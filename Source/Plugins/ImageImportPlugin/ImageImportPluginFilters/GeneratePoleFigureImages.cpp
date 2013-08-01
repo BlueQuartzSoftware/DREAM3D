@@ -35,22 +35,35 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GeneratePoleFigureImages.h"
 
+#include <iostream>
+#include <string>
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
-#include <QtGui/QImage>
+#include <QtCore/QDebug>
 
+#include <QtGui/QImage>
+#include <QtGui/QColor>
+
+#include "QtSupport/PoleFigureGeneration.h"
 
 #include "MXA/MXA.h"
+#include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
 
+#include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/TSL/AngReader.h"
+#include "EbsdLib/HKL/CtfReader.h"
+
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
-
-
 
 
 // -----------------------------------------------------------------------------
@@ -228,7 +241,7 @@ void GeneratePoleFigureImages::preflight()
 void GeneratePoleFigureImages::execute()
 {
   int err = 0;
-  std::stringstream ss;
+//  std::stringstream ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -247,29 +260,13 @@ void GeneratePoleFigureImages::execute()
   m->getDimensions(dims);
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
-  size_t numEntries = m->getTotalPoints();
-  FloatArrayType::Pointer e0 = FloatArrayType::CreateArray(numEntries, 1, "TEMP_Phi1");
-  FloatArrayType::Pointer e1 = FloatArrayType::CreateArray(numEntries, 1, "TEMP_Phi");
-  FloatArrayType::Pointer e2 = FloatArrayType::CreateArray(numEntries, 1, "TEMP_Phi2");
-  FloatArrayType::Pointer weights = FloatArrayType::CreateArray(numEntries, 1, "TEMP_Weights");
-  weights->initializeWithValues(1.0);
-  FloatArrayType::Pointer sigmas = FloatArrayType::CreateArray(numEntries, 1, "TEMP_Sigmas");
-  sigmas->initializeWithValues(0.0);
 
-  notifyStatusMessage("Copying Euler Data.....");
-  // Copy the Euler Angles from their usual place into the individual arrays needed by the StatsGen and Texture
-  for(size_t i = 0; i < numEntries; ++i)
-  {
-    e0->SetValue(i, m_CellEulerAngles[i*3]);
-    e1->SetValue(i, m_CellEulerAngles[i*3+1]);
-    e2->SetValue(i, m_CellEulerAngles[i*3+2]);
-  }
-
+  FloatArrayType* eulers = FloatArrayType::SafePointerDownCast(m->getCellData(getCellEulerAnglesArrayName()).get());
 
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[1]))
   {
-    generateCubicPoleFigures(e0, e1, e2, weights, sigmas);
+    generateCubicPoleFigures(eulers);
   }
   else if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[1]))
   {
@@ -283,63 +280,438 @@ void GeneratePoleFigureImages::execute()
 }
 
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType::Pointer e0, FloatArrayType::Pointer e1, FloatArrayType::Pointer e2,
-                                                        FloatArrayType::Pointer weights, FloatArrayType::Pointer sigmas)
+ModifiedLambertProjection::Pointer GeneratePoleFigureImages::createModifiedLambertProjection(FloatArrayType *coords, int dimension, float resolution)
 {
-  QVector<float> odf(CubicOps::k_OdfSize);
-  size_t numEntries = e0->GetNumberOfTuples();
+  std::cout << "createModifiedLambertProjection...." << std::endl;
+  size_t npoints = coords->GetNumberOfTuples();
+  bool nhCheck = false;
+  float sqCoord[2];
 
-  notifyStatusMessage("Sampling Euler Data.....");
+  ModifiedLambertProjection::Pointer squareProj = ModifiedLambertProjection::New();
 
-  Texture::CalculateCubicODFData(e0->GetPointer(0), e1->GetPointer(0), e2->GetPointer(0),
-                                 weights->GetPointer(0), sigmas->GetPointer(0), true,
-                                 odf.data(), numEntries);
-  size_t npoints = 5000;
-  QVector<float > x001(npoints * 3);
-  QVector<float > y001(npoints * 3);
-  QVector<float > x011(npoints * 6);
-  QVector<float > y011(npoints * 6);
-  QVector<float > x111(npoints * 4);
-  QVector<float > y111(npoints * 4);
 
-  qint32 kRad[2] = {m_KernelSize, m_KernelSize};
-  qint32 pfSize[2] = {m_ImageSize, m_ImageSize};
 
-  notifyStatusMessage("Generating raw XY plot data .....");
-
-  int err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
-                                          x011.data(), y011.data(), x111.data(), y111.data(), npoints);
-  if(err < 0)
+  squareProj->initializeSquares(dimension, resolution, 1.0f);
+  int sqIndex = 0;
+  for(int i = 0; i < npoints; ++i)
   {
-    setErrorCondition(-99001);
-    notifyErrorMessage("Cubic ODF Generation caused errors.", getErrorCondition());
-    return;
+    sqCoord[0] = 0.0; sqCoord[1] = 0.0;
+    //get coordinates in square projection of crystal normal parallel to boundary normal
+    nhCheck = squareProj->getSquareCoord(coords->GetPointer(i * 3), sqCoord);
+    sqIndex = squareProj->getSquareIndex(sqCoord);
+    if (nhCheck == true)
+    {
+      //north increment by 1
+      squareProj->addValue(ModifiedLambertProjection::NorthSquare, sqIndex, 1.0);
+    }
+    else
+    {
+      // south increment by 1
+      squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
+    }
   }
 
+ // squareProj->normalizeSquares();
 
-  PoleFigureData pf001(x001, y001, QString("<001>"), kRad, pfSize);
-  PoleFigureData pf011(x011, y011, QString("<011>"), kRad, pfSize);
-  PoleFigureData pf111(x111, y111, QString("<111>"), kRad, pfSize);
-
-
-  notifyStatusMessage("Generating 001 Pole Figure ....");
-  generateImage(pf001, QString("001"));
-  notifyStatusMessage("Generating 011 Pole Figure ....");
-  generateImage(pf011, QString("011"));
-  notifyStatusMessage("Generating 111 Pole Figure ....");
-  generateImage(pf111, QString("111"));
+  return squareProj;
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GeneratePoleFigureImages::generateImage(PoleFigureData data, QString label)
+DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLambertProjection::Pointer proj, int poleFigureDim)
 {
+  std::cout << "createPoleFigure..." << std::endl;
+  int xpoints = poleFigureDim;
+  int ypoints = poleFigureDim;
+
+  int xpointshalf = xpoints / 2;
+  int ypointshalf = ypoints / 2;
+
+  float xres = 2.0 / (float)(xpoints);
+  float yres = 2.0 / (float)(ypoints);
+  float xtmp, ytmp;
+  float sqCoord[2];
+  float xyz[3];
+  bool nhCheck = false;
+
+  DoubleArrayType::Pointer intensityPtr = DoubleArrayType::CreateArray(xpoints * ypoints, 1, "Intensity_Image");
+  intensityPtr->initializeWithZeros();
+  double* intensity = intensityPtr->GetPointer(0);
+
+  for (int64_t k = 0; k < (xpoints); k++)
+  {
+    for (int64_t l = 0; l < (ypoints); l++)
+    {
+      //get (x,y) for stereographic projection pixel
+      xtmp = float(k-xpointshalf)*xres+(xres/2.0);
+      ytmp = float(l-ypointshalf)*yres+(yres/2.0);
+      if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
+      {
+        xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
+        xyz[0] = xtmp*(1+xyz[2]);
+        xyz[1] = ytmp*(1+xyz[2]);
+
+        nhCheck = proj->getSquareCoord(xyz, sqCoord);
+        int sqIndex = proj->getSquareIndex(sqCoord);
+
+        int index = l * xpoints + k;
+        if (nhCheck == true)
+        {
+          //get Value from North square
+          intensity[index] = proj->getValue(ModifiedLambertProjection::NorthSquare, sqIndex);
+        }
+        else
+        {
+          //get Value from South square
+          intensity[index] = proj->getValue(ModifiedLambertProjection::SouthSquare, sqIndex);
+        }
+
+      }
+
+    }
+  }
+  return intensityPtr;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::generateCubicSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+{
+  size_t nOrientations = eulers->GetNumberOfTuples();
+  QuaternionMath<float>::Quaternion q1;
+  CubicOps ops;
+  float g[3][3];
+  float* currentEuler = NULL;
+  float direction[3] = {0.0, 0.0, 0.0};
+
+  for(size_t i = 0; i < nOrientations; ++i)
+  {
+
+    currentEuler = eulers->GetPointer(i * 3);
+
+    OrientationMath::EulertoQuat(q1, currentEuler);
+    ops.getFZQuat(q1);
+    OrientationMath::QuattoMat(q1, g);
+
+    // -----------------------------------------------------------------------------
+    // 001 Family
+
+    direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9));
+    direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 3));
+    direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 6));
+
+    // -----------------------------------------------------------------------------
+    // 011 Family
+
+    direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 0));
+    direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 3));
+    direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 6));
+    direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 9));
+    direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 12));
+    direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 15));
+
+    // -----------------------------------------------------------------------------
+    // 111 Family
+
+    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 0));
+    direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 3));
+    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 6));
+    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
+    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 9));
+  }
+
+}
+
+
+
+/**
+ * @brief This function writes a set of Axis coordinates to that are needed
+ * for a Rectilinear Grid based data set.
+ * @param f The "C" FILE* pointer to the file being written to.
+ * @param axis The name of the Axis that is being written
+ * @param type The type of primitive being written (float, int, ...)
+ * @param npoints The total number of points in the array
+ * @param min The minimum value of the axis
+ * @param max The maximum value of the axis
+ * @param step The step value between each point on the axis.
+ */
+
+int GeneratePoleFigureImages::writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
+{
+  int err = 0;
+  fprintf(f, "%s %lld %s\n", axis, npoints, type);
+  float* data = new float[npoints];
+  float d;
+  for (int idx = 0; idx < npoints; ++idx)
+  {
+    d = idx * step + min;
+    MXA::Endian::FromSystemToBig::convert<float>(d);
+    data[idx] = d;
+  }
+  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
+  delete[] data;
+  if (totalWritten != static_cast<size_t>(npoints) )
+  {
+    std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+    fclose(f);
+    return -1;
+  }
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleArrayType *poleFigurePtr, int dimension)
+{
+
+  std::cout << "writeVtkFile: " << filename << std::endl;
+  double* poleFigure = poleFigurePtr->GetPointer(0);
+  int xpoints = dimension;
+  int ypoints = dimension;
+  int zpoints = 1;
+  float xres = 2.0 / (float)(xpoints);
+  float yres = 2.0 / (float)(ypoints);
+  float zres = (xres+yres)/2.0;
+
   std::stringstream ss;
+  FILE* f = NULL;
+  f = fopen(filename.c_str(), "wb");
+  if(NULL == f)
+  {
+
+    ss.str("");
+    ss << "Could not open GBCD viz file " << filename << " for writing. Please check access permissions and the path to the output location exists";
+    //  notifyErrorMessage(ss.str(), getErrorCondition());
+    std::cout << ss.str() << std::endl;
+    return;
+  }
+
+
+
+  // Write the correct header
+  fprintf(f, "# vtk DataFile Version 2.0\n");
+  fprintf(f, "data set from DREAM3D\n");
+  fprintf(f, "BINARY"); fprintf(f, "\n");
+  fprintf(f, "DATASET RECTILINEAR_GRID\n");
+  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
+
+  // Write the Coords
+  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
+  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
+  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
+
+  size_t total = xpoints * ypoints * zpoints;
+  fprintf(f, "CELL_DATA %d\n", (int)total);
+
+  fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
+  fprintf(f, "LOOKUP_TABLE default\n");
+  {
+    float* gn = new float[total];
+    float t;
+    int count = 0;
+    for (int64_t j = 0; j < (ypoints); j++)
+    {
+      for (int64_t i = 0; i < (xpoints); i++)
+      {
+        t = float(poleFigure[(j*xpoints)+i]);
+        MXA::Endian::FromSystemToBig::convert<float>(t);
+        gn[count] = t;
+        count++;
+      }
+    }
+    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
+    delete[] gn;
+    if (totalWritten != (total))  {
+      std::cout << "Error Writing Binary VTK Data into file " << filename << std::endl;
+      fclose(f);
+    }
+  }
+
+  fclose(f);
+}
+
+
+///getColorCorrespondingToValue ////////////////////////////////////////////////
+//
+// Assumes you've already generated min and max -- the extrema for the data
+// to which you're applying the color map. Then define the number of colorNodes
+// and make sure there's a row of three float values (representing r, g, and b
+// in a 0.0-1.0 range) for each node. Then call this method for with parameter
+// val some float value between min and max inclusive. The corresponding rgb
+// values will be returned in the reference-to-float parameters r, g, and b.
+//
+////////////////////////////////////////////////////////////////////////////////
+void GeneratePoleFigureImages::getColorCorrespondingTovalue(float val,
+                                                            float &r, float &g, float &b,
+                                                            float max, float min)
+{
+  static const int numColorNodes = 8;
+  float color[numColorNodes][3] =
+  {
+    {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
+    {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
+    {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
+    {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
+    {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
+    {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
+    {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
+    {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
+  };
+  float range = max - min;
+  for (int i = 0; i < (numColorNodes - 1); i++)
+  {
+    float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
+    float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
+
+    if((val >= currFloor) && (val <= currCeil))
+    {
+      float currFraction = (val - currFloor) / (currCeil - currFloor);
+      r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
+      g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
+      b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
+{
+  std::cout << "writeImage: " << filename << std::endl;
+  size_t npoints = poleFigurePtr->GetNumberOfTuples();
+  double max = std::numeric_limits<double>::min();
+  double min = std::numeric_limits<double>::max();
+  double value = 0.0;
+  for(size_t i = 0; i < npoints; ++i)
+  {
+    value = poleFigurePtr->GetValue(i);
+    if (value > max) { max = value;}
+    if (value < min) { min = value;}
+  }
+
+
+  int imageWidth = dimension;
+  int imageHeight = dimension;
+
+  QImage image (imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
+  image.fill(0);
+  qint32 numColors = 9;
+
+  QVector<QColor> colorTable(numColors);
+  qint32 range = 8;
+
+  float r, g, b;
+  for (int i = 0; i < numColors; i++)
+  {
+    //int val = min + ((float)i / (float)numColors) * (float)range;
+    int val = 0 + ((float)i / (float)numColors) * (float)range;
+    //getColorCorrespondingTovalue(val, r, g, b, max, min);
+    getColorCorrespondingTovalue(val, r, g, b, 8, 0);
+    colorTable[i] = QColor(r*255, g*255, b*255, 255);
+  }
+  // Index 0 is all white which is every pixel outside of the Pole Figure circle
+  // colorTable[0] = QColor(255, 255, 255, 255);
+
+  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
+  {
+    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
+    {
+      double intensity = poleFigurePtr->GetValue(yCoord * imageWidth + xCoord);
+      intensity = (intensity - min) / (max - min) * (numColors-1);
+      image.setPixel(xCoord, yCoord, colorTable[(int)(intensity)].rgba());
+    }
+  }
+
+  // Flip the image so the (-1, -1) is in the lower left
+  image = image.mirrored(true, false);
+  bool saved = image.save(QString::fromStdString(filename));
+  if(!saved)
+  {
+    std::cout << "did NOT save QImage at path: " << filename << std::endl;
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
+{
+  std::cout << "generateCubicPoleFigures..." << std::endl;
+  int numOrientations = eulers->GetNumberOfTuples();
+
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for CUBIC ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
+  // this is size for CUBIC ONLY, <011> Family
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
+  // this is size for CUBIC ONLY, <111> Family
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
+
+  int dimension = 200;
+  float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
+  int poleFigureDim = getImageSize();
+
+  // Generate the coords on the sphere
+  generateCubicSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
+
+
+
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = createModifiedLambertProjection(xyz001.get(), dimension, resolution);
+  // Now create the intensity image that will become the actual Pole figure image
+  DoubleArrayType::Pointer poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
+  QString path = generateVtkPath("001");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("001");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+
+  // Generate the <011> pole figure
+  lambert = createModifiedLambertProjection(xyz011.get(), dimension, resolution);
+  poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
+  path = generateVtkPath("011");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("011");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+
+  // Generate the <111> pole figure
+  lambert = createModifiedLambertProjection(xyz111.get(), dimension, resolution);
+  poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
+  path = generateVtkPath("111");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("111");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GeneratePoleFigureImages::generateImagePath( QString label)
+{
   QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
   if(m_ImageFormat == TifImageType)
   {
@@ -365,15 +737,25 @@ int GeneratePoleFigureImages::generateImage(PoleFigureData data, QString label)
     parent.mkpath(fi.absolutePath());
   }
 
-  PoleFigureGeneration colorPoleFigure;
-  QImage image = colorPoleFigure.generateColorPoleFigureImage(data);
-  bool saved = image.save(path);
-  if (!saved)
+ return path;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString GeneratePoleFigureImages::generateVtkPath( QString label)
+{
+  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+
+  path.append(".vtk");
+
+  path = QDir::toNativeSeparators(path);
+  QFileInfo fi(path);
+  QDir parent(fi.absolutePath());
+  if (parent.exists() == false)
   {
-    ss.str("");
-    setErrorCondition(-99000);
-    ss << "Pole Figure image '" << path.toStdString() << "' not saved.";
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    parent.mkpath(fi.absolutePath());
   }
-  return getErrorCondition();
+
+ return path;
 }
