@@ -121,6 +121,41 @@ class ModifiedLambertProjection
       }
     }
 
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    double getInterpolatedValue(unsigned int square, float* sqCoord)
+    {
+      int abinMod, bbinMod;
+      float modX = ( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
+      float modY = ( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
+      int abin = (int) modX;
+      int bbin = (int) modY;
+      modX -= abin;
+      modY -= bbin;
+      if(abin < m_Dimension-1) abinMod = abin+1;
+      else abinMod = abin+1-m_Dimension;
+      if(bbin < m_Dimension-1) bbinMod = bbin+1;
+      else bbinMod = bbin+1-m_Dimension;
+      if (square == NorthSquare)
+      {
+         float intensity1 = m_NorthSquare->GetValue((abin)+(bbin*m_Dimension));
+         float intensity2 = m_NorthSquare->GetValue((abinMod)+(bbin*m_Dimension));
+         float intensity3 = m_NorthSquare->GetValue((abin)+(bbinMod*m_Dimension));
+         float intensity4 = m_NorthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
+         float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+         return interpolatedIntensity;
+      }
+      else
+      {
+         float intensity1 = m_SouthSquare->GetValue((abin)+(bbin*m_Dimension));
+         float intensity2 = m_SouthSquare->GetValue((abinMod)+(bbin*m_Dimension));
+         float intensity3 = m_SouthSquare->GetValue((abin)+(bbinMod*m_Dimension));
+         float intensity4 = m_SouthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
+         float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
+         return interpolatedIntensity;
+      }
+    }
 
     /**
      * @brief getSquareCoord
@@ -140,11 +175,11 @@ class ModifiedLambertProjection
       if(fabs(xyz[0]) >= fabs(xyz[1]))
       {
         sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
-        sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((0.5 * DREAM3D::Constants::k_SqrtPi)*atan(xyz[1]/xyz[0]));
+        sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[1]/xyz[0]));
       }
       else
       {
-        sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((0.5 * DREAM3D::Constants::k_SqrtPi)*atan(xyz[0]/xyz[1]));
+        sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[0]/xyz[1]));
         sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
       }
       return nhCheck;
