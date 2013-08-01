@@ -357,20 +357,27 @@ DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLamb
         xyz[0] = xtmp*(1+xyz[2]);
         xyz[1] = ytmp*(1+xyz[2]);
 
-        nhCheck = proj->getSquareCoord(xyz, sqCoord);
-        int sqIndex = proj->getSquareIndex(sqCoord);
-
         int index = l * xpoints + k;
-        if (nhCheck == true)
+        for( int64_t m = 0; m < 2; m++)
         {
-          //get Value from North square
-          intensity[index] = proj->getValue(ModifiedLambertProjection::NorthSquare, sqIndex);
+          if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
+          nhCheck = proj->getSquareCoord(xyz, sqCoord);
+          int sqIndex = proj->getSquareIndex(sqCoord);
+
+          if (nhCheck == true)
+          {
+            //get Value from North square
+            //          intensity[index] = proj->getValue(ModifiedLambertProjection::NorthSquare, sqIndex);
+            intensity[index] += proj->getInterpolatedValue(ModifiedLambertProjection::NorthSquare, sqCoord);
+          }
+          else
+          {
+            //get Value from South square
+            //          intensity[index] = proj->getValue(ModifiedLambertProjection::SouthSquare, sqIndex);
+            intensity[index] += proj->getInterpolatedValue(ModifiedLambertProjection::SouthSquare, sqCoord);
+          }
         }
-        else
-        {
-          //get Value from South square
-          intensity[index] = proj->getValue(ModifiedLambertProjection::SouthSquare, sqIndex);
-        }
+        intensity[index] /= 2.0;
 
       }
 
@@ -672,7 +679,7 @@ void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
   // this is size for CUBIC ONLY, <111> Family
   FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
 
-  int dimension = 200;
+  int dimension = 50;
   float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
   int poleFigureDim = getImageSize();
 
