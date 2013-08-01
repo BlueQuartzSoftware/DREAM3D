@@ -76,7 +76,7 @@ int main(int argc, char **argv)
                                  &(odf.front()), numEntries);
 
 
-  int size = 1000;
+  //int size = 1000;
   // Now generate the actual XY point data that gets plotted.
   // These are the output vectors
   std::vector<float> angles;

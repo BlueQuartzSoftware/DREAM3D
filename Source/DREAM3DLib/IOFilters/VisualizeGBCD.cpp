@@ -183,7 +183,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
         addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
       }
       else
-      {        
+      {
         GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
         GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
@@ -288,10 +288,6 @@ void VisualizeGBCD::execute()
   float sym2[3][3];
   float sym2t[3][3];
   float mis_euler1[3];
-  QuatF qtest;
-  float w, n1, n2, n3;
-  //  float dist;
-  float theta, cosPhi, phi;
 
   m_MisAngle = m_MisAngle * DREAM3D::Constants::k_Pi/180.0f;
   //convert axis angle to matrix representation of misorientation
@@ -309,9 +305,9 @@ void VisualizeGBCD::execute()
   float xres = 2.0/float(xpoints);
   float yres = 2.0/float(ypoints);
   float zres = (xres+yres)/2.0;
-  float x, y, z;
+  float x, y;
   float a, b;
-  int xbin, ybin;
+//  int xbin, ybin;
   int abin, bbin;
   int abinMod, bbinMod;
   float modX, modY;
@@ -428,7 +424,7 @@ void VisualizeGBCD::execute()
                   {
                     a = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*(sqrt(DREAM3D::Constants::k_Pi)/2.0);
                     b = (rotNormal[0]/fabs(rotNormal[0]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[1]/rotNormal[0]));
-                  }              
+                  }
                   else
                   {
                     a = (rotNormal[1]/fabs(rotNormal[1]))*sqrt(2.0*1.0*(1.0+(rotNormal[2]*adjust)))*((2.0/sqrt(DREAM3D::Constants::k_Pi))*atan(rotNormal[0]/rotNormal[1]));
@@ -449,8 +445,8 @@ void VisualizeGBCD::execute()
                   intensity3 = m_GBCD[2*(shift+(abin*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
                   intensity4 = m_GBCD[2*(shift+(abinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2])+(bbinMod*gbcdSizes[0]*gbcdSizes[1]*gbcdSizes[2]*gbcdSizes[3]))+hemisphere];
                   interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
-                  poleFigure[(l*xpoints)+k] += interpolatedIntensity; 
-                  poleFigureCounts[(l*xpoints)+k] += 1.0; 
+                  poleFigure[(l*xpoints)+k] += interpolatedIntensity;
+                  poleFigureCounts[(l*xpoints)+k] += 1.0;
                 }
               }
               count++;
@@ -470,7 +466,7 @@ void VisualizeGBCD::execute()
       y = float(l-ypointshalf)*yres+(yres/2.0);
       if((x*x+y*y) <= 1.0)
       {
-        poleFigure[(l*xpoints)+k] /= poleFigureCounts[(l*xpoints)+k]; 
+        poleFigure[(l*xpoints)+k] /= poleFigureCounts[(l*xpoints)+k];
       }
     }
   }

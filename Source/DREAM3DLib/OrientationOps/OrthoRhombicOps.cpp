@@ -502,6 +502,9 @@ void OrthoRhombicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, fl
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
@@ -568,4 +571,12 @@ void OrthoRhombicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float
   }
 */
 #endif
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+{
+  BOOST_ASSERT(false);
 }

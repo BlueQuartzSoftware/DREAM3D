@@ -92,7 +92,7 @@ class CalculateGBCDImpl
       int k;//, k4;
       int m;
       int temp;
-      bool gbcd_indices_good;
+      //bool gbcd_indices_good;
       int grain1, grain2;
       int inversion = 1;
       float g1ea[3], g2ea[3];
@@ -182,7 +182,7 @@ class CalculateGBCDImpl
                 //translate matrix to euler angles
                 OrientationMath::MattoEuler(dg, euler_mis[0], euler_mis[1], euler_mis[2]);
                 euler_mis[1] = cosf(euler_mis[1]);
-                
+
                 //get the indexes that this point would be in the GBCD histogram
                 gbcd_index = GBCDIndex (m_GBCDdeltas, m_GBCDsizes, m_GBCDlimits, euler_mis, sqCoord);
                 if (gbcd_index != -1)
@@ -241,11 +241,11 @@ class CalculateGBCDImpl
       for (i=0;i < 5; i++)
       {
         index[i] = (int) ((mis_eulerNorm[i] - gbcdlimits[i])/gbcddelta[i]);
-        if (index[i] >  (gbcdsz[i]-1)) 
+        if (index[i] >  (gbcdsz[i]-1))
         {
           index[i] =  (gbcdsz[i]-1);
         }
-        if (index[i] <  0) 
+        if (index[i] <  0)
         {
           index[i] =  0;
         }
@@ -269,7 +269,7 @@ class CalculateGBCDImpl
       {
         sqCoord[0] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi/2.0);
         sqCoord[1] = (xstl1_norm1[0]/fabs(xstl1_norm1[0]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xstl1_norm1[1]/xstl1_norm1[0]));
-      }              
+      }
       else
       {
         sqCoord[0] = (xstl1_norm1[1]/fabs(xstl1_norm1[1]))*sqrt(2.0*1.0*(1.0+(xstl1_norm1[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xstl1_norm1[0]/xstl1_norm1[1]));

@@ -41,6 +41,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -88,7 +89,7 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt) = 0;
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7) = 0;
 
-
+    virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3) = 0;
 
   protected:
     OrientationOps();

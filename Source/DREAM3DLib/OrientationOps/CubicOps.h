@@ -42,6 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -90,6 +91,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
 
 
+    virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
 
 

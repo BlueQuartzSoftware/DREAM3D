@@ -64,6 +64,14 @@
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
+
+
+#define SET_DIRECTION(i, j, k)\
+  direction[0] = i; direction[1] = j; direction[2] = k;
+
+
+
 
 
 // -----------------------------------------------------------------------------
@@ -278,182 +286,64 @@ void GeneratePoleFigureImages::execute()
 
   }
 
-
-
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ModifiedLambertProjection::Pointer GeneratePoleFigureImages::createModifiedLambertProjection(FloatArrayType *coords, int dimension, float resolution)
+void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
 {
-  notifyStatusMessage("Creating Modified Lambert Projections");
-  size_t npoints = coords->GetNumberOfTuples();
-  bool nhCheck = false;
-  float sqCoord[2];
-
-  ModifiedLambertProjection::Pointer squareProj = ModifiedLambertProjection::New();
+  notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
+  int numOrientations = eulers->GetNumberOfTuples();
 
 
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for CUBIC ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
+  // this is size for CUBIC ONLY, <011> Family
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
+  // this is size for CUBIC ONLY, <111> Family
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
 
-  squareProj->initializeSquares(dimension, resolution, 1.0f);
-  int sqIndex = 0;
-  for(int i = 0; i < npoints; ++i)
-  {
-    sqCoord[0] = 0.0; sqCoord[1] = 0.0;
-    //get coordinates in square projection of crystal normal parallel to boundary normal
-    nhCheck = squareProj->getSquareCoord(coords->GetPointer(i * 3), sqCoord);
-    sqIndex = squareProj->getSquareIndex(sqCoord);
-    if (nhCheck == true)
-    {
-      //north increment by 1
-      squareProj->addValue(ModifiedLambertProjection::NorthSquare, sqIndex, 1.0);
-    }
-    else
-    {
-      // south increment by 1
-      squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
-    }
-  }
+  int dimension = getLambertSize();
+  float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
+  int poleFigureDim = getImageSize();
+  float sphereRadius = 1.0f;
 
-  // squareProj->normalizeSquares();
-
-  return squareProj;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-DoubleArrayType::Pointer GeneratePoleFigureImages::createPoleFigure(ModifiedLambertProjection::Pointer proj, int poleFigureDim)
-{
-  notifyStatusMessage("Creating Pole Figures from Modified Lambert Projections");
-  int xpoints = poleFigureDim;
-  int ypoints = poleFigureDim;
-
-  int xpointshalf = xpoints / 2;
-  int ypointshalf = ypoints / 2;
-
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
-  float xtmp, ytmp;
-  float sqCoord[2];
-  float xyz[3];
-  bool nhCheck = false;
-
-  DoubleArrayType::Pointer intensityPtr = DoubleArrayType::CreateArray(xpoints * ypoints, 1, "Intensity_Image");
-  intensityPtr->initializeWithZeros();
-  double* intensity = intensityPtr->GetPointer(0);
-
-  for (int64_t k = 0; k < (xpoints); k++)
-  {
-    for (int64_t l = 0; l < (ypoints); l++)
-    {
-      //get (x,y) for stereographic projection pixel
-      xtmp = float(k-xpointshalf)*xres+(xres/2.0);
-      ytmp = float(l-ypointshalf)*yres+(yres/2.0);
-      if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
-      {
-        xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
-        xyz[0] = xtmp*(1+xyz[2]);
-        xyz[1] = ytmp*(1+xyz[2]);
-
-        int index = l * xpoints + k;
-        for( int64_t m = 0; m < 2; m++)
-        {
-          if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
-          nhCheck = proj->getSquareCoord(xyz, sqCoord);
-          //   int sqIndex = proj->getSquareIndex(sqCoord);
-
-          if (nhCheck == true)
-          {
-            //get Value from North square
-            //          intensity[index] = proj->getValue(ModifiedLambertProjection::NorthSquare, sqIndex);
-            intensity[index] += proj->getInterpolatedValue(ModifiedLambertProjection::NorthSquare, sqCoord);
-          }
-          else
-          {
-            //get Value from South square
-            //          intensity[index] = proj->getValue(ModifiedLambertProjection::SouthSquare, sqIndex);
-            intensity[index] += proj->getInterpolatedValue(ModifiedLambertProjection::SouthSquare, sqCoord);
-          }
-        }
-        intensity[index] /= 2.0;
-
-      }
-
-    }
-  }
-  return intensityPtr;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateCubicSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
-{
-  notifyStatusMessage("Calculating Euler Angle Projection to Unit Sphere");
-  size_t nOrientations = eulers->GetNumberOfTuples();
-  QuaternionMath<float>::Quaternion q1;
+  // Generate the coords on the sphere
   CubicOps ops;
-  float g[3][3];
-  float* currentEuler = NULL;
-  float direction[3] = {0.0, 0.0, 0.0};
+  ops.generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
 
-  for(size_t i = 0; i < nOrientations; ++i)
-  {
 
-    currentEuler = eulers->GetPointer(i * 3);
 
-    OrientationMath::EulertoQuat(q1, currentEuler);
-    ops.getFZQuat(q1);
-    OrientationMath::QuattoMat(q1, g);
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), dimension, resolution, sphereRadius);
+  // Now create the intensity image that will become the actual Pole figure image
+  DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  QString path = generateVtkPath("001");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("001");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
 
-    // -----------------------------------------------------------------------------
-    // 001 Family
+  // Generate the <011> pole figure
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), dimension, resolution, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  path = generateVtkPath("011");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("011");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
 
-    direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9));
-    direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 3));
-    direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 6));
-
-    // -----------------------------------------------------------------------------
-    // 011 Family
-
-    direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 0));
-    direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 3));
-    direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 6));
-    direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 9));
-    direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 12));
-    direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 15));
-
-    // -----------------------------------------------------------------------------
-    // 111 Family
-
-    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 0));
-    direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 3));
-    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 6));
-    direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 9));
-  }
-
+  // Generate the <111> pole figure
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), dimension, resolution, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  path = generateVtkPath("111");
+  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  path = generateImagePath("111");
+  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
 }
-
 
 
 /**
@@ -499,6 +389,18 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleA
 {
 
   notifyStatusMessage("Writing VTK File");
+
+  size_t dims[3] = {dimension, dimension, 1};
+  float res[3] = {  2.0/(float)(dimension),
+                    2.0/(float)(dimension),
+                    ( 2.0/(float)(dimension) + 2.0/(float)(dimension) )/2.0 };
+
+  int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);
+  if (err < 0)
+  {
+
+  }
+#if 0
   double* poleFigure = poleFigurePtr->GetPointer(0);
   int xpoints = dimension;
   int ypoints = dimension;
@@ -562,6 +464,7 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleA
   }
 
   fclose(f);
+  #endif
 }
 
 
@@ -643,13 +546,13 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
   qint32 colorRange = getNumColors();
 
   QVector<QColor> colorTable(numColors);
-  qint32 range = max - min;
+  //qint32 range = max - min;
 
   float r, g, b;
   for (int i = 0; i < getNumColors(); i++)
   {
     //int val = min + ((float)i / numColors) * range;
-    int val = ((float)i / (float)numColors) * colorRange;
+    //int val = ((float)i / (float)numColors) * colorRange;
     getColorCorrespondingTovalue(i, r, g, b, getNumColors(), 0);
     colorTable[i] = QColor(r*255, g*255, b*255, 255);
   }
@@ -684,58 +587,6 @@ void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArra
   }
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
-{
-  notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
-  int numOrientations = eulers->GetNumberOfTuples();
-
-
-  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
-
-  int dimension = getLambertSize();
-  float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
-  int poleFigureDim = getImageSize();
-
-  // Generate the coords on the sphere
-  generateCubicSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
-
-
-
-  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  ModifiedLambertProjection::Pointer lambert = createModifiedLambertProjection(xyz001.get(), dimension, resolution);
-  // Now create the intensity image that will become the actual Pole figure image
-  DoubleArrayType::Pointer poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
-  QString path = generateVtkPath("001");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("001");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-
-  // Generate the <011> pole figure
-  lambert = createModifiedLambertProjection(xyz011.get(), dimension, resolution);
-  poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
-  path = generateVtkPath("011");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("011");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-
-  // Generate the <111> pole figure
-  lambert = createModifiedLambertProjection(xyz111.get(), dimension, resolution);
-  poleFigurePtr = createPoleFigure(lambert, poleFigureDim);
-  path = generateVtkPath("111");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("111");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-}
 
 // -----------------------------------------------------------------------------
 //

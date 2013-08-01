@@ -158,10 +158,10 @@ void FindLargestCrossSections::execute()
 void FindLargestCrossSections::find_crosssections()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t totalPoints = m->getTotalPoints();
+//  int64_t totalPoints = m->getTotalPoints();
 
-  float radcubed;
-  float diameter;
+//  float radcubed;
+//  float diameter;
 
   size_t numgrains = m->getNumFieldTuples();
 
@@ -173,7 +173,7 @@ void FindLargestCrossSections::find_crosssections()
   int stride1, stride2, stride3;
   int istride, jstride, kstride;
   int point, gnum;
-  
+
   if(m_Plane == 0)
   {
     outPlane = m->getZPoints();

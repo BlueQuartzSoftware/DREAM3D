@@ -83,7 +83,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
       float normal[3];
       float g1[3][3];
       float schmid1, schmid2, schmid3;
-      int plane =0;
+ //     int plane =0;
  //     unsigned int phase1, phase2;
       QuatF q1;
    //   QuatF q2;
