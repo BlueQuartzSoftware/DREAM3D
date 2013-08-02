@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int closeFilterGroup() = 0;
 
     virtual std::string readValue(const std::string name, std::string value) = 0;
+    virtual std::vector<std::string> readValue(const std::string name, std::vector<std::string> value) = 0;
 
     virtual int8_t readValue(const std::string name, int8_t value) = 0;
     virtual int16_t readValue(const std::string name, int16_t value) = 0;
@@ -77,6 +78,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual uint64_t readValue(const std::string name, uint64_t value) = 0;
     virtual float readValue(const std::string name, float value) = 0;
     virtual double readValue(const std::string name, double value) = 0;
+    virtual std::vector<unsigned int> readValue(const std::string name, std::vector<unsigned int> value) = 0;
 
     virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v) = 0;

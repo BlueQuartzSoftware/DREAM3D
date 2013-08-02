@@ -233,7 +233,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   fprintf(f, "    QString getFilterGroup();\n\n");
   fprintf(f, "    QString getFilterSubGroup();\n\n");
   fprintf(f, "    virtual void openHtmlHelpFile();\n\n");
-  fprintf(f, "    virtual void getGuiParametersFromFilter(AbstractFilter::Pointer filt);\n\n");
+  fprintf(f, "    virtual void getGuiParametersFromFilter(AbstractFilter* filt);\n\n");
 
   bool implementArrayNameComboBoxUpdated = false;
   bool implementPreflightAboutToExecute = true;
@@ -551,7 +551,7 @@ void createSourceFile( const std::string &group,
   fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.c_str(), filter.c_str());
   fprintf(f, "{\n");
   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
-  fprintf(f, "     getGuiParametersFromFilter(filter);\n");
+  fprintf(f, "     getGuiParametersFromFilter( filter.get() );\n");
 
   // Generate code to get all the array names and set the local variables that hold those names
   //appendArrayNameConstructorCode<T>(t, f);
@@ -568,8 +568,8 @@ void createSourceFile( const std::string &group,
 
   // Write getGuiParametersFromFilter(filter) function
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter::Pointer filt)\n{\n", filter.c_str());
-  fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>( filt.get() );\n", filter.c_str(), filter.c_str(), filter.c_str());
+  fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter* filt)\n{\n", filter.c_str());
+  fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.c_str(), filter.c_str(), filter.c_str());
   // Loop on all the options getting the defaults from a fresh instance of the filter class
   for (size_t i = 0; i < options.size(); ++i)
   {

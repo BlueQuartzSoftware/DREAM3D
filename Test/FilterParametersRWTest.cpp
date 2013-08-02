@@ -285,8 +285,8 @@ void ArraySelectionExampleTest()
   DREAM3D_REQUIRED(err, >= , 0)
 
 
-      // We are done writing a file, now we need to read the file using raw HDF5 codes
-
+  // We are done writing a file, now we need to read the file using raw HDF5 codes
+  filt = ArraySelectionExample::New();
   hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
@@ -295,8 +295,6 @@ void ArraySelectionExampleTest()
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
-  err = reader->openFilterGroup( filt.get(), index ); // Open the HDF5 Group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -422,11 +420,8 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString4, ==, *iter)
 
-      err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
 
-
-      H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
+  H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
   H5Fclose(fid); // Closes the file
 }
 
@@ -460,7 +455,17 @@ void GenericExampleTest()
   filt->setSurfaceMeshEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
   filt->setSolidMeshPointArrayName(SolidMeshPointArrayNameTestValue);
   filt->setSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
-  filt->setSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);
+  filt->setSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);\
+
+  std::vector<std::string> strVector;
+  strVector.push_back(SurfaceMeshPointArrayNameTestValue);
+  strVector.push_back(SurfaceMeshFaceArrayNameTestValue);
+  strVector.push_back(SurfaceMeshEdgeArrayNameTestValue);
+  strVector.push_back(SolidMeshPointArrayNameTestValue);
+  strVector.push_back(SolidMeshFaceArrayNameTestValue);
+  strVector.push_back(SolidMeshEdgeArrayNameTestValue);
+
+  filt->setStrVector(strVector);
 
   IntVec3Widget_t intWidget;
   intWidget.x = IntWidgetXTestValue;
@@ -503,7 +508,7 @@ void GenericExampleTest()
 
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
-
+  filt = GenericFilter::New();
   hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
@@ -512,8 +517,6 @@ void GenericExampleTest()
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
-  err = reader->openFilterGroup( filt.get(), index); // Open the HDF5 Group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
@@ -565,8 +568,15 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(AxisAngles2KTestValue, ==, axisAngles2Read.k)
   DREAM3D_REQUIRED(AxisAngles2LTestValue, ==, axisAngles2Read.l)
 
-  err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
+  // Test the string vector
+  std::vector<std::string> strVectorRead = filt->getStrVector();
+
+  DREAM3D_REQUIRED(SurfaceMeshPointArrayNameTestValue, ==, strVectorRead[0])
+  DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, strVectorRead[1])
+  DREAM3D_REQUIRED(SurfaceMeshEdgeArrayNameTestValue, ==, strVectorRead[2])
+  DREAM3D_REQUIRED(SolidMeshPointArrayNameTestValue, ==, strVectorRead[3])
+  DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, strVectorRead[4])
+  DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, strVectorRead[5])
 
 
   H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
@@ -628,7 +638,7 @@ void ThresholdExampleTest()
 
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
-
+  filt = GenericFilter::New();
   hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
@@ -637,8 +647,6 @@ void ThresholdExampleTest()
   hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
-  err = reader->openFilterGroup( filt.get(), index++ ); // Open the HDF5 Group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index );
@@ -709,9 +717,6 @@ void ThresholdExampleTest()
   DREAM3D_REQUIRED(EdgeComparisonInputsArrayName2, ==, edgeComparisonInputs2.arrayName)
   DREAM3D_REQUIRED(EdgeComparisonInputsCompOperator2, ==, edgeComparisonInputs2.compOperator)
   DREAM3D_REQUIRED(EdgeComparisonInputsCompValue2, ==, edgeComparisonInputs2.compValue)
-
-  err = reader->closeFilterGroup(); // Close the HDF5 group for this filter
-  DREAM3D_REQUIRED(err, >=, 0)
 
 
   H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
@@ -950,9 +955,9 @@ int main(int argc, char **argv)
 
 
 
-      //DREAM3D_REGISTER_TEST( ArraySelectionExampleTest() )
-      //DREAM3D_REGISTER_TEST( GenericExampleTest() )
-      //DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
+      DREAM3D_REGISTER_TEST( ArraySelectionExampleTest() )
+      DREAM3D_REGISTER_TEST( GenericExampleTest() )
+      DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       //DREAM3D_REGISTER_TEST( FilterManagerTest() )
 
       //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, "", Test1) )
@@ -961,7 +966,7 @@ int main(int argc, char **argv)
 
       //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
 
-      DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
 
 #if 0
     #if REMOVE_TEST_FILES

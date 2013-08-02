@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int openFilterGroup(AbstractFilter* filter, int index);
     virtual int closeFilterGroup();
     virtual int writeValue(const std::string name, const std::string value);
+    virtual int writeValue(const std::string name, const std::vector<std::string> value);
 
     virtual int writeValue(const std::string name, int8_t value);
     virtual int writeValue(const std::string name, int16_t value);
@@ -77,6 +78,7 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const std::string name, uint64_t value);
     virtual int writeValue(const std::string name, float value);
     virtual int writeValue(const std::string name, double value);
+    virtual int writeValue(const std::string name, std::vector<unsigned int> value);
 
     virtual int writeValue(const std::string name, IntVec3Widget_t v);
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);

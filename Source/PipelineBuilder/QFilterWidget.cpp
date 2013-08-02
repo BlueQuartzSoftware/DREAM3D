@@ -1764,7 +1764,7 @@ void QFilterWidget::arrayNameComboBoxUpdated(QComboBox* cb)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::getParametersFromFilter(AbstractFilter* filt)
+void QFilterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
-
+  BOOST_ASSERT("QFilterWidget::getGuiParametersFromFilter executed");    // Code should never enter this function
 }
