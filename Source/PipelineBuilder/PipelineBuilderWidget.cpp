@@ -69,9 +69,13 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DREAM3DFilters.h"
+#include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
 
 #include "QFilterWidget.h"
 #include "AddFavoriteWidget.h"
+#include "DREAM3DFileDragMessageBox.h"
 
 namespace Detail
 {
@@ -250,6 +254,34 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
+{
+  hid_t fid = H5Utilities::openFile( filePath.toStdString() );
+  int err = readPipelineFromFile(fid);
+  FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
+
+  FilterPipeline::FilterContainerType::iterator iter = filters.begin();
+  for (; iter != filters.end(); iter++)
+  {
+    std::string filterName = (*iter)->getNameOfClass();
+    QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
+    if(w) {
+      w->getGuiParametersFromFilter( (*iter).get() );
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::addDREAM3DReaderFilter(const QString &filePath)
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
 {
   QFileInfo fi (filePath);
@@ -261,8 +293,53 @@ void PipelineBuilderWidget::openPipelineFile(const QString &filePath)
   }
   else if (extension == "dream3d")
   {
-
+    DREAM3DFileDragMessageBox* msgBox = new DREAM3DFileDragMessageBox(this);
+    msgBox->setFilePath(filePath);
+    connect(msgBox, SIGNAL(fireExtractPipelineFromFile(const QString &)), this, SLOT(extractPipelineFromFile(const QString &)));
+    connect(msgBox, SIGNAL(fireAddDREAM3DReaderFilter(const QString &)), this, SLOT(addDREAM3DReaderFilter(const QString &)));
+    msgBox->exec();
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
+{
+  int err = 0;
+  m_PipelineFromFile->clear();
+
+  H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
+
+  // HDF5: Open the "Pipeline" Group
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  reader->setGroupId(pipelineGroupId);
+
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+
+  // Loop over the items getting the "ClassName" attribute from each group
+  std::string classNameStr = "";
+  for (int i=0; i<groupList.size(); i++)
+  {
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+
+    // Instantiate a new filter using the FilterFactory based on the value of the className attribute
+    FilterManager::Pointer fm = FilterManager::Instance();
+    IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
+    AbstractFilter::Pointer filter = ff->create();
+
+    // Read the parameters
+    filter->readFilterParameters( reader.get(), i );
+
+    // Add filter to m_PipelineFromFile
+    m_PipelineFromFile->pushBack(filter);
+  }
+
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -538,6 +615,8 @@ void PipelineBuilderWidget::setWidgetListEnabled(bool b)
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::setupGui()
 {
+  m_PipelineFromFile = FilterPipeline::New();
+
   connect(m_PipelineViewWidget, SIGNAL(pipelineHasErrorsSignal()), this, SLOT(disableGoBtn()));
   connect(m_PipelineViewWidget, SIGNAL(pipelineHasNoErrors()), this, SLOT(enableGoBtn()));
 

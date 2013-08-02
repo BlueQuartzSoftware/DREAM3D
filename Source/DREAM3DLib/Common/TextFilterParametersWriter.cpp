@@ -76,6 +76,15 @@ int TextFilterParametersWriter::writeValue(const std::string name, const std::st
   return err;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, const std::vector<std::string> value)
+{
+  int err = -1;
+  return err;
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -162,6 +171,15 @@ int TextFilterParametersWriter::writeValue(const std::string name, float value)
 //
 // -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const std::string name, double value)
+{
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const std::string name, std::vector<unsigned int> value)
 {
   int err = -1;
   return err;

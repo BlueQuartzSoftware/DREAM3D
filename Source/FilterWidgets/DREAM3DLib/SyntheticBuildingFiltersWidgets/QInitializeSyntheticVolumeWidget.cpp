@@ -112,15 +112,13 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  DataArray<unsigned int>::Pointer shapeTypes =
-                  DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
-  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  std::vector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
    QComboBox* cb = m_ShapeTypeCombos.at(i);
    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-   shapeTypes->SetValue(i+1, sType);
+   shapeTypes[i+1]= sType;
   }
   filter->setShapeTypes(shapeTypes);
 

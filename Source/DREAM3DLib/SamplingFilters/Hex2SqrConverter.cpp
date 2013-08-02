@@ -90,8 +90,11 @@ void Hex2SqrConverter::setupFilterParameters()
 void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
+  setXResolution( reader->readValue("XResolution", getXResolution() ) );
+  setYResolution( reader->readValue("YResolution", getYResolution() ) );
+  setEbsdFileList( reader->readValue("EbsdFileList", getEbsdFileList() ) );
   reader->closeFilterGroup();
 }
 
@@ -101,6 +104,11 @@ void Hex2SqrConverter::readFilterParameters(AbstractFilterParametersReader* read
 int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("ZStartIndex", getZStartIndex() );
+  writer->writeValue("ZEndIndex", getZEndIndex() );
+  writer->writeValue("XResolution", getXResolution() );
+  writer->writeValue("ZYResolution", getYResolution() );
+  writer->writeValue("EbsdFileList", getEbsdFileList() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

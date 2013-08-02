@@ -368,6 +368,8 @@ void GenericFilter::readFilterParameters(AbstractFilterParametersReader* reader,
   setEdgeComparisonInputs( reader->readValue(H5FilterParameter::EdgeComparisonInputsConstant, m_EdgeComparisonInputs) );
 
   setAxisAngleRotations( reader->readValue(H5FilterParameter::AxisAngleInputsConstant, m_AxisAngleRotations) );
+
+  setStrVector( reader->readValue("StrVector", getStrVector() ) );
   reader->closeFilterGroup();
 }
 
@@ -409,6 +411,8 @@ int GenericFilter::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue(H5FilterParameter::EdgeComparisonInputsConstant, getEdgeComparisonInputs() );
 
   writer->writeValue(H5FilterParameter::AxisAngleInputsConstant, getAxisAngleRotations() );
+
+  writer->writeValue("StrVector", getStrVector() );
 
   writer->closeFilterGroup();
   return index;

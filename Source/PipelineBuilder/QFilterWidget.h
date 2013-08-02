@@ -127,7 +127,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
-    virtual void getParametersFromFilter(AbstractFilter* filt);
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
     /** @brief Subclasses can implement this method to add in any custom internal updates that are necessary */
     virtual void arrayNameComboBoxUpdated(QComboBox* cb);

@@ -35,27 +35,33 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ADDFAVORITEWIDGET_H_
-#define _ADDFAVORITEWIDGET_H_
+#ifndef _DREAM3DFILEDRAGMESSAGEBOX_H_
+#define _DREAM3DFILEDRAGMESSAGEBOX_H_
 
-#include "ui_AddFavoriteWidget.h"
+#include "ui_DREAM3DFileDragMessageBox.h"
 
-class AddFavoriteWidget : public QDialog, public Ui::Dialog
+#include <QDialog>
+
+class DREAM3DFileDragMessageBox : public QDialog, public Ui::Form
 {
   Q_OBJECT
 
   public:
-    AddFavoriteWidget(QWidget* parent = 0);
-    bool getBtnClicked();
-    QString getFavoriteName();
+    DREAM3DFileDragMessageBox(QWidget* parent = 0);
+
+    QString getFilePath();
+    void setFilePath(QString path);
 
   protected slots:
-    void on_addfavoriteOKButton_clicked();
-    void on_addfavoriteCancelButton_clicked();
-    void on_favoriteName_textChanged(const QString & text);
+    void on_extractPipelineBtn_clicked();
+    void on_addFilterBtn_clicked();
+
+  signals:
+    void fireExtractPipelineFromFile(const QString &filePath);
+    void fireAddDREAM3DReaderFilter(const QString &filePath);
 
   private:
-    bool BtnClicked;
+    QString filePath;
 };
 
-#endif /* _AddFavoriteWidget_H */
+#endif /* _DREAM3DFileDragMessageBox_H */

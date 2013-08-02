@@ -63,9 +63,7 @@ QDataContainerReaderWidget::QDataContainerReaderWidget(QWidget* parent) :
   }
   setupUi(this);
   DataContainerReader::Pointer filter = DataContainerReader::New();
-  setInputFile( QString::fromStdString(filter->getInputFile() ) );
-  setReadVoxelData( filter->getReadVoxelData() );
-  setReadSurfaceMeshData( filter->getReadSurfaceMeshData() );
+  getGuiParametersFromFilter( filter.get() );
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
@@ -82,6 +80,15 @@ QString QDataContainerReaderWidget::getFilterGroup()
   return m_FilterGroup;
 }
 
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  DataContainerReader* filter = DataContainerReader::SafeObjectDownCast<AbstractFilter*, DataContainerReader*>(filt);
+  setInputFile( QString::fromStdString( filter->getInputFile() ) );
+  setReadVoxelData( filter->getReadVoxelData() );
+  setReadSurfaceMeshData( filter->getReadSurfaceMeshData() );
+  setReadSolidMeshData( filter->getReadSolidMeshData() );
+}
 
 // -----------------------------------------------------------------------------
 //

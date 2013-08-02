@@ -35,27 +35,50 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _ADDFAVORITEWIDGET_H_
-#define _ADDFAVORITEWIDGET_H_
+#include "DREAM3DFileDragMessageBox.h"
 
-#include "ui_AddFavoriteWidget.h"
-
-class AddFavoriteWidget : public QDialog, public Ui::Dialog
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3DFileDragMessageBox::DREAM3DFileDragMessageBox(QWidget* parent)
 {
-  Q_OBJECT
+  setupUi(this);
+}
 
-  public:
-    AddFavoriteWidget(QWidget* parent = 0);
-    bool getBtnClicked();
-    QString getFavoriteName();
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString DREAM3DFileDragMessageBox::getFilePath()
+{
+  return filePath;
+}
 
-  protected slots:
-    void on_addfavoriteOKButton_clicked();
-    void on_addfavoriteCancelButton_clicked();
-    void on_favoriteName_textChanged(const QString & text);
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::setFilePath(QString path)
+{
+  filePath = path;
+}
 
-  private:
-    bool BtnClicked;
-};
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_extractPipelineBtn_clicked()
+{
+  emit fireExtractPipelineFromFile(filePath);
 
-#endif /* _AddFavoriteWidget_H */
+  // Close the dialog box
+  close();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DREAM3DFileDragMessageBox::on_addFilterBtn_clicked()
+{
+  emit fireAddDREAM3DReaderFilter(filePath);
+
+  // Close the dialog box
+  close();
+}

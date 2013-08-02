@@ -117,8 +117,13 @@ ReadH5Ebsd::~ReadH5Ebsd()
 void ReadH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
+  setInputFile( reader->readValue("InputFile", getInputFile() ) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex() ) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex() ) );
+  setUseTransformations( reader->readValue("UseTransformations", getUseTransformations() ) );
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -132,6 +137,9 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("UseTransformations", getUseTransformations() );
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

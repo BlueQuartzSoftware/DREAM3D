@@ -86,6 +86,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
@@ -217,12 +221,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     int tempxpoints;
     int tempypoints;
     int totaltemppoints;
-
-    std::set<std::string> m_SelectedVoxelCellArrays;
-    std::set<std::string> m_SelectedVoxelFieldArrays;
-    std::set<std::string> m_SelectedVoxelEnsembleArrays;
-
-
 
     ReadH5Ebsd(const ReadH5Ebsd&); // Copy Constructor Not Implemented
     void operator=(const ReadH5Ebsd&); // Operator '=' Not Implemented

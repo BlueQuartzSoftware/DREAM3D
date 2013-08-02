@@ -48,6 +48,8 @@ class GenericFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
     DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
 
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEnsembleArrayName)
