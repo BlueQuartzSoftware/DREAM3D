@@ -146,6 +146,8 @@ namespace DREAM3D
     const std::string BiasedFields("BiasedFields");
     const std::string NumNeighbors("NumNeighbors");
     const std::string RGBs("RGBs");
+    const std::string ElasticStrains("ElasticStrains");
+    const std::string FarFieldOrientations("FarFieldOrientations");
     const std::string Centroids("Centroids");
     const std::string NumCells("NumCells");
     const std::string ParentIds("ParentIds");
