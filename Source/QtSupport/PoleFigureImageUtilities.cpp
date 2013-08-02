@@ -34,21 +34,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "PoleFigureGeneration.h"
-
-#include <iostream>
-
+#include "PoleFigureImageUtilities.h"
+#include <QtCore/QDebug>
 #include <QtGui/QColor>
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureGeneration::PoleFigureGeneration() :
+PoleFigureImageUtilities::PoleFigureImageUtilities() :
   m_KernelWeightsInited(false)
 {
 
@@ -57,43 +56,14 @@ PoleFigureGeneration::PoleFigureGeneration() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PoleFigureGeneration::~PoleFigureGeneration()
+PoleFigureImageUtilities::~PoleFigureImageUtilities()
 {
 }
-
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void PoleFigureGeneration::generateKernelWeigths(int kernelWidth, int kernelHeight)
-{
-  //  int pX = 0;
-  //  int pY = 0;
-  int index = 0;
-  float delta = 0;
-  m_KernelWeights.resize((kernelWidth+1) * (kernelHeight+1) * 4);
-  //  int maxDelta = kernelWidth * kernelWidth + kernelHeight * kernelHeight;
-
-  for (int ky = -kernelHeight; ky <= kernelHeight; ++ky)
-  {
-    for (int kx = -kernelWidth; kx <= kernelWidth; ++kx)
-    {
-      delta = (kx) * (kx) + (ky) * (ky) + 1;
-      m_KernelWeights[index] = 1/delta * 512.0f;
-      //   printf("%04d ", m_KernelWeights[index]);
-      ++index;
-    }
-    //  printf("\n");
-  }
-  m_KernelWeightsInited = true;
-}
-#endif
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PoleFigureGeneration::generateKernelWeigths(int kernelWidth, int kernelHeight)
+void PoleFigureImageUtilities::generateKernelWeigths(int kernelWidth, int kernelHeight)
 {
   //  int pX = 0;
   //  int pY = 0;
@@ -122,16 +92,14 @@ void PoleFigureGeneration::generateKernelWeigths(int kernelWidth, int kernelHeig
   m_KernelWeightsInited = true;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PoleFigureGeneration::countPixelNeighbors(int imageWidth, int imageHeight,
-                                         int pX, int pY,
-                                         QVector<qint32> &data,
-                                         QVector<qint32> &counts,
-                                         int kernelWidth, int kernelHeight, bool genmask)
+int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeight,
+                                                  int pX, int pY,
+                                                  QVector<qint32> &data,
+                                                  QVector<qint32> &counts,
+                                                  int kernelWidth, int kernelHeight, bool genmask)
 {
   int xCoord, yCoord;
   int index = 0;
@@ -182,7 +150,7 @@ int PoleFigureGeneration::countPixelNeighbors(int imageWidth, int imageHeight,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureGeneration::generateColorPoleFigureImage(const PoleFigureData &config)
+QImage PoleFigureImageUtilities::generateColorPoleFigureImage(const PoleFigureData &config)
 {
 
   int kernelWidth = config.kernelRadius[0];
@@ -219,7 +187,7 @@ QImage PoleFigureGeneration::generateColorPoleFigureImage(const PoleFigureData &
 
   }
 
- // std::cout << "Max Data[]: " << max << std::endl;
+  // std::cout << "Max Data[]: " << max << std::endl;
 
   qint32 value = 0;
   for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
@@ -255,7 +223,7 @@ QImage PoleFigureGeneration::generateColorPoleFigureImage(const PoleFigureData &
   for (int i = 0; i < numColors; i++)
   {
     int val = min + ((float)i / numColors) * range;
-    getColorCorrespondingTovalue(val, r, g, b, max, min);
+    ColorTable::GetColorCorrespondingToValue(val, r, g, b, max, min);
     colorTable[i] = QColor(r*255, g*255, b*255, 255);
   }
   // Index 0 is all white which is every pixel outside of the ODF circle
@@ -273,13 +241,13 @@ QImage PoleFigureGeneration::generateColorPoleFigureImage(const PoleFigureData &
   // Flip the image so the (-1, -1) is in the lower left
   image = image.mirrored(true, false);
 
-  return paintImage(config.imageSize[0], config.imageSize[1], config.label, image);
+  return PaintOverlay(config.imageSize[0], config.imageSize[1], config.label, image);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureGeneration::generatePoleFigureImage(const PoleFigureData &config)
+QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &config)
 {
   int imageWidth = config.imageSize[0];
   int imageHeight = config.imageSize[1];
@@ -305,7 +273,7 @@ QImage PoleFigureGeneration::generatePoleFigureImage(const PoleFigureData &confi
     int yCoord = (yPoints[i] + 1) * imageHeight/2;
     if (xCoord > imageWidth || yCoord > imageHeight)
     {
-      std::cout << "This is bad" << std::endl;
+      qDebug() << "This is bad";
     }
     image.setPixel(xCoord, yCoord, black_Rgba);
   }
@@ -313,19 +281,108 @@ QImage PoleFigureGeneration::generatePoleFigureImage(const PoleFigureData &confi
   // Flip the image so the (-1, -1) is in the lower left
   image = image.mirrored(true, false);
 
-  return paintImage(config.imageSize[0], config.imageSize[1], config.label, image);
+  return PoleFigureImageUtilities::PaintOverlay(config.imageSize[0], config.imageSize[1], config.label, image);
 
 }
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureGeneration::paintImage(int imageWidth, int imageHeight, QString label, QImage image)
+QImage PoleFigureImageUtilities::CreateQImage(DoubleArrayType *poleFigurePtr, int imageDimension, int nColors, QString label, bool includeOverlay)
+{
+  size_t npoints = poleFigurePtr->GetNumberOfTuples();
+  double max = std::numeric_limits<double>::min();
+  double min = std::numeric_limits<double>::max();
+  double value = 0.0;
+  for(size_t i = 0; i < npoints; ++i)
+  {
+    value = poleFigurePtr->GetValue(i);
+    if (value < 0) {continue;}
+    if (value > max) { max = value;}
+    if (value < min) { min = value;}
+  }
+
+  //std::cout << "Min: " << min << "   Max: " << max << std::endl;
+
+  int xpoints = imageDimension;
+  int ypoints = imageDimension;
+
+  int xpointshalf = xpoints / 2;
+  int ypointshalf = ypoints / 2;
+
+  float xres = 2.0 / (float)(xpoints);
+  float yres = 2.0 / (float)(ypoints);
+  float xtmp, ytmp;
+
+  //if (max < 14) { max = 14; }
+  QImage image (xpoints, ypoints, QImage::Format_ARGB32_Premultiplied);
+  image.fill(0);
+  // qint32 numColors = max + 1;
+  qint32 numColors = nColors + 1;
+  // qint32 colorRange = getNumColors();
+
+  QVector<QColor> colorTable(numColors);
+  //qint32 range = max - min;
+
+  float r, g, b;
+  for (int i = 0; i < nColors; i++)
+  {
+    //int val = min + ((float)i / numColors) * range;
+    //int val = ((float)i / (float)numColors) * colorRange;
+    ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
+    colorTable[i] = QColor(r*255, g*255, b*255, 255);
+  }
+  // Index 0 is all white which is every pixel outside of the Pole Figure circle
+  colorTable[nColors] = QColor(255, 255, 255, 255);
+
+  //*********************** NOTE ************************************
+  // In the below loop over the Pole Figure Image we are swapping the
+  // X & Y coordinates when we place the RGBA value into the image. This
+  // is because for some reason the data is rotated 90 degrees. Since
+  // the image is square we can easily do this swap and effectively
+  // rotate the image 90 degrees.
+  for (int64_t y = 0; y < ypoints; y++)
+  {
+    for (int64_t x = 0; x < xpoints; x++)
+    {
+      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
+      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
+      if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
+      {
+        qint32 cindex = qint32(poleFigurePtr->GetValue(y * xpoints + x));
+        qint32 colorIndex = (cindex-min) / (max - min) * nColors;
+        image.setPixel(x, y, colorTable[colorIndex].rgba());
+      }
+      else // Outside the Circle - Set pixel to White
+      {
+        image.setPixel(x, y, colorTable[nColors].rgba());
+      }
+    }
+  }
+
+  // Flip the image so the (-1, -1) is in the lower left
+  image = image.mirrored(false, true);
+
+  QString imageLabel = "<" + label + ">";
+  if(includeOverlay == true)
+  {
+    image = PoleFigureImageUtilities::PaintOverlay(xpoints, ypoints, imageLabel, image);
+  }
+  return image;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage PoleFigureImageUtilities::PaintOverlay(int imageWidth, int imageHeight, QString label, QImage image)
 {
   int pxHigh = 0;
   int pxWide = 0;
 
-  QFont font("Ariel", 16, QFont::Bold);
+  QFont font("Ariel", 18, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
@@ -372,13 +429,13 @@ QImage PoleFigureGeneration::paintImage(int imageWidth, int imageHeight, QString
   circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
   painter.drawPath(circle);
 
-  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "TD");
+  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "RD");
 
   pxWide = metrics.width(QString("RD"));
-  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "RD");
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "TD");
 
   pxWide = metrics.width(label);
-  painter.drawText(2, pxHigh, label);
+  painter.drawText(pImageWidth / 2 - pxWide / 2, pxHigh, label);
 
   // Draw slightly transparent lines
   penWidth = 1;
@@ -388,48 +445,7 @@ QImage PoleFigureGeneration::paintImage(int imageWidth, int imageHeight, QString
 
   painter.end();
   // Scale the image down to 225 pixels
-  return pImage;//.scaled(225, 225, Qt::KeepAspectRatio, Qt::SmoothTransformation);
+  return pImage;
 }
 
-///getColorCorrespondingToValue ////////////////////////////////////////////////
-//
-// Assumes you've already generated min and max -- the extrema for the data
-// to which you're applying the color map. Then define the number of colorNodes
-// and make sure there's a row of three float values (representing r, g, and b
-// in a 0.0-1.0 range) for each node. Then call this method for with parameter
-// val some float value between min and max inclusive. The corresponding rgb
-// values will be returned in the reference-to-float parameters r, g, and b.
-//
-////////////////////////////////////////////////////////////////////////////////
-void PoleFigureGeneration::getColorCorrespondingTovalue(float val,
-                                                   float &r, float &g, float &b,
-                                                   float max, float min)
-{
-  static const int numColorNodes = 8;
-  float color[numColorNodes][3] =
-  {
-    {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
-    {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
-    {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
-    {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
-    {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
-    {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
-    {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
-    {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
-  };
-  float range = max - min;
-  for (int i = 0; i < (numColorNodes - 1); i++)
-  {
-    float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
-    float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
-
-    if((val >= currFloor) && (val <= currCeil))
-    {
-      float currFraction = (val - currFloor) / (currCeil - currFloor);
-      r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
-      g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
-      b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
-    }
-  }
-}
 

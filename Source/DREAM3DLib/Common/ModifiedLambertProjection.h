@@ -43,9 +43,10 @@
 
 /**
  * @class ModifiedLambertProjection ModifiedLambertProjection.h DREAM3DLib/Common/ModifiedLambertProjection.h
- * @brief  This class holds
+ * @brief  This class holds a pair of Modified Lambert Projection images. Based off the paper
+ * Rosca, D. (2010) New uniform grids on the sphere. Astron Astrophys A63, 520–525.
  * @author Michael A. Jackson for BlueQuartz Software, Michael A. Groeber for AFRL
- * @date
+ * @date July 30, 2013
  * @version 1.0
  */
 class DREAM3DLib_EXPORT ModifiedLambertProjection
@@ -98,7 +99,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
      * @param index
      * @param value
      */
-    void addValue(unsigned int square, int index, double value);
+    void addValue(Square square, int index, double value);
 
     /**
      * @brief getValue
@@ -106,7 +107,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
      * @param index
      * @return
      */
-    double getValue(unsigned int square, int index);
+    double getValue(Square square, int index);
 
     /**
      * @brief getInterpolatedValue
@@ -114,7 +115,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
      * @param sqCoord
      * @return
      */
-    double getInterpolatedValue(unsigned int square, float* sqCoord);
+    double getInterpolatedValue(Square square, float* sqCoord);
 
     /**
      * @brief getSquareCoord
@@ -149,6 +150,9 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
     int m_Dimension;
     float m_Resolution;
     float m_SphereRadius;
+
+    float k_MaxCoord;
+    float k_MinCoord;
 
     DoubleArrayType::Pointer m_NorthSquare;
     DoubleArrayType::Pointer m_SouthSquare;

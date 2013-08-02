@@ -106,12 +106,15 @@ void ModifiedLambertProjection::initializeSquares(int dims, float resolution, fl
   m_NorthSquare->initializeWithZeros();
   m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "SouthSquare");
   m_SouthSquare->initializeWithZeros();
+
+  k_MaxCoord = m_Dimension * m_Resolution * 0.5;
+  k_MinCoord = - m_Dimension * m_Resolution * 0.5;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjection::addValue(unsigned int square, int index, double value)
+void ModifiedLambertProjection::addValue(Square square, int index, double value)
 {
   if (square == NorthSquare)
   {
@@ -128,7 +131,7 @@ void ModifiedLambertProjection::addValue(unsigned int square, int index, double 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double ModifiedLambertProjection::getValue(unsigned int square, int index)
+double ModifiedLambertProjection::getValue(Square square, int index)
 {
   if (square == NorthSquare)
   {
@@ -143,7 +146,7 @@ double ModifiedLambertProjection::getValue(unsigned int square, int index)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-double ModifiedLambertProjection::getInterpolatedValue(unsigned int square, float* sqCoord)
+double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqCoord)
 {
   int abinMod, bbinMod;
   float modX = ( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
@@ -190,13 +193,22 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
-    sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[1]/xyz[0]));
+    sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfSqrtPi);
+    sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[1]/xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((2.0/DREAM3D::Constants::k_SqrtPi)*atan(xyz[0]/xyz[1]));
-    sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_SqrtPi * 0.5);
+    sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[0]/xyz[1]));
+    sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfSqrtPi);
+  }
+
+  if (sqCoord[0] >= k_MaxCoord)
+  {
+    sqCoord[0] = (k_MaxCoord) - .0001;
+  }
+  if (sqCoord[1] >= k_MaxCoord)
+  {
+    sqCoord[1] = (k_MaxCoord) - .0001;
   }
   return nhCheck;
 }
@@ -206,10 +218,21 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjection::getSquareIndex(float* sqCoord)
 {
-  int x = (int)( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-  int y = (int)( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-
-  return y * m_Dimension + x;
+  int x = (int)( (sqCoord[0] + k_MaxCoord) / m_Resolution);
+  if (x >= m_Dimension)
+  {
+    x = m_Dimension - 1;
+  }
+  if (x < 0) { x = 0; }
+  int y = (int)( (sqCoord[1] + k_MaxCoord) / m_Resolution);
+  if (y >= m_Dimension)
+  {
+    y = m_Dimension - 1;
+  }
+  if (y < 0) { y = 0; }
+  int index = y * m_Dimension + x;
+  BOOST_ASSERT(index < m_Dimension *m_Dimension);
+  return index;
 }
 
 
@@ -264,20 +287,22 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->GetPointer(0);
 
-  for (int64_t k = 0; k < (xpoints); k++)
+
+  for (int64_t y = 0; y < ypoints; y++)
   {
-    for (int64_t l = 0; l < (ypoints); l++)
+    for (int64_t x = 0; x < xpoints; x++)
     {
       //get (x,y) for stereographic projection pixel
-      xtmp = float(k-xpointshalf)*xres+(xres/2.0);
-      ytmp = float(l-ypointshalf)*yres+(yres/2.0);
+      xtmp = float(x-xpointshalf)*xres+(xres/2.0);
+      ytmp = float(y-ypointshalf)*yres+(yres/2.0);
+      int index = y * xpoints + x;
       if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
       {
         xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
         xyz[0] = xtmp*(1+xyz[2]);
         xyz[1] = ytmp*(1+xyz[2]);
 
-        int index = l * xpoints + k;
+
         for( int64_t m = 0; m < 2; m++)
         {
           if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);

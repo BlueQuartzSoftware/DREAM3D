@@ -43,10 +43,14 @@
 #include <QtCore/QString>
 #include <QtCore/QDebug>
 
+#include <QtGui/QPainter>
+#include <QtGui/QFont>
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "QtSupport/PoleFigureGeneration.h"
+
+#include "QtSupport/PoleFigureImageUtilities.h"
+
 
 #include "MXA/MXA.h"
 #include "MXA/Common/MXAEndian.h"
@@ -56,16 +60,14 @@
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/StatsGen.hpp"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 #define SET_DIRECTION(i, j, k)\
   direction[0] = i; direction[1] = j; direction[2] = k;
@@ -297,95 +299,56 @@ void GeneratePoleFigureImages::execute()
 void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
 {
   notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
-  int numOrientations = eulers->GetNumberOfTuples();
+
+  DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure011 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure111 = DoubleArrayType::NullPointer();
+  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure001, poleFigure011, poleFigure111);
 
 
-  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
-  // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
-  // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
-  // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
-
-  int dimension = getLambertSize();
-  float resolution = sqrt(M_PI*0.5) * 2.0 / (float)(dimension);
-  int poleFigureDim = getImageSize();
-  float sphereRadius = 1.0f;
-
-  // Generate the coords on the sphere
-  CubicOps ops;
-  ops.generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
-
-
-
-  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), dimension, resolution, sphereRadius);
-  // Now create the intensity image that will become the actual Pole figure image
-  DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  // Generate the <001> pole figure
   QString path = generateVtkPath("001");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("001");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure001.get(), getImageSize(), "001");
 
-  // Generate the <011> pole figure
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), dimension, resolution, sphereRadius);
-  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+
+  // Generate the <011> pole figure image
   path = generateVtkPath("011");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("011");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
+  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure011.get(), getImageSize(), "011");
 
-  // Generate the <111> pole figure
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), dimension, resolution, sphereRadius);
-  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  // Generate the <111> pole figure image
   path = generateVtkPath("111");
-  writeVtkFile(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-  path = generateImagePath("111");
-  writeImage(path.toStdString(), poleFigurePtr.get(), poleFigureDim);
-}
-
-
-/**
- * @brief This function writes a set of Axis coordinates to that are needed
- * for a Rectilinear Grid based data set.
- * @param f The "C" FILE* pointer to the file being written to.
- * @param axis The name of the Axis that is being written
- * @param type The type of primitive being written (float, int, ...)
- * @param npoints The total number of points in the array
- * @param min The minimum value of the axis
- * @param max The maximum value of the axis
- * @param step The step value between each point on the axis.
- */
-
-int GeneratePoleFigureImages::writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step)
-{
-  int err = 0;
-  fprintf(f, "%s %lld %s\n", axis, npoints, type);
-  float* data = new float[npoints];
-  float d;
-  for (int idx = 0; idx < npoints; ++idx)
-  {
-    d = idx * step + min;
-    MXA::Endian::FromSystemToBig::convert<float>(d);
-    data[idx] = d;
-  }
-  size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
-  delete[] data;
-  if (totalWritten != static_cast<size_t>(npoints) )
-  {
-    std::cout << "Error Writing Binary VTK Data into file " << std::endl;
-    fclose(f);
-    return -1;
-  }
-  return err;
+  writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure111.get(), getImageSize(), "111");
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleArrayType *poleFigurePtr, int dimension)
+QString GeneratePoleFigureImages::generateVtkPath( QString label)
+{
+  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+
+  path.append(".vtk");
+
+  path = QDir::toNativeSeparators(path);
+  QFileInfo fi(path);
+  QDir parent(fi.absolutePath());
+  if (parent.exists() == false)
+  {
+    parent.mkpath(fi.absolutePath());
+  }
+
+  return path;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
@@ -398,192 +361,33 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename,  DoubleA
   int err = VtkRectilinearGridWriter::WriteDataArrayToFile(filename, poleFigurePtr, dims, res, "double", true);
   if (err < 0)
   {
-
+    setErrorCondition(-99003);
+    notifyErrorMessage("Error writing the VTK file for the Pole Figure", getErrorCondition());
   }
-#if 0
-  double* poleFigure = poleFigurePtr->GetPointer(0);
-  int xpoints = dimension;
-  int ypoints = dimension;
-  int zpoints = 1;
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
-  float zres = (xres+yres)/2.0;
+}
 
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::writeImage(const std::string outputPath, DoubleArrayType *intensity, int dimension, QString label)
+{
   std::stringstream ss;
-  FILE* f = NULL;
-  f = fopen(filename.c_str(), "wb");
-  if(NULL == f)
-  {
+  ss << "Writing Image " << intensity->GetName();
+  notifyStatusMessage(ss.str());
 
-    ss.str("");
-    ss << "Could not open GBCD viz file " << filename << " for writing. Please check access permissions and the path to the output location exists";
-    //  notifyErrorMessage(ss.str(), getErrorCondition());
-    std::cout << ss.str() << std::endl;
-    return;
-  }
+  QImage image = PoleFigureImageUtilities::CreateQImage(intensity, dimension, getNumColors(), label, true);
 
-
-
-  // Write the correct header
-  fprintf(f, "# vtk DataFile Version 2.0\n");
-  fprintf(f, "data set from DREAM3D\n");
-  fprintf(f, "BINARY"); fprintf(f, "\n");
-  fprintf(f, "DATASET RECTILINEAR_GRID\n");
-  fprintf(f, "DIMENSIONS %d %d %d\n", xpoints+1, ypoints+1, zpoints+1);
-
-  // Write the Coords
-  writeCoords(f, "X_COORDINATES", "float", xpoints + 1, (-float(xpoints)*xres/2.0), xres);
-  writeCoords(f, "Y_COORDINATES", "float", ypoints + 1, (-float(ypoints)*yres/2.0), yres);
-  writeCoords(f, "Z_COORDINATES", "float", zpoints + 1, (-float(zpoints)*zres/2.0), zres);
-
-  size_t total = xpoints * ypoints * zpoints;
-  fprintf(f, "CELL_DATA %d\n", (int)total);
-
-  fprintf(f, "SCALARS %s %s 1\n", "Intensity", "float");
-  fprintf(f, "LOOKUP_TABLE default\n");
-  {
-    float* gn = new float[total];
-    float t;
-    int count = 0;
-    for (int64_t j = 0; j < (ypoints); j++)
-    {
-      for (int64_t i = 0; i < (xpoints); i++)
-      {
-        t = float(poleFigure[(j*xpoints)+i]);
-        MXA::Endian::FromSystemToBig::convert<float>(t);
-        gn[count] = t;
-        count++;
-      }
-    }
-    int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
-    delete[] gn;
-    if (totalWritten != (total))  {
-      std::cout << "Error Writing Binary VTK Data into file " << filename << std::endl;
-      fclose(f);
-    }
-  }
-
-  fclose(f);
-  #endif
-}
-
-
-///getColorCorrespondingToValue ////////////////////////////////////////////////
-//
-// Assumes you've already generated min and max -- the extrema for the data
-// to which you're applying the color map. Then define the number of colorNodes
-// and make sure there's a row of three float values (representing r, g, and b
-// in a 0.0-1.0 range) for each node. Then call this method for with parameter
-// val some float value between min and max inclusive. The corresponding rgb
-// values will be returned in the reference-to-float parameters r, g, and b.
-//
-////////////////////////////////////////////////////////////////////////////////
-void GeneratePoleFigureImages::getColorCorrespondingTovalue(float val,
-                                                            float &r, float &g, float &b,
-                                                            float max, float min)
-{
-  static const int numColorNodes = 8;
-  float color[numColorNodes][3] =
-  {
-    {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
-    {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
-    {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
-    {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
-    {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
-    {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
-    {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
-    {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
-  };
-  float range = max - min;
-  for (int i = 0; i < (numColorNodes - 1); i++)
-  {
-    float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
-    float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
-
-    if((val >= currFloor) && (val <= currCeil))
-    {
-      float currFraction = (val - currFloor) / (currCeil - currFloor);
-      r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
-      g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
-      b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeImage(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
-{
-  notifyStatusMessage("Writing Image");
-
-  size_t npoints = poleFigurePtr->GetNumberOfTuples();
-  double max = std::numeric_limits<double>::min();
-  double min = std::numeric_limits<double>::max();
-  double value = 0.0;
-  for(size_t i = 0; i < npoints; ++i)
-  {
-    value = poleFigurePtr->GetValue(i);
-    if (value > max) { max = value;}
-    if (value < min) { min = value;}
-  }
-
-
-  int imageWidth = dimension;
-  int imageHeight = dimension;
-  // This figures out if we are "inside" the circle or not
-  float radSqrd = (float)(imageWidth/2.0f) * (imageWidth/2.0f);
-  float cX = imageWidth/2.0f;  // Center x
-  float cY = imageHeight/2.0f; // Center y
-  float delta = 0.0;
-
-  //if (max < 14) { max = 14; }
-  QImage image (imageWidth, imageHeight, QImage::Format_ARGB32_Premultiplied);
-  image.fill(0);
- // qint32 numColors = max + 1;
-  qint32 numColors = getNumColors() + 1;
-  qint32 colorRange = getNumColors();
-
-  QVector<QColor> colorTable(numColors);
-  //qint32 range = max - min;
-
-  float r, g, b;
-  for (int i = 0; i < getNumColors(); i++)
-  {
-    //int val = min + ((float)i / numColors) * range;
-    //int val = ((float)i / (float)numColors) * colorRange;
-    getColorCorrespondingTovalue(i, r, g, b, getNumColors(), 0);
-    colorTable[i] = QColor(r*255, g*255, b*255, 255);
-  }
-  // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[getNumColors()] = QColor(255, 255, 255, 255);
-
-  for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
-  {
-    for (int xCoord = 0; xCoord < imageWidth; ++xCoord)
-    {
-      delta = (xCoord-cX)*(xCoord-cX) + (yCoord-cY)*(yCoord-cY);
-      if (delta > radSqrd)
-      {
-        image.setPixel(xCoord, yCoord, colorTable[getNumColors()].rgba());
-      }
-      else
-      {
-        quint32 colorIndex = quint32(poleFigurePtr->GetValue(yCoord * imageWidth + xCoord));
-        colorIndex = (colorIndex-min) / (max - min) * getNumColors();
-
-        image.setPixel(xCoord, yCoord, colorTable[colorIndex].rgba());
-      }
-    }
-  }
-
-  // Flip the image so the (-1, -1) is in the lower left
-  image = image.mirrored(true, false);
-  bool saved = image.save(QString::fromStdString(filename));
+  QString filename = generateImagePath(label);
+  bool saved = image.save(filename);
   if(!saved)
   {
-    std::cout << "did NOT save QImage at path: " << filename << std::endl;
+    setErrorCondition(-90011);
+    ss.str("");
+    ss << "The Pole Figure image file '" << filename.toStdString() << "' was not saved.";
+    notifyErrorMessage(ss.str(), getErrorCondition());
   }
 }
 
@@ -621,22 +425,3 @@ QString GeneratePoleFigureImages::generateImagePath( QString label)
   return path;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString GeneratePoleFigureImages::generateVtkPath( QString label)
-{
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
-
-  path.append(".vtk");
-
-  path = QDir::toNativeSeparators(path);
-  QFileInfo fi(path);
-  QDir parent(fi.absolutePath());
-  if (parent.exists() == false)
-  {
-    parent.mkpath(fi.absolutePath());
-  }
-
-  return path;
-}

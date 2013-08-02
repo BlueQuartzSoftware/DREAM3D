@@ -959,8 +959,8 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
   size_t nOrientations = eulers->GetNumberOfTuples();
   QuaternionMath<float>::Quaternion q1;
   CubicOps ops;
-  float gTemp[3][3];
   float g[3][3];
+  float gTranpose[3][3];
   float* currentEuler = NULL;
   float direction[3] = {0.0, 0.0, 0.0};
 
@@ -986,43 +986,43 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 
     OrientationMath::EulertoQuat(q1, currentEuler);
     ops.getFZQuat(q1);
-    OrientationMath::QuattoMat(q1, gTemp);
-    MatrixMath::Transpose3x3(gTemp, g);
+    OrientationMath::QuattoMat(q1, g);
+    MatrixMath::Transpose3x3(g, gTranpose);
 
     // -----------------------------------------------------------------------------
     // 001 Family
     direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->GetPointer(i*9));
     direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 3));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->GetPointer(i*9 + 3));
     direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz001->GetPointer(i*9 + 6));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->GetPointer(i*9 + 6));
 
     // -----------------------------------------------------------------------------
     // 011 Family
     direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 0));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 0));
     direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 3));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 3));
     direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 6));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 6));
     direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 9));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 9));
     direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 12));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 12));
     direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz011->GetPointer(i*18 + 15));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*18 + 15));
 
     // -----------------------------------------------------------------------------
     // 111 Family
     direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 0));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->GetPointer(i*12 + 0));
     direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 3));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->GetPointer(i*12 + 3));
     direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 6));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->GetPointer(i*12 + 6));
     direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
-    MatrixMath::Multiply3x3with3x1(g, direction, xyz111->GetPointer(i*12 + 9));
+    MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->GetPointer(i*12 + 9));
   }
 
 }
