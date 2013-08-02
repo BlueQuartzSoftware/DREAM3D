@@ -41,13 +41,10 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
-#include "QtSupport/PoleFigureGeneration.h"
 
 
 /**
@@ -156,14 +153,10 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     void generateCubicPoleFigures(FloatArrayType *eulers);
 
     QString generateVtkPath( QString label);
-    int writeCoords(FILE* f, const char* axis, const char* type, int64_t npoints, float min, float step);
     void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);
 
     QString generateImagePath( QString label);
-    void getColorCorrespondingTovalue(float val,
-                                      float &r, float &g, float &b,
-                                      float max, float min);
-    void writeImage(const std::string filename, DoubleArrayType* poleFigurePtr, int dimension);
+    void writeImage(const std::string outputPath, DoubleArrayType* poleFigurePtr, int dimension, QString label);
 
 
   private:
