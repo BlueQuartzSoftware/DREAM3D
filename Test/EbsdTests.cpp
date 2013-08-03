@@ -38,6 +38,7 @@
 
 
 #include "EbsdLib/EbsdConstants.h"
+#include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -74,14 +75,33 @@ void TestCrystalStructureTest()
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestEbsdColoring()
+{
 
+  float phi1 = 207.1653;
+  float phi = 44.2854;
+  float phi2 = 146.5178;
+  float ref0 = 0;
+  float ref1 = 0;
+  float ref2 = 1;
 
+  uint8_t rgb[3];
+  uint8_t hkl[3];
+
+  EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, hkl, true);
+
+  std::cout << (int)(rgb[0]) << " " << (int)(rgb[1]) << " " << (int)(rgb[2]) << " " << std::endl;
+}
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestEbsdColoring() )
 
   DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
 

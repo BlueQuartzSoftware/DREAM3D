@@ -64,17 +64,22 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     virtual ~GeneratePoleFigureImages();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+
+
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+
+
     DREAM3D_INSTANCE_STRING_PROPERTY(ImagePrefix)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(int, ImageFormat)
     DREAM3D_INSTANCE_PROPERTY(int, ImageSize)
     DREAM3D_INSTANCE_PROPERTY(int, LambertSize)
     DREAM3D_INSTANCE_PROPERTY(int, NumColors)
-    DREAM3D_INSTANCE_STRING_PROPERTY(EulersArrayName)
 
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     enum ImageFormatType
     {
@@ -161,6 +166,7 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
 
   private:
     float* m_CellEulerAngles;
+        int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
     GeneratePoleFigureImages(const GeneratePoleFigureImages&); // Copy Constructor Not Implemented
