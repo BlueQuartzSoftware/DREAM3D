@@ -529,7 +529,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       if(NULL == p.get())
       {
         std::cout << "---------------------------" << std::endl;
-        std::cout << "Could not find header entry for key'" << line[0] << "'" << std::endl;
+        std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;
 //        std::string upper(line[0]);
 //        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
 //        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
@@ -630,7 +630,20 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     while (buf[i] != 0 && i < kBufferSize) { ++i; }
     if(buf[i - 1] < 32) { buf[i - 1] = 0; }
 
-    std::vector<std::string> tokens = tokenize(buf, '\t');
+
+
+    std::vector<std::string> tokens;
+
+    std::string prj(buf, 4);
+    if (prj.compare("Prj ") == 0)
+    {
+      tokens.push_back(Ebsd::Ctf::Prj);
+      tokens.push_back(std::string(buf + 5));
+    }
+    else
+    {
+       tokens = tokenize(buf, '\t');
+    }
 
     // Once we hit the "Phases" header line we know exactly how many lines we have left to read
     if (tokens[0].compare("Phases") == 0)
