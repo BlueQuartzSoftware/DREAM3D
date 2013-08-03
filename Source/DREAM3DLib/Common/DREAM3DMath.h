@@ -141,6 +141,8 @@ namespace DREAM3D
     static const double k_1OverRoot2 = 1.0/sqrt(2.0);
     static const double k_1OverRoot3 = 1.0/sqrt(3.0);
     static const double k_Root3Over2 = sqrt(3.0)/2.0;
+    static const double k_DegToRad = M_PI/180.0;
+    static const double k_RadToDeg = 180.0/M_PI;
 
     static const double k_ACosNeg1 = acos(-1.0);
     static const double k_ACos1 = acos(1.0);
