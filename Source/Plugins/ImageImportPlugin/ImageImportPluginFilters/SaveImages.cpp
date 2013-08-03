@@ -284,10 +284,6 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
         scanLine[x*4 + 1] = ipfColors[index + 1];
         scanLine[x*4 + 0] = ipfColors[index + 2];
       #endif
-
-//      index = y * dims[0] + x;
-//      QRgb rgb(ipfColors[y*x*3 + 0], ipfColors[x*3 + 1], ipfColors[x*3 + 2]);
-//      image.setColor(index, rgb);
     }
 
   }
