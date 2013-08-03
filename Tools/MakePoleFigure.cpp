@@ -44,6 +44,7 @@
 #include <QtCore/QDir>
 
 #include <QtGui/QColor>
+#include <QtGui/QApplication>
 
 
 // TCLAP Includes
@@ -59,17 +60,22 @@
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
 
 
+
+static const int EulerType = 0;
+static const int QuaternionType = 1;
+static const int RodriguesType = 2;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int getLambertSize() { return 25; }
-int getImageSize() { return 128; }
+int getLambertSize() { return 24; }
+int getImageSize() { return 512; }
 
 
 // -----------------------------------------------------------------------------
@@ -117,19 +123,22 @@ QString generateVtkPath(QString outputPath, QString imagePrefix, QString label)
 // -----------------------------------------------------------------------------
 void writeImage(QString outputPath, DoubleArrayType *intensity, int dimension, QString label, int numColors)
 {
-  std::stringstream ss;
-  ss << "Writing Image " << intensity->GetName();
-  std::cout << ss.str() << std::endl;
+ // std::stringstream ss;
+
 
   QImage image = PoleFigureImageUtilities::CreateQImage(intensity, dimension, numColors, label, true);
 
   QString filename = generateImagePath(outputPath, "", label);
+
+    qDebug() << "Writing Image: " << filename;
+ // std::cout << ss.str() << std::endl;
+
   bool saved = image.save(filename);
   if(!saved)
   {
-    ss.str("");
-    ss << "The Pole Figure image file '" << filename.toStdString() << "' was not saved.";
-    std::cout << ss.str() << std::endl;
+   // ss.str("");
+    qDebug() << "The Pole Figure image file '" << filename << "' was not saved.";
+ //   std::cout << ss.str() << std::endl;
   }
 }
 
@@ -243,7 +252,7 @@ void generateFromCtfFile(QString inputFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void generateFromListFile(QString file, QString outputPath)
+void generateFromListFile(QString file, QString outputPath, int angleType)
 {
   int numOrients = 0;
   FILE* f = fopen(file.toStdString().c_str(), "rb");
@@ -253,14 +262,30 @@ void generateFromListFile(QString file, QString outputPath)
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(numOrients, 3, "TEMP_Eulers");
 
   float e1, e2, e3;
+  float r1, r2, r3;
+
+  QuaternionMathF::Quaternion quat;
 
   for(size_t i = 0; i < numOrients; i++)
   {
-    fscanf(f, "(%f, %f, %f)\n", &e1, &e2, &e3);
+    if (angleType == EulerType)
+    {
+      fscanf(f, "(%f, %f, %f)\n", &e1, &e2, &e3);
+    }
+    else if (angleType == QuaternionType)
+    {
+      fscanf(f, "(%f, %f, %f, %f)\n", &quat.x, &quat.y, &quat.z, &quat.w);
+      OrientationMath::QuattoEuler(quat, e1, e2, e3);
+    }
+    else if (angleType == RodriguesType)
+    {
+      fscanf(f, "(%f, %f, %f)\n", &r1, &r2, &r3);
+      OrientationMath::RodtoEuler(r1, r2, r3, e1, e2, e3);
+    }
     eulers->SetComponent(i, 0, e1);
     eulers->SetComponent(i, 1, e2);
     eulers->SetComponent(i, 2, e3);
-    std::cout << "reading line: " << i << std::endl;
+    //   std::cout << "reading line: " << i << std::endl;
   }
 
   DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
@@ -268,18 +293,18 @@ void generateFromListFile(QString file, QString outputPath)
   DoubleArrayType::Pointer poleFigure111 = DoubleArrayType::NullPointer();
   PoleFigureUtilities::GenerateCubicPoleFigures(eulers.get(), getLambertSize(), getImageSize(), poleFigure001, poleFigure011, poleFigure111);
 
-    // Generate the <001> pole figure
-    writeImage(outputPath, poleFigure001.get(), getImageSize(), "001", 32);
-    QString path = generateVtkPath(outputPath, "", "001");
-    writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
-    // Generate the <011> pole figure image
-    writeImage(outputPath, poleFigure011.get(), getImageSize(), "011", 32);
-    path = generateVtkPath(outputPath, "", "011");
-    writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
-    // Generate the <111> pole figure image
-    writeImage(outputPath, poleFigure111.get(), getImageSize(), "111", 32);
-    path = generateVtkPath(outputPath, "", "111");
-    writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
+  // Generate the <001> pole figure
+  writeImage(outputPath, poleFigure001.get(), getImageSize(), "001", 32);
+  QString path = generateVtkPath(outputPath, "", "001");
+  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+  // Generate the <011> pole figure image
+  writeImage(outputPath, poleFigure011.get(), getImageSize(), "011", 32);
+  path = generateVtkPath(outputPath, "", "011");
+  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
+  // Generate the <111> pole figure image
+  writeImage(outputPath, poleFigure111.get(), getImageSize(), "111", 32);
+  path = generateVtkPath(outputPath, "", "111");
+  writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
 
 
 }
@@ -289,6 +314,8 @@ void generateFromListFile(QString file, QString outputPath)
 // -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
+
+  QApplication app(argc, argv);
 
   QString inputFile;
   QString outputPath;
@@ -304,6 +331,10 @@ int main(int argc, char *argv[])
     TCLAP::ValueArg<std::string> outputPathArg( "", "outpath", "The output path", true, "", "Output Path");
     cmd.add(outputPathArg);
 
+    TCLAP::ValueArg<int> angleType("", "angleType", "The type of Angles: Euler=0, Quaternion=1. Rodrigues=2", false, 0, "Angle Type");
+    cmd.add(angleType);
+
+
     // Parse the argv array.
     cmd.parse(argc, argv);
     if (argc == 1)
@@ -315,6 +346,10 @@ int main(int argc, char *argv[])
     inputFile = QString::fromStdString(inputFileArg.getValue());
     outputPath = QString::fromStdString(outputPathArg.getValue());
 
+    QDir dir(outputPath);
+    // make sure the directory is available
+    dir.mkpath(outputPath);
+
     QFileInfo fi(inputFile);
     if (fi.suffix().compare("ang") == 0)
     {
@@ -322,7 +357,7 @@ int main(int argc, char *argv[])
     }
     else if (fi.suffix().compare("txt") == 0)
     {
-      generateFromListFile(inputFile, outputPath);
+      generateFromListFile(inputFile, outputPath, angleType.getValue());
     }
     else if (fi.suffix().compare("ctf") == 0)
     {

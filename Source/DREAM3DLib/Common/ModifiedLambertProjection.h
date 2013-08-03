@@ -74,11 +74,11 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
      * @param sphereRadius The radius of the sphere from where the coordinates are coming from.
      * @return
      */
-    static Pointer CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float resolution, float sphereRadius);
+    static Pointer CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius);
 
 
     DREAM3D_GET_PROPERTY(int, Dimension)
-    DREAM3D_GET_PROPERTY(float, Resolution)
+    DREAM3D_GET_PROPERTY(float, StepSize)
     DREAM3D_GET_PROPERTY(float, SphereRadius)
 
 
@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
      * @param resolution
      * @param sphereRadius
      */
-    void initializeSquares(int dims, float resolution, float sphereRadius);
+    void initializeSquares(int dims, float sphereRadius);
 
     /**
      * @brief addValue
@@ -148,11 +148,14 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
 
   private:
     int m_Dimension;
-    float m_Resolution;
+    float m_StepSize; // The length of an individual grid square
     float m_SphereRadius;
 
-    float k_MaxCoord;
-    float k_MinCoord;
+    // These are some precalculated values based on the values above.
+    float m_HalfDimension;
+    float m_HalfDimensionTimesStepSize;
+    float m_MaxCoord;
+    float m_MinCoord;
 
     DoubleArrayType::Pointer m_NorthSquare;
     DoubleArrayType::Pointer m_SouthSquare;
