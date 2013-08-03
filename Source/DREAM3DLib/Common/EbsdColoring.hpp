@@ -203,10 +203,10 @@ class EbsdColoring
       OrientationMath::EulertoMat(phi1, phi, phi2, g);
 
       // 2) use rotation matrix to find which crystal direction is aligned with 001
-      float refDirection[3];
-      refDirection[0] = refDir0;
-      refDirection[1] = refDir1;
-      refDirection[2] = refDir2;
+      float refDirection[3] = {refDir0, refDir1, refDir2};
+//      refDirection[0] = refDir0;
+//      refDirection[1] = refDir1;
+//      refDirection[2] = refDir2;
       MatrixMath::Multiply3x3with3x1(g, refDirection, cd);
 
       //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
@@ -232,7 +232,7 @@ class EbsdColoring
       d[0] = -(d[1] + d[2]) / d[0];
       d[1] = 1;
       d[2] = 1;
-      float norm = powf(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])), 0.5);
+      float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
       d[0] = d[0] / norm;
       d[1] = d[1] / norm;
       d[2] = d[2] / norm;
@@ -245,20 +245,15 @@ class EbsdColoring
       if (blue > max) max = blue;
 
       // Scale values from 0 to 1.0
-      red = red / max;
-      green = green / max;
-      blue = blue / max;
+      red = red / max * 255.0;
+      green = green / max * 255.0;
+      blue = blue / max * 255.0;
 #if 0
       // Add in some correction factors
       red = (0.85f * red) + 0.15f;
       green = (0.85f * green) + 0.15f;
       blue = (0.85f * blue) + 0.15f;
 #endif
-      // Multiply by 255 to get an R/G/B value
-      red = red * 255.0f;
-      green = green * 255.0f;
-      blue = blue * 255.0f;
-
 
       rgb[0] = static_cast<unsigned char> (red);
       rgb[1] = static_cast<unsigned char> (green);
