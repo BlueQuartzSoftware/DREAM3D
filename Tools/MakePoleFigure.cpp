@@ -68,9 +68,9 @@
 
 
 
-static const int EulerType = 0;
-static const int QuaternionType = 1;
-static const int RodriguesType = 2;
+static const int EulerAngles = 0;
+static const int QuaternionAngles = 1;
+static const int RodriguezAngles = 2;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -268,16 +268,16 @@ void generateFromListFile(QString file, QString outputPath, int angleType)
 
   for(size_t i = 0; i < numOrients; i++)
   {
-    if (angleType == EulerType)
+    if (angleType == EulerAngles)
     {
       fscanf(f, "(%f, %f, %f)\n", &e1, &e2, &e3);
     }
-    else if (angleType == QuaternionType)
+    else if (angleType == QuaternionAngles)
     {
       fscanf(f, "(%f, %f, %f, %f)\n", &quat.x, &quat.y, &quat.z, &quat.w);
       OrientationMath::QuattoEuler(quat, e1, e2, e3);
     }
-    else if (angleType == RodriguesType)
+    else if (angleType == QuaternionAngles)
     {
       fscanf(f, "(%f, %f, %f)\n", &r1, &r2, &r3);
       OrientationMath::RodtoEuler(r1, r2, r3, e1, e2, e3);

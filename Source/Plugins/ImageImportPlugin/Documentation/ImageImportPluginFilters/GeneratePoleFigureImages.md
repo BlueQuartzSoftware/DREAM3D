@@ -1,4 +1,4 @@
-Generate Pole Figure Images{#GeneratePoleFigureImages}
+Generate Pole Figure Images{#generatepolefigureimages}
 =====
 
 ## Group (Subgroup) ##

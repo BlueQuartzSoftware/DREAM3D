@@ -58,6 +58,7 @@
 
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
+#include "DREAM3DLib/Utilities/AngleFileLoader.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
@@ -190,17 +191,17 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 
   if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
   {
-      odf.resize(CubicOps::k_OdfSize);
-      Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                &(weights.front()), &(sigmas.front()), true,
-                                &(odf.front()), numEntries);
+    odf.resize(CubicOps::k_OdfSize);
+    Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
+                                   &(weights.front()), &(sigmas.front()), true,
+                                   &(odf.front()), numEntries);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
     odf.resize(HexagonalOps::k_OdfSize);
     Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                &(weights.front()), &(sigmas.front()), true,
-                                &(odf.front()), numEntries);
+                                 &(weights.front()), &(sigmas.front()), true,
+                                 &(odf.front()), numEntries);
   }
   if (odf.size() > 0)
   {
@@ -586,11 +587,11 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     x111.resize(npoints * 4);
     y111.resize(npoints * 4);
     Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
-                                weights.data(), sigmas.data(), true,
-                                odf.data(), numEntries);
+                                   weights.data(), sigmas.data(), true,
+                                   odf.data(), numEntries);
 
     err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
-                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
   }
   else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
   {
@@ -603,8 +604,8 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     x111.resize(npoints * 3);
     y111.resize(npoints * 3);
     Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
-                                weights.data(), sigmas.data(), true,
-                                odf.data(), numEntries);
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
     err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
                                       x011.data(), y011.data(), x111.data(), y111.data(), npoints);
   }
@@ -614,7 +615,6 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-#if SHOW_POLE_FIGURES
   // This is multi-threaded on appropriate hardware.
   qint32 kRad[2] = {4, 4};
   qint32 pfSize[2] = {226, 226};
@@ -639,103 +639,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   // This kicks off the threads that will generate the Pole Figure images
   m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateODFPoleFigure));
 
-#else
-  QwtArray<double> x001d(x001.size());
-  QwtArray<double> y001d(y001.size());
-  QwtArray<double> x011d(x011.size());
-  QwtArray<double> y011d(y011.size());
-  QwtArray<double> x111d(x111.size());
-  QwtArray<double> y111d(y111.size());
-  float minX = 1.0f;
-  float maxX = -1.0f;
-  float minY = 1.0f;
-  float maxY = -1.0f;
-  for(int i =0; i < x001.size(); ++i)
-  {
-    x001d[i] = x001[i];
-    y001d[i] = y001[i];
-    if (x001[i] < minX) { minX = x001[i];}
-    if (x001[i] > maxX) { maxX = x001[i];}
-    if (y001[i] < minY) { minY = y001[i];}
-    if (y001[i] > maxY) { maxY = y001[i];}
-  }
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-  for(int i =0; i < x011.size(); ++i)
-  {
-    x011d[i] = x011[i];
-    y011d[i] = y011[i];
-    if (x011[i] < minX) { minX = x011[i];}
-    if (x011[i] > maxX) { maxX = x011[i];}
-    if (y011[i] < minY) { minY = y011[i];}
-    if (y011[i] > maxY) { maxY = y011[i];}
-  }
 
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-
-  for(int i =0; i < x111.size(); ++i)
-  {
-    x111d[i] = x111[i];
-    y111d[i] = y111[i];
-    if (x111[i] < minX) { minX = x111[i];}
-    if (x111[i] > maxX) { maxX = x111[i];}
-    if (y111[i] < minY) { minY = y111[i];}
-    if (y111[i] > maxY) { maxY = y111[i];}
-  }
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-
-
-
-  //  QwtSymbol symbol;
-  //  symbol.setStyle(QwtSymbol::Ellipse);
-  //  symbol.setSize(1,1);
-  QwtPlotCurve* curve = m_PlotCurves[0];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x001d, y001d);
-#else
-  curve->setData(x001d, y001d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  curve->attach(m_ODF_001Plot);
-  // curve->setSymbol(symbol);
-  m_ODF_001Plot->replot();
-
-  curve = m_PlotCurves[1];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x011d, y011d);
-#else
-  curve->setData(x011d, y011d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  //  curve->setSymbol(symbol);
-  curve->attach(m_ODF_011Plot);
-  m_ODF_011Plot->replot();
-
-  curve = m_PlotCurves[2];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x111d, y111d);
-#else
-  curve->setData(x111d, y111d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  // curve->setSymbol(symbol);
-  curve->attach(m_ODF_111Plot);
-  m_ODF_111Plot->replot();
-#endif
   // Enable the MDF tab
   if (m_MDFWidget != NULL)
   {
@@ -774,43 +678,93 @@ void StatsGenODFWidget::on_addODFTextureBtn_clicked()
     m_ODFTableView->setCurrentIndex(index);
   }
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void StatsGenODFWidget::on_selectAnglesFile_clicked()
+{
+  QString proposedFile = m_OpenDialogLastDirectory;
+  QString file = QFileDialog::getOpenFileName(this, tr("Select Angles File"), proposedFile, tr("Text Document (*.txt)"));
+  angleFilePath->setText(file);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
 {
-  QString proposedFile = m_OpenDialogLastDirectory;
-  QString file = QFileDialog::getOpenFileName(this, tr("Open ODF File"), proposedFile, tr("Text Document (*.txt)"));
+
+  QString file = angleFilePath->text();
   if(true == file.isEmpty())
   {
     return;
   }
   else
   {
-    // Remove all the data first
-    m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
-    size_t numOrients = 0;
-    std::string filename = file.toStdString();
-    std::ifstream inFile;
-    inFile.open(filename.c_str());
-
-    inFile >> numOrients;
-
-    float e1, e2, e3, weight, sigma;
-    for(size_t i = 0; i < numOrients; i++)
+    AngleFileLoader::Pointer loader = AngleFileLoader::New();
+    loader->setInputFile(angleFilePath->text().toStdString());
+    loader->setAngleRepresentation(angleRepresentation->currentIndex());
+    loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
+    loader->setOutputAnglesInDegrees(true);
+    std::string delim;
+    int index = delimiter->currentIndex();
+    switch(index)
     {
-      inFile >> e1 >> e2 >> e3 >> weight >> sigma;
-      if (!m_ODFTableModel->insertRow(m_ODFTableModel->rowCount())) return;
-      int row = m_ODFTableModel->rowCount() - 1;
-      m_ODFTableModel->setRowData(row, e1, e2, e3, weight, sigma);
+      case 1:
+        delim = " ";
+        break;
+      case 2:
+        delim = "\t";
+        break;
+      case 3:
+        delim = ",";
+        break;
+      case 4:
+        delim = ";";
+        break;
+      default:
+        delim = " ";
 
-      //      m_ODFTableView->resizeColumnsToContents();
-      //      m_ODFTableView->scrollToBottom();
-      //      m_ODFTableView->setFocus();
-      QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
-      //      m_ODFTableView->setCurrentIndex(index);
-      //std::cout << "reading line: " << i << std::endl;
     }
+
+    loader->setDelimiter(delim);
+    FloatArrayType::Pointer data = loader->loadData();
+    if (loader->getErrorCode() < 0)
+    {
+      QMessageBox::critical(this, "Error Loading Angle data", QString::fromStdString(loader->getErrorMessage()), QMessageBox::Ok);
+      return;
+    }
+
+    m_ODFTableView->setDisabled(true);
+    m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
+
+
+    size_t count = data->GetNumberOfTuples();
+    QVector<float> e1s(count);
+    QVector<float> e2s(count);
+    QVector<float> e3s(count);
+    QVector<float> weights(count);
+    QVector<float> sigmas(count);
+    for(int i = 0; i < count; ++i)
+    {
+      e1s[i] = data->GetComponent(i, 0);
+      e2s[i] = data->GetComponent(i, 1);
+      e3s[i] = data->GetComponent(i, 2);
+      weights[i] = 1.0;
+      sigmas[i] = 1.0;
+    }
+
+    m_ODFTableModel->blockSignals(true);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Euler1, e1s);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Euler2, e3s);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Euler3, e2s);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Weight, weights);
+    m_ODFTableModel->blockSignals(false);
+    m_ODFTableModel->setColumnData(SGODFTableModel::Sigma, sigmas);
+
+    on_m_CalculateODFBtn_clicked();
   }
 }
 

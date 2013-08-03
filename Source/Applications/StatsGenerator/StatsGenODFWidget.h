@@ -116,6 +116,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void on_addODFTextureBtn_clicked();
       void on_deleteODFTextureBtn_clicked();
       void on_loadODFTextureBtn_clicked();
+      void on_selectAnglesFile_clicked();
 
       // Slots for the QFutureWatcher to connect to
       void showPoleFigure(int imageIndex);
