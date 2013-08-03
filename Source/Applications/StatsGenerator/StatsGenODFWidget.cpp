@@ -787,6 +787,8 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   }
   else
   {
+    // Remove all the data first
+    m_ODFTableModel->removeRows(0, m_ODFTableModel->rowCount());
     size_t numOrients = 0;
     std::string filename = file.toStdString();
     std::ifstream inFile;
@@ -807,10 +809,12 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
       //      m_ODFTableView->setFocus();
       QModelIndex index = m_ODFTableModel->index(m_ODFTableModel->rowCount() - 1, 0);
       //      m_ODFTableView->setCurrentIndex(index);
-      std::cout << "reading line: " << i << std::endl;
+      //std::cout << "reading line: " << i << std::endl;
     }
   }
 }
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
