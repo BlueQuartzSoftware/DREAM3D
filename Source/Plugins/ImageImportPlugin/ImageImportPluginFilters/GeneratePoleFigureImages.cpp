@@ -321,6 +321,7 @@ void GeneratePoleFigureImages::execute()
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 3, "Eulers_Per_Phase");
     subEulers->initializeWithValues(-1);
     float* eu = subEulers->GetPointer(0);
+  //  std::cout << count << std::endl;
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
@@ -333,6 +334,9 @@ void GeneratePoleFigureImages::execute()
           eu[count*3] = m_CellEulerAngles[i*3];
           eu[count*3+1] = m_CellEulerAngles[i*3+1];
           eu[count*3+2] = m_CellEulerAngles[i*3+2];
+
+      //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
+
           count++;
         }
       }
