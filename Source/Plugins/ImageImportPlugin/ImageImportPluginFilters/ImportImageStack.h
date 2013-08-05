@@ -74,13 +74,13 @@ class ImportImageStack : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ImageImport"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const std::string getSubGroupName() { return "IO"; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
