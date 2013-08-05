@@ -73,8 +73,7 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   }
   setupUi(this);
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
-  setInputFile( QString::fromStdString(filter->getInputFile() ) );
-  m_FilterGroup = QString::fromStdString(filter->getGroupName());
+  getGuiParametersFromFilter( filter.get() );
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
@@ -95,6 +94,23 @@ QString QReadH5EbsdWidget::getFilterGroup()
   return m_FilterGroup;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QReadH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  ReadH5Ebsd* filter = ReadH5Ebsd::SafeObjectDownCast<AbstractFilter*, ReadH5Ebsd*>(filt);
+  setInputFile( QString::fromStdString(filter->getInputFile() ) );
+  m_FilterGroup = QString::fromStdString(filter->getGroupName());
+
+  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  m_UseTransformations->setChecked( filter->getUseTransformations() );
+  m_RefFrameZDir->setText( QString::fromStdString( Ebsd::StackingOrder::Utils::getStringForEnum( filter->getRefFrameZDir() ) ) );
+
+  arraySelectionWidget->setArraySelections(filter);
+}
 
 // -----------------------------------------------------------------------------
 //

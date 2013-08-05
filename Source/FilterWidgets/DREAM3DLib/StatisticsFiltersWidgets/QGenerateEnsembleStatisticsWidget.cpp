@@ -55,6 +55,26 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   this->setupUi(this);
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
+  getGuiParametersFromFilter( filter.get() );
+  setupGui();
+  setTitle(QString::fromStdString(filter->getHumanLabel()));
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QGenerateEnsembleStatisticsWidget::~QGenerateEnsembleStatisticsWidget()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  GenerateEnsembleStatistics* filter = GenerateEnsembleStatistics::SafeObjectDownCast<AbstractFilter*, GenerateEnsembleStatistics*>(filt);
+
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
   //Get the defaults from the filter and assign to the internal variables
   /* Copy all the settings from this instance into the new instance */
@@ -69,17 +89,6 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   calcODF->setChecked(filter->getCalculateODF());
   calcMDF->setChecked(filter->getCalculateMDF());
   calcAODF->setChecked(filter->getCalculateAxisODF());
-
-  setupGui();
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QGenerateEnsembleStatisticsWidget::~QGenerateEnsembleStatisticsWidget()
-{
-
 }
 
 // -----------------------------------------------------------------------------
