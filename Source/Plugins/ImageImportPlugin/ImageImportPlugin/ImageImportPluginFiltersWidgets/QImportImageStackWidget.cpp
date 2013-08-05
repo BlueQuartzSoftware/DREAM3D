@@ -119,6 +119,7 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter()
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
 
+  filter->setRefFrameZDir( getRefFrameZDir() );
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
       .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
@@ -221,7 +222,11 @@ void QImportImageStackWidget::setupGui()
   m_WidgetList << m_FilePrefix << m_TotalSlices << m_ZStartIndex << m_ZEndIndex;
   m_WidgetList << xOrigin << yOrigin << zOrigin;
   m_WidgetList << xRes << yRes << zRes;
+  m_WidgetList << m_StackLowToHigh << m_StackHighToLow;
   m_ErrorMessage->setVisible(false);
+
+  connect(m_StackLowToHigh, SIGNAL(toggled(bool)),
+          this, SLOT(stackingOrderChanged(bool)));
 }
 
 // -----------------------------------------------------------------------------
@@ -237,6 +242,9 @@ void QImportImageStackWidget::writeOptions(QSettings &prefs)
   WRITE_STRING_SETTING(prefs, m_, ZStartIndex)
   WRITE_STRING_SETTING(prefs, m_, ZEndIndex)
   WRITE_STRING_SETTING(prefs, m_, TotalDigits)
+
+  WRITE_CHECKBOX_SETTING(prefs, m_, StackHighToLow)
+  WRITE_CHECKBOX_SETTING(prefs, m_, StackLowToHigh)
 
   bool ok = false;
   // ------------- Origin ----------------------------------
@@ -290,6 +298,9 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
   READ_STRING_SETTING(prefs, m_, FilePrefix, "");
   READ_STRING_SETTING(prefs, m_, FileSuffix, "");
   READ_STRING_SETTING(prefs, m_, FileExt, "tif");
+
+  READ_CHECKBOX_SETTING(prefs, m_, StackLowToHigh, true)
+  READ_CHECKBOX_SETTING(prefs, m_, StackHighToLow, false)
 
     // ------------- Origin ----------------------------------
   {
@@ -401,6 +412,26 @@ void QImportImageStackWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+Ebsd::RefFrameZDir QImportImageStackWidget::getRefFrameZDir()
+{
+  if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
+  if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
+  return Ebsd::UnknownRefFrameZDirection;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QImportImageStackWidget::stackingOrderChanged(bool checked)
+{
+  m_generateExampleEbsdInputFile();
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void QImportImageStackWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
@@ -499,7 +530,7 @@ void QImportImageStackWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));

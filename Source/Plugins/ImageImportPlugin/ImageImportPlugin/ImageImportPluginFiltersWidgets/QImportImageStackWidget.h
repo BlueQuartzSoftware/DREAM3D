@@ -122,6 +122,9 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
     // slots to catch signals emittd by the various QLineEdit widgets
     void on_m_InputDir_textChanged(const QString & text);
 
+  private slots:
+    void stackingOrderChanged(bool checked);
+
   private:
     QList<QWidget*>             m_WidgetList;
 
