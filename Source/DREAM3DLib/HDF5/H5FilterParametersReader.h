@@ -77,7 +77,17 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual uint64_t readValue(const std::string name, uint64_t value);
     virtual float readValue(const std::string name, float value);
     virtual double readValue(const std::string name, double value);
-    virtual std::vector<unsigned int> readValue(const std::string name, std::vector<unsigned int> value);
+
+    virtual std::vector<int8_t> readValue(const std::string name, std::vector<int8_t> value);
+    virtual std::vector<int16_t> readValue(const std::string name, std::vector<int16_t> value);
+    virtual std::vector<int32_t> readValue(const std::string name, std::vector<int32_t> value);
+    virtual std::vector<int64_t> readValue(const std::string name, std::vector<int64_t> value);
+    virtual std::vector<uint8_t> readValue(const std::string name, std::vector<uint8_t> value);
+    virtual std::vector<uint16_t> readValue(const std::string name, std::vector<uint16_t> value);
+    virtual std::vector<uint32_t> readValue(const std::string name, std::vector<uint32_t> value);
+    virtual std::vector<uint64_t> readValue(const std::string name, std::vector<uint64_t> value);
+    virtual std::vector<float> readValue(const std::string name, std::vector<float> value);
+    virtual std::vector<double> readValue(const std::string name, std::vector<double> value);
 
 
     virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v);

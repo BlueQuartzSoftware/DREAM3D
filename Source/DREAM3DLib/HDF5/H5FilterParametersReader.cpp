@@ -213,10 +213,10 @@ double H5FilterParametersReader::readValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<unsigned int> H5FilterParametersReader::readValue(const std::string name, std::vector<unsigned int> value)
+std::vector<int8_t> H5FilterParametersReader::readValue(const std::string name, std::vector<int8_t> value)
 {
   int vectorSize = 0;
-  unsigned int scalar = 0;
+  int8_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
   for (int i=0; i<vectorSize; i++)
@@ -229,6 +229,187 @@ std::vector<unsigned int> H5FilterParametersReader::readValue(const std::string 
 
   return value;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<int16_t> H5FilterParametersReader::readValue(const std::string name, std::vector<int16_t> value)
+{
+  int vectorSize = 0;
+  int16_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<int32_t> H5FilterParametersReader::readValue(const std::string name, std::vector<int32_t> value)
+{
+  int vectorSize = 0;
+  int32_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<int64_t> H5FilterParametersReader::readValue(const std::string name, std::vector<int64_t> value)
+{
+  int vectorSize = 0;
+  int64_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<uint8_t> H5FilterParametersReader::readValue(const std::string name, std::vector<uint8_t> value)
+{
+  int vectorSize = 0;
+  uint8_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<uint16_t> H5FilterParametersReader::readValue(const std::string name, std::vector<uint16_t> value)
+{
+  int vectorSize = 0;
+  uint16_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<uint32_t> H5FilterParametersReader::readValue(const std::string name, std::vector<uint32_t> value)
+{
+  int vectorSize = 0;
+  uint32_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<uint64_t> H5FilterParametersReader::readValue(const std::string name, std::vector<uint64_t> value)
+{
+  int vectorSize = 0;
+  uint64_t scalar = 0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<float> H5FilterParametersReader::readValue(const std::string name, std::vector<float> value)
+{
+  int vectorSize = 0;
+  float scalar = 0.0f;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<double> H5FilterParametersReader::readValue(const std::string name, std::vector<double> value)
+{
+  int vectorSize = 0;
+  double scalar = 0.0;
+  int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
+    value.push_back(scalar);
+    ss.clear();
+  }
+
+  return value;
+}
+
 
 // -----------------------------------------------------------------------------
 //

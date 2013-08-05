@@ -99,6 +99,7 @@ void InitializeSyntheticVolume::readFilterParameters(AbstractFilterParametersRea
   setXRes( reader->readValue("XRes", getXRes() ) );
   setYRes( reader->readValue("YRes", getYRes() ) );
   setZRes( reader->readValue("ZRes", getZRes() ) );
+  setShapeTypes( reader->readValue("ShapeTypes", getShapeTypes() ) );
   reader->closeFilterGroup();
 }
 
@@ -115,6 +116,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("XRes", getXRes() );
   writer->writeValue("YRes", getYRes() );
   writer->writeValue("ZRes", getZRes() );
+  writer->writeValue("ShapeTypes", getShapeTypes() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

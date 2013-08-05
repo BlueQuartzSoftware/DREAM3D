@@ -216,7 +216,169 @@ int H5FilterParametersWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<unsigned int> value)
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int8_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int16_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int32_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int64_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint8_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint16_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint32_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint64_t> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<float> value)
+{
+  int vectorSize = value.size();
+  int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
+  std::stringstream ss;
+  for (int i=0; i<vectorSize; i++)
+  {
+    ss << i;
+    err = H5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    ss.clear();
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int H5FilterParametersWriter::writeValue(const std::string name, std::vector<double> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
