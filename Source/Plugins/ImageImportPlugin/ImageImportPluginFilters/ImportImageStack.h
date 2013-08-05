@@ -66,7 +66,7 @@ class ImportImageStack : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, ImageFileList)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
-
+    DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
 
     /**

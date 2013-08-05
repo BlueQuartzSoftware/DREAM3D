@@ -48,6 +48,7 @@
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
+  m_RefFrameZDir(Ebsd::LowtoHigh),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
   m_ImageData(NULL)
@@ -105,7 +106,7 @@ void ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* wri
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
-
+  writer->writeValue("StackingOrder", getRefFrameZDir() );
 }
 
 // -----------------------------------------------------------------------------
@@ -181,6 +182,7 @@ void ImportImageStack::execute()
 //  int bytesPerLine = 0;
 
   int64_t z = m_ZStartIndex;
+  int64_t zSpot;
   for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     std::string imageFName = *filepath;
@@ -219,9 +221,12 @@ void ImportImageStack::execute()
 
     // Get the current position in the array to copy the image into
    // imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+//    if(m_RefFrameZDir == Ebsd::HightoLow) zSpot = (m_ZEndIndex-z);
+//    else zSpot = (z-m_ZStartIndex);
+    zSpot = (z-m_ZStartIndex);
     for(qint32 i = 0; i < height; ++i)
     {
-      imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));
+      imagePtr = data->GetPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
       uint8_t* source = image.scanLine(i);
       ::memcpy(imagePtr, source, width * pixelBytes);
     }
