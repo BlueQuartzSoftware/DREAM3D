@@ -214,7 +214,6 @@ int  FieldInfoReader::readFile()
 
   // Now that we know how many unique grains are in the file initialize the Field Map to the proper size:
   int64_t totalPoints = m->getTotalPoints();
-  //size_t totalFields = m->getNumFieldTuples();
   size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, numgrains + 1, totalEnsembles);
 

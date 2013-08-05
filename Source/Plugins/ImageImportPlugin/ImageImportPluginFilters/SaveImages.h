@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT SaveImages : public AbstractFilter
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const std::string getSubGroupName() { return "Output"; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
