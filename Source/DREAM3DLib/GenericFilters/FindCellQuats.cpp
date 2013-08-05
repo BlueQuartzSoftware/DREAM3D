@@ -52,6 +52,7 @@ FindCellQuats::FindCellQuats() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_CellPhases(NULL),
   m_Quats(NULL),
   m_CellEulerAngles(NULL),

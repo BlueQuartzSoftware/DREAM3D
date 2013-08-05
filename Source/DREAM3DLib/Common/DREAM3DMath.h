@@ -131,7 +131,7 @@ namespace DREAM3D
     static const float k_Pi = static_cast<float>(M_PI);
     static const double k_SqrtPi = sqrt(M_PI);
     static const double k_2OverSqrtPi = 2.0 / sqrt(M_PI);
-    static const double k_HalfSqrtPi = 0.5 * sqrt(M_PI);
+    static const double k_HalfOfSqrtPi = sqrt(M_PI) / 2.0;
     static const double k_2Pi = 2.0 * M_PI;
     static const double k_1OverPi = 1.0/M_PI;
     static const double k_PiOver180 = M_PI/180.0;
@@ -141,6 +141,8 @@ namespace DREAM3D
     static const double k_1OverRoot2 = 1.0/sqrt(2.0);
     static const double k_1OverRoot3 = 1.0/sqrt(3.0);
     static const double k_Root3Over2 = sqrt(3.0)/2.0;
+    static const double k_DegToRad = M_PI/180.0;
+    static const double k_RadToDeg = 180.0/M_PI;
 
     static const double k_ACosNeg1 = acos(-1.0);
     static const double k_ACos1 = acos(1.0);
