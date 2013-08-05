@@ -78,7 +78,17 @@ class DREAM3DLib_EXPORT TextFilterParametersWriter : public AbstractFilterParame
     virtual int writeValue(const std::string name, uint64_t value);
     virtual int writeValue(const std::string name, float value);
     virtual int writeValue(const std::string name, double value);
-    virtual int writeValue(const std::string name, std::vector<unsigned int> value);
+
+    virtual int writeValue(const std::string name, std::vector<int8_t> value);
+    virtual int writeValue(const std::string name, std::vector<int16_t> value);
+    virtual int writeValue(const std::string name, std::vector<int32_t> value);
+    virtual int writeValue(const std::string name, std::vector<int64_t> value);
+    virtual int writeValue(const std::string name, std::vector<uint8_t> value);
+    virtual int writeValue(const std::string name, std::vector<uint16_t> value);
+    virtual int writeValue(const std::string name, std::vector<uint32_t> value);
+    virtual int writeValue(const std::string name, std::vector<uint64_t> value);
+    virtual int writeValue(const std::string name, std::vector<float> value);
+    virtual int writeValue(const std::string name, std::vector<double> value);
 
     virtual int writeValue(const std::string name, IntVec3Widget_t v);
     virtual int writeValue(const std::string name, FloatVec3Widget_t v);

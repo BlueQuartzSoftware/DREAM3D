@@ -81,7 +81,17 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const std::string name, uint64_t value) = 0;
     virtual int writeValue(const std::string name, float value) = 0;
     virtual int writeValue(const std::string name, double value) = 0;
-    virtual int writeValue(const std::string name, std::vector<unsigned int> value) = 0;
+
+    virtual int writeValue(const std::string name, std::vector<int8_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int16_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int32_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int64_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint8_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint16_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint32_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint64_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<float> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<double> value) = 0;
 
     virtual int writeValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual int writeValue(const std::string name, FloatVec3Widget_t v) = 0;
