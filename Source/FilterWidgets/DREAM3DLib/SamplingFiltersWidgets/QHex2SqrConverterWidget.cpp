@@ -73,6 +73,7 @@ QFilterWidget(parent)
   }
   setupUi(this);
   Hex2SqrConverter::Pointer filter = Hex2SqrConverter::New();
+  getGuiParametersFromFilter( filter.get() );
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
@@ -92,6 +93,14 @@ QHex2SqrConverterWidget::~QHex2SqrConverterWidget()
 QString QHex2SqrConverterWidget::getFilterGroup()
 {
     return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  Hex2SqrConverter* filter = Hex2SqrConverter::SafeObjectDownCast<AbstractFilter*, Hex2SqrConverter*>(filt);
 }
 
 // -----------------------------------------------------------------------------

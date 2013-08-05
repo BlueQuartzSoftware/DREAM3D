@@ -111,6 +111,7 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
                                                    QString filename);
 
     virtual void openHtmlHelpFile();
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   protected slots:
     /* OIM Data Import Slots */

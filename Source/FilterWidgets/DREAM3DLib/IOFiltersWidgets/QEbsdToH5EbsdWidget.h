@@ -114,6 +114,8 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
                                               bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
+
   protected:
 
 

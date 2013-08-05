@@ -422,6 +422,24 @@ std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ArraySelectionWidget::setSelectedArrays(std::set<std::string> set, QListWidget*listWidget)
+{
+  std::set<std::string>::iterator iter = set.begin();
+  for (; iter != set.end(); iter++)
+  {
+    for(qint32 i = 0; i < listWidget->count(); ++i)
+    {
+      if (listWidget->item(i)->text().toStdString() == *iter)
+      {
+        listWidget->item(i)->setCheckState(Qt::Checked);
+      }
+    }
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 std::set<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
 {
   std::set<std::string> non_selectedArrays;

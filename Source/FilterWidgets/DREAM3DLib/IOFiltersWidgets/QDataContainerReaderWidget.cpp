@@ -88,6 +88,8 @@ void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt
   setReadVoxelData( filter->getReadVoxelData() );
   setReadSurfaceMeshData( filter->getReadSurfaceMeshData() );
   setReadSolidMeshData( filter->getReadSolidMeshData() );
+
+  arraySelectionWidget->setArraySelections(filter);
 }
 
 // -----------------------------------------------------------------------------

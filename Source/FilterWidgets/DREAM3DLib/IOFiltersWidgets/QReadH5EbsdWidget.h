@@ -85,7 +85,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
     virtual void openHtmlHelpFile();
-
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   public slots:
     void setInputFile(const QString &v);

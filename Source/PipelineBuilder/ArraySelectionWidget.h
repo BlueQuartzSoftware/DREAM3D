@@ -104,7 +104,6 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     template<typename Filter>
     void getArraySelections(Filter* filter)
     {
-      //std::cout << "ArraySelectionWidget::getArraySelections(Filter* filter): " << filter->getNameOfClass() << std::endl;
       filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList),
                                           getSelectedArrays(voxelFieldArrayList),
                                           getSelectedArrays(voxelEnsembleArrayList));
@@ -116,6 +115,14 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList),
                                               getSelectedArrays(solidMeshFaceArrayList),
                                               getSelectedArrays(solidMeshEdgeArrayList));
+    }
+
+    template<typename Filter>
+    void setArraySelections(Filter* filter)
+    {
+      setSelectedArrays( filter->getSelectedVoxelCellArrays(), voxelCellArrayList );
+      setSelectedArrays( filter->getSelectedVoxelFieldArrays(), voxelFieldArrayList );
+      setSelectedArrays( filter->getSelectedVoxelEnsembleArrays(), voxelEnsembleArrayList );
     }
 
     /**
@@ -203,6 +210,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @brief Returns the list of selected Array Names
      */
     virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual void setSelectedArrays(std::set<std::string> set, QListWidget* listWidget);
     virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
 
