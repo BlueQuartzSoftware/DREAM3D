@@ -12,11 +12,14 @@
 set(DREAM3DLib_Utilities_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.h
   ${DREAM3DLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.h
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/AngleFileLoader.h
 )
 set(DREAM3DLib_Utilities_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Utilities/ColorTable.cpp
   ${DREAM3DLib_SOURCE_DIR}/Utilities/PoleFigureUtilities.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Utilities/AngleFileLoader.cpp
 )
+
 cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/Utilities" "${DREAM3DLib_Utilities_HDRS}" "${DREAM3DLib_Utilities_SRCS}" "0")
 if( ${PROJECT_INSTALL_HEADERS} EQUAL 1 )
     INSTALL (FILES ${DREAM3DLib_Utilities_HDRS}

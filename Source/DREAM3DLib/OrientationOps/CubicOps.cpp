@@ -442,10 +442,6 @@ void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
 void CubicOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(CubicQuatSym[i], q);
-//  q.x = CubicQuatSym[i].x;
-//  q.y = CubicQuatSym[i].y;
-//  q.z = CubicQuatSym[i].z;
-//  q.w = CubicQuatSym[i].w;
 }
 
 void CubicOps::getRodSymOp(int i,float *r)
@@ -524,7 +520,7 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
   float bins[3];
   float step[3];
 
-   OrientationMath::RodtoHomochoric(r1, r2, r3);
+  OrientationMath::RodtoHomochoric(r1, r2, r3);
 
   dim[0] = Detail::CubicDim1InitValue;
   dim[1] = Detail::CubicDim2InitValue;
@@ -984,9 +980,7 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 
     currentEuler = eulers->GetPointer(i * 3);
 
-    OrientationMath::EulertoQuat(q1, currentEuler);
-    ops.getFZQuat(q1);
-    OrientationMath::QuattoMat(q1, g);
+    OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
     MatrixMath::Transpose3x3(g, gTranpose);
 
     // -----------------------------------------------------------------------------

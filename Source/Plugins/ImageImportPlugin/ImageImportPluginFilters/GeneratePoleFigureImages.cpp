@@ -35,6 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GeneratePoleFigureImages.h"
 
+#include <stdio.h>
+
 #include <iostream>
 #include <string>
 
@@ -74,23 +76,25 @@
 
 
 
-
+#define WRITE_EULERS_TEXT_FILE 1
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 GeneratePoleFigureImages::GeneratePoleFigureImages() :
   AbstractFilter(),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_ImagePrefix(""),
   m_OutputPath(""),
   m_ImageFormat(0),
   m_ImageSize(512),
   m_LambertSize(75),
   m_NumColors(32),
-  m_EulersArrayName(DREAM3D::CellData::EulerAngles),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CellEulerAngles(NULL),
+  m_CellPhases(NULL),
   m_CrystalStructures(NULL)
 {
   setupFilterParameters();
@@ -114,7 +118,7 @@ void GeneratePoleFigureImages::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Eulers Array");
-    option->setPropertyName("EulersArrayName");
+    option->setPropertyName("CellEulerAnglesArrayName");
     option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -178,7 +182,7 @@ void GeneratePoleFigureImages::setupFilterParameters()
     parameters.push_back(option);
   }
 
-    setFilterParameters(parameters);
+  setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +202,7 @@ void GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWri
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
-  writer->writeValue("EulersArrayName", getEulersArrayName() );
+  writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
   writer->writeValue("LabertSize", getLambertSize() );
@@ -229,7 +233,7 @@ void GeneratePoleFigureImages::dataCheck(bool preflight, size_t voxels, size_t f
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if(m_EulersArrayName.empty() == true)
+  if(m_CellEulerAnglesArrayName.empty() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
@@ -237,6 +241,8 @@ void GeneratePoleFigureImages::dataCheck(bool preflight, size_t voxels, size_t f
   else
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+        GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+
         typedef DataArray<unsigned int> XTalStructArrayType;
     GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
@@ -276,17 +282,78 @@ void GeneratePoleFigureImages::execute()
 
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
 
-  FloatArrayType* eulers = FloatArrayType::SafePointerDownCast(m->getCellData(getCellEulerAnglesArrayName()).get());
 
+  bool* m_GoodVoxels;
+  BoolArrayType* goodVoxels = NULL;
+  bool missingGoodVoxels = false;
+  IDataArray::Pointer gvPtr = m->getCellData(m_GoodVoxelsArrayName);
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[1]))
+  if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
   {
-    generateCubicPoleFigures(eulers);
+    missingGoodVoxels = true;
   }
-  else if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[1]))
+  else
   {
+    goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
+    m_GoodVoxels = goodVoxels->GetPointer(0);
+  }
+
+  // Find how many phases we have by getting the number of Crystal Structures
+  IDataArray::Pointer crystalStructures = m->getEnsembleData(m_CrystalStructuresArrayName);
+  int64_t numPoints = m->getTotalPoints();
+  int numPhases = crystalStructures->GetNumberOfTuples();
+  size_t count = 0;
+  // Loop over all the voxels gathering the Eulers for a specific phase into an array
+  for(int phase = 1; phase < numPhases; ++phase)
+  {
+    // First find out how many voxels we are going to have. This is probably faster to loop twice than to
+    // keep allocating memory everytime we find one.
+    for(int64_t i = 0; i < numPoints; ++i)
+    {
+      if (m_CellPhases[i] == phase) {
+        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        {
+          count++;
+        }
+      }
+    }
+
+    FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 3, "Eulers_Per_Phase");
+    subEulers->initializeWithValues(-1);
+    float* eu = subEulers->GetPointer(0);
+  //  std::cout << count << std::endl;
+
+    // Now loop through the eulers again and this time add them to the subEulers Array
+    count = 0;
+    for(int64_t i = 0; i < numPoints; ++i)
+    {
+      if (m_CellPhases[i] == phase)
+      {
+        if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        {
+          eu[count*3] = m_CellEulerAngles[i*3];
+          eu[count*3+1] = m_CellEulerAngles[i*3+1];
+          eu[count*3+2] = m_CellEulerAngles[i*3+2];
+
+      //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
+
+          count++;
+        }
+      }
+    }
+
+    if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]))
+    {
+      generateCubicPoleFigures(subEulers.get());
+    }
+    else if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[phase]))
+    {
+      // notifyErrorMessage("Hexagonal Pole Figures are not supported yet.", -1);
+    }
+
 
   }
+
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

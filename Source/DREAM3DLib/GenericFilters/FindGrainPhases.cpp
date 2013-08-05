@@ -49,6 +49,7 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+m_ActiveArrayName(DREAM3D::FieldData::Active),
 m_GrainIds(NULL),
 m_CellPhases(NULL),
 m_FieldPhases(NULL)

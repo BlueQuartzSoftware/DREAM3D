@@ -36,17 +36,23 @@
 
 #include "ModifiedLambertProjection.h"
 
+#include <set>
+
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
+
+#define WRITE_LAMBERT_SQUARE_COORD_VTK 0
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 ModifiedLambertProjection::ModifiedLambertProjection() :
   m_Dimension(0),
-  m_Resolution(0.0f),
-  m_SphereRadius(1.0f)
+  m_StepSize(0.0f),
+  m_SphereRadius(1.0f),
+  m_MaxCoord(0.0),
+  m_MinCoord(0.0)
 {
 
 }
@@ -62,21 +68,48 @@ ModifiedLambertProjection::~ModifiedLambertProjection()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float resolution, float sphereRadius)
+ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius)
 {
+
   size_t npoints = coords->GetNumberOfTuples();
   bool nhCheck = false;
   float sqCoord[2];
-
-  ModifiedLambertProjection::Pointer squareProj = ModifiedLambertProjection::New();
-  squareProj->initializeSquares(dimension, resolution, sphereRadius);
-
   int sqIndex = 0;
+  ModifiedLambertProjection::Pointer squareProj = ModifiedLambertProjection::New();
+  squareProj->initializeSquares(dimension, sphereRadius);
+
+
+#if WRITE_LAMBERT_SQUARE_COORD_VTK
+  std::stringstream ss;
+  std::string filename("/tmp/");
+  filename.append("ModifiedLambert_Square_Coords_").append(coords->GetName()).append(".vtk");
+  FILE* f = NULL;
+  f = fopen(filename.c_str(), "wb");
+  if(NULL == f)
+  {
+    ss.str("");
+    ss << "Could not open vtk viz file " << filename << " for writing. Please check access permissions and the path to the output location exists";
+    return squareProj;
+  }
+
+  // Write the correct header
+  fprintf(f, "# vtk DataFile Version 2.0\n");
+  fprintf(f, "data set from DREAM3D\n");
+  fprintf(f, "ASCII");
+  fprintf(f, "\n");
+
+  fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", coords->GetNumberOfTuples() );
+#endif
+
   for(int i = 0; i < npoints; ++i)
   {
     sqCoord[0] = 0.0; sqCoord[1] = 0.0;
     //get coordinates in square projection of crystal normal parallel to boundary normal
     nhCheck = squareProj->getSquareCoord(coords->GetPointer(i * 3), sqCoord);
+#if WRITE_LAMBERT_SQUARE_COORD_VTK
+    fprintf(f, "%f %f 0\n", sqCoord[0], sqCoord[1]);
+#endif
+
     // Based on the XY coordinate, get the pointer index that the value corresponds to in the proper square
     sqIndex = squareProj->getSquareIndex(sqCoord);
     if (nhCheck == true)
@@ -90,6 +123,9 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
       squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
     }
   }
+  #if WRITE_LAMBERT_SQUARE_COORD_VTK
+  fclose(f);
+  #endif
 
   return squareProj;
 }
@@ -97,18 +133,28 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjection::initializeSquares(int dims, float resolution, float sphereRadius)
+void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
 {
   m_Dimension = dims;
-  m_Resolution = resolution;
   m_SphereRadius = sphereRadius;
+  // We want half the sphere area for each square because each square represents a hemisphere.
+  float halfSphereArea = 4 * M_PI * sphereRadius * sphereRadius / 2.0;
+  // The length of a side of the square is the square root of the area
+  float squareEdge = sqrt(halfSphereArea);
+
+  m_StepSize = squareEdge / static_cast<float>(m_Dimension);
+
+  m_MaxCoord = squareEdge / 2.0;
+  m_MinCoord = -squareEdge / 2.0;
+  m_HalfDimension = static_cast<float>(m_Dimension) / 2.0;
+  m_HalfDimensionTimesStepSize = m_HalfDimension * m_StepSize;
+
   m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "NorthSquare");
   m_NorthSquare->initializeWithZeros();
   m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "SouthSquare");
   m_SouthSquare->initializeWithZeros();
 
-  k_MaxCoord = m_Dimension * m_Resolution * 0.5;
-  k_MinCoord = - m_Dimension * m_Resolution * 0.5;
+
 }
 
 // -----------------------------------------------------------------------------
@@ -149,8 +195,8 @@ double ModifiedLambertProjection::getValue(Square square, int index)
 double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqCoord)
 {
   int abinMod, bbinMod;
-  float modX = ( (sqCoord[0] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
-  float modY = ( (sqCoord[1] + ( ( (float)m_Dimension/2.0) * m_Resolution) ) / m_Resolution);
+  float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
+  float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   int abin = (int) modX;
   int bbin = (int) modY;
   modX -= abin;
@@ -193,22 +239,22 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {
-    sqCoord[0] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfSqrtPi);
-    sqCoord[1] = (xyz[0]/fabs(xyz[0]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[1]/xyz[0]));
+    sqCoord[0] = (xyz[0]/fabs(xyz[0]) ) * sqrt(2.0*m_SphereRadius*(m_SphereRadius + (xyz[2]*adjust) ) ) * DREAM3D::Constants::k_HalfOfSqrtPi;
+    sqCoord[1] = (xyz[0]/fabs(xyz[0]) ) * sqrt(2.0*m_SphereRadius*(m_SphereRadius + (xyz[2]*adjust) ) ) * ((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[1]/xyz[0]));
   }
   else
   {
-    sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[0]/xyz[1]));
-    sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*1.0*(1.0+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfSqrtPi);
+    sqCoord[0] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*m_SphereRadius*(m_SphereRadius+(xyz[2]*adjust)))*((DREAM3D::Constants::k_2OverSqrtPi)*atan(xyz[0]/xyz[1]));
+    sqCoord[1] = (xyz[1]/fabs(xyz[1]))*sqrt(2.0*m_SphereRadius*(m_SphereRadius+(xyz[2]*adjust)))*(DREAM3D::Constants::k_HalfOfSqrtPi);
   }
 
-  if (sqCoord[0] >= k_MaxCoord)
+  if (sqCoord[0] >= m_MaxCoord)
   {
-    sqCoord[0] = (k_MaxCoord) - .0001;
+    sqCoord[0] = (m_MaxCoord) - .0001;
   }
-  if (sqCoord[1] >= k_MaxCoord)
+  if (sqCoord[1] >= m_MaxCoord)
   {
-    sqCoord[1] = (k_MaxCoord) - .0001;
+    sqCoord[1] = (m_MaxCoord) - .0001;
   }
   return nhCheck;
 }
@@ -218,13 +264,13 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjection::getSquareIndex(float* sqCoord)
 {
-  int x = (int)( (sqCoord[0] + k_MaxCoord) / m_Resolution);
+  int x = (int)( (sqCoord[0] + m_MaxCoord) / m_StepSize);
   if (x >= m_Dimension)
   {
     x = m_Dimension - 1;
   }
   if (x < 0) { x = 0; }
-  int y = (int)( (sqCoord[1] + k_MaxCoord) / m_Resolution);
+  int y = (int)( (sqCoord[1] + m_MaxCoord) / m_StepSize);
   if (y >= m_Dimension)
   {
     y = m_Dimension - 1;
@@ -249,13 +295,14 @@ void ModifiedLambertProjection::normalizeSquares()
   double* north = m_NorthSquare->GetPointer(0);
   double* south = m_SouthSquare->GetPointer(0);
 
-
+  // Get the Sum of all the bins
   for(size_t i = 0; i < npoints; ++i)
   {
     nTotal = nTotal + north[i];
     sTotal = sTotal + south[i];
   }
 
+  // Divide each bin by the total of all the bins for that Hemisphere
   for(size_t i = 0; i < npoints; ++i)
   {
     north[i] = north[i]/nTotal;
@@ -293,8 +340,8 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
     for (int64_t x = 0; x < xpoints; x++)
     {
       //get (x,y) for stereographic projection pixel
-      xtmp = float(x-xpointshalf)*xres+(xres/2.0);
-      ytmp = float(y-ypointshalf)*yres+(yres/2.0);
+      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
+      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
       int index = y * xpoints + x;
       if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
       {
@@ -318,7 +365,7 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
             intensity[index] += getInterpolatedValue(ModifiedLambertProjection::SouthSquare, sqCoord);
           }
         }
-        intensity[index] /= 2.0;
+        intensity[index]  = intensity[index] * 0.5;
 
       }
 
