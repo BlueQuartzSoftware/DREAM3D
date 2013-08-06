@@ -90,6 +90,7 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   }
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
+  getGuiParametersFromFilter( filter.get() );
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
@@ -109,6 +110,24 @@ QEbsdToH5EbsdWidget::~QEbsdToH5EbsdWidget()
 QString QEbsdToH5EbsdWidget::getFilterGroup()
 {
   return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  EbsdToH5Ebsd* filter = EbsdToH5Ebsd::SafeObjectDownCast<AbstractFilter*, EbsdToH5Ebsd*>(filt);
+  m_OutputFile->setText( QString::fromStdString ( filter->getOutputFile() ) );
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  std::stringstream ss;
+  ss << filter->getZResolution();
+  m_zSpacing->setText( QString::fromStdString(ss.str()) );
+  m_SampleTransformationAngle = filter->getSampleTransformationAngle();
+  m_SampleTransformationAxis = filter->getSampleTransformationAxis();
+  m_EulerTransformationAngle = filter->getEulerTransformationAngle();
+  m_EulerTransformationAxis = filter->getEulerTransformationAxis();
 }
 
 // -----------------------------------------------------------------------------

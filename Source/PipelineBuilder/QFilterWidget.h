@@ -73,6 +73,16 @@ Q_DECLARE_METATYPE(FloatVec3Widget_t)
   QFILTERWIDGET_SET_PROPERTY(type, prpty)\
   QFILTERWIDGET_GET_PROPERTY(type, prpty)
 
+#define QFILTERWIDGET_INSTANCE_QPROPERTY(type, prpty)\
+  private:\
+    type m_##prpty;\
+  public:\
+    Q_PROPERTY(type ##prpty READ get##prpty WRITE set##prpty)\
+  public slots:\
+    QFILTERWIDGET_SET_PROPERTY(type, prpty)\
+  public:\
+    QFILTERWIDGET_GET_PROPERTY(type, prpty)\
+
 #endif
 
 
