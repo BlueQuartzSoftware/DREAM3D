@@ -75,6 +75,7 @@ QFilterWidget(parent)
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
+  getGuiParametersFromFilter( filter.get() );
   setupGui();
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
@@ -93,6 +94,14 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 {
     return QString::fromStdString(DREAM3D::FilterGroups::SyntheticBuildingFilters);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  InitializeSyntheticVolume* filter = InitializeSyntheticVolume::SafeObjectDownCast<AbstractFilter*, InitializeSyntheticVolume*>(filt);
 }
 
 // -----------------------------------------------------------------------------
