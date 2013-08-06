@@ -234,6 +234,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
                                      FilterParameter::WidgetType arrayListType);
     void setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
                                          FilterParameter* option, QLabel* label );
+
   private:
     QRect										m_DeleteRect;
     QPoint										dragStartPosition;

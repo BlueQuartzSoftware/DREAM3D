@@ -59,6 +59,7 @@ class GenericExample : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, AxisAngleRotations)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, GBCDArrayNames)
 
 
     /**

@@ -267,7 +267,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
       fprintf(f, "  public slots:\n");
       fprintf(f, "    void set%s(const %s &v, bool emitChanged = true);\n", prop.c_str(), cType.c_str());
       fprintf(f, "  public:\n");
-      fprintf(f, "    %s  get%s();\n\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s();\n\n\n", cType.c_str(), prop.c_str());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
@@ -288,7 +288,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "// AxisAngleWidget: Nothing in the header for %s \n", prop.c_str());
+      //fprintf(f, "// AxisAngleWidget: Nothing in the header for %s \n", prop.c_str());
       axisAngleWidgetCount++;
       if (axisAngleWidgetCount > 1)
       {
@@ -505,6 +505,7 @@ void createSourceFile( const std::string &group,
   bool implementArrayNameSelectionWidget = false;
   bool implementComparisonSelectionWidget = false;
   bool implementAxisAngleWidget = false;
+
   fprintf(f, "/*\n");
   fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "* If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
@@ -552,11 +553,6 @@ void createSourceFile( const std::string &group,
   fprintf(f, "{\n");
   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
   fprintf(f, "     getGuiParametersFromFilter( filter.get() );\n");
-
-  // Generate code to get all the array names and set the local variables that hold those names
-  //appendArrayNameConstructorCode<T>(t, f);
-
-  // Finish Writing the remainder of the constructor code
   fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
   fprintf(f, "     m_FilterSubGroup = QString::fromStdString(filter->getSubGroupName());\n");
   fprintf(f, "     setupGui();\n");
@@ -569,7 +565,10 @@ void createSourceFile( const std::string &group,
   // Write getGuiParametersFromFilter(filter) function
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter* filt)\n{\n", filter.c_str());
-  fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.c_str(), filter.c_str(), filter.c_str());
+  if (options.size() > 0)
+  {
+    fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.c_str(), filter.c_str(), filter.c_str());
+  }
   // Loop on all the options getting the defaults from a fresh instance of the filter class
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -583,19 +582,23 @@ void createSourceFile( const std::string &group,
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
       fprintf(f, "    //ArraySelectionWidget: Do we need to preset something from the filter maybe?\n");
+      fprintf(f, "   std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
       implementArrayNameSelectionWidget = true;
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
       fprintf(f, "    //AxisAngleWidget: Do we need to preset something from the filter maybe?\n");
+      fprintf(f, "   std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
       implementAxisAngleWidget = true;
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
       && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "    //ComparisonSelectionWidget: Do we need to preset something from the filter maybe?\n");
+      fprintf(f, "    std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
       implementComparisonSelectionWidget = true;
     }
+
     else
     {
       fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
@@ -631,14 +634,16 @@ void createSourceFile( const std::string &group,
     {
       fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
+    //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
+      fprintf(f, "      filter->set%s(w->getAxisAngleRotations());\n    }\n  }\n", prop.c_str());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
+     // fprintf(f, "//      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
+      fprintf(f, "        filter->set%s(w->getComparisonInputs());\n    }\n  }\n", prop.c_str());
     }
     else
     {
@@ -986,10 +991,6 @@ void createSourceFile( const std::string &group,
   parseSourceFileForMarker(ss.str(), "////!!##", replaceStream.str());
 #endif
 
-  // This template function will generate all the necessary code to set the name of each
-  // required and created array.
-  //appendArrayNameCodeToSource<T>(t, f);
-
   if (true == implementArrayNameComboBoxUpdated)
   {
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
@@ -1049,9 +1050,6 @@ void createSourceFile( const std::string &group,
   fprintf(f, "\n\n");
 
 
-
-
-
   // Close the file we are currently writing
   fclose(f);
 
@@ -1067,6 +1065,7 @@ void createSourceFile( const std::string &group,
   }
   else // Just because the files are the same size does not mean they are the same.
   {
+    std::cout << "  Comparing Files: " << filter << std::endl;
     FILE* c = fopen(completePath.c_str(), "rb");
     unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
     size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
@@ -1080,7 +1079,6 @@ void createSourceFile( const std::string &group,
     md5_current.update(currentContents, currentFileSize);
     md5_current.finalize();
     std::string currentHexDigest = md5_current.hexdigest();
-
 
     FILE* t = fopen(tempPath.c_str(), "rb");
     unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
@@ -1096,10 +1094,14 @@ void createSourceFile( const std::string &group,
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
+
+    std::cout << "    Hex Digest:    " << currentHexDigest << std::endl;\
+    std::cout << "    tempHexDigest: " << currentHexDigest << std::endl;
+
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
-      std::cout << "0-Creating Source File: " << completePath << std::endl;
+      std::cout << "  0-Copying Source File: " << completePath << std::endl;
       copyFile(tempPath, completePath);
     }
   }

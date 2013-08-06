@@ -77,6 +77,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(SphericalOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(GMTOutputFile)
 
+    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, MisorientationRotations)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

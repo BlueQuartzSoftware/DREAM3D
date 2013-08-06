@@ -71,7 +71,6 @@
 #include "ComparisonSelectionWidget.h"
 #include "AxisAngleWidget.h"
 
-
 #define PADDING 5
 #define BORDER 2
 #define IMAGE_WIDTH 17
@@ -85,10 +84,6 @@ QDataStream &operator>>( QDataStream &in, IntVec3Widget_t& v) { in >> v.x >> v.y
 
 QDataStream &operator<<( QDataStream &out, const FloatVec3Widget_t& v) { out << v.x << v.y << v.z; return out; }
 QDataStream &operator>>( QDataStream &in, FloatVec3Widget_t& v) { in >> v.x >> v.y >> v.z; return in; }
-
-//QDataStream &operator<<( QDataStream &out, const AxisAngleWidget_t& v)  { out << v.angle << v.h << v.k << v.l; return out; }
-//QDataStream &operator>>( QDataStream &in, AxisAngleWidget_t& v)  { in >> v.angle >> v.h >> v.k >> v.l; return in; }
-
 
 // Initialize private static member variable
 QString QFilterWidget::m_OpenDialogLastDirectory = "";
@@ -779,7 +774,7 @@ void QFilterWidget::setupGui()
     {
       setupFloatVec3Widget(frmLayout, optIndex, option, label);
     }
-     else if (wType == FilterParameter::AxisAngleWidget)
+    else if (wType == FilterParameter::AxisAngleWidget)
     {
       setupAxisAngleWidget(frmLayout, optIndex, option, label);
     }
@@ -953,7 +948,10 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label,
                                                 FilterParameter::WidgetType arrayListType)
 {
-  ComparisonSelectionWidget* w = new ComparisonSelectionWidget(this);
+ComparisonFilterParameter* param = ComparisonFilterParameter::SafePointerDownCast(option);
+if (NULL == param) { return; }
+
+  ComparisonSelectionWidget* w = new ComparisonSelectionWidget(param->getShowOperators(), this);
   switch(arrayListType)
   {
     case FilterParameter::CellArrayComparisonSelectionWidget:

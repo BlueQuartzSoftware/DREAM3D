@@ -271,6 +271,15 @@ void GenericExample::setupFilterParameters()
     options.push_back(option);
   }
 
+  /* Display the Single Array Selection Widget to collect Axis-Angle pairs from the user */
+  {
+//    FilterParameter::Pointer option = FilterParameter::New();
+//    option->setHumanLabel("GBCD Array Selections");
+//    option->setPropertyName("GBCDArrayNames");
+//    option->setWidgetType(FilterParameter::SingleArraySelectionWidget);
+//    option->setValueType("std::vector<std::string>");
+//    options.push_back(option);
+  }
 
   setFilterParameters(options);
 }
@@ -317,11 +326,13 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("SurfaceMeshFieldArrayName", getSurfaceMeshFieldArrayName());
   writer->writeValue("SurfaceMeshEnsembleArrayName", getSurfaceMeshEnsembleArrayName());
 
-  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName()); 
+  writer->writeValue("SolidMeshPointArrayName", getSolidMeshPointArrayName());
   writer->writeValue("SolidMeshFaceArrayName", getSolidMeshFaceArrayName());
   writer->writeValue("SolidMeshEdgeArrayName", getSolidMeshEdgeArrayName());
 
   writer->writeValue("AxisAngleRotations", getAxisAngleRotations());
+
+  writer->writeValue("GBCDArrayNames", getGBCDArrayNames());
 
   writer->closeFilterGroup();
   return index;

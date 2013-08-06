@@ -72,6 +72,8 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
+    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, GBCDArrayNames)
+
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
 
@@ -100,7 +102,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

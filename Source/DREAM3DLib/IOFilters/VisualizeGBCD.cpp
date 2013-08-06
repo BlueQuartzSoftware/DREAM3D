@@ -88,6 +88,15 @@ VisualizeGBCD::~VisualizeGBCD()
 void VisualizeGBCD::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+
+    /* Display the AxisAngleWidget to collect Axis-Angle pairs from the user */
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Misorientation Axis Angles");
+    option->setPropertyName("MisorientationRotations");
+    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    parameters.push_back(option);
+  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisAngle");
@@ -150,6 +159,8 @@ void VisualizeGBCD::setupFilterParameters()
     parameters.push_back(option);
   }
 #endif
+
+
   setFilterParameters(parameters);
 }
 
@@ -167,6 +178,7 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
   setStereoOutputFile( reader->readValue( "StereoOutputFile", getStereoOutputFile() ) );
   setSphericalOutputFile( reader->readValue( "SphericalOutputFile", getSphericalOutputFile() ) );
   setGMTOutputFile( reader->readValue( "GMTOutputFile", getGMTOutputFile() ) );
+  setMisorientationRotations(reader->readValue("MisorientationRotations", getMisorientationRotations()));
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -183,6 +195,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("StereoOutputFile", getStereoOutputFile() );
   writer->writeValue("SphericalOutputFile", getSphericalOutputFile() );
+  writer->writeValue("MisorientationRotations", getMisorientationRotations() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

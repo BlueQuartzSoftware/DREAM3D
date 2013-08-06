@@ -47,12 +47,20 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonSelectionTableModel::ComparisonSelectionTableModel(QObject* parent) :
+ComparisonSelectionTableModel::ComparisonSelectionTableModel(bool showOperators, QObject* parent) :
 QAbstractTableModel(parent),
 m_RowCount(0),
 m_NumberOfPhases(1)
 {
-  m_ColumnCount = ColumnCount;
+  if (showOperators)
+  {
+    m_ColumnCount = ColumnCount;
+  }
+  else
+  {
+    m_ColumnCount = 1;
+  }
+
 }
 
 // -----------------------------------------------------------------------------
