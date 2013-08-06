@@ -68,7 +68,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
     Q_OBJECT
   public:
-    ComparisonSelectionWidget(QWidget* parent = 0);
+    ComparisonSelectionWidget(bool showOperators, QWidget* parent = 0);
     virtual ~ComparisonSelectionWidget();
 
     /**
@@ -89,7 +89,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
     };
 
     DREAM3D_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
-
+    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
     /**
      * @brief populateArrayNames
@@ -115,31 +115,10 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
     virtual void writeOptions(QSettings &prefs, QString name);
 
     /**
-     * @brief This method extracts the values from the widget and pushes those values down into the AbstractFilter
-     * instance.
+     * @brief getComparisonInputs
+     * @return
      */
-    template<typename Filter>
-    void setComparisonsIntoFilter(Filter* filter)
-    {
-      std::vector<ComparisonInput_t> comps;
-      if (m_ComparisonSelectionTableModel == NULL) { return; }
-
-      int filterCount = m_ComparisonSelectionTableModel->rowCount();
-      QVector<QString> fieldNames;
-      QVector<float> fieldValues;
-      QVector<int> fieldOperators;
-      m_ComparisonSelectionTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
-
-      for(int i = 0; i < filterCount; ++i)
-      {
-        ComparisonInput_t comp;
-        comp.arrayName = fieldNames[i].toStdString();
-        comp.compOperator = fieldOperators[i];
-        comp.compValue = fieldValues[i];
-        comps.push_back(comp);
-      }
-      filter->setComparisonInputs(comps);
-    }
+    std::vector<ComparisonInput_t> getComparisonInputs();
 
   signals:
     void parametersChanged();

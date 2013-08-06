@@ -17,10 +17,10 @@
    <property name="margin">
     <number>4</number>
    </property>
-   <property name="spacing">
-    <number>6</number>
-   </property>
-   <item row="0" column="1">
+   <item row="0" column="1" rowspan="3">
+    <widget class="QTableView" name="m_TableView"/>
+   </item>
+   <item row="0" column="0" rowspan="3">
     <layout class="QVBoxLayout" name="verticalLayout">
      <property name="leftMargin">
       <number>0</number>
@@ -101,23 +101,20 @@
        </property>
       </widget>
      </item>
+     <item>
+      <spacer name="verticalSpacer">
+       <property name="orientation">
+        <enum>Qt::Vertical</enum>
+       </property>
+       <property name="sizeHint" stdset="0">
+        <size>
+         <width>20</width>
+         <height>40</height>
+        </size>
+       </property>
+      </spacer>
+     </item>
     </layout>
-   </item>
-   <item row="1" column="1">
-    <spacer name="verticalSpacer">
-     <property name="orientation">
-      <enum>Qt::Vertical</enum>
-     </property>
-     <property name="sizeHint" stdset="0">
-      <size>
-       <width>20</width>
-       <height>40</height>
-      </size>
-     </property>
-    </spacer>
-   </item>
-   <item row="0" column="0" rowspan="2">
-    <widget class="QTableView" name="m_TableView"/>
    </item>
   </layout>
  </widget>

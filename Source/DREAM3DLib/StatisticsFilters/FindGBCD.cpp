@@ -300,6 +300,18 @@ void FindGBCD::setupFilterParameters()
     option->setUnits("Degrees");
     parameters.push_back(option);
   }
+
+  /* Display the Single Array Selection Widget to collect Axis-Angle pairs from the user */
+  {
+    ComparisonFilterParameter::Pointer option = ComparisonFilterParameter::New();
+    option->setHumanLabel("GBCD Array Selections");
+    option->setPropertyName("GBCDArrayNames");
+    option->setShowOperators(false);
+    option->setWidgetType(FilterParameter::FaceArrayComparisonSelectionWidget);
+    option->setValueType("std::vector<ComparisonInput_t>");
+    parameters.push_back(option);
+  }
+
   setFilterParameters(parameters);
 }
 
@@ -312,6 +324,8 @@ void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int 
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setGBCDRes( reader->readValue("GBCDRes", 0) );
+  std::vector<ComparisonInput_t> defaults;
+  setGBCDArrayNames(reader->readValue("GBCDArrayNames",  defaults) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -323,6 +337,7 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("GBCDResolution", getGBCDRes() );
+  writer->writeValue("GBCDArrayNames", getGBCDArrayNames());
     writer->closeFilterGroup();
   return index;
 }
@@ -362,6 +377,12 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
       CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
+    }
+
+    if (m_GBCDArrayNames.size() == 0)
+    {
+      setErrorCondition(-999);
+      addErrorMessage(getHumanLabel(), "No Arrays were selected to include in the GBCD.", getErrorCondition());
     }
 
   }

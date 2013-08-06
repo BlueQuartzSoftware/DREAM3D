@@ -107,6 +107,30 @@ void AxisAngleWidget::on_deleteRow_clicked()
   }
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<AxisAngleInput_t> AxisAngleWidget::getAxisAngleRotations()
+{
+  std::vector<AxisAngleInput_t> comps;
+  if (m_TableModel == NULL) { return comps; }
+
+  int filterCount = m_TableModel->rowCount();
+  QVector<float> angles = m_TableModel->getData(AxisAngleTableModel::Angle);
+  QVector<float> axis = m_TableModel->getData(AxisAngleTableModel::Axis);
+
+  for(int i = 0; i < filterCount; ++i)
+  {
+    AxisAngleInput_t comp;
+    comp.angle = angles[i];
+    comp.h = axis[i*3 + 0];
+    comp.k = axis[i*3 + 1];
+    comp.l = axis[i*3 + 2];
+    comps.push_back(comp);
+  }
+  return comps;
+}
+
 #if 0
 // -----------------------------------------------------------------------------
 //
