@@ -12,13 +12,14 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 ## Version 4.3 Features/Bugs to Fix ##
 
-+ Visualize GBCD
-  + Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
-  +  Pole Figure smoothing function in Visualize GBCD
+**All of this is out at GitHub.com/dream3d**
++ Rewrite the Quaternion Code to only use 4 Components and implement basic Quaternion Math functions
++ Adapt statsGenerator Color PoleFigure creator to create image based on GBCD Visualization Data
++ Pole Figure smoothing function in Visualize GBCD
 + Add option to ReadH5Ebsd to Create the DataContainer in addition to creating the .h5ebsd file.
 + Reorganize Pipeline Menu to gather together "Favorite/Prebuilt" actions versus "Pipeline Actions"
 + PipelineView Widget
-    + When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
+  + When running a pipeline have a method that can disable all of the GUI widgets and Menus that would change the pipeline while running
     + During Execution of the pipeline dim the filters except for the one that is currently running
     + Disable modifying pipeline while a pipeline is running
     + Disable adding of filters into the pipeline while it is running.
@@ -33,19 +34,16 @@ This is the list of things to do. It is written with the Markdown style so it ca
 + Integration of Image Processing Library into DREAM3D
 + Image Data: Need way of reducing RGBA to RGB array so export to XDMF can work properly for image data
 + Add Filter to set Phase/Ensemble data instead of reading it from a file (Custom Gui for this one).
-+ Finish Abaqus output file filter
-
-
-## Future Features to Implement ##
++ Create filter to generate Abaqus input files, Albert Cerrone or Curt Bronkhorst to help with this
 
 
 ### Critical to Fix Before Bad Things Happen ###
-
+**All of this is out at GitHub.com/dream3d**
 + OrientationOps classes need a redesign so that we don't crash when we hit an unknown crystal structure.
 + All the shape ops classes need to be fully reentrant for parallel applications
 
 ### Joey K. Summer List ###
-
+**All of this is out at GitHub.com/dream3d**
 + Copy Pipeline from .dream3d into new .dream3d during pipeline execution
 + Import Pipeline from a .dream3d file
     - Add ability to append to pipeline folder in .dream3d file when starting a new pipeline with the read dream3d filter
@@ -58,12 +56,11 @@ This is the list of things to do. It is written with the Markdown style so it ca
     - The actual source code you will need to implement the _setupFilterParameters()_ function. You can copy/paste from other filters to build up the list of every parameter type.
     - This will make that when **FilterWidgetCodeGen** is run we are truly testing every type of parameter
 
-### Groeber Documentation
 
-+ Update Documentation for Visualize GBCD
 
 ### Documentation ###
-
+**All of this is out at GitHub.com/dream3d**
++ Update Documentation for Visualize GBCD
 + Tutorial::Small IN100 for Docs/Website
 + Tutorial::Synthetic Generation for Docs/Website
 + Tutorial::Visualization Techniques for Docs/Website
@@ -76,19 +73,19 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Workshop Feedback
-
+**All of this is out at GitHub.com/dream3d**
 + SurfaceMesh Face IPF Color display something about normals/orientation (Nathalie Gey's Question at workshop during surface meshing session)
 + Insert a "favorite" in between other filters, instead of only at the end of a pipeline
 + Write a .med file for the Salome FEM package which is just an HDF5 file.
 
 ### Developer Centric ###
-
+**All of this is out at GitHub.com/dream3d**
 + Add documentation on how to add new filter directly into DREAM3D
 + Add documentation on how to add new filter group directly into DREAM3D
 
 
 ### Statistics/Analysis/Other Algorithms ###
-
+**All of this is out at GitHub.com/dream3d**
 + Add filter to calculate histograms of user selected arrays (cell or field)
 + Add filter to insert subgrains
 + Fix the deformation statistics filter to adapt to new structure of transmission metrics
@@ -123,7 +120,7 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Still to Do ###
-
+**All of this is out at GitHub.com/dream3d**
 + "Tools" menu launches new instances of DREAM3D/StatsGenerator on Windows/Linux (Bummer)
 + Comprehensive search of the help system (Possibly QAssistant based?)
 + Put an option on the DREAM3D file writer to write the voxel data container as a solid mesh instead of the XDMF rectilinear grid.
@@ -151,14 +148,14 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ###  Synthetic Building Filters ###
-
+**All of this is out at GitHub.com/dream3d**
 + Add ability to read list of ellipsoids into packing algorithms
 + Look into bias near outside of box during synthetic building
 + Fix synthetic builder to note if volume is 2D and actually pack slices
 
 
 ###  IO Filters ###
-
+**All of this is out at GitHub.com/dream3d**
 + Add output directory to the HexToSquare Grid convertor filter
 + Provide better feedback on 3D .ctf files (No way to do this without major changes to codes)
 + Add filter to write out slices as images
@@ -170,18 +167,18 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ### Feature Request ###
-
+**All of this is out at GitHub.com/dream3d**
 + A filter that finds all the twins in the microstructure and assigns them to another phase (phase 3), so that they can be visualized differently to the surrounding grains (phase 2) and grains that are untwined (phase 1).
 + Add splash Screen similar to ParaView where the various entities that have donated code or Funding are shown with their logos.
 
 ###  Surface Meshing ###
-
+**All of this is out at GitHub.com/dream3d**
 + Add mesh decimation filter (surface or volume)
 + Add Marching TetraHedra surface Meshing Filter
 
 
 ###  MFE Smoothing ###
-
+**All of this is out at GitHub.com/dream3d**
 + add ability to stop the smoothing
 + bug in edges file is stopping the use in the smoothing filter
 
@@ -194,12 +191,9 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 
 ## Items Completed ##
+**All of this is out at GitHub.com/dream3d**
 
-### Develop Version 4.3 Fixed ###
-
-
-
-### Develop Version 4.2 Fixed ###
+### Version 4.2 Fixed ###
 
 #### 4.2.90 ###
 + Fixed bug where Quaternion::ElementWiseAbsd was casting to integers due to use of 'abs' instead of 'fabs'
@@ -207,9 +201,6 @@ This is the list of things to do. It is written with the Markdown style so it ca
 
 #### 4.2.88 ###
 + adding filters for volume fraction and surface area to volume ratio
-+ Implement Experimental Abaqus output file filter
-+ Rewrite the Quaternion Code to only use 4 Components and implement basic Quaternion Math functions
-+ Adding filters for volume fraction and surface area to volume ratio
 + Fix bug in ScalarSegmentGrains where boolean arrays are not segmented correctly
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Visualize GBCD, empty GMT file causes crash.
