@@ -288,7 +288,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      //fprintf(f, "// AxisAngleWidget: Nothing in the header for %s \n", prop.c_str());
+      fprintf(f, "DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, %s)\n\n", prop.c_str());
       axisAngleWidgetCount++;
       if (axisAngleWidgetCount > 1)
       {
@@ -299,6 +299,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
              && implementPreflightAboutToExecute == true)
     {
+      fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, %s)\n\n", prop.c_str());
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
@@ -590,16 +591,12 @@ void createSourceFile( const std::string &group,
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      //fprintf(f, "    #error AxisAngleWidget\n");
-      fprintf(f, "    //AxisAngleWidget: Do we need to preset something from the filter maybe?\n");
-      fprintf(f, "   std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
-      implementAxisAngleWidget = true;
+      fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
       && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "    //ComparisonSelectionWidget: Do we need to preset something from the filter maybe?\n");
-      fprintf(f, "    std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
+      fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
       implementComparisonSelectionWidget = true;
     }
 
