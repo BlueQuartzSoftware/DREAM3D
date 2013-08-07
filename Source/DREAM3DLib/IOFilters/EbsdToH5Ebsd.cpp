@@ -101,6 +101,16 @@ void EbsdToH5Ebsd::setupFilterParameters()
 void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
+  setOutputFile( reader->readValue("OutputFile", getOutputFile()) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setZResolution( reader->readValue("ZResolution", getZResolution()) );
+  setSampleTransformationAngle( reader->readValue("SampleTransformationAngle", getSampleTransformationAngle()) );
+  setSampleTransformationAxis( reader->readValue("SampleTransformationAxis", getSampleTransformationAxis()) );
+  setEulerTransformationAngle( reader->readValue("EulerTransformationAngle", getEulerTransformationAngle()) );
+  setEulerTransformationAxis( reader->readValue("EulerTransformationAxis", getEulerTransformationAxis()) );
+  setRefFrameZDir( static_cast<Ebsd::RefFrameZDir>( reader->readValue("RefFrameZDir", getRefFrameZDir() ) ) );
+  setEbsdFileList( reader->readValue("EbsdFileList", getEbsdFileList()) );
   reader->closeFilterGroup();
 }
 
@@ -110,6 +120,16 @@ void EbsdToH5Ebsd::readFilterParameters(AbstractFilterParametersReader* reader, 
 int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("OutputFile", getOutputFile());
+  writer->writeValue("ZStartIndex", getZStartIndex());
+  writer->writeValue("ZEndIndex", getZEndIndex());
+  writer->writeValue("ZResolution", getZResolution());
+  writer->writeValue("SampleTransformationAngle", getSampleTransformationAngle());
+  writer->writeValue("SampleTransformationAxis", getSampleTransformationAxis());
+  writer->writeValue("EulerTransformationAngle", getEulerTransformationAngle());
+  writer->writeValue("EulerTransformationAxis", getEulerTransformationAxis());
+  writer->writeValue("RefFrameZDir", getRefFrameZDir());
+  writer->writeValue("EbsdFileList", getEbsdFileList());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

@@ -60,6 +60,20 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+
     virtual ~RemoveArrays();
 
     typedef std::set<std::string> ArrayList_t;
@@ -132,20 +146,6 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-  private:
-    std::set<std::string> m_SelectedVoxelCellArrays;
-    std::set<std::string> m_SelectedVoxelFieldArrays;
-    std::set<std::string> m_SelectedVoxelEnsembleArrays;
-
-    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFieldArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEnsembleArrays;
-
-    std::set<std::string> m_SelectedSolidMeshVertexArrays;
-    std::set<std::string> m_SelectedSolidMeshFaceArrays;
-    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
 
     RemoveArrays(const RemoveArrays&); // Copy Constructor Not Implemented
     void operator=(const RemoveArrays&); // Operator '=' Not Implemented

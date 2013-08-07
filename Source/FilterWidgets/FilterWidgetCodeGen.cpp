@@ -581,12 +581,16 @@ void createSourceFile( const std::string &group,
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "    //ArraySelectionWidget: Do we need to preset something from the filter maybe?\n");
-      fprintf(f, "   std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
+      fprintf(f, "     ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "     if (NULL != w) {\n");
+      fprintf(f, "        w->setArraySelections(filter);\n");
+      fprintf(f, "     }\n");
+
       implementArrayNameSelectionWidget = true;
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
+      //fprintf(f, "    #error AxisAngleWidget\n");
       fprintf(f, "    //AxisAngleWidget: Do we need to preset something from the filter maybe?\n");
       fprintf(f, "   std::cout << \"%s::getGuiParametersFromFilter needs implementing Property: %s Type: %s\" << std::endl;\n", filter.c_str(), prop.c_str(), typ.c_str() );
       implementAxisAngleWidget = true;

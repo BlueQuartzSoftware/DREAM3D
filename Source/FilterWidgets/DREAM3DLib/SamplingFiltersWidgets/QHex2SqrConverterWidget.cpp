@@ -101,6 +101,16 @@ QString QHex2SqrConverterWidget::getFilterGroup()
 void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   Hex2SqrConverter* filter = Hex2SqrConverter::SafeObjectDownCast<AbstractFilter*, Hex2SqrConverter*>(filt);
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  std::stringstream ss;
+  ss << filter->getXResolution();
+  m_xSpacing->setText(QString::fromStdString(ss.str()));
+  ss.clear();
+  ss << filter->getYResolution();
+  m_ySpacing->setText(QString::fromStdString(ss.str()));
+  ss.clear();
+  setEbsdFileList( filter->getEbsdFileList() );
 }
 
 // -----------------------------------------------------------------------------

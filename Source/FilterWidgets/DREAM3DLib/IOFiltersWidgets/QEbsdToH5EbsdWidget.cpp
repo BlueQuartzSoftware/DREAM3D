@@ -128,6 +128,8 @@ void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
   m_SampleTransformationAxis = filter->getSampleTransformationAxis();
   m_EulerTransformationAngle = filter->getEulerTransformationAngle();
   m_EulerTransformationAxis = filter->getEulerTransformationAxis();
+  setRefFrameZDir( filter->getRefFrameZDir() );
+  setEbsdFileList( filter->getEbsdFileList() );
 }
 
 // -----------------------------------------------------------------------------
@@ -437,6 +439,21 @@ Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
   if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
   if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
   return Ebsd::UnknownRefFrameZDirection;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdToH5EbsdWidget::setRefFrameZDir(Ebsd::RefFrameZDir ref)
+{
+  if (ref == Ebsd::LowtoHigh)
+  {
+    m_StackLowToHigh->setChecked(true);
+  }
+  if (ref == Ebsd::HightoLow)
+  {
+    m_StackHighToLow->setChecked(true);
+  }
 }
 
 
