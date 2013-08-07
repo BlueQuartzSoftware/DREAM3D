@@ -55,13 +55,13 @@ class DREAM3DLib_EXPORT MatrixMath
     virtual ~MatrixMath();
 
     static void Multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3]);
-    static void Multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3]);
     static void Multiply3x3with3x1(const float g1[3][3], float g2[3], float outMat[3]);
     static void Multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
     static void Multiply3x1withConstant(float g[3], float constant);
 
     static void Transpose3x3(float g[3][3], float outMat[3][3]);
     static void Copy3x3(float g[3][3], float outMat[3][3]);
+    static void Copy3x1(float g[3], float outMat[3]);
     static void Normalize3x3(float g[3][3]);
     static void Normalize3x1(float g[3]);
     static float DotProduct(float a[3], float b[3]);

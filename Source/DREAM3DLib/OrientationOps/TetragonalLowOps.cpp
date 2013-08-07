@@ -34,43 +34,31 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "TetragonalOps.h"
+#include "TetragonalLowOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-namespace TetragonalMath {
+namespace TetragonalLowMath {
   namespace Detail {
 
-    static const float TetraDim1InitValue = powf((0.75f*((M_PI/2.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
-    static const float TetraDim2InitValue = powf((0.75f*((M_PI/2.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
-    static const float TetraDim3InitValue = powf((0.75f*((M_PI/4.0f)-sinf((M_PI/4.0f)))),(1.0f/3.0f));
-    static const float TetraDim1StepValue = TetraDim1InitValue/18.0f;
-    static const float TetraDim2StepValue = TetraDim2InitValue/18.0f;
+    static const float TetraDim1InitValue = powf((0.75f*((M_PI)-sinf((M_PI)))),(1.0f/3.0f));
+    static const float TetraDim2InitValue = powf((0.75f*((M_PI)-sinf((M_PI)))),(1.0f/3.0f));
+    static const float TetraDim3InitValue = powf((0.75f*((M_PI/4.0f)-sinf((M_PI/2.0f)))),(1.0f/3.0f));
+    static const float TetraDim1StepValue = TetraDim1InitValue/36.0f;
+    static const float TetraDim2StepValue = TetraDim2InitValue/36.0f;
     static const float TetraDim3StepValue = TetraDim3InitValue/9.0f;
 
-    static const float TetraRodSym[8][3] = {{0.0f,0.0f,0.0f},
-                      {10000000000.0f,0.0f,0.0f},
-                      {0.0f,10000000000.0f,0.0f},
+    static const float TetraRodSym[4][3] = {{0.0f,0.0f,0.0f},
                       {0.0f,0.0f,10000000000.0f},
                       {0.0f,0.0f,-1.0f},
-                      {0.0f,0.0f,1.0f},
-                      {10000000000.0f,10000000000.0f,0.0},
-                      {-10000000000.0f,10000000000.0f,0.0}};
+                      {0.0f,0.0f,1.0f}};
 
-        static const float TetraMatSym[8][3][3] =
+        static const float TetraMatSym[4][3][3] =
              {{{1.0, 0.0, 0.0},
               {0.0, 1.0, 0.0},
               {0.0, 0.0, 1.0}},
-
-              {{0.0, 0.0, 1.0},
-              {0.0, 1.0, 0.0},
-              {-1.0, 0.0, 0.0}},
-
-              {{-1.0, 0.0,  0.0},
-              {0.0, 1.0,  0.0},
-              {0.0, 0.0, -1.0}},
 
               {{-1.0,  0.0, 0.0},
               {0.0, -1.0, 0.0},
@@ -82,15 +70,7 @@ namespace TetragonalMath {
 
               {{0.0, -1.0, 0.0},
               {1.0,  0.0, 0.0},
-              {0.0,  0.0, 1.0}},
-
-              {{0.0, -1.0, 0.0},
-              {0.0,  0.0, 1.0},
-              {-1.0,  0.0, 0.0}},
-
-              {{0.0, -1.0,  0.0},
-              {-1.0,  0.0,  0.0},
-              {0.0,  0.0, -1.0}}};
+              {0.0,  0.0, 1.0}}};
   }
 }
 
@@ -98,12 +78,12 @@ namespace TetragonalMath {
 const static float m_OnePointThree = 1.33333333333f;
 
 
-using namespace TetragonalMath::Detail;
+using namespace TetragonalLowMath::Detail;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TetragonalOps::TetragonalOps()
+TetragonalLowOps::TetragonalLowOps()
 {
   // TODO Auto-generated constructor stub
 
@@ -112,12 +92,12 @@ TetragonalOps::TetragonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TetragonalOps::~TetragonalOps()
+TetragonalLowOps::~TetragonalLowOps()
 {
   // TODO Auto-generated destructor stub
 }
 
-float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
+float TetragonalLowOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3)
 {
@@ -166,30 +146,26 @@ float TetragonalOps::_calcMisoQuat(const QuatF quatsym[8], int numsym,
   return wmin;
 }
 
-float TetragonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float TetragonalLowOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
-  int numsym = 8;
+  int numsym = 4;
 
   return _calcMisoQuat(TetraQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TetragonalOps::getQuatSymOp(int i, QuatF &q)
+void TetragonalLowOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(TetraQuatSym[i], q);
-//  q.x = TetraQuatSym[i][0];
-//  q.y = TetraQuatSym[i][1];
-//  q.z = TetraQuatSym[i][2];
-//  q.w = TetraQuatSym[i][3];
 }
 
-void TetragonalOps::getRodSymOp(int i,float *r)
+void TetragonalLowOps::getRodSymOp(int i,float *r)
 {
   r[0] = TetraRodSym[i][0];
   r[1] = TetraRodSym[i][1];
   r[2] = TetraRodSym[i][2];
 }
 
-void TetragonalOps::getMatSymOp(int i,float g[3][3])
+void TetragonalLowOps::getMatSymOp(int i,float g[3][3])
 {
   g[0][0] = TetraMatSym[i][0][0];
   g[0][1] = TetraMatSym[i][0][1];
@@ -202,14 +178,14 @@ void TetragonalOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = TetraMatSym[i][2][2];
 }
 
-void TetragonalOps::getODFFZRod(float &r1,float &r2, float &r3)
+void TetragonalLowOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  int  numsym = 8;
+  int  numsym = 4;
 
   _calcRodNearestOrigin(TetraRodSym, numsym, r1, r2, r3);
 }
 
-void TetragonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void TetragonalLowOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
   float w, n1, n2, n3;
   float FZn1, FZn2, FZn3;
@@ -224,14 +200,14 @@ void TetragonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void TetragonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void TetragonalLowOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
-  int numsym = 8;
+  int numsym = 4;
 
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
-void TetragonalOps::getFZQuat(QuatF &qr)
+void TetragonalLowOps::getFZQuat(QuatF &qr)
 {
   int numsym = 8;
 
@@ -239,7 +215,7 @@ void TetragonalOps::getFZQuat(QuatF &qr)
 
 }
 
-int TetragonalOps::getMisoBin(float r1, float r2, float r3)
+int TetragonalLowOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -253,14 +229,14 @@ int TetragonalOps::getMisoBin(float r1, float r2, float r3)
   step[0] = TetraDim1StepValue;
   step[1] = TetraDim2StepValue;
   step[2] = TetraDim3StepValue;
-  bins[0] = 36.0;
-  bins[1] = 36.0;
+  bins[0] = 72.0;
+  bins[1] = 72.0;
   bins[2] = 18.0;
 
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
-void TetragonalOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void TetragonalLowOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
   float init[3];
   float step[3];
@@ -273,9 +249,9 @@ void TetragonalOps::determineEulerAngles(int choose, float &synea1, float &synea
   step[0] = TetraDim1StepValue;
   step[1] = TetraDim2StepValue;
   step[2] = TetraDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
@@ -284,7 +260,7 @@ void TetragonalOps::determineEulerAngles(int choose, float &synea1, float &synea
 }
 
 
-void TetragonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void TetragonalLowOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
@@ -296,16 +272,16 @@ void TetragonalOps::determineRodriguesVector( int choose, float &r1, float &r2, 
   step[0] = TetraDim1StepValue;
   step[1] = TetraDim2StepValue;
   step[2] = TetraDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
-int TetragonalOps::getOdfBin(float r1, float r2, float r3)
+int TetragonalLowOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -319,35 +295,35 @@ int TetragonalOps::getOdfBin(float r1, float r2, float r3)
   step[0] = TetraDim1StepValue;
   step[1] = TetraDim2StepValue;
   step[2] = TetraDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
+  bins[0] = 72.0f;
+  bins[1] = 72.0f;
   bins[2] = 18.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void TetragonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void TetragonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
   schmidfactor = 0;
   slipsys = 0;
 }
 
-void TetragonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void TetragonalLowOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   mPrime = 0;
 }
 
-void TetragonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void TetragonalLowOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   F1 = 0;
 }
 
-void TetragonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void TetragonalLowOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   F1spt = 0;
 }
 
-void TetragonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void TetragonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   F7 = 0;
 }
@@ -355,7 +331,7 @@ void TetragonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+void TetragonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   BOOST_ASSERT(false);
 }

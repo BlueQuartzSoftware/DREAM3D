@@ -333,11 +333,11 @@ QString PrecipitatePhaseWidget::getComboString()
 {
   QString s = QString::number(m_PhaseIndex);
   s.append(" - ");
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     s.append("Cubic");
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     s.append("Hexagonal");
   }

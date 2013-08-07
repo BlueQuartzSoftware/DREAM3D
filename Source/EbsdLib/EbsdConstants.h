@@ -156,22 +156,6 @@ namespace Ebsd
     const unsigned int Cubic_High = 1; //!< Cubic Cubic-High m3m
 
     const unsigned int UnknownCrystalStructure = 999; //!< UnknownCrystalStructure
-
-   class Check
-   {
-    public:
-      static bool IsCubic(unsigned int xtal)
-      {
-        if (xtal == Cubic_High) return true;
-        return false;
-      }
-
-      static bool IsHexagonal(unsigned int xtal)
-      {
-        if (xtal == Hexagonal_High) return true;
-        return false;
-      }
-   };
   }
 
   namespace BravaisLattice

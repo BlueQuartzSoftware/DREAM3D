@@ -89,6 +89,8 @@ class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationOps
     virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
+    
+    
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
   protected:

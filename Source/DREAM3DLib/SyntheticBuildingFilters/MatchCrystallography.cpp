@@ -416,8 +416,8 @@ void MatchCrystallography::assign_eulers(int ensem)
       choose = 0;
       totaldensity = 0;
 
-      if( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]) ) { numbins = CubicOps::k_OdfSize; };
-      if( Ebsd::CrystalStructure::Check::IsHexagonal( m_CrystalStructures[phase] ) ) { numbins = HexagonalOps::k_OdfSize; }
+      if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase] ) { numbins = CubicOps::k_OdfSize; };
+      if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase] ) { numbins = HexagonalOps::k_OdfSize; }
 
       for (int j = 0; j < numbins; j++)
       {
@@ -541,8 +541,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   size_t numfields = m->getNumFieldTuples();
   iterations = 0;
   badtrycount = 0;
-  if( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[ensem])) { numbins = 18 * 18 * 18; }
-  if( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[ensem])) { numbins = 36 * 36 * 12; }
+  if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[ensem]) { numbins = 18 * 18 * 18; }
+  if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem]) { numbins = 36 * 36 * 12; }
   while (badtrycount < (m_MaxIterations/10) && iterations < m_MaxIterations)
   {
     std::stringstream ss;

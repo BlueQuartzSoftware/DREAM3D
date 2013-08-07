@@ -97,7 +97,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
   PoleFigureImageUtilities colorPoleFigure;
   size_t numEntries = e1s.size();
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     std::cout << "Generating Cubic Pole Figure Images" << std::endl;
 
@@ -105,8 +105,8 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
 
-    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
-                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+//    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
+//                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;
@@ -156,7 +156,7 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
 
 
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     std::cout << "Generating Hex Pole Figure Images" << std::endl;
 
@@ -171,8 +171,8 @@ unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<flo
     Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
-    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
-                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+//    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
+//                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
     if (err == 1)
     {
       return EXIT_FAILURE;

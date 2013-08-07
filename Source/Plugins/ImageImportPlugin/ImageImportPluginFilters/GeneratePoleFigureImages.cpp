@@ -342,13 +342,13 @@ void GeneratePoleFigureImages::execute()
       }
     }
 
-    if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[phase]))
+    if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
     {
       generateCubicPoleFigures(subEulers.get());
     }
-    else if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[phase]))
+    else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase])
     {
-      // notifyErrorMessage("Hexagonal Pole Figures are not supported yet.", -1);
+      generateHexPoleFigures(subEulers.get());
     }
 
 
@@ -390,7 +390,63 @@ void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
   writeImage(m_OutputPath, poleFigure111.get(), getImageSize(), "111");
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::generateHexPoleFigures(FloatArrayType* eulers)
+{
+  notifyStatusMessage("Generating Hex Based Pole Figures for <0001>, <1010> & <1120>");
 
+  DoubleArrayType::Pointer poleFigure0001 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure1010 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure1120 = DoubleArrayType::NullPointer();
+  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure0001, poleFigure1010, poleFigure1120);
+
+
+  // Generate the <0001> pole figure
+  QString path = generateVtkPath("0001");
+  writeVtkFile(path.toStdString(), poleFigure0001.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure0001.get(), getImageSize(), "0001");
+
+
+  // Generate the <1010> pole figure image
+  path = generateVtkPath("1010");
+  writeVtkFile(path.toStdString(), poleFigure1010.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure1010.get(), getImageSize(), "1010");
+
+  // Generate the <1120> pole figure image
+  path = generateVtkPath("1120");
+  writeVtkFile(path.toStdString(), poleFigure1120.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure1120.get(), getImageSize(), "1120");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void GeneratePoleFigureImages::generateOrthoPoleFigures(FloatArrayType* eulers)
+{
+  notifyStatusMessage("Generating Hex Based Pole Figures for <100>, <010> & <001>");
+
+  DoubleArrayType::Pointer poleFigure100 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure010 = DoubleArrayType::NullPointer();
+  DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
+  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure100, poleFigure010, poleFigure001);
+
+  // Generate the <100> pole figure image
+  QString path = generateVtkPath("100");
+  writeVtkFile(path.toStdString(), poleFigure100.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure100.get(), getImageSize(), "100");
+
+  // Generate the <010> pole figure image
+  path = generateVtkPath("010");
+  writeVtkFile(path.toStdString(), poleFigure010.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure010.get(), getImageSize(), "010");
+
+  // Generate the <001> pole figure
+  path = generateVtkPath("001");
+  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+  writeImage(m_OutputPath, poleFigure001.get(), getImageSize(), "001");
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
