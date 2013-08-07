@@ -55,22 +55,22 @@ void TestCrystalStructureTest()
   uint32_t hhigh = Ebsd::CrystalStructure::Hexagonal_High;
   uint32_t hlow = Ebsd::CrystalStructure::Hexagonal_Low;
 
-  bool b = Ebsd::CrystalStructure::Check::IsCubic(chigh);
+  bool b = Ebsd::CrystalStructure::Cubic_High == chigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-  b = Ebsd::CrystalStructure::Check::IsCubic(clow);
+  b = Ebsd::CrystalStructure::Cubic_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-  b = Ebsd::CrystalStructure::Check::IsCubic(hlow);
+  b = Ebsd::CrystalStructure::Cubic_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-   b = Ebsd::CrystalStructure::Check::IsHexagonal(hhigh);
+   b = Ebsd::CrystalStructure::Hexagonal_High == hhigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-  b = Ebsd::CrystalStructure::Check::IsHexagonal(hlow);
+  b = Ebsd::CrystalStructure::Hexagonal_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-  b = Ebsd::CrystalStructure::Check::IsHexagonal(clow);
+  b = Ebsd::CrystalStructure::Hexagonal_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
 }

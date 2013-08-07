@@ -134,8 +134,8 @@ void TestTextureStatsGen()
     std::vector<float > y011(npoints * 6);
     std::vector<float > x111(npoints * 4);
     std::vector<float > y111(npoints * 4);
-    err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                        &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+//    err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+//                                        &(y011.front()), &(x111.front()), &(y111.front()), npoints);
 
     // Now generate the actual XY point data that gets plotted.
     // These are the output vectors
@@ -166,8 +166,8 @@ void TestTextureStatsGen()
     std::vector<float > y011(npoints * 3);
     std::vector<float > x111(npoints * 3);
     std::vector<float > y111(npoints * 3);
-    err = StatsGen::GenHexODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                      &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+//    err = StatsGen::GenHexODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+//                                      &(y011.front()), &(x111.front()), &(y111.front()), npoints);
 
   }
 
@@ -180,8 +180,8 @@ void TestTextureStatsGen()
     std::vector<float > y011(npoints * 6);
     std::vector<float > x111(npoints * 4);
     std::vector<float > y111(npoints * 4);
-    err = StatsGen::GenOrthoRhombicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                               &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+//    err = StatsGen::GenOrthoRhombicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+//                                               &(y011.front()), &(x111.front()), &(y111.front()), npoints);
   }
 
   {

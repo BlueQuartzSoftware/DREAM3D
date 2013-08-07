@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef HEXAGONALOPS_H_
-#define HEXAGONALOPS_H_
+#ifndef HexagonalLowOPS_H_
+#define HexagonalLowOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
 
@@ -45,43 +45,37 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
-namespace HexagonalMath {
+namespace HexagonalLowMath {
   namespace Detail {
-    static const QuatF HexQuatSym[12] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+    static const QuatF HexQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
                          QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
                          QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
                          QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
                          QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f),
-                         QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.866025400f, 0.500000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.500000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.86602540f, 0.500000000f, 0.000000000f, 0.000000000)};
+                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)};
   }
 }
 /**
- * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/OrientationOps/HexagonalOps.h
+ * @class HexagonalLowOps HexagonalLowOps.h DREAM3DLib/Common/OrientationOps/HexagonalLowOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
+class DREAM3DLib_EXPORT HexagonalLowOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(HexagonalOps)
-    MXA_TYPE_MACRO_SUPER(HexagonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(HexagonalOps)
+    MXA_SHARED_POINTERS(HexagonalLowOps)
+    MXA_TYPE_MACRO_SUPER(HexagonalLowOps, OrientationOps)
+    MXA_STATIC_NEW_MACRO(HexagonalLowOps)
 
-    HexagonalOps();
-    virtual ~HexagonalOps();
+    HexagonalLowOps();
+    virtual ~HexagonalLowOps();
 
-    static const int k_OdfSize = 15552;
-    static const int k_MdfSize = 15552;
-    static const int k_NumSymQuats = 12;
+    static const int k_OdfSize = 62208;
+    static const int k_MdfSize = 62208;
+    static const int k_NumSymQuats = 6;
 
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
@@ -114,8 +108,8 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
                   float &n1, float &n2, float &n3);
 
   private:
-    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
+    HexagonalLowOps(const HexagonalLowOps&); // Copy Constructor Not Implemented
+    void operator=(const HexagonalLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* HEXAGONALOPS_H_ */
+#endif /* HexagonalLowOPS_H_ */

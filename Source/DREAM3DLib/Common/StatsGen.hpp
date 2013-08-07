@@ -219,26 +219,17 @@ class StatsGen
      * @brief  This method will generate ODF data for 3 scatter plots which are the
      * <001>, <011> and <111> directions.
      * @param odf Pointer to ODF bin data which has been sized to CubicOps::k_OdfSize
-     * @param x001 [OUT] Pointer to X Values of the [001] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y001 [OUT] Pointer to Y Values of the [001] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x011 [OUT] Pointer to X Values of the [011] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y011 [OUT] Pointer to Y Values of the [011] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x111 [OUT] Pointer to X Values of the [111] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y111 [OUT] Pointer to Y Values of the [111] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param eulers Euler angles to be generated. This memory must already be preallocated.
      * @param npoints The number of points for the Scatter Plot which is at least the number of elements used in the allocation of the various output arrays.
      */
     template<typename T>
-    static int GenCubicODFPlotData(const T* odf, T* x001, T* y001, T* x011, T* y011, T* x111, T* y111, size_t npoints)
+    static int GenCubicODFPlotData(const T* odf, T* eulers, size_t npoints)
     {
 
       DREAM3D_RANDOMNG_NEW()
-          int err = 0;
+      int err = 0;
       int choose;
-      typename QuaternionMath<T>::Quaternion q1;
       T ea1, ea2, ea3;
-      T g[3][3];
-      T x, y, z;
-      T xpf, ypf;
       T totaldensity;
       T random, density;
 
@@ -258,122 +249,9 @@ class StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
-        ops.getFZQuat(q1);
-        // random = rg.genrand_res53();
-        g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
-        g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
-        g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
-        g[1][0] = (2 * q1.x * q1.y + 2 * q1.z * q1.w);
-        g[1][1] = (1 - 2 * q1.x * q1.x - 2 * q1.z * q1.z);
-        g[1][2] = (2 * q1.y * q1.z - 2 * q1.x * q1.w);
-        g[2][0] = (2 * q1.x * q1.z - 2 * q1.y * q1.w);
-        g[2][1] = (2 * q1.y * q1.z + 2 * q1.x * q1.w);
-        g[2][2] = (1 - 2 * q1.x * q1.x - 2 * q1.y * q1.y);
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i] = xpf;
-        y001[3 * i] = ypf;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i + 1] = xpf;
-        y001[3 * i + 1] = ypf;
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i + 2] = xpf;
-        y001[3 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][0] + g[0][1]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][0] + g[1][1]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][0] + g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i] = xpf;
-        y011[6 * i] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 1] = xpf;
-        y011[6 * i + 1] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][2] + g[0][0]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][2] + g[1][0]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][2] + g[2][0]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 2] = xpf;
-        y011[6 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][0] - g[0][1]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][0] - g[1][1]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][0] - g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 3] = xpf;
-        y011[6 * i + 3] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][1] - g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][1] - g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][1] - g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 4] = xpf;
-        y011[6 * i + 4] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][2] - g[0][0]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][2] - g[1][0]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][2] - g[2][0]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 5] = xpf;
-        y011[6 * i + 5] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] + g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] + g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i] = xpf;
-        y111[4 * i] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] + g[0][1] - g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] + g[1][1] - g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] + g[2][1] - g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 1] = xpf;
-        y111[4 * i + 1] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] - g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] - g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] - g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 2] = xpf;
-        y111[4 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (-g[0][0] + g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (-g[1][0] + g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (-g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 3] = xpf;
-        y111[4 * i + 3] = ypf;
+        eulers[3*i+0] = ea1;
+        eulers[3*i+1] = ea2;
+        eulers[3*i+2] = ea3;
       }
       return err;
     }
@@ -386,27 +264,16 @@ class StatsGen
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param odf [input] The ODF data
-     * @param x0001 X Values of the [0001] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y0001 Y Values of the [0001] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x1120 X Values of the [1120] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y1120 Y Values of the [1120] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x1010 X Values of the [1010] PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y1010 Y Values of the [1010] PF Scatter plot (Output). This memory must already be preallocated.
+     * @param eulers Euler angles to be generated. This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenHexODFPlotData(T* odf, T* x0001, T* y0001,
-                                  T* x1120, T* y1120,
-                                  T* x1010, T* y1010, int npoints)
+    static int GenHexODFPlotData(T* odf, T* eulers, int npoints)
     {
       DREAM3D_RANDOMNG_NEW()
       int err = 0;
       int choose;
       float ea1, ea2, ea3;
-      QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
       float totaldensity;
       float random, density;
       HexagonalOps ops;
@@ -425,74 +292,9 @@ class StatsGen
           if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
-        ops.getFZQuat(q1);
-        //    random = rg.genrand_res53();
-        g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
-        g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
-        g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
-        g[1][0] = (2 * q1.x * q1.y + 2 * q1.z * q1.w);
-        g[1][1] = (1 - 2 * q1.x * q1.x - 2 * q1.z * q1.z);
-        g[1][2] = (2 * q1.y * q1.z - 2 * q1.x * q1.w);
-        g[2][0] = (2 * q1.x * q1.z - 2 * q1.y * q1.w);
-        g[2][1] = (2 * q1.y * q1.z + 2 * q1.x * q1.w);
-        g[2][2] = (1 - 2 * q1.x * q1.x - 2 * q1.y * q1.y);
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x0001[1 * i] = xpf;
-        y0001[1 * i] = ypf;
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[3 * i] = xpf;
-        y1120[3 * i] = ypf;
-        x = (0.5 * g[0][0]) + (0.866025 * g[0][1]);
-        y = (0.5 * g[1][0]) + (0.866025 * g[1][1]);
-        z = (0.5 * g[2][0]) + (0.866025 * g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[3 * i + 1] = xpf;
-        y1120[3 * i + 1] = ypf;
-        x = (-0.5 * g[0][0]) + (0.866025 * g[0][1]);
-        y = (-0.5 * g[1][0]) + (0.866025 * g[1][1]);
-        z = (-0.5 * g[2][0]) + (0.866025 * g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1120[3 * i + 2] = xpf;
-        y1120[3 * i + 2] = ypf;
-        x = (0.866025 * g[0][0]) + (0.5 * g[0][1]);
-        y = (0.866025 * g[1][0]) + (0.5 * g[1][1]);
-        z = (0.866025 * g[2][0]) + (0.5 * g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[3 * i] = xpf;
-        y1010[3 * i] = ypf;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[3 * i + 1] = xpf;
-        y1010[3 * i + 1] = ypf;
-        x = (-0.866025 * g[0][0]) + (0.5 * g[0][1]);
-        y = (-0.866025 * g[1][0]) + (0.5 * g[1][1]);
-        z = (-0.866025 * g[2][0]) + (0.5 * g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x1010[3 * i + 2] = xpf;
-        y1010[3 * i + 2] = ypf;
+        eulers[3*i+0] = ea1;
+        eulers[3*i+1] = ea2;
+        eulers[3*i+2] = ea3;
       }
       return err;
     }
@@ -505,32 +307,16 @@ class StatsGen
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param odf The ODF Data
-     * @param x001 X Values of the [001] axis PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y001 Y Values of the [001] axis PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x011 X Values of the [011] axis PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y011 Y Values of the [011] axis PF Scatter plot (Output). This memory must already be preallocated.
-     * @param x111 X Values of the [111] axis PF Scatter plot (Output). This memory must already be preallocated.
-     * @param y111 Y Values of the [111] axis PF Scatter plot (Output). This memory must already be preallocated.
+     * @param eulers Euler angles to be generated. This memory must already be preallocated.
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenOrthoRhombicODFPlotData(T* odf, T* x001, T* y001, T* x011, T* y011, T* x111, T* y111, int npoints)
+    static int GenOrthoRhombicODFPlotData(T* odf, T* eulers, int npoints)
     {
-#if 0
-      These lines need to be run BEFORE you call this method
-          float totalweight = 0;
-      T odf;
-      odf.resize(odfsize);
-      Texture::calculateOrthoRhombicODFData(e1s, e2s, e3s, weights, sigmas, true, odf, totalweight);
-#endif
       DREAM3D_RANDOMNG_NEW()
           int err = 0;
       int choose;
       float ea1, ea2, ea3;
-      QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
@@ -553,122 +339,9 @@ class StatsGen
           }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
-        ops.getFZQuat(q1);
-        //    random = rg.genrand_res53();
-        g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
-        g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
-        g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
-        g[1][0] = (2 * q1.x * q1.y + 2 * q1.z * q1.w);
-        g[1][1] = (1 - 2 * q1.x * q1.x - 2 * q1.z * q1.z);
-        g[1][2] = (2 * q1.y * q1.z - 2 * q1.x * q1.w);
-        g[2][0] = (2 * q1.x * q1.z - 2 * q1.y * q1.w);
-        g[2][1] = (2 * q1.y * q1.z + 2 * q1.x * q1.w);
-        g[2][2] = (1 - 2 * q1.x * q1.x - 2 * q1.y * q1.y);
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i] = xpf;
-        y001[3 * i] = ypf;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i + 1] = xpf;
-        y001[3 * i + 1] = ypf;
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x001[3 * i + 2] = xpf;
-        y001[3 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][0] + g[0][1]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][0] + g[1][1]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][0] + g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i] = xpf;
-        y011[6 * i] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 1] = xpf;
-        y011[6 * i + 1] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][2] + g[0][0]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][2] + g[1][0]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][2] + g[2][0]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 2] = xpf;
-        y011[6 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][0] - g[0][1]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][0] - g[1][1]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][0] - g[2][1]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 3] = xpf;
-        y011[6 * i + 3] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][1] - g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][1] - g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][1] - g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 4] = xpf;
-        y011[6 * i + 4] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot2 * (g[0][2] - g[0][0]);
-        y = DREAM3D::Constants::k_1OverRoot2 * (g[1][2] - g[1][0]);
-        z = DREAM3D::Constants::k_1OverRoot2 * (g[2][2] - g[2][0]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x011[6 * i + 5] = xpf;
-        y011[6 * i + 5] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] + g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] + g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i] = xpf;
-        y111[4 * i] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] + g[0][1] - g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] + g[1][1] - g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] + g[2][1] - g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 1] = xpf;
-        y111[4 * i + 1] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (g[0][0] - g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (g[1][0] - g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (g[2][0] - g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 2] = xpf;
-        y111[4 * i + 2] = ypf;
-        x = DREAM3D::Constants::k_1OverRoot3 * (-g[0][0] + g[0][1] + g[0][2]);
-        y = DREAM3D::Constants::k_1OverRoot3 * (-g[1][0] + g[1][1] + g[1][2]);
-        z = DREAM3D::Constants::k_1OverRoot3 * (-g[2][0] + g[2][1] + g[2][2]);
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        x111[4 * i + 3] = xpf;
-        y111[4 * i + 3] = ypf;
+        eulers[3*i+0] = ea1;
+        eulers[3*i+1] = ea2;
+        eulers[3*i+2] = ea3;
       }
       return err;
     }

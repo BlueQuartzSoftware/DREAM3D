@@ -39,10 +39,11 @@
 #include "PoleFigureUtilities.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 
 
-#define WRITE_XYZ_SPHERE_COORD_VTK 0
+#define WRITE_XYZ_SPHERE_COORD_VTK 1
 #define WRITE_LAMBERT_SQUARES 0
 
 // -----------------------------------------------------------------------------
@@ -107,11 +108,11 @@ void PoleFigureUtilities::GenerateCubicPoleFigures(FloatArrayType* eulers, int l
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 3, 3, "TEMP_<001>_xyzCoords");
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<001>_xyzCoords");
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<011>_xyzCoords");
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 12, 3, "TEMP_<011>_xyzCoords");
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 4, 3, "TEMP_<111>_xyzCoords");
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 8, 3, "TEMP_<111>_xyzCoords");
 
 
 
@@ -121,9 +122,9 @@ void PoleFigureUtilities::GenerateCubicPoleFigures(FloatArrayType* eulers, int l
   CubicOps ops;
   ops.generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
 #if WRITE_XYZ_SPHERE_COORD_VTK
-  writeVtkFile(xyz001.get(), "/tmp/Sphere_XYZ_FROM_EULER_001.vtk");
-  writeVtkFile(xyz001.get(), "/tmp/Sphere_XYZ_FROM_EULER_011.vtk");
-  writeVtkFile(xyz001.get(), "/tmp/Sphere_XYZ_FROM_EULER_111.vtk");
+  writeVtkFile(xyz001.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_001.vtk");
+  writeVtkFile(xyz011.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_011.vtk");
+  writeVtkFile(xyz111.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_111.vtk");
 #endif
 
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
@@ -154,4 +155,128 @@ void PoleFigureUtilities::GenerateCubicPoleFigures(FloatArrayType* eulers, int l
   poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
   poleFigurePtr->SetName("PoleFigure_<111>");
   intensity111.swap(poleFigurePtr);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                              DoubleArrayType::Pointer &intensity0001,
+                                              DoubleArrayType::Pointer &intensity1010,
+                                              DoubleArrayType::Pointer &intensity1120)
+{
+  int numOrientations = eulers->GetNumberOfTuples();
+
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for HEX ONLY, <0001> Family
+  FloatArrayType::Pointer xyz0001 = FloatArrayType::CreateArray(numOrientations * 2, 3, "TEMP_<0001>_xyzCoords");
+  // this is size for HEX ONLY, <1010> Family
+  FloatArrayType::Pointer xyz1010 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<1010>_xyzCoords");
+  // this is size for HEX ONLY, <1120> Family
+  FloatArrayType::Pointer xyz1120 = FloatArrayType::CreateArray(numOrientations * 6, 3, "TEMP_<1120>_xyzCoords");
+
+
+
+  float sphereRadius = 1.0f;
+
+  // Generate the coords on the sphere
+  HexagonalOps ops;
+  ops.generateSphereCoordsFromEulers(eulers, xyz0001.get(), xyz1010.get(), xyz1120.get());
+#if WRITE_XYZ_SPHERE_COORD_VTK
+  writeVtkFile(xyz0001.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_0001.vtk");
+  writeVtkFile(xyz1010.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_1010.vtk");
+  writeVtkFile(xyz1120.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_1120.vtk");
+#endif
+
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz0001.get(), lambertDimension, sphereRadius);
+  // Now create the intensity image that will become the actual Pole figure image
+  DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<0001>");
+  intensity0001.swap(poleFigurePtr);
+
+#if WRITE_LAMBERT_SQUARES
+  size_t dims[3] = {lambert->getDimension(), lambert->getDimension(), 1 };
+  float res[3] = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize() };
+  DoubleArrayType::Pointer north = lambert->getNorthSquare();
+  DoubleArrayType::Pointer south = lambert->getSouthSquare();
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_North.vtk", north.get(), dims, res, "double", true);
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_South.vtk", south.get(), dims, res, "double", true);
+#endif
+
+
+// Generate the <011> pole figure which will generate a new set of Lambert Squares
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz1010.get(), lambertDimension, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<1010>");
+  intensity1010.swap(poleFigurePtr);
+
+    // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz1120.get(), lambertDimension, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<1120>");
+  intensity1120.swap(poleFigurePtr);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                              DoubleArrayType::Pointer &intensity100,
+                                              DoubleArrayType::Pointer &intensity010,
+                                              DoubleArrayType::Pointer &intensity001)
+{
+  int numOrientations = eulers->GetNumberOfTuples();
+
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for ORTHO ONLY, <100> Family
+  FloatArrayType::Pointer xyz100 = FloatArrayType::CreateArray(numOrientations * 2, 3, "TEMP_<100>_xyzCoords");
+  // this is size for ORTHO ONLY, <010> Family
+  FloatArrayType::Pointer xyz010 = FloatArrayType::CreateArray(numOrientations * 2, 3, "TEMP_<010>_xyzCoords");
+  // this is size for ORTHO ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 2, 3, "TEMP_<001>_xyzCoords");
+
+
+
+  float sphereRadius = 1.0f;
+
+  // Generate the coords on the sphere
+  HexagonalOps ops;
+  ops.generateSphereCoordsFromEulers(eulers, xyz100.get(), xyz010.get(), xyz001.get());
+#if WRITE_XYZ_SPHERE_COORD_VTK
+  writeVtkFile(xyz100.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_100.vtk");
+  writeVtkFile(xyz010.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_010.vtk");
+  writeVtkFile(xyz001.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_001.vtk");
+#endif
+
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz100.get(), lambertDimension, sphereRadius);
+  // Now create the intensity image that will become the actual Pole figure image
+  DoubleArrayType::Pointer poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<100>");
+  intensity100.swap(poleFigurePtr);
+
+#if WRITE_LAMBERT_SQUARES
+  size_t dims[3] = {lambert->getDimension(), lambert->getDimension(), 1 };
+  float res[3] = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize() };
+  DoubleArrayType::Pointer north = lambert->getNorthSquare();
+  DoubleArrayType::Pointer south = lambert->getSouthSquare();
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_North.vtk", north.get(), dims, res, "double", true);
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_South.vtk", south.get(), dims, res, "double", true);
+#endif
+
+
+// Generate the <011> pole figure which will generate a new set of Lambert Squares
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz010.get(), lambertDimension, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<010>");
+  intensity010.swap(poleFigurePtr);
+
+    // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
+  poleFigurePtr = lambert->createStereographicProjection(poleFigureDim);
+  poleFigurePtr->SetName("PoleFigure_<001>");
+  intensity001.swap(poleFigurePtr);
 }

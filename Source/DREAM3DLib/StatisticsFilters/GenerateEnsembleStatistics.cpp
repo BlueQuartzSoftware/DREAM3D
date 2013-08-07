@@ -788,12 +788,12 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   for(size_t i=1;i<numensembles;++i)
   {
     totalSurfaceArea[i] = 0;
-    if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructures[i]) )
+    if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[i] )
     {
       numbins = 36 * 36 * 12;
       misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);
     }
-    else if (Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[i]) )
+    else if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[i] )
     {
       numbins = 18 * 18 * 18;
       misobin[i] = FloatArrayType::CreateArray(numbins, DREAM3D::HDF5::MisorientationBins);

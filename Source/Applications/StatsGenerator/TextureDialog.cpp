@@ -62,11 +62,11 @@ TextureDialog::~TextureDialog()
 // -----------------------------------------------------------------------------
 void TextureDialog::setupGui()
 {
-  if(Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure) )
+  if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
   {
     m_Presets = CubicTexturePresets::getTextures();
   }
-  else if(Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure) )
+  else if(Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
   {
     m_Presets = HexTexturePresets::getTextures();
   }
@@ -102,11 +102,11 @@ void TextureDialog::setupGui()
   }
   {
     sigma->setRange(1.0, 1.0);
-    if (Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure ) )
+    if (Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure  )
     {
       sigma->setRange(1.0, 18.0);
     }
-    else if (Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure) )
+    else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
     {
       sigma->setRange(1.0, 36.0);
     }

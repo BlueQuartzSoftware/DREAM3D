@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>443</width>
-    <height>194</height>
+    <height>206</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -52,6 +52,51 @@
        <item>
         <property name="text">
          <string>Cubic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Hexagonal (Low)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Cubic (Low)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Triclinic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Monoclinic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Orthorhombic</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Tetragonal (Low)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Tetragonal</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Trigonal (Low)</string>
+        </property>
+       </item>
+       <item>
+        <property name="text">
+         <string>Trigonal</string>
         </property>
        </item>
       </widget>

@@ -156,6 +156,16 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
      * @param eulers
      */
     void generateCubicPoleFigures(FloatArrayType *eulers);
+    /**
+     * @brief generateHexPoleFigures
+     * @param eulers
+     */
+    void generateHexPoleFigures(FloatArrayType *eulers);
+    /**
+     * @brief generateOrthoPoleFigures
+     * @param eulers
+     */
+    void generateOrthoPoleFigures(FloatArrayType *eulers);
 
     QString generateVtkPath( QString label);
     void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);

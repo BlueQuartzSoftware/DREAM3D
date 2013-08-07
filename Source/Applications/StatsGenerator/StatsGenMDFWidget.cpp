@@ -165,7 +165,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
   // These are the output vectors
   QVector<float> x;
   QVector<float> y;
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure) )
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
     std::vector<float> mdf(CubicOps::k_MdfSize);
@@ -181,7 +181,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
       return;
     }
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure) )
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
     std::vector<float> mdf(HexagonalOps::k_MdfSize);
@@ -247,7 +247,7 @@ QVector<float> StatsGenMDFWidget::generateODFData()
   }
   size_t numEntries = e1s.size();
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
 
     odf.resize(CubicOps::k_OdfSize);
@@ -255,7 +255,7 @@ QVector<float> StatsGenMDFWidget::generateODFData()
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     odf.resize(HexagonalOps::k_OdfSize);
     Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
@@ -398,13 +398,13 @@ int StatsGenMDFWidget::getMisorientationData(StatsData* statsData, unsigned int 
 
   unsigned long long int nElements = 0;
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     mdf.resize(CubicOps::k_MdfSize);
     Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     nElements = 18 * 18 * 18;
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     mdf.resize(HexagonalOps::k_MdfSize);
     Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
