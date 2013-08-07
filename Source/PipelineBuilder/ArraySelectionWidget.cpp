@@ -424,6 +424,10 @@ std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWi
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setSelectedArrays(std::set<std::string> set, QListWidget*listWidget)
 {
+  if (set.empty() == true)
+  {
+    return;
+  }
   std::set<std::string>::iterator iter = set.begin();
   for (; iter != set.end(); iter++)
   {

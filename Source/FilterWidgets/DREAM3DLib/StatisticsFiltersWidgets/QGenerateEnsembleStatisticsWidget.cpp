@@ -89,6 +89,24 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
   calcODF->setChecked(filter->getCalculateODF());
   calcMDF->setChecked(filter->getCalculateMDF());
   calcAODF->setChecked(filter->getCalculateAxisODF());
+  m_SizeCorrRes->setValue( filter->getSizeCorrelationResolution() );
+
+  std::vector<unsigned int> phaseTypes = filter->getPhaseTypeArray();
+  if (phaseTypes.empty() == true)
+  {
+    m_DefinePhaseTypes->setChecked(false);
+  }
+  else
+  {
+    int count = phaseTypes.size();
+    for (int i=0; i < count; ++i)
+    {
+      QComboBox* cb = new QComboBox(this);
+      cb->setCurrentIndex(phaseTypes[i]);
+      phaseTypeTableWidget->setCellWidget(i, 0, cb);
+    }
+    m_DefinePhaseTypes->setChecked(true);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -112,7 +130,6 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
   filter->setCalculateAxisODF(calcAODF->isChecked());
   filter->setSizeCorrelationResolution(m_SizeCorrRes->value());
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
   // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
   if (m_DefinePhaseTypes->isChecked() == true)
   {

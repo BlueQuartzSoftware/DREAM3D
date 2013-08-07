@@ -102,6 +102,22 @@ QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   InitializeSyntheticVolume* filter = InitializeSyntheticVolume::SafeObjectDownCast<AbstractFilter*, InitializeSyntheticVolume*>(filt);
+  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_XPoints->setValue( filter->getXVoxels() );
+  m_YPoints->setValue( filter->getYVoxels() );
+  m_ZPoints->setValue( filter->getZVoxels() );
+  m_XResolution->setValue( filter->getXRes() );
+  m_YResolution->setValue( filter->getYRes() );
+  m_ZResolution->setValue( filter->getZRes() );
+
+  std::vector<uint32_t> shapeTypes = filter->getShapeTypes();
+  int count = shapeTypes.size();
+  for (int i=0; i < count; ++i)
+  {
+    QComboBox* cb = new QComboBox(this);
+    cb->setItemData(cb->currentIndex(), shapeTypes[i+1], Qt::UserRole);
+    m_ShapeTypeCombos.push_back(cb);
+  }
 }
 
 // -----------------------------------------------------------------------------

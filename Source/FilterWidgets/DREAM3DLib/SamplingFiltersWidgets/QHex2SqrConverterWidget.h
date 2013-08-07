@@ -57,9 +57,6 @@
 
 #include "ui_QHex2SqrConverterWidget.h"
 
-
-
-
 /**
  * @class QHex2SqrConverterWidget QHex2SqrConverterWidget.h Plugins/EbsdImport/UI/Hex2SqrConverterWidget.h
  * @brief This class represents the User Interface for the EBSD file import module
@@ -78,6 +75,8 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
   public:
     QHex2SqrConverterWidget(QWidget *parent = 0);
     virtual ~QHex2SqrConverterWidget();
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
 
     virtual AbstractFilter::Pointer getFilter();
 

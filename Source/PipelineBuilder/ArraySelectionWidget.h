@@ -123,6 +123,14 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       setSelectedArrays( filter->getSelectedVoxelCellArrays(), voxelCellArrayList );
       setSelectedArrays( filter->getSelectedVoxelFieldArrays(), voxelFieldArrayList );
       setSelectedArrays( filter->getSelectedVoxelEnsembleArrays(), voxelEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceMeshVertexArrays(), surfaceMeshVertexArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceMeshFaceArrays(), surfaceMeshFaceArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceMeshEdgeArrays(), surfaceMeshEdgeArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceMeshFieldArrays(), surfaceMeshFieldArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceMeshEnsembleArrays(), surfaceMeshEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedSolidMeshVertexArrays(), solidMeshVertexArrayList );
+      setSelectedArrays( filter->getSelectedSolidMeshFaceArrays(), solidMeshFaceArrayList );
+      setSelectedArrays( filter->getSelectedSolidMeshEdgeArrays(), solidMeshEdgeArrayList );
     }
 
     /**
