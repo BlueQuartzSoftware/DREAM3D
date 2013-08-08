@@ -116,7 +116,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
 
     virtual void setupGui();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);

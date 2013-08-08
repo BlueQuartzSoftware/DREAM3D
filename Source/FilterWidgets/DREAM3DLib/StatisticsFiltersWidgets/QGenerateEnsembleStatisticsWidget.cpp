@@ -55,8 +55,9 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   this->setupUi(this);
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
-  getGuiParametersFromFilter( filter.get() );
+  m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -75,9 +76,6 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
 {
   GenerateEnsembleStatistics* filter = GenerateEnsembleStatistics::SafeObjectDownCast<AbstractFilter*, GenerateEnsembleStatistics*>(filt);
 
-  m_FilterGroup = QString::fromStdString(filter->getGroupName());
-  //Get the defaults from the filter and assign to the internal variables
-  /* Copy all the settings from this instance into the new instance */
   calcSizeDistribution->setChecked(filter->getSizeDistribution());
   m_SizeDistributionFitType->setCurrentIndex(filter->getSizeDistributionFitType());
   calcAspectRatioDistribution->setChecked(filter->getAspectRatioDistribution());
@@ -112,9 +110,10 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
+AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaultValues)
 {
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
+  if (defaultValues == true) { return filter; }
 /* Copy all the settings from this instance into the new instance */
 
   filter->setSizeDistribution(calcSizeDistribution->isChecked());

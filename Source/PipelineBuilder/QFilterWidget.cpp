@@ -422,7 +422,7 @@ void QFilterWidget::setupGui()
   setSizePolicy(sizePolicy2);
 
 
-  setTitle(QString::fromStdString(getFilter()->getHumanLabel()));
+  setTitle(QString::fromStdString(getFilter(true)->getHumanLabel()));
 #if 0
   QVBoxLayout* vertLayout_0 = new QVBoxLayout(this);
 
@@ -455,7 +455,7 @@ void QFilterWidget::setupGui()
   setIsSelected(false);
   bool ok = false;
 
-  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(true)->getFilterParameters();
   int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
@@ -1114,7 +1114,7 @@ void QFilterWidget::updateFilterValues()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QFilterWidget::getFilter()
+AbstractFilter::Pointer QFilterWidget::getFilter(bool defaultValues)
 {
   return AbstractFilter::NullPointer();
 }
@@ -1192,7 +1192,7 @@ void QFilterWidget::selectInputFile()
     //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
-  AbstractFilter::Pointer f = getFilter();
+  AbstractFilter::Pointer f = getFilter(false);
   std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
@@ -1240,7 +1240,7 @@ void QFilterWidget::selectInputPath()
     //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
-  AbstractFilter::Pointer f = getFilter();
+  AbstractFilter::Pointer f = getFilter(false);
   std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
@@ -1291,7 +1291,7 @@ void QFilterWidget::selectOutputFile()
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
-  AbstractFilter::Pointer f = getFilter();
+  AbstractFilter::Pointer f = getFilter(false);
   // Get the options for that filter
   std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   // Loop on all the filter options to find the filter option we want to set
@@ -1343,7 +1343,7 @@ void QFilterWidget::selectOutputPath()
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
-  AbstractFilter::Pointer f = getFilter();
+  AbstractFilter::Pointer f = getFilter(false);
   // Get the options for that filter
   std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   // Loop on all the filter options to find the filter option we want to set
@@ -1628,7 +1628,7 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFileExtension(std::string propName)
 {
-  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
   //  int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
@@ -1646,7 +1646,7 @@ QString QFilterWidget::getFileExtension(std::string propName)
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFileType(std::string propName)
 {
-  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
   //int optIndex = 0;
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
@@ -1665,7 +1665,7 @@ QString QFilterWidget::getFileType(std::string propName)
 void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
 {
   // This section will update any combo boxes that are "Array Name" lists for the Voxel arrays.
-  std::vector<FilterParameter::Pointer> options = getFilter()->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
   for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();

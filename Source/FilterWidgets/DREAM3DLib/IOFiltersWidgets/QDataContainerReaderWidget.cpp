@@ -63,9 +63,9 @@ QDataContainerReaderWidget::QDataContainerReaderWidget(QWidget* parent) :
   }
   setupUi(this);
   DataContainerReader::Pointer filter = DataContainerReader::New();
-  getGuiParametersFromFilter( filter.get() );
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -95,9 +95,10 @@ void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QDataContainerReaderWidget::getFilter()
+AbstractFilter::Pointer QDataContainerReaderWidget::getFilter(bool defaultValues)
 {
   DataContainerReader::Pointer filter = DataContainerReader::New();
+  if (defaultValues == true) { return filter; }
   filter->setInputFile( getInputFile().toStdString() );
   filter->setReadVoxelData( getReadVoxelData() );
   filter->setReadSurfaceMeshData( getReadSurfaceMeshData() );

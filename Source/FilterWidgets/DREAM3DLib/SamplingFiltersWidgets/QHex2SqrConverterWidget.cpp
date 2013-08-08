@@ -73,8 +73,8 @@ QFilterWidget(parent)
   }
   setupUi(this);
   Hex2SqrConverter::Pointer filter = Hex2SqrConverter::New();
-  getGuiParametersFromFilter( filter.get() );
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
@@ -116,10 +116,12 @@ void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter()
+AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter(bool defaultValues)
 {
   bool ok = false;
   Hex2SqrConverter::Pointer filter =  Hex2SqrConverter::New();
+  if (defaultValues == true) { return filter; }
+
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setXResolution(m_xSpacing->text().toFloat(&ok));

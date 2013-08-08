@@ -53,7 +53,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     QReadH5EbsdWidget(QWidget* parent = NULL);
     virtual ~QReadH5EbsdWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);

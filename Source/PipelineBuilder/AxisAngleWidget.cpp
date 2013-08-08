@@ -131,6 +131,14 @@ std::vector<AxisAngleInput_t> AxisAngleWidget::getAxisAngleRotations()
   return comps;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AxisAngleTableModel* AxisAngleWidget::getTableModel()
+{
+  return m_TableModel;
+}
+
 #if 0
 // -----------------------------------------------------------------------------
 //
