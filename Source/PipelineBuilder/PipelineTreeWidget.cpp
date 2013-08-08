@@ -40,13 +40,13 @@
 #include "PipelineBuilderWidget.h"
 
 PipelineTreeWidget::PipelineTreeWidget(QFrame* parent) :
-QTreeWidget(parent)
+  QTreeWidget(parent)
 {
   setContextMenuPolicy(Qt::CustomContextMenu);
 
   connect(this,
-    SIGNAL(customContextMenuRequested(const QPoint&)),
-    SLOT(onCustomContextMenuRequested(const QPoint&)));
+          SIGNAL(customContextMenuRequested(const QPoint&)),
+          SLOT(onCustomContextMenuRequested(const QPoint&)));
 }
 
 // -----------------------------------------------------------------------------
@@ -56,7 +56,14 @@ void PipelineTreeWidget::addActionList(QList<QAction*> actionList)
 {
   for (int i=0; i<actionList.size(); i++)
   {
+    if (NULL == actionList[i])
+    {
+      m_Menu.addSeparator();
+    }
+    else
+    {
     m_Menu.addAction(actionList[i]);
+    }
   }
 }
 
@@ -87,57 +94,60 @@ void PipelineTreeWidget::showContextMenu(QTreeWidgetItem* item, const QPoint& gl
   int itemType = item->type();
   switch (itemType)
   {
-  case Favorite_Item_Type:
-    if ( !m_FavoritesActions.isEmpty() )
-      addActionList(m_FavoritesActions);
-    break;
+    case Favorite_Item_Type:
+      if ( !m_FavoritesActions.isEmpty() )
+        addActionList(m_FavoritesActions);
+      break;
 
-  case Prebuilt_Item_Type:
-    if ( !m_PrebuiltActions.isEmpty() )
-      addActionList(m_PrebuiltActions);
-    break;
+    case Prebuilt_Item_Type:
+      if ( !m_PrebuiltActions.isEmpty() )
+        addActionList(m_PrebuiltActions);
+      break;
 
-  case Default_Item_Type:
-    if ( !m_DefaultActions.isEmpty() )
-      addActionList(m_DefaultActions);
-    break;
+    case Default_Item_Type:
+      if ( !m_DefaultActions.isEmpty() )
+        addActionList(m_DefaultActions);
+      break;
 
-  case Favorite_Category_Item_Type:
-    if ( !m_FavoriteCategoryActions.isEmpty() )
-      addActionList(m_FavoriteCategoryActions);
-    break;
+    case Favorite_Category_Item_Type:
+      if ( !m_FavoriteCategoryActions.isEmpty() )
+        addActionList(m_FavoriteCategoryActions);
+      break;
 
-  case Prebuilt_Category_Item_Type:
-    if ( !m_PrebuiltCategoryActions.isEmpty() )
-      addActionList(m_PrebuiltCategoryActions);
-    break;
+    case Prebuilt_Category_Item_Type:
+      if ( !m_PrebuiltCategoryActions.isEmpty() )
+        addActionList(m_PrebuiltCategoryActions);
+      break;
   }
 
   m_Menu.exec(globalPos);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PipelineTreeWidget::setActionList(ItemType type, QList<QAction*> list)
 {
   switch (type)
   {
-  case Favorite_Item_Type:
-    m_FavoritesActions = list;
-    break;
+    case Favorite_Item_Type:
+      m_FavoritesActions = list;
+      break;
 
-  case Prebuilt_Item_Type:
-    m_PrebuiltActions = list;
-    break;
+    case Prebuilt_Item_Type:
+      m_PrebuiltActions = list;
+      break;
 
-  case Default_Item_Type:
-    m_DefaultActions = list;
-    break;
+    case Default_Item_Type:
+      m_DefaultActions = list;
+      break;
 
-  case Favorite_Category_Item_Type:
-    m_FavoriteCategoryActions = list;
-    break;
+    case Favorite_Category_Item_Type:
+      m_FavoriteCategoryActions = list;
+      break;
 
-  case Prebuilt_Category_Item_Type:
-    m_PrebuiltCategoryActions = list;
-    break;
+    case Prebuilt_Category_Item_Type:
+      m_PrebuiltCategoryActions = list;
+      break;
   }
 }
