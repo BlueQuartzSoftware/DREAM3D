@@ -45,22 +45,6 @@ get an example file from Perter K. at MPIE so DREAM3D can parse those files. We 
 
 Allow pausing of the Pipeline as maybe a button in each filter where the user can check the box and have the pipeline Pause until the user clicks the button again. This is an introductory step possible remote interactivity with ParaView or something else (QUBE). This should be able to done with a signal/slot where the thread goes to sleep and is woken back up by a signal from the button.
 
-
--------------------
-## Version Check Protocol (Started) ##
-
-Create a user interface (see image below) based on a menu selection that displays a dialog that allows the user to check for an update to DREAM3D.
-
-![Example GUI](Images/UpdateCheck.png)
-
-Initial implementation in _QtSupport/DREAM3DUpdateCheckDialog_
-
-**Items to Complete**
-
-+ Do we need to add a _close_ button to the UI?
-
-+ Users behind Proxy Servers will not be able to use this feature. We will need to put in a QNetworkProxy option at some point.
-
 -------------------
 
 ## StatsGenerator Template File Selection ##
@@ -79,10 +63,6 @@ StatsGenerator should open to a dialog that displays a list of *templates* that 
 ## Export Binary File
 We should be able to export any of the arrays into a raw binary file for import into other analysis programs. The filter also may want to output a text file that describes the data in the file (Dims, type, endian ...)
 
--------------------
-## Export Slice IPF Images ##
-
-A filter to generate images of the grains with IPF coloring for XY/YZ/XZ planes. The filter would require the Crystal Structure Ensemble data and the Euler Angles.
 
 -------------------
 ## H5EBSD & XDMF
