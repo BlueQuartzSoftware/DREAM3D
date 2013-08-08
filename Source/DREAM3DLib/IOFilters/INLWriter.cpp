@@ -39,13 +39,21 @@
 #include <iostream>
 #include <fstream>
 
+#include "MXA/Common/LogTime.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
 #include "EbsdLib/TSL/AngConstants.h"
 
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/DREAM3DVersion.h"
+
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -296,7 +304,6 @@ int INLWriter::writeFile()
   int32_t phaseId;
 
   unsigned char rgba[4] = {0,0,0,255};
-  unsigned char hkl[3] = { 0, 0, 0 };
   float refDir[3] = {0.0f, 0.0f, 1.0f};
 
 
@@ -322,13 +329,15 @@ int INLWriter::writeFile()
         {
           if(symmetry == Ebsd::CrystalStructure::Cubic_High)
           {
-            EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, hkl);
+            CubicOps ops;
+            ops.generateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, false);
             symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
 
           }
           else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
           {
-            EbsdColoring::GenerateHexIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba);
+            HexagonalOps ops;
+            ops.generateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, false);
             symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
           }
           else

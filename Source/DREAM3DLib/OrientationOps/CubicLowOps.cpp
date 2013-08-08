@@ -64,43 +64,43 @@ static const QuatF CubicLowQuatSym[12] = {
   QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
 
 static const float CubicLowRodSym[12][3] = {{0.0f, 0.0f,0.0f},
-                                         {10000000000.0f, 0.0f, 0.0f},
-                                         {0.0f, 10000000000.0f, 0.0f},
-                                         {0.0f, 0.0f, 10000000000.0f},
-                                         {1.0f, 1.0f, 1.0f},
-                                         {-1.0f, -1.0f, -1.0f},
-                                         {1.0f, -1.0f, 1.0f},
-                                         {-1.0f, 1.0f, -1.0f},
-                                         {-1.0f, 1.0f, 1.0f},
-                                         {1.0f, -1.0f, -1.0f},
-                                         {-1.0f, -1.0f, 1.0f},
-                                         {1.0f, 1.0f, -1.0}};
+                                            {10000000000.0f, 0.0f, 0.0f},
+                                            {0.0f, 10000000000.0f, 0.0f},
+                                            {0.0f, 0.0f, 10000000000.0f},
+                                            {1.0f, 1.0f, 1.0f},
+                                            {-1.0f, -1.0f, -1.0f},
+                                            {1.0f, -1.0f, 1.0f},
+                                            {-1.0f, 1.0f, -1.0f},
+                                            {-1.0f, 1.0f, 1.0f},
+                                            {1.0f, -1.0f, -1.0f},
+                                            {-1.0f, -1.0f, 1.0f},
+                                            {1.0f, 1.0f, -1.0}};
 
 static const float CubicLowSlipDirections[12][3] = {{0.0f,1.0f,-1.0f},
-                                                 {1.0f,0.0f,-1.0f},
-                                                 {1.0f,-1.0f,0.0f},
-                                                 {1.0f,-1.0f,0.0f},
-                                                 {1.0f,0.0f,1.0f},
-                                                 {0.0f,1.0f,1.0f},
-                                                 {1.0f,1.0f,0.0f},
-                                                 {0.0f,1.0f,1.0f},
-                                                 {1.0f,0.0f,-1.0f},
-                                                 {1.0f,1.0f,0.0f},
-                                                 {1.0f,0.0f,1.0f},
-                                                 {0.0f,1.0f,-1.0f}};
+                                                    {1.0f,0.0f,-1.0f},
+                                                    {1.0f,-1.0f,0.0f},
+                                                    {1.0f,-1.0f,0.0f},
+                                                    {1.0f,0.0f,1.0f},
+                                                    {0.0f,1.0f,1.0f},
+                                                    {1.0f,1.0f,0.0f},
+                                                    {0.0f,1.0f,1.0f},
+                                                    {1.0f,0.0f,-1.0f},
+                                                    {1.0f,1.0f,0.0f},
+                                                    {1.0f,0.0f,1.0f},
+                                                    {0.0f,1.0f,-1.0f}};
 
 static const float CubicLowSlipPlanes[12][3] = {{1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f}};
+                                                {1.0f,1.0f,1.0f},
+                                                {1.0f,1.0f,1.0f},
+                                                {1.0f,1.0f,-1.0f},
+                                                {1.0f,1.0f,-1.0f},
+                                                {1.0f,1.0f,-1.0f},
+                                                {1.0f,-1.0f,1.0f},
+                                                {1.0f,-1.0f,1.0f},
+                                                {1.0f,-1.0f,1.0f},
+                                                {-1.0f,1.0f,1.0f},
+                                                {-1.0f,1.0f,1.0f},
+                                                {-1.0f,1.0f,1.0f}};
 
 static const float CubicLowMatSym[12][3][3] =
 {{{1.0, 0.0, 0.0},
@@ -198,8 +198,8 @@ float &n1, float &n2, float &n3)
   QuaternionMathF::Multiply(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
-     QuaternionMathF::Multiply(qr, quatsym[i], qc);
-        if (qc.w < -1) {
+    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+    if (qc.w < -1) {
       qc.w = -1;
     }
     else if (qc.w > 1) {
@@ -750,7 +750,6 @@ void CubicLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7
 void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
-  QuaternionMath<float>::Quaternion q1;
   CubicLowOps ops;
   float g[3][3];
   float gTranpose[3][3];
@@ -843,3 +842,88 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatAr
   }
 
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CubicLowOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+{
+  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+{
+  if (degToRad == true)
+  {
+    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
+    phi = phi * DREAM3D::Constants::k_DegToRad;
+    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+  }
+  QuatF qc;
+  QuatF q1;
+  float g[3][3];
+  float p[3];
+  float refDirection[3];
+  float cd[3];
+  float d[3];
+  //float theta, phi_local;
+  float _rgb[3] = { 0.0, 0.0, 0.0 };
+
+  // 1) find rotation matrix from Euler angles
+  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+  QuatF q2;
+  CubicLowOps co;
+  for (int j = 0; j < 12; j++)
+  {
+    co.getQuatSymOp(j, q2);
+    QuaternionMathF::Multiply(q1,q2, qc);
+
+    OrientationMath::QuattoMat(qc, g);
+
+    refDirection[0] = refDir0;
+    refDirection[1] = refDir1;
+    refDirection[2] = refDir2;
+    MatrixMath::Multiply3x3with3x1(g, refDirection, p);
+    MatrixMath::Normalize3x1(p);
+
+
+    float theta = (cd[0] * 0) + (cd[1] * -DREAM3D::Constants::k_HalfSqrt2) + (cd[2] * DREAM3D::Constants::k_HalfSqrt2);
+    theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
+    _rgb[0] = (90.0f - theta) / 45.0f;
+    d[0] = (cd[1] * 1) - (cd[2] * 0);
+    d[1] = (cd[2] * 0) - (cd[0] * 1);
+    d[2] = (cd[0] * 0) - (cd[1] * 0);
+    d[0] = -(d[1] + d[2]) / d[0];
+    d[1] = 1;
+    d[2] = 1;
+    float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
+    d[0] = d[0] / norm;
+    d[1] = d[1] / norm;
+    d[2] = d[2] / norm;
+    float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
+    phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
+    _rgb[1] = (1 - _rgb[0]) * ((35.26f - phi_local) / 35.26f);
+    _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+  }
+  float max = _rgb[0];
+  if (_rgb[1] > max) max = _rgb[1];
+  if (_rgb[2] > max) max = _rgb[2];
+
+  _rgb[0] = _rgb[0] / max;
+  _rgb[1] = _rgb[1] / max;
+  _rgb[2] = _rgb[2] / max;
+
+  // Multiply by 255 to get an R/G/B value
+  _rgb[0] = _rgb[0] * 255.0f;
+  _rgb[1] = _rgb[1] * 255.0f;
+  _rgb[2] = _rgb[2] * 255.0f;
+
+  rgb[0] = static_cast<unsigned char>(_rgb[0]);
+  rgb[1] = static_cast<unsigned char>(_rgb[1]);
+  rgb[2] = static_cast<unsigned char>(_rgb[2]);
+
+}
+

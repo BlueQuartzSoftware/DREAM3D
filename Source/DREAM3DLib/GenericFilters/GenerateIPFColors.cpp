@@ -36,8 +36,17 @@
 #include "GenerateIPFColors.h"
 
 
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -188,7 +197,6 @@ void GenerateIPFColors::execute()
   // Make sure we are dealing with a unit 1 vector.
   MatrixMath::NormalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
 
-  uint8_t hkl[3] = { 0, 0, 0 };
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -200,25 +208,30 @@ void GenerateIPFColors::execute()
 
     if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
     {
+
       if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
       {
-        EbsdColoring::GenerateCubicIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, hkl);
+        CubicOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
       {
-        EbsdColoring::GenerateHexIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
+        HexagonalOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
       {
-        EbsdColoring::GenerateTrigIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
+        TrigonalOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
       {
-        EbsdColoring::GenerateTetraIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
+        TetragonalOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
     }
   }
