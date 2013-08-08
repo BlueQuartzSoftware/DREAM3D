@@ -61,25 +61,25 @@ namespace TrigonalMath {
       {0.0, 1.0, 0.0},
       {0.0, 0.0, 1.0}},
 
-     {{1.0, 0.0,  0.0},
-      {0.0, 0.0, -1.0},
-      {0.0, 1.0,  0.0}},
+     {{-0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
+    {-DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
+      {0.0, 0.0,  1.0}},
 
-     {{1.0,  0.0,  0.0},
-      {0.0, -1.0,  0.0},
-      {0.0,  0.0, -1.0}},
+     {{-0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
+    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
+      {0.0, 0.0,  1.0}},
 
-     {{1.0,  0.0, 0.0},
-      {0.0,  0.0, 1.0},
-      {0.0, -1.0, 0.0}},
+     {{0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
+    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
+      {0.0, 0.0,  -1.0}},
 
-     {{0.0, 0.0, -1.0},
-      {0.0, 1.0,  0.0},
-      {1.0, 0.0,  0.0}},
+    {{-1.0, 0.0, 0.0},
+      {0.0, 1.0, 0.0},
+      {0.0, 0.0, -1.0}},
 
-     {{0.0, -1.0,  0.0},
-      {-1.0,  0.0,  0.0},
-      {0.0,  0.0, -1.0}}};
+     {{0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
+    {-DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
+      {0.0, 0.0,  -1.0}}};
 
   }
 }
@@ -170,10 +170,6 @@ float TrigonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float
 void TrigonalOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(TrigQuatSym[i], q);
-//  q.x = TrigQuatSym[i][0];
-//  q.y = TrigQuatSym[i][1];
-//  q.z = TrigQuatSym[i][2];
-//  q.w = TrigQuatSym[i][3];
 
 }
 

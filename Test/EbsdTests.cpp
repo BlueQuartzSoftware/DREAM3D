@@ -91,7 +91,7 @@ void TestEbsdColoring()
   uint8_t rgb[3];
   uint8_t hkl[3];
 
-  EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, hkl, true);
+  EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
 
   std::cout << (int)(rgb[0]) << " " << (int)(rgb[1]) << " " << (int)(rgb[2]) << " " << std::endl;
 }
