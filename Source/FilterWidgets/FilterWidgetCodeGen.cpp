@@ -570,8 +570,6 @@ void createSourceFile( const std::string &group,
   fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter* filt)\n{\n", filter.c_str());
   if (options.size() > 0)
   {
-    fprintf(f, "     QList<QWidget*> children = findChildren<QWidget*>();\n");
-    fprintf(f, "     int childrenSize = children.size();\n");
     fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.c_str(), filter.c_str(), filter.c_str());
     fprintf(f, "     blockSignals(true);\n");
   }
@@ -582,8 +580,8 @@ void createSourceFile( const std::string &group,
     std::string prop = opt->getPropertyName();
     std::string typ = opt->getValueType();
 
-      if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget 
-        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget 
+      if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
+        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
         || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
       fprintf(f, "     {\n");
