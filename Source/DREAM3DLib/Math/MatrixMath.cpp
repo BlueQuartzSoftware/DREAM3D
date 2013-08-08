@@ -120,13 +120,6 @@ void MatrixMath::Multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat
   outMat[2][2] = g1[2][0]*g2[0][2] + g1[2][1]*g2[1][2] + g1[2][2]*g2[2][2];
 }
 
-void MatrixMath::Multiply3x3with3x1(float g1[3][3], float g2[3], float outMat[3])
-{
-  outMat[0] = g1[0][0]*g2[0] + g1[0][1]*g2[1] + g1[0][2]*g2[2];
-  outMat[1] = g1[1][0]*g2[0] + g1[1][1]*g2[1] + g1[1][2]*g2[2];
-  outMat[2] = g1[2][0]*g2[0] + g1[2][1]*g2[1] + g1[2][2]*g2[2];
-}
-
 void MatrixMath::Multiply3x3with3x1(const float g1[3][3], float g2[3], float outMat[3])
 {
   outMat[0] = g1[0][0]*g2[0] + g1[0][1]*g2[1] + g1[0][2]*g2[2];
@@ -172,6 +165,13 @@ void MatrixMath::Copy3x3(float g[3][3], float outMat[3][3])
   outMat[2][0] = g[2][0];
   outMat[2][1] = g[2][1];
   outMat[2][2] = g[2][2];
+}
+
+void MatrixMath::Copy3x1(float g[3], float outMat[3])
+{
+  outMat[0] = g[0];
+  outMat[1] = g[1];
+  outMat[2] = g[2];
 }
 
 void MatrixMath::Normalize3x3(float g[3][3])

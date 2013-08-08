@@ -33,36 +33,30 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "HexagonalOps.h"
+#include "HexagonalLowOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
 
-namespace HexagonalMath {
+namespace HexagonalLowMath {
   namespace Detail {
 
-    static const float HexDim1InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/2.0f)-sinf((float(DREAM3D::Constants::k_Pi)/2.0f)))),(1.0f/3.0f));
-    static const float HexDim2InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/2.0f)-sinf((float(DREAM3D::Constants::k_Pi)/2.0f)))),(1.0f/3.0f));
+    static const float HexDim1InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi))-sinf((float(DREAM3D::Constants::k_Pi))))),(1.0f/3.0f));
+    static const float HexDim2InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi))-sinf((float(DREAM3D::Constants::k_Pi))))),(1.0f/3.0f));
     static const float HexDim3InitValue = powf((0.75f*((float(DREAM3D::Constants::k_Pi)/6.0f)-sinf((float(DREAM3D::Constants::k_Pi)/6.0f)))),(1.0f/3.0f));
-    static const float HexDim1StepValue = HexDim1InitValue/18.0f;
-    static const float HexDim2StepValue = HexDim2InitValue/18.0f;
+    static const float HexDim1StepValue = HexDim1InitValue/36.0f;
+    static const float HexDim2StepValue = HexDim2InitValue/36.0f;
     static const float HexDim3StepValue = HexDim3InitValue/6.0f;
 
-    static const float HexRodSym[12][3] = {{0.0f, 0.0f, 0.0f},
+    static const float HexRodSym[6][3] = {{0.0f, 0.0f, 0.0f},
                                            {0.0f, 0.0f, 0.57735f},
                                            {0.0f, 0.0f, 1.73205f},
                                            {0.0f, 0.0f, 1000000000000.0f},
                                            {0.0f, 0.0f, -1.73205f},
-                                           {0.0f, 0.0f, -0.57735f},
-                                           {1000000000000.0f, 0.0f, 0.0f},
-                                           {8660254000000.0f, 5000000000000.0f, 0.0f},
-                                           {5000000000000.0f, 8660254000000.0f, 0.0f},
-                                           {0.0f, 1000000000000.0f, 0.0f},
-                                           {-5000000000000.0f, 8660254000000.0f, 0.0f},
-                                           {-8660254000000.0f, 5000000000000.0f, 0.0f}};
-    static const float HexMatSym[12][3][3] =
+                                           {0.0f, 0.0f, -0.57735f}};
+    static const float HexMatSym[6][3][3] =
     {{{1.0, 0.0, 0.0},
       {0.0, 1.0, 0.0},
       {0.0, 0.0, 1.0}},
@@ -85,44 +79,19 @@ namespace HexagonalMath {
 
      {{0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
     {DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-      {0.0, 0.0,  1.0}},
-    
-    {{-0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {-DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-      {0.0, 0.0,  -1.0}},
-
-    {{1.0, 0.0, 0.0},
-      {0.0, -1.0, 0.0},
-      {0.0, 0.0, -1.0}},
-
-     {{-0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, 0.5, 0.0},
-      {0.0, 0.0,  -1.0}},
-
-    {{0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-      {0.0, 0.0,  -1.0}},
-
-    {{-1.0, 0.0, 0.0},
-      {0.0, 1.0, 0.0},
-      {0.0, 0.0, -1.0}},
-
-     {{0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {-DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-      {0.0, 0.0,  -1.0}}};
-
+      {0.0, 0.0,  1.0}}};
   }
 }
 
 
 const static float m_OnePointThree = 1.33333333333f;
 
-using namespace HexagonalMath::Detail;
+using namespace HexagonalLowMath::Detail;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalOps::HexagonalOps()
+HexagonalLowOps::HexagonalLowOps()
 {
   float junk1 =  HexDim1StepValue * 1.0f;
   float junk2 = junk1/HexDim2StepValue;
@@ -133,14 +102,14 @@ HexagonalOps::HexagonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-HexagonalOps::~HexagonalOps()
+HexagonalLowOps::~HexagonalLowOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float HexagonalOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
+float HexagonalLowOps::_calcMisoQuat(const QuatF quatsym[12], int numsym,
 QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
@@ -188,30 +157,27 @@ float &n1, float &n2, float &n3)
   return wmin;
 }
 
-float HexagonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float HexagonalLowOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
-  int numsym = 12;
+  int numsym = 6;
 
   return _calcMisoQuat(HexQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void HexagonalOps::getQuatSymOp(int i, QuatF &q)
+void HexagonalLowOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(HexQuatSym[i], q);
-//  q.x = HexQuatSym[i][0];
-//  q.y = HexQuatSym[i][1];
-//  q.z = HexQuatSym[i][2];
-//  q.w = HexQuatSym[i][3];
+
 }
 
-void HexagonalOps::getRodSymOp(int i,float *r)
+void HexagonalLowOps::getRodSymOp(int i,float *r)
 {
   r[0] = HexRodSym[i][0];
   r[1] = HexRodSym[i][1];
   r[2] = HexRodSym[i][2];
 }
 
-void HexagonalOps::getMatSymOp(int i,float g[3][3])
+void HexagonalLowOps::getMatSymOp(int i,float g[3][3])
 {
   g[0][0] = HexMatSym[i][0][0];
   g[0][1] = HexMatSym[i][0][1];
@@ -224,14 +190,14 @@ void HexagonalOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = HexMatSym[i][2][2];
 }
 
-void HexagonalOps::getODFFZRod(float &r1,float &r2, float &r3)
+void HexagonalLowOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  int numsym = 12;
+  int numsym = 6;
 
   _calcRodNearestOrigin(HexRodSym, numsym, r1, r2, r3);
 }
 
-void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void HexagonalLowOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
   float w, n1, n2, n3;
   float FZn1, FZn2, FZn3;
@@ -273,21 +239,21 @@ void HexagonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
-void HexagonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void HexagonalLowOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
-  int numsym = 12;
+  int numsym = 6;
 
   _calcNearestQuat(HexQuatSym, numsym, q1, q2);
 }
 
-void HexagonalOps::getFZQuat(QuatF &qr)
+void HexagonalLowOps::getFZQuat(QuatF &qr)
 {
-  int numsym = 12;
+  int numsym = 6;
 
   _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
 }
 
-int HexagonalOps::getMisoBin(float r1, float r2, float r3)
+int HexagonalLowOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -301,15 +267,15 @@ int HexagonalOps::getMisoBin(float r1, float r2, float r3)
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
+  bins[0] = 72.0f;
+  bins[1] = 72.0f;
   bins[2] = 12.0f;
 
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
 
-void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void HexagonalLowOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
   float init[3];
   float step[3];
@@ -322,9 +288,9 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
@@ -333,7 +299,7 @@ void HexagonalOps::determineEulerAngles(int choose, float &synea1, float &synea2
 }
 
 
-void HexagonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void HexagonalLowOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
@@ -345,16 +311,16 @@ void HexagonalOps::determineRodriguesVector( int choose, float &r1, float &r2, f
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
-int HexagonalOps::getOdfBin(float r1, float r2, float r3)
+int HexagonalLowOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -368,14 +334,14 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
   step[0] = HexDim1StepValue;
   step[1] = HexDim2StepValue;
   step[2] = HexDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
+  bins[0] = 72.0f;
+  bins[1] = 72.0f;
   bins[2] = 12.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void HexagonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
@@ -660,7 +626,7 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
 
-void HexagonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void HexagonalLowOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -699,7 +665,7 @@ void HexagonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 #endif
 }
 
-void HexagonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void HexagonalLowOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -771,7 +737,7 @@ void HexagonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F
 */
 #endif
 }
-void HexagonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void HexagonalLowOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -845,7 +811,7 @@ void HexagonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float
 #endif
 }
 
-void HexagonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void HexagonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   BOOST_ASSERT(false);
 #if 0
@@ -916,11 +882,11 @@ void HexagonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz0001, FloatArrayType *xyz1010, FloatArrayType *xyz1120)
+void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz0001, FloatArrayType *xyz1010, FloatArrayType *xyz1120)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
   QuaternionMath<float>::Quaternion q1;
-  HexagonalOps ops;
+  HexagonalLowOps ops;
   float g[3][3];
   float gTranpose[3][3];
   float* currentEuler = NULL;

@@ -70,8 +70,34 @@ public:
                                               DoubleArrayType::Pointer &intensity011,
                                               DoubleArrayType::Pointer &intensity111);
 
+  /**
+   * @brief GenerateHexPoleFigures
+   * @param eulers
+   * @param lambertDimension
+   * @param poleFigureDim
+   * @param intensity0001 [output]
+   * @param intensity1010 [output]
+   * @param intensity1120 [output]
+   */
+  static void GenerateHexPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                              DoubleArrayType::Pointer &intensity0001,
+                                              DoubleArrayType::Pointer &intensity1010,
+                                              DoubleArrayType::Pointer &intensity1120);
 
 
+  /**
+   * @brief GenerateHexPoleFigures
+   * @param eulers
+   * @param lambertDimension
+   * @param poleFigureDim
+   * @param intensity100 [output]
+   * @param intensity010 [output]
+   * @param intensity001 [output]
+   */
+  static void GenerateOrthoPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
+                                              DoubleArrayType::Pointer &intensity100,
+                                              DoubleArrayType::Pointer &intensity010,
+                                              DoubleArrayType::Pointer &intensity001);
 
 
 

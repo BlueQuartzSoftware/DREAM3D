@@ -88,8 +88,8 @@ int main(int argc, char **argv)
 
 
   int err = 0;
-  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+//  err = StatsGen::GenCubicODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+//                                     &(y011.front()), &(x111.front()), &(y111.front()), npoints);
   if (err == 1)
   {
     //TODO: Present Error Message

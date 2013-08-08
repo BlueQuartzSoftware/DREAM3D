@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef HEXAGONALOPS_H_
-#define HEXAGONALOPS_H_
+#ifndef TetragonalLowOPS_H_
+#define TetragonalLowOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
 
@@ -43,45 +43,39 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
-
-namespace HexagonalMath {
+namespace TetragonalLowMath {
   namespace Detail {
-    static const QuatF HexQuatSym[12] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f),
-                         QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.866025400f, 0.500000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.500000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.86602540f, 0.500000000f, 0.000000000f, 0.000000000)};
+
+    static const QuatF TetraQuatSym[4] = {QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,1.000000000f,0.000000000f),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,-DREAM3D::Constants::k_1OverRoot2),
+                                             QuaternionMathF::New(0.000000000f,0.000000000f,DREAM3D::Constants::k_1OverRoot2,DREAM3D::Constants::k_1OverRoot2)};
   }
 }
 /**
- * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/OrientationOps/HexagonalOps.h
+ * @class TetragonalLowOps TetragonalLowOps.h DREAM3DLib/Common/OrientationOps/TetragonalLowOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
+class DREAM3DLib_EXPORT TetragonalLowOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(HexagonalOps)
-    MXA_TYPE_MACRO_SUPER(HexagonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(HexagonalOps)
+    MXA_SHARED_POINTERS(TetragonalLowOps)
+    MXA_TYPE_MACRO_SUPER(TetragonalLowOps, OrientationOps)
+    MXA_STATIC_NEW_MACRO(TetragonalLowOps)
 
-    HexagonalOps();
-    virtual ~HexagonalOps();
 
-    static const int k_OdfSize = 15552;
-    static const int k_MdfSize = 15552;
-    static const int k_NumSymQuats = 12;
+    TetragonalLowOps();
+    virtual ~TetragonalLowOps();
+
+    static const int k_OdfSize = 93312;
+    static const int k_MdfSize = 93312;
+    static const int k_NumSymQuats = 4;
 
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
@@ -104,18 +98,16 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
     virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
-
-
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[8], int numsym,
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
   private:
-    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
+    TetragonalLowOps(const TetragonalLowOps&); // Copy Constructor Not Implemented
+    void operator=(const TetragonalLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* HEXAGONALOPS_H_ */
+#endif /* TetragonalLowOPS_H_ */

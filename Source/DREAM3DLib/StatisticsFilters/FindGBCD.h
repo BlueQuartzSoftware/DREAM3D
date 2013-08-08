@@ -46,6 +46,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
 /**
  * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
