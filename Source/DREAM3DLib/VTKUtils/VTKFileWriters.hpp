@@ -52,6 +52,8 @@
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 
 
@@ -323,8 +325,6 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
   {
       int err = 0;
       size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
-      unsigned char hkl[3] =
-      { 0, 0, 0 };
       VTK_IPF_COLOR_REFDIRECTION(RefDirection)
       int phase;
       unsigned char* rgba = NULL;
@@ -368,13 +368,16 @@ class VoxelIPFColorScalarWriter : public VtkScalarWriter
         {
           if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
           {
-            EbsdColoring::GenerateCubicIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
+            CubicOps ops;
+            ops.generateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
                                           RefDirection[0], RefDirection[1], RefDirection[2],
-                                          &rgba[index], hkl);
+                                          &rgba[index], false);
           }
           else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
           {
-            EbsdColoring::GenerateHexIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2], RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index]);
+            HexagonalOps ops;
+            ops.generateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
+                                    RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], false);
           }
         }
 

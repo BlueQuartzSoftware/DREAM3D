@@ -38,7 +38,21 @@
 
 
 #include "EbsdLib/EbsdConstants.h"
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+
+
+
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
@@ -58,19 +72,19 @@ void TestCrystalStructureTest()
   bool b = Ebsd::CrystalStructure::Cubic_High == chigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-  b = Ebsd::CrystalStructure::Cubic_High == clow;
+      b = Ebsd::CrystalStructure::Cubic_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-  b = Ebsd::CrystalStructure::Cubic_High == hlow;
+      b = Ebsd::CrystalStructure::Cubic_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-   b = Ebsd::CrystalStructure::Hexagonal_High == hhigh;
+      b = Ebsd::CrystalStructure::Hexagonal_High == hhigh;
   DREAM3D_REQUIRE_EQUAL(b, true)
 
-  b = Ebsd::CrystalStructure::Hexagonal_High == hlow;
+      b = Ebsd::CrystalStructure::Hexagonal_High == hlow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
-  b = Ebsd::CrystalStructure::Hexagonal_High == clow;
+      b = Ebsd::CrystalStructure::Hexagonal_High == clow;
   DREAM3D_REQUIRE_EQUAL(b, false)
 
 }
@@ -89,10 +103,50 @@ void TestEbsdColoring()
   float ref2 = 1;
 
   uint8_t rgb[3];
-  uint8_t hkl[3];
-
-  EbsdColoring::GenerateCubicIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-
+  {
+    CubicOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    CubicLowOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    HexagonalOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    HexagonalLowOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    MonoclinicOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    OrthoRhombicOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    TetragonalLowOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    TetragonalOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    TriclinicOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    TrigonalLowOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
+  {
+    TrigonalOps ops;
+    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
+  }
   std::cout << (int)(rgb[0]) << " " << (int)(rgb[1]) << " " << (int)(rgb[2]) << " " << std::endl;
 }
 
@@ -103,9 +157,9 @@ int main(int argc, char **argv) {
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestEbsdColoring() )
 
-  DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
+      DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
 
-  PRINT_TEST_SUMMARY();
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

@@ -46,13 +46,9 @@
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
-namespace TrigonalLowMath {
-  namespace Detail {
-    static const QuatF TrigQuatSym[3] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f)};
-  }
-}
+
+
+
 /**
  * @class TrigonalLowOps TrigonalLowOps.h DREAM3DLib/Common/OrientationOps/TrigonalLowOps.h
  * @brief
@@ -97,6 +93,11 @@ class DREAM3DLib_EXPORT TrigonalLowOps : public OrientationOps
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
+
+
+    virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees);
+    virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[6], int numsym,
