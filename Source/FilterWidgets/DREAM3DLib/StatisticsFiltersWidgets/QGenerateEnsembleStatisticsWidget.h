@@ -62,7 +62,7 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     QGenerateEnsembleStatisticsWidget(QWidget* parent = NULL);
     ~QGenerateEnsembleStatisticsWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
     void writeOptions(QSettings &prefs);
     void readOptions(QSettings &prefs);
 

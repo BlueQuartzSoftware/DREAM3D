@@ -75,8 +75,8 @@ QFilterWidget(parent)
   m_OpenDialogLastDirectory = QDir::homePath();
   setupUi(this);
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
-  getGuiParametersFromFilter( filter.get() );
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -123,10 +123,11 @@ void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
+AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool defaultValues)
 {
   // Update the filter with the latest values from the GUI
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
+  if (defaultValues == true) { return filter; }
 
   filter->setInputFile(m_InputFile->text().toStdString());
   filter->setXVoxels(m_XPoints->value());

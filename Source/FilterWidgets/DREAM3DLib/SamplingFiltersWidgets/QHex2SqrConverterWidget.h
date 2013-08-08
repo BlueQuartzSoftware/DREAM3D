@@ -78,7 +78,7 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);

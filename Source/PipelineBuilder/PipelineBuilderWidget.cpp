@@ -257,6 +257,12 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
 {
   hid_t fid = H5Utilities::openFile( filePath.toStdString() );
+  if (fid <= 0)
+  {
+
+    //Present a error dialog
+    return;
+  }
   int err = readPipelineFromFile(fid);
   FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
 
@@ -1030,44 +1036,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem * item, QListWidgetItem * previous )
 {
-  if (NULL == item) { return; }
-  QString filterName = item->data(Qt::UserRole).toString();
-  FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-  if (NULL == wm.get()) { return; }
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
-  if (NULL == wf.get())
-  {
-    return;
-  }
-  AbstractFilter::Pointer filter = wf->getFilterInstance();
-  if (NULL == filter.get())
-  {
-    return;
-  }
-
-#if 0
-  QString html;
-  QString resName = QString(":/%1Filters/%2.html").arg(filter->getGroupName().c_str()).arg(filter->getNameOfClass().c_str());
-  QFile f(resName);
-  if ( f.open(QIODevice::ReadOnly) )
-  {
-    html = QLatin1String(f.readAll());
-  }
-  else
-  {
-    html.append("<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">");
-    html.append("<html>");
-    html.append("<head>");
-    html.append("<meta name=\"qrichtext\" content=\"1\" />");
-    html.append("<style type=\"text/css\">p, li { white-space: pre-wrap; }</style>");
-    html.append("</head>");
-    html.append("<body>\n");
-    html.append("Documentation file was not found. ");
-    html.append(resName);
-    html.append("</body></html>\n");
-  }
-#endif
-
+  
 }
 
 // -----------------------------------------------------------------------------
@@ -1272,7 +1241,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
     QFilterWidget* fw = m_PipelineViewWidget->filterWidgetAt(i);
     if (fw)
     {
-      m_FilterPipeline->pushBack(fw->getFilter());
+      m_FilterPipeline->pushBack(fw->getFilter(false));
     }
   }
 

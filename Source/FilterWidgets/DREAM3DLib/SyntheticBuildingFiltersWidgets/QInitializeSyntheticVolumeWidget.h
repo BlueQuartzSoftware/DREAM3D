@@ -66,7 +66,7 @@ class QInitializeSyntheticVolumeWidget : public QFilterWidget, private Ui::QInit
     QInitializeSyntheticVolumeWidget(QWidget* parent = NULL);
     virtual ~QInitializeSyntheticVolumeWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);

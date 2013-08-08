@@ -89,6 +89,8 @@ class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Ax
      */
     virtual std::vector<AxisAngleInput_t> getAxisAngleRotations();
 
+    virtual AxisAngleTableModel* getTableModel();
+
   signals:
     void AxisAnglesChanged();
 

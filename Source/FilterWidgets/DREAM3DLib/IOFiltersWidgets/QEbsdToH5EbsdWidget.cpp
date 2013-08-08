@@ -90,8 +90,8 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   }
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
-  getGuiParametersFromFilter( filter.get() );
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
@@ -135,12 +135,14 @@ void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
+AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
 {
   bool ok = false;
 
   // Now create the filter and start pushing values into the filter
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
+  if (defaultValues == true) { return filter; }
+
   filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
