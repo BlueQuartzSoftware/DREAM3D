@@ -33,30 +33,27 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "TrigonalOps.h"
+#include "TrigonalLowOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 
-namespace TrigonalMath {
+namespace TrigonalLowMath {
   namespace Detail {
 
-    static const float TrigDim1InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
-    static const float TrigDim2InitValue = powf((0.75f*((float(M_PI)/2.0f)-sinf((float(M_PI)/2.0f)))),(1.0f/3.0f));
+    static const float TrigDim1InitValue = powf((0.75f*((float(M_PI))-sinf((float(M_PI))))),(1.0f/3.0f));
+    static const float TrigDim2InitValue = powf((0.75f*((float(M_PI))-sinf((float(M_PI))))),(1.0f/3.0f));
     static const float TrigDim3InitValue = powf((0.75f*((float(M_PI)/3.0f)-sinf((float(M_PI)/3.0f)))),(1.0f/3.0f));
-    static const float TrigDim1StepValue = TrigDim1InitValue/18.0f;
-    static const float TrigDim2StepValue = TrigDim2InitValue/18.0f;
+    static const float TrigDim1StepValue = TrigDim1InitValue/36.0f;
+    static const float TrigDim2StepValue = TrigDim2InitValue/36.0f;
     static const float TrigDim3StepValue = TrigDim3InitValue/12.0f;
 
-    static const float TrigRodSym[6][3] = {{0.0f, 0.0f, 0.0f},
+    static const float TrigRodSym[3][3] = {{0.0f, 0.0f, 0.0f},
                                            {0.0f, 0.0f, 1.73205f},
-                                           {0.0f, 0.0f, -1.73205f},
-                                           {8660254000000.0f, 5000000000000.0f, 0.0f},
-                                           {0.0f, 1000000000000.0f, 0.0f},
-                                           {-8660254000000.0f, 5000000000000.0f, 0.0f}};
+                                           {0.0f, 0.0f, -1.73205f}};
 
-    static const float TrigMatSym[6][3][3] =
+    static const float TrigMatSym[3][3][3] =
     {{{1.0, 0.0, 0.0},
       {0.0, 1.0, 0.0},
       {0.0, 0.0, 1.0}},
@@ -67,19 +64,7 @@ namespace TrigonalMath {
 
      {{-0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
     {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-      {0.0, 0.0,  1.0}},
-
-     {{0.5, DREAM3D::Constants::k_Root3Over2,  0.0},
-    {DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-      {0.0, 0.0,  -1.0}},
-
-    {{-1.0, 0.0, 0.0},
-      {0.0, 1.0, 0.0},
-      {0.0, 0.0, -1.0}},
-
-     {{0.5, -DREAM3D::Constants::k_Root3Over2,  0.0},
-    {-DREAM3D::Constants::k_Root3Over2, -0.5, 0.0},
-      {0.0, 0.0,  -1.0}}};
+      {0.0, 0.0,  1.0}}};
 
   }
 }
@@ -88,12 +73,12 @@ namespace TrigonalMath {
 const static float m_OnePointThree = 1.33333333333f;
 
 
-using namespace TrigonalMath::Detail;
+using namespace TrigonalLowMath::Detail;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TrigonalOps::TrigonalOps()
+TrigonalLowOps::TrigonalLowOps()
 {
   float junk1 =  TrigDim1StepValue * 1.0f;
   float junk2 = junk1/TrigDim2StepValue;
@@ -104,14 +89,14 @@ TrigonalOps::TrigonalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TrigonalOps::~TrigonalOps()
+TrigonalLowOps::~TrigonalLowOps()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float TrigonalOps::_calcMisoQuat(const QuatF quatsym[6], int numsym,
+float TrigonalLowOps::_calcMisoQuat(const QuatF quatsym[6], int numsym,
 QuatF &q1, QuatF &q2,
 float &n1, float &n2, float &n3)
 {
@@ -160,27 +145,27 @@ float &n1, float &n2, float &n3)
   return wmin;
 }
 
-float TrigonalOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float TrigonalLowOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
 {
-  int numsym = 6;
+  int numsym = 3;
 
   return _calcMisoQuat(TrigQuatSym, numsym, q1, q2, n1, n2, n3);
 }
 
-void TrigonalOps::getQuatSymOp(int i, QuatF &q)
+void TrigonalLowOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(TrigQuatSym[i], q);
 
 }
 
-void TrigonalOps::getRodSymOp(int i,float *r)
+void TrigonalLowOps::getRodSymOp(int i,float *r)
 {
   r[0] = TrigRodSym[i][0];
   r[1] = TrigRodSym[i][1];
   r[2] = TrigRodSym[i][2];
 }
 
-void TrigonalOps::getMatSymOp(int i,float g[3][3])
+void TrigonalLowOps::getMatSymOp(int i,float g[3][3])
 {
   g[0][0] = TrigMatSym[i][0][0];
   g[0][1] = TrigMatSym[i][0][1];
@@ -193,14 +178,14 @@ void TrigonalOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = TrigMatSym[i][2][2];
 }
 
-void TrigonalOps::getODFFZRod(float &r1,float &r2, float &r3)
+void TrigonalLowOps::getODFFZRod(float &r1,float &r2, float &r3)
 {
-  int numsym = 6;
+  int numsym = 3;
 
   _calcRodNearestOrigin(TrigRodSym, numsym, r1, r2, r3);
 }
 
-void TrigonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void TrigonalLowOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
   float w, n1, n2, n3;
   float FZn1, FZn2, FZn3;
@@ -242,21 +227,21 @@ void TrigonalOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
   OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
-void TrigonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void TrigonalLowOps::getNearestQuat(QuatF &q1, QuatF &q2)
 {
-  int numsym = 6;
+  int numsym = 3;
 
   _calcNearestQuat(TrigQuatSym, numsym, q1, q2);
 }
 
-void TrigonalOps::getFZQuat(QuatF &qr)
+void TrigonalLowOps::getFZQuat(QuatF &qr)
 {
-  int numsym = 6;
+  int numsym = 3;
 
   _calcQuatNearestOrigin(TrigQuatSym, numsym, qr);
 }
 
-int TrigonalOps::getMisoBin(float r1, float r2, float r3)
+int TrigonalLowOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -270,15 +255,15 @@ int TrigonalOps::getMisoBin(float r1, float r2, float r3)
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
+  bins[0] = 72.0f;
+  bins[1] = 72.0f;
   bins[2] = 24.0f;
 
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
 
-void TrigonalOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void TrigonalLowOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
 {
   float init[3];
   float step[3];
@@ -291,9 +276,9 @@ void TrigonalOps::determineEulerAngles(int choose, float &synea1, float &synea2,
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
@@ -302,7 +287,7 @@ void TrigonalOps::determineEulerAngles(int choose, float &synea1, float &synea2,
 }
 
 
-void TrigonalOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
+void TrigonalLowOps::determineRodriguesVector( int choose, float &r1, float &r2, float &r3)
 {
   float init[3];
   float step[3];
@@ -314,16 +299,16 @@ void TrigonalOps::determineRodriguesVector( int choose, float &r1, float &r2, fl
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  phi[0] = static_cast<float>(choose % 36);
-  phi[1] = static_cast<float>((choose / 36) % 36);
-  phi[2] = static_cast<float>(choose / (36 * 36));
+  phi[0] = static_cast<float>(choose % 72);
+  phi[1] = static_cast<float>((choose / 72) % 72);
+  phi[2] = static_cast<float>(choose / (72 * 72));
 
   _calcDetermineHomochoricValues(init, step, phi, choose, r1, r2, r3);
   OrientationMath::HomochorictoRod(r1, r2, r3);
   getMDFFZRod(r1, r2, r3);
 }
 
-int TrigonalOps::getOdfBin(float r1, float r2, float r3)
+int TrigonalLowOps::getOdfBin(float r1, float r2, float r3)
 {
   float dim[3];
   float bins[3];
@@ -337,43 +322,44 @@ int TrigonalOps::getOdfBin(float r1, float r2, float r3)
   step[0] = TrigDim1StepValue;
   step[1] = TrigDim2StepValue;
   step[2] = TrigDim3StepValue;
-  bins[0] = 36.0f;
-  bins[1] = 36.0f;
+  bins[0] = 72.0f;
+  bins[1] = 72.0f;
   bins[2] = 24.0f;
 
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void TrigonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void TrigonalLowOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
   schmidfactor = 0;
   slipsys = 0;
 }
 
-void TrigonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void TrigonalLowOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
 {
   mPrime = 0;
 }
 
-void TrigonalOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void TrigonalLowOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 {
   F1 = 0;
 }
 
-void TrigonalOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void TrigonalLowOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
 {
   F1spt = 0;
 }
 
-void TrigonalOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void TrigonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 {
   F7 = 0;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+void TrigonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   BOOST_ASSERT(false);
 }

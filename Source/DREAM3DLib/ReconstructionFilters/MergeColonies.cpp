@@ -426,8 +426,8 @@ void MergeColonies::merge_colonies()
                 colonylist.push_back(neigh);
               }
             }
-            else if (Ebsd::CrystalStructure::Check::IsCubic(phase2)
-                     && Ebsd::CrystalStructure::Check::IsHexagonal(phase1))
+            else if (Ebsd::CrystalStructure::Cubic_High == phase2
+              && Ebsd::CrystalStructure::Hexagonal_High == phase1)
             {
               colony = check_for_burgers(q2, q1);
               if (colony == 1)
@@ -436,8 +436,8 @@ void MergeColonies::merge_colonies()
                 colonylist.push_back(neigh);
               }
             }
-            else if ( Ebsd::CrystalStructure::Check::IsCubic(phase1)
-                      && Ebsd::CrystalStructure::Check::IsHexagonal(phase2) )
+            else if ( Ebsd::CrystalStructure::Cubic_High == phase1
+                      && Ebsd::CrystalStructure::Hexagonal_High == phase2)
             {
               colony = check_for_burgers(q1, q2);
               if (colony == 1)
@@ -557,7 +557,7 @@ void MergeColonies::identify_globAlpha()
   {
     int pnum = m_CellParentIds[i];
     totalSize[pnum]++;
-    if(Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructures[m_CellPhases[i]]) )
+    if(Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[m_CellPhases[i]] )
     { betaSize[pnum]++; }
   }
   for (int64_t i = 0; i < totalPoints; i++)

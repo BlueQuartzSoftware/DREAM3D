@@ -64,6 +64,9 @@
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
 
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "QtSupport/PoleFigureImageUtilities.h"
+
 
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
@@ -189,14 +192,14 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   }
   size_t numEntries = e1s.size();
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     odf.resize(CubicOps::k_OdfSize);
     Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
                                    &(weights.front()), &(sigmas.front()), true,
                                    &(odf.front()), numEntries);
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     odf.resize(HexagonalOps::k_OdfSize);
     Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
@@ -569,45 +572,76 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
 
   int npoints = 5000;
-  QwtArray<float> x001;
-  QwtArray<float> y001;
-  QwtArray<float> x011;
-  QwtArray<float> y011;
-  QwtArray<float> x111;
-  QwtArray<float> y111;
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, 3, "Eulers");
 
-  if ( Ebsd::CrystalStructure::Check::IsCubic(m_CrystalStructure))
+  if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(CubicOps::k_OdfSize);
-    x001.resize(npoints * 3);
-    y001.resize(npoints * 3);
-    x011.resize(npoints * 6);
-    y011.resize(npoints * 6);
-    x111.resize(npoints * 4);
-    y111.resize(npoints * 4);
     Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(),
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
 
-    err = StatsGen::GenCubicODFPlotData(odf.data(), x001.data(), y001.data(),
-                                        x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+
+    DoubleArrayType::Pointer intensity001;
+    DoubleArrayType::Pointer intensity011;
+    DoubleArrayType::Pointer intensity111;
+    PoleFigureUtilities::GenerateCubicPoleFigures(eulers.get(), 22, 226, intensity001, intensity011, intensity111);
+
+    QImage i001 = PoleFigureImageUtilities::CreateQImage(intensity001.get(), 226, 16, "OO1", true);
+    QImage i011 = PoleFigureImageUtilities::CreateQImage(intensity011.get(), 226, 16, "O11", true);
+    QImage i111 = PoleFigureImageUtilities::CreateQImage(intensity111.get(), 226, 16, "111", true);
+
+    m_001PF->setPixmap(QPixmap::fromImage(i001));
+    m_011PF->setPixmap(QPixmap::fromImage(i011));
+    m_111PF->setPixmap(QPixmap::fromImage(i111));
   }
-  else if ( Ebsd::CrystalStructure::Check::IsHexagonal(m_CrystalStructure))
+  else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
     // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(HexagonalOps::k_OdfSize);
-    x001.resize(npoints * 1);
-    y001.resize(npoints * 1);
-    x011.resize(npoints * 3);
-    y011.resize(npoints * 3);
-    x111.resize(npoints * 3);
-    y111.resize(npoints * 3);
     Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(),
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
-    err = StatsGen::GenHexODFPlotData(odf.data(), x001.data(), y001.data(),
-                                      x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+
+    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+
+    DoubleArrayType::Pointer intensity0001;
+    DoubleArrayType::Pointer intensity1010;
+    DoubleArrayType::Pointer intensity1120;
+    PoleFigureUtilities::GenerateHexPoleFigures(eulers.get(), 22, 226, intensity0001, intensity1010, intensity1120);
+
+    QImage i0001 = PoleFigureImageUtilities::CreateQImage(intensity0001.get(), 226, 16, "0001", true);
+    QImage i1010 = PoleFigureImageUtilities::CreateQImage(intensity1010.get(), 226, 16, "1010", true);
+    QImage i1120 = PoleFigureImageUtilities::CreateQImage(intensity1120.get(), 226, 16, "1120", true);
+
+    m_001PF->setPixmap(QPixmap::fromImage(i0001));
+    m_011PF->setPixmap(QPixmap::fromImage(i1010));
+    m_111PF->setPixmap(QPixmap::fromImage(i1120));
+  }
+  else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
+  {
+    // We now need to resize all the arrays here to make sure they are all allocated
+    odf.resize(OrthoRhombicOps::k_OdfSize);
+    Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
+                                 weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
+
+    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+
+    DoubleArrayType::Pointer intensity100;
+    DoubleArrayType::Pointer intensity010;
+    DoubleArrayType::Pointer intensity001;
+    PoleFigureUtilities::GenerateHexPoleFigures(eulers.get(), 22, 226, intensity001, intensity010, intensity001);
+
+    QImage i100 = PoleFigureImageUtilities::CreateQImage(intensity100.get(), 226, 16, "001", true);
+    QImage i010 = PoleFigureImageUtilities::CreateQImage(intensity010.get(), 226, 16, "010", true);
+    QImage i001 = PoleFigureImageUtilities::CreateQImage(intensity001.get(), 226, 16, "001", true);
+
+    m_001PF->setPixmap(QPixmap::fromImage(i100));
+    m_011PF->setPixmap(QPixmap::fromImage(i010));
+    m_111PF->setPixmap(QPixmap::fromImage(i001));
   }
   if (err == 1)
   {
@@ -615,29 +649,29 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     return;
   }
 
-  // This is multi-threaded on appropriate hardware.
-  qint32 kRad[2] = {4, 4};
-  qint32 pfSize[2] = {226, 226};
-  QVector<PoleFigureData> data;
+  //// This is multi-threaded on appropriate hardware.
+  //qint32 kRad[2] = {4, 4};
+  //qint32 pfSize[2] = {226, 226};
+  //QVector<PoleFigureData> data;
 
-  switch(this->m_CrystalStructure)
-  {
-    case Ebsd::CrystalStructure::Cubic_High:
-      data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
-      break;
-    case Ebsd::CrystalStructure::Hexagonal_High:
-      data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
-      data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
-      break;
-    default:
-      return;
-  }
+  //switch(this->m_CrystalStructure)
+  //{
+  //  case Ebsd::CrystalStructure::Cubic_High:
+  //    data.push_back(PoleFigureData(x001, y001, QString("<001>"), kRad, pfSize));
+  //    data.push_back(PoleFigureData(x011, y011, QString("<011>"), kRad, pfSize));
+  //    data.push_back(PoleFigureData(x111, y111, QString("<111>"), kRad, pfSize));
+  //    break;
+  //  case Ebsd::CrystalStructure::Hexagonal_High:
+  //    data.push_back(PoleFigureData(x001, y001, QString("<0001>"), kRad, pfSize));
+  //    data.push_back(PoleFigureData(x011, y011, QString("<11-20>"), kRad, pfSize));
+  //    data.push_back(PoleFigureData(x111, y111, QString("<10-10>"), kRad, pfSize));
+  //    break;
+  //  default:
+  //    return;
+  //}
 
-  // This kicks off the threads that will generate the Pole Figure images
-  m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateODFPoleFigure));
+  //// This kicks off the threads that will generate the Pole Figure images
+  //m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateODFPoleFigure));
 
 
   // Enable the MDF tab

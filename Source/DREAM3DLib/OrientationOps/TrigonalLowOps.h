@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef HEXAGONALOPS_H_
-#define HEXAGONALOPS_H_
+#ifndef TrigonalLowOPS_H_
+#define TrigonalLowOPS_H_
 
 #include "MXA/Common/MXASetGetMacros.h"
 
@@ -43,45 +43,37 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/QuaternionMath.hpp"
 
 
-namespace HexagonalMath {
+namespace TrigonalLowMath {
   namespace Detail {
-    static const QuatF HexQuatSym[12] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f),
-                         QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.866025400f, 0.500000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.500000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.50000000f, 0.866025400f, 0.000000000f, 0.000000000f),
-                         QuaternionMathF::New(-0.86602540f, 0.500000000f, 0.000000000f, 0.000000000)};
+    static const QuatF TrigQuatSym[3] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
+                                            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f)};
   }
 }
 /**
- * @class HexagonalOps HexagonalOps.h DREAM3DLib/Common/OrientationOps/HexagonalOps.h
+ * @class TrigonalLowOps TrigonalLowOps.h DREAM3DLib/Common/OrientationOps/TrigonalLowOps.h
  * @brief
  * @author Michael A. Jackson for BlueQuartz Software
  * @author Michael A. Groeber for USAF Research Laboratory, Materials Lab
  * @date May 5, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
+class DREAM3DLib_EXPORT TrigonalLowOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(HexagonalOps)
-    MXA_TYPE_MACRO_SUPER(HexagonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(HexagonalOps)
+    MXA_SHARED_POINTERS(TrigonalLowOps)
+    MXA_TYPE_MACRO_SUPER(TrigonalLowOps, OrientationOps)
+    MXA_STATIC_NEW_MACRO(TrigonalLowOps)
 
-    HexagonalOps();
-    virtual ~HexagonalOps();
+    TrigonalLowOps();
+    virtual ~TrigonalLowOps();
 
-    static const int k_OdfSize = 15552;
-    static const int k_MdfSize = 15552;
-    static const int k_NumSymQuats = 12;
+    static const int k_OdfSize = 124416;
+    static const int k_MdfSize = 124416;
+    static const int k_NumSymQuats = 3;
 
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
@@ -104,18 +96,16 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
     virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
-
-
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
   protected:
-    float _calcMisoQuat(const QuatF quatsym[12], int numsym,
+    float _calcMisoQuat(const QuatF quatsym[6], int numsym,
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
   private:
-    HexagonalOps(const HexagonalOps&); // Copy Constructor Not Implemented
-    void operator=(const HexagonalOps&); // Operator '=' Not Implemented
+    TrigonalLowOps(const TrigonalLowOps&); // Copy Constructor Not Implemented
+    void operator=(const TrigonalLowOps&); // Operator '=' Not Implemented
 };
 
-#endif /* HEXAGONALOPS_H_ */
+#endif /* TrigonalLowOPS_H_ */
