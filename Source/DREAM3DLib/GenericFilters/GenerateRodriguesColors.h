@@ -85,7 +85,7 @@ class DREAM3DLib_EXPORT GenerateRodriguesColors : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate IPF Colors"; }
+    virtual const std::string getHumanLabel() { return "Generate Rodrigues Colors"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

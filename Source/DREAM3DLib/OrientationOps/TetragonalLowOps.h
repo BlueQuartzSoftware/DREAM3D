@@ -45,11 +45,6 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
-namespace TetragonalLowMath {
-  namespace Detail {
-
- }
-}
 /**
  * @class TetragonalLowOps TetragonalLowOps.h DREAM3DLib/Common/OrientationOps/TetragonalLowOps.h
  * @brief
