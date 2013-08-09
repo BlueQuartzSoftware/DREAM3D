@@ -211,14 +211,9 @@ void GenerateIPFColors::execute()
 
       if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
       {
-<<<<<<< HEAD
-        EbsdColoring::GenerateCubicIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index);
-=======
         CubicOps ops;
         ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
->>>>>>> 9fead6e7defc294879e935b7880e0869da3cb129
       }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
       {
