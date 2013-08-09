@@ -120,9 +120,9 @@ void NeighborOrientationCorrelation::readFilterParameters(AbstractFilterParamete
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMinConfidence( reader->readValue("MinConfidence", 0) );
-  setMisorientationTolerance( reader->readValue("MisorientationTolerance", 0) );
-  setLevel( reader->readValue("Level", 0) );
+  setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
+  setLevel( reader->readValue("Level", getLevel()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

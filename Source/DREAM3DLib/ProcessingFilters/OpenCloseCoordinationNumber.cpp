@@ -103,7 +103,7 @@ void OpenCloseCoordinationNumber::readFilterParameters(AbstractFilterParametersR
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setCoordinationNumber( reader->readValue("CoordinationNumber", 0) );
+  setCoordinationNumber( reader->readValue("CoordinationNumber", getCoordinationNumber()) );
   setLoop( reader->readValue("Loop", false) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

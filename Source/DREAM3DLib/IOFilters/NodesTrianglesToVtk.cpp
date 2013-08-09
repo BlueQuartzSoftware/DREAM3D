@@ -120,8 +120,8 @@ void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* r
   setNodesFile( reader->readValue( "NodesFile", getNodesFile() ) );
   setTrianglesFile( reader->readValue( "TrianglesFile", getTrianglesFile() ) );
   setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
-  setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
-  setWriteConformalMesh( reader->readValue("WriteConformalMesh", false) );
+  setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
+  setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

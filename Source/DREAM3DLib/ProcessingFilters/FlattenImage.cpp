@@ -137,7 +137,7 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setFlattenMethod( reader->readValue("FlattenMethod", 0) );
+  setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

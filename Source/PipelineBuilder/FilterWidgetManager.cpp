@@ -59,7 +59,7 @@ FilterWidgetManager::Pointer FilterWidgetManager::Instance()
 
   if (singleton.get() == NULL)
   {
-      std::cout << "FilterWidgetManager::Instance singleton was NULL" << std::endl;
+   //   std::cout << "FilterWidgetManager::Instance singleton was NULL" << std::endl;
     singleton.reset (new FilterWidgetManager() );
    // std::cout << "singleton.get(): " << singleton.get() << std::endl;
   }

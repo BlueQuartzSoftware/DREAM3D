@@ -172,7 +172,7 @@ void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader,
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMisAngle( reader->readValue("MisAngle", 0) );
+  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
   setMisAxis( reader->readValue("MisAxis", getMisAxis() ) );
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setStereoOutputFile( reader->readValue( "StereoOutputFile", getStereoOutputFile() ) );

@@ -141,9 +141,10 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-  setWriteVoxelData( reader->readValue("WriteVoxelData", false) );
-  setWriteSurfaceMeshData( reader->readValue("WriteSurfaceMeshData", false) );
-  setWriteXdmfFile( reader->readValue("WriteXdmfFile", false) );
+  setWriteVoxelData( reader->readValue("WriteVoxelData", getWriteVoxelData()) );
+  setWriteSurfaceMeshData( reader->readValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() ) );
+  setWriteSolidMeshData( reader->readValue("WriteSolidMeshData", getWriteSolidMeshData() ) );
+  setWriteXdmfFile( reader->readValue("WriteXdmfFile", getWriteXdmfFile()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

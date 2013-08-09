@@ -162,7 +162,7 @@ void RotateEulerRefFrame::readFilterParameters(AbstractFilterParametersReader* r
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setRotationAxis( reader->readValue("RotationAxis", getRotationAxis() ) );
-  setRotationAngle( reader->readValue("RotationAngle", 0) );
+  setRotationAngle( reader->readValue("RotationAngle", getRotationAngle()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

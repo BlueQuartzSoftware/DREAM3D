@@ -103,7 +103,7 @@ void FieldDataCSVWriter::readFilterParameters(AbstractFilterParametersReader* re
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setFieldDataFile( reader->readValue( "FieldDataFile", getFieldDataFile() ) );
-  setWriteNeighborListData( reader->readValue("WriteNeighborListData", false) );
+  setWriteNeighborListData( reader->readValue("WriteNeighborListData", getWriteNeighborListData()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

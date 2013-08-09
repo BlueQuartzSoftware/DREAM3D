@@ -949,7 +949,7 @@ int main(int argc, char **argv)
   FilterManager::Instance()->addFilterFactory("Filt1",Filt1Factory);
 
   int err = EXIT_SUCCESS;
-#if 0
+#if 1
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
@@ -970,7 +970,7 @@ int main(int argc, char **argv)
 
       //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
 
-#if 0
+#if 1
     #if REMOVE_TEST_FILES
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif

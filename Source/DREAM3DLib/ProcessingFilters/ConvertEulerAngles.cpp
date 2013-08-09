@@ -126,7 +126,7 @@ void ConvertEulerAngles::readFilterParameters(AbstractFilterParametersReader* re
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setConversionType( reader->readValue("ConversionType", 0) );
+  setConversionType( reader->readValue("ConversionType", getConversionType()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

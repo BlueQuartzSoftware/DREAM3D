@@ -262,8 +262,9 @@ void GenericExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
-  reader->openFilterGroup(this, index);
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
 
+  reader->openFilterGroup(this, index);
   setStlFilePrefix( reader->readValue("StlFilePrefix", getStlFilePrefix()) );
   setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );

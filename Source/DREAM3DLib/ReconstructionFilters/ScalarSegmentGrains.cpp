@@ -196,7 +196,7 @@ void ScalarSegmentGrains::readFilterParameters(AbstractFilterParametersReader* r
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setScalarArrayName( reader->readValue( "ScalarArrayName", getScalarArrayName() ) );
-  setScalarTolerance( reader->readValue("ScalarTolerance", 0) );
+  setScalarTolerance( reader->readValue("ScalarTolerance", getScalarTolerance()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

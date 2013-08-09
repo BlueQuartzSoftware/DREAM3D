@@ -91,7 +91,7 @@ void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParameters
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-  setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
+  setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

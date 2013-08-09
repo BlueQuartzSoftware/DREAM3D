@@ -262,13 +262,13 @@ void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* re
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setIterationSteps( reader->readValue("IterationSteps", 0) );
-  setLambda( reader->readValue("Lambda", 0) );
-  setTripleLineLambda( reader->readValue("TripleLineLambda", 0) );
-  setQuadPointLambda( reader->readValue("QuadPointLambda", 0) );
-  setSurfacePointLambda( reader->readValue("SurfacePointLambda", 0) );
-  setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", 0) );
-  setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", 0) );
+  setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
+  setLambda( reader->readValue("Lambda", getLambda()) );
+  setTripleLineLambda( reader->readValue("TripleLineLambda", getTripleLineLambda()) );
+  setQuadPointLambda( reader->readValue("QuadPointLambda", getQuadPointLambda()) );
+  setSurfacePointLambda( reader->readValue("SurfacePointLambda", getSurfacePointLambda()) );
+  setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()) );
+  setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }

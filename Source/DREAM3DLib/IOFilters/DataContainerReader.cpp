@@ -363,17 +363,24 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
     std::stringstream ss;
     ss << i;
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
-
+#if (__APPLE__)
+#warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
+#endif
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     FilterManager::Pointer fm = FilterManager::Instance();
     IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
-    AbstractFilter::Pointer filter = ff->create();
+    if (NULL != ff.get())
+    {
+      AbstractFilter::Pointer filter = ff->create();
+      if(NULL != filter.get())
+      {
+        // Read the parameters
+        filter->readFilterParameters( reader.get(), i);
 
-    // Read the parameters
-    filter->readFilterParameters( reader.get(), i);
-
-    // Add filter to m_PipelineFromFile
-    m_PipelineFromFile->pushBack(filter);
+        // Add filter to m_PipelineFromFile
+        m_PipelineFromFile->pushBack(filter);
+      }
+    }
   }
   err = H5Gclose(pipelineGroupId);
   return err;
