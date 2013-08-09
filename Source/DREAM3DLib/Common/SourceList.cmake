@@ -26,7 +26,6 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/EbsdColoring.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterParameter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h

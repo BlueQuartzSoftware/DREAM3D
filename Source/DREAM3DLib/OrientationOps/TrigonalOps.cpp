@@ -474,3 +474,25 @@ void TrigonalOps::generateIPFColor(double phi1, double phi, double phi2, double 
   rgb[1] = static_cast<unsigned char>(_rgb[1]);
   rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }
+
+void TrigonalOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+{
+  float range1 = 2.0f*TrigDim1InitValue;
+  float range2 = 2.0f*TrigDim2InitValue;
+  float range3 = 2.0f*TrigDim3InitValue;
+  float max1 = range1/2.0f;
+  float max2 = range2/2.0f;
+  float max3 = range3/2.0f;
+  float red = (r1+max1)/range1;
+  float green = (r2+max2)/range2;
+  float blue = (r3+max3)/range3;
+
+  // Multiply by 255 to get an R/G/B value
+  red = red * 255.0f;
+  green = green * 255.0f;
+  blue = blue * 255.0f;
+
+  rgb[0] = static_cast<unsigned char> (red);
+  rgb[1] = static_cast<unsigned char> (green);
+  rgb[2] = static_cast<unsigned char> (blue);
+}

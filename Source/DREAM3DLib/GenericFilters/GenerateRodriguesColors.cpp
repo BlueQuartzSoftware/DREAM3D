@@ -33,26 +33,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "GenerateEulerColors.h"
+#include "GenerateRodriguesColors.h"
 
-#include <limits>
+
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateEulerColors::GenerateEulerColors() :
+GenerateRodriguesColors::GenerateRodriguesColors() :
   AbstractFilter(),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CellEulerColorsArrayName(DREAM3D::CellData::EulerColor),
+  m_CellRodriguesColorsArrayName(DREAM3D::CellData::IPFColor),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
-  m_CellEulerColors(NULL),
-  m_CrystalStructures(NULL)
+  m_CrystalStructures(NULL),
+  m_CellRodriguesColors(NULL)
 {
   setupFilterParameters();
 }
@@ -60,30 +73,31 @@ GenerateEulerColors::GenerateEulerColors() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateEulerColors::~GenerateEulerColors()
+GenerateRodriguesColors::~GenerateRodriguesColors()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::setupFilterParameters()
+void GenerateRodriguesColors::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReader* reader)
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* writer)
+void GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWriter* writer)
 
 {
   /* Place code that will write the inputs values into a file. reference the
@@ -93,7 +107,7 @@ void GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -109,18 +123,18 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::preflight()
+void GenerateRodriguesColors::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -130,7 +144,7 @@ void GenerateEulerColors::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEulerColors::execute()
+void GenerateRodriguesColors::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -151,41 +165,95 @@ void GenerateEulerColors::execute()
     return;
   }
 
-  size_t index = 0;
+  bool* m_GoodVoxels;
+  BoolArrayType* goodVoxels = NULL;
+  bool missingGoodVoxels = false;
+  IDataArray::Pointer gvPtr = m->getCellData(m_GoodVoxelsArrayName);
+
+  if (m->getCellData(m_GoodVoxelsArrayName).get() == NULL)
+  {
+    missingGoodVoxels = true;
+  }
+  else
+  {
+    goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
+    m_GoodVoxels = goodVoxels->GetPointer(0);
+  }
+
+
 
   int phase;
-  float twoPi = 2.0f * DREAM3D::Constants::k_Pi;
-  float halfPi = 0.5f * DREAM3D::Constants::k_Pi;
-  float thirdPi = 0.333 * DREAM3D::Constants::k_Pi;
-  float twoThirdPi = 0.6666 * DREAM3D::Constants::k_Pi;
+  size_t index = 0;
+  float r1, r2, r3;
 
-  // Write the Euler Coloring Cell Data
-  for (int i = 0; i < totalPoints; ++i)
+  // Write the IPF Coloring Cell Data
+  for (int64_t i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
     index = i * 3;
+    m_CellRodriguesColors[index] = 0;
+    m_CellRodriguesColors[index + 1] = 0;
+    m_CellRodriguesColors[index + 2] = 0;
 
-  if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
-  }
-
-
-
+    if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+    {
+      OrientationMath::EulertoRod(r1, r2, r3, m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2]);
+      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
+      {
+        CubicOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_Low)
+      {
+        CubicLowOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+      {
+        HexagonalOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_Low)
+      {
+        HexagonalLowOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
+      {
+        TrigonalOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_Low)
+      {
+        TrigonalLowOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
+      {
+        TetragonalOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_Low)
+      {
+        TetragonalLowOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::OrthoRhombic)
+      {
+        OrthoRhombicOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Monoclinic)
+      {
+        MonoclinicOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Triclinic)
+      {
+        TriclinicOps ops;
+        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
+      }
+    }
   }
 
   /* Let the GUI know we are done with this filter */

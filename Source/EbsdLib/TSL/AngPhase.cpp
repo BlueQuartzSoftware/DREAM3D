@@ -351,7 +351,9 @@ unsigned int AngPhase::determineCrystalStructure()
     case Ebsd::Ang::PhaseSymmetry::Monoclinic_a:
       crystal_structure = Ebsd::CrystalStructure::Monoclinic;
       break;
-
+    case Ebsd::Ang::PhaseSymmetry::Triclinic:
+      crystal_structure = Ebsd::CrystalStructure::Triclinic;
+      break;
     case Ebsd::Ang::PhaseSymmetry::DiHexagonal:
       crystal_structure = Ebsd::CrystalStructure::Hexagonal_High;
       break;

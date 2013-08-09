@@ -44,8 +44,8 @@
 
 #include "EbsdLib/TSL/AngConstants.h"
 
-#include "DREAM3DLib/Common/EbsdColoring.hpp"
 #include "DREAM3DLib/DREAM3DVersion.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -212,9 +212,9 @@ int LosAlamosFFTWriter::writeFile()
       for (size_t x = 0; x < dims[0]; ++x)
       {
         index = (z*dims[0]*dims[1]) + (dims[0]*y) + x;
-        phi1 = m_CellEulerAngles[index*3] * 180.0/M_PI;
-        phi = m_CellEulerAngles[index*3+1] * 180.0/M_PI;
-        phi2 = m_CellEulerAngles[index*3+2] * 180.0/M_PI;
+        phi1 = m_CellEulerAngles[index*3] * 180.0*DREAM3D::Constants::k_1OverPi;
+        phi = m_CellEulerAngles[index*3+1] * 180.0*DREAM3D::Constants::k_1OverPi;
+        phi2 = m_CellEulerAngles[index*3+2] * 180.0*DREAM3D::Constants::k_1OverPi;
 
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
