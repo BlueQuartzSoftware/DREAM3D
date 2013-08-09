@@ -269,6 +269,11 @@ set_target_properties(TextureTest PROPERTIES FOLDER Test)
 #target_link_libraries(DxTest DREAM3DLib)
 
 # --------
+add_executable(AngleFileLoaderTest ${DREAM3DTest_SOURCE_DIR}/AngleFileLoaderTest.cpp)
+target_link_libraries(AngleFileLoaderTest DREAM3DLib)
+set_target_properties(AngleFileLoaderTest PROPERTIES FOLDER Test)
+
+# --------
 add_executable(SurfaceMeshTest ${DREAM3DTest_SOURCE_DIR}/SurfaceMeshTest.cpp)
 target_link_libraries(SurfaceMeshTest DREAM3DLib)
 set_target_properties(SurfaceMeshTest PROPERTIES FOLDER Test)

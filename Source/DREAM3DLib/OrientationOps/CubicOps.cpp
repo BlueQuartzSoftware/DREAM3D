@@ -953,7 +953,6 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
-  QuaternionMath<float>::Quaternion q1;
   CubicOps ops;
   float g[3][3];
   float gTranpose[3][3];
@@ -1044,5 +1043,117 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
     MatrixMath::Copy3x1(xyz111->GetPointer(i*24+18),xyz111->GetPointer(i*24 + 21));
     MatrixMath::Multiply3x1withConstant(xyz111->GetPointer(i*24 + 21),-1);
   }
+
+}
+/**
+ * @brief Sorts the 3 values from low to high
+ * @param a
+ * @param b
+ * @param c
+ * @param sorted The array to store the sorted values.
+ */
+template<typename T>
+void _TripletSort(T a, T b, T c, T* sorted)
+{
+  if ( a > b && a > c)
+  {
+    sorted[2] = a;
+    if (b > c) { sorted[1] = b; sorted[0] = c; }
+    else { sorted[1] = c; sorted[0] = b; }
+  }
+  else if ( b > a && b > c)
+  {
+    sorted[2] = b;
+    if (a > c) { sorted[1] = a; sorted[0] = c; }
+    else { sorted[1] = c; sorted[0] = a; }
+  }
+  else if ( a > b )
+  {
+    sorted[1] = a; sorted[0] = b; sorted[2] = c;
+  }
+  else if (a >= c && b >=c)
+  {
+    sorted[0] = c; sorted[1] = a; sorted[2] = b;
+  }
+  else
+  { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CubicOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+{
+  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+{
+  if (degToRad == true)
+  {
+    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
+    phi = phi * DREAM3D::Constants::k_DegToRad;
+    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+  }
+  float g[3][3]; // Rotation Matrix?
+  float cd[3];
+  float d[3];
+  float _rgb[3] = { 0.0, 0.0, 0.0 };
+
+  // 1) find rotation matrix from Euler angles
+  OrientationMath::EulertoMat(phi1, phi, phi2, g);
+
+  // 2) use rotation matrix to find which crystal direction is aligned with 001
+  float refDirection[3] = {refDir0, refDir1, refDir2};
+  //      refDirection[0] = refDir0;
+  //      refDirection[1] = refDir1;
+  //      refDirection[2] = refDir2;
+  MatrixMath::Multiply3x3with3x1(g, refDirection, cd);
+
+  //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
+  cd[0] = fabs(cd[0]);
+  cd[1] = fabs(cd[1]);
+  cd[2] = fabs(cd[2]);
+
+  // Sort the cd array from smallest to largest
+  _TripletSort(cd[0], cd[1], cd[2], cd);
+
+  float theta = (cd[0] * 0) + (cd[1] * -DREAM3D::Constants::k_HalfSqrt2) + (cd[2] * DREAM3D::Constants::k_HalfSqrt2);
+  theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
+  _rgb[0] = (90.0f - theta) / 45.0f;
+  d[0] = (cd[1] * 1) - (cd[2] * 0);
+  d[1] = (cd[2] * 0) - (cd[0] * 1);
+  d[2] = (cd[0] * 0) - (cd[1] * 0);
+  d[0] = -(d[1] + d[2]) / d[0];
+  d[1] = 1;
+  d[2] = 1;
+  float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
+  d[0] = d[0] / norm;
+  d[1] = d[1] / norm;
+  d[2] = d[2] / norm;
+  float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
+  phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
+  _rgb[1] = (1 - _rgb[0]) * ((35.26f - phi_local) / 35.26f);
+  _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+  float max = _rgb[0];
+  if (_rgb[1] > max) max = _rgb[1];
+  if (_rgb[2] > max) max = _rgb[2];
+
+  _rgb[0] = _rgb[0] / max;
+  _rgb[1] = _rgb[1] / max;
+  _rgb[2] = _rgb[2] / max;
+
+  // Multiply by 255 to get an R/G/B value
+  _rgb[0] = _rgb[0] * 255.0f;
+  _rgb[1] = _rgb[1] * 255.0f;
+  _rgb[2] = _rgb[2] * 255.0f;
+
+  rgb[0] = static_cast<unsigned char>(_rgb[0]);
+  rgb[1] = static_cast<unsigned char>(_rgb[1]);
+  rgb[2] = static_cast<unsigned char>(_rgb[2]);
 
 }

@@ -318,6 +318,7 @@ void ReadOrientationData::readAngFile()
   if (err < 0)
   {
     setErrorCondition(err);
+    notifyErrorMessage(reader.getErrorMessage(), err);
     notifyErrorMessage("AngReader could not read the .ang file.", getErrorCondition());
     return;
   }

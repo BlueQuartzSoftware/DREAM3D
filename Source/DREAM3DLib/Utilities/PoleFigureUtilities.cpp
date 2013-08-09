@@ -84,7 +84,7 @@ void writeVtkFile(FloatArrayType* xyz, const std::string &filename)
   fprintf(f, "ASCII");
   fprintf(f, "\n");
 
-  fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %d float\n", xyz->GetNumberOfTuples() );
+  fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", xyz->GetNumberOfTuples() );
   size_t count = xyz->GetNumberOfTuples();
   for(int i = 0; i < count; ++i)
   {
