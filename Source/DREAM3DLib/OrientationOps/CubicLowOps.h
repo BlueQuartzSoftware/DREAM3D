@@ -54,6 +54,24 @@
  * @date May 5, 2011
  * @version 1.0
  */
+namespace CubicLowMath {
+  namespace Detail {
+          static const QuatF CubicLowQuatSym[12] = {
+            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+            QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
+  }
+}
+
 class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
 {
   public:

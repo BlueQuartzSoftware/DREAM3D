@@ -49,20 +49,6 @@ namespace Detail
   static const float CubicLowDim3StepValue = CubicLowDim3InitValue/18.0f;
 }
 
-static const QuatF CubicLowQuatSym[12] = {
-  QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-  QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-  QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
-  QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
-  QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
-  QuaternionMathF::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
-  QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
-  QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
-  QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
-  QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
-
 static const float CubicLowRodSym[12][3] = {{0.0f, 0.0f,0.0f},
                                          {10000000000.0f, 0.0f, 0.0f},
                                          {0.0f, 10000000000.0f, 0.0f},
@@ -151,6 +137,7 @@ static const float CubicLowMatSym[12][3][3] =
   {1.0, 0.0, 0.0},
   {0.0, 1.0, 0.0}}};
 
+using namespace CubicLowMath::Detail;
 
 // -----------------------------------------------------------------------------
 //
