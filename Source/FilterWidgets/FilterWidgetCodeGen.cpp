@@ -506,7 +506,6 @@ void createSourceFile( const std::string &group,
   bool implementArrayNameComboBoxUpdated = false;
   bool implementArrayNameSelectionWidget = false;
   bool implementComparisonSelectionWidget = false;
-  bool implementAxisAngleWidget = false;
 
   fprintf(f, "/*\n");
   fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
@@ -674,10 +673,12 @@ void createSourceFile( const std::string &group,
       fprintf(f, "        AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "        if (NULL != w) {\n");
       fprintf(f, "           std::vector<AxisAngleInput_t> v = filter->get%s();\n", prop.c_str());
+      fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
       fprintf(f, "              std::stringstream ss;\n");
-      fprintf(f, "              ss << \"(\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \")\";\n");
+      fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
+      fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
       fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");
       fprintf(f, "              ss.str(\"\");\n");
       fprintf(f, "           }\n");
@@ -701,7 +702,12 @@ void createSourceFile( const std::string &group,
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
       && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
+     // fprintf(f, "     {\n");
+      fprintf(f, "     ComparisonSelectionWidget* w_%s = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str(), prop.c_str());
+      fprintf(f, "     if (w_%s) {\n", prop.c_str());
+      fprintf(f, "       w_%s->setComparisons(filter->get%s());\n", prop.c_str(), prop.c_str());
+      fprintf(f, "     }\n");
+     // fprintf(f, "     }\n");
       implementComparisonSelectionWidget = true;
     }
 
@@ -728,7 +734,7 @@ else
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter(bool defaultValues) \n{\n", filter.c_str());
   fprintf(f, "  %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
-  fprintf(f, "  if (defaultValues == true) { return filter; }\n\n", filter.c_str(), filter.c_str());
+  fprintf(f, "  if (defaultValues == true) { return filter; }\n\n");
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
@@ -1179,7 +1185,7 @@ else
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    std::cout << "  Comparing Files: " << filter << std::endl;
+    //std::cout << "  Comparing Files: " << filter << std::endl;
     FILE* c = fopen(completePath.c_str(), "rb");
     unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
     size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
@@ -1208,14 +1214,12 @@ else
     md5.finalize();
     std::string tempHexDigest = md5.hexdigest();
 
-
-    std::cout << "    Hex Digest:    " << currentHexDigest << std::endl;\
-    std::cout << "    tempHexDigest: " << currentHexDigest << std::endl;
-
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
       std::cout << "  0-Copying Source File: " << completePath << std::endl;
+      std::cout << "    Hex Digest:    " << currentHexDigest << std::endl;
+      std::cout << "    tempHexDigest: " << tempHexDigest << std::endl;
       copyFile(tempPath, completePath);
     }
   }

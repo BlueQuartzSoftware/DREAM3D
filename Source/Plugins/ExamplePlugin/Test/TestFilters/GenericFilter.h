@@ -39,31 +39,22 @@ class GenericFilter : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputPath)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FieldComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EnsembleComparisonInputs)
-
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, PointComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FaceComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
-
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEnsembleArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshEdgeArrayName)
-
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, AxisAngleRotations)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, TestAxisAngleRotations)
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelEnsembleArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshEdgeArrayName)
 
 
     /**

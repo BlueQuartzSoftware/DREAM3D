@@ -78,8 +78,12 @@ class DREAM3DLib_EXPORT FilterManager
      * in the core of DREAM3DLib. This method is called when the singleton instance of this class is
      * first created.
      */
-    static void RegisterKnownFilters();
+    static void RegisterKnownFilters(FilterManager* fm);
 
+    /**
+     * @brief FilterManager::printFactoryNames
+     */
+    void printFactoryNames();
 
     /**
      * @brief Returns the mapping of names to Factory instances for all the

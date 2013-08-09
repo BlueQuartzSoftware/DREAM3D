@@ -38,7 +38,7 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     /**
     * @brief
     */
-    virtual void registerFilters();
+    virtual void registerFilters(FilterManager* fm);
 
 
     /**

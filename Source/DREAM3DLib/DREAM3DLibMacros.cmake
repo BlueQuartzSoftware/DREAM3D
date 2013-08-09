@@ -103,7 +103,7 @@ macro(ADD_DREAM3D_FILTER FilterLib WidgetLib filterGroup filterName filterDocPat
 
 
         file(APPEND ${RegisterKnownFiltersFile} "   FilterFactory<${filterName}>::Pointer ${filterName}Factory = FilterFactory<${filterName}>::New();\n")
-        file(APPEND ${RegisterKnownFiltersFile} "   FilterManager::Instance()->addFilterFactory(\"${filterName}\",${filterName}Factory);\n\n")
+        file(APPEND ${RegisterKnownFiltersFile} "   fm->addFilterFactory(\"${filterName}\",${filterName}Factory);\n\n")
 
        #-- Check to make sure we have a Documentation file for the filter
         if(NOT EXISTS ${filterDocPath} )

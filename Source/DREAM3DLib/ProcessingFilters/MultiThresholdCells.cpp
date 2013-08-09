@@ -80,11 +80,12 @@ void MultiThresholdCells::setupFilterParameters()
   }
 
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
     parameter->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
     parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }
 

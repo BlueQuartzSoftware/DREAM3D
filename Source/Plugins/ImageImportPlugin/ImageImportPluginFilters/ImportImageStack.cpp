@@ -90,8 +90,11 @@ void ImportImageStack::setupFilterParameters()
 void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
+  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setOrigin( reader->readValue("Origin", getOrigin()) );
+  setResolution( reader->readValue("Resolution", getResolution()) );
   reader->closeFilterGroup();
 }
 
@@ -134,9 +137,9 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     // This would be for a gray scale image
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-    // If we have RGB or RGBA Images then we are going to have to change things a bit.
-    // We should read the file and see what we have? Of course Qt is going to read it up into
-    // an RGB array by default
+        // If we have RGB or RGBA Images then we are going to have to change things a bit.
+        // We should read the file and see what we have? Of course Qt is going to read it up into
+        // an RGB array by default
   }
 
 }
@@ -178,20 +181,20 @@ void ImportImageStack::execute()
 
   uint8_t* imagePtr = NULL;
 
-//  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-//  int progress = 0;
+  //  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
+  //  int progress = 0;
   int pixelBytes = 0;
   int totalPixels = 0;
   int height = 0;
   int width = 0;
-//  int bytesPerLine = 0;
+  //  int bytesPerLine = 0;
 
   int64_t z = m_ZStartIndex;
   for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     std::string imageFName = *filepath;
-//    progress = static_cast<int>( z - m_ZStartIndex );
-//    progress = (int)(100.0f * (float)(progress) / total);
+    //    progress = static_cast<int>( z - m_ZStartIndex );
+    //    progress = (int)(100.0f * (float)(progress) / total);
 
     ss.str("");
     ss << "Importing file " << imageFName;
@@ -206,7 +209,7 @@ void ImportImageStack::execute()
     height = image.height();
     width = image.width();
     totalPixels = width * height;
-  //  bytesPerLine = image.bytesPerLine();
+    //  bytesPerLine = image.bytesPerLine();
     // This is the first image so we need to create our block of data to store the data
     if (z == m_ZStartIndex)
     {
@@ -224,7 +227,7 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-   // imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
+    // imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
     for(qint32 i = 0; i < height; ++i)
     {
       imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes + i * (width * pixelBytes));

@@ -46,36 +46,11 @@ namespace H5FilterParameter
   const std::string CompOperatorConstant = "_CompOperator";
   const std::string CompValueConstant = "_CompValue";
   const std::string AngleConstant = "_Angle";
+  const std::string ComparisonInput = "_ComparisonInput";
+  const std::string AxisAngleInput = "_AxisAngleInput";
   const std::string HConstant = "_H";
   const std::string KConstant = "_K";
   const std::string LConstant = "_L";
-  const std::string CellComparisonInputsConstant = "CellComparisonInputs";
-  const std::string FieldComparisonInputsConstant = "FieldComparisonInputs";
-  const std::string EnsembleComparisonInputsConstant = "EnsembleComparisonInputs";
-  const std::string PointComparisonInputsConstant = "PointComparisonInputs";
-  const std::string FaceComparisonInputsConstant = "FaceComparisonInputs";
-  const std::string EdgeComparisonInputsConstant = "EdgeComparisonInputs";
-  const std::string AxisAngleInputsConstant = "AxisAngleInputs";
-  const std::string StlFilePrefixConstant = "StlFilePrefix";
-  const std::string MaxIterationsConstant = "MaxIterations";
-  const std::string MisorientationToleranceConstant = "MisorientationTolerance";
-  const std::string InputFileConstant = "InputFile";
-  const std::string InputPathConstant = "InputPath";
-  const std::string OutputFileConstant = "OutputFile";
-  const std::string OutputPathConstant = "OutputPath";
-  const std::string WriteAlignmentShiftsConstant = "WriteAlignmentShifts";
-  const std::string ConversionTypeConstant = "ConversionType";
-  const std::string SelectedCellArrayNameConstant = "SelectedCellArrayName";
-  const std::string SelectedFieldArrayNameConstant = "SelectedFieldArrayName";
-  const std::string SelectedEnsembleArrayNameConstant = "SelectedEnsembleArrayName";
-  const std::string SurfaceMeshPointArrayNameConstant = "SurfaceMeshPointArrayName";
-  const std::string SurfaceMeshFaceArrayNameConstant = "SurfaceMeshFaceArrayName";
-  const std::string SurfaceMeshEdgeArrayNameConstant = "SurfaceMeshEdgeArrayName";
-  const std::string SolidMeshPointArrayNameConstant = "SolidMeshPointArrayName";
-  const std::string SolidMeshFaceArrayNameConstant = "SolidMeshFaceArrayName";
-  const std::string SolidMeshEdgeArrayNameConstant = "SolidMeshEdgeArrayName";
-  const std::string GenericTestDimensionsConstant = "Dimensions";
-  const std::string GenericTestOriginConstant = "Origin";
 }
 
 #endif /* _H5FilterParametersConstants_H_ */

@@ -61,8 +61,9 @@ FilterManager::Pointer FilterManager::Instance()
 
   if (singleton.get() == NULL)
   {
+    std::cout << "FilterManager::Instance singleton was NULL" << std::endl;
     singleton.reset ( new FilterManager() );
-    singleton->RegisterKnownFilters();
+//    singleton->RegisterKnownFilters();
   }
   return singleton;
 }
@@ -86,6 +87,17 @@ void FilterManager::RegisterFilterFactory(const std::string &name, IFilterFactor
 FilterManager::Collection FilterManager::getFactories()
 {
   return m_Factories;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void FilterManager::printFactoryNames()
+{
+    for(Collection::iterator iter = m_Factories.begin(); iter != m_Factories.end(); ++iter)
+    {
+      std::cout << "Name: " << (*iter).first << std::endl;
+    }
 }
 
 // -----------------------------------------------------------------------------

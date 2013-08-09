@@ -47,8 +47,10 @@
 
 #include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
-#include "TestFilters/GenericFilter.h"
-#include "TestFilters/ArraySelectionExample.h"
+
+#include "ExamplePluginFilters/GenericExample.h"
+#include "ExamplePluginFilters/ThresholdExample.h"
+#include "ExamplePluginFilters/ArraySelectionExample.h"
 #include "TestFilters/TestFilters.h"
 
 
@@ -434,7 +436,7 @@ void GenericExampleTest()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  GenericFilter::Pointer filt = GenericFilter::New();
+  GenericExample::Pointer filt = GenericExample::New();
 
   // Set something for each and every property so you have something to compare against.
   // You may want to make some constants for these values
@@ -447,15 +449,15 @@ void GenericExampleTest()
   filt->setOutputPath(OutputPathTestValue);
   filt->setWriteAlignmentShifts(WriteAlignmentShiftsTestValue);
   filt->setConversionType(ConversionTypeTestValue);
-  filt->setSelectedCellArrayName(SelectedCellArrayNameTestValue);
-  filt->setSelectedFieldArrayName(SelectedFieldArrayNameTestValue);
-  filt->setSelectedEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
-  filt->setSurfaceMeshPointArrayName(SurfaceMeshPointArrayNameTestValue);
-  filt->setSurfaceMeshFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
-  filt->setSurfaceMeshEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
-  filt->setSolidMeshPointArrayName(SolidMeshPointArrayNameTestValue);
-  filt->setSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
-  filt->setSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);\
+  filt->setSelectedVoxelCellArrayName(SelectedCellArrayNameTestValue);
+  filt->setSelectedVoxelFieldArrayName(SelectedFieldArrayNameTestValue);
+  filt->setSelectedVoxelEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
+  filt->setSelectedSurfaceMeshPointArrayName(SurfaceMeshPointArrayNameTestValue);
+  filt->setSelectedSurfaceMeshFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
+  filt->setSelectedSurfaceMeshEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
+  filt->setSelectedSolidMeshPointArrayName(SolidMeshPointArrayNameTestValue);
+  filt->setSelectedSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
+  filt->setSelectedSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);
 
   std::vector<std::string> strVector;
   strVector.push_back(SurfaceMeshPointArrayNameTestValue);
@@ -494,7 +496,7 @@ void GenericExampleTest()
   std::vector<AxisAngleInput_t> axisAngleInputsVector;
   axisAngleInputsVector.push_back(axisAngles1);
   axisAngleInputsVector.push_back(axisAngles2);
-  filt->setAxisAngleRotations(axisAngleInputsVector);
+  filt->setCrystalSymmetryRotations(axisAngleInputsVector);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
@@ -508,7 +510,7 @@ void GenericExampleTest()
 
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
-  filt = GenericFilter::New();
+  filt = GenericExample::New();
   hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
@@ -532,15 +534,15 @@ void GenericExampleTest()
   DREAM3D_REQUIRED( OutputPathTestValue, ==, filt->getOutputPath() )
   DREAM3D_REQUIRED( WriteAlignmentShiftsTestValue, ==, filt->getWriteAlignmentShifts() )
   DREAM3D_REQUIRED( ConversionTypeTestValue, ==, filt->getConversionType() )
-  DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, ==, filt->getSelectedCellArrayName() )
-  DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, ==, filt->getSelectedFieldArrayName() )
-  DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedEnsembleArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshPointArrayNameTestValue, ==, filt->getSurfaceMeshPointArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, ==, filt->getSurfaceMeshFaceArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSurfaceMeshEdgeArrayName() )
-  DREAM3D_REQUIRED( SolidMeshPointArrayNameTestValue, ==, filt->getSolidMeshPointArrayName() )
-  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, ==, filt->getSolidMeshFaceArrayName() )
-  DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, ==, filt->getSolidMeshEdgeArrayName() )
+  DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, ==, filt->getSelectedVoxelCellArrayName() )
+  DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, ==, filt->getSelectedVoxelFieldArrayName() )
+  DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedVoxelEnsembleArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshPointArrayNameTestValue, ==, filt->getSelectedSurfaceMeshPointArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, ==, filt->getSelectedSurfaceMeshFaceArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSelectedSurfaceMeshEdgeArrayName() )
+  DREAM3D_REQUIRED( SolidMeshPointArrayNameTestValue, ==, filt->getSelectedSolidMeshPointArrayName() )
+  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, ==, filt->getSelectedSolidMeshFaceArrayName() )
+  DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, ==, filt->getSelectedSolidMeshEdgeArrayName() )
 
   // Test the IntVec3Widget
   IntVec3Widget_t intWidgetRead = filt->getDimensions();
@@ -555,7 +557,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(FloatWidgetZTestValue, ==, floatWidgetRead.z)
 
   // Test the AxisAngleInput
-  std::vector<AxisAngleInput_t> axisAngleVectorRead = filt->getAxisAngleRotations();
+  std::vector<AxisAngleInput_t> axisAngleVectorRead = filt->getCrystalSymmetryRotations();
   AxisAngleInput_t axisAngles1Read = axisAngleVectorRead[0];
   AxisAngleInput_t axisAngles2Read = axisAngleVectorRead[1];
 
@@ -592,7 +594,7 @@ void ThresholdExampleTest()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
 
-  GenericFilter::Pointer filt = GenericFilter::New();
+  ThresholdExample::Pointer filt = ThresholdExample::New();
 
   std::vector<ComparisonInput_t> cellComparisonInputsVector = getComparisonInputsVector(CellComparisonInputsArrayName1, CellComparisonInputsCompOperator1,
                                                                                         CellComparisonInputsCompValue1, CellComparisonInputsArrayName2,
@@ -638,7 +640,7 @@ void ThresholdExampleTest()
 
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
-  filt = GenericFilter::New();
+  filt = ThresholdExample::New();
   hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 

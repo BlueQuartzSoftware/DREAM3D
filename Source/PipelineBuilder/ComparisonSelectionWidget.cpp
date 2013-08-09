@@ -170,11 +170,27 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
   m_ComparisonSelectionTableView->setItemDelegate(aid);
-
-
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> comparisons)
+{
+  qint32 count = comparisons.size();
+
+  QVector<QString> arrayNames(count);
+  QVector<int>   compOperators(count);
+  QVector<float> compValues(count);
+  bool ok = false;
+  for(int i = 0; i < count; ++i)
+  {
+    arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);
+    compOperators[i] = comparisons[i].compOperator;
+    compValues[i] = comparisons[i].compValue;
+  }
+  m_ComparisonSelectionTableModel->setTableData(arrayNames, compValues, compOperators);
+}
 
 // -----------------------------------------------------------------------------
 //

@@ -49,7 +49,7 @@ file(WRITE ${RegisterKnownFiltersFile} "/* This file was AUTO GENERATED During t
 file(APPEND ${RegisterKnownFiltersFile} "/* The CMake code that generates this file is located in ${CMAKE_CURRENT_LIST_FILE}*/\n")
 file(APPEND ${RegisterKnownFiltersFile} "/* This file will be directly included in another source file. */\n")
 file(APPEND ${RegisterKnownFiltersFile} "#include \"${PLUGIN_NAME}Filters.h\"\n")
-file(APPEND ${RegisterKnownFiltersFile} "\nvoid ${PLUGIN_NAME}::registerFilters()\n{\n")
+file(APPEND ${RegisterKnownFiltersFile} "\nvoid ${PLUGIN_NAME}::registerFilters(FilterManager* fm)\n{\n")
 
 # --------------------------------------------------------------------
 # Generate a file with all of our MOC'ed sources and  headers
