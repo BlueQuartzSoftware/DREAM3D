@@ -61,7 +61,7 @@ GenerateRodriguesColors::GenerateRodriguesColors() :
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CellRodriguesColorsArrayName(DREAM3D::CellData::IPFColor),
+  m_CellRodriguesColorsArrayName(DREAM3D::CellData::RodriguesColor),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
   m_CrystalStructures(NULL),
