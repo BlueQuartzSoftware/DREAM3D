@@ -54,23 +54,6 @@
  * @date May 5, 2011
  * @version 1.0
  */
-namespace CubicLowMath {
-  namespace Detail {
-          static const QuatF CubicLowQuatSym[12] = {
-            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-            QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
-            QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
-            QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-            QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
-            QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
-            QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
-            QuaternionMathF::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
-            QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
-            QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
-            QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
-            QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
-  }
-}
 
 class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
 {
@@ -113,6 +96,8 @@ class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
 
     virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees);
     virtual void generateIPFColor(double e0, double e1, double phi2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+    virtual void generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb);
+
 
 protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,

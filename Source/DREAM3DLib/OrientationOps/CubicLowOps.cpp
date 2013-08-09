@@ -49,6 +49,21 @@ namespace Detail
   static const float CubicLowDim3StepValue = CubicLowDim3InitValue/18.0f;
 }
 
+static const QuatF CubicLowQuatSym[12] = {
+            QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
+            QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
+            QuaternionMathF::New(0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
+            QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
+            QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
+
+
 static const float CubicLowRodSym[12][3] = {{0.0f, 0.0f,0.0f},
                                             {10000000000.0f, 0.0f, 0.0f},
                                             {0.0f, 10000000000.0f, 0.0f},
@@ -137,7 +152,7 @@ static const float CubicLowMatSym[12][3][3] =
   {1.0, 0.0, 0.0},
   {0.0, 1.0, 0.0}}};
 
-using namespace CubicLowMath::Detail;
+using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -744,11 +759,11 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatAr
   float direction[3] = {0.0, 0.0, 0.0};
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * 6)
+  if (xyz001->GetNumberOfTuples() < nOrientations * 3)
   {
     xyz001->Resize(nOrientations * 6 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * 12)
+  if (xyz011->GetNumberOfTuples() < nOrientations * 6)
   {
     xyz011->Resize(nOrientations * 12 * 3);
   }
@@ -914,3 +929,29 @@ void CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double 
 
 }
 
+void CubicLowOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+{
+  float range1 = 2.0f*CubicLowDim1InitValue;
+  float range2 = 2.0f*CubicLowDim2InitValue;
+  float range3 = 2.0f*CubicLowDim3InitValue;
+  float max1 = range1/2.0f;
+  float max2 = range2/2.0f;
+  float max3 = range3/2.0f;
+  float red = (r1+max1)/range1;
+  float green = (r2+max2)/range2;
+  float blue = (r3+max3)/range3;
+
+  // Scale values from 0 to 1.0
+  red = red / max1;
+  green = green / max1;
+  blue = blue / max2;
+
+  // Multiply by 255 to get an R/G/B value
+  red = red * 255.0f;
+  green = green * 255.0f;
+  blue = blue * 255.0f;
+
+  rgb[0] = static_cast<unsigned char> (red);
+  rgb[1] = static_cast<unsigned char> (green);
+  rgb[2] = static_cast<unsigned char> (blue);
+}

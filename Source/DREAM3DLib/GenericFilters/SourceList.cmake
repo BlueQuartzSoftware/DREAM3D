@@ -28,6 +28,7 @@ set(_PublicFilters
   FindSurfaceCells
   FindSurfaceGrains
   GenerateIPFColors
+  GenerateRodriguesColors
 
   LinkFieldMapToCellArray
   RemoveArrays

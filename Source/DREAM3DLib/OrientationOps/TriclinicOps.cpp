@@ -459,7 +459,7 @@ void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double
     d[1] = p[1];
     d[2] = 0;
     MatrixMath::Normalize3x1(d);
-    if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (360.0 * DREAM3D::Constants::k_DegToRad))
+    if (atan2(d[1], d[0]) >= (-180.0 * DREAM3D::Constants::k_DegToRad) && atan2(d[1], d[0]) < (180.0 * DREAM3D::Constants::k_DegToRad))
     {
       theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
       if (theta > 1) theta = 1;
@@ -499,4 +499,31 @@ void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double
   rgb[0] = static_cast<unsigned char>(_rgb[0]);
   rgb[1] = static_cast<unsigned char>(_rgb[1]);
   rgb[2] = static_cast<unsigned char>(_rgb[2]);
+}
+
+void TriclinicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+{
+  float range1 = 2.0f*TriclinicDim1InitValue;
+  float range2 = 2.0f*TriclinicDim2InitValue;
+  float range3 = 2.0f*TriclinicDim3InitValue;
+  float max1 = range1/2.0f;
+  float max2 = range2/2.0f;
+  float max3 = range3/2.0f;
+  float red = (r1+max1)/range1;
+  float green = (r2+max2)/range2;
+  float blue = (r3+max3)/range3;
+
+  // Scale values from 0 to 1.0
+  red = red / max1;
+  green = green / max1;
+  blue = blue / max2;
+
+  // Multiply by 255 to get an R/G/B value
+  red = red * 255.0f;
+  green = green * 255.0f;
+  blue = blue * 255.0f;
+
+  rgb[0] = static_cast<unsigned char> (red);
+  rgb[1] = static_cast<unsigned char> (green);
+  rgb[2] = static_cast<unsigned char> (blue);
 }

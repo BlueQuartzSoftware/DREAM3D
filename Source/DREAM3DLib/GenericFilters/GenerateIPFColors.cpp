@@ -43,10 +43,14 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -215,9 +219,21 @@ void GenerateIPFColors::execute()
         ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
+      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_Low)
+      {
+        CubicLowOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
       {
         HexagonalOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_Low)
+      {
+        HexagonalLowOps ops;
         ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
@@ -227,9 +243,39 @@ void GenerateIPFColors::execute()
         ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_Low)
+      {
+        TrigonalLowOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
       else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
       {
         TetragonalOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_Low)
+      {
+        TetragonalLowOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::OrthoRhombic)
+      {
+        OrthoRhombicOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Monoclinic)
+      {
+        MonoclinicOps ops;
+        ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
+            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      }
+      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Triclinic)
+      {
+        TriclinicOps ops;
         ops.generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
             m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
       }
