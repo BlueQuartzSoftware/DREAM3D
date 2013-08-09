@@ -474,6 +474,10 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
     xVal[i] = m_X[i];
     yVal[i] = m_Y[i];
   }
+  xMin = xMin - (2.0*newEdgeLength);
+  xMax = xMax + (2.0*newEdgeLength);
+  yMin = yMin - (2.0*newEdgeLength);
+  yMax = yMax + (2.0*newEdgeLength);
   xDim = int((xMax-xMin)/newEdgeLength)+1;
   yDim = int((yMax-yMin)/newEdgeLength)+1;
   xRes = newEdgeLength*1000.0f;
@@ -634,13 +638,17 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
    * Some HEDM Mic files do NOT have all 10 columns. Assume these are lacking the last
    * 2 columns and all the other columns are the same as above.
    */
-  float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, z=-1.0f, conf=-1.0f;
-  int up = 0, level = 0, good = 0;
+  float p1 = 0.0f, p=0.0f, p2=0.0f, x=-1.0f, y=-1.0f, z=-1.0f, conf=-1.0f, junk1, junk2, junk3;
+  int up = 0, level = 0, good = 0, junk4, junk5, junk6, junk7, junk8, junk9;
   size_t offset = 0;
   size_t fieldsRead = 0;
-  fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf);
+//  fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf);
+  fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
 
   offset = i;
+
+  if(good > 0) good = 1;
+  else good = 0;
 
   m_Euler1[offset] = p1;
   m_Euler2[offset] = p;

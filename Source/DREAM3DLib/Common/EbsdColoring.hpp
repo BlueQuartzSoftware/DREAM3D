@@ -368,6 +368,8 @@ class EbsdColoring
       // 1) find rotation matrix from Euler angles
       OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
 
+      QuatF 
+
       for (int j = 0; j < 12; j++)
       {
         //        q2 =  const_HexagonalMath::Detail::HexQuatSym[j];
