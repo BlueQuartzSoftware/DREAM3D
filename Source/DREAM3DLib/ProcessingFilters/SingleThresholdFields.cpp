@@ -118,8 +118,8 @@ void SingleThresholdFields::readFilterParameters(AbstractFilterParametersReader*
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
-  setComparisonOperator( reader->readValue("ComparisonOperator", 0) );
-  setComparisonValue( reader->readValue("ComparisonValue", 0) );
+  setComparisonOperator( reader->readValue("ComparisonOperator", getComparisonOperator()) );
+  setComparisonValue( reader->readValue("ComparisonValue", getComparisonValue()) );
   setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

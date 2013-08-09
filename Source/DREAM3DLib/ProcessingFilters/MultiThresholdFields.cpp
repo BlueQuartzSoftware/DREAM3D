@@ -112,17 +112,8 @@ void MultiThresholdFields::readFilterParameters(AbstractFilterParametersReader* 
 int MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-
-  int numQFilters = static_cast<int>( m_ComparisonInputs.size() );
-  writer->writeValue("NumComparisons",  numQFilters);
-  std::stringstream ss;
-  for(int i = 0; i < numQFilters; i++)
-  {
-    ss << "Comparison-" << i;
-    writer->writeValue(ss.str(), m_ComparisonInputs[i], i);
-    ss.str("");
-  }
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("OutputArrayName", getOutputArrayName());
+  writer->writeValue("CellComparisonInputs", getComparisonInputs());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

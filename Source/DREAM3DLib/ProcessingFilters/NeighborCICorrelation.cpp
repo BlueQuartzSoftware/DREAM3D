@@ -103,7 +103,7 @@ void NeighborCICorrelation::readFilterParameters(AbstractFilterParametersReader*
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setMinConfidence( reader->readValue("MinConfidence", 0) );
+  setMinConfidence( reader->readValue("MinConfidence", getMinConfidence()) );
   setLoop( reader->readValue("Loop", false) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

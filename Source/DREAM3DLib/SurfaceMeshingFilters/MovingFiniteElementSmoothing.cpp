@@ -224,7 +224,7 @@ void MovingFiniteElementSmoothing::readFilterParameters(AbstractFilterParameters
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setIterationSteps( reader->readValue("IterationSteps", 0) );
+  setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
   setNodeConstraints( reader->readValue("NodeConstraints", false) );
   setConstrainSurfaceNodes( reader->readValue("ConstrainSurfaceNodes", false) );
   setConstrainQuadPoints( reader->readValue("ConstrainQuadPoints", false) );

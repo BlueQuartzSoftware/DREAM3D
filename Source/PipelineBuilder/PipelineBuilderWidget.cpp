@@ -35,6 +35,8 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 //-- Qt Includes
+#include <QtCore/QDebug>
+#include <QtCore/QTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -278,15 +280,21 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
   FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
 
   FilterPipeline::FilterContainerType::iterator iter = filters.begin();
+
   for (; iter != filters.end(); iter++)
   {
+
     std::string filterName = (*iter)->getNameOfClass();
+  //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
     QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
+   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
     if(w) {
+      QTime qtime = QTime::currentTime();
       m_PipelineViewWidget->preflightPipeline();
-    //  w->blockSignals(true);
+    //  qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
+      qtime = QTime::currentTime();
       w->getGuiParametersFromFilter( (*iter).get() );
-    //  w->blockSignals(false);
+     // qDebug() << "ms: " << qtime.msecsTo(QTime::currentTime());
     }
   }
   // One last preflight to get the changes introduced by the last filter

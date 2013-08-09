@@ -84,12 +84,15 @@ QString QDataContainerReaderWidget::getFilterGroup()
 void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   DataContainerReader* filter = DataContainerReader::SafeObjectDownCast<AbstractFilter*, DataContainerReader*>(filt);
+  blockSignals(true);
   setInputFile( QString::fromStdString( filter->getInputFile() ) );
   setReadVoxelData( filter->getReadVoxelData() );
   setReadSurfaceMeshData( filter->getReadSurfaceMeshData() );
   setReadSolidMeshData( filter->getReadSolidMeshData() );
-
+  blockSignals(false);
+  arraySelectionWidget->blockSignals(true);
   arraySelectionWidget->setArraySelections(filter);
+  arraySelectionWidget->blockSignals(false);
 }
 
 // -----------------------------------------------------------------------------

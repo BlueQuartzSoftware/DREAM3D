@@ -166,8 +166,8 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
-  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
+  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", getApplyToVoxelVolume()) );
+  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh()) );
   setScaleFactor( reader->readValue("ScaleFactor", getScaleFactor() ) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();

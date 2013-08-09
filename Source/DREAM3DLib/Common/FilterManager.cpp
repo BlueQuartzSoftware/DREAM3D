@@ -61,7 +61,7 @@ FilterManager::Pointer FilterManager::Instance()
 
   if (singleton.get() == NULL)
   {
-    std::cout << "FilterManager::Instance singleton was NULL" << std::endl;
+  //  std::cout << "FilterManager::Instance singleton was NULL" << std::endl;
     singleton.reset ( new FilterManager() );
 //    singleton->RegisterKnownFilters();
   }

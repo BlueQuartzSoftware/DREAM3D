@@ -100,8 +100,8 @@ void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* r
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
-  setComparisonInputs( reader->readValue("ComparisonInputs", getComparisonInputs() ) );
+  setOutputArrayName(reader->readValue( "OutputArrayName", getOutputArrayName()));
+  setComparisonInputs(reader->readValue("ComparisonInputs", getComparisonInputs()));
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -112,16 +112,8 @@ void MultiThresholdCells::readFilterParameters(AbstractFilterParametersReader* r
 int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  int numQFilters = static_cast<int>( m_ComparisonInputs.size() );
-  writer->writeValue("NumComparisons",  numQFilters);
-  std::stringstream ss;
-  for(int i = 0; i < numQFilters; i++)
-  {
-    ss << "Comparison-" << i;
-    writer->writeValue(ss.str(), m_ComparisonInputs[i], i);
-    ss.str("");
-  }
-  writer->writeValue("OutputArrayName", getOutputArrayName() );
+  writer->writeValue("OutputArrayName", getOutputArrayName());
+  writer->writeValue("ComparisonInputs", getComparisonInputs());
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }

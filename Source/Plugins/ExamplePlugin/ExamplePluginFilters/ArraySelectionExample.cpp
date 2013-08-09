@@ -78,6 +78,8 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+
   reader->openFilterGroup(this, index);
   setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
   setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
