@@ -107,8 +107,8 @@ QFilterWidget::QFilterWidget(QWidget* parent) :
   qRegisterMetaType<FloatVec3Widget_t>("FloatVec3Widget_t");
   qRegisterMetaTypeStreamOperators<FloatVec3Widget_t>("FloatVec3Widget_t");
 
- // qRegisterMetaType<AxisAngleWidget_t>("AxisAngleWidget_t");
- // qRegisterMetaTypeStreamOperators<AxisAngleWidget_t>("AxisAngleWidget_t");
+  // qRegisterMetaType<AxisAngleWidget_t>("AxisAngleWidget_t");
+  // qRegisterMetaTypeStreamOperators<AxisAngleWidget_t>("AxisAngleWidget_t");
 
   if ( m_OpenDialogLastDirectory.isEmpty() )
   {
@@ -948,8 +948,8 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optIndex, FilterParameter* option, QLabel* label,
                                                 FilterParameter::WidgetType arrayListType)
 {
-ComparisonFilterParameter* param = ComparisonFilterParameter::SafePointerDownCast(option);
-if (NULL == param) { return; }
+  ComparisonFilterParameter* param = ComparisonFilterParameter::SafePointerDownCast(option);
+  if (NULL == param) { return; }
 
   ComparisonSelectionWidget* w = new ComparisonSelectionWidget(param->getShowOperators(), this);
   switch(arrayListType)

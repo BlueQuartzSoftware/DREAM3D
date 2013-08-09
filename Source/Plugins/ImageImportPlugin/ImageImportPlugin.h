@@ -38,7 +38,7 @@ class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
     /**
      * @brief registerFilters
      */
-    virtual void registerFilters();
+    virtual void registerFilters(FilterManager* fm);
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file

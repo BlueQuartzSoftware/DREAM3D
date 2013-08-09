@@ -187,10 +187,6 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
   protected slots:
     void arrayListUpdated(QListWidgetItem* item);
 
-//    void on_vertexArraysCB_stateChanged(int state);
-//    void on_faceArraysCB_stateChanged(int state);
-//    void on_edgeArraysCB_stateChanged(int state);
-
     void on_voxelCellCB_stateChanged(int state);
     void on_voxelFieldCB_stateChanged(int state);
     void on_voxelEnsembleCB_stateChanged(int state);
@@ -218,7 +214,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @brief Returns the list of selected Array Names
      */
     virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
-    virtual void setSelectedArrays(std::set<std::string> set, QListWidget* listWidget);
+    virtual void setSelectedArrays(std::set<std::string> names, QListWidget* listWidget);
     virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
 

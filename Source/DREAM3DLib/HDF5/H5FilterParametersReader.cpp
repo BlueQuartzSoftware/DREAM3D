@@ -418,8 +418,6 @@ IntVec3Widget_t H5FilterParametersReader::readValue(const std::string name, IntV
 {
   int err = 0;
   IntVec3Widget_t v;
-//  int32_t rank = 1;
-//  hsize_t dims[1] = { 3 };
   err = H5Lite::readPointerDataset<int32_t>(m_CurrentGroupId, name, reinterpret_cast<int32_t*>(&v) );
   if (err < 0) { return defaultValue; }
 
@@ -433,8 +431,6 @@ FloatVec3Widget_t H5FilterParametersReader::readValue(const std::string name, Fl
 {
   int err = 0;
   FloatVec3Widget_t v;
-//  int32_t rank = 1;
-//  hsize_t dims[1] = { 3 };
   err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
   if (err < 0) { return defaultValue; }
   return v;
@@ -448,23 +444,31 @@ ComparisonInput_t H5FilterParametersReader::readValue(const std::string name, Co
   int err = 0;
   ComparisonInput_t v;
 
-  std::ostringstream convert1;
-  convert1 << vectorPos << H5FilterParameter::ArrayNameConstant;
-  std::string strAttribute1 = convert1.str();
-  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, strAttribute1, v.arrayName);
-  if (err < 0) { return defaultValue; }
+  std::stringstream ss;
+  ss << vectorPos <<  H5FilterParameter::ComparisonInput;
 
-  std::ostringstream convert2;
-  convert2 << vectorPos << H5FilterParameter::CompOperatorConstant;
-  std::string strAttribute2 = convert2.str();
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.compOperator);
-  if (err < 0) { return defaultValue; }
+  std::string data;
 
-  std::ostringstream convert3;
-  convert3 << vectorPos << H5FilterParameter::CompValueConstant;
-  std::string strAttribute3 = convert3.str();
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.compValue);
-  if (err < 0) { return defaultValue; }
+  err = H5Lite::readStringAttribute(m_CurrentGroupId, name, ss.str(), data);
+  if(err < 0)
+  {
+    return defaultValue;
+  }
+
+  std::vector<std::string> tokens = tokenize(data.c_str(), '\n');
+  if(tokens.size() >= 1)
+  {
+    v.arrayName = tokens[0];
+  }
+  if(tokens.size() >= 2)
+  {
+    StringUtils::stringToNum(v.compOperator, tokens[1]);
+  }
+  if(tokens.size() >= 3)
+  {
+    StringUtils::stringToNum(v.compValue, tokens[2]);
+  }
+
   return v;
 }
 
@@ -489,30 +493,13 @@ std::vector<ComparisonInput_t> H5FilterParametersReader::readValue(const std::st
 AxisAngleInput_t H5FilterParametersReader::readValue(const std::string name, AxisAngleInput_t v, int vectorPos)
 {
   int err = 0;
-  int32_t rank = 1;
-  hsize_t dims[1] = { 4 };
+  //  int32_t rank = 1;
+  //  hsize_t dims[1] = { 4 };
 
-  std::ostringstream convert1;
-  convert1 << vectorPos << H5FilterParameter::AngleConstant;
-  std::string strAttribute1 = convert1.str();
+  std::stringstream ss;
+  ss << vectorPos <<  H5FilterParameter::AxisAngleInput;
 
-  std::ostringstream convert2;
-  convert2 << vectorPos << H5FilterParameter::HConstant;
-  std::string strAttribute2 = convert2.str();
-
-  std::ostringstream convert3;
-  convert3 << vectorPos << H5FilterParameter::KConstant;
-  std::string strAttribute3 = convert3.str();
-
-  std::ostringstream convert4;
-  convert4 << vectorPos << H5FilterParameter::LConstant;
-  std::string strAttribute4 = convert4.str();
-
-  //err = H5Lite::readPointerDataset<float>(m_CurrentGroupId, name, reinterpret_cast<float*>(&v) );
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute1, v.angle);
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute2, v.h);
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute3, v.k);
-  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, strAttribute4, v.l);
+  err = H5Lite::readPointerAttribute<float>(m_CurrentGroupId, name, ss.str(), reinterpret_cast<float*>(&v) );
 
   return v;
 }
@@ -543,15 +530,19 @@ std::set<std::string> H5FilterParametersReader::readValue(const std::string name
 {
   size_t size = 0;
   std::string strData = "";
-  herr_t err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
 
-  err = H5Lite::readStringDataset(m_CurrentGroupId, name, strData);
+  herr_t err = H5Lite::readStringDataset(m_CurrentGroupId, name, strData);
+  if(err < 0) { return v; } // If the data set does not exist no point in going any further
+
+  // Now read the the attribute that says how many arrays are in the data set.
+  err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
 
   std::vector<std::string> strVector = tokenize(strData.c_str(), '\n');
-  // Something has gone wrong in the tokenization and the number of tokens does not match what
-  // was written to the HDF5 file.
+
   if (strVector.size() != size)
   {
+    // Something has gone wrong in the tokenization and the number of tokens does not match what
+    // was written to the HDF5 file.
     return v;
   }
   for (int i=0; i<strVector.size(); i++)

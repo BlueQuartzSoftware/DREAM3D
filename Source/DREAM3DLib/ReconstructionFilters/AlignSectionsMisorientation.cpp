@@ -144,7 +144,6 @@ void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersR
 int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  AlignSections::writeFilterParameters(writer, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());

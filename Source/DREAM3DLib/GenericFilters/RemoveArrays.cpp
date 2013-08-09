@@ -78,9 +78,17 @@ void RemoveArrays::setupFilterParameters()
 void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
+  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() ) );
+  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() ) );
+  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() ) );
+  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() ) );
+  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() ) );
+  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() ) );
+  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() ) );
+  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -90,11 +98,19 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  //writer->writeValue("DropAllData", getDropAllData() );
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() );
+  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() );
+  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() );
+  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() );
+  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() );
+  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() );
+  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() );
+  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() );
   writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
+  return ++index;
 }
 
 // -----------------------------------------------------------------------------

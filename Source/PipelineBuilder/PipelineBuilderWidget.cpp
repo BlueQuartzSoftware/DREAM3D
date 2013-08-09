@@ -32,6 +32,8 @@
 #include <string>
 #include <set>
 
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 //-- Qt Includes
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
@@ -90,13 +92,14 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent) :
+PipelineBuilderWidget::PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager *fm, QWidget *parent) :
   DREAM3DPluginFrame(parent),
   m_FilterPipeline(NULL),
   m_MenuPipeline(NULL),
   m_WorkerThread(NULL),
   m_DocErrorTabsIsOpen(false),
-  m_HelpDialog(NULL)
+  m_HelpDialog(NULL),
+  m_FilterManager(fm)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
   setPipelineMenu(pipelineMenu);
@@ -175,7 +178,7 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
   m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
   connect(m_actionAppendFavorite, SIGNAL(triggered()),
-    this, SLOT( actionAppendFavorite_triggered() ) );
+          this, SLOT( actionAppendFavorite_triggered() ) );
 
   menuPipeline->addSeparator();
 
@@ -203,16 +206,16 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
   m_actionShowInFileSystem = new QAction(this);
   m_actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
   // Handle the naming based on what OS we are currently running...
-  #if defined(Q_OS_WIN)
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
-  #elif defined(Q_OS_MAC)
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
-  #else
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
-  #endif
+#if defined(Q_OS_WIN)
+  m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+#elif defined(Q_OS_MAC)
+  m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+#else
+  m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+#endif
 
   connect(m_actionShowInFileSystem, SIGNAL(triggered()),
-    this, SLOT( actionShowInFileSystem_triggered() ) );
+          this, SLOT( actionShowInFileSystem_triggered() ) );
 
   // Add favorites actions to m_FavoritesActionList
   m_ActionList.append(m_actionRemoveFavorite);
@@ -259,11 +262,19 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
   hid_t fid = H5Utilities::openFile( filePath.toStdString() );
   if (fid <= 0)
   {
-
     //Present a error dialog
+    QMessageBox::critical(this, "Error Opening DREAM3D File", QString("Error opening file ") + filePath, QMessageBox::Ok, QMessageBox::Ok);
     return;
   }
+  HDF5ScopedFileSentinel sentinel(&fid, true);
+  fid = *(sentinel.getFileId());
   int err = readPipelineFromFile(fid);
+  if (err < 0)
+  {
+    QMessageBox::critical(this, "Error Extracting Pipeline from DREAM3D file.",
+                          "An error occured with extracting the pipeline from the DREAM3D file.",QMessageBox::Ok, QMessageBox::Ok);
+    return;
+  }
   FilterPipeline::FilterContainerType filters = m_PipelineFromFile->getFilterContainer();
 
   FilterPipeline::FilterContainerType::iterator iter = filters.begin();
@@ -272,9 +283,14 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
     std::string filterName = (*iter)->getNameOfClass();
     QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
     if(w) {
+      m_PipelineViewWidget->preflightPipeline();
+    //  w->blockSignals(true);
       w->getGuiParametersFromFilter( (*iter).get() );
+    //  w->blockSignals(false);
     }
   }
+  // One last preflight to get the changes introduced by the last filter
+ // m_PipelineViewWidget->preflightPipeline();
 }
 
 // -----------------------------------------------------------------------------
@@ -334,17 +350,29 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
-    FilterManager::Pointer fm = FilterManager::Instance();
-    IFilterFactory::Pointer ff = fm->getFactoryForFilter(classNameStr);
-    AbstractFilter::Pointer filter = ff->create();
+    IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);
+    if (NULL != ff)
+    {
+      AbstractFilter::Pointer filter = ff->create();
+      if(NULL != ff)
+      {
+        // Read the parameters
+        filter->readFilterParameters( reader.get(), i );
 
-    // Read the parameters
-    filter->readFilterParameters( reader.get(), i );
+        // Add filter to m_PipelineFromFile
+        m_PipelineFromFile->pushBack(filter);
+      }
+    }
+    else
+    {
+      QMessageBox::critical(this, "Error Adding Filter to Pipeline",
+                            QString("The filter was not known to DREAM3D:") + QString::fromStdString(classNameStr),
+                            QMessageBox::Ok, QMessageBox::Ok);
+    }
 
-    // Add filter to m_PipelineFromFile
-    m_PipelineFromFile->pushBack(filter);
   }
 
+  H5Gclose(pipelineGroupId);
   return err;
 }
 
@@ -954,7 +982,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   else
   {
     // Update filter list with preview of current item
-  on_filterLibraryTree_itemClicked(item, 0);
+    on_filterLibraryTree_itemClicked(item, 0);
   }
 }
 
@@ -1036,7 +1064,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_filterList_currentItemChanged ( QListWidgetItem * item, QListWidgetItem * previous )
 {
-  
+
 }
 
 // -----------------------------------------------------------------------------
@@ -1335,7 +1363,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-    QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1346,14 +1374,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1388,14 +1416,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1578,7 +1606,7 @@ void PipelineBuilderWidget::actionShowInFileSystem_triggered()
   QString pipelinePathDir = pipelinePathInfo.path();
 
   QString s("file://");
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
 

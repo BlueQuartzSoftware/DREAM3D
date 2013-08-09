@@ -115,7 +115,7 @@ file(APPEND ${RegisterKnownFiltersFile} "/* The CMake code that generates this f
 file(APPEND ${RegisterKnownFiltersFile} "/* This file will be directly included in another source file. */\n")
 #file(APPEND ${RegisterKnownFiltersFile} "#include \"DREAM3DLib/Common/FilterManager.h\"\n")
 file(APPEND ${RegisterKnownFiltersFile} "#include \"DREAM3DFilters.h\"\n")
-file(APPEND ${RegisterKnownFiltersFile} "\nvoid FilterManager::RegisterKnownFilters()\n{\n")
+file(APPEND ${RegisterKnownFiltersFile} "\nvoid FilterManager::RegisterKnownFilters(FilterManager* fm)\n{\n")
 
 # --------------------------------------------------------------------
 # Create a File that will register all of the DREAM3D Filter Qt based Widgets

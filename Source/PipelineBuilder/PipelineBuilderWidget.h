@@ -53,6 +53,7 @@ class QTreeWidgetItem;
 class QFilterWidget;
 class QMenu;
 class HelpDialog;
+class FilterManager;
 
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
@@ -68,7 +69,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     Q_OBJECT
 
   public:
-    PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent = 0);
+    PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget *parent = 0);
     virtual ~PipelineBuilderWidget();
 
     /**
@@ -288,6 +289,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QAction*                    m_actionFilterHelp;
     QPoint                      m_FilterListPosition;
     FilterPipeline::Pointer     m_PipelineFromFile;
+    FilterManager*              m_FilterManager;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented
