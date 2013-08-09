@@ -137,18 +137,19 @@ namespace DREAM3D
     static const double k_PiOver180 = M_PI/180.0;
     static const double k_360OverPi = 360.0/M_PI;
     static const double k_180OverPi = 180.0/M_PI;
+    static const double k_PiOver4 = M_PI/4.0;
+    static const double k_PiOver12 = M_PI/12.0;
     static const double k_Sqrt2 = sqrt(2.0);
+    static const double k_HalfSqrt2 = 0.5 * sqrt(2.0);
     static const double k_1OverRoot2 = 1.0/sqrt(2.0);
     static const double k_1OverRoot3 = 1.0/sqrt(3.0);
     static const double k_Root3Over2 = sqrt(3.0)/2.0;
     static const double k_DegToRad = M_PI/180.0;
     static const double k_RadToDeg = 180.0/M_PI;
+    static const double k_1Point3 = 1.0 + 1.0/3.0;
 
     static const double k_ACosNeg1 = acos(-1.0);
     static const double k_ACos1 = acos(1.0);
-    static const double k_1Point3 = 1.0/3.0;
-
-
   }
 }
 

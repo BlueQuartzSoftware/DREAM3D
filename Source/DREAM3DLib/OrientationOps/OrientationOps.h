@@ -91,6 +91,9 @@ class DREAM3DLib_EXPORT OrientationOps
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3) = 0;
 
+    virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees) = 0;
+    virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees) = 0;
+
   protected:
     OrientationOps();
 

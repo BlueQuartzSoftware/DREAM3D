@@ -53,7 +53,7 @@ static const QuatF TriclinicQuatSym[1] = {
   QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f)};
 
 
-static const float TriclinicRodSym[1][3] = {0.0f, 0.0f,0.0f};
+static const float TriclinicRodSym[1][3] = {{0.0f, 0.0f, 0.0f}};
 
 
 static const float TriclinicMatSym[1][3][3] =
@@ -61,7 +61,7 @@ static const float TriclinicMatSym[1][3][3] =
   {0.0, 1.0, 0.0},
   {0.0, 0.0, 1.0}}};
 
-
+using namespace Detail;
 
 // -----------------------------------------------------------------------------
 //
@@ -109,8 +109,8 @@ float &n1, float &n2, float &n3)
   QuaternionMathF::Multiply(q2inv, q1, qr);
   for (int i = 0; i < numsym; i++)
   {
-     QuaternionMathF::Multiply(qr, quatsym[i], qc);
-        if (qc.w < -1) {
+    QuaternionMathF::Multiply(qr, quatsym[i], qc);
+    if (qc.w < -1) {
       qc.w = -1;
     }
     else if (qc.w > 1) {
@@ -174,8 +174,8 @@ void TriclinicOps::getMatSymOp(int i,float g[3][3])
 
 void TriclinicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
-  float w, n1, n2, n3;
-  float FZw, FZn1, FZn2, FZn3;
+  float w = 0.0, n1 = 0.0, n2 = 0.0, n3 = 0.0;
+  float FZw = 0.0, FZn1 = 0.0, FZn2 = 0.0, FZn3 = 0.0;
 
   OrientationOps::_calcRodNearestOrigin(TriclinicRodSym, 1, r1, r2, r3);
   OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
@@ -314,8 +314,6 @@ void TriclinicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F
 void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
-  QuaternionMath<float>::Quaternion q1;
-  TriclinicOps ops;
   float g[3][3];
   float gTranpose[3][3];
   float* currentEuler = NULL;
@@ -406,4 +404,99 @@ void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatA
     MatrixMath::Multiply3x1withConstant(xyz111->GetPointer(i*24 + 21),-1);
   }
 
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriclinicOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+{
+  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+{
+  if (degToRad == true)
+  {
+    phi1 = phi1 * DREAM3D::Constants::k_DegToRad;
+    phi = phi * DREAM3D::Constants::k_DegToRad;
+    phi2 = phi2 * DREAM3D::Constants::k_DegToRad;
+  }
+  QuatF qc;
+  QuatF q1;
+  float g[3][3];
+  float p[3];
+  float refDirection[3];
+  float d[3];
+  float theta, phi_local;
+  float _rgb[3] = { 0.0, 0.0, 0.0 };
+
+  OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
+
+  for (int j = 0; j < 1; j++)
+  {
+    QuaternionMathF::Multiply(q1, TriclinicQuatSym[j], qc);
+
+    OrientationMath::QuattoMat(qc, g);
+
+    refDirection[0] = refDir0;
+    refDirection[1] = refDir1;
+    refDirection[2] = refDir2;
+    MatrixMath::Multiply3x3with3x1(g, refDirection, p);
+    MatrixMath::Normalize3x1(p);
+
+
+    if (p[2] < 0)
+    {
+      p[0] = -p[0];
+      p[1] = -p[1];
+      p[2] = -p[2];
+    }
+    d[0] = p[0];
+    d[1] = p[1];
+    d[2] = 0;
+    MatrixMath::Normalize3x1(d);
+    if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (360.0 * DREAM3D::Constants::k_DegToRad))
+    {
+      theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
+      if (theta > 1) theta = 1;
+
+      if (theta < -1) theta = -1;
+
+      theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
+      _rgb[0] = (90.0f - theta) / 90.0f;
+      phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
+      if (phi_local > 1) phi_local = 1;
+
+      if (phi_local < -1) phi_local = -1;
+
+      phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
+      _rgb[1] = (1 - _rgb[0]) * ((360.0f - phi_local) / 360.0f);
+      _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+      break;
+    }
+  }
+
+  float max = _rgb[0];
+  if (_rgb[1] > max) max = _rgb[1];
+  if (_rgb[2] > max) max = _rgb[2];
+
+  _rgb[0] = _rgb[0] / max;
+  _rgb[1] = _rgb[1] / max;
+  _rgb[2] = _rgb[2] / max;
+//  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
+//  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
+//  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
+
+  // Multiply by 255 to get an R/G/B value
+  _rgb[0] = _rgb[0] * 255.0f;
+  _rgb[1] = _rgb[1] * 255.0f;
+  _rgb[2] = _rgb[2] * 255.0f;
+
+  rgb[0] = static_cast<unsigned char>(_rgb[0]);
+  rgb[1] = static_cast<unsigned char>(_rgb[1]);
+  rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }

@@ -746,16 +746,16 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     int index = delimiter->currentIndex();
     switch(index)
     {
-      case 1:
+      case 0:
         delim = " ";
         break;
-      case 2:
+      case 1:
         delim = "\t";
         break;
-      case 3:
+      case 2:
         delim = ",";
         break;
-      case 4:
+      case 3:
         delim = ";";
         break;
       default:

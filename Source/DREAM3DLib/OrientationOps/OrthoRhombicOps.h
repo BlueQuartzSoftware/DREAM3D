@@ -89,9 +89,13 @@ class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationOps
     virtual void getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1);
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt);
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
-    
-    
+
+
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
+
+    virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees);
+    virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[4], int numsym,

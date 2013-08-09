@@ -136,6 +136,12 @@ namespace UnitTest
   {
     const std::string TestDir("@DREAM3DTest_BINARY_DIR@/PoleFigureTest/");
   }
+
+  namespace AngleFileLoaderTest
+  {
+    const std::string TestDir("@MXA_TEMP_DIR@AngleFileLoaderTest");
+    const std::string OutputFile("@MXA_TEMP_DIR@AngleFileLoaderTest/AngleTestFile.txt");
+  }
 }
 
 // -----------------------------------------------------------------------------

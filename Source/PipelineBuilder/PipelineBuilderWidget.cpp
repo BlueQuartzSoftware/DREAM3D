@@ -146,72 +146,93 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 {
   this->m_MenuPipeline = menuPipeline;
 
-  m_actionAddFavorite = new QAction(m_MenuPipeline);
-  m_actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
-  m_actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionAddFavorite);
+  QAction* separator = NULL;
+
+  QAction* actionAddFavorite = new QAction(m_MenuPipeline);
+  actionAddFavorite->setObjectName(QString::fromUtf8("actionAddFavorite"));
+  actionAddFavorite->setText(QApplication::translate("DREAM3D_UI", "Add Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAddFavorite);
   QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
-  m_actionAddFavorite->setShortcut(actionAddFavKeySeq);
-  connect(m_actionAddFavorite, SIGNAL(triggered()),
+  actionAddFavorite->setShortcut(actionAddFavKeySeq);
+  connect(actionAddFavorite, SIGNAL(triggered()),
           this, SLOT( actionAddFavorite_triggered() ) );
+  m_FavoriteItemActions << actionAddFavorite;
+  m_FavoriteCategoryActions << actionAddFavorite;
 
-  m_actionRenameFavorite = new QAction(m_MenuPipeline);
-  m_actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
-  m_actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename ...", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionRenameFavorite);
+  QAction* actionUpdateFavorite = new QAction(m_MenuPipeline);
+  actionUpdateFavorite->setObjectName(QString::fromUtf8("actionUpdateFavorite"));
+  actionUpdateFavorite->setText(QApplication::translate("DREAM3D_UI", "Update Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionUpdateFavorite);
+  //QKeySequence actionAddFavKeySeq(Qt::CTRL + Qt::Key_Plus);
+  //actionUpdateFavorite->setShortcut(actionAddFavKeySeq);
+  connect(actionUpdateFavorite, SIGNAL(triggered()),
+          this, SLOT( actionUpdateFavorite_triggered() ) );
+  m_FavoriteItemActions << actionUpdateFavorite;
+
+  QAction* actionRenameFavorite = new QAction(m_MenuPipeline);
+  actionRenameFavorite->setObjectName(QString::fromUtf8("actionRenameFavorite"));
+  actionRenameFavorite->setText(QApplication::translate("DREAM3D_UI", "Rename ...", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionRenameFavorite);
   QKeySequence actionRenameFavKeySeq(Qt::CTRL + Qt::Key_R);
-  m_actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
-  connect(m_actionRenameFavorite, SIGNAL(triggered()),
+  actionRenameFavorite->setShortcut(actionRenameFavKeySeq);
+  connect(actionRenameFavorite, SIGNAL(triggered()),
           this, SLOT( actionRenameFavorite_triggered() ) );
+  m_FavoriteItemActions << actionRenameFavorite;
 
-  m_actionAppendFavorite = new QAction(m_MenuPipeline);
-  m_actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
-  m_actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append to Pipeline", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionAppendFavorite);
+
+  QAction* actionAppendFavorite = new QAction(m_MenuPipeline);
+  actionAppendFavorite->setObjectName(QString::fromUtf8("actionAppendFavorite"));
+  actionAppendFavorite->setText(QApplication::translate("DREAM3D_UI", "Append to Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionAppendFavorite);
   QKeySequence actionAppendFavKeySeq(Qt::CTRL + Qt::Key_A);
-  m_actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
-  connect(m_actionAppendFavorite, SIGNAL(triggered()),
-    this, SLOT( actionAppendFavorite_triggered() ) );
+  actionAppendFavorite->setShortcut(actionAppendFavKeySeq);
+  connect(actionAppendFavorite, SIGNAL(triggered()),
+          this, SLOT( actionAppendFavorite_triggered() ) );
+  m_FavoriteItemActions << actionAppendFavorite;
+  m_PrebuiltItemActions << actionAppendFavorite;
 
   menuPipeline->addSeparator();
+  m_FavoriteItemActions << separator;
 
-  m_actionRemoveFavorite = new QAction(m_MenuPipeline);
-  m_actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
-  m_actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionRemoveFavorite);
+  QAction* actionRemoveFavorite = new QAction(m_MenuPipeline);
+  actionRemoveFavorite->setObjectName(QString::fromUtf8("actionRemoveFavorite"));
+  actionRemoveFavorite->setText(QApplication::translate("DREAM3D_UI", "Remove Favorite", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionRemoveFavorite);
   QKeySequence actionRemoveFavKeySeq(Qt::CTRL + Qt::Key_Minus);
-  m_actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
-  connect(m_actionRemoveFavorite, SIGNAL(triggered()),
+  actionRemoveFavorite->setShortcut(actionRemoveFavKeySeq);
+  connect(actionRemoveFavorite, SIGNAL(triggered()),
           this, SLOT( actionRemoveFavorite_triggered() ) );
-
+  m_FavoriteItemActions << actionRemoveFavorite;
   menuPipeline->addSeparator();
 
-  m_actionClearPipeline = new QAction(m_MenuPipeline);
-  m_actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
-  m_actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear", 0, QApplication::UnicodeUTF8));
-  menuPipeline->addAction(m_actionClearPipeline);
+
+  QAction* actionClearPipeline = new QAction(m_MenuPipeline);
+  actionClearPipeline->setObjectName(QString::fromUtf8("actionClearPipeline"));
+  actionClearPipeline->setText(QApplication::translate("DREAM3D_UI", "Clear Pipeline", 0, QApplication::UnicodeUTF8));
+  menuPipeline->addAction(actionClearPipeline);
   QKeySequence actionClearKeySeq(Qt::CTRL + Qt::Key_Delete);
-  m_actionClearPipeline->setShortcut(actionClearKeySeq);
-  connect(m_actionClearPipeline, SIGNAL(triggered()),
+  actionClearPipeline->setShortcut(actionClearKeySeq);
+  connect(actionClearPipeline, SIGNAL(triggered()),
           this, SLOT( actionClearPipeline_triggered() ) );
 
 
-  m_actionShowInFileSystem = new QAction(this);
-  m_actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
+  QAction* actionShowInFileSystem = new QAction(this);
+  actionShowInFileSystem->setObjectName(QString::fromUtf8("actionShowInFileSystem"));
   // Handle the naming based on what OS we are currently running...
-  #if defined(Q_OS_WIN)
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
-  #elif defined(Q_OS_MAC)
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
-  #else
-    m_actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
-  #endif
+#if defined(Q_OS_WIN)
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Windows Explorer", 0, QApplication::UnicodeUTF8));
+#elif defined(Q_OS_MAC)
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in Finder", 0, QApplication::UnicodeUTF8));
+#else
+  actionShowInFileSystem->setText(QApplication::translate("DREAM3D_UI", "Show in File System", 0, QApplication::UnicodeUTF8));
+#endif
 
-  connect(m_actionShowInFileSystem, SIGNAL(triggered()),
-    this, SLOT( actionShowInFileSystem_triggered() ) );
-
-  // Add favorites actions to m_FavoritesActionList
-  m_ActionList.append(m_actionRemoveFavorite);
+  connect(actionShowInFileSystem, SIGNAL(triggered()),
+          this, SLOT( actionShowInFileSystem_triggered() ) );
+  m_FavoriteItemActions << separator;
+  m_FavoriteItemActions << actionShowInFileSystem;
+  m_PrebuiltItemActions << separator;
+  m_PrebuiltItemActions << actionShowInFileSystem;
 }
 
 // -----------------------------------------------------------------------------
@@ -220,21 +241,15 @@ void PipelineBuilderWidget::setPipelineMenu(QMenu* menuPipeline)
 void PipelineBuilderWidget::setupContextualMenus()
 {
   // Create favorites action list and add to tree
-  m_ActionList << m_actionAppendFavorite << m_actionRenameFavorite << m_actionRemoveFavorite << m_actionShowInFileSystem;
-  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_ActionList);
-  m_ActionList.clear();
+  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Item_Type, m_FavoriteItemActions);
 
   // Create prebuilt action list and add to tree
-  m_ActionList << m_actionShowInFileSystem << m_actionAppendFavorite;
-  filterLibraryTree->setActionList(PipelineTreeWidget::Prebuilt_Item_Type, m_ActionList);
-  m_ActionList.clear();
+  filterLibraryTree->setActionList(PipelineTreeWidget::Prebuilt_Item_Type, m_PrebuiltItemActions);
 
   // Create library action list and add to tree
 
   // Create favorite-category action list and add to tree
-  m_ActionList << m_actionAddFavorite;
-  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Category_Item_Type, m_ActionList);
-  m_ActionList.clear();
+  filterLibraryTree->setActionList(PipelineTreeWidget::Favorite_Category_Item_Type, m_FavoriteCategoryActions);
 
   // Create prebuilt-category action list and add to tree
 }
@@ -861,7 +876,7 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   else
   {
     // Update filter list with preview of current item
-  on_filterLibraryTree_itemClicked(item, 0);
+    on_filterLibraryTree_itemClicked(item, 0);
   }
 }
 
@@ -1279,7 +1294,7 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
 
       errorTableWidget->insertRow(rc);
 
-    QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1290,14 +1305,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        errorTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        errorTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       errorTableWidget->setItem(rc, 1, descriptionWidgetItem);
       errorTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1332,14 +1347,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       descriptionWidgetItem->setBackground(msgBrush);
       codeWidgetItem->setBackground(msgBrush);
 
-    if (hyperlinkLabel == NULL)
-    {
-      msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
-    }
-    else
-    {
-      msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
-    }
+      if (hyperlinkLabel == NULL)
+      {
+        msgTableWidget->setItem(rc, 0, filterNameWidgetItem);
+      }
+      else
+      {
+        msgTableWidget->setCellWidget(rc, 0, hyperlinkLabel);
+      }
       msgTableWidget->setItem(rc, 1, descriptionWidgetItem);
       msgTableWidget->setItem(rc, 2, codeWidgetItem);
     }
@@ -1383,64 +1398,119 @@ void PipelineBuilderWidget::addProgressMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineBuilderWidget::actionAddFavorite_triggered() {
-  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
-  addfavoriteDialog->exec();
-
-  QString favoriteTitle = addfavoriteDialog->getFavoriteName();
-
+void PipelineBuilderWidget::addFavorite(QString favoriteTitle)
+{
   //Remove all spaces and illegal characters from favorite name
   favoriteTitle = favoriteTitle.trimmed();
   favoriteTitle = favoriteTitle.remove(" ");
   favoriteTitle = favoriteTitle.remove(QRegExp("[^a-zA-Z_\\d\\s]"));
 
-  if(addfavoriteDialog->getBtnClicked())
-  {
+
 #if defined (Q_OS_MAC)
-    QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
+  QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  QString extension = ".ini";
 #else
-    QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
-    QString extension = ".ini";
+  QSettings prefs(QSettings::IniFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
+  QString extension = ".ini";
 #endif
 
-    QString prefFile = prefs.fileName();
-    QFileInfo prefFileInfo = QFileInfo(prefFile);
-    QString parentPath = prefFileInfo.path();
-    QDir parentPathDir = QDir(parentPath);
+  QString prefFile = prefs.fileName();
+  QFileInfo prefFileInfo = QFileInfo(prefFile);
+  QString parentPath = prefFileInfo.path();
+  QDir parentPathDir = QDir(parentPath);
 
-    if(parentPathDir.mkpath(parentPath))
+  if(parentPathDir.mkpath(parentPath))
+  {
+    QString newParentPrefPath = parentPath + "/DREAM3D_Favorites";
+    QString newPrefPath = newParentPrefPath + "/" + favoriteTitle + extension;
+
+    newPrefPath = QDir::toNativeSeparators(newPrefPath);
+    newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
+
+    QDir newParentPrefPathDir = QDir(newParentPrefPath);
+
+    if(newParentPrefPathDir.mkpath(newParentPrefPath))
     {
-      QString newParentPrefPath = parentPath + "/DREAM3D_Favorites";
-      QString newPrefPath = newParentPrefPath + "/" + favoriteTitle + extension;
-
-      newPrefPath = QDir::toNativeSeparators(newPrefPath);
-      newParentPrefPath = QDir::toNativeSeparators(newParentPrefPath);
-
-      QDir newParentPrefPathDir = QDir(newParentPrefPath);
-
-      if(newParentPrefPathDir.mkpath(newParentPrefPath))
-      {
-        QSettings newPrefs(newPrefPath, QSettings::IniFormat);
-        newPrefs.beginGroup(Detail::PipelineBuilderGroup);
-        newPrefs.setValue("Name", favoriteTitle);
-        newPrefs.endGroup();
-        writeSettings(newPrefs, m_PipelineViewWidget);
-      }
+      QSettings newPrefs(newPrefPath, QSettings::IniFormat);
+      newPrefs.beginGroup(Detail::PipelineBuilderGroup);
+      newPrefs.setValue("Name", favoriteTitle);
+      newPrefs.endGroup();
+      writeSettings(newPrefs, m_PipelineViewWidget);
     }
-
-    QList<QTreeWidgetItem*> items = m_favorites->takeChildren();
-    int count = items.count();
-    for(int i = 0; i < count; ++i)
-    {
-      delete items.at(i);
-    }
-    filterLibraryTree->blockSignals(true);
-    readFavoritePipelines();
-    filterLibraryTree->blockSignals(false);
   }
 
+  QList<QTreeWidgetItem*> items = m_favorites->takeChildren();
+  int count = items.count();
+  for(int i = 0; i < count; ++i)
+  {
+    delete items.at(i);
+  }
+  filterLibraryTree->blockSignals(true);
+  readFavoritePipelines();
+  filterLibraryTree->blockSignals(false);
   // Tell everyone to save their preferences NOW instead of waiting until the app quits
+  emit fireWriteSettings();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionAddFavorite_triggered() {
+  AddFavoriteWidget* addfavoriteDialog = new AddFavoriteWidget(this);
+  addfavoriteDialog->exec();
+
+  if(addfavoriteDialog->getBtnClicked())
+  {
+
+    QString favoriteTitle = addfavoriteDialog->getFavoriteName();
+    addFavorite(favoriteTitle);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::actionUpdateFavorite_triggered()
+{
+  // Lets get the name of the favorit
+  QTreeWidgetItem* item = filterLibraryTree->currentItem();
+  QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
+
+  QString filePath = item->data(0, Qt::UserRole).toString();
+  QFileInfo filePathInfo = QFileInfo(filePath);
+  // QString fileParentPath = filePathInfo.path();
+  QString fileName = filePathInfo.fileName();
+
+
+  if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 )
+  {
+    removeFavorite(item);
+    item = NULL;
+    addFavorite(fileName);
+  }
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PipelineBuilderWidget::removeFavorite(QTreeWidgetItem* item)
+{
+  QString filePath = item->data(0, Qt::UserRole).toString();
+  QFileInfo filePathInfo = QFileInfo(filePath);
+  QString fileParentPath = filePathInfo.path();
+  QString fileName = filePathInfo.fileName();
+  QDir fileParentPathDir = QDir(fileParentPath);
+
+  //Remove favorite's pref file
+  fileParentPathDir.remove(fileName);
+
+  //Remove favorite, graphically, from the DREAM3D interface
+  filterLibraryTree->removeItemWidget(item, 0);
+  delete item;
+
+  // Write these changes out to the preferences file
   emit fireWriteSettings();
 }
 
@@ -1460,22 +1530,7 @@ void PipelineBuilderWidget::actionRemoveFavorite_triggered()
 
   if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 && ret == QMessageBox::Yes)
   {
-    // QString favoriteName = item->text(0);
-    QString filePath = item->data(0, Qt::UserRole).toString();
-    QFileInfo filePathInfo = QFileInfo(filePath);
-    QString fileParentPath = filePathInfo.path();
-    QString fileName = filePathInfo.fileName();
-    QDir fileParentPathDir = QDir(fileParentPath);
-
-    //Remove favorite's pref file
-    fileParentPathDir.remove(fileName);
-
-    //Remove favorite, graphically, from the DREAM3D interface
-    filterLibraryTree->removeItemWidget(item, 0);
-    delete item;
-
-    // Write these changes out to the preferences file
-    emit fireWriteSettings();
+    removeFavorite(item);
   }
 }
 
@@ -1522,7 +1577,7 @@ void PipelineBuilderWidget::actionShowInFileSystem_triggered()
   QString pipelinePathDir = pipelinePathInfo.path();
 
   QString s("file://");
-  #if defined(Q_OS_WIN)
+#if defined(Q_OS_WIN)
   s = s + "/"; // Need the third slash on windows because file paths start with a drive letter
 #elif defined(Q_OS_MAC)
 

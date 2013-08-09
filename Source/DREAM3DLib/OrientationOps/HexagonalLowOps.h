@@ -45,16 +45,6 @@
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
-namespace HexagonalLowMath {
-  namespace Detail {
-    static const QuatF HexQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, 0.866025400f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, 0.500000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 1.000000000f, 0.000000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.866025400f, -0.50000000f),
-                         QuaternionMathF::New(0.000000000f, 0.000000000f, 0.500000000f, -0.86602540f)};
-  }
-}
 /**
  * @class HexagonalLowOps HexagonalLowOps.h DREAM3DLib/Common/OrientationOps/HexagonalLowOps.h
  * @brief
@@ -101,6 +91,10 @@ class DREAM3DLib_EXPORT HexagonalLowOps : public OrientationOps
 
 
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
+
+    virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees);
+    virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[12], int numsym,
