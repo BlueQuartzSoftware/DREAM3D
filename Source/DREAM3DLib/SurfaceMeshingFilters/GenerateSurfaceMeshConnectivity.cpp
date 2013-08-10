@@ -100,22 +100,31 @@ void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenerateSurfaceMeshConnectivity::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setGenerateVertexTriangleLists( reader->readValue("GenerateVertexTriangleLists", false) );
+  setGenerateTriangleNeighbors( reader->readValue("GenerateTriangleNeighbors", false) );
+  setGenerateEdgeIdList( reader->readValue("GenerateEdgeIdList", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("GenerateVertexTriangleLists", getGenerateVertexTriangleLists() );
   writer->writeValue("GenerateTriangleNeighbors", getGenerateTriangleNeighbors() );
   writer->writeValue("GenerateEdgeIdList", getGenerateEdgeIdList() );
-
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

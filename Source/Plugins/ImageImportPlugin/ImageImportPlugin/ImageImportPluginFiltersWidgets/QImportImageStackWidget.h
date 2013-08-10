@@ -74,7 +74,7 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
     QImportImageStackWidget(QWidget *parent = 0);
     virtual ~QImportImageStackWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);

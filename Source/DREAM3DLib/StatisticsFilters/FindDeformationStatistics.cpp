@@ -118,18 +118,24 @@ void FindDeformationStatistics::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindDeformationStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("DeformationStatisticsFile", getDeformationStatisticsFile() );
   writer->writeValue("VtkOutputFile", getVtkOutputFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

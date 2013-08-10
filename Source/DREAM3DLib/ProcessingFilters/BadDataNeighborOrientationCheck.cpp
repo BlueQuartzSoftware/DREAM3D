@@ -105,19 +105,29 @@ void BadDataNeighborOrientationCheck::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader)
+void BadDataNeighborOrientationCheck::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
+  setNumberOfNeighbors( reader->readValue("NumberOfNeighbors", getNumberOfNeighbors()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("NumberofNeighbors", getNumberOfNeighbors() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

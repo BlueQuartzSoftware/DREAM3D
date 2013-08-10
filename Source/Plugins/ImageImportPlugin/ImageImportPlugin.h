@@ -2,8 +2,8 @@
  * Your License or Copyright Information can go here
  */
 
-#ifndef SURFACEMESHINGPLUGIN_H_
-#define SURFACEMESHINGPLUGIN_H_
+#ifndef _ImageImportPlugin_H_
+#define _ImageImportPlugin_H_
 
 #include <QtCore/QObject>
 #include <QtCore/QSettings>
@@ -36,6 +36,11 @@ class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
     virtual void registerFilterWidgets();
 
     /**
+     * @brief registerFilters
+     */
+    virtual void registerFilters(FilterManager* fm);
+
+    /**
      * @brief Writes the settings in the input gui to the Application's preference file
      * @param prefs A valid QSettings pointer.
      */
@@ -53,4 +58,4 @@ class ImageImportPlugin : public QObject, public DREAM3DPluginInterface
     void operator=(const ImageImportPlugin&); // Operator '=' Not Implemented
 };
 
-#endif /* SURFACEMESHINGPLUGIN_H_ */
+#endif /* _ImageImportPlugin_H_ */

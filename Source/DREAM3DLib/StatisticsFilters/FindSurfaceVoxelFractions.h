@@ -63,14 +63,14 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
 
     virtual ~FindSurfaceVoxelFractions();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelFractionsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelFractionsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Surface Voxel Fractions"; }
 
     /**
@@ -78,13 +78,13 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
      */
 
     virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void execute();
     virtual void preflight();

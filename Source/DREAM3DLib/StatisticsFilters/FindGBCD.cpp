@@ -335,17 +335,25 @@ void FindGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setGBCDRes( reader->readValue("GBCDRes", getGBCDRes()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->writeValue("GBCDResolution", getGBCDRes() );
+  writer->openFilterGroup(this, index);
+  writer->writeValue("GBCDRes", getGBCDRes() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

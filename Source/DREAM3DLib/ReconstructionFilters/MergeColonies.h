@@ -43,11 +43,10 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /**
  * @class MergeColonies MergeColonies.h DREAM3DLib/ReconstructionFilters/MergeColonies.h
@@ -90,13 +89,13 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, IdentifyGlobAlpha)
 
     virtual void setupFilterParameters();
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

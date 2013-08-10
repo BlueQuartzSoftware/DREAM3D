@@ -86,6 +86,13 @@ void VisualizeGBCD::setupFilterParameters()
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Misorientation Axis Angles");
+    option->setPropertyName("MisorientationRotations");
+    option->setWidgetType(FilterParameter::AxisAngleWidget);
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisAngle");
     option->setHumanLabel("Misorientation Angle");
     option->setWidgetType(FilterParameter::DoubleWidget);
@@ -120,19 +127,31 @@ void VisualizeGBCD::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader)
+void VisualizeGBCD::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMisAngle( reader->readValue("MisAngle", getMisAngle()) );
+  setMisAxis( reader->readValue("MisAxis", getMisAxis() ) );
+  setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
+  setMisorientationRotations(reader->readValue("MisorientationRotations", getMisorientationRotations()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationAngle", getMisAngle() );
   writer->writeValue("MisorientationAxis", getMisAxis() );
   writer->writeValue("OutputFile", getOutputFile() );
+  writer->writeValue("MisorientationRotations", getMisorientationRotations() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

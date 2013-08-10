@@ -125,20 +125,20 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
-    /**
+ /**
      * @brief This function writes a set of Axis coordinates to that are needed
      * for a Rectilinear Grid based data set.
      * @param f The "C" FILE* pointer to the file being written to.
@@ -251,7 +251,6 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       fclose(f);
       return err;
     }
-
 
 
   protected:

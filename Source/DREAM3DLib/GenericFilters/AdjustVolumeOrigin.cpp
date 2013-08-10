@@ -163,20 +163,30 @@ void AdjustVolumeOrigin::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* reader)
+void AdjustVolumeOrigin::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", false) );
+  setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", false) );
+  setOrigin( reader->readValue("Origin", getOrigin() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
   writer->writeValue("ApplyToSolidMesh", getApplyToSolidMesh() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

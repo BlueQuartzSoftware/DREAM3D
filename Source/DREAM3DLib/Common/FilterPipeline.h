@@ -62,7 +62,6 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     typedef std::list<AbstractFilter::Pointer>  FilterContainerType;
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
- //   DREAM3D_INSTANCE_PROPERTY(DataContainer::Pointer, DataContainer)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter)
 
     /**

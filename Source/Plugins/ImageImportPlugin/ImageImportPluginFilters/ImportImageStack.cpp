@@ -48,9 +48,9 @@
 ImportImageStack::ImportImageStack() :
   AbstractFilter(),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
-  m_RefFrameZDir(Ebsd::LowtoHigh),
   m_ZStartIndex(0),
   m_ZEndIndex(0),
+  m_RefFrameZDir(Ebsd::LowtoHigh),
   m_ImageData(NULL)
 {
 
@@ -88,25 +88,34 @@ void ImportImageStack::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader)
+void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setImageDataArrayName( reader->readValue("ImageDataArrayName", getImageDataArrayName()) );
+  setZStartIndex( reader->readValue("ZStartIndex", getZStartIndex()) );
+  setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
+  setOrigin( reader->readValue("Origin", getOrigin()) );
+  setResolution( reader->readValue("Resolution", getResolution()) );
+  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir",getRefFrameZDir()));
+  setRefFrameZDir(zdir);
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-  * AbstractFilterParametersWriter class for the proper API to use.
-  */
+  writer->openFilterGroup(this, index);
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("Resolution", getResolution() );
-  writer->writeValue("StackingOrder", getRefFrameZDir() );
+  writer->writeValue("RefFrameZDir", getRefFrameZDir() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -129,9 +138,9 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     // This would be for a gray scale image
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-    // If we have RGB or RGBA Images then we are going to have to change things a bit.
-    // We should read the file and see what we have? Of course Qt is going to read it up into
-    // an RGB array by default
+        // If we have RGB or RGBA Images then we are going to have to change things a bit.
+        // We should read the file and see what we have? Of course Qt is going to read it up into
+        // an RGB array by default
   }
 
 }
@@ -173,22 +182,17 @@ void ImportImageStack::execute()
 
   uint8_t* imagePtr = NULL;
 
-//  float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
-//  int progress = 0;
   int pixelBytes = 0;
   int totalPixels = 0;
   int height = 0;
   int width = 0;
-//  int bytesPerLine = 0;
+  //  int bytesPerLine = 0;
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
   for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     std::string imageFName = *filepath;
-//    progress = static_cast<int>( z - m_ZStartIndex );
-//    progress = (int)(100.0f * (float)(progress) / total);
-
     ss.str("");
     ss << "Importing file " << imageFName;
     notifyStatusMessage(ss.str());
@@ -202,7 +206,7 @@ void ImportImageStack::execute()
     height = image.height();
     width = image.width();
     totalPixels = width * height;
-  //  bytesPerLine = image.bytesPerLine();
+    //  bytesPerLine = image.bytesPerLine();
     // This is the first image so we need to create our block of data to store the data
     if (z == m_ZStartIndex)
     {
@@ -220,9 +224,6 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-   // imagePtr = data->GetPointer( (z-m_ZStartIndex) * totalPixels * pixelBytes);
-//    if(m_RefFrameZDir == Ebsd::HightoLow) zSpot = (m_ZEndIndex-z);
-//    else zSpot = (z-m_ZStartIndex);
     zSpot = (z-m_ZStartIndex);
     for(qint32 i = 0; i < height; ++i)
     {

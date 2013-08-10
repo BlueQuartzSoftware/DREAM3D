@@ -269,16 +269,41 @@ void VtkRectilinearGridWriter::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersReader* reader)
+void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
+  setWriteGrainIds( reader->readValue("WriteGrainIds", false) );
+  setWriteParentIds( reader->readValue("WriteParentIds", false) );
+  setWritePhaseIds( reader->readValue("WritePhaseIds", false) );
+  setWriteBandContrasts( reader->readValue("WriteBandContrasts", false) );
+  setWriteImageQualities( reader->readValue("WriteImageQualities", false) );
+  setWriteConfidenceIndicies( reader->readValue("WriteConfidenceIndicies", false) );
+  setWriteKernelAverageMisorientations( reader->readValue("WriteKernelAverageMisorientations", false) );
+  setWriteGrainReferenceMisorientations( reader->readValue("WriteGrainReferenceMisorientations", false) );
+  setWriteGrainReferenceCAxisMisorientations( reader->readValue("WriteGrainReferenceCAxisMisorientations", false) );
+  setWriteGoodVoxels( reader->readValue("WriteGoodVoxels", false) );
+  setWriteGlobAlpha( reader->readValue("WriteGlobAlpha", false) );
+  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
+  setWriteSchmidFactors( reader->readValue("WriteSchmidFactors", false) );
+  setWriteGBEuclideanDistanceMap( reader->readValue("WriteGBEuclideanDistanceMap", false) );
+  setWriteTJEuclideanDistanceMap( reader->readValue("WriteTJEuclideanDistanceMap", false) );
+  setWriteQPEuclideanDistanceMap( reader->readValue("WriteQPEuclideanDistanceMap", false) );
+  setWriteGrainSizes( reader->readValue("WriteGrainSizes", false) );
+  setWriteEulerAngles( reader->readValue("WriteEulerAngles", false) );
+  setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
   writer->writeValue("WriteGrainIds", getWriteGrainIds() );
   writer->writeValue("WriteParentIds", getWriteParentIds() );
@@ -298,6 +323,8 @@ void VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
