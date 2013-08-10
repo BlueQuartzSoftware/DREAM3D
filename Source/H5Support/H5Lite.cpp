@@ -465,7 +465,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std:
   data.clear();
   did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
-    std::cout << "Error Opening Dataset" << std::endl;
+    std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
   }
   tid = H5Dget_type(did);
@@ -500,7 +500,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
 
   did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
-    std::cout << "Error Opening Dataset" << std::endl;
+    std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
   }
   tid = H5Dget_type(did);
@@ -1109,7 +1109,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
  /* Open the dataset. */
   did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
   if ( did < 0 ) {
-    std::cout << " Error opening Dataset: " << did << std::endl;
+    std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return NULL;
   }
   if ( did >= 0 ) {

@@ -41,9 +41,10 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-ComparisonSelectionWidget::ComparisonSelectionWidget(QWidget *parent) :
+ComparisonSelectionWidget::ComparisonSelectionWidget(bool showOperators, QWidget *parent) :
   QWidget(parent),
   m_ArrayListType(CellListType),
+  m_ShowOperators(showOperators),
   m_ComparisonSelectionTableModel(NULL)
 {
   setupUi(this);
@@ -60,10 +61,37 @@ ComparisonSelectionWidget::~ComparisonSelectionWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+std::vector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
+{
+  std::vector<ComparisonInput_t> comps;
+  if (m_ComparisonSelectionTableModel == NULL) { return comps; }
+
+  int filterCount = m_ComparisonSelectionTableModel->rowCount();
+  QVector<QString> fieldNames;
+  QVector<float> fieldValues;
+  QVector<int> fieldOperators;
+  m_ComparisonSelectionTableModel->getTableData(fieldNames, fieldValues, fieldOperators);
+
+  for(int i = 0; i < filterCount; ++i)
+  {
+    ComparisonInput_t comp;
+    comp.arrayName = fieldNames[i].toStdString();
+    comp.compOperator = fieldOperators[i];
+    comp.compValue = fieldValues[i];
+    comps.push_back(comp);
+  }
+  return comps;
+}
+
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::setupGui()
 {
 
-  m_ComparisonSelectionTableModel = new ComparisonSelectionTableModel;
+  m_ComparisonSelectionTableModel = new ComparisonSelectionTableModel(m_ShowOperators);
   QAbstractItemModel* model = m_ComparisonSelectionTableView->model();
   m_ComparisonSelectionTableView->setModel(m_ComparisonSelectionTableModel);
 
@@ -95,7 +123,9 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
   QModelIndex index = m_ComparisonSelectionTableModel->index(m_ComparisonSelectionTableModel->rowCount() - 1, 0);
   m_ComparisonSelectionTableView->setCurrentIndex(index);
   m_ComparisonSelectionTableView->resizeColumnsToContents();
-  //emit parametersChanged();
+  m_ComparisonSelectionTableView->scrollToBottom();
+  m_ComparisonSelectionTableView->setFocus();
+  emit parametersChanged();
 }
 
 
@@ -129,7 +159,7 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
 
   if (m_ArrayListType >= CellListType && m_ArrayListType <= EnsembleListType )
   {
-  populateVoxelArrayNames(vdc);
+    populateVoxelArrayNames(vdc);
   }
   else if (m_ArrayListType >= PointListType && m_ArrayListType <= EdgeListType)
   { populateSurfaceMeshArrayNames(smdc);}
@@ -140,11 +170,27 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
   m_ComparisonSelectionTableView->setItemDelegate(aid);
-
-
-
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> comparisons)
+{
+  qint32 count = comparisons.size();
+
+  QVector<QString> arrayNames(count);
+  QVector<int>   compOperators(count);
+  QVector<float> compValues(count);
+  bool ok = false;
+  for(int i = 0; i < count; ++i)
+  {
+    arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);
+    compOperators[i] = comparisons[i].compOperator;
+    compValues[i] = comparisons[i].compValue;
+  }
+  m_ComparisonSelectionTableModel->setTableData(arrayNames, compValues, compOperators);
+}
 
 // -----------------------------------------------------------------------------
 //

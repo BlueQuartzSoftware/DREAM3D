@@ -36,7 +36,6 @@
 #include "GenerateIPFColors.h"
 
 
-
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -51,6 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -102,19 +102,27 @@ void GenerateIPFColors::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setReferenceDir( reader->readValue("ReferenceDir", getReferenceDir() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("ReferenceDir", getReferenceDir() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

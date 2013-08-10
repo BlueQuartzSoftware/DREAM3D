@@ -42,7 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
-AbstractFilter()
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -63,8 +63,8 @@ void ArraySelectionExample::setupFilterParameters()
   /* To select arrays */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Arrays to Delete");
-    option->setPropertyName("ArraysToDelete");
+    option->setHumanLabel("Arrays to Remember");
+    option->setPropertyName("ArraysToRemember");
     option->setWidgetType(FilterParameter::ArraySelectionWidget);
     options.push_back(option);
   }
@@ -76,20 +76,44 @@ void ArraySelectionExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader)
+void ArraySelectionExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+
+  reader->openFilterGroup(this, index);
+  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
+  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
+  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
+  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() ) );
+  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() ) );
+  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() ) );
+  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() ) );
+  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() ) );
+  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() ) );
+  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() ) );
+  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-
-/* writer->writeValue("StlFilePrefix", getStlFilePrefix() ); */
+  writer->openFilterGroup(this, index);
+  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
+  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
+  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() );
+  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() );
+  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() );
+  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() );
+  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() );
+  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() );
+  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() );
+  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 
@@ -97,8 +121,8 @@ void ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                                    std::set<std::string> selectedFieldArrays,
-                                                    std::set<std::string> selectedEnsembleArrays)
+                                                       std::set<std::string> selectedFieldArrays,
+                                                       std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -109,10 +133,10 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> sel
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                             std::set<std::string> selectedFaceArrays,
+                                                             std::set<std::string> selectedEdgeArrays,
+                                                             std::set<std::string> selectedFieldArrays,
+                                                             std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -125,8 +149,8 @@ void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::strin
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                        std::set<std::string> selectedFaceArrays,
-                                                        std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
@@ -141,19 +165,6 @@ void ArraySelectionExample::setSolidMeshSelectedArrayNames(std::set<std::string>
 void ArraySelectionExample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
-  /*
-  if (m_OutputFile.empty() == true)
-  {
-    ss << "The output file must be set before executing this filter.";
-    PipelineMessage em(getNameOfClass(), "There was an error", -666);
-    addErrorMessage(em);
-    setErrorCondition(-1);
-  }
-  */
 
 }
 
@@ -187,5 +198,5 @@ void ArraySelectionExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

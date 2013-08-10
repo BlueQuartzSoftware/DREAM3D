@@ -40,25 +40,21 @@ class GenericExample : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)
     DREAM3D_INSTANCE_PROPERTY(int, ConversionType)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedEnsembleArrayName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEdgeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFieldArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshEnsembleArrayName)
-
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SolidMeshEdgeArrayName)
-
-
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, CrystalSymmetryRotations)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, AxisAngleRotations)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelEnsembleArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshEdgeArrayName)
 
 
     /**
@@ -90,13 +86,13 @@ class GenericExample : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
 
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
    /**
     * @brief Reimplemented from @see AbstractFilter class

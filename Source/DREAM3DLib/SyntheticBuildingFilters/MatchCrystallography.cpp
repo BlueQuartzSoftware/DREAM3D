@@ -120,18 +120,27 @@ void MatchCrystallography::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* reader)
+void MatchCrystallography::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMaxIterations( reader->readValue("MaxIterations", getMaxIterations()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MaxIterations", getMaxIterations() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -752,6 +761,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
           deltaerror = (odfchange / currentodferror) + (mdfchange / currentmdferror);
           if(deltaerror > 0)
           {
+
             badtrycount = 0;
             m_FieldEulerAngles[3 * selectedgrain1] = g2ea1;
             m_FieldEulerAngles[3 * selectedgrain1 + 1] = g2ea2;

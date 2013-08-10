@@ -115,18 +115,26 @@ void AlignSectionsMutualInformation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParametersReader* reader)
+void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  AlignSections::writeFilterParameters(writer);
+  writer->openFilterGroup(this, index);
+  AlignSections::writeFilterParameters(writer, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

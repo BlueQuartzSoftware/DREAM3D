@@ -38,7 +38,7 @@
 #define _AbstractFilterParametersWriter_H_
 
 #include <string>
-
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -65,10 +65,11 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
 
     virtual ~AbstractFilterParametersWriter();
 
-    virtual int openOptionsGroup(AbstractFilter* filter) = 0;
-    virtual int closeOptionsGroup() = 0;
+    virtual int openFilterGroup(AbstractFilter *filter, int index) = 0;
+    virtual int closeFilterGroup() = 0;
 
     virtual int writeValue(const std::string name, const std::string value) = 0;
+    virtual int writeValue(const std::string name, const std::vector<std::string> value) = 0;
 
     virtual int writeValue(const std::string name, int8_t value) = 0;
     virtual int writeValue(const std::string name, int16_t value) = 0;
@@ -81,12 +82,26 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const std::string name, float value) = 0;
     virtual int writeValue(const std::string name, double value) = 0;
 
+    virtual int writeValue(const std::string name, std::vector<int8_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int16_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int32_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<int64_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint8_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint16_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint32_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<uint64_t> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<float> value) = 0;
+    virtual int writeValue(const std::string name, std::vector<double> value) = 0;
+
     virtual int writeValue(const std::string name, IntVec3Widget_t v) = 0;
     virtual int writeValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual int writeValue(const std::string name, ComparisonInput_t v) = 0;
+    virtual int writeValue(const std::string name, ComparisonInput_t v, int vectorPos) = 0;
     virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
-    virtual int writeValue(const std::string name, AxisAngleInput_t v) = 0;
+    virtual int writeValue(const std::string name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
+    virtual int writeValue(const std::string name, std::set<std::string> v) = 0;
+
+
 
   protected:
     AbstractFilterParametersWriter();

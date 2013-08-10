@@ -76,15 +76,15 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
     AbstractFilter::Pointer getFilterInstance()
     {
       Widget w;
-      return w.getFilter();
+      return w.getFilter(false);
     }
 
   protected:
     QFilterWidgetFactory() {
       Widget w;
-      m_GroupName = w.getFilter()->getGroupName();
-      m_SubGroupName = w.getFilter()->getSubGroupName();
-      m_HumanName = w.getFilter()->getHumanLabel();
+      m_GroupName = w.getFilter(false)->getGroupName();
+      m_SubGroupName = w.getFilter(false)->getSubGroupName();
+      m_HumanName = w.getFilter(false)->getHumanLabel();
     }
 
   private:

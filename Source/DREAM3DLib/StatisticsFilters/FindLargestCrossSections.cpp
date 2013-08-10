@@ -84,19 +84,28 @@ void FindLargestCrossSections::setupFilterParameters()
   }
   setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindLargestCrossSections::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setPlane( reader->readValue("Plane", getPlane()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  writer->writeValue("Plane", getPlane() );
+  writer->openFilterGroup(this, index);
+  writer->writeValue("Plane", getPlane());
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

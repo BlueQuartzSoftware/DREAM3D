@@ -246,21 +246,31 @@ void ConvertData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertData::readFilterParameters(AbstractFilterParametersReader* reader)
+void ConvertData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
+  setScalarType( reader->readValue("ScalarType", getScalarType()) );
+  setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("ScalarType", getScalarType() );
   writer->writeValue("OutputArrayName", getOutputArrayName() );
   writer->writeValue("SelectedCellArrayName", getSelectedCellArrayName() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

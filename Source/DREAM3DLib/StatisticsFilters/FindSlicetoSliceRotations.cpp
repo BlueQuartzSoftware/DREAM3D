@@ -86,17 +86,23 @@ void FindSlicetoSliceRotations::setupFilterParameters()
 }
 
 // -----------------------------------------------------------------------------
-void FindSlicetoSliceRotations::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindSlicetoSliceRotations::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+////!!##
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("SlicetoSliceRotationsFile", getSlicetoSliceRotationsFile() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

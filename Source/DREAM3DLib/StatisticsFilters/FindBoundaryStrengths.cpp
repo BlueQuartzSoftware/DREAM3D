@@ -107,18 +107,26 @@ void FindBoundaryStrengths::setupFilterParameters()
   }
   setFilterParameters(parameters);
 }
+
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader* reader)
+void FindBoundaryStrengths::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setLoading( reader->readValue("Loading", getLoading() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("Loading", getLoading() );
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

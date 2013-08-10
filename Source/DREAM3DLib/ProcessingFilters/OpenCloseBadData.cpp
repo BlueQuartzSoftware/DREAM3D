@@ -57,9 +57,9 @@ AbstractFilter(),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_Direction(0),
 m_NumIterations(1),
-m_xDirOn(true),
-m_yDirOn(true),
-m_zDirOn(true),
+m_XDirOn(true),
+m_YDirOn(true),
+m_ZDirOn(true),
 m_Neighbors(NULL),
 m_GrainIds(NULL)
 {
@@ -102,7 +102,7 @@ void OpenCloseBadData::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Direction");
-    option->setPropertyName("xDirOn");
+    option->setPropertyName("XDirOn");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -110,7 +110,7 @@ void OpenCloseBadData::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Y Direction");
-    option->setPropertyName("yDirOn");
+    option->setPropertyName("YDirOn");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -118,7 +118,7 @@ void OpenCloseBadData::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Z Direction");
-    option->setPropertyName("zDirOn");
+    option->setPropertyName("ZDirOn");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
@@ -129,21 +129,33 @@ void OpenCloseBadData::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* reader)
+void OpenCloseBadData::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setDirection( reader->readValue("Direction", getDirection()) );
+  setNumIterations( reader->readValue("NumIterations", getNumIterations()) );
+  setXDirOn(reader->readValue("X Direction", getXDirOn()) );
+  setYDirOn(reader->readValue("Y Direction", getYDirOn()) );
+  setZDirOn(reader->readValue("Z Direction", getZDirOn()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("Direction", getDirection() );
   writer->writeValue("NumIterations", getNumIterations() );
-  writer->writeValue("X Direction", getxDirOn() );
-  writer->writeValue("Y Direction", getyDirOn() );
-  writer->writeValue("Z Direction", getzDirOn() );
+  writer->writeValue("X Direction", getXDirOn() );
+  writer->writeValue("Y Direction", getYDirOn() );
+  writer->writeValue("Z Direction", getZDirOn() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -254,12 +266,12 @@ void OpenCloseBadData::execute()
             {
               good = 1;
               neighpoint = static_cast<int>( count + neighpoints[l] );
-              if (l == 0 && (k == 0 || m_zDirOn == false)) good = 0;
-              else if (l == 5 && (k == (dims[2] - 1) || m_zDirOn == false)) good = 0;
-              else if (l == 1 && (j == 0 || m_yDirOn == false)) good = 0;
-              else if (l == 4 && (j == (dims[1] - 1) || m_yDirOn == false)) good = 0;
-              else if (l == 2 && (i == 0 || m_xDirOn == false)) good = 0;
-              else if (l == 3 && (i == (dims[0] - 1) || m_xDirOn == false)) good = 0;
+              if (l == 0 && (k == 0 || m_ZDirOn == false)) good = 0;
+              else if (l == 5 && (k == (dims[2] - 1) || m_ZDirOn == false)) good = 0;
+              else if (l == 1 && (j == 0 || m_YDirOn == false)) good = 0;
+              else if (l == 4 && (j == (dims[1] - 1) || m_YDirOn == false)) good = 0;
+              else if (l == 2 && (i == 0 || m_XDirOn == false)) good = 0;
+              else if (l == 3 && (i == (dims[0] - 1) || m_XDirOn == false)) good = 0;
               if (good == 1)
               {
                 grain = m_GrainIds[neighpoint];

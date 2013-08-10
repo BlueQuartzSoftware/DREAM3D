@@ -61,9 +61,9 @@
 class ArraySelectionExample : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(ArraySelectionExample);
-    DREAM3D_STATIC_NEW_MACRO(ArraySelectionExample);
-    DREAM3D_TYPE_MACRO_SUPER(ArraySelectionExample, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(ArraySelectionExample)
+    DREAM3D_STATIC_NEW_MACRO(ArraySelectionExample)
+    DREAM3D_TYPE_MACRO_SUPER(ArraySelectionExample, AbstractFilter)
 
     virtual ~ArraySelectionExample();
 
@@ -72,6 +72,7 @@ class ArraySelectionExample : public AbstractFilter
     // -----------------------------------------------------------------------------
     /* These methods are needed if you use the ArraySelectionWidget as an input */
     typedef std::set<std::string> ArrayList_t;
+
 
     virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                             std::set<std::string> selectedFieldArrays,
@@ -86,43 +87,21 @@ class ArraySelectionExample : public AbstractFilter
                                                 std::set<std::string> selectedEdgeArrays);
 
 
-  private:
-    std::set<std::string> m_SelectedVoxelCellArrays;
-    std::set<std::string> m_SelectedVoxelFieldArrays;
-    std::set<std::string> m_SelectedVoxelEnsembleArrays;
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
 
-    std::set<std::string> m_SelectedSurfaceMeshVertexArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFaceArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEdgeArrays;
-    std::set<std::string> m_SelectedSurfaceMeshFieldArrays;
-    std::set<std::string> m_SelectedSurfaceMeshEnsembleArrays;
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
 
-    std::set<std::string> m_SelectedSolidMeshVertexArrays;
-    std::set<std::string> m_SelectedSolidMeshFaceArrays;
-    std::set<std::string> m_SelectedSolidMeshEdgeArrays;
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
     /* END BLOCK FOR ArraySelectionWidget Input */
     // -----------------------------------------------------------------------------
-
-
-  public:
-
-    // -----------------------------------------------------------------------------
-    /* Each Filter can ONLY have ONE of these types of widgets */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FieldComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EnsembleComparisonInputs)
-
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, PointComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FaceComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
-
-    /* And if you have one of those Widgets then you need this to support that widget */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
-    // -----------------------------------------------------------------------------
-
-
-    DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
-    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
 
 
@@ -155,13 +134,13 @@ class ArraySelectionExample : public AbstractFilter
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
    /**
     * @brief Reimplemented from @see AbstractFilter class
