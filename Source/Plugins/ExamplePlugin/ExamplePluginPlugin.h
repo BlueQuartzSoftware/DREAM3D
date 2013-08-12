@@ -36,7 +36,7 @@ class ExamplePluginPlugin : public QObject, public DREAM3DPluginInterface
     virtual void registerFilterWidgets();
 
     /**
-    * @brief
+    * @brief Registers all the filters that this plugin implements with the FilterManger so they are available else where.
     */
     virtual void registerFilters(FilterManager* fm);
 
