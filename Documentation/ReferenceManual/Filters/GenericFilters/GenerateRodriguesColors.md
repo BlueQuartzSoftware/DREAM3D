@@ -4,7 +4,7 @@ Generate Rodrigues Colors {#generaterodriguescolors}
 Generic Filters (Misc)
 
 ## Description ##
-This filter will generate Rodrigues colors for each voxel.  
+This filter will generate Rodrigues colors for each voxel.
 
 
 ## Input Options ##
@@ -25,7 +25,7 @@ Voxel
 | Type | Default Name | Description  | Filters Known to Create Data |
 |------|--------------|------------|-----|
 | Cell | CellEulerAngles |  These are the angles used to determine the colors | Read H5Ebsd File (IO), Match Crystallography (SyntheticBuilding) |
-| Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |  
+| Cell | CellPhases |  These are used to determine which ensemble the **Cell** belongs to | Read H5Ebsd File (IO), Pack Primary Phases (SyntheticBuilding), Insert Precipitate Phases (SyntheticBuilding), Establish Matrix Phase (SyntheticBuilding) |
 | Ensemble | CrystalStructures |  These are the symmetries of the ensembles, which dictate orientation operations and which color palatte is used | Read H5Ebsd File (IO), Read Ensemble Info File (IO), Initialize Synthetic Volume (SyntheticBuilding) |
 
 ## Created Arrays ##
