@@ -36,9 +36,10 @@ class @PluginName@Plugin : public QObject, public DREAM3DPluginInterface
     virtual void registerFilterWidgets();
 
     /**
-    * @brief
+    * @brief This registers the filters that this plugin implements with the Filter Manager that is passed in
+    * @param fm The FilterManager to register the filters into.
     */
-    virtual void registerFilters();
+    virtual void registerFilters(FilterManager* fm);
 
 
     /**
