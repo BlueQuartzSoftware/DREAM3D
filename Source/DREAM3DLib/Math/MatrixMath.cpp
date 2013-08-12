@@ -174,6 +174,19 @@ void MatrixMath::Copy3x1(float g[3], float outMat[3])
   outMat[2] = g[2];
 }
 
+void MatrixMath::Identity3x3(float g[3][3])
+{
+  g[0][0] = 1.0f;
+  g[0][1] = 0.0f;
+  g[0][2] = 0.0f;
+  g[1][0] = 0.0f;
+  g[1][1] = 1.0f;
+  g[1][2] = 0.0f;
+  g[2][0] = 0.0f;
+  g[2][1] = 0.0f;
+  g[2][2] = 1.0f;
+}
+
 void MatrixMath::Normalize3x3(float g[3][3])
 {
   float denom;

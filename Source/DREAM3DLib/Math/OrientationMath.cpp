@@ -40,22 +40,6 @@
 
 #include "MXA/Common/LogTime.h"
 
-namespace Detail
-{
-  const static float m_OnePointThree = 1.33333333333f;
-//  const float sin_wmin_neg_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACosNeg1/2.0f) );
-//  const float sin_wmin_pos_1_over_2 = static_cast<float>( sinf(DREAM3D::Constants::k_ACos1/2.0f) );
-//  const float sin_of_acos_neg_1 = sinf(DREAM3D::Constants::k_ACosNeg1);
-//  const float sin_of_acos_pos_1 = sinf(DREAM3D::Constants::k_ACos1);
-
-//  const float recip_sin_of_acos_neg_1 = 1.0f/sin_of_acos_neg_1;
-//  const float recip_sin_of_acos_pos_1 = 1.0f/sin_of_acos_pos_1;
-
-//  const static float SinOfHalf = sinf(0.5f);
-//  const static float CosOfHalf = cosf(0.5f);
-//  const static float SinOfZero = sinf(0.0f);
-//  const static float CosOfZero = cosf(0.0f);
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -80,13 +64,17 @@ void OrientationMath::AxisAngletoHomochoric(float w, float n1, float n2, float n
 
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
+  if(denom == 0.0)
+  {
+      r1 = 0.0, r2 = 0.0, r3 = 0.0;
+      return;
+  }
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(denom == 0.0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  r1 = n1 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
-  r2 = n2 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
-  r3 = n3 * powf(((0.75f) * (w - sinf(w))), (1.0f / 3.0f));
+  r1 = n1 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+  r2 = n2 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
+  r3 = n3 * powf(((0.75f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
 }
 
 // -----------------------------------------------------------------------------
@@ -98,10 +86,14 @@ void OrientationMath::AxisAngletoRod(float w, float n1, float n2, float n3, floa
 
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
+  if(denom == 0.0)
+  {
+      r1 = 0.0, r2 = 0.0, r3 = 0.0;
+      return;
+  }
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   float const1 = tanf(w/2.0f);
   r1 = n1 * const1;
   r2 = n2 * const1;
@@ -117,12 +109,16 @@ void OrientationMath::AxisAngletoQuat(float w, float n1, float n2, float n3, Qua
 
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
+  if(denom == 0.0)
+  {
+      q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
+      return;
+  }
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
-  float const1 = cosf(w/2.0f);
-  float const2 = sinf(w/2.0f);
+  float const1 = cosf(w*0.5f);
+  float const2 = sinf(w*0.5f);
   q.x = n1 * const2;
   q.y = n2 * const2;
   q.z = n3 * const2;
@@ -142,10 +138,14 @@ void OrientationMath::AxisAngletoMat(float w, float n1, float n2, float n3, floa
 
   denom = (n1 * n1) + (n2 * n2) + (n3 * n3);
   denom = sqrt(denom);
+  if(denom == 0.0)
+  {
+    MatrixMath::Identity3x3(g);
+    return;
+  }
   n1 = n1 / denom;
   n2 = n2 / denom;
   n3 = n3 / denom;
-  if(denom == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
 
   g[0][0] = t*n1*n1+c;
   g[0][1] = t*n1*n2-n3*s;
@@ -167,12 +167,16 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = sqrt(rmag);
+  if(rmag == 0.0)
+  {
+    r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+    return;
+  }
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
-  if(rmag == 0.0) r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   w = static_cast<float>( 2.0*atan(rmag) );
-  float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), (1.0f / 3.0f));
+  float const1 = powf(((3.0f / 4.0f) * (w - sinf(w))), DREAM3D::Constants::k_1Over3);
   r1 = r1 * const1;
   r2 = r2 * const1;
   r3 = r3 * const1;
@@ -183,22 +187,27 @@ void OrientationMath::RodtoHomochoric(float &r1, float &r2, float &r3)
 // -----------------------------------------------------------------------------
 void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
 {
-  float hmag, x, w, w_new;
+  float hmag, w;
+  static double c[7] = {-0.5000096149170321, -0.02486606148871731, -0.004549381779362819,
+                          0.0005118668366387526, -0.0016500827333575548, 0.0007593352203388718, -0.0002040422502566876};
 
   hmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   hmag = sqrt(hmag);
+  if(hmag == 0.0)
+  {
+    r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+    return;
+  }
   r1 = r1 / hmag;
   r2 = r2 / hmag;
   r3 = r3 / hmag;
-  if(hmag == 0.0) r1 = 0.0, r2 = 0.0, r3 = 0.0;
-  w = static_cast<float>( powf((8*hmag*hmag*hmag),(1.0f/3.0f)) );
-  x = Detail::m_OnePointThree*hmag*hmag*hmag;
-  for(size_t i = 1; i < 10; i++)
+  double sum = 0.0;
+  for(int i = 0; i < 7; ++i)
   {
-  w_new = w - ((x-w+sin(w))/(-1+cos(w)));
-  w = w_new;
+     sum = sum + c[i] * pow(hmag, 2*i);
   }
-  float const1 = tanf(w/2.0f);
+  w = (1.0+sum);
+  float const1 = sqrt(1.0-(w*w))/w;
   r1 = r1 * const1;
   r2 = r2 * const1;
   r3 = r3 * const1;
@@ -214,17 +223,21 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = sqrt(rmag);
+  if(rmag == 0.0)
+  {
+    w = 0.0, n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+    return;
+  }
   w = static_cast<float>( 2.0*atan(rmag) );
   n1 = r1 / rmag;
   n2 = r2 / rmag;
   n3 = r3 / rmag;
-  if(rmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > DREAM3D::Constants::k_Pi)
   {
-  w = (2*DREAM3D::Constants::k_Pi)-w;
-  n1 = -n1;
-  n2 = -n2;
-  n3 = -n3;
+    w = (2*DREAM3D::Constants::k_Pi)-w;
+    n1 = -n1;
+    n2 = -n2;
+    n3 = -n3;
   }
 }
 
@@ -234,17 +247,21 @@ void OrientationMath::RodtoAxisAngle(float r1, float r2, float r3, float &w, flo
 // -----------------------------------------------------------------------------
 void OrientationMath::QuattoAxisAngle(QuatF &q, float &w, float &n1, float &n2, float &n3)
 {
+  if(q.w == 1.0)
+  {
+    w = 0.0, n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
+    return;
+  }
   w = static_cast<float>( 2.0*acos(q.w) );
   n1 = q.x / sqrt(1-(q.w*q.w));
   n2 = q.y / sqrt(1-(q.w*q.w));
   n3 = q.z / sqrt(1-(q.w*q.w));
-  if(q.w == 1.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   if(w > DREAM3D::Constants::k_Pi)
   {
-  w = (2*DREAM3D::Constants::k_Pi)-w;
-  n1 = -n1;
-  n2 = -n2;
-  n3 = -n3;
+    w = (2*DREAM3D::Constants::k_Pi)-w;
+    n1 = -n1;
+    n2 = -n2;
+    n3 = -n3;
   }
 }
 
@@ -273,10 +290,14 @@ void OrientationMath::RodtoQuat(QuatF &q, float r1, float r2, float r3)
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = sqrt(rmag);
+  if(rmag == 0.0) 
+  {
+    q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
+    return;
+  }
   r1 = r1 / rmag;
   r2 = r2 / rmag;
   r3 = r3 / rmag;
-  if(rmag == 0.0) r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
   w = 2.0f*atan(rmag);
   float const1 = sinf(w/2.0f);
   q.x = r1 * const1;
@@ -295,10 +316,14 @@ void OrientationMath::QuattoRod(QuatF &q, float &r1, float &r2, float &r3)
 
   qmag = (q.x * q.x) + (q.y * q.y) + (q.z * q.z);
   qmag = sqrt(qmag);
+  if(qmag == 0.0)
+  {
+    r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
+    return;
+  }
   n1 = q.x / qmag;
   n2 = q.y / qmag;
   n3 = q.z / qmag;
-  if(qmag == 0.0) n1 = 0.0f, n2 = 0.0f, n3 = 1.0f;
   w = static_cast<float>( 2.0*acos(q.w) );
   float const1 = tanf(w * 0.5f);
   r1 = n1 * const1;
@@ -456,7 +481,7 @@ float OrientationMath::MatrixMisorientation(float g1[3][3], float g2[3][3])
   deltaG[0][0] = g1[0][0]*g2[0][0] + g1[1][0]*g2[1][0] + g1[2][0]*g2[2][0];
   deltaG[1][1] = g1[0][1]*g2[0][1] + g1[1][1]*g2[1][1] + g1[2][1]*g2[2][1];
   deltaG[2][2] = g1[0][2]*g2[0][2] + g1[1][2]*g2[1][2] + g1[2][2]*g2[2][2];
-  float value = ((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0)/2.0;
+  float value = 0.5*((deltaG[0][0]+deltaG[1][1]+deltaG[2][2])-1.0);
   if(value > 1.0) value = 1.0;
   if(value < -1.0) value = -1.0;
   return acosf(value);
