@@ -111,6 +111,7 @@ void @ClassName@::readFilterParameters(AbstractFilterParametersReader* reader, i
   reader->openFilterGroup(this, index);
   /*
    Place code in here that will read the parameters from a file
+   setOutputFile( reader->readValue("OutputFile", getOutputFile() ) );
    */
   reader->closeFilterGroup();
 }
@@ -119,11 +120,9 @@ void @ClassName@::readFilterParameters(AbstractFilterParametersReader* reader, i
 //
 // -----------------------------------------------------------------------------
 int @ClassName@::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-
 {
   writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
+  /* Place code that will write the inputs values into a file. reference the AbstractFilterParametersWriter class for the proper API to use. */
   /*  writer->writeValue("OutputFile", getOutputFile() ); */
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -148,8 +147,6 @@ void @ClassName@::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(-1);
   }
   */
-
-
 }
 
 
