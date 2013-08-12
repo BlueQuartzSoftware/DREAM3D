@@ -91,6 +91,7 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   setupUi(this);
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
@@ -114,12 +115,34 @@ QString QEbsdToH5EbsdWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter()
+void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  EbsdToH5Ebsd* filter = EbsdToH5Ebsd::SafeObjectDownCast<AbstractFilter*, EbsdToH5Ebsd*>(filt);
+  m_OutputFile->setText( QString::fromStdString ( filter->getOutputFile() ) );
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  std::stringstream ss;
+  ss << filter->getZResolution();
+  m_zSpacing->setText( QString::fromStdString(ss.str()) );
+  m_SampleTransformationAngle = filter->getSampleTransformationAngle();
+  m_SampleTransformationAxis = filter->getSampleTransformationAxis();
+  m_EulerTransformationAngle = filter->getEulerTransformationAngle();
+  m_EulerTransformationAxis = filter->getEulerTransformationAxis();
+  setRefFrameZDir( filter->getRefFrameZDir() );
+  setEbsdFileList( filter->getEbsdFileList() );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
 {
   bool ok = false;
 
   // Now create the filter and start pushing values into the filter
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
+  if (defaultValues == true) { return filter; }
+
   filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
@@ -418,6 +441,21 @@ Ebsd::RefFrameZDir QEbsdToH5EbsdWidget::getRefFrameZDir()
   if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
   if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
   return Ebsd::UnknownRefFrameZDirection;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QEbsdToH5EbsdWidget::setRefFrameZDir(Ebsd::RefFrameZDir ref)
+{
+  if (ref == Ebsd::LowtoHigh)
+  {
+    m_StackLowToHigh->setChecked(true);
+  }
+  if (ref == Ebsd::HightoLow)
+  {
+    m_StackHighToLow->setChecked(true);
+  }
 }
 
 

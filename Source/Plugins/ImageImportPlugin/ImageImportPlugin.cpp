@@ -1,7 +1,12 @@
 /*
  * Your License or Copyright Information can go here
  */
+
 #include "ImageImportPlugin.h"
+
+#include "DREAM3DLib/Common/FilterManager.h"
+#include "DREAM3DLib/Common/IFilterFactory.hpp"
+#include "DREAM3DLib/Common/FilterFactory.hpp"
 
 #include "PipelineBuilder/FilterWidgetManager.h"
 #include "FilterWidgets/QFilterWidgetFactory.hpp"
@@ -57,4 +62,4 @@ void ImageImportPlugin::readSettings(QSettings &prefs)
 }
 
 #include "ImageImportPluginFilters/RegisterKnownFilterWidgets.cpp"
-
+#include "ImageImportPluginFilters/RegisterKnownFilters.cpp"

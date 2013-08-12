@@ -93,7 +93,6 @@ void SaveImages::setupFilterParameters()
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
- //   choices.push_back("jpg");
     parameter->setChoices(choices);
     parameters.push_back(parameter);
   }
@@ -123,22 +122,29 @@ void SaveImages::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader)
+void SaveImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()) );
+  setOutputPath( reader->readValue("OutputPath", getOutputPath()) );
+  setColorsArrayName( reader->readValue("ColorsArrayName", getColorsArrayName()) );
+  setImageFormat( reader->readValue("ImageFormat", getImageFormat()) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-   writer->writeValue("ImagePrefix", getImagePrefix() );
-   writer->writeValue("OutputPath", getOutputPath() );
-   writer->writeValue("ColorsArrayName", getColorsArrayName() );
-   writer->writeValue("ImageFormat", getImageFormat() );
+  writer->openFilterGroup(this, index);
+  writer->writeValue("ImagePrefix", getImagePrefix() );
+  writer->writeValue("OutputPath", getOutputPath() );
+  writer->writeValue("ColorsArrayName", getColorsArrayName() );
+  writer->writeValue("ImageFormat", getImageFormat() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -173,7 +179,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
   else
   {
-      GET_PREREQ_DATA_2(m, CellData, Colors, ss, -300, uint8_t, UInt8ArrayType, voxels, 3)
+    GET_PREREQ_DATA_2(m, CellData, Colors, ss, -300, uint8_t, UInt8ArrayType, voxels, 3)
   }
 
 }
@@ -212,7 +218,7 @@ void SaveImages::execute()
   size_t dims[3];
   m->getDimensions(dims);
 
- dataCheck(false, dims[0] * dims[1] * dims[2], 1, 1);
+  dataCheck(false, dims[0] * dims[1] * dims[2], 1, 1);
 
 
 
@@ -249,15 +255,15 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   }
   else if (m_ImageFormat == BmpImageType)
   {
-  path.append(".bmp");
+    path.append(".bmp");
   }
   else if (m_ImageFormat == PngImageType)
   {
-  path.append(".png");
+    path.append(".png");
   }
-    else if (m_ImageFormat == JpgImageType)
+  else if (m_ImageFormat == JpgImageType)
   {
-  path.append(".jpg");
+    path.append(".jpg");
   }
 
   path = QDir::toNativeSeparators(path);
@@ -272,8 +278,8 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
   QImage image(dims[0], dims[1], QImage::Format_ARGB32);
   for(size_t y = 0; y < dims[1]; ++y)
   {
-     uint8_t* scanLine = image.scanLine(y);
-     for(size_t x = 0; x < dims[0]; ++x)
+    uint8_t* scanLine = image.scanLine(y);
+    for(size_t x = 0; x < dims[0]; ++x)
     {
       #if defined (CMP_WORDS_BIGENDIAN)
         #error

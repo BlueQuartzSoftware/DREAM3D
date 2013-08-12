@@ -87,6 +87,7 @@ namespace DREAM3D\
 
 
 class DREAM3DPluginFrame;
+class FilterManager;
 
 /**
  * @class DREAM3DPluginInterface DREAM3DPluginInterface.h IPHelper/plugins/DREAM3DPluginInterface.h
@@ -158,6 +159,11 @@ class DREAM3DPluginInterface
      * @brief Register all the filters with the FilterWidgetFactory
      */
     virtual void registerFilterWidgets() = 0;
+
+    /**
+     * @brief registerFilters Registers all the filters for this plugin
+     */
+    virtual void registerFilters(FilterManager* fm) = 0;
 
     /**
      * @brief Writes the settings in the input gui to the Application's preference file

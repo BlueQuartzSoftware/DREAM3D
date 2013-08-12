@@ -53,6 +53,7 @@ class QTreeWidgetItem;
 class QFilterWidget;
 class QMenu;
 class HelpDialog;
+class FilterManager;
 
 /**
  * @class PipelineBuilderWidget PipelineBuilderWidget.h PipelineBuilder/UI/PipelineBuilderWidget.h
@@ -68,7 +69,7 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     Q_OBJECT
 
   public:
-    PipelineBuilderWidget(QMenu* pipelineMenu, QWidget *parent = 0);
+    PipelineBuilderWidget(QMenu* pipelineMenu, FilterManager* fm, QWidget *parent = 0);
     virtual ~PipelineBuilderWidget();
 
     /**
@@ -200,6 +201,11 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
      */
     QLabel* createHyperlinkLabel(PipelineMessage msg);
 
+    /**
+     * @brief Reads the pipeline stored inside a dream3d file using the file's ID
+     */
+    int readPipelineFromFile(hid_t fileId);
+
   public slots:
     void openPipelineFile(const QString& filePath);
 
@@ -235,6 +241,9 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     void onFilterListCustomContextMenuRequested(const QPoint& pos);
 
     void clearMessagesTable();
+
+    void extractPipelineFromFile(const QString &filePath);
+    void addDREAM3DReaderFilter(const QString &filePath);
 
     virtual void addMessage(PipelineMessage msg);
     virtual void addProgressMessage(QString message);
@@ -274,6 +283,8 @@ class PipelineBuilderLib_EXPORT PipelineBuilderWidget : public DREAM3DPluginFram
     QMenu                       m_FilterMenu;
     QAction*                    m_actionFilterHelp;
     QPoint                      m_FilterListPosition;
+    FilterPipeline::Pointer     m_PipelineFromFile;
+    FilterManager*              m_FilterManager;
 
     PipelineBuilderWidget(const PipelineBuilderWidget&); // Copy Constructor Not Implemented
     void operator=(const PipelineBuilderWidget&); // Operator '=' Not Implemented

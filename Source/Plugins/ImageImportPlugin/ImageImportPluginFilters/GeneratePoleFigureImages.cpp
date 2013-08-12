@@ -188,24 +188,34 @@ void GeneratePoleFigureImages::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::readFilterParameters(AbstractFilterParametersReader* reader)
+void GeneratePoleFigureImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setImagePrefix( reader->readValue("ImagePrefix", getImagePrefix()));
+  setOutputPath( reader->readValue("OutputPath", getOutputPath()));
+  setCellEulerAnglesArrayName( reader->readValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName()));
+  setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
+  setLambertSize( reader->readValue("ImageSize", getLambertSize()));
+  setLambertSize( reader->readValue("LambertSize", getLambertSize()));
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
+  writer->openFilterGroup(this, index);
   writer->writeValue("ImagePrefix", getImagePrefix() );
   writer->writeValue("OutputPath", getOutputPath() );
   writer->writeValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName() );
   writer->writeValue("ImageFormat", getImageFormat() );
   writer->writeValue("ImageSize", getImageSize() );
-  writer->writeValue("LabertSize", getLambertSize() );
+  writer->writeValue("LambertSize", getLambertSize() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

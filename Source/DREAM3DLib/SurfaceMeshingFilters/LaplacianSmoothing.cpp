@@ -257,16 +257,28 @@ void LaplacianSmoothing::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader)
+void LaplacianSmoothing::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setIterationSteps( reader->readValue("IterationSteps", getIterationSteps()) );
+  setLambda( reader->readValue("Lambda", getLambda()) );
+  setTripleLineLambda( reader->readValue("TripleLineLambda", getTripleLineLambda()) );
+  setQuadPointLambda( reader->readValue("QuadPointLambda", getQuadPointLambda()) );
+  setSurfacePointLambda( reader->readValue("SurfacePointLambda", getSurfacePointLambda()) );
+  setSurfaceTripleLineLambda( reader->readValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda()) );
+  setSurfaceQuadPointLambda( reader->readValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
@@ -277,6 +289,8 @@ void LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("SurfacePointLambda", getSurfacePointLambda());
   writer->writeValue("SurfaceTripleLineLambda", getSurfaceTripleLineLambda());
   writer->writeValue("SurfaceQuadPointLambda", getSurfaceQuadPointLambda());
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

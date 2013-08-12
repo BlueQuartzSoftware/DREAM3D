@@ -71,13 +71,13 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
 	virtual void setupFilterParameters();
-	virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
+	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void preflight();
 	virtual void execute();

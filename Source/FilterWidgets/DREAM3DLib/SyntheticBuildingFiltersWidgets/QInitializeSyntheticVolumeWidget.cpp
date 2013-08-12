@@ -76,6 +76,7 @@ QFilterWidget(parent)
   setupUi(this);
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -98,10 +99,35 @@ QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
+void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  InitializeSyntheticVolume* filter = InitializeSyntheticVolume::SafeObjectDownCast<AbstractFilter*, InitializeSyntheticVolume*>(filt);
+  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_XPoints->setValue( filter->getXVoxels() );
+  m_YPoints->setValue( filter->getYVoxels() );
+  m_ZPoints->setValue( filter->getZVoxels() );
+  m_XResolution->setValue( filter->getXRes() );
+  m_YResolution->setValue( filter->getYRes() );
+  m_ZResolution->setValue( filter->getZRes() );
+
+  std::vector<uint32_t> shapeTypes = filter->getShapeTypes();
+  int count = shapeTypes.size();
+  for (int i=0; i < count; ++i)
+  {
+    QComboBox* cb = new QComboBox(this);
+    cb->setItemData(cb->currentIndex(), shapeTypes[i+1], Qt::UserRole);
+    m_ShapeTypeCombos.push_back(cb);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool defaultValues)
 {
   // Update the filter with the latest values from the GUI
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
+  if (defaultValues == true) { return filter; }
 
   filter->setInputFile(m_InputFile->text().toStdString());
   filter->setXVoxels(m_XPoints->value());
@@ -112,15 +138,13 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter()
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  DataArray<unsigned int>::Pointer shapeTypes =
-                  DataArray<unsigned int>::CreateArray(count+1, DREAM3D::EnsembleData::ShapeTypes);
-  shapeTypes->SetValue(0, DREAM3D::ShapeType::UnknownShapeType);
+  std::vector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
    QComboBox* cb = m_ShapeTypeCombos.at(i);
    unsigned int sType = static_cast<unsigned int>(cb->itemData(cb->currentIndex(), Qt::UserRole).toUInt(&ok));
-   shapeTypes->SetValue(i+1, sType);
+   shapeTypes[i+1]= sType;
   }
   filter->setShapeTypes(shapeTypes);
 

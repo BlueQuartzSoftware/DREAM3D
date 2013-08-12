@@ -65,7 +65,7 @@ void ThresholdExample::setupFilterParameters()
 
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
     parameter->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
@@ -74,7 +74,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Field Arrays to Threshold");
     parameter->setPropertyName("FieldComparisonInputs");
     parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
@@ -83,7 +83,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
     parameter->setPropertyName("EnsembleComparisonInputs");
     parameter->setWidgetType(FilterParameter::EnsembleArrayComparisonSelectionWidget);
@@ -92,7 +92,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
     parameter->setWidgetType(FilterParameter::PointArrayComparisonSelectionWidget);
@@ -101,7 +101,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
     parameter->setPropertyName("FaceComparisonInputs");
     parameter->setWidgetType(FilterParameter::FaceArrayComparisonSelectionWidget);
@@ -110,7 +110,7 @@ void ThresholdExample::setupFilterParameters()
   }
   /* To Compare Arrays like a threshold filter */
   {
-    FilterParameter::Pointer parameter = FilterParameter::New();
+    ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
     parameter->setPropertyName("EdgeComparisonInputs");
     parameter->setWidgetType(FilterParameter::EdgeArrayComparisonSelectionWidget);
@@ -124,17 +124,27 @@ void ThresholdExample::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* reader)
+void ThresholdExample::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+
+  reader->openFilterGroup(this, index);
+  setCellComparisonInputs(reader->readValue("CellComparisonInputs", getCellComparisonInputs()));
+  setFieldComparisonInputs(reader->readValue("FieldComparisonInputs", getFieldComparisonInputs()));
+  setEnsembleComparisonInputs(reader->readValue("EnsembleComparisonInputs", getEnsembleComparisonInputs()));
+  setPointComparisonInputs(reader->readValue("PointComparisonInputs", getPointComparisonInputs()));
+  setFaceComparisonInputs(reader->readValue("FaceComparisonInputs", getFaceComparisonInputs()));
+  setEdgeComparisonInputs(reader->readValue("EdgeComparisonInputs", getEdgeComparisonInputs()));
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
- /* Place code that will write the inputs values into a file. reference the
+  writer->openFilterGroup(this, index);
+  /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
 
   /* --- CellArrayComparisonSelectionWidget --- */
@@ -154,9 +164,9 @@ void ThresholdExample::writeFilterParameters(AbstractFilterParametersWriter* wri
 
   /* --- EdgeArrayComparisonSelectionWidget --- */
   writer->writeValue("EdgeComparisonInputs", getEdgeComparisonInputs() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
-
-
 
 // -----------------------------------------------------------------------------
 //

@@ -645,64 +645,64 @@ void testCase4()
 template<typename T, size_t N>
 void testCase5_Execute(const std::string &name, int scalarType)
 {
-	int dataArraySize = ARRAY_SIZE * N;
-	int junkArraySize = 10;
-	int skipHeaderBytes = junkArraySize * sizeof(T);
-	int err = 0;
-	std::cout << "Testing case 5: " << name << " with num comps " << N << std::endl;
+  int dataArraySize = ARRAY_SIZE * N;
+  int junkArraySize = 10;
+  int skipHeaderBytes = junkArraySize * sizeof(T);
+  int err = 0;
+  std::cout << "Testing case 5: " << name << " with num comps " << N << std::endl;
 
-	// Allocate an array, and get the dataArray from that array
-	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
-	T* dataArray = array.get();
+  // Allocate an array, and get the dataArray from that array
+  boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
+  T* dataArray = array.get();
 
-	// Write some data into the data array
-	for(size_t i = 0; i < dataArraySize; ++i)
-	{
-		dataArray[i] = static_cast<T>(i);
-	}
+  // Write some data into the data array
+  for(size_t i = 0; i < dataArraySize; ++i)
+  {
+    dataArray[i] = static_cast<T>(i);
+  }
 
-	// Create junkArray
-	T* junkArray = new T[junkArraySize];
+  // Create junkArray
+  T* junkArray = new T[junkArraySize];
 
-	// Write a pattern into junkArray
-	for(size_t i = 0; i < junkArraySize; ++i)
-	{
-		junkArray[i] = (unsigned)0xAB;
-	}
+  // Write a pattern into junkArray
+  for(size_t i = 0; i < junkArraySize; ++i)
+  {
+    junkArray[i] = (unsigned)0xAB;
+  }
 
 
-	// Create the file and write to it.  If any of the information is wrong, the result will be false
-	bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Both);
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
+  bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Both);
 
-	// Test to make sure that the file was created and written to successfully
-	DREAM3D_REQUIRED(result, ==, true)
+  // Test to make sure that the file was created and written to successfully
+  DREAM3D_REQUIRED(result, ==, true)
 
     // Create the data container
     VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
-	// Create the filter, passing in the skipHeaderBytes
-	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-	filt->setVoxelDataContainer(m.get());
+  // Create the filter, passing in the skipHeaderBytes
+  RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
+  filt->setVoxelDataContainer(m.get());
 
-	// Preflight, get error condition, and check that there are no errors
-	filt->preflight();
-	err = filt->getErrorCondition();
-	DREAM3D_REQUIRED(err, >=, 0)
+  // Preflight, get error condition, and check that there are no errors
+  filt->preflight();
+  err = filt->getErrorCondition();
+  DREAM3D_REQUIRED(err, >=, 0)
 
-	// Execute, get error condition, check that there are no errors, and compare the data
-	filt->execute();
-	err = filt->getErrorCondition();
-	DREAM3D_REQUIRED(err, >=, 0)
+  // Execute, get error condition, check that there are no errors, and compare the data
+  filt->execute();
+  err = filt->getErrorCondition();
+  DREAM3D_REQUIRED(err, >=, 0)
 
-	IDataArray::Pointer iData = m->getCellData("Test_Array");
-	T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
-	T d, p;
-	for(size_t i = 0; i < dataArraySize; ++i)
-	{
-		d = data[i];
-		p = dataArray[i];
-		DREAM3D_REQUIRE_EQUAL(d, p)
-	}
+  IDataArray::Pointer iData = m->getCellData("Test_Array");
+  T* data = reinterpret_cast<T*>(iData->GetVoidPointer(0));
+  T d, p;
+  for(size_t i = 0; i < dataArraySize; ++i)
+  {
+    d = data[i];
+    p = dataArray[i];
+    DREAM3D_REQUIRE_EQUAL(d, p)
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -711,9 +711,9 @@ void testCase5_Execute(const std::string &name, int scalarType)
 template<typename T>
 void testCase5_TestPrimitives(const std::string &name, int scalarType)
 {
-	testCase5_Execute<T, 1>(name, scalarType);
-	testCase5_Execute<T, 2>(name, scalarType);
-	testCase5_Execute<T, 3>(name, scalarType);
+  testCase5_Execute<T, 1>(name, scalarType);
+  testCase5_Execute<T, 2>(name, scalarType);
+  testCase5_Execute<T, 3>(name, scalarType);
 }
 
 // -----------------------------------------------------------------------------
@@ -721,25 +721,25 @@ void testCase5_TestPrimitives(const std::string &name, int scalarType)
 // -----------------------------------------------------------------------------
 void testCase5()
 {
-	// Make sure any directory path is also available as the user may have just typed
-	// in a path without actually creating the full path
-	if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
-	{
-		std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
-		return;
-	}
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  {
+    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    return;
+  }
 
 
-	testCase5_TestPrimitives<int8_t>("int8_t", Detail::Int8);
-	testCase5_TestPrimitives<uint8_t>("uint8_t", Detail::UInt8);
-	testCase5_TestPrimitives<int16_t>("int16_t", Detail::Int16);
-	testCase5_TestPrimitives<uint16_t>("uint16_t", Detail::UInt16);
-	testCase5_TestPrimitives<int32_t>("int32_t", Detail::Int32);
-	testCase5_TestPrimitives<uint32_t>("uint32_t", Detail::UInt32);
-	testCase5_TestPrimitives<int64_t>("int64_t", Detail::Int64);
-	testCase5_TestPrimitives<uint64_t>("uint64_t", Detail::UInt64);
-	testCase5_TestPrimitives<float>("float", Detail::Float);
-	testCase5_TestPrimitives<double>("double", Detail::Double);
+  testCase5_TestPrimitives<int8_t>("int8_t", Detail::Int8);
+  testCase5_TestPrimitives<uint8_t>("uint8_t", Detail::UInt8);
+  testCase5_TestPrimitives<int16_t>("int16_t", Detail::Int16);
+  testCase5_TestPrimitives<uint16_t>("uint16_t", Detail::UInt16);
+  testCase5_TestPrimitives<int32_t>("int32_t", Detail::Int32);
+  testCase5_TestPrimitives<uint32_t>("uint32_t", Detail::UInt32);
+  testCase5_TestPrimitives<int64_t>("int64_t", Detail::Int64);
+  testCase5_TestPrimitives<uint64_t>("uint64_t", Detail::UInt64);
+  testCase5_TestPrimitives<float>("float", Detail::Float);
+  testCase5_TestPrimitives<double>("double", Detail::Double);
 }
 
 // -----------------------------------------------------------------------------
@@ -749,54 +749,54 @@ void testCase5()
 template<typename T, size_t N>
 void testCase6_Execute(const std::string &name, int scalarType)
 {
-	int dataArraySize = 0;
-	int junkArraySize = ARRAY_SIZE * N;
-	int skipHeaderBytes = junkArraySize * sizeof(T);
-	int err = 0;
-	std::cout << "Testing case 6: " << name << " with num comps " << N << std::endl;
+  int dataArraySize = 0;
+  int junkArraySize = ARRAY_SIZE * N;
+  int skipHeaderBytes = junkArraySize * sizeof(T);
+  int err = 0;
+  std::cout << "Testing case 6: " << name << " with num comps " << N << std::endl;
 
-	// Allocate an array, and get the dataArray from that array
-	boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
-	T* dataArray = array.get();
+  // Allocate an array, and get the dataArray from that array
+  boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
+  T* dataArray = array.get();
 
-	// Write some data into the data array
-	for(size_t i = 0; i < dataArraySize; ++i)
-	{
-		dataArray[i] = static_cast<T>(i);
-	}
+  // Write some data into the data array
+  for(size_t i = 0; i < dataArraySize; ++i)
+  {
+    dataArray[i] = static_cast<T>(i);
+  }
 
-	// Create junkArray
-	T* junkArray = new T[junkArraySize];
+  // Create junkArray
+  T* junkArray = new T[junkArraySize];
 
-	// Write a pattern into junkArray
-	for(size_t i = 0; i < junkArraySize; ++i)
-	{
-		junkArray[i] = (unsigned)0xAB;
-	}
+  // Write a pattern into junkArray
+  for(size_t i = 0; i < junkArraySize; ++i)
+  {
+    junkArray[i] = (unsigned)0xAB;
+  }
 
 
-	// Create the file and write to it.  If any of the information is wrong, the result will be false
-	bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
+  // Create the file and write to it.  If any of the information is wrong, the result will be false
+  bool result = createAndWriteToFile(dataArray, dataArraySize, junkArray, junkArraySize, Detail::Start);
 
-	// Test to make sure that the file was created and written to successfully
-	DREAM3D_REQUIRED(result, ==, true)
+  // Test to make sure that the file was created and written to successfully
+  DREAM3D_REQUIRED(result, ==, true)
 
-	// Create the data container
-	VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  // Create the data container
+  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
 
-	// Create the filter, passing in the skipHeaderBytes
-	RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-	filt->setVoxelDataContainer(m.get());
+  // Create the filter, passing in the skipHeaderBytes
+  RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
+  filt->setVoxelDataContainer(m.get());
 
-	// Preflight, get error condition, and check that the "file too small" error has occurred
-	filt->preflight();
-	err = filt->getErrorCondition();
-	DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
+  // Preflight, get error condition, and check that the "file too small" error has occurred
+  filt->preflight();
+  err = filt->getErrorCondition();
+  DREAM3D_REQUIRED(err, ==, RBRT_FILE_TOO_SMALL)
 
-	// Execute, get error condition, and check that there are errors
-	filt->execute();
-	err = filt->getErrorCondition();
-	DREAM3D_REQUIRED(err, <, 0)
+  // Execute, get error condition, and check that there are errors
+  filt->execute();
+  err = filt->getErrorCondition();
+  DREAM3D_REQUIRED(err, <, 0)
 }
 
 // -----------------------------------------------------------------------------
@@ -805,9 +805,9 @@ void testCase6_Execute(const std::string &name, int scalarType)
 template<typename T>
 void testCase6_TestPrimitives(const std::string &name, int scalarType)
 {
-	testCase6_Execute<T, 1>(name, scalarType);
-	testCase6_Execute<T, 2>(name, scalarType);
-	testCase6_Execute<T, 3>(name, scalarType);
+  testCase6_Execute<T, 1>(name, scalarType);
+  testCase6_Execute<T, 2>(name, scalarType);
+  testCase6_Execute<T, 3>(name, scalarType);
 }
 
 // -----------------------------------------------------------------------------
@@ -815,25 +815,25 @@ void testCase6_TestPrimitives(const std::string &name, int scalarType)
 // -----------------------------------------------------------------------------
 void testCase6()
 {
-	// Make sure any directory path is also available as the user may have just typed
-	// in a path without actually creating the full path
-	if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
-	{
-		std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
-		return;
-	}
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  {
+    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    return;
+  }
 
 
-	testCase6_TestPrimitives<int8_t>("int8_t", Detail::Int8);
-	testCase6_TestPrimitives<uint8_t>("uint8_t", Detail::UInt8);
-	testCase6_TestPrimitives<int16_t>("int16_t", Detail::Int16);
-	testCase6_TestPrimitives<uint16_t>("uint16_t", Detail::UInt16);
-	testCase6_TestPrimitives<int32_t>("int32_t", Detail::Int32);
-	testCase6_TestPrimitives<uint32_t>("uint32_t", Detail::UInt32);
-	testCase6_TestPrimitives<int64_t>("int64_t", Detail::Int64);
-	testCase6_TestPrimitives<uint64_t>("uint64_t", Detail::UInt64);
-	testCase6_TestPrimitives<float>("float", Detail::Float);
-	testCase6_TestPrimitives<double>("double", Detail::Double);
+  testCase6_TestPrimitives<int8_t>("int8_t", Detail::Int8);
+  testCase6_TestPrimitives<uint8_t>("uint8_t", Detail::UInt8);
+  testCase6_TestPrimitives<int16_t>("int16_t", Detail::Int16);
+  testCase6_TestPrimitives<uint16_t>("uint16_t", Detail::UInt16);
+  testCase6_TestPrimitives<int32_t>("int32_t", Detail::Int32);
+  testCase6_TestPrimitives<uint32_t>("uint32_t", Detail::UInt32);
+  testCase6_TestPrimitives<int64_t>("int64_t", Detail::Int64);
+  testCase6_TestPrimitives<uint64_t>("uint64_t", Detail::UInt64);
+  testCase6_TestPrimitives<float>("float", Detail::Float);
+  testCase6_TestPrimitives<double>("double", Detail::Double);
 }
 
 // -----------------------------------------------------------------------------
@@ -842,12 +842,24 @@ void testCase6()
 int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
+
+
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
+
+
   DREAM3D_REGISTER_TEST( testCase1() )
   DREAM3D_REGISTER_TEST( testCase2() )
   DREAM3D_REGISTER_TEST( testCase3() )
   DREAM3D_REGISTER_TEST( testCase4() )
   DREAM3D_REGISTER_TEST( testCase5() )
   DREAM3D_REGISTER_TEST( testCase6() )
+
+#if REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
+
 
       PRINT_TEST_SUMMARY();
   return err;

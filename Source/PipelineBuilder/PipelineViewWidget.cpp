@@ -330,7 +330,7 @@ void PipelineViewWidget::preflightPipeline()
       fw->setHasPreflightWarnings(false);
       fw->preflightAboutToExecute(m, sm, solid);
 
-      AbstractFilter::Pointer filter = fw->getFilter();
+      AbstractFilter::Pointer filter = fw->getFilter(false);
 
       filter->setVoxelDataContainer(m.get());
       filter->setSurfaceMeshDataContainer(sm.get());

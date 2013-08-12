@@ -74,6 +74,7 @@ QFilterWidget(parent)
   setupUi(this);
   Hex2SqrConverter::Pointer filter = Hex2SqrConverter::New();
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
@@ -97,10 +98,30 @@ QString QHex2SqrConverterWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter()
+void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  Hex2SqrConverter* filter = Hex2SqrConverter::SafeObjectDownCast<AbstractFilter*, Hex2SqrConverter*>(filt);
+  m_ZStartIndex->setValue( filter->getZStartIndex() );
+  m_ZEndIndex->setValue( filter->getZEndIndex() );
+  std::stringstream ss;
+  ss << filter->getXResolution();
+  m_xSpacing->setText(QString::fromStdString(ss.str()));
+  ss.clear();
+  ss << filter->getYResolution();
+  m_ySpacing->setText(QString::fromStdString(ss.str()));
+  ss.clear();
+  setEbsdFileList( filter->getEbsdFileList() );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter(bool defaultValues)
 {
   bool ok = false;
   Hex2SqrConverter::Pointer filter =  Hex2SqrConverter::New();
+  if (defaultValues == true) { return filter; }
+
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setXResolution(m_xSpacing->text().toFloat(&ok));

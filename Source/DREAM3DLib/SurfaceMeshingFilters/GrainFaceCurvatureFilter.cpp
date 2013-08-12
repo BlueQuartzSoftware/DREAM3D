@@ -137,16 +137,26 @@ void GrainFaceCurvatureFilter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersReader* reader)
+void GrainFaceCurvatureFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setNRing( reader->readValue("NRing", getNRing()) );
+  setComputePrincipalDirectionVectors( reader->readValue("ComputePrincipalDirectionVectors", false) );
+  setComputeGaussianCurvature( reader->readValue("ComputeGaussianCurvature", false) );
+  setComputeMeanCurvature( reader->readValue("ComputeMeanCurvature", false) );
+  setUseNormalsForCurveFitting( reader->readValue("UseNormalsForCurveFitting", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
   writer->writeValue("NRing", getNRing() );
@@ -154,6 +164,8 @@ void GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWri
   writer->writeValue("ComputeGaussianCurvature", getComputeGaussianCurvature() );
   writer->writeValue("ComputeMeanCurvature", getComputeMeanCurvature() );
   writer->writeValue("UseNormalsForCurveFitting", getUseNormalsForCurveFitting() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

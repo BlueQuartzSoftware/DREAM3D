@@ -151,16 +151,29 @@ void CropVolume::setupFilterParameters()
   setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
-void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader)
+void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setXMin( reader->readValue("XMin", getXMin()) );
+  setYMin( reader->readValue("YMin", getYMin()) );
+  setZMin( reader->readValue("ZMin", getZMin()) );
+  setXMax( reader->readValue("XMax", getXMax()) );
+  setYMax( reader->readValue("YMax", getYMax()) );
+  setZMax( reader->readValue("ZMax", getZMax()) );
+  setRenumberGrains( reader->readValue("RenumberGrains", false) );
+  setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("XMin", getXMin() );
   writer->writeValue("YMin", getYMin() );
   writer->writeValue("ZMin", getZMin() );
@@ -168,6 +181,8 @@ void CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer)
   writer->writeValue("YMax", getYMax() );
   writer->writeValue("ZMax", getZMax() );
   writer->writeValue("RenumberGrains", getRenumberGrains() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

@@ -55,6 +55,7 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/FilterManager.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -96,6 +97,7 @@ DREAM3D_UI::DREAM3D_UI(QWidget *parent) :
   m_UpdateCheckThread(NULL)
 {
   m_OpenDialogLastDirectory = QDir::homePath();
+
   // Calls the Parent Class to do all the Widget Initialization that were created
   // using the QDesigner program
   setupUi(this);
@@ -359,16 +361,17 @@ void DREAM3D_UI::setupGui()
   m_HelpDialog = new HelpDialog(this);
   m_HelpDialog->setWindowModality(Qt::NonModal);
 
-  // Look for plugins
-  loadPlugins();
-
   // Register all of the Filters we know about - the rest will be loaded through plugins
   //  which all should have been loaded by now.
+  m_FilterManager = FilterManager::Instance();
+  m_FilterManager->RegisterKnownFilters(m_FilterManager.get());
+
   FilterWidgetsLib::RegisterKnownQFilterWidgets();
- // Q_INIT_RESOURCE(Generated_FilterDocs);
+  // Look for plugins
+  loadPlugins(m_FilterManager.get());
 
   // Now create our central widget
-  m_PipelineBuilderWidget = new PipelineBuilderWidget(this->menuPipeline, this);
+  m_PipelineBuilderWidget = new PipelineBuilderWidget(this->menuPipeline, m_FilterManager.get(), this);
   m_PipelineBuilderWidget->setStatusBar(this->statusBar());
   centerWidget->layout()->addWidget(m_PipelineBuilderWidget);
 
@@ -594,7 +597,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DREAM3D_UI::loadPlugins()
+void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
 //  std::cout << "DREAM3D_UI::loadPlugins" << std::endl;
 
@@ -688,6 +691,7 @@ void DREAM3D_UI::loadPlugins()
       {
         m_LoadedPlugins.push_back(ipPlugin);
         ipPlugin->registerFilterWidgets();
+        ipPlugin->registerFilters(fm);
       }
 
       m_PluginFileNames += fileName;
