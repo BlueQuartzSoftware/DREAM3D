@@ -196,7 +196,7 @@ void GeneratePoleFigureImages::readFilterParameters(AbstractFilterParametersRead
   setOutputPath( reader->readValue("OutputPath", getOutputPath()));
   setCellEulerAnglesArrayName( reader->readValue("CellEulerAnglesArrayName", getCellEulerAnglesArrayName()));
   setImageFormat( reader->readValue("ImageFormat", getImageFormat()));
-  setLambertSize( reader->readValue("ImageSize", getLambertSize()));
+  setImageSize( reader->readValue("ImageSize", getImageSize()));
   setLambertSize( reader->readValue("LambertSize", getLambertSize()));
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
