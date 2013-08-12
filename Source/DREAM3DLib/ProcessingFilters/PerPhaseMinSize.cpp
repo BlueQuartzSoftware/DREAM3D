@@ -102,18 +102,27 @@ void PerPhaseMinSize::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reader)
+void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMinAllowedGrainSize( reader->readValue("MinAllowedGrainSize", getMinAllowedGrainSize()) );
+  setPhaseNumber( reader->readValue("PhaseNumber", getPhaseNumber()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------
@@ -139,7 +148,7 @@ void PerPhaseMinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	m_Active[i] = true;
+  m_Active[i] = true;
     if(voxcounts[i] >= m_MinAllowedGrainSize || m_FieldPhases[i] != m_PhaseNumber) good = true;
   }
   if(good == false)
@@ -152,9 +161,9 @@ void PerPhaseMinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
-	{
-		m_GrainIds[i] = -1;
-		m_Active[gnum] = false;
-	}
+  {
+    m_GrainIds[i] = -1;
+    m_Active[gnum] = false;
+  }
   }
 }

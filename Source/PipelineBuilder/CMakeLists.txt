@@ -58,10 +58,11 @@ set(PipelineBuilderLib_HDRS
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionItemDelegate.h
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.h
-  ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
-  ${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
-  ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.h
-  ${PROJECT_SOURCE_DIR}/AxisAngleItemDelegate.h
+    ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.h
+    ${PROJECT_SOURCE_DIR}/AxisAngleWidget.h
+    ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.h
+    ${PROJECT_SOURCE_DIR}/AxisAngleItemDelegate.h
+    ${PROJECT_SOURCE_DIR}/DREAM3DFileDragMessageBox.h
 )
 
 set(PipelineBuilderLib_SRCS
@@ -73,9 +74,10 @@ set(PipelineBuilderLib_SRCS
     ${PROJECT_SOURCE_DIR}/ArraySelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionWidget.cpp
     ${PROJECT_SOURCE_DIR}/ComparisonSelectionTableModel.cpp
-  ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
-  ${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
-  ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.cpp
+    ${PROJECT_SOURCE_DIR}/PipelineTreeWidget.cpp
+    ${PROJECT_SOURCE_DIR}/AxisAngleWidget.cpp
+    ${PROJECT_SOURCE_DIR}/AxisAngleTableModel.cpp
+    ${PROJECT_SOURCE_DIR}/DREAM3DFileDragMessageBox.cpp
 )
 
 cmp_IDE_SOURCE_PROPERTIES("PipelineBuilderLib/" "${PipelineBuilderLib_HDRS}" "${PipelineBuilderLib_SRCS}" "0")
@@ -90,7 +92,8 @@ QT4_WRAP_UI( PipelineBuilderLib_Generated_UI_HDRS
             ${PROJECT_SOURCE_DIR}/UI_Files/ArraySelectionWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/AxisAngleWidget.ui
             ${PROJECT_SOURCE_DIR}/UI_Files/ComparisonSelectionWidget.ui
-      )
+            ${PROJECT_SOURCE_DIR}/UI_Files/DREAM3DFileDragMessageBox.ui
+)
 
 QT4_WRAP_CPP( PipelineBuilderLib_Generated_MOC_SRCS ${PipelineBuilderLib_HDRS} )
 #set_source_files_properties( ${PipelineBuilderLib_Generated_MOC_SRCS} PROPERTIES HEADER_FILE_ONLY TRUE)

@@ -112,21 +112,33 @@ void NodesTrianglesToVtk::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader)
+void NodesTrianglesToVtk::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setNodesFile( reader->readValue( "NodesFile", getNodesFile() ) );
+  setTrianglesFile( reader->readValue( "TrianglesFile", getTrianglesFile() ) );
+  setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
+  setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
+  setWriteConformalMesh( reader->readValue("WriteConformalMesh", getWriteConformalMesh()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("NodesFile", getNodesFile() );
   writer->writeValue("TrianglesFile", getTrianglesFile() );
   writer->writeValue("OutputVtkFile", getOutputVtkFile() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
   writer->writeValue("WriteConformalMesh", getWriteConformalMesh() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

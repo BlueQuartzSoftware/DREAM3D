@@ -53,7 +53,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     QReadH5EbsdWidget(QWidget* parent = NULL);
     virtual ~QReadH5EbsdWidget();
 
-    virtual AbstractFilter::Pointer getFilter();
+    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
     virtual void writeOptions(QSettings &prefs);
     virtual void readOptions(QSettings &prefs);
@@ -85,7 +85,7 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
     virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
 
     virtual void openHtmlHelpFile();
-
+    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
   public slots:
     void setInputFile(const QString &v);

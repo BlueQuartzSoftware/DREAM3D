@@ -126,20 +126,29 @@ void AlignSectionsMisorientation::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersReader* reader)
+void AlignSectionsMisorientation::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
+  setWriteAlignmentShifts( reader->readValue("WriteAlignmentShifts", getWriteAlignmentShifts()) );
+  setAlignmentShiftFileName( reader->readValue( "AlignmentShiftFileName", getAlignmentShiftFileName() ) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
-  AlignSections::writeFilterParameters(writer);
+  writer->openFilterGroup(this, index);
   writer->writeValue("MisorientationTolerance", getMisorientationTolerance() );
   writer->writeValue("WriteAlignmentShifts", getWriteAlignmentShifts());
   writer->writeValue("AlignmentShiftFileName", getAlignmentShiftFileName());
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

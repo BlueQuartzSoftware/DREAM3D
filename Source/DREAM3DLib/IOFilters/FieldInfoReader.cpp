@@ -56,7 +56,6 @@ FieldInfoReader::FieldInfoReader() :
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-  m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_InputFile(""),
   m_CreateCellLevelArrays(true),
   m_RenumberGrains(true),
@@ -115,19 +114,29 @@ void FieldInfoReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldInfoReader::readFilterParameters(AbstractFilterParametersReader* reader)
+void FieldInfoReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  /* Code to read the values goes between these statements */
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setInputFile( reader->readValue( "InputFile", getInputFile()) );
+  setCreateCellLevelArrays( reader->readValue("CreateCellLevelArrays", getCreateCellLevelArrays()) );
+  setRenumberGrains( reader->readValue("RenumberGrains", getRenumberGrains()) );
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int FieldInfoReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
   writer->writeValue("CreateCellLevelArrays", getCreateCellLevelArrays() );
   writer->writeValue("RenumberGrains", getRenumberGrains() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
 
 // -----------------------------------------------------------------------------

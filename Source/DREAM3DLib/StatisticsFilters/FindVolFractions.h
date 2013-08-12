@@ -64,20 +64,20 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(VolFractionsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Volume Fractions of Phases"; }
 
     /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
-    virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     virtual void execute();
     virtual void preflight();
@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT FindVolFractions : public AbstractFilter
 
     float* m_VolFractions;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindVolFractions(const FindVolFractions&); // Copy Constructor Not Implemented
     void operator=(const FindVolFractions&); // Operator '=' Not Implemented

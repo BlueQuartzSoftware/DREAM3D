@@ -177,5 +177,28 @@ class ChoiceFilterParameter : public FilterParameter
     void operator=(const ChoiceFilterParameter&); // Operator '=' Not Implemented
 };
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+class ComparisonFilterParameter : public FilterParameter
+{
+  public:
+    DREAM3D_SHARED_POINTERS(ComparisonFilterParameter)
+    DREAM3D_STATIC_NEW_MACRO(ComparisonFilterParameter)
+    DREAM3D_TYPE_MACRO_SUPER(ComparisonFilterParameter, FilterParameter)
+
+    virtual ~ComparisonFilterParameter(){}
+
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
+
+  protected:
+    ComparisonFilterParameter() :
+    m_ShowOperators(true) {}
+
+  private:
+    ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
+    void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
+};
 
 #endif /* _FilterParameter_H_ */

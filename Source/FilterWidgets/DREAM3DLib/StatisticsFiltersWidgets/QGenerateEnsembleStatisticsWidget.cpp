@@ -56,21 +56,8 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
   m_FilterGroup = QString::fromStdString(filter->getGroupName());
-  //Get the defaults from the filter and assign to the internal variables
-  /* Copy all the settings from this instance into the new instance */
-  calcSizeDistribution->setChecked(filter->getSizeDistribution());
-  m_SizeDistributionFitType->setCurrentIndex(filter->getSizeDistributionFitType());
-  calcAspectRatioDistribution->setChecked(filter->getAspectRatioDistribution());
-  m_AspectRatioDistributionFitType->setCurrentIndex(filter->getAspectRatioDistributionFitType());
-  calcOmega3Distribution->setChecked(filter->getOmega3Distribution());
-  m_Omega3DistributionFitType->setCurrentIndex(filter->getOmega3DistributionFitType());
-  calcNeighborhoodDistribution->setChecked(filter->getNeighborhoodDistribution());
-  m_NeighborhoodDistributionFitType->setCurrentIndex(filter->getNeighborhoodDistributionFitType());
-  calcODF->setChecked(filter->getCalculateODF());
-  calcMDF->setChecked(filter->getCalculateMDF());
-  calcAODF->setChecked(filter->getCalculateAxisODF());
-
   setupGui();
+  getGuiParametersFromFilter( filter.get() );
   setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
@@ -85,9 +72,48 @@ QGenerateEnsembleStatisticsWidget::~QGenerateEnsembleStatisticsWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
+void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilter* filt)
+{
+  GenerateEnsembleStatistics* filter = GenerateEnsembleStatistics::SafeObjectDownCast<AbstractFilter*, GenerateEnsembleStatistics*>(filt);
+
+  calcSizeDistribution->setChecked(filter->getSizeDistribution());
+  m_SizeDistributionFitType->setCurrentIndex(filter->getSizeDistributionFitType());
+  calcAspectRatioDistribution->setChecked(filter->getAspectRatioDistribution());
+  m_AspectRatioDistributionFitType->setCurrentIndex(filter->getAspectRatioDistributionFitType());
+  calcOmega3Distribution->setChecked(filter->getOmega3Distribution());
+  m_Omega3DistributionFitType->setCurrentIndex(filter->getOmega3DistributionFitType());
+  calcNeighborhoodDistribution->setChecked(filter->getNeighborhoodDistribution());
+  m_NeighborhoodDistributionFitType->setCurrentIndex(filter->getNeighborhoodDistributionFitType());
+  calcODF->setChecked(filter->getCalculateODF());
+  calcMDF->setChecked(filter->getCalculateMDF());
+  calcAODF->setChecked(filter->getCalculateAxisODF());
+  m_SizeCorrRes->setValue( filter->getSizeCorrelationResolution() );
+
+  std::vector<unsigned int> phaseTypes = filter->getPhaseTypeArray();
+  if (phaseTypes.empty() == true)
+  {
+    m_DefinePhaseTypes->setChecked(false);
+  }
+  else
+  {
+    int count = phaseTypes.size();
+    for (int i=0; i < count; ++i)
+    {
+      QComboBox* cb = new QComboBox(this);
+      cb->setCurrentIndex(phaseTypes[i]);
+      phaseTypeTableWidget->setCellWidget(i, 0, cb);
+    }
+    m_DefinePhaseTypes->setChecked(true);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaultValues)
 {
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
+  if (defaultValues == true) { return filter; }
 /* Copy all the settings from this instance into the new instance */
 
   filter->setSizeDistribution(calcSizeDistribution->isChecked());
@@ -103,7 +129,6 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter()
   filter->setCalculateAxisODF(calcAODF->isChecked());
   filter->setSizeCorrelationResolution(m_SizeCorrRes->value());
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
   // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
   if (m_DefinePhaseTypes->isChecked() == true)
   {

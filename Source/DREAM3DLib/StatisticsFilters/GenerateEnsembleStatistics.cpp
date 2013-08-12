@@ -111,17 +111,48 @@ GenerateEnsembleStatistics::~GenerateEnsembleStatistics()
 {
 }
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersReader* reader)
+void GenerateEnsembleStatistics::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
+  reader->openFilterGroup(this, index);
+  setSizeDistribution( reader->readValue("SizeDistribution", getSizeDistribution() ) );
+  setSizeDistributionFitType( reader->readValue("SizeDistributionFitType", getSizeDistributionFitType() ) );
+  setAspectRatioDistribution( reader->readValue("AspectRatioDistribution", getAspectRatioDistribution() ) );
+  setAspectRatioDistributionFitType( reader->readValue("AspectRatioDistributionFitType", getAspectRatioDistributionFitType() ) );
+  setOmega3Distribution( reader->readValue("Omega3Distribution", getOmega3Distribution() ) );
+  setOmega3DistributionFitType( reader->readValue("Omega3DistributionFitType", getOmega3DistributionFitType() ) );
+  setNeighborhoodDistribution( reader->readValue("NeighborhoodDistribution", getNeighborhoodDistribution() ) );
+  setNeighborhoodDistributionFitType( reader->readValue("NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType() ) );
+  setCalculateODF( reader->readValue("CalculateODF", getCalculateODF() ) );
+  setCalculateMDF( reader->readValue("CalculateMDF", getCalculateMDF() ) );
+  setCalculateAxisODF( reader->readValue("CalculateAxisODF", getCalculateAxisODF() ) );
+  setSizeCorrelationResolution( reader->readValue("SizeCorrelationResolution", getSizeCorrelationResolution() ) );
+  setPhaseTypeArray( reader->readValue("PhaseTypeArray", getPhaseTypeArray() ) );
+  reader->closeFilterGroup();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
+int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
+  writer->openFilterGroup(this, index);
+  writer->writeValue("SizeDistribution", getSizeDistribution() );
+  writer->writeValue("SizeDistributionFitType", getSizeDistributionFitType() );
+  writer->writeValue("AspectRatioDistribution", getAspectRatioDistribution() );
+  writer->writeValue("AspectRatioDistributionFitType", getAspectRatioDistributionFitType() );
+  writer->writeValue("Omega3Distribution", getOmega3Distribution() );
+  writer->writeValue("Omega3DistributionFitType", getOmega3DistributionFitType() );
+  writer->writeValue("NeighborhoodDistribution", getNeighborhoodDistribution() );
+  writer->writeValue("NeighborhoodDistributionFitType", getNeighborhoodDistributionFitType() );
+  writer->writeValue("CalculateODF", getCalculateODF() );
+  writer->writeValue("CalculateMDF", getCalculateMDF() );
+  writer->writeValue("CalculateAxisODF", getCalculateAxisODF() );
+  writer->writeValue("SizeCorrelationResolution", getSizeCorrelationResolution() );
+  writer->writeValue("PhaseTypeArray", getPhaseTypeArray() );
+  writer->closeFilterGroup();
+  return ++index; // we want to return the next index that was just written to
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

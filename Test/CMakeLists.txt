@@ -136,15 +136,6 @@ set_target_properties(EbsdTests PROPERTIES FOLDER Test)
 add_test(EbsdTests ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/EbsdTests)
 
 # --------------------------------------------------------------------------
-# FilterParametersRW Test
-# --------------------------------------------------------------------------
-add_executable(FilterParametersRWTest FilterParametersRWTest.cpp TestFilter.h TestFilter.cpp )
-target_link_libraries(FilterParametersRWTest DREAM3DLib)
-set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
-add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
-
-
-# --------------------------------------------------------------------------
 # H5Support Library Testing
 # --------------------------------------------------------------------------
 add_executable(H5LiteTest ${DREAM3DTest_SOURCE_DIR}/H5LiteTest.cpp)
@@ -221,7 +212,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
-  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+	set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
