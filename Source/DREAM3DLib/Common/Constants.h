@@ -102,7 +102,7 @@ namespace DREAM3D
     const std::string CellPhases("Phases");
     const std::string BandContrast("BandContrast");
     const std::string EulerAngles("EulerAngles");
-    const std::string CellEulerAngles("CellEulerAngles");
+ //   const std::string CellEulerAngles("CellEulerAngles");
     const std::string SurfaceVoxels("SurfaceVoxels");
     const std::string Quats("Quats");
     const std::string GoodVoxels("GoodVoxels");
@@ -139,7 +139,7 @@ namespace DREAM3D
     const std::string F7("F7");
     const std::string mPrime("mPrime");
     const std::string EulerAngles("EulerAngles");
-    const std::string FieldEulerAngles("FieldEulerAngles");
+  //  const std::string FieldEulerAngles("FieldEulerAngles");
     const std::string SurfaceVoxelFractions("SurfaceVoxelFractions");
     const std::string AxisEulerAngles("AxisEulerAngles");
     const std::string SurfaceFields("SurfaceFields");

@@ -50,7 +50,7 @@ GBCDTriangleDumper::GBCDTriangleDumper() :
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
   m_SurfaceMeshFaceAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::FieldEulerAngles),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_SurfaceMeshFaceAreas(NULL),
   m_SurfaceMeshFaceLabels(NULL),
   m_SurfaceMeshFaceNormals(NULL),
