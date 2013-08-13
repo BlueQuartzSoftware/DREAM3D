@@ -81,7 +81,7 @@
   /* addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named '" << NameSpace::DType::Name  << "' for this filter."\
+    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named 'm_" << #Name  << "' for this filter."\
     << "The preflight failed for one or more reasons. Check additional error messages for more details." << std::endl;\
     setErrorCondition(err##002);\
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
