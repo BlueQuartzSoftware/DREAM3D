@@ -49,9 +49,10 @@
 
 /**
  * @class GenerateIPFTriangle GenerateIPFTriangle.h /IOFilters/GenerateIPFTriangle.h
- * @brief
- * @author
- * @date
+ * @brief This filter generates the IPF Color Triangle legend used for IPF color maps from
+ * EBSD and other orientation data
+ * @author Mike Jackson
+ * @date Aug 12, 2013
  * @version 1.0
  */
 class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
