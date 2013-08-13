@@ -2,35 +2,33 @@ Generate IPF Color Triangle {#generateipftriangle}
 =====
 
 ## Group (Subgroup) ##
-Filter Group (Filter Subgroup)
+IO Filters (Output)
 
 
 ## Description ##
-This filter does the following...
+This filter will generate a standard Inverse Pole Figure color Triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
+
+Currently the only supported triangles are for Cubic (High) crystal symmetry.
 
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
-| Field Array Name | String |
+| Image Size | Pixels (This will be both the height and width of the image) |  
+|  Image Type | Tiff, PNG and BMP can be selected |  
+| Output File Name |  The path to the output file |
+
 
 ## Required Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
+None
 
 ## Created Arrays ##
 
-| Type | Default Array Name | Description | Comment |
-|------|--------------------|-------------|---------|
-| Int  | SomeName           | ....        | other   |
-
-
+None
 
 ## Authors ##
 
-**Copyright** 2012 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
+**Copyright** 2013 Michael A. Groeber (AFRL), 2012 Michael A. Jackson (BlueQuartz Software)
 
 **Contact Info** dream3d@bluequartz.net
 
