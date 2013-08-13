@@ -140,23 +140,6 @@ void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer v
   // Set the ItemDelegate for the table.
   QAbstractItemDelegate* aid = m_ComparisonSelectionTableModel->getItemDelegate();
   m_ComparisonSelectionTableView->setItemDelegate(aid);
-
-
-<<<<<<< HEAD
-
-=======
-  QVector<QString> arrayNames(count);
-  QVector<int>   compOperators(count);
-  QVector<float> compValues(count);
-  //bool ok = false;
-  for(int i = 0; i < count; ++i)
-  {
-    arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);
-    compOperators[i] = comparisons[i].compOperator;
-    compValues[i] = comparisons[i].compValue;
-  }
-  m_ComparisonSelectionTableModel->setTableData(arrayNames, compValues, compOperators);
->>>>>>> 7a75935... Making error messages more clear when DataArrays that are requested from the Data Container classes do not match type, size or number of components to the filter that is doing the requests.
 }
 
 

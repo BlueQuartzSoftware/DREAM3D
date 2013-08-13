@@ -67,15 +67,12 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-<<<<<<< HEAD
-=======
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
     /* Input Parameters */
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
->>>>>>> 7a75935... Making error messages more clear when DataArrays that are requested from the Data Container classes do not match type, size or number of components to the filter that is doing the requests.
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
@@ -87,7 +84,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
