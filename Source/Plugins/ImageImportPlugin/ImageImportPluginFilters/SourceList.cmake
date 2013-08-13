@@ -15,6 +15,7 @@ set(_PublicFilters
   ImportImageStack
   SaveImages
   GeneratePoleFigureImages
+  GenerateIPFTriangle
 )
 
 
