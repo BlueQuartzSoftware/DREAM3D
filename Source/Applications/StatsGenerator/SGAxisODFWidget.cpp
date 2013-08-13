@@ -66,6 +66,9 @@
 #include "StatsGenerator/TextureDialog.h"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "QtSupport/PoleFigureImageUtilities.h"
+
 #define SHOW_POLE_FIGURES 1
 #define COLOR_POLE_FIGURES 1
 
@@ -480,13 +483,6 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
   // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
-  QwtArray<float> x001;
-  QwtArray<float> y001;
-  QwtArray<float> x011;
-  QwtArray<float> y011;
-  QwtArray<float> x111;
-  QwtArray<float> y111;
-
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -509,134 +505,45 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   }
   size_t numEntries = e1s.size();
 
-  int npoints = 2500;
+  int npoints = 5000;
+  FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, 3, "Eulers");
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
-  x001.resize(npoints * 1);
-  y001.resize(npoints * 1);
-  x011.resize(npoints * 1);
-  y011.resize(npoints * 1);
-  x111.resize(npoints * 1);
-  y111.resize(npoints * 1);
 
   Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
                                         weights.data(), sigmas.data(), true,
                                         odf.data(), numEntries);
 
-  err = StatsGen::GenAxisODFPlotData(odf.data(), x001.data(), y001.data(), x011.data(), y011.data(), x111.data(), y111.data(), npoints);
+  err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+
+  DoubleArrayType::Pointer intensity100;
+  DoubleArrayType::Pointer intensity010;
+  DoubleArrayType::Pointer intensity001;
+  PoleFigureUtilities::GenerateOrthoPoleFigures(eulers.get(), 22, 226, intensity100, intensity010, intensity001);
+
+  QImage i100 = PoleFigureImageUtilities::CreateQImage(intensity100.get(), 226, 16, "A Axis", true);
+  QImage i010 = PoleFigureImageUtilities::CreateQImage(intensity010.get(), 226, 16, "B Axis", true);
+  QImage i001 = PoleFigureImageUtilities::CreateQImage(intensity001.get(), 226, 16, "C Axis", true);
+
+  m_001PF->setPixmap(QPixmap::fromImage(i100));
+  m_011PF->setPixmap(QPixmap::fromImage(i010));
+  m_111PF->setPixmap(QPixmap::fromImage(i001));
+
   if (err == 1)
   {
     //TODO: Present Error Message
     return;
   }
 
-#if SHOW_POLE_FIGURES
   // This is multi-threaded on appropriate hardware.
-  qint32 kRad[2] = {5, 5};
-  qint32 pfSize[2] = {226, 226};
-  QVector<PoleFigureData> data;
-  data.push_back(PoleFigureData(x001, y001, QString("A Axis"), kRad, pfSize));
-  data.push_back(PoleFigureData(x011, y011, QString("B Axis"), kRad, pfSize));
-  data.push_back(PoleFigureData(x111, y111, QString("C Axis"), kRad, pfSize));
-  // This kicks off the threads
-  m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
-
-#else
-  QwtArray<double> x001d(x001.size());
-  QwtArray<double> y001d(y001.size());
-  QwtArray<double> x011d(x011.size());
-  QwtArray<double> y011d(y011.size());
-  QwtArray<double> x111d(x111.size());
-  QwtArray<double> y111d(y111.size());
-  float minX = 1.0f;
-  float maxX = -1.0f;
-  float minY = 1.0f;
-  float maxY = -1.0f;
-  for(int i =0; i < x001.size(); ++i)
-  {
-    x001d[i] = x001[i];
-    y001d[i] = y001[i];
-    if (x001[i] < minX) { minX = x001[i];}
-    if (x001[i] > maxX) { maxX = x001[i];}
-    if (y001[i] < minY) { minY = y001[i];}
-    if (y001[i] > maxY) { maxY = y001[i];}
-  }
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-  for(int i =0; i < x011.size(); ++i)
-  {
-    x011d[i] = x011[i];
-    y011d[i] = y011[i];
-    if (x011[i] < minX) { minX = x011[i];}
-    if (x011[i] > maxX) { maxX = x011[i];}
-    if (y011[i] < minY) { minY = y011[i];}
-    if (y011[i] > maxY) { maxY = y011[i];}
-  }
-
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-
-  for(int i =0; i < x111.size(); ++i)
-  {
-    x111d[i] = x111[i];
-    y111d[i] = y111[i];
-    if (x111[i] < minX) { minX = x111[i];}
-    if (x111[i] > maxX) { maxX = x111[i];}
-    if (y111[i] < minY) { minY = y111[i];}
-    if (y111[i] > maxY) { maxY = y111[i];}
-  }
-  if (minX < -1 || minY < -1) {
-    std::cout << "Minx: " << minX << "  MinY: " << minY << std::endl;
-  }
-  if (maxX > 1.0 || maxY > 1.0f) {
-    std::cout << "maxX: " << maxX << "  maxY: " << maxY << std::endl;
-  }
-
-  //  QwtSymbol symbol;
-  //  symbol.setStyle(QwtSymbol::Ellipse);
-  //  symbol.setSize(1,1);
-
-  QwtPlotCurve* curve = m_PlotCurves[0];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x001d, y001d);
-#else
-  curve->setData(x001d, y001d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  curve->attach(m_ODF_001Plot);
-  //  curve->setSymbol(symbol);
-  m_ODF_001Plot->replot();
-
-  curve = m_PlotCurves[1];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x011d, y011d);
-#else
-  curve->setData(x011d, y011d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  // curve->setSymbol(symbol);
-  curve->attach(m_ODF_011Plot);
-  m_ODF_011Plot->replot();
-
-  curve = m_PlotCurves[2];
-#if QWT_VERSION >= 0x060000
-  curve->setSamples(x111d, y111d);
-#else
-  curve->setData(x111d, y111d);
-#endif
-  curve->setStyle(QwtPlotCurve::Dots);
-  // curve->setSymbol(symbol);
-  curve->attach(m_ODF_111Plot);
-  m_ODF_111Plot->replot();
-#endif
+  //qint32 kRad[2] = {5, 5};
+  //qint32 pfSize[2] = {226, 226};
+  //QVector<PoleFigureData> data;
+  //data.push_back(PoleFigureData(x001, y001, QString("A Axis"), kRad, pfSize));
+  //data.push_back(PoleFigureData(x011, y011, QString("B Axis"), kRad, pfSize));
+  //data.push_back(PoleFigureData(x111, y111, QString("C Axis"), kRad, pfSize));
+  //// This kicks off the threads
+  //m_PoleFigureFuture->setFuture(QtConcurrent::mapped(data, generateAxisODFPoleFigure));
 }
 
 // -----------------------------------------------------------------------------

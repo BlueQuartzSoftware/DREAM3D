@@ -204,7 +204,7 @@ void OrientationMath::HomochorictoRod(float &r1, float &r2, float &r3)
   double sum = 0.0;
   for(int i = 0; i < 7; ++i)
   {
-     sum = sum + c[i] * pow(hmag, 2*i);
+     sum = sum + c[i] * pow(hmag, 2*(i+1));
   }
   w = (1.0+sum);
   float const1 = sqrt(1.0-(w*w))/w;
