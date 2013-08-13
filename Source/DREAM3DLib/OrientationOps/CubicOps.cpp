@@ -1123,15 +1123,18 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   // Sort the cd array from smallest to largest
   _TripletSort(cd[0], cd[1], cd[2], cd);
 
-  float theta = (cd[0] * 0) + (cd[1] * -DREAM3D::Constants::k_HalfSqrt2) + (cd[2] * DREAM3D::Constants::k_HalfSqrt2);
-  theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
-  _rgb[0] = (90.0f - theta) / 45.0f;
+  float redDir[3] = {0,0,1};
+  float theta1 = MatrixMath::DotProduct(cd, redDir);
+  theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
   d[0] = (cd[1] * 1) - (cd[2] * 0);
   d[1] = (cd[2] * 0) - (cd[0] * 1);
   d[2] = (cd[0] * 0) - (cd[1] * 0);
   d[0] = -(d[1] + d[2]) / d[0];
   d[1] = 1;
   d[2] = 1;
+  float theta2 = MatrixMath::DotProduct(d, redDir);
+  theta2 = (DREAM3D::Constants::k_RadToDeg) * acos(theta2);
+  _rgb[0] = (theta2-theta1)/theta2;
   float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
   d[0] = d[0] / norm;
   d[1] = d[1] / norm;
@@ -1147,6 +1150,9 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
+  //_rgb[0] = (0.6f * _rgb[0]) + 0.40f;
+  //_rgb[1] = (0.6f * _rgb[1]) + 0.40f;
+  //_rgb[2] = (0.6f * _rgb[2]) + 0.40f;
 
   // Multiply by 255 to get an R/G/B value
   _rgb[0] = _rgb[0] * 255.0f;
