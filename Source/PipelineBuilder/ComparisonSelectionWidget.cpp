@@ -182,7 +182,7 @@ void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> co
   QVector<QString> arrayNames(count);
   QVector<int>   compOperators(count);
   QVector<float> compValues(count);
-  bool ok = false;
+  //bool ok = false;
   for(int i = 0; i < count; ++i)
   {
     arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);

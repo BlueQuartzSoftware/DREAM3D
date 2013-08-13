@@ -62,19 +62,16 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
 
     virtual ~FieldInfoReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
-
-    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-
+    /* Input Parameters */
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
