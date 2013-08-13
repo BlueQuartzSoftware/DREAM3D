@@ -346,7 +346,7 @@ void GenerateIPFTriangle::findColor(float x, float y, float z, unsigned char* rg
 void GenerateIPFTriangle::generateCubicTriangle()
 {
   notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
-  QImage image(m_ImageSize, m_ImageSize, QImage::QImage::Format_ARGB32_Premultiplied);
+  QImage image(m_ImageSize, m_ImageSize, QImage::Format_ARGB32_Premultiplied);
 
   float indexConst1 = 0.414 / m_ImageSize;
   float indexConst2 = 0.207 / m_ImageSize;

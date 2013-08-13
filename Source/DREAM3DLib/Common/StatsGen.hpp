@@ -367,20 +367,16 @@ class StatsGen
      * @param size The number of points for the Scatter Plot
      */
     template<typename T>
-    static int GenAxisODFPlotData(T* odf, T* xA, T* yA, T* xB, T* yB, T* xC, T* yC, int npoints)
+    static int GenAxisODFPlotData(T* odf, T* eulers, int npoints)
     {
-
       DREAM3D_RANDOMNG_NEW()
           int err = 0;
       int choose;
       float ea1, ea2, ea3;
-      QuatF q1;
-      float g[3][3];
-      float x, y, z;
-      float xpf, ypf;
       float totaldensity;
       float random, density;
       OrthoRhombicOps ops;
+
       float td1;
       for (int i = 0; i < npoints; i++)
       {
@@ -392,48 +388,16 @@ class StatsGen
           density = odf[j];
           td1 = totaldensity;
           totaldensity = totaldensity + density;
-          if (random < totaldensity && random >= td1) { choose = static_cast<int> (j); break; }
+          if (random < totaldensity && random >= td1)
+          {
+            choose = static_cast<int> (j);
+            break;
+          }
         }
         ops.determineEulerAngles(choose, ea1, ea2, ea3);
-        OrientationMath::EulertoQuat(q1, ea1, ea2, ea3);
-        ops.getFZQuat(q1);
-        g[0][0] = (1 - 2 * q1.y * q1.y - 2 * q1.z * q1.z);
-        g[1][0] = (2 * q1.x * q1.y + 2 * q1.z * q1.w);
-        g[2][0] = (2 * q1.x * q1.z - 2 * q1.y * q1.w);
-
-        g[0][1] = (2 * q1.x * q1.y - 2 * q1.z * q1.w);
-        g[1][1] = (1 - 2 * q1.x * q1.x - 2 * q1.z * q1.z);
-        g[2][1] = (2 * q1.y * q1.z + 2 * q1.x * q1.w);
-
-        g[0][2] = (2 * q1.x * q1.z + 2 * q1.y * q1.w);
-        g[1][2] = (2 * q1.y * q1.z - 2 * q1.x * q1.w);
-        g[2][2] = (1 - 2 * q1.x * q1.x - 2 * q1.y * q1.y);
-
-        x = g[0][0];
-        y = g[1][0];
-        z = g[2][0];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        //  random = rg.Random();
-        xA[1 * i] = xpf;
-        yA[1 * i] = ypf;
-        x = g[0][1];
-        y = g[1][1];
-        z = g[2][1];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        xB[1 * i] = xpf;
-        yB[1 * i] = ypf;
-        x = g[0][2];
-        y = g[1][2];
-        z = g[2][2];
-        if (z < 0) x = -x, y = -y, z = -z;
-        xpf = y - (y * (z / (z + 1)));
-        ypf = x - (x * (z / (z + 1)));
-        xC[1 * i] = xpf;
-        yC[1 * i] = ypf;
+        eulers[3*i+0] = ea1;
+        eulers[3*i+1] = ea2;
+        eulers[3*i+2] = ea3;
       }
       return err;
     }

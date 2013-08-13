@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 
 
@@ -243,7 +244,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
   float sphereRadius = 1.0f;
 
   // Generate the coords on the sphere
-  HexagonalOps ops;
+  OrthoRhombicOps ops;
   ops.generateSphereCoordsFromEulers(eulers, xyz100.get(), xyz010.get(), xyz001.get());
 #if WRITE_XYZ_SPHERE_COORD_VTK
   writeVtkFile(xyz100.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_100.vtk");

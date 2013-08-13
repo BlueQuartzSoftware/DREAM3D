@@ -162,10 +162,6 @@ float OrthoRhombicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, f
 void OrthoRhombicOps::getQuatSymOp(int i, QuatF &q)
 {
   QuaternionMathF::Copy(OrthoQuatSym[i], q);
-  //  q.x = OrthoQuatSym[i][0];
-  //  q.y = OrthoQuatSym[i][1];
-  //  q.z = OrthoQuatSym[i][2];
-  //  q.w = OrthoQuatSym[i][3];
 
 }
 
@@ -203,12 +199,6 @@ void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 
   _calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
   OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
-
-  FZn1 = fabs(n1);
-  FZn2 = fabs(n2);
-  FZn3 = fabs(n3);
-
-  OrientationMath::AxisAngletoRod(w, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
 void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)

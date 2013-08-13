@@ -633,7 +633,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     DoubleArrayType::Pointer intensity100;
     DoubleArrayType::Pointer intensity010;
     DoubleArrayType::Pointer intensity001;
-    PoleFigureUtilities::GenerateHexPoleFigures(eulers.get(), 22, 226, intensity001, intensity010, intensity001);
+    PoleFigureUtilities::GenerateOrthoPoleFigures(eulers.get(), 22, 226, intensity100, intensity010, intensity001);
 
     QImage i100 = PoleFigureImageUtilities::CreateQImage(intensity100.get(), 226, 16, "001", true);
     QImage i010 = PoleFigureImageUtilities::CreateQImage(intensity010.get(), 226, 16, "010", true);
