@@ -57,6 +57,7 @@
 #include "MXA/MXA.h"
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -132,7 +133,8 @@ void GenerateIPFTriangle::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("ColorCorrectionFactor");
-    option->setHumanLabel("Color Correction Factor (0<1)");
+    option->setHumanLabel("Color Correction Factor");
+    option->setUnits("0 <= x < 1");
     option->setWidgetType(FilterParameter::DoubleWidget);
     option->setValueType("float");
     parameters.push_back(option);
@@ -184,7 +186,13 @@ void GenerateIPFTriangle::dataCheck(bool preflight, size_t voxels, size_t fields
   if (m_OutputFile.empty() == true)
   {
     setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "Output File is Not set correctly", getErrorCondition());
+  }
+
+  if (MXAFileInfo::isDirectory(m_OutputFile) == true)
+  {
+    setErrorCondition(-1004);
+    addErrorMessage(getHumanLabel(), "The path for the output file is a directory. Please specify an output file and not a directory.", getErrorCondition());
   }
 
 }
