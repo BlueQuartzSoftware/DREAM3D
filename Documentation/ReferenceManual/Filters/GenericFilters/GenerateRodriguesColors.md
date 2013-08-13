@@ -1,4 +1,5 @@
 Generate Rodrigues Colors {#generaterodriguescolors}
+=============
 
 ## Group (Subgroup) ##
 Generic Filters (Misc)
