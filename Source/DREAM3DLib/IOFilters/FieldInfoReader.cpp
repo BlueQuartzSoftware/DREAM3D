@@ -50,13 +50,14 @@
 // -----------------------------------------------------------------------------
 FieldInfoReader::FieldInfoReader() :
   FileReader(),
-  m_InputFile(""),
-  m_CreateCellLevelArrays(true),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_InputFile(""),
+  m_CreateCellLevelArrays(true),
+  m_RenumberGrains(true),
   m_GrainIds(NULL),
   m_CellPhases(NULL),
   m_CellEulerAngles(NULL),
