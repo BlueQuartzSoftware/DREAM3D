@@ -221,8 +221,10 @@ if (numComp != iDataArray->GetNumberOfComponents()) {\
 }\
   gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == gi) {\
+    typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
     std::stringstream s;\
-    s << " -  Array '" << arrayName << "' stored in the DataContainer could not be cast to correct type. For example selecting an array with floating point values for an array that needs integer values";\
+    s << " - The filter requested an array named '" << arrayName << " ' with type " << dat->getTypeAsString() << " from the " << getNameOfClass() << std::endl;\
+    s << "An Array with name '" << arrayName << "' is stored in the " << getNameOfClass() << " but is of type " << iDataArray->getTypeAsString() << std::endl;\
     if (NULL != obv) {obv->setErrorCondition(-502);\
     obv->addErrorMessage(obv->getHumanLabel(), s.str(), -502);}\
     return gi;\

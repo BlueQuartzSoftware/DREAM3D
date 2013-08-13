@@ -62,16 +62,20 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
 
     virtual ~FieldInfoReader();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
-    DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
-
-    //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+<<<<<<< HEAD
+=======
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+
+    /* Input Parameters */
+    DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
+>>>>>>> 7a75935... Making error messages more clear when DataArrays that are requested from the Data Container classes do not match type, size or number of components to the filter that is doing the requests.
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
