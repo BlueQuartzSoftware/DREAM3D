@@ -57,7 +57,7 @@ GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
   m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::FieldEulerAngles),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
   m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
