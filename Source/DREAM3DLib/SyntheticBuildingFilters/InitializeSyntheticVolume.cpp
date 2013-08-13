@@ -160,7 +160,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
-
+  m->setOrigin(0.0, 0.0, 0.0);
 }
 
 // -----------------------------------------------------------------------------

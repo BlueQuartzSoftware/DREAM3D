@@ -101,20 +101,18 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
   protected:
     MinSize();
 
-    virtual void remove_smallgrains();
-    virtual void assign_badpoints();
-
-
-  private:
     int32_t* m_Neighbors;
 
     int32_t* m_GrainIds;
     bool* m_Active;
 
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
+    std::vector<std::vector<int> > voxellists;
+    std::vector<int> nuclei;
 
+    virtual void remove_smallgrains();
+    virtual void assign_badpoints();
 
+  private:
     MinSize(const MinSize&); // Copy Constructor Not Implemented
     void operator=(const MinSize&); // Operator '=' Not Implemented
 };

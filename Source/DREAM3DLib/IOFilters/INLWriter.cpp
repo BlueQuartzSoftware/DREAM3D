@@ -160,10 +160,6 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     addErrorMessage(getHumanLabel(), ss, -1111);
     setErrorCondition(-1111);
   }
-  //  else
-  //  {
-  //    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
-  //  }
 
 
 }
@@ -275,11 +271,11 @@ int INLWriter::writeFile()
     return -1;
   }
   uint32_t symmetry = 0;
-  int32_t count = static_cast<int32_t>(materialNamePtr->GetNumberOfTuples());
+  int32_t count = static_cast<int32_t>(materialNamePtr->getNumberOfTuples());
   for(int32_t i = 1; i < count; ++i)
   {
-    std::string matName = materialNames->GetValue(i);
-    fprintf(f, "# Phase_%d: %s\r\n", i, matName.c_str());
+    QString matName = materialNames->GetValue(i);
+    fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%lu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
