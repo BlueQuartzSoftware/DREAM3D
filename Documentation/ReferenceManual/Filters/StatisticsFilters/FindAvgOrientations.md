@@ -41,10 +41,10 @@ Voxel
 
 ## Created Arrays ##
 
-| Type | Default Name | Comment |  |
-|------|--------------|---------|--|
-| Field | AvgQuats | Five (5) values (floats) defining the average orientation of the **Field** in quaternion representation | |
-| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each **Field** in Bunge convention (Z-X-Z) | The first value is a dummy value, so each **Field** has quat = {dummy, q1, q2, q3, q4} - where q1, q2, and q3 contain the axis information and q4 contains the angle information of the quaternion |
+| Type | Default Name | Comment |
+|------|--------------|---------|
+| Field | AvgQuats | Four (4) values (floats) defining the average orientation of the **Field** in quaternion representation  (<x,y,z>, w)|
+| Field | FieldEulerAngles | Three (3) angles (floats) defining the orientation of each **Field** in Bunge convention (Z-X-Z) |
 
 ## Authors ##
 
