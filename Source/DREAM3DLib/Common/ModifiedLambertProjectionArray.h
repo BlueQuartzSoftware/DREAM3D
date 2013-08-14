@@ -34,32 +34,28 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSDATAARRAY_H_
-#define _STATSDATAARRAY_H_
+#ifndef _ModifiedLambertProjectionArray_H_
+#define _ModifiedLambertProjectionArray_H_
 
 #include <string>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/TransformationStatsData.h"
-#include "DREAM3DLib/Common/BoundaryStatsData.h"
-#include "DREAM3DLib/Common/MatrixStatsData.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+
 
 /*
  *
  */
-class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
+class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
 {
   public:
-    DREAM3D_SHARED_POINTERS(StatsDataArray)
-    DREAM3D_STATIC_NEW_MACRO(StatsDataArray)
-    DREAM3D_TYPE_MACRO_SUPER(StatsDataArray, IDataArray)
+    DREAM3D_SHARED_POINTERS(ModifiedLambertProjectionArray)
+    DREAM3D_STATIC_NEW_MACRO(ModifiedLambertProjectionArray)
+    DREAM3D_TYPE_MACRO_SUPER(ModifiedLambertProjectionArray, IDataArray)
 
-    virtual ~StatsDataArray();
+    virtual ~ModifiedLambertProjectionArray();
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -76,14 +72,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return "StatsDataArray"; }
+    virtual std::string getTypeAsString() { return "ModifiedLambertProjectionArray"; }
 
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<StatsData::Pointer>, StatsDataArray)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
     {
-      return StatsDataArray::New();
+      return ModifiedLambertProjectionArray::New();
     }
 
     /**
@@ -100,71 +96,65 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     void clearAll()
     {
-      m_StatsDataArray.clear();
+      m_ModifiedLambertProjectionArray.clear();
     }
 
     /**
      *
      */
-    void setStatsData(int index, StatsData::Pointer statsData)
+    void setModifiedLambertProjection(int index, ModifiedLambertProjection::Pointer ModifiedLambertProjection)
     {
-      if(index >= static_cast<int>(m_StatsDataArray.size()))
+      if(index >= static_cast<int>(m_ModifiedLambertProjectionArray.size()))
       {
-        size_t old = m_StatsDataArray.size();
-        m_StatsDataArray.resize(index + 1);
+        size_t old = m_ModifiedLambertProjectionArray.size();
+        m_ModifiedLambertProjectionArray.resize(index + 1);
         // Initialize with zero length Vectors
-        for (size_t i = old; i < m_StatsDataArray.size(); ++i)
+        for (size_t i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
         {
-          m_StatsDataArray[i] = StatsData::New();
+          m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
         }
       }
-      m_StatsDataArray[index] = statsData;
+      m_ModifiedLambertProjectionArray[index] = ModifiedLambertProjection;
     }
 
     /**
     *
     */
-    void fillArrayWithNewStatsData(size_t n, unsigned int* phase_types)
+    void fillArrayWithNewModifiedLambertProjection(size_t n)
     {
-      m_StatsDataArray.resize(n);
+      m_ModifiedLambertProjectionArray.resize(n);
       for (size_t i = 0; i < n; ++i)
       {
-          if (m_StatsDataArray[i].get() == NULL && phase_types != NULL)
+          if (m_ModifiedLambertProjectionArray[i].get() == NULL)
           {
-        if(phase_types[i] == DREAM3D::PhaseType::PrimaryPhase) m_StatsDataArray[i] = PrimaryStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::PrecipitatePhase) m_StatsDataArray[i] = PrecipitateStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::TransformationPhase) m_StatsDataArray[i] = TransformationStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::BoundaryPhase) m_StatsDataArray[i] = BoundaryStatsData::New();
-        else if(phase_types[i] == DREAM3D::PhaseType::MatrixPhase) m_StatsDataArray[i] = MatrixStatsData::New();
-        else m_StatsDataArray[i] = StatsData::New();
+            m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
           }
-      if(phase_types == NULL) m_StatsDataArray[i] = StatsData::New();
       }
     }
 
     /**
      *
      */
-    StatsData::Pointer getStatsData(int idx)
+    ModifiedLambertProjection::Pointer getModifiedLambertProjection(int idx)
     {
 #ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0u)
+      if(m_ModifiedLambertProjectionArray.size() > 0u)
       {
-        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+        BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
       }
 #endif
-      return m_StatsDataArray[idx];
+      return m_ModifiedLambertProjectionArray[idx];
     }
 
-    StatsData::Pointer operator[](int idx)
+    ModifiedLambertProjection::Pointer operator[](int idx)
     {
 #ifndef NDEBUG
-      if(m_StatsDataArray.size() > 0u)
+      if(m_ModifiedLambertProjectionArray.size() > 0u)
       {
-        BOOST_ASSERT(idx < static_cast<int>(m_StatsDataArray.size()));
+        BOOST_ASSERT(idx < static_cast<int>(m_ModifiedLambertProjectionArray.size()));
       }
 #endif
-      return m_StatsDataArray[idx];
+      return m_ModifiedLambertProjectionArray[idx];
     }
 
     /* **************** This is the interface for the IDataArray Class which MUST
@@ -289,14 +279,14 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     }
 
   protected:
-    StatsDataArray();
+    ModifiedLambertProjectionArray();
 
   private:
     std::string m_Name;
     bool m_IsAllocated;
 
-    StatsDataArray(const StatsDataArray&); // Copy Constructor Not Implemented
-    void operator=(const StatsDataArray&); // Operator '=' Not Implemented
+    ModifiedLambertProjectionArray(const ModifiedLambertProjectionArray&); // Copy Constructor Not Implemented
+    void operator=(const ModifiedLambertProjectionArray&); // Operator '=' Not Implemented
 };
 
-#endif /* _STATSDATAARRAY_H_ */
+#endif /* _ModifiedLambertProjectionArray_H_ */

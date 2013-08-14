@@ -208,14 +208,6 @@ void OrthoRhombicOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(OrthoQuatSym, numsym, q1, q2);
 }
 
-void OrthoRhombicOps::getFZQuat(QuatF &qr)
-{
-  int numsym = 4;
-
-  _calcQuatNearestOrigin(OrthoQuatSym, numsym, qr);
-
-}
-
 int OrthoRhombicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];

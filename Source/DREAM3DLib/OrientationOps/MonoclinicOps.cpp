@@ -197,13 +197,6 @@ void MonoclinicOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(MonoclinicQuatSym, numsym, q1, q2);
 }
 
-void MonoclinicOps::getFZQuat(QuatF &qr)
-{
-  int numsym = 2;
-
-  _calcQuatNearestOrigin(MonoclinicQuatSym, numsym, qr);
-}
-
 int MonoclinicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];

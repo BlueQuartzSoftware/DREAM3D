@@ -211,14 +211,6 @@ void TetragonalLowOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(TetraQuatSym, numsym, q1, q2);
 }
 
-void TetragonalLowOps::getFZQuat(QuatF &qr)
-{
-  int numsym = 8;
-
-  _calcQuatNearestOrigin(TetraQuatSym, numsym, qr);
-
-}
-
 int TetragonalLowOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
