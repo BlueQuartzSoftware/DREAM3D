@@ -357,6 +357,7 @@ void CropVolume::execute()
   int m_ZP = ( (m_ZMax - m_ZMin)+1 );
 
   int col, row, plane;
+  int colold, rowold, planeold;
   int index;
   int index_old;
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
@@ -365,15 +366,18 @@ void CropVolume::execute()
     std::stringstream ss;
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
+    planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
+    plane = (i * m_XP * m_YP);
     for (int j = 0; j < m_YP; j++)
     {
+      rowold = (j + m_YMin)*m->getXPoints();
+      row = (j*m_XP);
       for (int k = 0; k < m_XP; k++)
       {
-        col = k + m_XMin;
-        row = j + m_YMin;
-        plane = i + m_ZMin;
-        index_old = (plane * m->getXPoints() * m->getYPoints()) + (row * m->getXPoints()) + col;
-        index = ( (i * m_XP * m_YP) + (j * m_XP) + k );
+        colold = (k + m_XMin);
+        col = k;
+        index_old = planeold + rowold + colold;
+        index = plane + row + col;
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           std::string name = *iter;
