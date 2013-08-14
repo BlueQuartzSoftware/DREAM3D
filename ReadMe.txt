@@ -15,8 +15,13 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 **Note: This pipeline will OVERWRITE the existing DREAM3D File if both the input and output files are the same file.**
 
-## Version 4.2 Bugs Fixed & Features Added ##
+### Version 4.2.97 ###
 
++ Fixed bug where the "Generate Ensemble Statistics" could not execute due to an error in the internal naming of variables.
++ Updated the documentation for the "Find Average Orientations" filter
++ Clarifying an error message that is produced when a filter requests an array from the Data Container but the array stored in the Data container does not match type and/or size and/or number of components.
+
+## Version 4.2 Bugs Fixed & Features Added ##
 
 + Adding filters for volume fraction and surface area to volume ratio
 + Fix bug in ScalarSegmentGrains where boolean arrays are not segmented correctly
