@@ -38,6 +38,8 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 namespace Detail
 {
@@ -1165,6 +1167,9 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CubicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
 {
   float range1 = 2.0f*CubicDim1InitValue;
@@ -1187,3 +1192,71 @@ void CubicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned cha
   rgb[2] = static_cast<unsigned char> (blue);
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(FloatArrayType* eulers, int poleFigureDimension, int lambertDimension, int numColors)
+{
+  std::vector<UInt8ArrayType::Pointer> poleFigures;
+
+  int numOrientations = eulers->GetNumberOfTuples();
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for CUBIC ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 6, 3, "Cubic_<001>_xyzCoords");
+  // this is size for CUBIC ONLY, <011> Family
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 12, 3, "Cubic_<011>_xyzCoords");
+  // this is size for CUBIC ONLY, <111> Family
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 8, 3, "Cubic_<111>_xyzCoords");
+
+
+  float sphereRadius = 1.0f;
+
+  // Generate the coords on the sphere
+  generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
+#if WRITE_XYZ_SPHERE_COORD_VTK
+  writeVtkFile(xyz001.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_001.vtk");
+  writeVtkFile(xyz011.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_011.vtk");
+  writeVtkFile(xyz111.get(), "c:/Users/GroebeMA/Desktop/Sphere_XYZ_FROM_EULER_111.vtk");
+#endif
+  // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
+
+  // Now create the intensity image that will become the actual Pole figure image
+  {
+    DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity001->SetName("PoleFigure_<001>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), poleFigureDimension, poleFigureDimension, numColors, "Cubic PoleFigure <001>");
+    poleFigures.push_back(image);
+  }
+
+#if WRITE_LAMBERT_SQUARES
+  size_t dims[3] = {lambert->getDimension(), lambert->getDimension(), 1 };
+  float res[3] = {lambert->getStepSize(), lambert->getStepSize(), lambert->getStepSize() };
+  DoubleArrayType::Pointer north = lambert->getNorthSquare();
+  DoubleArrayType::Pointer south = lambert->getSouthSquare();
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_North.vtk", north.get(), dims, res, "double", true);
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/ModifiedLambert_South.vtk", south.get(), dims, res, "double", true);
+#endif
+
+  // Generate the <011> pole figure which will generate a new set of Lambert Squares
+  {
+    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), lambertDimension, sphereRadius);
+    DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity011->SetName("PoleFigure_<011>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), poleFigureDimension, poleFigureDimension, numColors, "Cubic PoleFigure <011>");
+    poleFigures.push_back(image);
+  }
+  // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  {
+    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), lambertDimension, sphereRadius);
+    DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity111->SetName("PoleFigure_<111>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), poleFigureDimension, poleFigureDimension, numColors, "Cubic PoleFigure <111>");
+    poleFigures.push_back(image);
+  }
+
+  return poleFigures;
+}

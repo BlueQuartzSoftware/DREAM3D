@@ -67,7 +67,19 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
+
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
@@ -331,7 +343,7 @@ void GeneratePoleFigureImages::execute()
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 3, "Eulers_Per_Phase");
     subEulers->initializeWithValues(-1);
     float* eu = subEulers->GetPointer(0);
-  //  std::cout << count << std::endl;
+    //  std::cout << count << std::endl;
 
     // Now loop through the eulers again and this time add them to the subEulers Array
     count = 0;
@@ -345,20 +357,51 @@ void GeneratePoleFigureImages::execute()
           eu[count*3+1] = m_CellEulerAngles[i*3+1];
           eu[count*3+2] = m_CellEulerAngles[i*3+2];
 
-      //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
+          //    std::cout << eu[count*3] << " " << eu[count*3+1] << " " << eu[count*3+2] << std::endl;
 
           count++;
         }
       }
     }
+    if (subEulers->GetNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
+    switch(m_CrystalStructures[phase])
+    {
+      case Ebsd::CrystalStructure::Cubic_High:
+        generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Cubic_Low:
+        //generateCubicLowPoleFigures(subEulers.get());
+        break;
+      case Ebsd::CrystalStructure::Hexagonal_High:
+        generateHexHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Hexagonal_Low:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Trigonal_High:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Trigonal_Low:
+        // generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Tetragonal_High:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Tetragonal_Low:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::OrthoRhombic:
+        generateOrthorhombicPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Monoclinic:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      case Ebsd::CrystalStructure::Triclinic:
+        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        break;
+      default:
+        break;
 
-    if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[phase])
-    {
-      generateCubicPoleFigures(subEulers.get());
-    }
-    else if (Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[phase])
-    {
-      generateHexPoleFigures(subEulers.get());
     }
 
 
@@ -369,94 +412,138 @@ void GeneratePoleFigureImages::execute()
   notifyStatusMessage("Complete");
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateCubicPoleFigures(FloatArrayType* eulers)
+void GeneratePoleFigureImages::generateCubicHighPoleFigures(FloatArrayType* eulers, int phaseIndex)
 {
   notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
+  CubicOps ops;
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(eulers, getImageSize(), getLambertSize(), getNumColors());
 
-  DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure011 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure111 = DoubleArrayType::NullPointer();
-  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure001, poleFigure011, poleFigure111);
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), "Cubic High <001>", true);
+    // Generate the <001> pole figure
+    //QString path = generateVtkPath("001");
+    //writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+    QString label("001_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), "Cubic High <011>", true);
+    // Generate the <011> pole figure image
+    //  path = generateVtkPath("011");
+    //  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
+    QString label("011_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 
-  // Generate the <001> pole figure
-  QString path = generateVtkPath("001");
-  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure001.get(), getImageSize(), "001");
-
-
-  // Generate the <011> pole figure image
-  path = generateVtkPath("011");
-  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure011.get(), getImageSize(), "011");
-
-  // Generate the <111> pole figure image
-  path = generateVtkPath("111");
-  writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure111.get(), getImageSize(), "111");
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), "Cubic High <111>", true);
+    // Generate the <111> pole figure image
+    //path = generateVtkPath("111");
+    //writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
+    QString label("111_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateHexPoleFigures(FloatArrayType* eulers)
+void GeneratePoleFigureImages::generateHexHighPoleFigures(FloatArrayType* eulers, int phaseIndex)
 {
   notifyStatusMessage("Generating Hex Based Pole Figures for <0001>, <1010> & <1120>");
 
-  DoubleArrayType::Pointer poleFigure0001 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure1010 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure1120 = DoubleArrayType::NullPointer();
-  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure0001, poleFigure1010, poleFigure1120);
+  HexagonalOps ops;
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(eulers, getImageSize(), getLambertSize(), getNumColors());
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), "Hexagonal High <0001>", true);
+    // Generate the <0001> pole figure
+    //  QString path = generateVtkPath("0001");
+    //  writeVtkFile(path.toStdString(), poleFigure0001.get(), getImageSize());
+    QString label("0001_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
+
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), "Hexagonal High <1010>", true);
+    // Generate the <1010> pole figure image
+    //  path = generateVtkPath("1010");
+    //  writeVtkFile(path.toStdString(), poleFigure1010.get(), getImageSize());
+    QString label("1010_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
+
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), "Hexagonal High <1120>", true);
+    // Generate the <111> pole figure image
+    //  path = generateVtkPath("1120");
+    //  writeVtkFile(path.toStdString(), poleFigure1120.get(), getImageSize());
+    QString label("1120_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 
 
-  // Generate the <0001> pole figure
-  QString path = generateVtkPath("0001");
-  writeVtkFile(path.toStdString(), poleFigure0001.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure0001.get(), getImageSize(), "0001");
-
-
-  // Generate the <1010> pole figure image
-  path = generateVtkPath("1010");
-  writeVtkFile(path.toStdString(), poleFigure1010.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure1010.get(), getImageSize(), "1010");
-
-  // Generate the <1120> pole figure image
-  path = generateVtkPath("1120");
-  writeVtkFile(path.toStdString(), poleFigure1120.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure1120.get(), getImageSize(), "1120");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateOrthoPoleFigures(FloatArrayType* eulers)
+void GeneratePoleFigureImages::generateOrthorhombicPoleFigures(FloatArrayType* eulers, int phaseIndex)
 {
-  notifyStatusMessage("Generating Hex Based Pole Figures for <100>, <010> & <001>");
+  notifyStatusMessage("Generating Orthorhombic Based Pole Figures for <100>, <010> & <001>");
 
-  DoubleArrayType::Pointer poleFigure100 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure010 = DoubleArrayType::NullPointer();
-  DoubleArrayType::Pointer poleFigure001 = DoubleArrayType::NullPointer();
-  PoleFigureUtilities::GenerateCubicPoleFigures(eulers, getLambertSize(), getImageSize(), poleFigure100, poleFigure010, poleFigure001);
+  OrthoRhombicOps ops;
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(eulers, getImageSize(), getLambertSize(), getNumColors());
 
-  // Generate the <100> pole figure image
-  QString path = generateVtkPath("100");
-  writeVtkFile(path.toStdString(), poleFigure100.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure100.get(), getImageSize(), "100");
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), "Cubic High <001>", true);
+    // Generate the <001> pole figure
+    //QString path = generateVtkPath("001");
+    //writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
+    QString label("001_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 
-  // Generate the <010> pole figure image
-  path = generateVtkPath("010");
-  writeVtkFile(path.toStdString(), poleFigure010.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure010.get(), getImageSize(), "010");
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), "Cubic High <011>", true);
+    // Generate the <011> pole figure image
+    //  path = generateVtkPath("011");
+    //  writeVtkFile(path.toStdString(), poleFigure011.get(), getImageSize());
+    QString label("011_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 
-  // Generate the <001> pole figure
-  path = generateVtkPath("001");
-  writeVtkFile(path.toStdString(), poleFigure001.get(), getImageSize());
-  writeImage(m_OutputPath, poleFigure001.get(), getImageSize(), "001");
+  {
+    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), "Cubic High <111>", true);
+    // Generate the <111> pole figure image
+    //path = generateVtkPath("111");
+    //writeVtkFile(path.toStdString(), poleFigure111.get(), getImageSize());
+    QString label("111_");
+    label.append("Phase_").append(QString::number(phaseIndex));
+    writeImage(m_OutputPath, image, getImageSize(), label);
+  }
 }
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -505,13 +592,11 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeImage(const std::string outputPath, DoubleArrayType *intensity, int dimension, QString label)
+void GeneratePoleFigureImages::writeImage(const std::string outputPath, QImage image, int dimension, QString label)
 {
   std::stringstream ss;
-  ss << "Writing Image " << intensity->GetName();
+  ss << "Writing Image " << outputPath;
   notifyStatusMessage(ss.str());
-
-  QImage image = PoleFigureImageUtilities::CreateQImage(intensity, dimension, getNumColors(), label, true);
 
   QString filename = generateImagePath(label);
   bool saved = image.save(filename);
