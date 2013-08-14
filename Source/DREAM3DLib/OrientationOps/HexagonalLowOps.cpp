@@ -38,7 +38,8 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
-
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 
 namespace Detail {
@@ -1054,6 +1055,9 @@ void HexagonalLowOps::generateIPFColor(double phi1, double phi, double phi2, dou
   rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
 {
   float range1 = 2.0f*HexDim1InitValue;
@@ -1079,4 +1083,59 @@ void HexagonalLowOps::generateRodriguesColor(float r1, float r2, float r3, unsig
   rgb[0] = static_cast<unsigned char> (red);
   rgb[1] = static_cast<unsigned char> (green);
   rgb[2] = static_cast<unsigned char> (blue);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(FloatArrayType* eulers, int poleFigureDimension, int lambertDimension, int numColors)
+{
+  std::vector<UInt8ArrayType::Pointer> poleFigures;
+
+  int numOrientations = eulers->GetNumberOfTuples();
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for CUBIC ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 2, 3, "HexLow_<0001>_xyzCoords");
+  // this is size for CUBIC ONLY, <011> Family
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 6, 3, "HexLow_<1010>_xyzCoords");
+  // this is size for CUBIC ONLY, <111> Family
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 6, 3, "HexLow_<1120>_xyzCoords");
+
+
+  float sphereRadius = 1.0f;
+
+  // Generate the coords on the sphere
+  generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
+
+  // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
+
+  // Now create the intensity image that will become the actual Pole figure image
+  {
+    DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity001->SetName("PoleFigure_<001>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), poleFigureDimension, poleFigureDimension, numColors, "Hex Low PoleFigure <0001>");
+    poleFigures.push_back(image);
+  }
+
+  // Generate the <011> pole figure which will generate a new set of Lambert Squares
+  {
+    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), lambertDimension, sphereRadius);
+    DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity011->SetName("PoleFigure_<011>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), poleFigureDimension, poleFigureDimension, numColors, "Hex Low PoleFigure <1010>");
+    poleFigures.push_back(image);
+  }
+  // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  {
+    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), lambertDimension, sphereRadius);
+    DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(poleFigureDimension);
+    intensity111->SetName("PoleFigure_<111>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), poleFigureDimension, poleFigureDimension, numColors, "Hex Low PoleFigure <1120>");
+    poleFigures.push_back(image);
+  }
+
+  return poleFigures;
 }

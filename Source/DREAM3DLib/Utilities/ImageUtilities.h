@@ -33,60 +33,31 @@
  *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-#include <QtCore/QVector>
-#include <QtCore/QDir>
-
-#include <QtGui/QApplication>
-#include <QtGui/QImage>
-
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/EbsdConstants.h"
-
+#ifndef _ImageUtilites_H_
+#define _ImageUtilites_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
-#define PFTEST_NO_QOBJECT 1
-
-#include "QtSupport/PoleFigureImageUtilities.h"
-
-#include "TestFileLocations.h"
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void poleFigureGenerationComplete()
+/**
+ * @class ImageUtilities ImageUtilities.h /Utilities/ImageUtilities.h
+ * @brief This class has functions that help create and manipulate images.
+ * @author Mike Jackson for BlueQuartz Software
+ * @date Aug 13 2013
+ * @version 1.0
+ */
+class DREAM3DLib_EXPORT ImageUtilities
 {
-  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
-}
+public:
+  ImageUtilities();
+  virtual ~ImageUtilities();
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s,
-                             QVector<float> weights, QVector<float> sigmas, QString prefix)
-{
+  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const std::string &name);
 
-  return EXIT_SUCCESS;
-}
+private:
+  ImageUtilities(const ImageUtilities&); // Copy Constructor Not Implemented
+  void operator=(const ImageUtilities&); // Operator '=' Not Implemented
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
-{
+  };
 
-  QApplication app(argc, argv);
-
-  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
-  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
-
-
-
-  return EXIT_SUCCESS;
-}
+#endif /* _ImageUtilites_H_ */

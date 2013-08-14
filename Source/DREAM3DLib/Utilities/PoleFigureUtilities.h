@@ -55,7 +55,7 @@ public:
   PoleFigureUtilities();
   virtual ~PoleFigureUtilities();
 
-
+#if 0
   /**
    * @brief GenerateCubicPoleFigures
    * @param eulers
@@ -69,7 +69,7 @@ public:
                                               DoubleArrayType::Pointer &intensity001,
                                               DoubleArrayType::Pointer &intensity011,
                                               DoubleArrayType::Pointer &intensity111);
-
+#endif
   /**
    * @brief GenerateHexPoleFigures
    * @param eulers

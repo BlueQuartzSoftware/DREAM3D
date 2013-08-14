@@ -43,6 +43,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -147,6 +148,7 @@ int PoleFigureImageUtilities::countPixelNeighbors(int imageWidth, int imageHeigh
   return counts[targetIndex];
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -284,100 +286,12 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
   return PoleFigureImageUtilities::PaintOverlay(config.imageSize[0], config.imageSize[1], config.label, image);
 
 }
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QImage PoleFigureImageUtilities::CreateQImage(DoubleArrayType *poleFigurePtr, int imageDimension, int nColors, QString label, bool includeOverlay)
-{
-  size_t npoints = poleFigurePtr->GetNumberOfTuples();
-  double max = std::numeric_limits<double>::min();
-  double min = std::numeric_limits<double>::max();
-  double value = 0.0;
-  for(size_t i = 0; i < npoints; ++i)
-  {
-    value = poleFigurePtr->GetValue(i);
-    if (value < 0) {continue;}
-    if (value > max) { max = value;}
-    if (value < min) { min = value;}
-  }
-
-  //std::cout << "Min: " << min << "   Max: " << max << std::endl;
-
-  int xpoints = imageDimension;
-  int ypoints = imageDimension;
-
-  int xpointshalf = xpoints / 2;
-  int ypointshalf = ypoints / 2;
-
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
-  float xtmp, ytmp;
-
-  //if (max < 14) { max = 14; }
-  QImage image (xpoints, ypoints, QImage::Format_ARGB32_Premultiplied);
-  image.fill(0);
-  // qint32 numColors = max + 1;
-  qint32 numColors = nColors + 1;
-  // qint32 colorRange = getNumColors();
-
-  QVector<QColor> colorTable(numColors);
-  //qint32 range = max - min;
-
-  float r, g, b;
-  for (int i = 0; i < nColors; i++)
-  {
-    //int val = min + ((float)i / numColors) * range;
-    //int val = ((float)i / (float)numColors) * colorRange;
-    ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
-    colorTable[i] = QColor(r*255, g*255, b*255, 255);
-  }
-  // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[nColors] = QColor(255, 255, 255, 255);
-
-  //*********************** NOTE ************************************
-  // In the below loop over the Pole Figure Image we are swapping the
-  // X & Y coordinates when we place the RGBA value into the image. This
-  // is because for some reason the data is rotated 90 degrees. Since
-  // the image is square we can easily do this swap and effectively
-  // rotate the image 90 degrees.
-  for (int64_t y = 0; y < ypoints; y++)
-  {
-    for (int64_t x = 0; x < xpoints; x++)
-    {
-      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
-      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
-      if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
-      {
-        qint32 cindex = qint32(poleFigurePtr->GetValue(y * xpoints + x));
-        qint32 colorIndex = (cindex-min) / (max - min) * nColors;
-        image.setPixel(x, y, colorTable[colorIndex].rgba());
-      }
-      else // Outside the Circle - Set pixel to White
-      {
-        image.setPixel(x, y, colorTable[nColors].rgba());
-      }
-    }
-  }
-
-  // Flip the image so the (-1, -1) is in the lower left
-  image = image.mirrored(false, true);
-
-  QString imageLabel = "<" + label + ">";
-  if(includeOverlay == true)
-  {
-    image = PoleFigureImageUtilities::PaintOverlay(xpoints, ypoints, imageLabel, image);
-  }
-  return image;
-}
-
-
+#endif
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureImageUtilities::PaintOverlay(int imageWidth, int imageHeight, QString label, QImage image)
+QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image)
 {
   int pxHigh = 0;
   int pxWide = 0;
@@ -449,3 +363,35 @@ QImage PoleFigureImageUtilities::PaintOverlay(int imageWidth, int imageHeight, Q
 }
 
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, QString imageLabel, bool includeOverlay)
+{
+  uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(poleFigurePtr->GetPointer(0));
+
+  // Create a QImage
+  QImage image(imageDimension, imageDimension, QImage::Format_ARGB32_Premultiplied);
+
+  size_t idx = 0;
+  // Now copy the data from the rgbaImage into the QImage. We do this because QImage is very finicky about byte alignment
+  for(int y = 0; y < imageDimension; ++y)
+  {
+    for (int x = 0; x < imageDimension; ++x)
+    {
+      idx = (imageDimension * y) + x;
+      image.setPixel(x, y, rgbaPtr[idx]);
+    }
+  }
+
+  // Flip the image so the (-1, -1) is in the lower left
+  image = image.mirrored(false, true);
+
+
+  if(includeOverlay == true)
+  {
+    image = PoleFigureImageUtilities::PaintPoleFigureOverlay(imageDimension, imageDimension, imageLabel, image);
+  }
+  return image;
+}

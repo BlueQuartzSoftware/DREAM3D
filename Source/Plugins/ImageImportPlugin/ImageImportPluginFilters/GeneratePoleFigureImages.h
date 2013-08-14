@@ -64,9 +64,6 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     virtual ~GeneratePoleFigureImages();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
-
-
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
@@ -155,28 +152,31 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
      * @brief generateCubicPoleFigures
      * @param eulers
      */
-    void generateCubicPoleFigures(FloatArrayType *eulers);
+    void generateCubicHighPoleFigures(FloatArrayType *eulers, int phaseIndex);
     /**
      * @brief generateHexPoleFigures
      * @param eulers
      */
-    void generateHexPoleFigures(FloatArrayType *eulers);
+    void generateHexHighPoleFigures(FloatArrayType *eulers, int phaseIndex);
     /**
      * @brief generateOrthoPoleFigures
      * @param eulers
      */
-    void generateOrthoPoleFigures(FloatArrayType *eulers);
+    void generateOrthorhombicPoleFigures(FloatArrayType *eulers, int phaseIndex);
 
     QString generateVtkPath( QString label);
     void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);
 
     QString generateImagePath( QString label);
-    void writeImage(const std::string outputPath, DoubleArrayType* poleFigurePtr, int dimension, QString label);
+    void writeImage(const std::string outputPath, QImage image, int dimension, QString label);
 
+
+    QImage createQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, QString imageLabel, bool includeOverlay);
+    QImage paintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
 
   private:
     float* m_CellEulerAngles;
-        int32_t* m_CellPhases;
+    int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
     GeneratePoleFigureImages(const GeneratePoleFigureImages&); // Copy Constructor Not Implemented
