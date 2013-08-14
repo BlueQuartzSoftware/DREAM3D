@@ -193,8 +193,8 @@ void TestTextureStatsGen()
     std::vector<float > y011(npoints * 1);
     std::vector<float > x111(npoints * 1);
     std::vector<float > y111(npoints * 1);
-    err = StatsGen::GenAxisODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
-                                       &(y011.front()), &(x111.front()), &(y111.front()), npoints);
+//    err = StatsGen::GenAxisODFPlotData(&(odf.front()), &(x001.front()), &(y001.front()), &(x011.front()),
+//                                       &(y011.front()), &(x111.front()), &(y111.front()), npoints);
   }
 
 }

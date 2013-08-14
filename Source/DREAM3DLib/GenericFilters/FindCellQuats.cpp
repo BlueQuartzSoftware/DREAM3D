@@ -156,31 +156,7 @@ void FindCellQuats::execute()
     {
       QuaternionMathF::Identity(qr);
     }
-    else
-    {
-      uint32_t xtalStruct = m_CrystalStructures[phase];
-      if (xtalStruct >= m_OrientationOps.size())
-      {
-        setErrorCondition(-55000);
-        ss.str("");
-        ss << "The value for the Crystal Structure is " << xtalStruct << " which is a value that is not understood by DREAM3D. The "
-        << "symmetry operations have not been implemented. Please report this to dream3d@bluequartz.net along with any data that you "
-        << "can provide.";
-        notifyErrorMessage(ss.str(), getErrorCondition());
-        return;
-      }
-      else
-      {
-        m_OrientationOps[m_CrystalStructures[phase]]->getFZQuat(qr);
-        QuaternionMathF::UnitQuaternion(qr);
-      }
-    }
-
     QuaternionMathF::Copy(qr, quats[i]);
-//    m_Quats[i*4 + 0] = qr[1];
-//    m_Quats[i*4 + 1] = qr[2];
-//    m_Quats[i*4 + 2] = qr[3];
-//    m_Quats[i*4 + 3] = qr[4];
   }
 
   notifyStatusMessage("Complete");

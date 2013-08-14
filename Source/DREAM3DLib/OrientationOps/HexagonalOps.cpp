@@ -290,13 +290,6 @@ void HexagonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(HexQuatSym, numsym, q1, q2);
 }
 
-void HexagonalOps::getFZQuat(QuatF &qr)
-{
-  int numsym = 12;
-
-  _calcQuatNearestOrigin(HexQuatSym, numsym, qr);
-}
-
 int HexagonalOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
