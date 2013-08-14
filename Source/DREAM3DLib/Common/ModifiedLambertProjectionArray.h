@@ -102,19 +102,19 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /**
      *
      */
-    void setModifiedLambertProjection(int grainId, ModifiedLambertProjection::Pointer ModifiedLambertProjection)
+    void setModifiedLambertProjection(int index, ModifiedLambertProjection::Pointer ModifiedLambertProjection)
     {
-      if(grainId >= static_cast<int>(m_ModifiedLambertProjectionArray.size()))
+      if(index >= static_cast<int>(m_ModifiedLambertProjectionArray.size()))
       {
         size_t old = m_ModifiedLambertProjectionArray.size();
-        m_ModifiedLambertProjectionArray.resize(grainId + 1);
+        m_ModifiedLambertProjectionArray.resize(index + 1);
         // Initialize with zero length Vectors
         for (size_t i = old; i < m_ModifiedLambertProjectionArray.size(); ++i)
         {
           m_ModifiedLambertProjectionArray[i] = ModifiedLambertProjection::New();
         }
       }
-      m_ModifiedLambertProjectionArray[grainId] = ModifiedLambertProjection;
+      m_ModifiedLambertProjectionArray[index] = ModifiedLambertProjection;
     }
 
     /**

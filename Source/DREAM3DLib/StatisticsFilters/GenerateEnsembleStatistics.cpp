@@ -301,7 +301,6 @@ void GenerateEnsembleStatistics::execute()
       ss.str("");
       ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
       notifyWarningMessage(ss.str(), -999);
-      return;
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)

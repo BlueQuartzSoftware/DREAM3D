@@ -106,19 +106,19 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
     /**
      *
      */
-    void setStatsData(int grainId, StatsData::Pointer statsData)
+    void setStatsData(int index, StatsData::Pointer statsData)
     {
-      if(grainId >= static_cast<int>(m_StatsDataArray.size()))
+      if(index >= static_cast<int>(m_StatsDataArray.size()))
       {
         size_t old = m_StatsDataArray.size();
-        m_StatsDataArray.resize(grainId + 1);
+        m_StatsDataArray.resize(index + 1);
         // Initialize with zero length Vectors
         for (size_t i = old; i < m_StatsDataArray.size(); ++i)
         {
           m_StatsDataArray[i] = StatsData::New();
         }
       }
-      m_StatsDataArray[grainId] = statsData;
+      m_StatsDataArray[index] = statsData;
     }
 
     /**
