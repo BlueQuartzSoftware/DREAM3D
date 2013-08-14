@@ -287,7 +287,7 @@ void CropVolume::preflight()
     setErrorCondition(-5557);
   }
 
-  m->setDimensions((getXMax()-getXMin())-1,(getYMax()-getYMin())-1,(getZMax()-getZMin())-1);
+  m->setDimensions((getXMax()-getXMin())+1,(getYMax()-getYMin())+1,(getZMax()-getZMin())+1);
 }
 
 // -----------------------------------------------------------------------------
