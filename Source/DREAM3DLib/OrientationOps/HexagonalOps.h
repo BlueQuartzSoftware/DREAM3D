@@ -78,7 +78,6 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
     virtual void getODFFZRod(float &r1, float &r2, float &r3);
     virtual void getMDFFZRod(float &r1, float &r2, float &r3);
     virtual void getNearestQuat(QuatF &q1, QuatF &q2);
-    virtual void getFZQuat(QuatF &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);

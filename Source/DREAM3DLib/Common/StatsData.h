@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _STATSDATATUPLE_H_
-#define _STATSDATATUPLE_H_
+#ifndef _STATSDATA_H_
+#define _STATSDATA_H_
 
 #include <hdf5.h>
 
@@ -127,4 +127,4 @@ class DREAM3DLib_EXPORT StatsData
     void operator=(const StatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* _STATSDATATUPLE_H_ */
+#endif /* _STATSDATA_H_ */

@@ -160,6 +160,24 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int ModifiedLambertProjection::writeHDF5Data(hid_t groupId)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int ModifiedLambertProjection::readHDF5Data(hid_t groupId)
+{
+  int err = 0;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void ModifiedLambertProjection::addValue(Square square, int index, double value)
 {
   if (square == NorthSquare)

@@ -251,13 +251,6 @@ void TrigonalOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(TrigQuatSym, numsym, q1, q2);
 }
 
-void TrigonalOps::getFZQuat(QuatF &qr)
-{
-  int numsym = 6;
-
-  _calcQuatNearestOrigin(TrigQuatSym, numsym, qr);
-}
-
 int TrigonalOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
