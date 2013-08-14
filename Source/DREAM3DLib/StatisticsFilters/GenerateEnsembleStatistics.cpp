@@ -192,9 +192,15 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   }
 
 
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
-
+  if (m_PhaseTypeArray.size() <= 1)
+  {
+    addErrorMessage(getHumanLabel(), "The Phase Type Array must contain at least one member.  Add a Phase Type on the GUI.", -1000);
+  }
+  else
+  {
+    typedef DataArray<unsigned int> PhaseTypeArrayType;
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+  }
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
