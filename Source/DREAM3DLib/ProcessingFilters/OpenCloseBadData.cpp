@@ -315,7 +315,7 @@ void OpenCloseBadData::execute()
       }
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-    for (int j = 0; j < totalPoints; j++)
+    for (size_t j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
       int neighbor = m_Neighbors[j];

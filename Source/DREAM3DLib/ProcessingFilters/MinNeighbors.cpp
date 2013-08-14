@@ -330,7 +330,7 @@ void MinNeighbors::assign_badpoints()
 		}
 	}
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-    for (int j = 0; j < totalPoints; j++)
+    for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
