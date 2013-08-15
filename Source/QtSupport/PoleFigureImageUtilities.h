@@ -41,6 +41,8 @@
 #include <QtGui/QImage>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
  * @brief
@@ -50,7 +52,7 @@
  */
 class PoleFigureData : QObject
 {
-  Q_OBJECT
+    Q_OBJECT
 
   public:
     PoleFigureData()
@@ -60,9 +62,9 @@ class PoleFigureData : QObject
     }
 
     PoleFigureData(QVector<float> &xData, QVector<float> &yData, const QString &s, qint32* kernelRad, qint32* size) :
-    xData(xData),
-    yData(yData),
-    label(s)
+      xData(xData),
+      yData(yData),
+      label(s)
     {
       imageSize[0] = size[0]; imageSize[1] = size[1];
       kernelRadius[0] = kernelRad[0]; kernelRadius[1] = kernelRad[1];
@@ -119,9 +121,6 @@ class PoleFigureImageUtilities
     PoleFigureImageUtilities();
     virtual ~PoleFigureImageUtilities();
 
-    QImage generateColorPoleFigureImage(const PoleFigureData &config);
-
-    QImage generatePoleFigureImage(const PoleFigureData &config);
 
 
     int countPixelNeighbors(int imageWidth, int imageHeight, int pX, int pY,
@@ -130,11 +129,26 @@ class PoleFigureImageUtilities
 
     void generateKernelWeigths(int kernelWidth, int kernelHeight);
 
-    static QImage PaintOverlay(int width, int imageHeight, QString label, QImage image);
 
-    static QImage CreateQImage(DoubleArrayType *poleFigurePtr, int imageDimension, int nColors, QString label, bool includeOverlay);
+#if 0
+    QImage generateColorPoleFigureImage(const PoleFigureData &config);
 
+    QImage generatePoleFigureImage(const PoleFigureData &config);
+#endif
 
+    static QImage PaintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
+
+    static QImage CreateQImageFromRgbaArray(UInt8ArrayType *poleFigurePtr, int imageDimension, bool includeOverlay);
+    /**
+     * @brief Create3ImagePoleFigure
+     * @param i0
+     * @param i1
+     * @param i2
+     * @param config
+     * @return
+     */
+    static QImage Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
+                                                        PoleFigureConfiguration_t &config);
   private:
 
     QVector<qint32> m_KernelWeights;

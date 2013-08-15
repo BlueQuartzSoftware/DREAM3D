@@ -264,7 +264,7 @@ namespace DREAM3D
     //  const std::string ImageQuality( "ImageQuality");
 
     // const std::string Phase("Phase");
-
+    const std::string GBCD("GBCD");
     const std::string Statistics("Statistics");
     const std::string AxisOrientation("AxisOrientation");
     const std::string AxisODFWeights("AxisODF-Weights");

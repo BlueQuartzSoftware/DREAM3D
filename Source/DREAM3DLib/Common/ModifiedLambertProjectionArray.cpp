@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 ModifiedLambertProjectionArray::ModifiedLambertProjectionArray() :
-    m_Name("")
+  m_Name("")
 {
   m_IsAllocated = true;
 }
@@ -257,28 +257,202 @@ void ModifiedLambertProjectionArray::printComponent(std::ostream &out, size_t i,
   BOOST_ASSERT(false);
 }
 
+// -------------------------------------------------------------------------- */
+void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSize, double* north, double* south)
+{
+  hid_t dataspace = -1, dataset = -1;
+  hid_t filespace = -1;
+  hsize_t currentDims[2] = { 1, 0 };
+  hsize_t newDims[2];
+  hsize_t offset[2];
+  hsize_t hyperDims[2] = { 1, 0 };
+  int rank;
+  herr_t status;
+  /*  printf("CPU [%d,%d] Expanding '%s' array with additional Row \n", home->myDomain, home->cycle, dsetName);
+      fflush(stdout); */
+  dataset = H5Dopen2(gid, dsetName.c_str(), H5P_DEFAULT);
+  filespace = H5Dget_space(dataset); /* Get filespace handle first. */
+  rank = H5Sget_simple_extent_ndims(filespace);
+  status = H5Sget_simple_extent_dims(filespace, currentDims, NULL);
+  /*  printf("dataset '%s' rank %d, dims %lu x %lu \n", dsetName, rank, (unsigned long)(dims[0]), (unsigned long)(dims[1]));*/
+
+  /* Try extending the dataset*/
+  newDims[0] = currentDims[0] + 1;
+  newDims[1] = currentDims[1]; // Number of columns
+
+//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.c_str(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
+  status = H5Dset_extent(dataset, newDims);
+  if (status < 0)
+  {
+    std::cout << "Error Extending Data set" << std::endl;
+    BOOST_ASSERT(false);
+  }
+  /*// Select a hyperslab.*/
+  filespace = H5Dget_space(dataset);
+  offset[0] = currentDims[0];
+  offset[1] = 0; // Start of Row
+  /*  printf("dataset '%s' rank %d, offset %lu x %lu \n", dsetName, rank, (unsigned long)(offset[0]), (unsigned long)(offset[1]));*/
+  hyperDims[0] = 1; /* We want 1 single row - so force the dimension correctly */
+  hyperDims[1] = currentDims[1]/2; /* We DO want how ever many columns are needed. */
+  /*  printf("dataset '%s' rank %d, dims1 %lu x %lu \n", dsetName, rank, (unsigned long)(dims1[0]), (unsigned long)(dims1[1]));*/
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  /* Define a Memory Space*/
+//  currentDims[0] = 1;
+//  currentDims[1] = currentDims[1] / 2;
+  dataspace = H5Screate_simple(rank, hyperDims, NULL);
+  /* Write the data to the hyperslab.*/
+  /*  printf("dataset '%s' rank %d, dims %lu x %lu \n", dsetName, rank, (unsigned long)(dims[0]), (unsigned long)(dims[1]));*/
+  status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
+  if (status < 0)
+  {
+    std::cout << "Error appending north square" << std::endl;
+  }
+
+
+  filespace = H5Dget_space(dataset);
+  //offset[0] = currentDims[0]; // Offset to current row being added
+  offset[1] = lambertSize; // Offset 0 Column
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+  /*
+   * Write the data to the hyperslab.
+   */
+  status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
+  if (status < 0)
+  {
+    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+  }
+
+
+  H5Dclose(dataset);
+  H5Sclose(dataspace);
+  H5Sclose(filespace);
+}
+/* -----------------------------------------------------------------------------
+//
+// -------------------------------------------------------------------------- */
+void Create2DExpandableDataset(hid_t gid, const std::string &dsetName, int lambertSize, hsize_t chunk_dim,
+                               double* north, double* south)
+{
+
+  hid_t dataspace = -1;
+  hid_t filespace = -1;
+  hid_t dataset = -1;
+  hid_t cparms = -1;
+  herr_t status = -1;
+  hsize_t maxdims[2] = { H5S_UNLIMITED, H5S_UNLIMITED }; // Allow for 2D Arrays
+  hsize_t chunk_dims[2] =  { 1, chunk_dim };
+  hsize_t dims[2] = { 1, lambertSize };
+  hsize_t size[2];
+  hsize_t offset[2];
+  hsize_t hyperDims[2] =  { 1, lambertSize };
+  double fillvalue = -1.0;
+  int rank = 2;
+//  int i = 0;
+//  int strSize = 0;
+//  char buffer[32];
+
+  if (lambertSize == 1)
+  {
+    rank = 1;
+  }
+  /*  printf("CPU [%d,%d] Writing '%s' initial value to array. \n", home->myDomain, home->cycle, dsetName);
+      fflush(stdout);*/
+
+  /* Create the data space with unlimited dimensions */
+  dataspace = H5Screate_simple(rank, dims, maxdims);
+
+  /* Modify dataset creation properties, i.e. enable chunking.*/
+  cparms = H5Pcreate(H5P_DATASET_CREATE);
+  status = H5Pset_chunk(cparms, rank, chunk_dims);
+  status = H5Pset_fill_value(cparms, H5T_NATIVE_DOUBLE, &fillvalue);
+
+  /* Create a new dataset within the file using cparms creation properties.*/
+//  dataset = H5Dcreate(gid, dsetName, H5T_NATIVE_DOUBLE, dataspace, cparms, H5P_DEFAULT, H5P_DEFAULT);
+  dataset = H5Dcreate2(gid, dsetName.c_str(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
+  /*  Extend the dataset. This call assures that dataset is at least 1 */
+  size[0] = 1; // Single Row
+  size[1] = chunk_dim; // N Columns - What ever the user asked for
+  status = H5Dset_extent(dataset, size);
+  /* Select a hyperslab. */
+  filespace = H5Dget_space(dataset);
+  offset[0] = 0; // Offset 0 row
+  offset[1] = 0; // Offset 0 Column
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+
+  /*
+   * Write the data to the hyperslab.
+   */
+  status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
+  if (status < 0)
+  {
+    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+  }
+
+  filespace = H5Dget_space(dataset);
+  offset[0] = 0; // Offset 0 row
+  offset[1] = lambertSize; // Offset 0 Column
+  status = H5Sselect_hyperslab(filespace, H5S_SELECT_SET, offset, NULL, hyperDims, NULL);
+
+  /*
+   * Write the data to the hyperslab.
+   */
+  status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
+  if (status < 0)
+  {
+    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+  }
+
+  H5Dclose(dataset);
+  H5Sclose(dataspace);
+  H5Sclose(filespace);
+  H5Pclose(cparms);
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
 {
   herr_t err = 0;
-  hid_t gid = H5Utilities::createGroup(parentId, DREAM3D::HDF5::Statistics);
+  if (m_ModifiedLambertProjectionArray.size() == 0)
+  {
+    return -2;
+  }
+  hid_t gid = H5Utilities::createGroup(parentId, DREAM3D::HDF5::GBCD);
   if (gid < 0)
   {
     return -1;
   }
+
+  std::string dsetName = StringUtils::numToString(m_Phase);
+  ModifiedLambertProjection::Pointer tmp = m_ModifiedLambertProjectionArray[0];
+  tmp->getDimension();
+  int lambertDimension = tmp->getDimension();
+  hsize_t lambertElements =  tmp->getDimension() * tmp->getDimension();
+  float sphereRadius = tmp->getSphereRadius();
+
+  Create2DExpandableDataset(gid, dsetName, lambertElements, lambertElements * 2, tmp->getNorthSquare()->GetPointer(0), tmp->getSouthSquare()->GetPointer(0) );
+
+
+  DoubleArrayType* north = NULL;
+  DoubleArrayType* south = NULL;
+
+
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
   for(size_t i = 1; i < m_ModifiedLambertProjectionArray.size(); ++i)
   {
-    if (m_ModifiedLambertProjectionArray[i].get() != NULL) {
-    std::string indexString = StringUtils::numToString(i);
-    hid_t tupleId = H5Utilities::createGroup(gid, indexString);
-    err |= m_ModifiedLambertProjectionArray[i]->writeHDF5Data(tupleId);
-    err |= H5Utilities::closeHDF5Object(tupleId);
+    if (m_ModifiedLambertProjectionArray[i].get() != NULL)
+    {
+      north = m_ModifiedLambertProjectionArray[i]->getNorthSquare().get();
+      south = m_ModifiedLambertProjectionArray[i]->getSouthSquare().get();
+      AppendRowToH5Dataset(gid, dsetName, lambertElements, north->GetPointer(0), south->GetPointer(0));
     }
   }
-  err |= H5Utilities::closeHDF5Object(gid);
+
+  err = H5Lite::writeScalarAttribute(gid, dsetName, "Lambert Dimension", lambertDimension);
+  err = H5Lite::writeScalarAttribute(gid, dsetName, "Lambert Sphere Radius", sphereRadius);
+  err = H5Utilities::closeHDF5Object(gid);
   return err;
 }
 // -----------------------------------------------------------------------------

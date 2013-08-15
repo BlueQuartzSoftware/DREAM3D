@@ -40,7 +40,14 @@
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
-
+typedef struct {
+  FloatArrayType* eulers;
+  int imageDim;
+  int lambertDim;
+  int numColors;
+  double minScale;
+  double maxScale;
+} PoleFigureConfiguration_t;
 
 /**
  * @class PoleFigureUtilities PoleFigureUtilities.h /Utilities/PoleFigureUtilities.h
@@ -55,7 +62,7 @@ public:
   PoleFigureUtilities();
   virtual ~PoleFigureUtilities();
 
-
+#if 0
   /**
    * @brief GenerateCubicPoleFigures
    * @param eulers
@@ -69,7 +76,7 @@ public:
                                               DoubleArrayType::Pointer &intensity001,
                                               DoubleArrayType::Pointer &intensity011,
                                               DoubleArrayType::Pointer &intensity111);
-
+#endif
   /**
    * @brief GenerateHexPoleFigures
    * @param eulers
