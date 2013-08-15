@@ -92,7 +92,7 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
   }
   else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-	  v.resize(DREAM3D::HDF5::LogNormalColumnCount);
+    v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Average);
     v[0]->initializeWithZeros();
     v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::StandardDeviation);
@@ -103,7 +103,7 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
     v.resize(DREAM3D::HDF5::LogNormalColumnCount);
     v[0] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::Alpha);
     v[0]->initializeWithZeros();
-	v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::MinimumValue);
+  v[1] = FloatArrayType::CreateArray(numBins, DREAM3D::HDF5::MinimumValue);
     v[1]->initializeWithZeros();
   }
   return v;
@@ -113,20 +113,20 @@ VectorOfFloatArray StatsData::CreateCorrelatedDistributionArrays(uint32_t distri
 // -----------------------------------------------------------------------------
 FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributionType)
 {
-	FloatArrayType::Pointer v;
+  FloatArrayType::Pointer v;
   if(distributionType == DREAM3D::DistributionType::Beta)
   {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+  v = FloatArrayType::CreateArray(DREAM3D::HDF5::BetaColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
     v->initializeWithZeros();
   }
   else if(distributionType == DREAM3D::DistributionType::LogNormal)
   {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+  v = FloatArrayType::CreateArray(DREAM3D::HDF5::LogNormalColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
     v->initializeWithZeros();
   }
   else if(distributionType == DREAM3D::DistributionType::Power)
   {
-	v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
+  v = FloatArrayType::CreateArray(DREAM3D::HDF5::PowerLawColumnCount, DREAM3D::HDF5::Grain_Size_Distribution);
     v->initializeWithZeros();
   }
   return v;
@@ -137,7 +137,7 @@ FloatArrayType::Pointer StatsData::CreateDistributionArrays(uint32_t distributio
 // -----------------------------------------------------------------------------
 void StatsData::initialize()
 {
-
+  //These should be implemented in the subclasses.
 }
 
 // -----------------------------------------------------------------------------
@@ -146,6 +146,7 @@ void StatsData::initialize()
 int StatsData::writeHDF5Data(hid_t groupId)
 {
   int err = 0;
+  //These should be implemented in the subclasses.
   return err;
 }
 
@@ -156,5 +157,6 @@ int StatsData::writeHDF5Data(hid_t groupId)
 int StatsData::readHDF5Data(hid_t groupId)
 {
   int err = 0;
+  //These should be implemented in the subclasses.
   return err;
 }
