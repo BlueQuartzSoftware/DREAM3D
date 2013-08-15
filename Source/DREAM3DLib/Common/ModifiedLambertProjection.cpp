@@ -123,9 +123,9 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
       squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
     }
   }
-  #if WRITE_LAMBERT_SQUARE_COORD_VTK
+#if WRITE_LAMBERT_SQUARE_COORD_VTK
   fclose(f);
-  #endif
+#endif
 
   return squareProj;
 }
@@ -319,24 +319,46 @@ void ModifiedLambertProjection::normalizeSquares()
     nTotal = nTotal + north[i];
     sTotal = sTotal + south[i];
   }
+  double oneOverNTotal = 1.0/nTotal;
+  double oneOverSTotal = 1.0/sTotal;
 
   // Divide each bin by the total of all the bins for that Hemisphere
   for(size_t i = 0; i < npoints; ++i)
   {
-    north[i] = north[i]/nTotal;
-    south[i] = south[i]/sTotal;
+    north[i] = (north[i] * oneOverNTotal);
+    south[i] = (south[i] * oneOverSTotal);
   }
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjection::normalizeSquaresToMRD()
+{
+  // First Normalize the squares
+  normalizeSquares();
+  size_t npoints = m_NorthSquare->GetNumberOfTuples();
+  double* north = m_NorthSquare->GetPointer(0);
+  double* south = m_SouthSquare->GetPointer(0);
+  int dimSqrd = m_Dimension * m_Dimension;
+
+  // Multiply Each Bin by the total number of bins
+  for(size_t i = 0; i < npoints; ++i)
+  {
+    north[i] = north[i] * dimSqrd;
+    south[i] = south[i] * dimSqrd;
+  }
+
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjection(int stereoGraphicProjectionDims)
+void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArrayType* stereoIntensity)
 {
-  int xpoints = stereoGraphicProjectionDims;
-  int ypoints = stereoGraphicProjectionDims;
+  int xpoints = dim;
+  int ypoints = dim;
 
   int xpointshalf = xpoints / 2;
   int ypointshalf = ypoints / 2;
@@ -348,7 +370,6 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
   float xyz[3];
   bool nhCheck = false;
 
-  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(xpoints * ypoints, 1, "ModifiedLambertProjection_StereographicProjection");
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->GetPointer(0);
 
@@ -384,10 +405,17 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
           }
         }
         intensity[index]  = intensity[index] * 0.5;
-
       }
-
     }
   }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjection(int dim)
+{
+  DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(dim * dim, 1, "ModifiedLambertProjection_StereographicProjection");
+  stereoIntensity->initializeWithZeros();
   return stereoIntensity;
 }
