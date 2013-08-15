@@ -526,6 +526,82 @@ void ReadOrientationData::readCtfFile()
 // -----------------------------------------------------------------------------
 void ReadOrientationData::readMicFile()
 {
-  setErrorCondition(-999);
-  notifyErrorMessage("Reading HEDM data is not yet supported in the ReadOrientationFilter", getErrorCondition());
+  int err = 0;
+  MicReader reader;
+  reader.setFileName(m_InputFile);
+  err = reader.readFile();
+  if (err < 0)
+  {
+    setErrorCondition(err);
+    notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
+    return;
+  }
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  int64_t dims[3];
+  dims[0] = reader.getXDimension();
+  dims[1] = reader.getYDimension();
+  dims[2] = 1; // We are reading a single slice
+  m->setDimensions(dims[0], dims[1], dims[2]);
+  m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+  m->setOrigin(0.0f, 0.0f, 0.0f);
+
+  err = loadInfo<MicReader, MicPhase>(&reader);
+
+  float* f1 = NULL;
+  float* f2 = NULL;
+  float* f3 = NULL;
+  int* phasePtr = NULL;
+
+  FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
+  Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
+  int64_t totalPoints = m->getTotalPoints();
+
+  {
+    phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
+    for (int64_t i = 0; i < totalPoints; i++)
+    {
+      if (phasePtr[i] < 1)
+      {
+        phasePtr[i] = 1;
+      }
+    }
+    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(DREAM3D::CellData::Phases, iArray);
+  }
+
+  {
+    //  radianconversion = M_PI / 180.0;
+    f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler1));
+    f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler2));
+    f3 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Euler3));
+    fArray = FloatArrayType::CreateArray(totalPoints * 3, DREAM3D::CellData::EulerAngles);
+    fArray->SetNumberOfComponents(3);
+    float* cellEulerAngles = fArray->GetPointer(0);
+    for (int64_t i = 0; i < totalPoints; i++)
+    {
+      cellEulerAngles[3 * i] = f1[i];
+      cellEulerAngles[3 * i + 1] = f2[i];
+      cellEulerAngles[3 * i + 2] = f3[i];
+    }
+    m->addCellData(DREAM3D::CellData::EulerAngles, fArray);
+  }
+
+  {
+    phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
+    iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
+    iArray->SetNumberOfComponents(1);
+    ::memcpy(iArray->GetPointer(0), phasePtr, sizeof(int32_t) * totalPoints);
+    m->addCellData(DREAM3D::CellData::Phases, iArray);
+  }
+
+  {
+    f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Confidence));
+    fArray = FloatArrayType::CreateArray(totalPoints, Ebsd::Mic::Confidence);
+    fArray->SetNumberOfComponents(1);
+    ::memcpy(fArray->GetPointer(0), f1, sizeof(float) * totalPoints);
+    m->addCellData(Ebsd::Mic::Confidence, fArray);
+  }
+
 }

@@ -166,14 +166,14 @@ void FindGrainCentroids::find_centroids()
   {
     graincenters[i] = 0.0f;
   }
-  int zStride, yStride;
-  for(int i=0;i<zPoints;i++)
+  size_t zStride, yStride;
+  for(size_t i=0;i<zPoints;i++)
   {
   zStride = i*xPoints*yPoints;
-  for (int j=0;j<yPoints;j++)
+  for (size_t j=0;j<yPoints;j++)
   {
     yStride = j*xPoints;
-    for(int k=0;k<xPoints;k++)
+    for(size_t k=0;k<xPoints;k++)
     {
       int gnum = m_GrainIds[zStride+yStride+k];
       graincenters[gnum * 5 + 0]++;

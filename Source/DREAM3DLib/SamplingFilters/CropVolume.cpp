@@ -389,7 +389,7 @@ void CropVolume::execute()
   }
   m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
   int64_t totalPoints = m->getTotalPoints();
-  totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
+  std::cout << "Total Points: " << totalPoints << std::endl;
 
 
   // Resize all the other Voxel Arrays
