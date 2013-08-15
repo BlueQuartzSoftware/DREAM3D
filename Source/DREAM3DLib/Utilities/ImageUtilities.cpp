@@ -53,23 +53,25 @@ ImageUtilities::~ImageUtilities(){}
 // -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const std::string &name, double min, double max)
 {
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(width * height, 4, name);
+  PoleFigureConfiguration_t config;
+  config.imageDim = width;
+  config.numColors = nColors;
+  config.eulers = NULL;
+  config.minScale = min;
+  config.maxScale = max;
+  config.sphereRadius = 1.0;
+  ImageUtilities::CreateColorImage(data, config, image.get());
+  return image;
+}
 
-//  size_t npoints = data->GetNumberOfTuples();
-//  max = std::numeric_limits<double>::min();
-//  min = std::numeric_limits<double>::max();
-//  double value = 0.0;
-//  for(size_t i = 0; i < npoints; ++i)
-//  {
-//    value = data->GetValue(i);
-//    if (value < 0) {continue;}
-//    if (value > max) { max = value;}
-//    if (value < min) { min = value;}
-//  }
-
-  //std::cout << "Min: " << min << "   Max: " << max << std::endl;
-
-  int xpoints = width;
-  int ypoints = height;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, UInt8ArrayType* image)
+{
+  int xpoints = config.imageDim ;
+  int ypoints = config.imageDim ;
 
   int xpointshalf = xpoints / 2;
   int ypointshalf = ypoints / 2;
@@ -78,24 +80,14 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
   float yres = 2.0 / (float)(ypoints);
   float xtmp, ytmp;
 
-  //if (max < 14) { max = 14; }
-  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(ypoints * xpoints, 4, name);
+  float max = static_cast<float>(config.maxScale);
+  float min = static_cast<float>(config.minScale);
+
+  // Initialize the image with all zeros
   image->initializeWithZeros();
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
-  int32_t numColors = nColors + 1;
-
-  std::vector<ColorTable::Rgba> colorTable(numColors);
-
   float r=0.0, g=0.0, b=0.0;
-
-  for (int i = 0; i < nColors; i++)
-  {
-    ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
-    colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
-  }
-  // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[nColors] = ColorTable::makeRgba(255, 255, 255, 255);
 
   //*********************** NOTE ************************************
   // In the below loop over the Pole Figure Image we are swapping the
@@ -103,6 +95,7 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
   // is because for some reason the data is rotated 90 degrees. Since
   // the image is square we can easily do this swap and effectively
   // rotate the image 90 degrees.
+  double* dataPtr = data->GetPointer(0);
   size_t idx = 0;
   for (int64_t y = 0; y < ypoints; y++)
   {
@@ -113,26 +106,14 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
       idx = (xpoints * y) + x;
       if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
       {
-        int32_t cindex = int32_t(data->GetValue(y * xpoints + x));
-        int32_t colorIndex = (cindex-min) / (max - min) * nColors;
-        rgbaPtr[idx] = colorTable[colorIndex];
+        ColorTable::GetColorCorrespondingToValue(dataPtr[y * xpoints + x], r, g, b, max, min);
+        rgbaPtr[idx] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
       }
       else // Outside the Circle - Set pixel to White
       {
-        rgbaPtr[idx] = colorTable[nColors];
+        rgbaPtr[idx] = 0xFFFFFFFF; // White
       }
     }
   }
 
-  return image;
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t &config, const std::string &name)
-{
-  return ImageUtilities::CreateColorImage(data, config.imageDim, config.imageDim, config.numColors, name, config.minScale, config.maxScale);
-}
-
-
