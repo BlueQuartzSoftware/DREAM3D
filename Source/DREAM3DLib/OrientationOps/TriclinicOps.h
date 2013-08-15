@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT TriclinicOps : public OrientationOps
      * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(FloatArrayType* eulers, int imgeSize, int lambertSize, int numColors);
+    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
 
 protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,

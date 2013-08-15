@@ -521,20 +521,26 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
 
   OrthoRhombicOps ops;
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(eulers.get(), imageSize, lamberSize, numColors);
+  PoleFigureConfiguration_t config;
+  config.eulers = eulers.get();
+  config.imageDim = imageSize;
+  config.lambertDim = lamberSize;
+  config.numColors = numColors;
+
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, "Hexagonal High <001>", true);
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
     m_001PF->setPixmap(QPixmap::fromImage(image));
   }
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, "Hexagonal High <011>", true);
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
     m_011PF->setPixmap(QPixmap::fromImage(image));
   }
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, "Hexagonal High <111>", true);
+    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
     m_111PF->setPixmap(QPixmap::fromImage(image));
   }
 

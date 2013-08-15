@@ -52,6 +52,34 @@ class DREAM3DLib_EXPORT ColorTable
     virtual ~ColorTable();
 
 
+    typedef uint32_t Rgba;
+
+    static int red(Rgba rgb)
+    {
+      return ((rgb >> 16) & 0xff);
+    }
+
+    static int green(Rgba rgb)
+    {
+      return ((rgb >> 8) & 0xff);
+    }
+
+    static int blue(Rgba rgb)
+    {
+      return (rgb & 0xff);
+    }
+
+    static int alpha(Rgba rgb)
+    {
+      return rgb >> 24;
+    }
+
+    static Rgba makeRgba(int r, int g, int b, int a)
+    {
+      return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+    }
+
+
 
     /**
     * @brief Assumes you've already generated min and max -- the extrema for the data

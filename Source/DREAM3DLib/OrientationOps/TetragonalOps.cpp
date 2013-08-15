@@ -493,52 +493,87 @@ void TetragonalOps::generateRodriguesColor(float r1, float r2, float r3, unsigne
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(FloatArrayType* eulers, int poleFigureDimension, int lambertDimension, int numColors)
+std::vector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
   std::vector<UInt8ArrayType::Pointer> poleFigures;
+  std::string label0("Tetragonal <001>");
+  std::string label1("Tetragonal <011>");
+  std::string label2("Tetragonal <111>");
+  int symSize0 = 1;
+  int symSize1 = 1;
+  int symSize2 = 1;
 
-  int numOrientations = eulers->GetNumberOfTuples();
+  int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * 1, 3, "Tetragonal High_<001>_xyzCoords");
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * 1, 3, "Tetragonal High_<011>_xyzCoords");
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * 1, 3, "Tetragonal High_<111>_xyzCoords");
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
 
 
   float sphereRadius = 1.0f;
 
   // Generate the coords on the sphere
-  generateSphereCoordsFromEulers(eulers, xyz001.get(), xyz011.get(), xyz111.get());
+  generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), lambertDimension, sphereRadius);
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(config.imageDim);
 
-  // Now create the intensity image that will become the actual Pole figure image
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(config.imageDim);
+
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(config.imageDim);
+
+  // Find the Max and Min values based on ALL 3 arrays so we can color scale them all the same
+  double max = std::numeric_limits<double>::min();
+  double min = std::numeric_limits<double>::max();
+
+  double* dPtr = intensity001->GetPointer(0);
+  size_t count = intensity001->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
   {
-    DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(poleFigureDimension);
-    intensity001->SetName("PoleFigure_<001>");
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), poleFigureDimension, poleFigureDimension, numColors, "Tetragonal High PoleFigure <001>");
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  dPtr = intensity011->GetPointer(0);
+  count = intensity011->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  dPtr = intensity111->GetPointer(0);
+  count = intensity111->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  config.minScale = min;
+  config.maxScale = max;
+  // Generate the <001> pole figure which will generate a new set of Lambert Squares
+  {
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), config, label0);
     poleFigures.push_back(image);
   }
 
   // Generate the <011> pole figure which will generate a new set of Lambert Squares
   {
-    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), lambertDimension, sphereRadius);
-    DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(poleFigureDimension);
-    intensity011->SetName("PoleFigure_<011>");
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), poleFigureDimension, poleFigureDimension, numColors, "Tetragonal High PoleFigure <011>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), config, label1);
     poleFigures.push_back(image);
   }
   // Generate the <111> pole figure which will generate a new set of Lambert Squares
   {
-    lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), lambertDimension, sphereRadius);
-    DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(poleFigureDimension);
-    intensity111->SetName("PoleFigure_<111>");
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), poleFigureDimension, poleFigureDimension, numColors, "Tetragonal High PoleFigure <111>");
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), config, label2);
     poleFigures.push_back(image);
   }
 
