@@ -40,7 +40,7 @@
 
 #include <QtCore/QString>
 #include <QtGui/QImage>
-
+#include <QtGui/QImageReader>
 
 // -----------------------------------------------------------------------------
 //
@@ -138,9 +138,48 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   {
     // This would be for a gray scale image
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
-        // If we have RGB or RGBA Images then we are going to have to change things a bit.
-        // We should read the file and see what we have? Of course Qt is going to read it up into
-        // an RGB array by default
+    // If we have RGB or RGBA Images then we are going to have to change things a bit.
+    // We should read the file and see what we have? Of course Qt is going to read it up into
+    // an RGB array by default
+    int err = 0;
+    QImageReader reader(QString::fromStdString(m_ImageFileList[0]));
+    QSize imageDims = reader.size();
+    int64_t dims[3] = {imageDims.width(), imageDims.height(), m_ImageFileList.size()};
+    /* Sanity check what we are trying to load to make sure it can fit in our address space.
+     * Note that this does not guarantee the user has enough left, just that the
+     * size of the volume can fit in the address space of the program
+     */
+#if   (CMP_SIZEOF_SSIZE_T==4)
+    int64_t max = std::numeric_limits<size_t>::max();
+#else
+    int64_t max = std::numeric_limits<int64_t>::max();
+#endif
+    if(dims[0] * dims[1] * dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
+      return;
+    }
+
+    if(dims[0] > max || dims[1] > max || dims[2] > max)
+    {
+      err = -1;
+      std::stringstream s;
+      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+      setErrorCondition(err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
+      return;
+    }
+    /* ************ End Sanity Check *************************** */
+
+    m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
+    m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
+    m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
+
   }
 
 }
@@ -240,11 +279,7 @@ void ImportImageStack::execute()
     }
   }
 
-
-
-
   m->addCellData(data->GetName(), data);
-
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
