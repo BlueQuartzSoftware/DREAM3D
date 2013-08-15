@@ -29,8 +29,8 @@ FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMP
 file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BINARY_DIR_NATIVE)
 file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" MXA_BINARY_DIR_NATIVE)
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
-set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${MXA_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
-ConvertPathToHeaderCompatible(MXA_TEMP_DIR)
+set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
+ConvertPathToHeaderCompatible(TEST_TEMP_DIR)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
 ConvertPathToHeaderCompatible(DREAM3DTest_BINARY_DIR_NATIVE)
