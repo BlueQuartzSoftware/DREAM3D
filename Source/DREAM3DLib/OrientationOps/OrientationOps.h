@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Math/MatrixMath.h"
-
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 /*
  * @class OrientationOps OrientationOps.h DREAM3DLib/Common/OrientationOps.h
@@ -64,14 +64,47 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual ~OrientationOps();
 
 
-
+    /**
+     * @brief getOrientationOpsVector This method returns a vector of each type of OrientationOps placed such that the
+     * index into the vector is the value of the constant at EBSD::CrystalStructure::***
+     * @return Vector of OrientationOps subclasses.
+     */
     static std::vector<OrientationOps::Pointer> getOrientationOpsVector();
 
+    /**
+     * @brief getODFSize Returns the number of elements in the ODF array
+     * @return
+     */
     virtual int getODFSize() = 0;
+
+    /**
+     * @brief getMDFSize Returns the number of elements in the MDF Array
+     * @return
+     */
     virtual int getMDFSize() = 0;
+
+    /**
+     * @brief getNumSymOps Returns the number of symmetry operators
+     * @return
+     */
     virtual int getNumSymOps() = 0;
 
+    /**
+     * @brief getMisoQuat Finds the misorientation
+     * @param q1
+     * @param q2
+     * @param n1
+     * @param n2
+     * @param n3
+     * @return
+     */
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3) = 0;
+
+    /**
+     * @brief getQuatSymOp Copies the symmetry operator at index i into q
+     * @param i The index into the Symmetry operators array
+     * @param q [output] The quaternion to store the value into
+     */
     virtual void getQuatSymOp(int i, QuatF &q) = 0;
     virtual void getRodSymOp(int i, float *r) = 0;
     virtual void getMatSymOp(int i, float g[3][3]) = 0;
@@ -88,11 +121,50 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual void getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt) = 0;
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7) = 0;
 
+
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3) = 0;
 
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param eulers Pointer to the 3 component Euler Angle
+     * @param refDir Pointer to the 3 Component Reference Direction
+     * @param rgb [output] The pointer to store the RGB value
+     * @param convertDegrees Are the input angles in Degrees
+     */
     virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees) = 0;
+
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param e0 First component of the Euler Angle
+     * @param e1 Second component of the Euler Angle
+     * @param e2 Third component of the Euler Angle
+     * @param dir0 First component of the Reference Direction
+     * @param dir1 Second component of the Reference Direction
+     * @param dir2 Third component of the Reference Direction
+     * @param rgb [output] The pointer to store the RGB value
+     * @param convertDegrees Are the input angles in Degrees
+     */
     virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees) = 0;
+
+    /**
+     * @brief generateRodriguesColor Generates an RGB Color from a Rodrigues Vector
+     * @param r1 First component of the Rodrigues Vector
+     * @param r2 Second component of the Rodrigues Vector
+     * @param r3 Third component of the Rodrigues Vector
+     * @param rgb [output] The pointer to store the RGB value
+     */
     virtual void generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb) = 0;
+
+    /**
+     * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
+     * angles that are passed in.
+     * @param eulers The Euler Angles to generate the pole figure from.
+     * @param imageSize The size in Pixels of the final RGB Image.
+     * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
+     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * an image object from other libraries and written out to disk.
+     */
+    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
 
   protected:
     OrientationOps();

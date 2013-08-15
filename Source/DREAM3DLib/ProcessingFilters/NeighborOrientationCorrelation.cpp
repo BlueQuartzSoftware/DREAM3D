@@ -336,7 +336,7 @@ void NeighborOrientationCorrelation::execute()
       }
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-    for (int j = 0; j < totalPoints; j++)
+    for (size_t j = 0; j < totalPoints; j++)
     {
     neighbor = bestNeighbor[j];
     if (neighbor != -1)

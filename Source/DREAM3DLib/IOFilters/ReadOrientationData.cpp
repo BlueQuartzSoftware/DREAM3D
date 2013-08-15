@@ -195,11 +195,11 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       CtfReader reader;
       reader.setFileName(m_InputFile);
       reader.readHeaderOnly();
-      dims[0] = reader.getXDimension();
-      dims[1] = reader.getYDimension();
-      dims[2] = 1; // We are reading a single slice
+      dims[0] = reader.getXCells();
+      dims[1] = reader.getYCells();
+      dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
       m->setDimensions(dims[0], dims[1], dims[2]);
-      m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+      m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
       names = fields.getFilterFields<std::vector<std::string> > ();
@@ -421,7 +421,7 @@ void ReadOrientationData::readCtfFile()
   int err = 0;
   CtfReader reader;
   reader.setFileName(m_InputFile);
-  reader.readOnlySliceIndex(0);
+ // reader.readOnlySliceIndex(0);
   err = reader.readFile();
   if (err < 0)
   {
@@ -432,11 +432,11 @@ void ReadOrientationData::readCtfFile()
   VoxelDataContainer* m = getVoxelDataContainer();
 
   int64_t dims[3];
-  dims[0] = reader.getXDimension();
-  dims[1] = reader.getYDimension();
-  dims[2] = 1; // We are reading a single slice
+  dims[0] = reader.getXCells();
+  dims[1] = reader.getYCells();
+  dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
   m->setDimensions(dims[0], dims[1], dims[2]);
-  m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+  m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
   m->setOrigin(0.0f, 0.0f, 0.0f);
 
   err = loadInfo<CtfReader, CtfPhase>(&reader);
@@ -452,12 +452,22 @@ void ReadOrientationData::readCtfFile()
 
   int64_t totalPoints = m->getTotalPoints();
   {
+    /* Take from H5CtfVolumeReader.cpp
+    * For HKL OIM Files if there is a single phase then the value of the phase
+    * data is one (1). If there are 2 or more phases then the lowest value
+    * of phase is also one (1). However, if there are "zero solutions" in the data
+    * then those points are assigned a phase of zero.  Since those points can be identified
+    * by other methods, the phase of these points should be changed to one since in the rest
+    * of the reconstruction code we follow the convention that the lowest value is One (1)
+    * even if there is only a single phase. The next if statement converts all zeros to ones
+    * if there is a single phase in the OIM data.
+    */
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Ctf::Phase));
     for (int64_t i = 0; i < totalPoints; i++)
     {
       if (phasePtr[i] < 1)
       {
-        phasePtr[i] = 1;
+         phasePtr[i] = 1;
       }
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);

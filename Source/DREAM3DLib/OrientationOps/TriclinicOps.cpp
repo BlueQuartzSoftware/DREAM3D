@@ -38,6 +38,8 @@
 // to expose some of the constants needed below
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Utilities/ImageUtilities.h"
 
 namespace Detail
 {
@@ -494,6 +496,9 @@ void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double
   rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void TriclinicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
 {
   float range1 = 2.0f*TriclinicDim1InitValue;
@@ -519,4 +524,94 @@ void TriclinicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned
   rgb[0] = static_cast<unsigned char> (red);
   rgb[1] = static_cast<unsigned char> (green);
   rgb[2] = static_cast<unsigned char> (blue);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::vector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+{
+  std::vector<UInt8ArrayType::Pointer> poleFigures;
+  std::string label0("Triclinic <001>");
+  std::string label1("Triclinic <011>");
+  std::string label2("Triclinic <111>");
+  int symSize0 = 6;
+  int symSize1 = 12;
+  int symSize2 = 8;
+
+  int numOrientations = config.eulers->GetNumberOfTuples();
+
+  // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
+  // this is size for CUBIC ONLY, <001> Family
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  // this is size for CUBIC ONLY, <011> Family
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  // this is size for CUBIC ONLY, <111> Family
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+
+
+  float sphereRadius = 1.0f;
+
+  // Generate the coords on the sphere
+  generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
+
+  // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
+  // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
+  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(config.imageDim);
+
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(config.imageDim);
+
+  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), config.lambertDim, sphereRadius);
+  DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(config.imageDim);
+
+  // Find the Max and Min values based on ALL 3 arrays so we can color scale them all the same
+  double max = std::numeric_limits<double>::min();
+  double min = std::numeric_limits<double>::max();
+
+  double* dPtr = intensity001->GetPointer(0);
+  size_t count = intensity001->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  dPtr = intensity011->GetPointer(0);
+  count = intensity011->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  dPtr = intensity111->GetPointer(0);
+  count = intensity111->GetNumberOfTuples();
+  for(size_t i = 0; i < count; ++i)
+  {
+    if (dPtr[i] > max) { max = dPtr[i]; }
+    if (dPtr[i] < min) { min = dPtr[i]; }
+  }
+
+  config.minScale = min;
+  config.maxScale = max;
+  // Generate the <001> pole figure which will generate a new set of Lambert Squares
+  {
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), config, label0);
+    poleFigures.push_back(image);
+  }
+
+  // Generate the <011> pole figure which will generate a new set of Lambert Squares
+  {
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), config, label1);
+    poleFigures.push_back(image);
+  }
+  // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  {
+    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), config, label2);
+    poleFigures.push_back(image);
+  }
+
+  return poleFigures;
 }

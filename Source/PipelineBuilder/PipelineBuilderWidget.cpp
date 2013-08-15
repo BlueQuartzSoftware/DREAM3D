@@ -1569,14 +1569,14 @@ void PipelineBuilderWidget::actionAddFavorite_triggered() {
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::actionUpdateFavorite_triggered()
 {
-  // Lets get the name of the favorit
+  // Lets get the name of the favorite
   QTreeWidgetItem* item = filterLibraryTree->currentItem();
   QTreeWidgetItem* parent = filterLibraryTree->currentItem()->parent();
 
   QString filePath = item->data(0, Qt::UserRole).toString();
   QFileInfo filePathInfo = QFileInfo(filePath);
   // QString fileParentPath = filePathInfo.path();
-  QString fileName = filePathInfo.fileName();
+  QString fileName = filePathInfo.baseName();
 
 
   if (NULL != parent && parent->text(0).compare(Detail::FavoritePipelines) == 0 )

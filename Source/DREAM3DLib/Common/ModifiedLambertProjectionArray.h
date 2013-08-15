@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual std::string getTypeAsString() { return "ModifiedLambertProjectionArray"; }
 
-
+    DREAM3D_INSTANCE_PROPERTY(int, Phase)
     DREAM3D_INSTANCE_PROPERTY(std::vector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)

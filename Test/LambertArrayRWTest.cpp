@@ -30,63 +30,100 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-10-D-5210
+ *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#include <vector>
 
+#include "MXA/Utilities/MXADir.h"
 
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
-#include <QtCore/QVector>
-#include <QtCore/QDir>
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjectionArray.h"
 
-#include <QtGui/QApplication>
-#include <QtGui/QImage>
-
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/EbsdConstants.h"
-
-
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/StatsGen.hpp"
-
-#define PFTEST_NO_QOBJECT 1
-
-#include "QtSupport/PoleFigureImageUtilities.h"
-
+#include "UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void poleFigureGenerationComplete()
+void RemoveTestFiles()
 {
-  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
+#if REMOVE_TEST_FILES
+  MXADir::remove(UnitTest::DxIOTest::TestFile);
+#endif
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int makePoleFigures(QVector<float> e1s, QVector<float> e2s, QVector<float> e3s,
-                             QVector<float> weights, QVector<float> sigmas, QString prefix)
+void TestLambertWrite()
 {
+  FloatArrayType::Pointer xyzCoords = FloatArrayType::CreateArray(0, "XYZ Coords");
+  int lambertDim = 22;
+  float sphereRadius = 1.0;
+  size_t gbcdDims[3] = { 40, 20, 40};
+  // Allocate a typical GBCD Data Array
+  std::vector<ModifiedLambertProjection::Pointer> lamberts(gbcdDims[0] * gbcdDims[1] * gbcdDims[2]);
+  size_t count = lamberts.size();
+  for(size_t i = 0; i < count; ++i)
+  {
+    lamberts[i] = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyzCoords.get(), lambertDim, sphereRadius);
+    lamberts[i]->getNorthSquare()->initializeWithZeros();
+    lamberts[i]->getSouthSquare()->initializeWithValues(1.0);
+  }
 
-  return EXIT_SUCCESS;
+  // Create something to hold all the GBCD Data
+  ModifiedLambertProjectionArray::Pointer gbcdData = ModifiedLambertProjectionArray::New();
+  gbcdData->setModifiedLambertProjectionArray(lamberts);
+
+
+  // Now open an HDF5 File for writing
+  hid_t fid = H5Utilities::createFile(UnitTest::LambertRWTest::TestFile);
+  DREAM3D_REQUIRE(fid > 0)
+
+  int err = gbcdData->writeH5Data(fid);
+  DREAM3D_REQUIRE(err >= 0)
+
+  H5Utilities::closeFile(fid);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int main(int argc, char *argv[])
+void TestLambertRead()
 {
 
-  QApplication app(argc, argv);
-
-  QDir d(QString::fromStdString(UnitTest::PFTest::TestDir));
-  d.mkdir(QString::fromStdString(UnitTest::PFTest::TestDir));
-
-
-
-  return EXIT_SUCCESS;
 }
+
+// -----------------------------------------------------------------------------
+//  Use test framework
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv)
+{
+
+  int err = EXIT_SUCCESS;
+
+#if !REMOVE_TEST_FILES
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
+
+  DREAM3D_REGISTER_TEST( TestLambertWrite() )
+  DREAM3D_REGISTER_TEST( TestLambertRead() )
+
+#if REMOVE_TEST_FILES
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+#endif
+
+  PRINT_TEST_SUMMARY();
+  return err;
+}
+
+
+
+
+
+

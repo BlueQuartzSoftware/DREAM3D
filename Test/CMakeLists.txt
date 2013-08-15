@@ -20,9 +20,9 @@ macro (ConvertPathToHeaderCompatible INPUT)
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
     endif()
 endmacro()
-
+#message(STATUS "DREAM3DTest_BINARY_DIR: ${DREAM3DTest_BINARY_DIR}")
 include_directories(${DREAM3DTest_BINARY_DIR})
-set(MXA_TEMP_DIR ${DREAM3DProj_BINARY_DIR}/Testing/)
+set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
 
 GET_FILENAME_COMPONENT(MXA_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMPORT_XML_FILE)
@@ -110,6 +110,16 @@ add_executable(QuaternionMathTest QuaternionMathTest.cpp )
 target_link_libraries(QuaternionMathTest DREAM3DLib)
 set_target_properties(QuaternionMathTest PROPERTIES FOLDER Test)
 add_test(QuaternionMathTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QuaternionMathTest)
+
+
+# --------------------------------------------------------------------------
+# LambertArray HDF5 Write Test
+# --------------------------------------------------------------------------
+add_executable(LambertArrayRWTest LambertArrayRWTest.cpp )
+target_link_libraries(LambertArrayRWTest DREAM3DLib)
+set_target_properties(LambertArrayRWTest PROPERTIES FOLDER Test)
+add_test(LambertArrayRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/LambertArrayRWTest)
+
 
 # --------------------------------------------------------------------------
 # ErrorMessageTest
@@ -212,7 +222,7 @@ if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
     # --------------------------------------------------------------------------
     add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
     target_link_libraries(FindNeighborsTest DREAM3DLib)
-	set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
     add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
 
     # --------------------------------------------------------------------------
