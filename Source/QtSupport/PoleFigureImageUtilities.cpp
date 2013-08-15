@@ -288,6 +288,82 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
 }
 #endif
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigureConfiguration_t &config)
+{
+
+  int scaleHeight = imageHeight * 0.25;
+  int scaleWidth = 50;
+
+  QPointF topLeft(imageWidth * .625, imageHeight * .625);
+
+  QSizeF size(scaleWidth, scaleHeight);
+
+  int penWidth = 1;
+  //Get all the colors that we will need
+  int nColors = scaleHeight;
+  int32_t numColors = nColors + 1;
+
+  std::vector<ColorTable::Rgba> colorTable(numColors);
+
+  float r=0.0, g=0.0, b=0.0;
+
+  for (int i = 0; i < nColors; i++)
+  {
+    ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
+    colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
+  }
+  // Index 0 is all white which is every pixel outside of the Pole Figure circle
+  colorTable[nColors] = ColorTable::makeRgba(255, 255, 255, 255);
+
+
+  // Now start from the top and draw colored lines down the scale bar
+  int yLinePos = topLeft.y() + size.height();
+  QPointF start = topLeft;
+  QPointF end = topLeft;
+  QRectF scaleBorder(topLeft, size);
+
+  for(int i = 1; i < scaleHeight; ++i)
+  {
+    QColor c(colorTable[i]);
+    painter.setPen(QPen(c, penWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
+    start.setY(yLinePos);
+    end.setX(topLeft.x() + scaleWidth);
+    end.setY(yLinePos);
+    painter.drawLine(start, end);
+    yLinePos--;
+  }
+
+  // Draw the border of the scale bar
+  penWidth = 2;
+  painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  painter.drawRect(scaleBorder);
+
+  // Draw some more information
+  QString maxStr = QString::number(config.maxScale);
+  painter.drawText(topLeft.x() + scaleWidth + 10, topLeft.y(), maxStr);
+
+  QString minStr = QString::number(config.minScale);
+  painter.drawText(topLeft.x() + scaleWidth + 10, topLeft.y() + size.height(), minStr);
+
+  QPointF statsPoint(imageWidth * .75, imageHeight * .625);
+  QString label("Upper & Lower");
+
+  QFontMetrics metrics = painter.fontMetrics();
+  int  fontHigh = metrics.height();
+  int  fontWide = metrics.width(label);
+  painter.drawText(statsPoint, label);
+
+  label = QString("Samples: ") + QString::number(config.eulers->GetNumberOfTuples());
+  statsPoint.setY( statsPoint.y() + fontHigh*1.5);
+  painter.drawText(statsPoint, label);
+
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -296,7 +372,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   int pxHigh = 0;
   int pxWide = 0;
 
-  QFont font("Ariel", 18, QFont::Bold);
+  QFont font("Ariel", 24, QFont::Bold);
   {
     QPainter painter;
     QImage pImage(100, 100, QImage::Format_ARGB32_Premultiplied);
@@ -306,7 +382,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
     painter.setFont(font);
     QFontMetrics metrics = painter.fontMetrics();
     pxHigh = metrics.height();
-    pxWide = metrics.width(QString("TD"));
+    pxWide = metrics.width(QString("Y"));
     painter.end();
   }
 
@@ -330,35 +406,40 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   painter.setFont(font);
   QFontMetrics metrics = painter.fontMetrics();
   pxHigh = metrics.height();
-  pxWide = metrics.width(QString("TD"));
+  pxWide = metrics.width(QString("Y"));
 
+  // Draw the Pole Figure into the center of the canvas
   QPoint point(pxOffset, pyOffset);
-  painter.drawImage(point, image); // Draw the image we just generated into the QPainter's canvas
+  painter.drawImage(point, image);
 
   qint32 penWidth = 2;
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
 
+  // Draw the Outer circular border around the pole figure
   QPainterPath circle;
   QPointF center(pImageWidth / 2, pImageHeight / 2);
   circle.addEllipse(center, imageWidth / 2, imageHeight / 2);
   painter.drawPath(circle);
 
-  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "RD");
+  // Label the X Axis
+  painter.drawText(pImageWidth - 2*pxWide +4, pImageHeight / 2 + pxHigh / 3, "X");
+  // Label the Y Axis
+  pxWide = metrics.width(QString("Y"));
+  painter.drawText(pImageWidth / 2 - pxWide/2, pyOffset - 4, "Y");
 
-  pxWide = metrics.width(QString("RD"));
-  painter.drawText(pImageWidth / 2 - pxWide / 2, pImageHeight - pyOffset + pxHigh + 2, "TD");
-
+  // Draw the name of the Pole Figure
   pxWide = metrics.width(label);
-  painter.drawText(pImageWidth / 2 - pxWide / 2, pxHigh, label);
+  painter.drawText(pImageWidth/4, pxHigh, label);
 
   // Draw slightly transparent lines
   penWidth = 1;
   painter.setPen(QPen(QColor(0, 0, 0, 180), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
+  // Draw the X Axis
   painter.drawLine(pxOffset, pImageHeight / 2, pImageWidth - pxOffset, pImageHeight / 2);
+  // Draw the Y Axis
   painter.drawLine(pImageWidth / 2, pyOffset, pImageWidth / 2, pImageHeight - pyOffset);
 
   painter.end();
-  // Scale the image down to 225 pixels
   return pImage;
 }
 
@@ -367,7 +448,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, QString imageLabel, bool includeOverlay)
+QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, bool includeOverlay)
 {
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(poleFigurePtr->GetPointer(0));
 
@@ -388,10 +469,61 @@ QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleF
   // Flip the image so the (-1, -1) is in the lower left
   image = image.mirrored(false, true);
 
-
+  QString imageLabel = QString::fromStdString(poleFigurePtr->GetName());
   if(includeOverlay == true)
   {
     image = PoleFigureImageUtilities::PaintPoleFigureOverlay(imageDimension, imageDimension, imageLabel, image);
   }
   return image;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
+                                                        PoleFigureConfiguration_t &config)
+{
+
+  // Create a QImage that is the width of the first 2 images and the height of the first and third
+  QImage img0 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(i0, config.imageDim, true);
+  QImage img1 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(i1, config.imageDim, true);
+  QImage img2 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(i2, config.imageDim, true);
+
+
+  int pImageWidth = img0.width() + img1.width();
+  int pImageHeight = img0.height() + img2.height();
+
+  QImage pImage(pImageWidth, pImageHeight, QImage::Format_ARGB32_Premultiplied);
+  pImage.fill(0xFFFFFFFF); // All white background
+
+  // Create a Painter backed by a QImage to draw into
+  QPainter painter;
+  painter.begin(&pImage);
+  painter.setRenderHint(QPainter::Antialiasing, true);
+
+  QFont font("Ariel", 18, QFont::Bold);
+  painter.setFont(font);
+  QFontMetrics metrics = painter.fontMetrics();
+  int pxHigh = metrics.height();
+  int pxWide = metrics.width(QString("Y"));
+
+  painter.drawImage(QPoint(0, 0), img0); // Draw the first image in the upper Left
+  painter.drawImage(QPoint(pImageWidth/2, 0), img1); // Draw the first image in the upper Left
+  painter.drawImage(QPoint(0, pImageHeight/2), img2); // Draw the first image in the upper Left
+
+  drawScaleBar(painter, pImageWidth, pImageHeight, config);
+
+  painter.end();
+  // Scale the image down to 225 pixels
+  return pImage;
+}
+
+
+
+

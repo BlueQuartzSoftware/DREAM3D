@@ -38,6 +38,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 /**
  * @class ImageUtilities ImageUtilities.h /Utilities/ImageUtilities.h
@@ -52,7 +53,9 @@ public:
   ImageUtilities();
   virtual ~ImageUtilities();
 
-  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const std::string &name);
+  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const std::string &name, double min, double max);
+
+  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, const std::string &name);
 
 private:
   ImageUtilities(const ImageUtilities&); // Copy Constructor Not Implemented

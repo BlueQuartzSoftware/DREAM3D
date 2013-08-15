@@ -37,35 +37,6 @@
 
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
-namespace Detail
-{
-  typedef uint32_t Rgba;
-
-  int red(Rgba rgb)
-  {
-    return ((rgb >> 16) & 0xff);
-  }
-
-  int green(Rgba rgb)
-  {
-    return ((rgb >> 8) & 0xff);
-  }
-
-  int blue(Rgba rgb)
-  {
-    return (rgb & 0xff);
-  }
-
-  int alpha(Rgba rgb)
-  {
-    return rgb >> 24;
-  }
-
-  Rgba makeRgba(int r, int g, int b, int a)
-  {
-    return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -80,20 +51,20 @@ ImageUtilities::~ImageUtilities(){}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const std::string &name)
+UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const std::string &name, double min, double max)
 {
 
-  size_t npoints = data->GetNumberOfTuples();
-  double max = std::numeric_limits<double>::min();
-  double min = std::numeric_limits<double>::max();
-  double value = 0.0;
-  for(size_t i = 0; i < npoints; ++i)
-  {
-    value = data->GetValue(i);
-    if (value < 0) {continue;}
-    if (value > max) { max = value;}
-    if (value < min) { min = value;}
-  }
+//  size_t npoints = data->GetNumberOfTuples();
+//  max = std::numeric_limits<double>::min();
+//  min = std::numeric_limits<double>::max();
+//  double value = 0.0;
+//  for(size_t i = 0; i < npoints; ++i)
+//  {
+//    value = data->GetValue(i);
+//    if (value < 0) {continue;}
+//    if (value > max) { max = value;}
+//    if (value < min) { min = value;}
+//  }
 
   //std::cout << "Min: " << min << "   Max: " << max << std::endl;
 
@@ -114,17 +85,17 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
 
   int32_t numColors = nColors + 1;
 
-  std::vector<Detail::Rgba> colorTable(numColors);
+  std::vector<ColorTable::Rgba> colorTable(numColors);
 
   float r=0.0, g=0.0, b=0.0;
 
   for (int i = 0; i < nColors; i++)
   {
     ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
-    colorTable[i] = Detail::makeRgba(r*255, g*255, b*255, 255);
+    colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
   }
   // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[nColors] = Detail::makeRgba(255, 255, 255, 255);
+  colorTable[nColors] = ColorTable::makeRgba(255, 255, 255, 255);
 
   //*********************** NOTE ************************************
   // In the below loop over the Pole Figure Image we are swapping the
@@ -154,6 +125,14 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
   }
 
   return image;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, PoleFigureConfiguration_t &config, const std::string &name)
+{
+  return ImageUtilities::CreateColorImage(data, config.imageDim, config.imageDim, config.numColors, name, config.minScale, config.maxScale);
 }
 
 

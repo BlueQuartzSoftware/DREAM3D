@@ -41,6 +41,8 @@
 #include <QtGui/QImage>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+
 /**
  * @class PoleFigureData PoleFigureData.h StatsGenerator/PoleFigureData.h
  * @brief
@@ -136,8 +138,17 @@ class PoleFigureImageUtilities
 
     static QImage PaintPoleFigureOverlay(int imageWidth, int imageHeight, QString label, QImage image);
 
-    static QImage CreateQImageFromRgbaArray(UInt8ArrayType *poleFigurePtr, int imageDimension, QString label, bool includeOverlay);
-
+    static QImage CreateQImageFromRgbaArray(UInt8ArrayType *poleFigurePtr, int imageDimension, bool includeOverlay);
+    /**
+     * @brief Create3ImagePoleFigure
+     * @param i0
+     * @param i1
+     * @param i2
+     * @param config
+     * @return
+     */
+    static QImage Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
+                                                        PoleFigureConfiguration_t &config);
   private:
 
     QVector<qint32> m_KernelWeights;
