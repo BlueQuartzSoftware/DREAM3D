@@ -342,19 +342,25 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));
   painter.drawRect(scaleBorder);
 
-  // Draw some more information
-  QString maxStr = QString::number(config.maxScale);
+  // Draw some more information to the right of the Scale Bar
+  QString maxStr = QString::number(config.maxScale, 'f', 3);
   painter.drawText(topLeft.x() + scaleWidth + 10, topLeft.y(), maxStr);
 
-  QString minStr = QString::number(config.minScale);
+  QString minStr = QString::number(config.minScale, 'f', 3);
   painter.drawText(topLeft.x() + scaleWidth + 10, topLeft.y() + size.height(), minStr);
-
-  QPointF statsPoint(imageWidth * .75, imageHeight * .625);
-  QString label("Upper & Lower");
 
   QFontMetrics metrics = painter.fontMetrics();
   int  fontHigh = metrics.height();
-  int  fontWide = metrics.width(label);
+  int  labelWidth = metrics.width(maxStr);
+  if (labelWidth < metrics.width(minStr))
+  {
+    labelWidth = metrics.width(minStr);
+  }
+
+  QPointF statsPoint(topLeft.x() + scaleWidth + 10 + labelWidth + 10, imageHeight * .625);
+
+  // Draw some more Statistics Text
+  QString label("Upper & Lower");
   painter.drawText(statsPoint, label);
 
   label = QString("Samples: ") + QString::number(config.eulers->GetNumberOfTuples());
@@ -443,8 +449,6 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
   return pImage;
 }
 
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -481,11 +485,6 @@ QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleF
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt8ArrayType* i1, UInt8ArrayType* i2,
                                                         PoleFigureConfiguration_t &config)
 {
@@ -510,8 +509,8 @@ QImage PoleFigureImageUtilities::Create3ImagePoleFigure(UInt8ArrayType* i0, UInt
   QFont font("Ariel", 18, QFont::Bold);
   painter.setFont(font);
   QFontMetrics metrics = painter.fontMetrics();
-  int pxHigh = metrics.height();
-  int pxWide = metrics.width(QString("Y"));
+//  int pxHigh = metrics.height();
+//  int pxWide = metrics.width(QString("Y"));
 
   painter.drawImage(QPoint(0, 0), img0); // Draw the first image in the upper Left
   painter.drawImage(QPoint(pImageWidth/2, 0), img1); // Draw the first image in the upper Left
