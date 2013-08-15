@@ -94,6 +94,16 @@ class DREAM3DLib_EXPORT TetragonalLowOps : public OrientationOps
     virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
     virtual void generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb);
 
+    /**
+     * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
+     * angles that are passed in.
+     * @param eulers The Euler Angles to generate the pole figure from.
+     * @param imageSize The size in Pixels of the final RGB Image.
+     * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
+     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * an image object from other libraries and written out to disk.
+     */
+    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[8], int numsym,

@@ -44,7 +44,7 @@
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 
 
-#define WRITE_XYZ_SPHERE_COORD_VTK 1
+#define WRITE_XYZ_SPHERE_COORD_VTK 0
 #define WRITE_LAMBERT_SQUARES 0
 
 // -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ void writeVtkFile(FloatArrayType* xyz, const std::string &filename)
 
 }
 
-
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -157,6 +157,7 @@ void PoleFigureUtilities::GenerateCubicPoleFigures(FloatArrayType* eulers, int l
   poleFigurePtr->SetName("PoleFigure_<111>");
   intensity111.swap(poleFigurePtr);
 }
+#endif
 
 // -----------------------------------------------------------------------------
 //

@@ -532,12 +532,13 @@ void StatsGenODFWidget::poleFigureGenerationComplete()
 // -----------------------------------------------------------------------------
 QImage generateODFPoleFigure(const PoleFigureData &data)
 {
-  PoleFigureImageUtilities colorPoleFigure;
-#if COLOR_POLE_FIGURES
-  return colorPoleFigure.generateColorPoleFigureImage(data);
-#else
-  return colorPoleFigure.generatePoleFigureImage(data);
-#endif
+//  PoleFigureImageUtilities colorPoleFigure;
+//#if COLOR_POLE_FIGURES
+//  return colorPoleFigure.generateColorPoleFigureImage(data);
+//#else
+//  return colorPoleFigure.generatePoleFigureImage(data);
+//#endif
+return QImage();
 }
 
 // -----------------------------------------------------------------------------
@@ -570,7 +571,9 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
   }
   size_t numEntries = e1s.size();
 
-
+  int imageSize = 226;
+  int lamberSize = 22;
+  int numColors = 16;
   int npoints = 5000;
   FloatArrayType::Pointer eulers = FloatArrayType::CreateArray(npoints, 3, "Eulers");
 
@@ -584,18 +587,30 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
 
-    DoubleArrayType::Pointer intensity001;
-    DoubleArrayType::Pointer intensity011;
-    DoubleArrayType::Pointer intensity111;
-    PoleFigureUtilities::GenerateCubicPoleFigures(eulers.get(), 22, 226, intensity001, intensity011, intensity111);
+    CubicOps ops;
+    PoleFigureConfiguration_t config;
+    config.eulers = eulers.get();
+    config.imageDim = imageSize;
+    config.lambertDim = lamberSize;
+    config.numColors = numColors;
 
-    QImage i001 = PoleFigureImageUtilities::CreateQImage(intensity001.get(), 226, 16, "OO1", true);
-    QImage i011 = PoleFigureImageUtilities::CreateQImage(intensity011.get(), 226, 16, "O11", true);
-    QImage i111 = PoleFigureImageUtilities::CreateQImage(intensity111.get(), 226, 16, "111", true);
+    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_001PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_011PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_111PF->setPixmap(QPixmap::fromImage(image));
+    }
 
-    m_001PF->setPixmap(QPixmap::fromImage(i001));
-    m_011PF->setPixmap(QPixmap::fromImage(i011));
-    m_111PF->setPixmap(QPixmap::fromImage(i111));
   }
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure)
   {
@@ -607,22 +622,33 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     err = StatsGen::GenHexODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
 
-    DoubleArrayType::Pointer intensity0001;
-    DoubleArrayType::Pointer intensity1010;
-    DoubleArrayType::Pointer intensity1120;
-    PoleFigureUtilities::GenerateHexPoleFigures(eulers.get(), 22, 226, intensity0001, intensity1010, intensity1120);
+    HexagonalOps ops;
+    PoleFigureConfiguration_t config;
+    config.eulers = eulers.get();
+    config.imageDim = imageSize;
+    config.lambertDim = lamberSize;
+    config.numColors = numColors;
 
-    QImage i0001 = PoleFigureImageUtilities::CreateQImage(intensity0001.get(), 226, 16, "0001", true);
-    QImage i1010 = PoleFigureImageUtilities::CreateQImage(intensity1010.get(), 226, 16, "1010", true);
-    QImage i1120 = PoleFigureImageUtilities::CreateQImage(intensity1120.get(), 226, 16, "1120", true);
-
-    m_001PF->setPixmap(QPixmap::fromImage(i0001));
-    m_011PF->setPixmap(QPixmap::fromImage(i1010));
-    m_111PF->setPixmap(QPixmap::fromImage(i1120));
+    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_001PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_011PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_111PF->setPixmap(QPixmap::fromImage(image));
+    }
   }
   else if ( Ebsd::CrystalStructure::OrthoRhombic == m_CrystalStructure)
   {
-    // We now need to resize all the arrays here to make sure they are all allocated
+//    // We now need to resize all the arrays here to make sure they are all allocated
     odf.resize(OrthoRhombicOps::k_OdfSize);
     Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(),
                                  weights.data(), sigmas.data(), true,
@@ -630,18 +656,29 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
 
     err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
 
-    DoubleArrayType::Pointer intensity100;
-    DoubleArrayType::Pointer intensity010;
-    DoubleArrayType::Pointer intensity001;
-    PoleFigureUtilities::GenerateOrthoPoleFigures(eulers.get(), 22, 226, intensity100, intensity010, intensity001);
+    OrthoRhombicOps ops;
+    PoleFigureConfiguration_t config;
+    config.eulers = eulers.get();
+    config.imageDim = imageSize;
+    config.lambertDim = lamberSize;
+    config.numColors = numColors;
 
-    QImage i100 = PoleFigureImageUtilities::CreateQImage(intensity100.get(), 226, 16, "001", true);
-    QImage i010 = PoleFigureImageUtilities::CreateQImage(intensity010.get(), 226, 16, "010", true);
-    QImage i001 = PoleFigureImageUtilities::CreateQImage(intensity001.get(), 226, 16, "001", true);
-
-    m_001PF->setPixmap(QPixmap::fromImage(i100));
-    m_011PF->setPixmap(QPixmap::fromImage(i010));
-    m_111PF->setPixmap(QPixmap::fromImage(i001));
+    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_001PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_011PF->setPixmap(QPixmap::fromImage(image));
+    }
+    {
+      // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
+      QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
+      m_111PF->setPixmap(QPixmap::fromImage(image));
+    }
   }
   if (err == 1)
   {

@@ -36,11 +36,16 @@
 
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
+#include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
-
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 
 namespace Detail
 {
@@ -267,35 +272,31 @@ int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], floa
   return g1odfbin;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 std::vector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
 {
   std::vector<OrientationOps::Pointer> m_OrientationOps;
-  HexagonalOps::Pointer m_HexOps = HexagonalOps::New(); // Hex High
-  m_OrientationOps.push_back((m_HexOps));
+  m_OrientationOps.push_back(HexagonalOps::New());
 
-  CubicOps::Pointer m_CubicOps = CubicOps::New(); // Cubic High
-  m_OrientationOps.push_back((m_CubicOps));
+  m_OrientationOps.push_back(CubicOps::New());
 
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Hex Low
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Cubic Low
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Triclinic
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Monoclinic
+  m_OrientationOps.push_back(HexagonalLowOps::New()); // Hex Low
+  m_OrientationOps.push_back(CubicLowOps::New()); // Cubic Low
+  m_OrientationOps.push_back(TriclinicOps::New()); // Triclinic
+  m_OrientationOps.push_back(MonoclinicOps::New()); // Monoclinic
 
-  OrthoRhombicOps::Pointer m_OrthoOps = OrthoRhombicOps::New(); // OrthoRhombic
-  m_OrientationOps.push_back((m_OrthoOps));
+  m_OrientationOps.push_back(OrthoRhombicOps::New());// OrthoRhombic
 
 
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Tetragonal-low
-  TetragonalOps::Pointer m_TetraOps = TetragonalOps::New(); // Tetragonal-high
-  m_OrientationOps.push_back((m_TetraOps));
+  m_OrientationOps.push_back(TetragonalLowOps::New()); // Tetragonal-low
+  m_OrientationOps.push_back(TetragonalOps::New());// Tetragonal-high
 
-  m_OrientationOps.push_back(OrientationOps::NullPointer()); // Trigonal-low
-  TrigonalOps::Pointer m_TrigOps = TrigonalOps::New(); // Trigonal-High
-  m_OrientationOps.push_back((m_TrigOps));
+  m_OrientationOps.push_back(TrigonalLowOps::New()); // Trigonal-low
+  m_OrientationOps.push_back(TrigonalOps::New());// Trigonal-High
 
-
-  OrthoRhombicOps::Pointer m_AxisOrthoOps = OrthoRhombicOps::New();
-  m_OrientationOps.push_back((m_AxisOrthoOps));
+  m_OrientationOps.push_back(OrthoRhombicOps::New()); // Axis OrthorhombicOps
 
   return m_OrientationOps;
 }
