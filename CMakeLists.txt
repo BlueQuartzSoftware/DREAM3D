@@ -155,9 +155,9 @@ set(DREAM3DProj_INSTALL_FILES "${PROJECT_INSTALL_HEADERS}")
 # Generate our ReadMe and License Files
 configure_file(${PROJECT_SOURCE_DIR}/License.txt
                 ${PROJECT_BINARY_DIR}/License.txt )
-configure_file(${PROJECT_SOURCE_DIR}/ReadMe.txt
-                ${PROJECT_BINARY_DIR}/ReadMe.txt )
-install(FILES ${PROJECT_BINARY_DIR}/ReadMe.txt
+configure_file(${PROJECT_SOURCE_DIR}/ReadMe.md
+                ${PROJECT_BINARY_DIR}/ReadMe.md )
+install(FILES ${PROJECT_BINARY_DIR}/ReadMe.md
         DESTINATION .
         COMPONENT Applications)
 
