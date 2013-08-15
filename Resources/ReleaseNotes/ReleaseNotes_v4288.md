@@ -1,5 +1,3 @@
-# DREAM3D Release Notes #
-
 ## Important Changes in Version 4.2 ##
 
 ### TSL Reference Frame Changes ###
@@ -15,15 +13,9 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 
 **Note: This pipeline will OVERWRITE the existing DREAM3D File if both the input and output files are the same file.**
 
-### Version 4.2.97 ###
 
-+ Fixed bug where the "Generate Ensemble Statistics" could not execute due to an error in the internal naming of variables.
-+ Updated the documentation for the "Find Average Orientations" filter
-+ Clarifying an error message that is produced when a filter requests an array from the Data Container but the array stored in the Data container does not match type and/or size and/or number of components.
-
-## Version 4.2 Bugs Fixed & Features Added ##
-
-+ Adding filters for volume fraction and surface area to volume ratio
+#### 4.2.88  Features & Bugs  Fixed  ###
++ adding filters for volume fraction and surface area to volume ratio
 + Fix bug in ScalarSegmentGrains where boolean arrays are not segmented correctly
 + On the raw binary reader allow user to optionally over ride the origin and spacing values with the entries in the filter.
 + Visualize GBCD, empty GMT file causes crash.
@@ -94,3 +86,5 @@ For historical compatibility in versions prior to 4.2 the internal representatio
 + Fix calculation+storage of real stats for reading into synthetic builder
 + Read DREAM3D Filter: Not saving which SurfaceMesh arrays were checked to the file
 + Missing Documentation File for IOFilters/ImportImageStack
++ Add "help" button to each filter that would display the help for that specific filter (right click)
+
