@@ -62,6 +62,13 @@ namespace Detail
   static const float OrthoDim1StepValue = OrthoDim1InitValue/18.0f;
   static const float OrthoDim2StepValue = OrthoDim2InitValue/18.0f;
   static const float OrthoDim3StepValue = OrthoDim3InitValue/18.0f;
+
+  namespace Orthorhombic
+  {
+  static const int symSize0 = 2;
+  static const int symSize1 = 2;
+  static const int symSize2 = 2;
+  }
 }
 
 static const QuatF OrthoQuatSym[4] = { QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
@@ -409,22 +416,18 @@ void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, Flo
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
 
-  int symSize0 = 2;
-  int symSize1 = 2;
-  int symSize2 = 2;
-
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize0)
   {
-    xyz001->Resize(nOrientations * symSize0 * 3);
+    xyz001->Resize(nOrientations * Detail::Orthorhombic::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize1)
   {
-    xyz011->Resize(nOrientations * symSize1 * 3);
+    xyz011->Resize(nOrientations * Detail::Orthorhombic::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize2)
   {
-    xyz111->Resize(nOrientations * symSize2 * 3);
+    xyz111->Resize(nOrientations * Detail::Orthorhombic::symSize2 * 3);
   }
 
 
@@ -584,19 +587,17 @@ std::vector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFig
   std::string label0("Orthorhombic <001>");
   std::string label1("Orthorhombic <011>");
   std::string label2("Orthorhombic <111>");
-  int symSize0 = 2;
-  int symSize1 = 2;
-  int symSize2 = 2;
+
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::Orthorhombic::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 
