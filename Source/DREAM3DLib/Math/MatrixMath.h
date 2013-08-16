@@ -146,6 +146,14 @@ class DREAM3DLib_EXPORT MatrixMath
     static float CosThetaBetweenVectors(float a[3], float b[3]);
 
     /**
+     * @brief Computes the angle in RADIANS between 2 vectors.
+     * @param a
+     * @param b
+     * @return
+     */
+    float AngleBetweenVectors(float a[3], float b[3]);
+
+    /**
      * @brief The dot product of 2 vectors a & b
      * @param a 1x3 Vector
      * @param b 1x3 Vector

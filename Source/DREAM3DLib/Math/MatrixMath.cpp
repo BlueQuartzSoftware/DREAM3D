@@ -265,3 +265,13 @@ float MatrixMath::CosThetaBetweenVectors(float a[3], float b[3])
   float norm2 = sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
   return (a[0]*b[0]+a[1]*b[1]+a[2]*b[2])/(norm1*norm2);
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+float MatrixMath::AngleBetweenVectors(float a[3], float b[3])
+{
+  float norm1 = sqrt(a[0]*a[0]+a[1]*a[1]+a[2]*a[2]);
+  float norm2 = sqrt(b[0]*b[0]+b[1]*b[1]+b[2]*b[2]);
+  return acos((a[0]*b[0]+a[1]*b[1]+a[2]*b[2])/(norm1*norm2));
+}
