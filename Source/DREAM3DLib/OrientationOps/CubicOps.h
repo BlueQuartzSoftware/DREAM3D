@@ -108,10 +108,22 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      * an image object from other libraries and written out to disk.
      */
     virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
+
+
+    /**
+     * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
+
+
 protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
+
+    void _calculateIPFColor(float *d, float *fRgb, uint8_t *rgb);
+
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
     void operator=(const CubicOps&); // Operator '=' Not Implemented

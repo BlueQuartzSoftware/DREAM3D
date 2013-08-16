@@ -59,6 +59,13 @@ namespace Detail
   static const float TriclinicDim1StepValue = TriclinicDim1InitValue/36.0f;
   static const float TriclinicDim2StepValue = TriclinicDim2InitValue/36.0f;
   static const float TriclinicDim3StepValue = TriclinicDim3InitValue/36.0f;
+
+  namespace Triclinic
+  {
+    static const int symSize0 = 6;
+    static const int symSize1 = 12;
+    static const int symSize2 = 8;
+  }
 }
 
 static const QuatF TriclinicQuatSym[1] = {
@@ -431,22 +438,20 @@ class GenerateSphereCoordsImpl
 void TriclinicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
-  int symSize0 = 6;
-  int symSize1 = 12;
-  int symSize2 = 8;
+
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::Triclinic::symSize0)
   {
-    xyz001->Resize(nOrientations * symSize0 * 3);
+    xyz001->Resize(nOrientations * Detail::Triclinic::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::Triclinic::symSize1)
   {
-    xyz011->Resize(nOrientations * symSize1 * 3);
+    xyz011->Resize(nOrientations * Detail::Triclinic::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::Triclinic::symSize2)
   {
-    xyz111->Resize(nOrientations * symSize2 * 3);
+    xyz111->Resize(nOrientations * Detail::Triclinic::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -604,19 +609,16 @@ std::vector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigure
   std::string label0("Triclinic <001>");
   std::string label1("Triclinic <011>");
   std::string label2("Triclinic <111>");
-  int symSize0 = 6;
-  int symSize1 = 12;
-  int symSize2 = 8;
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::Triclinic::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::Triclinic::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::Triclinic::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 
