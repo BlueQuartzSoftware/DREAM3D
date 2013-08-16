@@ -63,9 +63,9 @@ namespace Detail
   static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
   namespace CubicHigh
   {
-  static const int symSize0 = 6;
-  static const int symSize1 = 12;
-  static const int symSize2 = 8;
+    static const int symSize0 = 6;
+    static const int symSize1 = 12;
+    static const int symSize2 = 8;
   }
 }
 
@@ -1206,32 +1206,6 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   _rgb[0] = (theta2-theta1)/theta2;
 
   _calculateIPFColor(d, _rgb, rgb);
-//  // 4 Compute the Red, Green and Blue values
-//  float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
-//  d[0] = d[0] / norm;
-//  d[1] = d[1] / norm;
-//  d[2] = d[2] / norm;
-//  float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
-//  phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
-//  _rgb[1] = (1 - _rgb[0]) * ((35.26f - phi_local) / 35.26f);
-//  _rgb[2] = (1 - _rgb[0]) - _rgb[1];
-//  float max = _rgb[0];
-//  if (_rgb[1] > max) max = _rgb[1];
-//  if (_rgb[2] > max) max = _rgb[2];
-
-//  _rgb[0] = _rgb[0] / max;
-//  _rgb[1] = _rgb[1] / max;
-//  _rgb[2] = _rgb[2] / max;
-
-//  // Multiply by 255 to get an R/G/B value
-//  _rgb[0] = _rgb[0] * 255.0f;
-//  _rgb[1] = _rgb[1] * 255.0f;
-//  _rgb[2] = _rgb[2] * 255.0f;
-
-//  rgb[0] = static_cast<unsigned char>(_rgb[0]);
-//  rgb[1] = static_cast<unsigned char>(_rgb[1]);
-//  rgb[2] = static_cast<unsigned char>(_rgb[2]);
-
 }
 
 // -----------------------------------------------------------------------------
@@ -1502,14 +1476,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
           phi > (90 * DREAM3D::Constants::k_PiOver180) ||
           theta > (35.26 * DREAM3D::Constants::k_PiOver180))
       {
-        color = ColorTable::makeRgba(255, 255, 255, 255);
+        color = 0xFFFFFFFF;
       }
       else
       {
         //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
-        cd[0] = fabs(x);
-        cd[1] = fabs(y);
-        cd[2] = fabs(z);
+        cd[0] = fabs(x1);
+        cd[1] = fabs(y1);
+        cd[2] = fabs(z1);
 
         // Sort the cd array from smallest to largest
         _TripletSort(cd[0], cd[1], cd[2], cd);
@@ -1521,13 +1495,14 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
         d[1] = 1;
         d[2] = 1;
 
+       // float redDir[3] = {0,-DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
         theta1 = (cd[0] * redDir[0]) + (cd[1] * redDir[1]) + (cd[2] * redDir[2]);
-        theta1 = DREAM3D::Constants::k_RadToDeg * acos(theta1);
-        theta2 = 90.0f;
+        theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
 
         fRgb[0] = (theta2 - theta1) / (theta2 * 0.5f);
 
         _calculateIPFColor(d, fRgb, rgb);
+
         color = ColorTable::makeRgba(rgb[0], rgb[1], rgb[2], 255);
       }
       pixelPtr[idx] = color;

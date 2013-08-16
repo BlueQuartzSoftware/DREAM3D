@@ -142,13 +142,18 @@ class DREAM3DLib_EXPORT WriteIPFStandardTriangle : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    QString generateImagePath( QString label);
+
+    void writeImage(QImage &image);
+
+    QImage generateCubicHighTriangle();
+    QImage overlayCubicHighText(QImage image);
+
+
+    // These should go away
+    void findColor(float x1, float y1, float z1, unsigned char* rgb);
     QImage generateCubicTriangle();
 
-    void findColor(float x, float y, float z, unsigned char* rgb);
-
-    QString generateImagePath( QString label);
-    QImage overlayCubicHighText(QImage image);
-    void writeImage(QImage &image);
 
 
   private:
