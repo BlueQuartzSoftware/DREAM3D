@@ -409,7 +409,7 @@ class GenerateSphereCoordsImpl
       float g[3][3];
       float gTranpose[3][3];
       float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+      //float direction[3] = {0.0, 0.0, 0.0};
 
 
       for(size_t i = start; i < end; ++i)
