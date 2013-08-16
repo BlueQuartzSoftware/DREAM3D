@@ -214,7 +214,7 @@ void OrthoRhombicOps::getODFFZRod(float &r1,float &r2, float &r3)
 void OrthoRhombicOps::getMDFFZRod(float &r1,float &r2, float &r3)
 {
   float w, n1, n2, n3;
-  float FZn1, FZn2, FZn3;
+  //float FZn1, FZn2, FZn3;
 
   _calcRodNearestOrigin(OrthoRodSym, 4, r1, r2, r3);
   OrientationMath::RodtoAxisAngle(r1, r2, r3, w, n1, n2, n3);
