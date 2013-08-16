@@ -37,7 +37,6 @@
 #define _PoleFigureUtilities_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 typedef struct {
@@ -47,6 +46,7 @@ typedef struct {
   int numColors;
   double minScale;
   double maxScale;
+  float sphereRadius;
 } PoleFigureConfiguration_t;
 
 /**

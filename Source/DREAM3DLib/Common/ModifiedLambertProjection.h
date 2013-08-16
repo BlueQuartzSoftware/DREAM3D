@@ -40,6 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 /**
  * @class ModifiedLambertProjection ModifiedLambertProjection.h DREAM3DLib/Common/ModifiedLambertProjection.h
@@ -136,15 +137,23 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
     int getSquareIndex(float* sqCoord);
 
     /**
-     * @brief normalizeSquares
+     * @brief This function normalizes the squares by taking the value of each square and dividing by the sum of all the
+     * values in all the squares.
      */
     void normalizeSquares();
+
+    /**
+     * @brief normalizeSquaresToMRD This function first normalizes the squares then multiplies each value by the total number of squares.
+     */
+    void normalizeSquaresToMRD();
 
     /**
      * @brief createStereographicProjection
      * @param stereoGraphicProjectionDims
      */
-    DoubleArrayType::Pointer createStereographicProjection(int stereoGraphicProjectionDims);
+    DoubleArrayType::Pointer createStereographicProjection(int dim);
+
+    void createStereographicProjection(int dim, DoubleArrayType* stereoIntensity);
 
   protected:
     ModifiedLambertProjection();
@@ -169,5 +178,40 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
     void operator=(const ModifiedLambertProjection&); // Operator '=' Not Implemented
 };
 
+
+ /**
+ * @class This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
+ * off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
+ * the Coords generated from Euler Angles. This all feeds into generating a pole figure.
+ */
+  class GenerateIntensityMapImpl
+  {
+    public:
+      GenerateIntensityMapImpl(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
+        m_XYZCoords(xyzCoords),
+        m_Config(config),
+        m_Intensity(intensity)
+      {
+
+      }
+      virtual ~GenerateIntensityMapImpl(){}
+
+      void operator()() const
+      {
+        ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
+        lambert->normalizeSquaresToMRD();
+        m_Intensity->Resize(m_Config->imageDim * m_Config->imageDim);
+        m_Intensity->SetNumberOfComponents(1);
+        lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
+      }
+
+    protected:
+      GenerateIntensityMapImpl(){}
+
+    private:
+      FloatArrayType*     m_XYZCoords;
+      PoleFigureConfiguration_t* m_Config;
+      DoubleArrayType*    m_Intensity;
+  };
 
 #endif /* _ModifiedLambertProjection_H_ */
