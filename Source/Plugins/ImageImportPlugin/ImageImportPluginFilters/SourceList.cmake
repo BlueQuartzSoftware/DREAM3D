@@ -14,8 +14,6 @@ START_FILTER_GROUP(${ImageImportPlugin_BINARY_DIR} "${_filterGroupName}" "Image 
 set(_PublicFilters
   ImportImageStack
   SaveImages
-  GeneratePoleFigureImages
-  GenerateIPFTriangle
 )
 
 
