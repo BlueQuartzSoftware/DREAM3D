@@ -141,13 +141,13 @@ void SegmentGrains::execute()
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
 
   size_t gnum = 1;
-  int seed = 0;
-  int neighbor;
+  int64_t seed = 0;
+  int64_t neighbor;
   bool good = 0;
   DimType col, row, plane;
-  size_t size = 0;
-  size_t initialVoxelsListSize = 10000;
-  std::vector<int> voxelslist(initialVoxelsListSize, -1);
+  int64_t size = 0;
+  int64_t initialVoxelsListSize = 10000;
+  std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];
@@ -209,7 +209,7 @@ void SegmentGrains::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SegmentGrains::getSeed(size_t gnum)
+int64_t SegmentGrains::getSeed(size_t gnum)
 {
   return -1;
 }
@@ -217,7 +217,7 @@ int SegmentGrains::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool SegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
+bool SegmentGrains::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
   return false;
 }
