@@ -156,7 +156,7 @@ class CalculateTwinBoundaryImpl
                   n[1] = n2;
                   n[2] = n3;
                   m_TwinBoundary[i] = true;
-                  incoherence = 180.0*acos(MatrixMath::DotProduct(n, s_xstl_norm))/DREAM3D::Constants::k_Pi;
+                  incoherence = 180.0*acos(MatrixMath::CosThetaBetweenVectors(n, s_xstl_norm))/DREAM3D::Constants::k_Pi;
                   if(incoherence < m_TwinBoundaryIncoherence[i]) m_TwinBoundaryIncoherence[i] = incoherence;
                 }
               }
