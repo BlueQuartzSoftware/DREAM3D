@@ -165,9 +165,10 @@ void SegmentGrains::execute()
       size = 0;
       voxelslist[size] = seed;
       size++;
-      for (size_t j = 0; j < size; ++j)
+      while(size > 0)
       {
-        size_t currentpoint = voxelslist[j];
+        int64_t currentpoint = voxelslist[size-1];
+        size -= 1;
         col = currentpoint % dims[0];
         row = (currentpoint / dims[0]) % dims[1];
         plane = currentpoint / (dims[0] * dims[1]);
