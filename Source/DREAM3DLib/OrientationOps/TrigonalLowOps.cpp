@@ -41,6 +41,16 @@
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+#include <tbb/parallel_for.h>
+#include <tbb/blocked_range.h>
+#include <tbb/partitioner.h>
+#include <tbb/task_scheduler_init.h>
+#include <tbb/task_group.h>
+#include <tbb/task.h>
+#endif
+
 namespace Detail {
 
   static const float TrigDim1InitValue = powf((0.75f*((float(M_PI))-sinf((float(M_PI))))),(1.0f/3.0f));
@@ -347,14 +357,98 @@ void TrigonalLowOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float 
 {
   F7 = 0;
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+namespace Detail
+{
+namespace TrigonalLow
+{
+class GenerateSphereCoordsImpl
+{
+    FloatArrayType* eulers;
+    FloatArrayType* xyz001;
+    FloatArrayType* xyz011;
+    FloatArrayType* xyz111;
+
+  public:
+    GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
+      eulers(eulerAngles),
+      xyz001(xyz001Coords),
+      xyz011(xyz011Coords),
+      xyz111(xyz111Coords)
+    {}
+    virtual ~GenerateSphereCoordsImpl(){}
+
+    void generate(size_t start, size_t end) const
+    {
+      float g[3][3];
+      float gTranpose[3][3];
+      float* currentEuler = NULL;
+      float direction[3] = {0.0, 0.0, 0.0};
 
 
+      for(size_t i = start; i < end; ++i)
+      {
+        currentEuler = eulers->GetPointer(i * 3);
+
+        OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+        MatrixMath::Transpose3x3(g, gTranpose);
+      }
+    }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+    void operator()(const tbb::blocked_range<size_t> &r) const
+    {
+      generate(r.begin(), r.end());
+    }
+#endif
+};
+}
+}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void TrigonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   BOOST_ASSERT(false);
+  size_t nOrientations = eulers->GetNumberOfTuples();
+  int symSize0 = 0;
+  int symSize1 = 0;
+  int symSize2 = 0;
+
+  // Sanity Check the size of the arrays
+  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  {
+    xyz001->Resize(nOrientations * symSize0 * 3);
+  }
+  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  {
+    xyz011->Resize(nOrientations * symSize1 * 3);
+  }
+  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  {
+    xyz111->Resize(nOrientations * symSize2 * 3);
+  }
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+#endif
+
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  if (doParallel == true)
+  {
+    tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
+                      Detail::TrigonalLow::GenerateSphereCoordsImpl(eulers, xyz001, xyz011, xyz111), tbb::auto_partitioner());
+  }
+  else
+#endif
+  {
+    Detail::TrigonalLow::GenerateSphereCoordsImpl serial(eulers, xyz001, xyz011, xyz111);
+    serial.generate(0, nOrientations);
+  }
+
 }
 
 // -----------------------------------------------------------------------------
@@ -436,9 +530,9 @@ void TrigonalLowOps::generateIPFColor(double phi1, double phi, double phi2, doub
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
-//  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
-//  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
-//  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
+  //  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
+  //  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
+  //  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
   // Multiply by 255 to get an R/G/B value
   _rgb[0] = _rgb[0] * 255.0f;
@@ -504,22 +598,41 @@ std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigu
   // this is size for CUBIC ONLY, <111> Family
   FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
 
+  config.sphereRadius = 1.0f;
 
-  float sphereRadius = 1.0f;
-
-  // Generate the coords on the sphere
+  // Generate the coords on the sphere **** Parallelized
   generateSphereCoordsFromEulers(config.eulers, xyz001.get(), xyz011.get(), xyz111.get());
+
 
   // These arrays hold the "intensity" images which eventually get converted to an actual Color RGB image
   // Generate the modified Lambert projection images (Squares, 2 of them, 1 for northern hemisphere, 1 for southern hemisphere
-  ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz001.get(), config.lambertDim, sphereRadius);
-  DoubleArrayType::Pointer intensity001 = lambert->createStereographicProjection(config.imageDim);
+  DoubleArrayType::Pointer intensity001 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label0 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity011 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label1 + "_Intensity_Image");
+  DoubleArrayType::Pointer intensity111 = DoubleArrayType::CreateArray(config.imageDim * config.imageDim, 1, label2 + "_Intensity_Image");
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  tbb::task_scheduler_init init;
+  bool doParallel = true;
+  tbb::task_group* g = new tbb::task_group;
 
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz011.get(), config.lambertDim, sphereRadius);
-  DoubleArrayType::Pointer intensity011 = lambert->createStereographicProjection(config.imageDim);
-
-  lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyz111.get(), config.lambertDim, sphereRadius);
-  DoubleArrayType::Pointer intensity111 = lambert->createStereographicProjection(config.imageDim);
+  if(doParallel == true)
+  {
+    g->run(GenerateIntensityMapImpl(xyz001.get(), &config, intensity001.get()));
+    g->run(GenerateIntensityMapImpl(xyz011.get(), &config, intensity011.get()));
+    g->run(GenerateIntensityMapImpl(xyz111.get(), &config, intensity111.get()));
+    g->wait(); // Wait for all the threads to complete before moving on.
+    delete g;
+    g = NULL;
+  }
+  else
+#endif
+  {
+    GenerateIntensityMapImpl m001(xyz001.get(), &config, intensity001.get());
+    m001();
+    GenerateIntensityMapImpl m011(xyz011.get(), &config, intensity011.get());
+    m011();
+    GenerateIntensityMapImpl m111(xyz111.get(), &config, intensity111.get());
+    m111();
+  }
 
   // Find the Max and Min values based on ALL 3 arrays so we can color scale them all the same
   double max = std::numeric_limits<double>::min();
@@ -532,6 +645,7 @@ std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigu
     if (dPtr[i] > max) { max = dPtr[i]; }
     if (dPtr[i] < min) { min = dPtr[i]; }
   }
+
 
   dPtr = intensity011->GetPointer(0);
   count = intensity011->GetNumberOfTuples();
@@ -551,21 +665,36 @@ std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigu
 
   config.minScale = min;
   config.maxScale = max;
-  // Generate the <001> pole figure which will generate a new set of Lambert Squares
-  {
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity001.get(), config, label0);
-    poleFigures.push_back(image);
-  }
 
-  // Generate the <011> pole figure which will generate a new set of Lambert Squares
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
+  UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
+  UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
+  UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+
+  poleFigures.push_back(image001);
+  poleFigures.push_back(image011);
+  poleFigures.push_back(image111);
+
+  g = new tbb::task_group;
+
+  if(doParallel == true)
   {
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity011.get(), config, label1);
-    poleFigures.push_back(image);
+    g->run(GenerateRgbaImageImpl(intensity001.get(), &config, image001.get()));
+    g->run(GenerateRgbaImageImpl(intensity011.get(), &config, image011.get()));
+    g->run(GenerateRgbaImageImpl(intensity111.get(), &config, image111.get()));
+    g->wait(); // Wait for all the threads to complete before moving on.
+    delete g;
+    g = NULL;
   }
-  // Generate the <111> pole figure which will generate a new set of Lambert Squares
+  else
+#endif
   {
-    UInt8ArrayType::Pointer image = ImageUtilities::CreateColorImage(intensity111.get(), config, label2);
-    poleFigures.push_back(image);
+    GenerateRgbaImageImpl m001(intensity001.get(), &config, image001.get());
+    m001();
+    GenerateRgbaImageImpl m011(intensity011.get(), &config, image011.get());
+    m011();
+    GenerateRgbaImageImpl m111(intensity111.get(), &config, image111.get());
+    m111();
   }
 
   return poleFigures;

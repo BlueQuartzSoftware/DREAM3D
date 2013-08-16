@@ -55,12 +55,42 @@ public:
 
   static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const std::string &name, double min, double max);
 
-  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, const std::string &name);
+  static void CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, UInt8ArrayType* image);
 
 private:
   ImageUtilities(const ImageUtilities&); // Copy Constructor Not Implemented
   void operator=(const ImageUtilities&); // Operator '=' Not Implemented
 
   };
+
+
+
+  /**
+   * @brief The GenerateRgbaImageImpl class is a wrapper around generating the RGBA image (2D UChar Array with 4 Components) from the
+   * intensity image. This should be called from a TBB Task
+   */
+  class GenerateRgbaImageImpl
+  {
+    public:
+      GenerateRgbaImageImpl(DoubleArrayType* intensity, PoleFigureConfiguration_t* config, UInt8ArrayType* rgba) :
+       m_Intensity(intensity),
+       m_Config(config),
+       m_Rgba(rgba)
+      {}
+      virtual ~GenerateRgbaImageImpl(){}
+
+      void operator()() const
+      {
+         ImageUtilities::CreateColorImage(m_Intensity, *m_Config, m_Rgba);
+      }
+    protected:
+      GenerateRgbaImageImpl(){}
+
+    private:
+      DoubleArrayType*    m_Intensity;
+      PoleFigureConfiguration_t* m_Config;
+      UInt8ArrayType* m_Rgba;
+  };
+
 
 #endif /* _ImageUtilites_H_ */

@@ -104,7 +104,7 @@ GeneratePoleFigureImages::GeneratePoleFigureImages() :
   m_OutputPath(""),
   m_ImageFormat(0),
   m_ImageSize(512),
-  m_LambertSize(75),
+  m_LambertSize(32),
   m_NumColors(32),
   m_CellEulerAngles(NULL),
   m_CellPhases(NULL),
@@ -439,38 +439,12 @@ void GeneratePoleFigureImages::generateCubicHighPoleFigures(FloatArrayType* eule
   config.lambertDim = getLambertSize();
   config.numColors = getNumColors();
 
+  std::cout << "STARTING CUBIC HIGH" << std::endl;
+
   std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-
   {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage i0 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), true);
-    // Generate the <001> pole figure
-    QString label("001_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, i0, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage i1 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), true);
-    // Generate the <011> pole figure image
-    QString label("011_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-  //  writeImage(m_OutputPath, i1, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage i2 = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), true);
-    // Generate the <111> pole figure image
-    QString label("111_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-  //  writeImage(m_OutputPath, i2, getImageSize(), label);
-  }
-
-  {
-    QString label("Combined_");
-    label.append("Phase_").append(QString::number(phaseIndex));
+    QString label("Phase_");
+    label.append(QString::number(phaseIndex));
     QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
     writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
   }
@@ -482,6 +456,7 @@ void GeneratePoleFigureImages::generateCubicHighPoleFigures(FloatArrayType* eule
 void GeneratePoleFigureImages::generateHexHighPoleFigures(FloatArrayType* eulers, int phaseIndex)
 {
   notifyStatusMessage("Generating Hex Based Pole Figures for <0001>, <1010> & <1120>");
+  std::cout << "STARTING HEX HIGH" << std::endl;
 
   HexagonalOps ops;
   PoleFigureConfiguration_t config;
@@ -493,34 +468,8 @@ void GeneratePoleFigureImages::generateHexHighPoleFigures(FloatArrayType* eulers
   std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
 
   {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), true);
-    // Generate the <0001> pole figure
-    QString label("0001_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), true);
-    // Generate the <1010> pole figure image
-    QString label("1010_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), true);
-    // Generate the <111> pole figure image
-    QString label("1120_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-  //  writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-  {
-    QString label("Combined_");
-    label.append("Phase_").append(QString::number(phaseIndex));
+    QString label("Phase_");
+    label.append(QString::number(phaseIndex));
     QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
     writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
   }
@@ -544,34 +493,8 @@ void GeneratePoleFigureImages::generateOrthorhombicPoleFigures(FloatArrayType* e
   std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
 
   {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), getImageSize(), true);
-    // Generate the <001> pole figure
-    QString label("001_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[1].get(), getImageSize(), true);
-    // Generate the <011> pole figure image
-    QString label("011_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-
-  {
-    // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
-    QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[2].get(), getImageSize(), true);
-    // Generate the <111> pole figure image
-    QString label("111_");
-    label.append("Phase_").append(QString::number(phaseIndex));
-   // writeImage(m_OutputPath, image, getImageSize(), label);
-  }
-  {
-    QString label("Combined_");
-    label.append("Phase_").append(QString::number(phaseIndex));
+    QString label("Phase_");
+    label.append(QString::number(phaseIndex));
     QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
     writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
   }

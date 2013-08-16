@@ -42,6 +42,7 @@
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
+#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 
 
 #define WRITE_XYZ_SPHERE_COORD_VTK 0
