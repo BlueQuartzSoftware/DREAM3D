@@ -1,4 +1,4 @@
-Generate IPF Color Triangle {#generateipftriangle}
+WriteIPFStandardTriangle {#writeipfstandardtriangle}
 =====
 
 ## Group (Subgroup) ##
@@ -9,6 +9,8 @@ IO Filters (Output)
 This filter will generate a standard Inverse Pole Figure color Triangle that is used for typical EBSD visualizations and other visualizations from orientation data. The user can adjust the size and type of the output file.
 
 Currently the only supported triangles are for Cubic (High) crystal symmetry.
+
+![IPFFilterLegend.png](images/IPFFilterLegend.png)
 
 ## Parameters ##
 | Name             | Type |
@@ -39,3 +41,5 @@ None
 
 
 See a bug? Does this documentation need updated with a citation? Send comments, corrections and additions to [The DREAM3D development team](mailto:dream3d@bluequartz.net?subject=Documentation%20Correction)
+
+

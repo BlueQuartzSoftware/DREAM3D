@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "GeneratePoleFigureImages.h"
+#include "WritePoleFigure.h"
 
 #include <stdio.h>
 
@@ -94,7 +94,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePoleFigureImages::GeneratePoleFigureImages() :
+WritePoleFigure::WritePoleFigure() :
   AbstractFilter(),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -116,14 +116,14 @@ GeneratePoleFigureImages::GeneratePoleFigureImages() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GeneratePoleFigureImages::~GeneratePoleFigureImages()
+WritePoleFigure::~WritePoleFigure()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::setupFilterParameters()
+void WritePoleFigure::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
@@ -201,7 +201,7 @@ void GeneratePoleFigureImages::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void WritePoleFigure::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
@@ -218,7 +218,7 @@ void GeneratePoleFigureImages::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("ImagePrefix", getImagePrefix() );
@@ -234,7 +234,7 @@ int GeneratePoleFigureImages::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -276,7 +276,7 @@ void GeneratePoleFigureImages::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::preflight()
+void WritePoleFigure::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -286,7 +286,18 @@ void GeneratePoleFigureImages::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::execute()
+template<typename Ops>
+std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
+{
+  Ops ops;
+  return ops.generatePoleFigure(config);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void WritePoleFigure::execute()
 {
   int err = 0;
   setErrorCondition(err);
@@ -378,47 +389,67 @@ void GeneratePoleFigureImages::execute()
       }
     }
     if (subEulers->GetNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
+
+    std::vector<UInt8ArrayType::Pointer> figures;
+
+    PoleFigureConfiguration_t config;
+    config.eulers = subEulers.get();
+    config.imageDim = getImageSize();
+    config.lambertDim = getLambertSize();
+    config.numColors = getNumColors();
+
+    QString label("Phase_");
+    label.append(QString::number(phase));
+
     switch(m_CrystalStructures[phase])
     {
       case Ebsd::CrystalStructure::Cubic_High:
-        generateCubicHighPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<CubicOps>(config);
         break;
       case Ebsd::CrystalStructure::Cubic_Low:
-        //generateCubicLowPoleFigures(subEulers.get());
+        figures = makePoleFigures<CubicLowOps>(config);
         break;
       case Ebsd::CrystalStructure::Hexagonal_High:
-        generateHexHighPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<HexagonalOps>(config);
         break;
       case Ebsd::CrystalStructure::Hexagonal_Low:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<HexagonalLowOps>(config);
         break;
       case Ebsd::CrystalStructure::Trigonal_High:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+     //   figures = makePoleFigures<TrigonalOps>(config);
+        addWarningMessage(getHumanLabel(), "Trigonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Trigonal_Low:
-        // generateCubicHighPoleFigures(subEulers.get(), phase);
+      //  figures = makePoleFigures<TrigonalLowOps>(config);
+        addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_High:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+      //  figures = makePoleFigures<TetragonalOps>(config);
+        addWarningMessage(getHumanLabel(), "Tetragonal High Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::Tetragonal_Low:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+      //  figures = makePoleFigures<TetragonalLowOps>(config);
+        addWarningMessage(getHumanLabel(), "Trigonal Low Symmetry is not supported for Pole figures. This phase will be omitted from results", -1010);
         break;
       case Ebsd::CrystalStructure::OrthoRhombic:
-        generateOrthorhombicPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<OrthoRhombicOps>(config);
         break;
       case Ebsd::CrystalStructure::Monoclinic:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<MonoclinicOps>(config);
         break;
       case Ebsd::CrystalStructure::Triclinic:
-        //generateCubicHighPoleFigures(subEulers.get(), phase);
+        figures = makePoleFigures<TriclinicOps>(config);
         break;
       default:
         break;
 
     }
 
-
+    if (figures.size() == 3)
+    {
+      QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
+      writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
+    }
   }
 
 
@@ -426,84 +457,12 @@ void GeneratePoleFigureImages::execute()
   notifyStatusMessage("Complete");
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateCubicHighPoleFigures(FloatArrayType* eulers, int phaseIndex)
-{
-  notifyStatusMessage("Generating Cubic Based Pole Figures for <001>, <011> & <111>");
-  CubicOps ops;
-  PoleFigureConfiguration_t config;
-  config.eulers = eulers;
-  config.imageDim = getImageSize();
-  config.lambertDim = getLambertSize();
-  config.numColors = getNumColors();
 
-  std::cout << "STARTING CUBIC HIGH" << std::endl;
-
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-  {
-    QString label("Phase_");
-    label.append(QString::number(phaseIndex));
-    QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
-    writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
-  }
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateHexHighPoleFigures(FloatArrayType* eulers, int phaseIndex)
-{
-  notifyStatusMessage("Generating Hex Based Pole Figures for <0001>, <1010> & <1120>");
-  std::cout << "STARTING HEX HIGH" << std::endl;
-
-  HexagonalOps ops;
-  PoleFigureConfiguration_t config;
-  config.eulers = eulers;
-  config.imageDim = getImageSize();
-  config.lambertDim = getLambertSize();
-  config.numColors = getNumColors();
-
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-
-  {
-    QString label("Phase_");
-    label.append(QString::number(phaseIndex));
-    QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
-    writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
-  }
-
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::generateOrthorhombicPoleFigures(FloatArrayType* eulers, int phaseIndex)
-{
-  notifyStatusMessage("Generating Orthorhombic Based Pole Figures for <100>, <010> & <001>");
-
-  OrthoRhombicOps ops;
-  PoleFigureConfiguration_t config;
-  config.eulers = eulers;
-  config.imageDim = getImageSize();
-  config.lambertDim = getLambertSize();
-  config.numColors = getNumColors();
-
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
-
-  {
-    QString label("Phase_");
-    label.append(QString::number(phaseIndex));
-    QImage combinedImage = PoleFigureImageUtilities::Create3ImagePoleFigure(figures[0].get(), figures[1].get(), figures[2].get(), config);
-    writeImage(m_OutputPath, combinedImage, combinedImage.width(), label);
-  }
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QString GeneratePoleFigureImages::generateVtkPath( QString label)
+QString WritePoleFigure::generateVtkPath( QString label)
 {
   QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
 
@@ -524,7 +483,7 @@ QString GeneratePoleFigureImages::generateVtkPath( QString label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
+void WritePoleFigure::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
@@ -548,7 +507,7 @@ void GeneratePoleFigureImages::writeVtkFile(const std::string filename, DoubleAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GeneratePoleFigureImages::writeImage(const std::string outputPath, QImage image, int dimension, QString label)
+void WritePoleFigure::writeImage(const std::string outputPath, QImage image, int dimension, QString label)
 {
   std::stringstream ss;
   ss << "Writing Image " << outputPath;
@@ -569,7 +528,7 @@ void GeneratePoleFigureImages::writeImage(const std::string outputPath, QImage i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString GeneratePoleFigureImages::generateImagePath( QString label)
+QString WritePoleFigure::generateImagePath( QString label)
 {
   QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
   if(m_ImageFormat == TifImageType)

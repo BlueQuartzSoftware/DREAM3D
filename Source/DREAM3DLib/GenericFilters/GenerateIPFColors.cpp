@@ -207,7 +207,7 @@ void GenerateIPFColors::execute()
   size_t index = 0;
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::NormalizeVector(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  MatrixMath::Normalize3x1(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
 
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)

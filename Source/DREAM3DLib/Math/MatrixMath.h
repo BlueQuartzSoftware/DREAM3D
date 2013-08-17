@@ -54,25 +54,123 @@ class DREAM3DLib_EXPORT MatrixMath
 
     virtual ~MatrixMath();
 
+    /**
+     * @brief Performs the Matrix Multiplication of g1 and g2 and puts the result into outMat. (Single Precision version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
     static void Multiply3x3with3x3(float g1[3][3], float g2[3][3], float outMat[3][3]);
+
+    /**
+     * @brief Performs the Matrix Multiplication of g1 and g2 and puts the result into outMat. (Single Precision version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
     static void Multiply3x3with3x1(const float g1[3][3], float g2[3], float outMat[3]);
+
+    /**
+     * @brief Performs the Matrix Multiplication of g1 and g2 and puts the result into outMat. (Double Precision Version)
+     * @param g1
+     * @param g2
+     * @param outMat
+     */
     static void Multiply3x3with3x1(double g1[3][3], double g2[3], double outMat[3]);
-    static void Multiply3x1withConstant(float g[3], float constant);
 
+    /**
+     * @brief Multiplies each element of a 3x1 matrix by the value v.
+     * @param g Input Matrix
+     * @param v Value to mutliply each element by.
+     */
+    static void Multiply3x1withConstant(float g[3], float v);
+
+    /**
+     * @brief Transposes the 3x3 matrix and places the result into outMat
+     * @param g
+     * @param outMat
+     */
     static void Transpose3x3(float g[3][3], float outMat[3][3]);
-    static void Copy3x3(float g[3][3], float outMat[3][3]);
-    static void Copy3x1(float g[3], float outMat[3]);
-    static void Normalize3x3(float g[3][3]);
-    static void Identity3x3(float g[3][3]);
-    static void Normalize3x1(float g[3]);
-    static float DotProduct(float a[3], float b[3]);
 
+    /**
+     * @brief Copies a 3x3 matrix into another 3x3 matrix
+     * @param g
+     * @param outMat
+     */
+    static void Copy3x3(float g[3][3], float outMat[3][3]);
+
+    /**
+     * @brief Copies a 3x1 matrix into another 3x1 matrix
+     * @param g
+     * @param outMat
+     */
+    static void Copy3x1(float g[3], float outMat[3]);
+
+    /**
+     * @brief Initializes the 3x3 matrix to the "Identity" matrix
+     * @param g
+     */
+    static void Identity3x3(float g[3][3]);
+
+    /**
+     * @brief Performs an "in place" normalization of the 3x1 vector.
+     * @param g
+     */
+    static void Normalize3x3(float g[3][3]);
+
+    /**
+     * @brief Performs an "in place" normalization of the 3x1 vector. Single Precision Variant
+     * @param g
+     */
+    static void Normalize3x1(float g[3]);
+
+     /**
+     * @brief Performs an "in place" normalization of the 3x1 vector. Double Precision Variant
+     * @param g
+     */
+    static void Normalize3x1(double g[3]);
+
+
+//    static void NormalizeVector(double g[3]);
+    static void Normalize3x1(double &i, double &j, double &k);
+//    static void NormalizeVector(float a[3]);
+    static void Normalize3x1(float &i, float &j, float &k);
+
+    /**
+     * @brief Calculates the Cosine of the angle between 2 vectors. To get the actual angle the programmer should
+     * use the following form: float radians = acos(MatrixMath::CosThetaBetweenVectors(a, b));
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @return
+     */
+    static float CosThetaBetweenVectors(float a[3], float b[3]);
+
+    /**
+     * @brief Computes the angle in RADIANS between 2 vectors.
+     * @param a
+     * @param b
+     * @return
+     */
+    float AngleBetweenVectors(float a[3], float b[3]);
+
+    /**
+     * @brief The dot product of 2 vectors a & b
+     * @param a 1x3 Vector
+     * @param b 1x3 Vector
+     * @return
+     */
+    static float DotProduct3x1(float a[3], float b[3]);
+
+    /**
+     * @brief Performs a Cross Product of "a into b" and places the result into c.
+     * A X B = C
+     * @param a
+     * @param b
+     * @param c
+     */
     static void CrossProduct(double a[3], double b[3], double c[3]);
 
-    static void NormalizeVector(double a[3]);
-    static void NormalizeVector(double &i, double &j, double &k);
-    static void NormalizeVector(float a[3]);
-    static void NormalizeVector(float &i, float &j, float &k);
+
 
   protected:
     MatrixMath();

@@ -520,7 +520,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
     b[0] = gAlphaT[0][2];
     b[1] = gAlphaT[1][2];
     b[2] = gAlphaT[2][2];
-    dP = MatrixMath::DotProduct(a, b);
+    dP = MatrixMath::CosThetaBetweenVectors(a, b);
     angle = acos(dP);
     if((angle*radToDeg) < m_AngleTolerance || (180.0-(angle*radToDeg)) < m_AngleTolerance)
     {
@@ -530,21 +530,21 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
       b[0] = gAlphaT[0][0];
       b[1] = gAlphaT[1][0];
       b[2] = gAlphaT[2][0];
-      dP = MatrixMath::DotProduct(a, b);
+      dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]+0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]+0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]+0.866025*gAlphaT[2][1];
-      dP = MatrixMath::DotProduct(a, b);
+      dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;
       b[0] = -0.5*gAlphaT[0][0]-0.866025*gAlphaT[0][1];
       b[1] = -0.5*gAlphaT[1][0]-0.866025*gAlphaT[1][1];
       b[2] = -0.5*gAlphaT[2][0]-0.866025*gAlphaT[2][1];
-      dP = MatrixMath::DotProduct(a, b);
+      dP = MatrixMath::CosThetaBetweenVectors(a, b);
       angle = acos(dP);
       if((angle*radToDeg) < m_AngleTolerance) return 1;
       if((180.0-(angle*radToDeg)) < m_AngleTolerance) return 1;

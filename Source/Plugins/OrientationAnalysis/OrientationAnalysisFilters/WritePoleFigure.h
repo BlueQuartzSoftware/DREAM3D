@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GeneratePoleFigureImages_H_
-#define _GeneratePoleFigureImages_H_
+#ifndef _WritePoleFigure_H_
+#define _WritePoleFigure_H_
 
 #include <string>
 
@@ -48,20 +48,20 @@
 
 
 /**
- * @class GeneratePoleFigureImages GeneratePoleFigureImages.h /IOFilters/GeneratePoleFigureImages.h
+ * @class WritePoleFigure WritePoleFigure.h /IOFilters/WritePoleFigure.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
+class DREAM3DLib_EXPORT WritePoleFigure : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GeneratePoleFigureImages)
-    DREAM3D_STATIC_NEW_MACRO(GeneratePoleFigureImages)
-    DREAM3D_TYPE_MACRO_SUPER(GeneratePoleFigureImages, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(WritePoleFigure)
+    DREAM3D_STATIC_NEW_MACRO(WritePoleFigure)
+    DREAM3D_TYPE_MACRO_SUPER(WritePoleFigure, AbstractFilter)
 
-    virtual ~GeneratePoleFigureImages();
+    virtual ~WritePoleFigure();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Pole Figure Images"; }
+    virtual const std::string getHumanLabel() { return "Write Pole Figure Image"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
 
 
   protected:
-    GeneratePoleFigureImages();
+    WritePoleFigure();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -179,8 +179,8 @@ class DREAM3DLib_EXPORT GeneratePoleFigureImages : public AbstractFilter
     int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-    GeneratePoleFigureImages(const GeneratePoleFigureImages&); // Copy Constructor Not Implemented
-    void operator=(const GeneratePoleFigureImages&); // Operator '=' Not Implemented
+    WritePoleFigure(const WritePoleFigure&); // Copy Constructor Not Implemented
+    void operator=(const WritePoleFigure&); // Operator '=' Not Implemented
 };
 
-#endif /* _GeneratePoleFigureImages_H_ */
+#endif /* _WritePoleFigure_H_ */
