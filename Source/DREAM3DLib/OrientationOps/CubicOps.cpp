@@ -40,6 +40,7 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -53,13 +54,21 @@
 
 namespace Detail
 {
+
   static const float CubicDim1InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
   static const float CubicDim2InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
   static const float CubicDim3InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
   static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
   static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
   static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
+  namespace CubicHigh
+  {
+    static const int symSize0 = 6;
+    static const int symSize1 = 12;
+    static const int symSize2 = 8;
+  }
 }
+
 
 static const QuatF CubicQuatSym[24] = {
   QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
@@ -689,8 +698,8 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor)
     {
@@ -722,8 +731,8 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
     MatrixMath::Normalize3x1(hkl2);
     MatrixMath::Normalize3x1(uvw2);
-    directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
-    planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+    directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
+    planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
     schmidFactor2 = directionComponent2*planeComponent2;
     if(schmidFactor2 > maxSchmidFactor)
     {
@@ -741,8 +750,8 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
   MatrixMath::Normalize3x1(hkl2);
   MatrixMath::Normalize3x1(uvw2);
-  planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
-  directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+  planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1,hkl2));
+  directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
   mPrime = planeMisalignment*directionMisalignment;
 }
 
@@ -779,8 +788,8 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
     MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -798,10 +807,10 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
         MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
@@ -848,8 +857,8 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
     MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -868,11 +877,11 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
         MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
-        planeMisalignment = fabs(MatrixMath::DotProduct(hkl1,hkl2));
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
+        planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1,hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
@@ -918,8 +927,8 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
     MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::DotProduct(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::DotProduct(LD,hkl1));
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
     schmidFactor1 = directionComponent1*planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
@@ -937,10 +946,10 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
         MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::DotProduct(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::DotProduct(LD,hkl2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
         schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::DotProduct(uvw1,uvw2));
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
       F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
@@ -958,110 +967,110 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 // -----------------------------------------------------------------------------
 namespace Detail
 {
-namespace CubicHigh
-{
-class GenerateSphereCoordsImpl
-{
-    FloatArrayType* m_Eulers;
-    FloatArrayType* m_xyz001;
-    FloatArrayType* m_xyz011;
-    FloatArrayType* m_xyz111;
-
-  public:
-    GenerateSphereCoordsImpl(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) :
-      m_Eulers(eulers),
-      m_xyz001(xyz001),
-      m_xyz011(xyz011),
-      m_xyz111(xyz111)
-    {}
-    virtual ~GenerateSphereCoordsImpl(){}
-
-    void generate(size_t start, size_t end) const
+  namespace CubicHigh
+  {
+    class GenerateSphereCoordsImpl
     {
-      float g[3][3];
-      float gTranpose[3][3];
-      float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+        FloatArrayType* m_Eulers;
+        FloatArrayType* m_xyz001;
+        FloatArrayType* m_xyz011;
+        FloatArrayType* m_xyz111;
 
-      for(size_t i = start; i < end; ++i)
-      {
-        currentEuler = m_Eulers->GetPointer(i * 3);
+      public:
+        GenerateSphereCoordsImpl(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111) :
+          m_Eulers(eulers),
+          m_xyz001(xyz001),
+          m_xyz011(xyz011),
+          m_xyz111(xyz111)
+        {}
+        virtual ~GenerateSphereCoordsImpl(){}
 
-        OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
-        MatrixMath::Transpose3x3(g, gTranpose);
+        void generate(size_t start, size_t end) const
+        {
+          float g[3][3];
+          float gTranpose[3][3];
+          float* currentEuler = NULL;
+          float direction[3] = {0.0, 0.0, 0.0};
 
-        // -----------------------------------------------------------------------------
-        // 001 Family
-        direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18));
-        MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18),m_xyz001->GetPointer(i*18 + 3));
-        MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 3),-1);
-        direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 6));
-        MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 6),m_xyz001->GetPointer(i*18 + 9));
-        MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 9),-1);
-        direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 12));
-        MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 12),m_xyz001->GetPointer(i*18 + 15));
-        MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 15),-1);
+          for(size_t i = start; i < end; ++i)
+          {
+            currentEuler = m_Eulers->GetPointer(i * 3);
 
-        // -----------------------------------------------------------------------------
-        // 011 Family
-        direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36),m_xyz011->GetPointer(i*36 + 3));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 3),-1);
-        direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 6));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+6),m_xyz011->GetPointer(i*36 + 9));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 9),-1);
-        direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 12));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+12),m_xyz011->GetPointer(i*36 + 15));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 15),-1);
-        direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 18));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+18),m_xyz011->GetPointer(i*36 + 21));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 21),-1);
-        direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 24));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+24),m_xyz011->GetPointer(i*36 + 27));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 27),-1);
-        direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 30));
-        MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+30),m_xyz011->GetPointer(i*36 + 33));
-        MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 33),-1);
+            OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
+            MatrixMath::Transpose3x3(g, gTranpose);
 
-        // -----------------------------------------------------------------------------
-        // 111 Family
-        direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24));
-        MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24),m_xyz111->GetPointer(i*24 + 3));
-        MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 3),-1);
-        direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 6));
-        MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+6),m_xyz111->GetPointer(i*24 + 9));
-        MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 9),-1);
-        direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 12));
-        MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+12),m_xyz111->GetPointer(i*24 + 15));
-        MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 15),-1);
-        direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 18));
-        MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+18),m_xyz111->GetPointer(i*24 + 21));
-        MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 21),-1);
-      }
+            // -----------------------------------------------------------------------------
+            // 001 Family
+            direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18),m_xyz001->GetPointer(i*18 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 3),-1);
+            direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 6));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 6),m_xyz001->GetPointer(i*18 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 9),-1);
+            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 12));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 12),m_xyz001->GetPointer(i*18 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 15),-1);
 
-    }
+            // -----------------------------------------------------------------------------
+            // 011 Family
+            direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36),m_xyz011->GetPointer(i*36 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 3),-1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 6));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+6),m_xyz011->GetPointer(i*36 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 9),-1);
+            direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 12));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+12),m_xyz011->GetPointer(i*36 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 15),-1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 18));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+18),m_xyz011->GetPointer(i*36 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 21),-1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 24));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+24),m_xyz011->GetPointer(i*36 + 27));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 27),-1);
+            direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 30));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+30),m_xyz011->GetPointer(i*36 + 33));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 33),-1);
+
+            // -----------------------------------------------------------------------------
+            // 111 Family
+            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24),m_xyz111->GetPointer(i*24 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 3),-1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 6));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+6),m_xyz111->GetPointer(i*24 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 9),-1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 12));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+12),m_xyz111->GetPointer(i*24 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 15),-1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 18));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+18),m_xyz111->GetPointer(i*24 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 21),-1);
+          }
+
+        }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
-    {
-      generate(r.begin(), r.end());
-    }
+        void operator()(const tbb::blocked_range<size_t> &r) const
+        {
+          generate(r.begin(), r.end());
+        }
 #endif
-};
-}
+    };
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -1071,22 +1080,18 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
 
-  int symSize0 = 6;
-  int symSize1 = 12;
-  int symSize2 = 8;
-
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize0)
   {
-    xyz001->Resize(nOrientations * symSize0 * 3);
+    xyz001->Resize(nOrientations * Detail::CubicHigh::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize1)
   {
-    xyz011->Resize(nOrientations * symSize1 * 3);
+    xyz011->Resize(nOrientations * Detail::CubicHigh::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::CubicHigh::symSize2)
   {
-    xyz111->Resize(nOrientations * symSize2 * 3);
+    xyz111->Resize(nOrientations * Detail::CubicHigh::symSize2 * 3);
   }
 
 
@@ -1174,9 +1179,6 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
 
   // 2) use rotation matrix to find which crystal direction is aligned with 001
   float refDirection[3] = {refDir0, refDir1, refDir2};
-  //      refDirection[0] = refDir0;
-  //      refDirection[1] = refDir1;
-  //      refDirection[2] = refDir2;
   MatrixMath::Multiply3x3with3x1(g, refDirection, cd);
 
   //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
@@ -1187,46 +1189,23 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   // Sort the cd array from smallest to largest
   _TripletSort(cd[0], cd[1], cd[2], cd);
 
-  float redDir[3] = {0,0,1};
-  float theta1 = MatrixMath::DotProduct(cd, redDir);
-  theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
   d[0] = (cd[1] * 1) - (cd[2] * 0);
   d[1] = (cd[2] * 0) - (cd[0] * 1);
   d[2] = (cd[0] * 0) - (cd[1] * 0);
   d[0] = -(d[1] + d[2]) / d[0];
   d[1] = 1;
   d[2] = 1;
-  float theta2 = MatrixMath::DotProduct(d, redDir);
+
+  float redDir[3] = {0,0,1};
+  float theta1 = MatrixMath::CosThetaBetweenVectors(cd, redDir);
+  theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
+
+  float theta2 = MatrixMath::CosThetaBetweenVectors(d, redDir);
   theta2 = (DREAM3D::Constants::k_RadToDeg) * acos(theta2);
+
   _rgb[0] = (theta2-theta1)/theta2;
-  float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
-  d[0] = d[0] / norm;
-  d[1] = d[1] / norm;
-  d[2] = d[2] / norm;
-  float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
-  phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
-  _rgb[1] = (1 - _rgb[0]) * ((35.26f - phi_local) / 35.26f);
-  _rgb[2] = (1 - _rgb[0]) - _rgb[1];
-  float max = _rgb[0];
-  if (_rgb[1] > max) max = _rgb[1];
-  if (_rgb[2] > max) max = _rgb[2];
 
-  _rgb[0] = _rgb[0] / max;
-  _rgb[1] = _rgb[1] / max;
-  _rgb[2] = _rgb[2] / max;
-  //_rgb[0] = (0.6f * _rgb[0]) + 0.40f;
-  //_rgb[1] = (0.6f * _rgb[1]) + 0.40f;
-  //_rgb[2] = (0.6f * _rgb[2]) + 0.40f;
-
-  // Multiply by 255 to get an R/G/B value
-  _rgb[0] = _rgb[0] * 255.0f;
-  _rgb[1] = _rgb[1] * 255.0f;
-  _rgb[2] = _rgb[2] * 255.0f;
-
-  rgb[0] = static_cast<unsigned char>(_rgb[0]);
-  rgb[1] = static_cast<unsigned char>(_rgb[1]);
-  rgb[2] = static_cast<unsigned char>(_rgb[2]);
-
+  _calculateIPFColor(d, _rgb, rgb);
 }
 
 // -----------------------------------------------------------------------------
@@ -1263,19 +1242,17 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   std::string label0("<001>");
   std::string label1("<011>");
   std::string label2("<111>");
-  int symSize0 = 6;
-  int symSize1 = 12;
-  int symSize2 = 8;
+
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 
@@ -1377,4 +1354,160 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   }
 
   return poleFigures;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void CubicOps::_calculateIPFColor(float* d, float* fRgb, uint8_t* rgb)
+{
+  // 4 Compute the Red, Green and Blue values
+  float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
+  d[0] = d[0] / norm;
+  d[1] = d[1] / norm;
+  d[2] = d[2] / norm;
+  float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
+  phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
+  fRgb[1] = (1 - fRgb[0]) * ((35.26f - phi_local) / 35.26f);
+  fRgb[2] = (1 - fRgb[0]) - fRgb[1];
+  float max = fRgb[0];
+  if (fRgb[1] > max) max = fRgb[1];
+  if (fRgb[2] > max) max = fRgb[2];
+
+  fRgb[0] = (fRgb[0] / max) * 255.0;
+  fRgb[1] = (fRgb[1] / max) * 255.0;
+  fRgb[2] = (fRgb[2] / max) * 255.0;
+
+  rgb[0] = static_cast<unsigned char>(fRgb[0]);
+  rgb[1] = static_cast<unsigned char>(fRgb[1]);
+  rgb[2] = static_cast<unsigned char>(fRgb[2]);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
+{
+
+  UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High IPF Triangle Legend");
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
+
+
+  float indexConst1 = 0.414 / imageDim;
+  float indexConst2 = 0.207 / imageDim;
+  //float tslConst1 = (90.0f * M_PI) / 180.0f;
+  float temp = 0.0f;
+  float red1 = 0.0f;
+  float green1 = 0.0f;
+  float blue1 = 0.0f;
+  float red2 = 0.0f;
+  float green2 = 0.0f;
+  float blue2 = 0.0f;
+  float x = 0.0f;
+  float y = 0.0f;
+  float z = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+  float check1 = 0.0f;
+  float check2 = 0.0f;
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+  float phi = 0.0f;
+  float x1alt = 0.0f;
+  float theta = 0.0f;
+  float k_RootOfHalf = sqrt(0.5);
+  uint8_t rgb[3];
+
+  float redDir[3] = {0, -DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
+  float cd[3];
+  float d[3];
+  float fRgb[3] = { 0.0f, 0.0f, 0.0f };
+  float theta1 = 0.0f;
+  float theta2 = 90.0f;
+
+  ColorTable::Rgba color;
+  size_t idx = 0;
+  size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (size_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+    yScanLineIndex--;
+    for (size_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+      temp = 0;
+      red1 = 0;
+      green1 = 0;
+      blue1 = 0;
+      red2 = 0;
+      green2 = 0;
+      blue2 = 0;
+      x = xIndex * indexConst1 + indexConst2;
+      y = yIndex * indexConst1 + indexConst2;
+      z = -1.0;
+      a = (x * x + y * y + 1);
+      b = (2 * x * x + 2 * y * y);
+      c = (x * x + y * y - 1);
+      check1 = b * b;
+      check2 = 4 * a * c;
+      val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+      x1 = (1 + val) * x;
+      y1 = (1 + val) * y;
+      z1 = val;
+      denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+      denom = sqrtf(denom);
+      x1 = x1 / denom;
+      y1 = y1 / denom;
+      z1 = z1 / denom;
+
+      red1 = x1 * (-k_RootOfHalf) + z1 * k_RootOfHalf;
+      phi = acos(red1);
+      x1alt = x1 / k_RootOfHalf;
+      x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
+      //theta = acos(x1alt / cos((tslConst1) - phi));
+      theta = acos(x1alt);
+
+      if (phi < (45 * DREAM3D::Constants::k_PiOver180) ||
+          phi > (90 * DREAM3D::Constants::k_PiOver180) ||
+          theta > (35.26 * DREAM3D::Constants::k_PiOver180))
+      {
+        color = 0xFFFFFFFF;
+      }
+      else
+      {
+        //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
+        cd[0] = fabs(x1);
+        cd[1] = fabs(y1);
+        cd[2] = fabs(z1);
+
+        // Sort the cd array from smallest to largest
+        _TripletSort(cd[0], cd[1], cd[2], cd);
+
+        d[0] = (cd[1] * 1) - (cd[2] * 0);
+        d[1] = (cd[2] * 0) - (cd[0] * 1);
+        d[2] = (cd[0] * 0) - (cd[1] * 0);
+        d[0] = -(d[1] + d[2]) / d[0];
+        d[1] = 1;
+        d[2] = 1;
+
+       // float redDir[3] = {0,-DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
+        theta1 = (cd[0] * redDir[0]) + (cd[1] * redDir[1]) + (cd[2] * redDir[2]);
+        theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
+
+        fRgb[0] = (theta2 - theta1) / (theta2 * 0.5f);
+
+        _calculateIPFColor(d, fRgb, rgb);
+
+        color = ColorTable::makeRgba(rgb[0], rgb[1], rgb[2], 255);
+      }
+      pixelPtr[idx] = color;
+    }
+  }
+
+  return image;
 }

@@ -1,5 +1,6 @@
-Generate Pole Figure Images{#generatepolefigureimages}
+WritePoleFigure {#writepolefigure}
 =====
+
 
 ## Group (Subgroup) ##
 IOFilters (Output)

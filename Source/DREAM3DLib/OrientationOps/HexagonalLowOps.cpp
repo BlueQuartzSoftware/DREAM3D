@@ -58,6 +58,13 @@ namespace Detail {
   static const float HexDim1StepValue = HexDim1InitValue/36.0f;
   static const float HexDim2StepValue = HexDim2InitValue/36.0f;
   static const float HexDim3StepValue = HexDim3InitValue/6.0f;
+
+  namespace HexagonalLow
+  {
+    static const int symSize0 = 2;
+    static const int symSize1 = 6;
+    static const int symSize2 = 6;
+  }
 }
 
 
@@ -1004,22 +1011,20 @@ class GenerateSphereCoordsImpl
 void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz0001, FloatArrayType *xyz1010, FloatArrayType *xyz1120)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
-  int symSize0 = 2;
-  int symSize1 = 6;
-  int symSize2 = 6;
+
 
   // Sanity Check the size of the arrays
-  if (xyz0001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz0001->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize0)
   {
-    xyz0001->Resize(nOrientations * symSize0 * 3);
+    xyz0001->Resize(nOrientations * Detail::HexagonalLow::symSize0 * 3);
   }
-  if (xyz1010->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz1010->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize1)
   {
-    xyz1010->Resize(nOrientations * symSize1 * 3);
+    xyz1010->Resize(nOrientations * Detail::HexagonalLow::symSize1 * 3);
   }
-  if (xyz1120->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz1120->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize2)
   {
-    xyz1120->Resize(nOrientations * symSize2 * 3);
+    xyz1120->Resize(nOrientations * Detail::HexagonalLow::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -1176,19 +1181,17 @@ std::vector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFig
   std::string label0("Hex Low <0001>");
   std::string label1("Hex Low <1010>");
   std::string label2("Hex Low <1120>");
-  int symSize0 = 2;
-  int symSize1 = 6;
-  int symSize2 = 6;
+
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::HexagonalLow::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 

@@ -69,6 +69,13 @@ namespace Detail {
                                           {0.0f,0.0f,1.0f},
                                           {10000000000.0f,10000000000.0f,0.0},
                                           {-10000000000.0f,10000000000.0f,0.0}};
+
+  namespace TetragonalHigh
+  {
+    static const int symSize0 = 1;
+    static const int symSize1 = 1;
+    static const int symSize2 = 1;
+  }
 }
 
 static const QuatF TetraQuatSym[8] = {QuaternionMathF::New(0.000000000f,0.000000000f,0.000000000f,1.000000000f),
@@ -386,7 +393,7 @@ class GenerateSphereCoordsImpl
       float g[3][3];
       float gTranpose[3][3];
       float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+      //float direction[3] = {0.0, 0.0, 0.0};
 
 
       for(size_t i = start; i < end; ++i)
@@ -415,22 +422,19 @@ void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, Float
 {
   BOOST_ASSERT(false);
   size_t nOrientations = eulers->GetNumberOfTuples();
-  int symSize0 = 0;
-  int symSize1 = 0;
-  int symSize2 = 0;
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize0)
   {
-    xyz001->Resize(nOrientations * symSize0 * 3);
+    xyz001->Resize(nOrientations * Detail::TetragonalHigh::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize1)
   {
-    xyz011->Resize(nOrientations * symSize1 * 3);
+    xyz011->Resize(nOrientations * Detail::TetragonalHigh::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize2)
   {
-    xyz111->Resize(nOrientations * symSize2 * 3);
+    xyz111->Resize(nOrientations * Detail::TetragonalHigh::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -587,19 +591,17 @@ std::vector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigur
   std::string label0("Tetragonal <001>");
   std::string label1("Tetragonal <011>");
   std::string label2("Tetragonal <111>");
-  int symSize0 = 1;
-  int symSize1 = 1;
-  int symSize2 = 1;
+
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::TetragonalHigh::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::TetragonalHigh::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::TetragonalHigh::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 

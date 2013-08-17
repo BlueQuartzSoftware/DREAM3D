@@ -11,6 +11,8 @@ This filter will save images based on an array that represents RGB color values 
 
 An example filter to run would be the [Generate IPF Colors](generateipfcolors.html) filter which will generate RGB values for each voxel in the volume.
 
+Currently the "Generate IPF Colors" is the only filter that can generate the correct array.
+
 ## Parameters ##
 | Name             | Type |
 |------------------|------|
@@ -24,7 +26,7 @@ An example filter to run would be the [Generate IPF Colors](generateipfcolors.ht
 
 | Type | Default Array Name | Description | Comment |
 |------|--------------------|-------------|---------|
-| UInt8  | User Selected    | The user selects a Voxel Cell Array that represents RGB Values for each voxel. ||
+| UInt8  | User Selected    | The user selects a Voxel Cell Array that represents RGB Values for each voxel. | The selected array should be a 3 component UInt8 array|
 
 
 ## Created Arrays ##

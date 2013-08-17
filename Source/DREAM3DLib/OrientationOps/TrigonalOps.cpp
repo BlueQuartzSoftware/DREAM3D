@@ -59,6 +59,12 @@ namespace Detail {
   static const float TrigDim1StepValue = TrigDim1InitValue/18.0f;
   static const float TrigDim2StepValue = TrigDim2InitValue/18.0f;
   static const float TrigDim3StepValue = TrigDim3InitValue/12.0f;
+  namespace TrigonalHigh
+  {
+    static const int symSize0 = 1;
+    static const int symSize1 = 1;
+    static const int symSize2 = 1;
+  }
 }
 
 static const QuatF TrigQuatSym[6] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
@@ -403,7 +409,7 @@ class GenerateSphereCoordsImpl
       float g[3][3];
       float gTranpose[3][3];
       float* currentEuler = NULL;
-      float direction[3] = {0.0, 0.0, 0.0};
+      //float direction[3] = {0.0, 0.0, 0.0};
 
 
       for(size_t i = start; i < end; ++i)
@@ -431,22 +437,19 @@ void TrigonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatAr
 {
   BOOST_ASSERT(false);
   size_t nOrientations = eulers->GetNumberOfTuples();
-  int symSize0 = 0;
-  int symSize1 = 0;
-  int symSize2 = 0;
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * symSize0)
+  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize0)
   {
-    xyz001->Resize(nOrientations * symSize0 * 3);
+    xyz001->Resize(nOrientations * Detail::TrigonalHigh::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * symSize1)
+  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize1)
   {
-    xyz011->Resize(nOrientations * symSize1 * 3);
+    xyz011->Resize(nOrientations * Detail::TrigonalHigh::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * symSize2)
+  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::TrigonalHigh::symSize2)
   {
-    xyz111->Resize(nOrientations * symSize2 * 3);
+    xyz111->Resize(nOrientations * Detail::TrigonalHigh::symSize2 * 3);
   }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -598,19 +601,16 @@ std::vector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureC
   std::string label0("Trigonal <001>");
   std::string label1("Trigonal <011>");
   std::string label2("Trigonal <111>");
-  int symSize0 = 1;
-  int symSize1 = 1;
-  int symSize2 = 1;
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize0, 3, label0 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize1, 3, label1 + std::string("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::TrigonalHigh::symSize2, 3, label2 + std::string("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 

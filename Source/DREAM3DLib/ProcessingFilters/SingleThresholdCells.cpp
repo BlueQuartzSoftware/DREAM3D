@@ -46,6 +46,8 @@ SingleThresholdCells::SingleThresholdCells():
   AbstractFilter(),
   m_SelectedCellArrayName(""),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels),
+  m_ComparisonOperator(2),
+  m_ComparisonValue(0.0),
   m_Output(NULL)
 {
   setupFilterParameters();

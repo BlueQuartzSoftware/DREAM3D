@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _GenerateIPFTriangle_H_
-#define _GenerateIPFTriangle_H_
+#ifndef _WriteIPFStandardTriangle_H_
+#define _WriteIPFStandardTriangle_H_
 
 #include <string>
 
@@ -48,21 +48,21 @@
 
 
 /**
- * @class GenerateIPFTriangle GenerateIPFTriangle.h /IOFilters/GenerateIPFTriangle.h
+ * @class WriteIPFStandardTriangle WriteIPFStandardTriangle.h /IOFilters/WriteIPFStandardTriangle.h
  * @brief This filter generates the IPF Color Triangle legend used for IPF color maps from
  * EBSD and other orientation data
  * @author Mike Jackson
  * @date Aug 12, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
+class DREAM3DLib_EXPORT WriteIPFStandardTriangle : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(GenerateIPFTriangle)
-    DREAM3D_STATIC_NEW_MACRO(GenerateIPFTriangle)
-    DREAM3D_TYPE_MACRO_SUPER(GenerateIPFTriangle, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(WriteIPFStandardTriangle)
+    DREAM3D_STATIC_NEW_MACRO(WriteIPFStandardTriangle)
+    DREAM3D_TYPE_MACRO_SUPER(WriteIPFStandardTriangle, AbstractFilter)
 
-    virtual ~GenerateIPFTriangle();
+    virtual ~WriteIPFStandardTriangle();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write IPF Standard Triangle"; }
+    virtual const std::string getHumanLabel() { return "Write IPF Triangle Legend"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
 
 
   protected:
-    GenerateIPFTriangle();
+    WriteIPFStandardTriangle();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -142,12 +142,18 @@ class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    void generateCubicTriangle();
-
-    void findColor(float x, float y, float z, unsigned char* rgb);
-
     QString generateImagePath( QString label);
+
     void writeImage(QImage &image);
+
+    QImage generateCubicHighTriangle();
+    QImage overlayCubicHighText(QImage image);
+
+
+    // These should go away
+    void findColor(float x1, float y1, float z1, unsigned char* rgb);
+    QImage generateCubicTriangle();
+
 
 
   private:
@@ -155,8 +161,8 @@ class DREAM3DLib_EXPORT GenerateIPFTriangle : public AbstractFilter
         int32_t* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-    GenerateIPFTriangle(const GenerateIPFTriangle&); // Copy Constructor Not Implemented
-    void operator=(const GenerateIPFTriangle&); // Operator '=' Not Implemented
+    WriteIPFStandardTriangle(const WriteIPFStandardTriangle&); // Copy Constructor Not Implemented
+    void operator=(const WriteIPFStandardTriangle&); // Operator '=' Not Implemented
 };
 
-#endif /* _GenerateIPFTriangle_H_ */
+#endif /* _WriteIPFStandardTriangle_H_ */
