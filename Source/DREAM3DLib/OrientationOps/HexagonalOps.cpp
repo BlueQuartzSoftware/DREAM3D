@@ -397,6 +397,7 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
 
 void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
+  schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
@@ -660,24 +661,24 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   if(schmid4 > schmidfactor) schmidfactor = schmid4, slipsys = 4;
   if(schmid5 > schmidfactor) schmidfactor = schmid5, slipsys = 5;
   if(schmid6 > schmidfactor) schmidfactor = schmid6, slipsys = 6;
-  if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
-  if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
-  if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;
-  if(schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 10;
-  if(schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 11;
-  if(schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 12;
-  if(schmid13 > schmidfactor) schmidfactor = schmid13, slipsys = 13;
-  if(schmid14 > schmidfactor) schmidfactor = schmid14, slipsys = 14;
-  if(schmid15 > schmidfactor) schmidfactor = schmid15, slipsys = 15;
-  if(schmid16 > schmidfactor) schmidfactor = schmid16, slipsys = 16;
-  if(schmid17 > schmidfactor) schmidfactor = schmid17, slipsys = 17;
-  if(schmid18 > schmidfactor) schmidfactor = schmid18, slipsys = 18;
-  if(schmid19 > schmidfactor) schmidfactor = schmid19, slipsys = 19;
-  if(schmid20 > schmidfactor) schmidfactor = schmid20, slipsys = 20;
-  if(schmid21 > schmidfactor) schmidfactor = schmid21, slipsys = 21;
-  if(schmid22 > schmidfactor) schmidfactor = schmid22, slipsys = 22;
-  if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
-  if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
+  //if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
+  //if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
+  //if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;
+  //if(schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 10;
+  //if(schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 11;
+  //if(schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 12;
+  //if(schmid13 > schmidfactor) schmidfactor = schmid13, slipsys = 13;
+  //if(schmid14 > schmidfactor) schmidfactor = schmid14, slipsys = 14;
+  //if(schmid15 > schmidfactor) schmidfactor = schmid15, slipsys = 15;
+  //if(schmid16 > schmidfactor) schmidfactor = schmid16, slipsys = 16;
+  //if(schmid17 > schmidfactor) schmidfactor = schmid17, slipsys = 17;
+  //if(schmid18 > schmidfactor) schmidfactor = schmid18, slipsys = 18;
+  //if(schmid19 > schmidfactor) schmidfactor = schmid19, slipsys = 19;
+  //if(schmid20 > schmidfactor) schmidfactor = schmid20, slipsys = 20;
+  //if(schmid21 > schmidfactor) schmidfactor = schmid21, slipsys = 21;
+  //if(schmid22 > schmidfactor) schmidfactor = schmid22, slipsys = 22;
+  //if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
+  //if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
 
 void HexagonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)

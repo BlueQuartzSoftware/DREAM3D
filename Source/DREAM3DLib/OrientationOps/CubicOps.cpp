@@ -616,6 +616,7 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
 
 void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
+  schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;

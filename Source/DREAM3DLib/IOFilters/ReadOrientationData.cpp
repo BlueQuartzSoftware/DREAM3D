@@ -567,6 +567,20 @@ void ReadOrientationData::readMicFile()
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   int64_t totalPoints = m->getTotalPoints();
 
+  float x, y;
+  float xMin = 10000000;
+  float yMin = 10000000;
+  f1 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::X));
+  f2 = reinterpret_cast<float*>(reader.getPointerByName(Ebsd::Mic::Y));
+  for (int64_t i = 0; i < totalPoints; i++)
+  {
+    x = f1[i];
+    y = f2[i];
+    if(x < xMin) xMin = x;
+    if(y < yMin) yMin = y;
+  }
+  m->setOrigin(xMin,yMin,0.0);
+
   {
     phasePtr = reinterpret_cast<int*>(reader.getPointerByName(Ebsd::Mic::Phase));
     for (int64_t i = 0; i < totalPoints; i++)
