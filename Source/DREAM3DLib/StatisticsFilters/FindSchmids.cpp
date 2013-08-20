@@ -175,21 +175,22 @@ void FindSchmids::execute()
   float crystalLoading[3];
   float schmid = 0;
 
+  sampleLoading[0] = m_LoadingDir.x;
+  sampleLoading[1] = m_LoadingDir.y;
+  sampleLoading[2] = m_LoadingDir.z;
+  MatrixMath::Normalize3x1(sampleLoading);
+
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     OrientationMath::QuattoMat(q1, g);
 
-    sampleLoading[0] = m_LoadingDir.x;
-    sampleLoading[1] = m_LoadingDir.y;
-    sampleLoading[2] = m_LoadingDir.z;
-
     MatrixMath::Multiply3x3with3x1(g, sampleLoading, crystalLoading);
 
     m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 
-      m_Schmids[i] = schmid;
+    m_Schmids[i] = schmid;
     m_Poles[3*i] = int32_t(crystalLoading[0]*100);
     m_Poles[3*i+1] = int32_t(crystalLoading[1]*100);
     m_Poles[3*i+2] = int32_t(crystalLoading[2]*100);

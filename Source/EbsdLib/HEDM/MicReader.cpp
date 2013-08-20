@@ -404,6 +404,7 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   float origEdgeLength;
   float xMax = 0, yMax = 0;
   float xMin = 1000000000, yMin = 1000000000;
+  float xMinUM, yMinUM;
   size_t counter = 0;
 
   initPointers(1);
@@ -482,6 +483,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   yDim = int((yMax-yMin)/newEdgeLength)+1;
   xRes = newEdgeLength*1000.0f;
   yRes = newEdgeLength*1000.0f;
+  xMinUM = xMin*1000.0f;
+  yMinUM = xMin*1000.0f;
 
   char buf_2[16];
   ::memset(buf_2, 0, 16);
@@ -542,8 +545,8 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
           m_Euler3[point] = EA3[i];
           m_Conf[point] = confidence[i];
           m_Phase[point] = phase[i];
-          m_X[point] = float(j)*xRes;
-          m_Y[point] = float(k)*yRes;
+          m_X[point] = float(j)*xRes+xMinUM;
+          m_Y[point] = float(k)*yRes+yMinUM;
         }
       }
     }
