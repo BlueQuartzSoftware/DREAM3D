@@ -1064,6 +1064,14 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatA
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool HexagonalOps::inUnitTriangle(float eta, float chi)
+{
+  if( eta < 0 || eta > (30.0*DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0*DREAM3D::Constants::k_PiOver180) ) return false;
+  return true;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1091,7 +1099,7 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
   float p[3];
   float refDirection[3];
   float d[3];
-  float theta, phi_local;
+  float chi, eta;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
   OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
@@ -1108,36 +1116,27 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if (p[2] < 0)
-    {
-      p[0] = -p[0];
-      p[1] = -p[1];
-      p[2] = -p[2];
-    }
-    d[0] = p[0];
-    d[1] = p[1];
-    d[2] = 0;
-    MatrixMath::Normalize3x1(d);
-    if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * DREAM3D::Constants::k_DegToRad))
-    {
-      theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
-      if (theta > 1) theta = 1;
+    if(p[2] < 0) continue;
+    chi = acos(p[2]);
+    eta = atan2(p[1],p[0]);
+    if(inUnitTriangle(eta, chi) == false) continue;
 
-      if (theta < -1) theta = -1;
-
-      theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
-      _rgb[0] = (90.0f - theta) / 90.0f;
-      phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
-      if (phi_local > 1) phi_local = 1;
-
-      if (phi_local < -1) phi_local = -1;
-
-      phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
-      _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
-      _rgb[2] = (1 - _rgb[0]) - _rgb[1];
-      break;
-    }
   }
+
+  float etaMin = 0.0;
+  float etaMax = 30.0;
+  float chiMax = 90.0;
+  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float arg;
+
+  _rgb[0] = 1.0 - chi/chiMax;
+  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
+  _rgb[1] = 1-_rgb[2];
+  _rgb[1] *= chi/chiMax;
+  _rgb[2] *= chi/chiMax;
+  _rgb[0] = sqrt(_rgb[0]);
+  _rgb[1] = sqrt(_rgb[1]);
+  _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
   if (_rgb[1] > max) max = _rgb[1];
@@ -1146,9 +1145,6 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
-  //  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
-  //  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
-  //  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
   // Multiply by 255 to get an R/G/B value
   _rgb[0] = _rgb[0] * 255.0f;

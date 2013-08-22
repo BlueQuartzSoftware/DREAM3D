@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT HexagonalLowOps : public OrientationOps
     static const int k_MdfSize = 62208;
     static const int k_NumSymQuats = 6;
 
+    virtual bool getHasInversion() { return false; }
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
@@ -79,6 +80,7 @@ class DREAM3DLib_EXPORT HexagonalLowOps : public OrientationOps
     virtual void getMDFFZRod(float &r1, float &r2, float &r3);
     virtual void getNearestQuat(QuatF &q1, QuatF &q2);
     virtual int getMisoBin(float r1, float r2, float r3);
+    virtual bool inUnitTriangle(float eta, float chi);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
