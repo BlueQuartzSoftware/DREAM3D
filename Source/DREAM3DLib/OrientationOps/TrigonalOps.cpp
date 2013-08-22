@@ -680,10 +680,10 @@ std::vector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureC
   config.minScale = min;
   config.maxScale = max;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);
