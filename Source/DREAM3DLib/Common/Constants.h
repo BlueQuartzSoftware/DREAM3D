@@ -98,6 +98,7 @@ namespace DREAM3D
   {
     const std::string GrainIds("GrainIds");
     const std::string FarFieldZoneIds("FarFieldZoneIds");
+    const std::string FarFieldQuats("FarFieldQuats");
     const std::string ParentIds("ParentIds");
     const std::string Phases("Phases");
     const std::string CellPhases("Phases");

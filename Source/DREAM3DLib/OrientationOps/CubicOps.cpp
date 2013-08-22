@@ -1162,6 +1162,15 @@ void CubicOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool CubicOps::inUnitTriangle(float eta, float chi)
+{
+
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
 {
   if (degToRad == true)
