@@ -507,7 +507,7 @@ void OrthoRhombicOps::generateIPFColor(double phi1, double phi, double phi2, dou
     chi = acos(p[2]);
     eta = atan2(p[1],p[0]);
     if(inUnitTriangle(eta, chi) == false) continue;
-
+    else {break;}
   }
 
   float etaMin = 0.0;
