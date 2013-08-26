@@ -41,7 +41,8 @@
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
-
+#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 
 // -----------------------------------------------------------------------------
@@ -52,11 +53,13 @@ AbstractFilter(),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_NeighborhoodsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
-m_Neighborhoods(NULL)
+m_Neighborhoods(NULL),
+m_NeighborhoodList(NULL)
 {
   setupFilterParameters();
 }
@@ -102,6 +105,37 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
+
+  // Field Data
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
+  // because we are just creating an empty NeighborList object.
+  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+  m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(m_NeighborhoodListArrayName).get());
+  if(m_NeighborhoodList == NULL)
+  {
+    NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
+    neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
+    neighborhoodlistPtr->Resize(fields);
+    m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+    if (neighborhoodlistPtr.get() == NULL) {
+      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      setErrorCondition(-308);
+    }
+    m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+                                          (m->getFieldData(m_NeighborhoodListArrayName).get());
+
+    CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
+    e->setFilterName(this->getNameOfClass());
+    e->setFilterHumanLabel(this->getHumanLabel());
+    e->setFilterGroup(this->getGroupName());
+    e->setFilterSubGroup(this->getSubGroupName());
+    e->setArrayDefaultName(m_NeighborhoodListArrayName);
+    e->setArrayGroup("Field");
+    e->setArrayNumComponents(0);
+    e->setArrayType("NeighborList");
+    addCreatedArrayHelpIndexEntry(e);
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
@@ -149,26 +183,42 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
+  std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   float x, y, z;
   float xn, yn, zn;
   float dx, dy, dz;
-  size_t numgrains = m->getNumFieldTuples();
 
-  for (size_t i = 1; i < numgrains; i++)
+    std::vector<std::vector<int> > neighborhoodlist;
+
+  int totalFields = int(m->getNumFieldTuples());
+
+  neighborhoodlist.resize(totalFields);
+
+  float aveDiam = 0;
+  for (size_t i = 1; i < totalFields; i++)
   {
     m_Neighborhoods[i] = 0;
+    aveDiam += m_EquivalentDiameters[i];
   }
-  for (size_t i = 1; i < numgrains; i++)
+  aveDiam /= totalFields;
+
+  for (size_t i = 1; i < totalFields; i++)
   {
+      if (i%100 == 0)
+      {
+      ss.str("");
+      ss << "Working On Grain " << i << " of " << totalFields;
+      notifyStatusMessage(ss.str());
+      }
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
     if(m->getXPoints() == 1) x = 0;
     if(m->getYPoints() == 1) y = 0;
     if(m->getZPoints() == 1) z = 0;
-      for (size_t j = i; j < numgrains; j++)
+      for (size_t j = i; j < totalFields; j++)
       {
       xn = m_Centroids[3*j];
       yn = m_Centroids[3*j+1];
@@ -179,14 +229,20 @@ void FindNeighborhoods::find_neighborhoods()
         dx = fabs(x - xn);
         dy = fabs(y - yn);
         dz = fabs(z - zn);
-        if (dx < m_EquivalentDiameters[i] && dy < m_EquivalentDiameters[i] && dz < m_EquivalentDiameters[i])
+        if (dx < aveDiam && dy < aveDiam && dz < aveDiam)
         {
             m_Neighborhoods[i]++;
-        }
-        if (dx < m_EquivalentDiameters[j] && dy < m_EquivalentDiameters[j] && dz < m_EquivalentDiameters[j])
-        {
+            neighborhoodlist[i].push_back(j);
             m_Neighborhoods[j]++;
+            neighborhoodlist[j].push_back(i);
         }
       }
+  }
+  for (size_t i = 1; i < totalFields; i++)
+  {
+      // Set the vector for each list into the NeighborhoodList Object
+      NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
+      sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
+      m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
   }
 }
