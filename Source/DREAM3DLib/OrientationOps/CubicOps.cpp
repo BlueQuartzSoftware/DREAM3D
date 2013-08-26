@@ -39,6 +39,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 
@@ -1364,10 +1365,10 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   config.minScale = min;
   config.maxScale = max;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);
@@ -1394,6 +1395,17 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
     GenerateRgbaImageImpl m111(intensity111.get(), &config, image111.get());
     m111();
   }
+
+
+
+  size_t dims[3] = {config.imageDim, config.imageDim, 1};
+  float res[3] = {1.0, 1.0, 1.0};
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->GetName() + ".vtk",
+                                                 intensity001.get(), dims, res, "double", true );
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity011->GetName() + ".vtk",
+                                                 intensity011.get(), dims, res, "double", true );
+  VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->GetName() + ".vtk",
+                                                 intensity111.get(), dims, res, "double", true );
 
   return poleFigures;
 }
@@ -1523,6 +1535,5 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   //    pixelPtr[idx] = color;
   //  }
   //}
-
   return image;
 }
