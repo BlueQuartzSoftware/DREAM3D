@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
 
+    DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
 	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }

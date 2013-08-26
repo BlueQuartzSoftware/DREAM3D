@@ -53,6 +53,7 @@ m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_MultiplesOfAverage(1),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
@@ -72,7 +73,18 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("MultiplesOfAverage");
+    option->setHumanLabel("Multiples Of Average Diameter");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
 
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
@@ -80,6 +92,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMultiplesOfAverage( reader->readValue("MultiplesOfAverage", getMultiplesOfAverage()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -90,6 +103,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("MultiplesOfAverage", getMultiplesOfAverage() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
