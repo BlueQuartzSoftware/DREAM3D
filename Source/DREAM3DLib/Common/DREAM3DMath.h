@@ -164,6 +164,9 @@ class DREAM3DMath
     virtual ~DREAM3DMath();
 
     static DREAM3DLib_EXPORT float Gamma(float);
+    static DREAM3DLib_EXPORT float boundF(float val, float min, float max);
+    static DREAM3DLib_EXPORT int boundI(int val, int min, int max);
+    static DREAM3DLib_EXPORT double boundD(double val, double min, double max);
     static DREAM3DLib_EXPORT float erf(float);
     static DREAM3DLib_EXPORT float erfc(float);
     static DREAM3DLib_EXPORT float gammastirf(float);

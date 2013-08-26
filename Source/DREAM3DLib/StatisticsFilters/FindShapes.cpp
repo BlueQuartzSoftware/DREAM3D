@@ -209,14 +209,14 @@ void FindShapes::find_moments()
   float xdist1, xdist2, xdist3, xdist4, xdist5, xdist6, xdist7, xdist8;
   float ydist1, ydist2, ydist3, ydist4, ydist5, ydist6, ydist7, ydist8;
   float zdist1, zdist2, zdist3, zdist4, zdist5, zdist6, zdist7, zdist8;
-  int zStride, yStride;
-  for(int i=0;i<zPoints;i++)
+  size_t zStride, yStride;
+  for(size_t i=0;i<zPoints;i++)
   {
   zStride = i*xPoints*yPoints;
-  for (int j=0;j<yPoints;j++)
+  for (size_t j=0;j<yPoints;j++)
   {
     yStride = j*xPoints;
-    for(int k=0;k<xPoints;k++)
+    for(size_t k=0;k<xPoints;k++)
     {
       int gnum = m_GrainIds[zStride+yStride+k];
       x = float(k) * xRes;

@@ -352,27 +352,27 @@ void CropVolume::execute()
     notifyWarningMessage(ss.str(), -950);
   }
 
-  int m_XP = ( (m_XMax - m_XMin)+1 );
-  int m_YP = ( (m_YMax - m_YMin)+1 );
-  int m_ZP = ( (m_ZMax - m_ZMin)+1 );
+  int64_t m_XP = ( (m_XMax - m_XMin)+1 );
+  int64_t m_YP = ( (m_YMax - m_YMin)+1 );
+  int64_t m_ZP = ( (m_ZMax - m_ZMin)+1 );
 
-  int col, row, plane;
-  int colold, rowold, planeold;
-  int index;
-  int index_old;
+  int64_t col, row, plane;
+  int64_t colold, rowold, planeold;
+  int64_t index;
+  int64_t index_old;
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (int i = 0; i < m_ZP; i++)
+  for (int64_t i = 0; i < m_ZP; i++)
   {
     std::stringstream ss;
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
     planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
     plane = (i * m_XP * m_YP);
-    for (int j = 0; j < m_YP; j++)
+    for (int64_t j = 0; j < m_YP; j++)
     {
       rowold = (j + m_YMin)*m->getXPoints();
       row = (j*m_XP);
-      for (int k = 0; k < m_XP; k++)
+      for (int64_t k = 0; k < m_XP; k++)
       {
         colold = (k + m_XMin);
         col = k;
@@ -389,7 +389,6 @@ void CropVolume::execute()
   }
   m->setDimensions(static_cast<size_t>(m_XP), static_cast<size_t>(m_YP), static_cast<size_t>(m_ZP));
   int64_t totalPoints = m->getTotalPoints();
- // totalPoints = static_cast<int64_t>( m_XP * m_YP * m_ZP );
 
 
   // Resize all the other Voxel Arrays

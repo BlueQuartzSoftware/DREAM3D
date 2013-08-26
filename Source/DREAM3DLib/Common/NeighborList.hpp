@@ -67,6 +67,8 @@ class NeighborList : public IDataArray
     DREAM3D_STATIC_NEW_MACRO(NeighborList<T> )
     DREAM3D_TYPE_MACRO_SUPER(NeighborList<T>, IDataArray)
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
+
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
     {
       return NeighborList<T>::New();
@@ -245,7 +247,6 @@ class NeighborList : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
-
     //FIXME: These need to be implemented
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
@@ -287,14 +288,14 @@ class NeighborList : public IDataArray
 
       // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
-      if (H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == false)
+      if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
         rewrite = true;
       }
       else
       {
         std::vector<int32_t> fileNumNeigh(_data.size());
-        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, fileNumNeigh);
+        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
           return -602;
@@ -319,17 +320,17 @@ class NeighborList : public IDataArray
       if(rewrite == true)
       {
         std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, dims, numNeighbors);
+        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
         if(err < 0)
         {
           return -603;
         }
-        err = H5Lite::writeScalarAttribute(parentId, DREAM3D::FieldData::NumNeighbors, std::string(H5_NUMCOMPONENTS), 1);
+        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -605;
         }
-        err = H5Lite::writeStringAttribute(parentId, DREAM3D::FieldData::NumNeighbors, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
         if(err < 0)
         {
           return -604;
@@ -374,7 +375,7 @@ class NeighborList : public IDataArray
           return -607;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", DREAM3D::FieldData::NumNeighbors);
+        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
           return -608;
@@ -431,9 +432,9 @@ class NeighborList : public IDataArray
       std::vector<int32_t> numNeighbors;
 
       // Check to see if the NumNeighbors exists in the file, which it must.
-      if(H5Lite::datasetExists(parentId, DREAM3D::FieldData::NumNeighbors) == true)
+      if(H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
       {
-        err = H5Lite::readVectorDataset(parentId, DREAM3D::FieldData::NumNeighbors, numNeighbors);
+        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
         if(err < 0)
         {
           return -702;

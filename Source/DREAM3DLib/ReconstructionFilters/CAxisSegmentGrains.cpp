@@ -273,7 +273,7 @@ void CAxisSegmentGrains::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CAxisSegmentGrains::getSeed(size_t gnum)
+int64_t CAxisSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -289,17 +289,17 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
   int64_t totalPoints = m->getTotalPoints();
 
   DREAM3D_RANDOMNG_NEW()
-  int seed = -1;
-  int randpoint = 0;
+  int64_t seed = -1;
+  int64_t randpoint = 0;
 
   // Precalculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
 
-  int counter = 0;
-  randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
+  int64_t counter = 0;
+  randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = static_cast<int>( randpoint - totalPoints );
+      if (randpoint > totalPMinus1) randpoint = static_cast<int64_t>( randpoint - totalPoints );
       if (m_GoodVoxels[randpoint] == true && m_GrainIds[randpoint] == 0 && m_CellPhases[randpoint] > 0) seed = randpoint;
       randpoint++;
       counter++;
@@ -315,7 +315,7 @@ int CAxisSegmentGrains::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
+bool CAxisSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
   bool group = false;
   float w = 10000.0;
@@ -336,19 +336,9 @@ bool CAxisSegmentGrains::determineGrouping(int referencepoint, int neighborpoint
   {
     phase1 = m_CrystalStructures[m_CellPhases[referencepoint]];
     QuaternionMathF::Copy(quats[referencepoint], q1);
-//    q1[0] = 1;
-//    q1[1] = m_Quats[referencepoint * 5 + 1];
-//    q1[2] = m_Quats[referencepoint * 5 + 2];
-//    q1[3] = m_Quats[referencepoint * 5 + 3];
-//    q1[4] = m_Quats[referencepoint * 5 + 4];
 
     phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
     QuaternionMathF::Copy(quats[neighborpoint], q2);
-//    q2[0] = 1;
-//    q2[1] = m_Quats[neighborpoint*5 + 1];
-//    q2[2] = m_Quats[neighborpoint*5 + 2];
-//    q2[3] = m_Quats[neighborpoint*5 + 3];
-//    q2[4] = m_Quats[neighborpoint*5 + 4];
 
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint])
     {
