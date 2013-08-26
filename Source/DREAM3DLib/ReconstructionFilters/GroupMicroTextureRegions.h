@@ -84,6 +84,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
+    DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
