@@ -68,6 +68,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
+  m_UseNonContiguousNeighbors(false),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
@@ -103,6 +104,16 @@ void GroupMicroTextureRegions::setupFilterParameters()
     option->setValueType("float");
     option->setCastableValueType("double");
     option->setUnits("Degrees");
+    parameters.push_back(option);
+  }
+
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Use Non-Contiguous Neighbors");
+    option->setPropertyName("UseNonContiguousNeighbors");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    option->setUnits("");
     parameters.push_back(option);
   }
 
@@ -154,15 +165,29 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-  if(m_NeighborList == NULL)
-  {
-    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-    setErrorCondition(-304);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
-  }
 
+  if(m_UseNonContiguousNeighbors == false)
+  {
+      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      if(m_NeighborList == NULL)
+      {
+        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+        setErrorCondition(-304);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
+      }
+  }
+  else
+  {
+      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
+      if(m_NeighborList == NULL)
+      {
+        ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
+        setErrorCondition(-305);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
+      }
+  }
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
