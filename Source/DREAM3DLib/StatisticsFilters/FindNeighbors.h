@@ -69,7 +69,6 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceVoxelsArrayName)
     //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SharedSurfaceAreaListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborListArrayName)
@@ -101,7 +100,6 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     int32_t* m_GrainIds;
     int8_t* m_SurfaceVoxels;
     bool* m_SurfaceFields;
-    int32_t* m_NumNeighbors;
     NeighborList<int>* m_NeighborList;
     NeighborList<float>* m_SharedSurfaceAreaList;
 

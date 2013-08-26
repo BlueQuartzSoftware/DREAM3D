@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT CubicLowOps : public OrientationOps
     static const int k_MdfSize = 46656;
     static const int k_NumSymQuats = 12;
 
-    virtual bool getHasInversion() { return false; }
+    virtual bool getHasInversion() { return true; }
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }

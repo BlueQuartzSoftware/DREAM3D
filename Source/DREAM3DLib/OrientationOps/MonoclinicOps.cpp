@@ -532,7 +532,8 @@ void MonoclinicOps::generateIPFColor(double phi1, double phi, double phi2, doubl
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(p[2] < 0) continue;
+    if(getHasInversion() == false && p[2] < 0) continue;
+    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     chi = acos(p[2]);
     eta = atan2(p[1],p[0]);
     if(inUnitTriangle(eta, chi) == false) continue;
@@ -543,13 +544,14 @@ void MonoclinicOps::generateIPFColor(double phi1, double phi, double phi2, doubl
   float etaMax = 180.0;
   float chiMax = 90.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
   float arg;
 
-  _rgb[0] = 1.0 - chi/chiMax;
+  _rgb[0] = 1.0 - chiDeg/chiMax;
   _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
   _rgb[1] = 1-_rgb[2];
-  _rgb[1] *= chi/chiMax;
-  _rgb[2] *= chi/chiMax;
+  _rgb[1] *= chiDeg/chiMax;
+  _rgb[2] *= chiDeg/chiMax;
   _rgb[0] = sqrt(_rgb[0]);
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);

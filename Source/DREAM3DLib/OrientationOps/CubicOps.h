@@ -124,8 +124,6 @@ protected:
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
 
-    void _calculateIPFColor(float *d, float *fRgb, uint8_t *rgb);
-
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
     void operator=(const CubicOps&); // Operator '=' Not Implemented

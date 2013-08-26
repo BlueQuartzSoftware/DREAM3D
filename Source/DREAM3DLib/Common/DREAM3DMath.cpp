@@ -734,3 +734,24 @@ float DREAM3DMath::incompletebetaps(float a, float b, float x, float maxgam)
     result = s;
     return result;
 }
+
+double DREAM3DMath::boundD(double val, double min, double max)
+{
+  if(val < min) val = min;
+  else if(val > max) val = max;
+  return val;
+}
+
+float DREAM3DMath::boundF(float val, float min, float max)
+{
+  if(val < min) val = min;
+  else if(val > max) val = max;
+  return val;
+}
+
+int DREAM3DMath::boundI(int val, int min, int max)
+{
+  if(val < min) val = min;
+  else if(val > max) val = max;
+  return val;
+}
