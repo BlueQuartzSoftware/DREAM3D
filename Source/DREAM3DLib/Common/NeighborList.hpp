@@ -247,13 +247,6 @@ class NeighborList : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
-    virtual void ResizeKeyArray(size_t numTuples)
-    {
-      Int32ArrayType::Pointer numNeighs = Int32ArrayType::NullPointer();
-      numNeighs = Int32ArrayType::CreateArray(numTuples, m_NumNeighborsArrayName);
-      m_NumNeighbors = numNeighs->GetPointer(0);
-    }
-
     //FIXME: These need to be implemented
     virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
     {
@@ -626,15 +619,6 @@ class NeighborList : public IDataArray
 
     }
 
-    void setNumNeighbors(size_t index, int32_t val)
-    {
-      m_NumNeighbors[index] = val;
-    }
-
-    int32_t getNumNeighbors(size_t index)
-    {
-      return m_NumNeighbors[index];
-    }
 
   protected:
     /**
@@ -645,8 +629,6 @@ class NeighborList : public IDataArray
 
   private:
     std::string m_Name;
-
-    int32_t* m_NumNeighbors;
 
     std::vector<SharedVectorType> _data;
 
