@@ -505,7 +505,8 @@ void TrigonalLowOps::generateIPFColor(double phi1, double phi, double phi2, doub
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(p[2] < 0) continue;
+    if(getHasInversion() == false && p[2] < 0) continue;
+    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
     chi = acos(p[2]);
     eta = atan2(p[1],p[0]);
     if(inUnitTriangle(eta, chi) == false) continue;
@@ -516,34 +517,17 @@ void TrigonalLowOps::generateIPFColor(double phi1, double phi, double phi2, doub
   float etaMax = 0.0;
   float chiMax = 90.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
   float arg;
 
-  float frac = 3*(etaDeg-etaMin)/(etaMax-etaMin);
-  if(frac<1.0)
-  {
-    _rgb[0] = 1.0-frac;
-    _rgb[1] = frac;
-    _rgb[2] = 0.0;
-  }
-  else if(frac<2.0)
-  {
-    _rgb[0] = 0.0;
-    _rgb[1] = 2.0-frac;
-    _rgb[2] = frac-1.0;
-  }
-  else
-  {
-    _rgb[0] = frac-2.0;
-    _rgb[1] = 0.0;
-    _rgb[2] = 3.0-frac;
-  }
-  _rgb[0] = powf(_rgb[0],0.7);
-  _rgb[1] = powf(_rgb[1],0.7);
-  _rgb[2] = powf(_rgb[2],0.7);
-
-  _rgb[0] = 1.0 + (_rgb[0]-1.0)*chi*chi/(chiMax*chiMax);
-  _rgb[1] = 1.0 + (_rgb[1]-1.0)*chi*chi/(chiMax*chiMax);
-  _rgb[2] = 1.0 + (_rgb[2]-1.0)*chi*chi/(chiMax*chiMax);
+  _rgb[0] = 1.0 - chiDeg/chiMax;
+  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
+  _rgb[1] = 1-_rgb[2];
+  _rgb[1] *= chiDeg/chiMax;
+  _rgb[2] *= chiDeg/chiMax;
+  _rgb[0] = sqrt(_rgb[0]);
+  _rgb[1] = sqrt(_rgb[1]);
+  _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
   if (_rgb[1] > max) max = _rgb[1];
