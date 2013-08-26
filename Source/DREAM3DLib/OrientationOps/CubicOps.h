@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     static const int k_MdfSize = 5832;
     static const int k_NumSymQuats = 24;
 
+    virtual bool getHasInversion() { return true; }
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
@@ -80,6 +81,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     virtual void getMDFFZRod(float &r1, float &r2, float &r3);
     virtual void getNearestQuat(QuatF &q1, QuatF &q2);
     virtual int getMisoBin(float r1, float r2, float r3);
+    virtual bool inUnitTriangle(float eta, float chi);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);
     virtual void determineRodriguesVector(int choose, float &r1, float &r2, float &r3);
     virtual int getOdfBin(float r1, float r2, float r3);
@@ -121,8 +123,6 @@ protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
                   QuatF &q1, QuatF &q2,
                   float &n1, float &n2, float &n3);
-
-    void _calculateIPFColor(float *d, float *fRgb, uint8_t *rgb);
 
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented

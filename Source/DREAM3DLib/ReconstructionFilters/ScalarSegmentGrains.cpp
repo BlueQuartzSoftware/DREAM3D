@@ -394,7 +394,7 @@ void ScalarSegmentGrains::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ScalarSegmentGrains::getSeed(size_t gnum)
+int64_t ScalarSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
@@ -410,17 +410,17 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
   int64_t totalPoints = m->getTotalPoints();
 
   DREAM3D_RANDOMNG_NEW()
-  int seed = -1;
-  int randpoint = 0;
+  int64_t seed = -1;
+  int64_t randpoint = 0;
 
   // Pre-calculate some constants
   int64_t totalPMinus1 = totalPoints - 1;
 
-  int counter = 0;
-  randpoint = int(float(rg.genrand_res53()) * float(totalPMinus1));
+  int64_t counter = 0;
+  randpoint = int64_t(float(rg.genrand_res53()) * float(totalPMinus1));
   while (seed == -1 && counter < totalPoints)
   {
-      if (randpoint > totalPMinus1) randpoint = static_cast<int>( randpoint - totalPoints );
+      if (randpoint > totalPMinus1) randpoint = static_cast<int64_t>( randpoint - totalPoints );
       if (m_GrainIds[randpoint] == 0) seed = randpoint;
       randpoint++;
       counter++;
@@ -437,7 +437,7 @@ int ScalarSegmentGrains::getSeed(size_t gnum)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool ScalarSegmentGrains::determineGrouping(int referencepoint, int neighborpoint, size_t gnum)
+bool ScalarSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum)
 {
 
   if(m_GrainIds[neighborpoint] > 0) { return false; }

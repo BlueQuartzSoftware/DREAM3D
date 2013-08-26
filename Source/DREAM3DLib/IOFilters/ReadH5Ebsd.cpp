@@ -693,13 +693,15 @@ H5EbsdVolumeReader::Pointer ReadH5Ebsd::initHEDMEbsdVolumeReader()
   if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end())
   {
     m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Euler1);
-    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler2);
-    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Euler3);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Euler2);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Euler3);
   }
   if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end())
   {
-    m_SelectedVoxelCellArrays.insert(Ebsd::Ctf::Phase);
+    m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Phase);
   }
+  m_SelectedVoxelCellArrays.insert(Ebsd::Mic::X);
+  m_SelectedVoxelCellArrays.insert(Ebsd::Mic::Y);
   return ebsdReader;
 }
 
@@ -881,6 +883,19 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
+  float x, y;
+  float xMin = 10000000;
+  float yMin = 10000000;
+  f1 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::X));
+  f2 = reinterpret_cast<float*>(ebsdReader->getPointerByName(Ebsd::Mic::Y));
+  for (int64_t i = 0; i < totalPoints; i++)
+  {
+    x = f1[i];
+    y = f2[i];
+    if(x < xMin) xMin = x;
+    if(y < yMin) yMin = y;
+  }
+  m->setOrigin(xMin,yMin,0.0);
 
   if (m_SelectedVoxelCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVoxelCellArrays.end() )
   {

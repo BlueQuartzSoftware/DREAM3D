@@ -587,6 +587,20 @@ void CubicLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+bool CubicLowOps::inUnitTriangle(float eta, float chi)
+{
+  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float arg;
+  if(etaDeg > 45.0) arg = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
+  else arg = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
+  float chiMax = acos(DREAM3DMath::boundF(arg,-1.0f,1.0f));
+  if( eta < 0.0 || eta > (90.0*DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax ) return false;
+  return true;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void CubicLowOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
 {
   generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
@@ -610,7 +624,7 @@ void CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double 
   float refDirection[3];
   float cd[3];
   float d[3];
-  //float theta, phi_local;
+  float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
   // 1) find rotation matrix from Euler angles
@@ -630,32 +644,30 @@ void CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double 
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-
-    float theta = (cd[0] * 0) + (cd[1] * -DREAM3D::Constants::k_HalfSqrt2) + (cd[2] * DREAM3D::Constants::k_HalfSqrt2);
-    theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
-    _rgb[0] = (90.0f - theta) / 45.0f;
-    d[0] = (cd[1] * 1) - (cd[2] * 0);
-    d[1] = (cd[2] * 0) - (cd[0] * 1);
-    d[2] = (cd[0] * 0) - (cd[1] * 0);
-    d[0] = -(d[1] + d[2]) / d[0];
-    d[1] = 1;
-    d[2] = 1;
-    float norm = sqrt(((d[0] * d[0]) + (d[1] * d[1]) + (d[2] * d[2])));
-    d[0] = d[0] / norm;
-    d[1] = d[1] / norm;
-    d[2] = d[2] / norm;
-    float phi_local = (d[0] * 0) + (d[1] * DREAM3D::Constants::k_HalfSqrt2) + (d[2] * DREAM3D::Constants::k_HalfSqrt2);
-    phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
-    _rgb[1] = (1 - _rgb[0]) * ((35.26f - phi_local) / 35.26f);
-    _rgb[2] = (1 - _rgb[0]) - _rgb[1];
+    if(getHasInversion() == false && p[2] < 0) continue;
+    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    chi = acos(p[2]);
+    eta = atan2(p[1],p[0]);
+    if(inUnitTriangle(eta, chi) == false) continue;
+    else {break;}
   }
-  float max = _rgb[0];
-  if (_rgb[1] > max) max = _rgb[1];
-  if (_rgb[2] > max) max = _rgb[2];
 
-  _rgb[0] = _rgb[0] / max;
-  _rgb[1] = _rgb[1] / max;
-  _rgb[2] = _rgb[2] / max;
+  float etaMin = 0.0;
+  float etaMax = 90.0;
+  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float arg;
+  if(etaDeg > 45.0) arg = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
+  else arg = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
+  float chiMax = acos(DREAM3DMath::boundF(arg,-1.0f,1.0f));
+
+  _rgb[0] = 1.0 - chi/chiMax;
+  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
+  _rgb[1] = 1-_rgb[2];
+  _rgb[1] *= chi/chiMax;
+  _rgb[2] *= chi/chiMax;
+  _rgb[0] = sqrt(_rgb[0]);
+  _rgb[1] = sqrt(_rgb[1]);
+  _rgb[2] = sqrt(_rgb[2]);
 
   // Multiply by 255 to get an R/G/B value
   _rgb[0] = _rgb[0] * 255.0f;
@@ -787,10 +799,10 @@ std::vector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureC
   config.minScale = min;
   config.maxScale = max;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);

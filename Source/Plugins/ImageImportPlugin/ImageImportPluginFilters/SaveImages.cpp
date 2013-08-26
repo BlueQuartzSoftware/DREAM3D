@@ -284,24 +284,12 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
       #if defined (CMP_WORDS_BIGENDIAN)
         #error
       #else
-       QColor rgb(ipfColors[index + 0], ipfColors[index + 1], ipfColors[index +2]);
-       QColor hsl = rgb.toHsl();
-       int hue = hsl.hue();
-       int saturation = hsl.saturation();
-       int lightness = hsl.lightness();
-        lightness = (float)(lightness) * 1.20;
-        if(lightness > 255) { lightness = 255; }
-        hsl.setHsl(hue, saturation, lightness);
 
-       rgb = hsl.toRgb();
-   //     scanLine[x*4 + 3] = 0xFF;
+        scanLine[x*4 + 3] = 0xFF;
         index = y * dims[0] * 3 + x * 3;
-//        scanLine[x*4 + 2] = ipfColors[index + 0];
-//        scanLine[x*4 + 1] = ipfColors[index + 1];
-//        scanLine[x*4 + 0] = ipfColors[index + 2];
-        scanLine[x*4 + 2] = rgb.red();
-        scanLine[x*4 + 1] = rgb.green();
-        scanLine[x*4 + 0] = rgb.blue();
+        scanLine[x*4 + 2] = ipfColors[index + 0];
+        scanLine[x*4 + 1] = ipfColors[index + 1];
+        scanLine[x*4 + 0] = ipfColors[index + 2];
 
       #endif
     }

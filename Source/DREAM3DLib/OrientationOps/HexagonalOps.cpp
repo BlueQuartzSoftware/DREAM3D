@@ -397,6 +397,7 @@ int HexagonalOps::getOdfBin(float r1, float r2, float r3)
 
 void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
 {
+  schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4, theta5, theta6, theta7, theta8, theta9;
   float lambda1, lambda2, lambda3, lambda4, lambda5, lambda6, lambda7, lambda8, lambda9, lambda10;
   float schmid1, schmid2, schmid3, schmid4, schmid5, schmid6, schmid7, schmid8, schmid9, schmid10, schmid11, schmid12;
@@ -660,24 +661,24 @@ void HexagonalOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, f
   if(schmid4 > schmidfactor) schmidfactor = schmid4, slipsys = 4;
   if(schmid5 > schmidfactor) schmidfactor = schmid5, slipsys = 5;
   if(schmid6 > schmidfactor) schmidfactor = schmid6, slipsys = 6;
-  if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
-  if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
-  if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;
-  if(schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 10;
-  if(schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 11;
-  if(schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 12;
-  if(schmid13 > schmidfactor) schmidfactor = schmid13, slipsys = 13;
-  if(schmid14 > schmidfactor) schmidfactor = schmid14, slipsys = 14;
-  if(schmid15 > schmidfactor) schmidfactor = schmid15, slipsys = 15;
-  if(schmid16 > schmidfactor) schmidfactor = schmid16, slipsys = 16;
-  if(schmid17 > schmidfactor) schmidfactor = schmid17, slipsys = 17;
-  if(schmid18 > schmidfactor) schmidfactor = schmid18, slipsys = 18;
-  if(schmid19 > schmidfactor) schmidfactor = schmid19, slipsys = 19;
-  if(schmid20 > schmidfactor) schmidfactor = schmid20, slipsys = 20;
-  if(schmid21 > schmidfactor) schmidfactor = schmid21, slipsys = 21;
-  if(schmid22 > schmidfactor) schmidfactor = schmid22, slipsys = 22;
-  if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
-  if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
+  //if(schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 7;
+  //if(schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 8;
+  //if(schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 9;
+  //if(schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 10;
+  //if(schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 11;
+  //if(schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 12;
+  //if(schmid13 > schmidfactor) schmidfactor = schmid13, slipsys = 13;
+  //if(schmid14 > schmidfactor) schmidfactor = schmid14, slipsys = 14;
+  //if(schmid15 > schmidfactor) schmidfactor = schmid15, slipsys = 15;
+  //if(schmid16 > schmidfactor) schmidfactor = schmid16, slipsys = 16;
+  //if(schmid17 > schmidfactor) schmidfactor = schmid17, slipsys = 17;
+  //if(schmid18 > schmidfactor) schmidfactor = schmid18, slipsys = 18;
+  //if(schmid19 > schmidfactor) schmidfactor = schmid19, slipsys = 19;
+  //if(schmid20 > schmidfactor) schmidfactor = schmid20, slipsys = 20;
+  //if(schmid21 > schmidfactor) schmidfactor = schmid21, slipsys = 21;
+  //if(schmid22 > schmidfactor) schmidfactor = schmid22, slipsys = 22;
+  //if(schmid23 > schmidfactor) schmidfactor = schmid23, slipsys = 23;
+  //if(schmid24 > schmidfactor) schmidfactor = schmid24, slipsys = 24;
 }
 
 void HexagonalOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
@@ -1063,6 +1064,14 @@ void HexagonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatA
 
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+bool HexagonalOps::inUnitTriangle(float eta, float chi)
+{
+  if( eta < 0 || eta > (30.0*DREAM3D::Constants::k_PiOver180) || chi < 0 || chi > (90.0*DREAM3D::Constants::k_PiOver180) ) return false;
+  return true;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -1090,7 +1099,7 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
   float p[3];
   float refDirection[3];
   float d[3];
-  float theta, phi_local;
+  float chi, eta;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
   OrientationMath::EulertoQuat(q1, phi1, phi, phi2);
@@ -1107,36 +1116,29 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if (p[2] < 0)
-    {
-      p[0] = -p[0];
-      p[1] = -p[1];
-      p[2] = -p[2];
-    }
-    d[0] = p[0];
-    d[1] = p[1];
-    d[2] = 0;
-    MatrixMath::Normalize3x1(d);
-    if (atan2(d[1], d[0]) >= 0 && atan2(d[1], d[0]) < (30.0 * DREAM3D::Constants::k_DegToRad))
-    {
-      theta = (p[0] * 0) + (p[1] * 0) + (p[2] * 1);
-      if (theta > 1) theta = 1;
-
-      if (theta < -1) theta = -1;
-
-      theta = (DREAM3D::Constants::k_RadToDeg) * acos(theta);
-      _rgb[0] = (90.0f - theta) / 90.0f;
-      phi_local = (d[0] * 1) + (d[1] * 0) + (d[2] * 0);
-      if (phi_local > 1) phi_local = 1;
-
-      if (phi_local < -1) phi_local = -1;
-
-      phi_local = (DREAM3D::Constants::k_RadToDeg) * acos(phi_local);
-      _rgb[1] = (1 - _rgb[0]) * ((30.0f - phi_local) / 30.0f);
-      _rgb[2] = (1 - _rgb[0]) - _rgb[1];
-      break;
-    }
+    if(getHasInversion() == false && p[2] < 0) continue;
+    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    chi = acos(p[2]);
+    eta = atan2(p[1],p[0]);
+    if(inUnitTriangle(eta, chi) == false) continue;
+    else {break;}
   }
+
+  float etaMin = 0.0;
+  float etaMax = 30.0;
+  float chiMax = 90.0;
+  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
+  float arg;
+
+  _rgb[0] = 1.0 - chiDeg/chiMax;
+  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
+  _rgb[1] = 1-_rgb[2];
+  _rgb[1] *= chiDeg/chiMax;
+  _rgb[2] *= chiDeg/chiMax;
+  _rgb[0] = sqrt(_rgb[0]);
+  _rgb[1] = sqrt(_rgb[1]);
+  _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
   if (_rgb[1] > max) max = _rgb[1];
@@ -1145,9 +1147,6 @@ void HexagonalOps::generateIPFColor(double phi1, double phi, double phi2, double
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
-  //  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
-  //  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
-  //  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
   // Multiply by 255 to get an R/G/B value
   _rgb[0] = _rgb[0] * 255.0f;
@@ -1278,10 +1277,10 @@ std::vector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigure
   config.minScale = min;
   config.maxScale = max;
 
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   UInt8ArrayType::Pointer image001 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label0);
   UInt8ArrayType::Pointer image011 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label1);
   UInt8ArrayType::Pointer image111 = UInt8ArrayType::CreateArray(config.imageDim * config.imageDim, 4, label2);
+#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 
   poleFigures.push_back(image001);
   poleFigures.push_back(image011);
