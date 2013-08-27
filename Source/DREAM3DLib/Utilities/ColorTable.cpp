@@ -39,7 +39,6 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -59,10 +58,8 @@ ColorTable::~ColorTable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ColorTable::GetColorCorrespondingToValue(float val,
-                                              float &r, float &g, float &b,
-                                              float max, float min)
-{
+void ColorTable::GetColorTable(int numColors, std::vector<float> &colors)
+{ 
   static const int numColorNodes = 8;
   float color[numColorNodes][3] =
   {
@@ -75,18 +72,19 @@ void ColorTable::GetColorCorrespondingToValue(float val,
     {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
     {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
   };
-  float range = max - min;
-  for (int i = 0; i < (numColorNodes - 1); i++)
-  {
-    float currFloor = min + ((float)i / (numColorNodes - 1)) * range;
-    float currCeil = min + ((float)(i + 1) / (numColorNodes - 1)) * range;
 
-    if((val >= currFloor) && (val <= currCeil))
-    {
-      float currFraction = (val - currFloor) / (currCeil - currFloor);
-      r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
-      g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
-      b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
-    }
+  float val, r, g, b;
+  float step = 1.0/float(numColors);
+  float nodeStep = 1.0/float(numColorNodes);
+  for (int i = 0; i < (numColors - 1); i++)
+  {
+    val = float(i)*step;
+    float currFraction = (val/nodeStep) - int(val/nodeStep);
+    r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
+    g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
+    b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
+    colors[3*i] = r;
+    colors[3*i+1] = g;
+    colors[3*i+2] = b;
   }
 }

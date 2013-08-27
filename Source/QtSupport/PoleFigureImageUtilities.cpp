@@ -294,30 +294,33 @@ QImage PoleFigureImageUtilities::generatePoleFigureImage(const PoleFigureData &c
 // -----------------------------------------------------------------------------
 void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigureConfiguration_t &config)
 {
-
+  int numColors = config.numColors;
   int scaleHeight = imageHeight * 0.25;
   int scaleWidth = 50;
+  int penWidth = int(scaleHeight/numColors);
+  scaleHeight = penWidth*numColors;
 
   QPointF topLeft(imageWidth * .625, imageHeight * .625);
 
   QSizeF size(scaleWidth, scaleHeight);
 
-  int penWidth = 1;
   //Get all the colors that we will need
-  int nColors = scaleHeight;
-  int32_t numColors = nColors + 1;
 
   std::vector<ColorTable::Rgba> colorTable(numColors);
+  std::vector<float> colors(3*numColors, 0.0);
+  ColorTable::GetColorTable(numColors, colors);
 
   float r=0.0, g=0.0, b=0.0;
 
-  for (int i = 0; i < nColors; i++)
+  for (int i = 0; i < numColors; i++)
   {
-    ColorTable::GetColorCorrespondingToValue(i, r, g, b, nColors, 0);
+    r = colors[3*i];
+    g = colors[3*i+1];
+    b = colors[3*i+2];
     colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
   }
   // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[nColors] = ColorTable::makeRgba(255, 255, 255, 255);
+  colorTable[numColors] = ColorTable::makeRgba(255, 255, 255, 255);
 
 
   // Now start from the top and draw colored lines down the scale bar
@@ -326,7 +329,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   QPointF end = topLeft;
   QRectF scaleBorder(topLeft, size);
 
-  for(int i = 1; i < scaleHeight; ++i)
+  for(int i = 0; i < numColors; ++i)
   {
     QColor c(colorTable[i]);
     painter.setPen(QPen(c, penWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
@@ -334,7 +337,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
     end.setX(topLeft.x() + scaleWidth);
     end.setY(yLinePos);
     painter.drawLine(start, end);
-    yLinePos--;
+    yLinePos = yLinePos-penWidth;
   }
 
   // Draw the border of the scale bar

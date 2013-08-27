@@ -1190,7 +1190,6 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   float g[3][3];
   float p[3];
   float refDirection[3];
-  float d[3];
   float chi, eta;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
