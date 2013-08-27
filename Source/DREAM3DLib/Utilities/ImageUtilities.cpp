@@ -87,10 +87,16 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
   image->initializeWithZeros();
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
+  int numColors = config.numColors;
+  std::vector<float> colors(numColors*3, 0.0);
+  ColorTable::GetColorTable(config.numColors, colors);
+
   float r=0.0, g=0.0, b=0.0;
 
   double* dataPtr = data->GetPointer(0);
   size_t idx = 0;
+  double value;
+  int bin;
   for (int64_t y = 0; y < height; y++)
   {
     for (int64_t x = 0; x < width; x++)
@@ -100,7 +106,13 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
       idx = (width * y) + x;
       if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
       {
-        ColorTable::GetColorCorrespondingToValue(dataPtr[y * width + x], r, g, b, max, min);
+        value = dataPtr[y * width + x];
+        value = (value-min)/(max-min);
+        bin = int(value*numColors);
+        if(bin > numColors-1) bin = numColors-1;
+        r = colors[3*bin];
+        g = colors[3*bin+1];
+        b = colors[3*bin+2];
         rgbaPtr[idx] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
       }
       else // Outside the Circle - Set pixel to White
