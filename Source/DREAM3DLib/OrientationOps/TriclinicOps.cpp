@@ -469,7 +469,6 @@ void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double
   float g[3][3];
   float p[3];
   float refDirection[3];
-  float d[3];
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
@@ -500,7 +499,6 @@ void TriclinicOps::generateIPFColor(double phi1, double phi, double phi2, double
   float chiMax = 90.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
   float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
-  float arg;
 
   _rgb[0] = 1.0 - chiDeg/chiMax;
   _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);

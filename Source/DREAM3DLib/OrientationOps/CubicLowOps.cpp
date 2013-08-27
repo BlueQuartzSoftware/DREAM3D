@@ -622,8 +622,6 @@ void CubicLowOps::generateIPFColor(double phi1, double phi, double phi2, double 
   float g[3][3];
   float p[3];
   float refDirection[3];
-  float cd[3];
-  float d[3];
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
