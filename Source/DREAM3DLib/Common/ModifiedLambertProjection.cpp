@@ -229,16 +229,23 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
 {
  // float sqCoord[2] = { sqCoord0[0] - 0.5*m_StepSize, sqCoord0[1] - 0.5*m_StepSize};
   int abinMod, bbinMod;
+  int abinSign, bbinSign;
   float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   int abin = (int) modX;
   int bbin = (int) modY;
   modX -= abin;
   modY -= bbin;
-  if(abin < m_Dimension-1) abinMod = abin+1;
-  else abinMod = abin+1-m_Dimension;
-  if(bbin < m_Dimension-1) bbinMod = bbin+1;
-  else bbinMod = bbin+1-m_Dimension;
+  modX -= 0.5;
+  modY -= 0.5;
+  abinSign = modX/fabs(modX);
+  bbinSign = modY/fabs(modY);
+  if((abin+abinSign) < m_Dimension-1 && (abin+abinSign) > 0) abinMod = abin+abinSign;
+  else abinMod = abin;
+  if((bbin+bbinSign) < m_Dimension-1 && (bbin+bbinSign) > 0) bbinMod = bbin+bbinSign;
+  else bbinMod = bbin;
+  modX = fabs(modX);
+  modY = fabs(modY);
   if (square == NorthSquare)
   {
     float intensity1 = m_NorthSquare->GetValue((abin)+(bbin*m_Dimension));
