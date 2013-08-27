@@ -70,14 +70,14 @@ UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, 
 // -----------------------------------------------------------------------------
 void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, UInt8ArrayType* image)
 {
-  int xpoints = config.imageDim ;
-  int ypoints = config.imageDim ;
+  int width = config.imageDim ;
+  int height = config.imageDim ;
 
-  int xpointshalf = xpoints / 2;
-  int ypointshalf = ypoints / 2;
+  int halfWidth = width / 2;
+  int halfHeight = height / 2;
 
-  float xres = 2.0 / (float)(xpoints);
-  float yres = 2.0 / (float)(ypoints);
+  float xres = 2.0 / (float)(width);
+  float yres = 2.0 / (float)(height);
   float xtmp, ytmp;
 
   float max = static_cast<float>(config.maxScale);
@@ -89,24 +89,18 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
 
   float r=0.0, g=0.0, b=0.0;
 
-  //*********************** NOTE ************************************
-  // In the below loop over the Pole Figure Image we are swapping the
-  // X & Y coordinates when we place the RGBA value into the image. This
-  // is because for some reason the data is rotated 90 degrees. Since
-  // the image is square we can easily do this swap and effectively
-  // rotate the image 90 degrees.
   double* dataPtr = data->GetPointer(0);
   size_t idx = 0;
-  for (int64_t y = 0; y < ypoints; y++)
+  for (int64_t y = 0; y < height; y++)
   {
-    for (int64_t x = 0; x < xpoints; x++)
+    for (int64_t x = 0; x < width; x++)
     {
-      xtmp = float(x-xpointshalf)*xres+(xres * 0.5);
-      ytmp = float(y-ypointshalf)*yres+(yres * 0.5);
-      idx = (xpoints * y) + x;
+      xtmp = float(x-halfWidth)*xres+(xres * 0.5);
+      ytmp = float(y-halfHeight)*yres+(yres * 0.5);
+      idx = (width * y) + x;
       if( ( xtmp * xtmp + ytmp * ytmp) <= 1.0) // Inside the circle
       {
-        ColorTable::GetColorCorrespondingToValue(dataPtr[y * xpoints + x], r, g, b, max, min);
+        ColorTable::GetColorCorrespondingToValue(dataPtr[y * width + x], r, g, b, max, min);
         rgbaPtr[idx] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
       }
       else // Outside the Circle - Set pixel to White
