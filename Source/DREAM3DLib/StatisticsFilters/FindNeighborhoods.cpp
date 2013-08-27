@@ -53,7 +53,8 @@ AbstractFilter(),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NeighborhoodsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
+m_MultiplesOfAverage(1),
 m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
@@ -75,7 +76,18 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
+  std::vector<FilterParameter::Pointer> parameters;
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setPropertyName("MultiplesOfAverage");
+    option->setHumanLabel("Multiples Of Average Diameter");
+    option->setWidgetType(FilterParameter::IntWidget);
+    option->setValueType("int");
+    option->setUnits("");
+    parameters.push_back(option);
+  }
 
+  setFilterParameters(parameters);
 }
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* reader, int index)
@@ -83,6 +95,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  setMultiplesOfAverage( reader->readValue("MultiplesOfAverage", getMultiplesOfAverage()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -93,6 +106,7 @@ void FindNeighborhoods::readFilterParameters(AbstractFilterParametersReader* rea
 int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
+  writer->writeValue("MultiplesOfAverage", getMultiplesOfAverage() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -117,6 +131,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
     neighborhoodlistPtr->Resize(fields);
+    neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
       ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
@@ -190,7 +205,9 @@ void FindNeighborhoods::find_neighborhoods()
   float xn, yn, zn;
   float dx, dy, dz;
 
-    std::vector<std::vector<int> > neighborhoodlist;
+
+
+  std::vector<std::vector<int> > neighborhoodlist;
 
   int totalFields = int(m->getNumFieldTuples());
 
@@ -203,38 +220,86 @@ void FindNeighborhoods::find_neighborhoods()
     aveDiam += m_EquivalentDiameters[i];
   }
   aveDiam /= totalFields;
+  float criticalDistance = aveDiam*m_MultiplesOfAverage;
 
+  float m_OriginX, m_OriginY, m_OriginZ;
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  size_t xP = dims[0];
+  size_t yP = dims[1];
+  size_t zP = dims[2];
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  float sizeX = float(xP)*xRes;
+  float sizeY = float(yP)*yRes;
+  float sizeZ = float(zP)*zRes;
+  int numXBins = int(sizeX/criticalDistance);
+  int numYBins = int(sizeY/criticalDistance);
+  int numZBins = int(sizeZ/criticalDistance);
+
+  int xbin, ybin, zbin, bin, bin1, bin2;
+  std::vector<size_t> bins(totalFields, 0);
   for (size_t i = 1; i < totalFields; i++)
   {
-      if (i%100 == 0)
+      x = m_Centroids[3*i];
+      y = m_Centroids[3*i+1];
+      z = m_Centroids[3*i+2];
+      xbin = int((x-m_OriginX)/criticalDistance);
+      ybin = int((y-m_OriginY)/criticalDistance);
+      zbin = int((z-m_OriginZ)/criticalDistance);
+      bin = (zbin*numXBins*numYBins)+(ybin*numXBins)+(xbin);
+      bins[i] = bin;
+  }
+  for (size_t i = 1; i < totalFields; i++)
+  {
+      if (i%1000 == 0)
       {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+        ss.str("");
+        ss << "Working On Grain " << i << " of " << totalFields;
+        notifyStatusMessage(ss.str());
       }
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
-    if(m->getXPoints() == 1) x = 0;
-    if(m->getYPoints() == 1) y = 0;
-    if(m->getZPoints() == 1) z = 0;
-      for (size_t j = i; j < totalFields; j++)
+      bin1 = bins[i];
+      for (size_t j = i+1; j < totalFields; j++)
       {
-      xn = m_Centroids[3*j];
-      yn = m_Centroids[3*j+1];
-      zn = m_Centroids[3*j+2];
-      if(m->getXPoints() == 1) xn = 0;
-      if(m->getYPoints() == 1) yn = 0;
-      if(m->getZPoints() == 1) zn = 0;
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < aveDiam && dy < aveDiam && dz < aveDiam)
+        bin2 = bins[j];
+        if(bin1 == bin2)
         {
             m_Neighborhoods[i]++;
             neighborhoodlist[i].push_back(j);
             m_Neighborhoods[j]++;
             neighborhoodlist[j].push_back(i);
+        }
+        else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
+        {
+          xn = m_Centroids[3*j];
+          yn = m_Centroids[3*j+1];
+          zn = m_Centroids[3*j+2];
+          dx = fabs(x - xn);
+          dy = fabs(y - yn);
+          dz = fabs(z - zn);
+          if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
+          {
+              m_Neighborhoods[i]++;
+              neighborhoodlist[i].push_back(j);
+              m_Neighborhoods[j]++;
+              neighborhoodlist[j].push_back(i);
+          }
         }
       }
   }

@@ -129,6 +129,7 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
+  setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -140,6 +141,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("CAxisTolerance", getCAxisTolerance() );
+  writer->writeValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -277,11 +279,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         int firstgrain = microtexturelist[j];
         int size = int(neighborlist[firstgrain].size());
         QuaternionMathF::Copy(avgQuats[firstgrain], q1);
-//        q1[0] = 1;
-//        q1[1] = m_AvgQuats[5*firstgrain+1];
-//        q1[2] = m_AvgQuats[5*firstgrain+2];
-//        q1[3] = m_AvgQuats[5*firstgrain+3];
-//        q1[4] = m_AvgQuats[5*firstgrain+4];
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
         OrientationMath::QuattoMat(q1, g1);
         //transpose the g matrix so when caxis is multiplied by it

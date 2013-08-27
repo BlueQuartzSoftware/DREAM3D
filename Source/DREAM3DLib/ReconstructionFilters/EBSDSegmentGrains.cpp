@@ -107,16 +107,7 @@ void EBSDSegmentGrains::setupFilterParameters()
     option->setUnits("Degrees");
     parameters.push_back(option);
   }
-#if 0
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Randomly Reorder Generated Grain Ids");
-    option->setPropertyName("RandomizeGrainIds");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-#endif
+
   setFilterParameters(parameters);
 }
 
