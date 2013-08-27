@@ -149,9 +149,9 @@ void ModifiedLambertProjection::initializeSquares(int dims, float sphereRadius)
   m_HalfDimension = static_cast<float>(m_Dimension) / 2.0;
   m_HalfDimensionTimesStepSize = m_HalfDimension * m_StepSize;
 
-  m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "NorthSquare");
+  m_NorthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "ModifiedLambert_NorthSquare");
   m_NorthSquare->initializeWithZeros();
-  m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "SouthSquare");
+  m_SouthSquare = DoubleArrayType::CreateArray(m_Dimension * m_Dimension, 1, "ModifiedLambert_SouthSquare");
   m_SouthSquare->initializeWithZeros();
 
 
@@ -195,6 +195,21 @@ void ModifiedLambertProjection::addValue(Square square, int index, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void ModifiedLambertProjection::setValue(Square square, int index, double value)
+{
+  if (square == NorthSquare)
+  {
+    m_NorthSquare->SetValue(index, value);
+  }
+  else
+  {
+    m_SouthSquare->SetValue(index, value);
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 double ModifiedLambertProjection::getValue(Square square, int index)
 {
   if (square == NorthSquare)
@@ -212,17 +227,25 @@ double ModifiedLambertProjection::getValue(Square square, int index)
 // -----------------------------------------------------------------------------
 double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqCoord)
 {
+ // float sqCoord[2] = { sqCoord0[0] - 0.5*m_StepSize, sqCoord0[1] - 0.5*m_StepSize};
   int abinMod, bbinMod;
+  int abinSign, bbinSign;
   float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   int abin = (int) modX;
   int bbin = (int) modY;
   modX -= abin;
   modY -= bbin;
-  if(abin < m_Dimension-1) abinMod = abin+1;
-  else abinMod = abin+1-m_Dimension;
-  if(bbin < m_Dimension-1) bbinMod = bbin+1;
-  else bbinMod = bbin+1-m_Dimension;
+  modX -= 0.5;
+  modY -= 0.5;
+  abinSign = modX/fabs(modX);
+  bbinSign = modY/fabs(modY);
+  if((abin+abinSign) < m_Dimension-1 && (abin+abinSign) > 0) abinMod = abin+abinSign;
+  else abinMod = abin;
+  if((bbin+bbinSign) < m_Dimension-1 && (bbin+bbinSign) > 0) bbinMod = bbin+bbinSign;
+  else bbinMod = bbin;
+  modX = fabs(modX);
+  modY = fabs(modY);
   if (square == NorthSquare)
   {
     float intensity1 = m_NorthSquare->GetValue((abin)+(bbin*m_Dimension));
@@ -372,7 +395,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
 
   stereoIntensity->initializeWithZeros();
   double* intensity = stereoIntensity->GetPointer(0);
-
+  int sqIndex = 0;
 
   for (int64_t y = 0; y < ypoints; y++)
   {
@@ -384,6 +407,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
       int index = y * xpoints + x;
       if((xtmp*xtmp+ytmp*ytmp) <= 1.0)
       {
+        //project xy from stereo projection to the unit spehere
         xyz[2] = -((xtmp*xtmp+ytmp*ytmp)-1)/((xtmp*xtmp+ytmp*ytmp)+1);
         xyz[0] = xtmp*(1+xyz[2]);
         xyz[1] = ytmp*(1+xyz[2]);
@@ -393,15 +417,18 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
         {
           if(m == 1) MatrixMath::Multiply3x1withConstant(xyz, -1.0);
           nhCheck = getSquareCoord(xyz, sqCoord);
+          sqIndex = getSquareIndex(sqCoord);
           if (nhCheck == true)
           {
             //get Value from North square
             intensity[index] += getInterpolatedValue(ModifiedLambertProjection::NorthSquare, sqCoord);
+            //intensity[index] += getValue(ModifiedLambertProjection::NorthSquare, sqIndex);
           }
           else
           {
             //get Value from South square
             intensity[index] += getInterpolatedValue(ModifiedLambertProjection::SouthSquare, sqCoord);
+            //intensity[index] += getValue(ModifiedLambertProjection::SouthSquare, sqIndex);
           }
         }
         intensity[index]  = intensity[index] * 0.5;
@@ -417,5 +444,6 @@ DoubleArrayType::Pointer ModifiedLambertProjection::createStereographicProjectio
 {
   DoubleArrayType::Pointer stereoIntensity = DoubleArrayType::CreateArray(dim * dim, 1, "ModifiedLambertProjection_StereographicProjection");
   stereoIntensity->initializeWithZeros();
+  createStereographicProjection(dim, stereoIntensity.get());
   return stereoIntensity;
 }

@@ -349,16 +349,16 @@ namespace OrthoRhombic
 class GenerateSphereCoordsImpl
 {
     FloatArrayType* eulers;
-    FloatArrayType* xyz001;
-    FloatArrayType* xyz011;
-    FloatArrayType* xyz111;
+    FloatArrayType* m_xyz001;
+    FloatArrayType* m_xyz011;
+    FloatArrayType* m_xyz111;
 
   public:
     GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
       eulers(eulerAngles),
-      xyz001(xyz001Coords),
-      xyz011(xyz011Coords),
-      xyz111(xyz111Coords)
+      m_xyz001(xyz001Coords),
+      m_xyz011(xyz011Coords),
+      m_xyz111(xyz111Coords)
     {}
     virtual ~GenerateSphereCoordsImpl(){}
 
@@ -373,29 +373,32 @@ class GenerateSphereCoordsImpl
       for(size_t i = start; i < end; ++i)
       {
         currentEuler = eulers->GetPointer(i * 3);
+
         OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
         MatrixMath::Transpose3x3(g, gTranpose);
 
-        // -----------------------------------------------------------------------------
-        // 100 Family
-        direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz001->GetPointer(i*6));
-        MatrixMath::Copy3x1(xyz001->GetPointer(i*6),xyz001->GetPointer(i*6 + 3));
-        MatrixMath::Multiply3x1withConstant(xyz001->GetPointer(i*6 + 3),-1);
+            // -----------------------------------------------------------------------------
+            // 001 Family
+            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*6),m_xyz001->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*6 + 3),-1);
 
-        // -----------------------------------------------------------------------------
-        // 010 Family
-        direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz011->GetPointer(i*6));
-        MatrixMath::Copy3x1(xyz011->GetPointer(i*6),xyz011->GetPointer(i*6 + 3));
-        MatrixMath::Multiply3x1withConstant(xyz011->GetPointer(i*6 + 3),-1);
 
-        // -----------------------------------------------------------------------------
-        // 001 Family
-        direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-        MatrixMath::Multiply3x3with3x1(gTranpose, direction, xyz111->GetPointer(i*6));
-        MatrixMath::Copy3x1(xyz111->GetPointer(i*6),xyz111->GetPointer(i*6 + 3));
-        MatrixMath::Multiply3x1withConstant(xyz111->GetPointer(i*6 + 3),-1);
+            // -----------------------------------------------------------------------------
+            // 011 Family
+            direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*6),m_xyz011->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*6 + 3),-1);
+
+
+            // -----------------------------------------------------------------------------
+            // 111 Family
+            direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*6),m_xyz111->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*6 + 3),-1);
       }
     }
 
@@ -484,7 +487,6 @@ void OrthoRhombicOps::generateIPFColor(double phi1, double phi, double phi2, dou
   float g[3][3];
   float p[3];
   float refDirection[3];
-  float d[3];
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
@@ -516,7 +518,6 @@ void OrthoRhombicOps::generateIPFColor(double phi1, double phi, double phi2, dou
   float chiMax = 90.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
   float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
-  float arg;
 
   _rgb[0] = 1.0 - chiDeg/chiMax;
   _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
@@ -582,8 +583,8 @@ std::vector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFig
 {
   std::vector<UInt8ArrayType::Pointer> poleFigures;
   std::string label0("Orthorhombic <001>");
-  std::string label1("Orthorhombic <011>");
-  std::string label2("Orthorhombic <111>");
+  std::string label1("Orthorhombic <100>");
+  std::string label2("Orthorhombic <010>");
 
 
   int numOrientations = config.eulers->GetNumberOfTuples();

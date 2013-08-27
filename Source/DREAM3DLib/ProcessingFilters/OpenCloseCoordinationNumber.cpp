@@ -190,6 +190,13 @@ void OpenCloseCoordinationNumber::execute()
 //  DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
+  if (numgrains == 0)
+  {
+    setErrorCondition(-90001);
+    notifyErrorMessage("No grains have been defined in the Field map. A filter needs to be executed before this filter that defines the number of grains.", getErrorCondition());
+    notifyStatusMessage("Completed with Errors");
+    return;
+  }
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -198,7 +205,7 @@ void OpenCloseCoordinationNumber::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  std::vector<int> currentvlist;
+ // std::vector<int> currentvlist;
 
   size_t point = 0;
   int kstride, jstride;
@@ -229,10 +236,10 @@ void OpenCloseCoordinationNumber::execute()
         {
           point = kstride+jstride+i;
           grainname = m_GrainIds[point];
-		  coordination = 0;
-		  current = 0;
-		  most = 0;
-		  for (int l = 0; l < 6; l++)
+      coordination = 0;
+      current = 0;
+      most = 0;
+      for (int l = 0; l < 6; l++)
           {
             good = 1;
             neighpoint = static_cast<int>( point + neighpoints[l] );
@@ -248,29 +255,29 @@ void OpenCloseCoordinationNumber::execute()
               if((grainname > 0 && grain == 0) || (grainname == 0 && grain > 0))
               {
                 coordination = coordination + 1;
-				n[grain]++;
-				current = n[grain];
-				if (current > most)
-				{
-					most = current;
-					m_Neighbors[point] = neighpoint;
-				}
+        n[grain]++;
+        current = n[grain];
+        if (current > most)
+        {
+          most = current;
+          m_Neighbors[point] = neighpoint;
+        }
               }
             }
           }
           coordinationNumber[point] = coordination;
-	      int neighbor = m_Neighbors[point];
-	      if (coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
-	      {
-	          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-	          {
-	            std::string name = *iter;
-	            IDataArray::Pointer p = m->getCellData(*iter);
-	            p->CopyTuple(neighbor, point);
-	          }
-		  }
-		  for (int l = 0; l < 6; l++)
-		  {
+        int neighbor = m_Neighbors[point];
+        if (coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
+        {
+            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            {
+              std::string name = *iter;
+              IDataArray::Pointer p = m->getCellData(*iter);
+              p->CopyTuple(neighbor, point);
+            }
+      }
+      for (int l = 0; l < 6; l++)
+      {
             good = 1;
             neighpoint = static_cast<int>( point + neighpoints[l] );
             if (l == 0 && k == 0) good = 0;
@@ -280,12 +287,12 @@ void OpenCloseCoordinationNumber::execute()
             if (l == 2 && i == 0) good = 0;
             if (l == 3 && i == (dims[0] - 1)) good = 0;
             if (good == 1)
-		    {
-			  grain = m_GrainIds[neighpoint];
-			  if(grain > 0) n[grain] = 0;
-		    }
-		  }
-		}
+        {
+        grain = m_GrainIds[neighpoint];
+        if(grain > 0) n[grain] = 0;
+        }
+      }
+    }
       }
     }
     for (int k = 0; k < dims[2]; k++)

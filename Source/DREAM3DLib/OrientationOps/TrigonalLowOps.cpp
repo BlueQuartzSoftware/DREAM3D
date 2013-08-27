@@ -61,9 +61,9 @@ namespace Detail {
   static const float TrigDim3StepValue = TrigDim3InitValue/12.0f;
   namespace TrigonalLow
   {
-    static const int symSize0 = 1;
-    static const int symSize1 = 1;
-    static const int symSize2 = 1;
+    static const int symSize0 = 2;
+    static const int symSize1 = 2;
+    static const int symSize2 = 2;
   }
 }
 static const QuatF TrigQuatSym[3] = {QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
@@ -373,16 +373,16 @@ namespace TrigonalLow
 class GenerateSphereCoordsImpl
 {
     FloatArrayType* eulers;
-    FloatArrayType* xyz001;
-    FloatArrayType* xyz011;
-    FloatArrayType* xyz111;
+    FloatArrayType* m_xyz001;
+    FloatArrayType* m_xyz011;
+    FloatArrayType* m_xyz111;
 
   public:
     GenerateSphereCoordsImpl(FloatArrayType* eulerAngles, FloatArrayType* xyz001Coords, FloatArrayType* xyz011Coords, FloatArrayType* xyz111Coords) :
       eulers(eulerAngles),
-      xyz001(xyz001Coords),
-      xyz011(xyz011Coords),
-      xyz111(xyz111Coords)
+      m_xyz001(xyz001Coords),
+      m_xyz011(xyz011Coords),
+      m_xyz111(xyz111Coords)
     {}
     virtual ~GenerateSphereCoordsImpl(){}
 
@@ -391,7 +391,7 @@ class GenerateSphereCoordsImpl
       float g[3][3];
       float gTranpose[3][3];
       float* currentEuler = NULL;
-      //float direction[3] = {0.0, 0.0, 0.0};
+      float direction[3] = {0.0, 0.0, 0.0};
 
 
       for(size_t i = start; i < end; ++i)
@@ -400,6 +400,31 @@ class GenerateSphereCoordsImpl
 
         OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
         MatrixMath::Transpose3x3(g, gTranpose);
+
+            // -----------------------------------------------------------------------------
+            // 001 Family
+            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*6),m_xyz001->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*6 + 3),-1);
+
+
+            // -----------------------------------------------------------------------------
+            // 011 Family
+            direction[0] = -0.5; direction[1] = DREAM3D::Constants::k_Root3Over2; direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*6),m_xyz011->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*6 + 3),-1);
+
+
+            // -----------------------------------------------------------------------------
+            // 111 Family
+            direction[0] = 1; direction[1] = 0; direction[2] = 0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*6),m_xyz111->GetPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*6 + 3),-1);
+
+
       }
     }
 
@@ -487,7 +512,6 @@ void TrigonalLowOps::generateIPFColor(double phi1, double phi, double phi2, doub
   float g[3][3];
   float p[3];
   float refDirection[3];
-  float d[3];
   float eta, chi;
   float _rgb[3] = { 0.0, 0.0, 0.0 };
 
@@ -518,7 +542,6 @@ void TrigonalLowOps::generateIPFColor(double phi1, double phi, double phi2, doub
   float chiMax = 90.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
   float chiDeg = chi*DREAM3D::Constants::k_180OverPi;
-  float arg;
 
   _rgb[0] = 1.0 - chiDeg/chiMax;
   _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
@@ -584,9 +607,9 @@ void TrigonalLowOps::generateRodriguesColor(float r1, float r2, float r3, unsign
 std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
   std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Trigonal Low <001>");
-  std::string label1("Trigonal Low <011>");
-  std::string label2("Trigonal Low <111>");
+  std::string label0("Trigonal Low <0001>");
+  std::string label1("Trigonal Low <-1-120>");
+  std::string label2("Trigonal Low <2-1-10>");
 
 
   int numOrientations = config.eulers->GetNumberOfTuples();
