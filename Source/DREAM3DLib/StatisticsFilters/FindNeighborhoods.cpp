@@ -205,7 +205,9 @@ void FindNeighborhoods::find_neighborhoods()
   float xn, yn, zn;
   float dx, dy, dz;
 
-    std::vector<std::vector<int> > neighborhoodlist;
+
+
+  std::vector<std::vector<int> > neighborhoodlist;
 
   int totalFields = int(m->getNumFieldTuples());
 
@@ -220,37 +222,84 @@ void FindNeighborhoods::find_neighborhoods()
   aveDiam /= totalFields;
   float criticalDistance = aveDiam*m_MultiplesOfAverage;
 
+  float m_OriginX, m_OriginY, m_OriginZ;
+  m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
+  size_t udims[3] = {0,0,0};
+  m->getDimensions(udims);
+#if (CMP_SIZEOF_SIZE_T == 4)
+  typedef int32_t DimType;
+#else
+  typedef int64_t DimType;
+#endif
+  DimType dims[3] = {
+    static_cast<DimType>(udims[0]),
+    static_cast<DimType>(udims[1]),
+    static_cast<DimType>(udims[2]),
+  };
+
+  size_t xP = dims[0];
+  size_t yP = dims[1];
+  size_t zP = dims[2];
+  float xRes = m->getXRes();
+  float yRes = m->getYRes();
+  float zRes = m->getZRes();
+  float sizeX = float(xP)*xRes;
+  float sizeY = float(yP)*yRes;
+  float sizeZ = float(zP)*zRes;
+  int numXBins = int(sizeX/criticalDistance);
+  int numYBins = int(sizeY/criticalDistance);
+  int numZBins = int(sizeZ/criticalDistance);
+
+  int xbin, ybin, zbin, bin, bin1, bin2;
+  std::vector<size_t> bins(totalFields, 0);
   for (size_t i = 1; i < totalFields; i++)
   {
-      if (i%100 == 0)
+      x = m_Centroids[3*i];
+      y = m_Centroids[3*i+1];
+      z = m_Centroids[3*i+2];
+      xbin = int((x-m_OriginX)/criticalDistance);
+      ybin = int((y-m_OriginY)/criticalDistance);
+      zbin = int((z-m_OriginZ)/criticalDistance);
+      bin = (zbin*numXBins*numYBins)+(ybin*numXBins)+(xbin);
+      bins[i] = bin;
+  }
+  for (size_t i = 1; i < totalFields; i++)
+  {
+      if (i%1000 == 0)
       {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+        ss.str("");
+        ss << "Working On Grain " << i << " of " << totalFields;
+        notifyStatusMessage(ss.str());
       }
       x = m_Centroids[3*i];
       y = m_Centroids[3*i+1];
       z = m_Centroids[3*i+2];
-    if(m->getXPoints() == 1) x = 0;
-    if(m->getYPoints() == 1) y = 0;
-    if(m->getZPoints() == 1) z = 0;
-      for (size_t j = i; j < totalFields; j++)
+      bin1 = bins[i];
+      for (size_t j = i+1; j < totalFields; j++)
       {
-      xn = m_Centroids[3*j];
-      yn = m_Centroids[3*j+1];
-      zn = m_Centroids[3*j+2];
-      if(m->getXPoints() == 1) xn = 0;
-      if(m->getYPoints() == 1) yn = 0;
-      if(m->getZPoints() == 1) zn = 0;
-        dx = fabs(x - xn);
-        dy = fabs(y - yn);
-        dz = fabs(z - zn);
-        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
+        bin2 = bins[j];
+        if(bin1 == bin2)
         {
             m_Neighborhoods[i]++;
             neighborhoodlist[i].push_back(j);
             m_Neighborhoods[j]++;
             neighborhoodlist[j].push_back(i);
+        }
+        else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
+        {
+          xn = m_Centroids[3*j];
+          yn = m_Centroids[3*j+1];
+          zn = m_Centroids[3*j+2];
+          dx = fabs(x - xn);
+          dy = fabs(y - yn);
+          dz = fabs(z - zn);
+          if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
+          {
+              m_Neighborhoods[i]++;
+              neighborhoodlist[i].push_back(j);
+              m_Neighborhoods[j]++;
+              neighborhoodlist[j].push_back(i);
+          }
         }
       }
   }
