@@ -42,10 +42,10 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h
@@ -63,12 +63,16 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
 
     virtual ~FindNeighborhoods();
 
+    //------ Required Cell Data
+
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NeighborhoodListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
 
@@ -106,6 +110,7 @@ private:
     float* m_Centroids;
     float* m_EquivalentDiameters;
     int32_t* m_Neighborhoods;
+    NeighborList<int>* m_NeighborhoodList;
 
 	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
