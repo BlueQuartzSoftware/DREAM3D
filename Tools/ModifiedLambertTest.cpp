@@ -55,11 +55,11 @@ ModifiedLambertProjection::Pointer forwardProjectGreyScaleImage(QImage image)
 
           if (nhCheck == true)
           {
-            lambert->addValue(ModifiedLambertProjection::NorthSquare, sqIndex,  static_cast<double>(gray));
+            lambert->setValue(ModifiedLambertProjection::NorthSquare, sqIndex,  static_cast<double>(gray));
           }
           else
           {
-            lambert->addValue(ModifiedLambertProjection::SouthSquare, sqIndex,  static_cast<double>(gray));
+            lambert->setValue(ModifiedLambertProjection::SouthSquare, sqIndex,  static_cast<double>(gray));
           }
         }
       }
@@ -119,7 +119,7 @@ int main(int argc, char *argv[])
       idx = (y * size.width()) + x;
       QRgb rgb = image.pixel(x, y);
       int gray = qGray(rgb);
-      lamproj->addValue(ModifiedLambertProjection::NorthSquare, idx, static_cast<double>(gray));
+      lamproj->setValue(ModifiedLambertProjection::NorthSquare, idx, static_cast<double>(gray));
     }
   }
 
@@ -128,8 +128,6 @@ int main(int argc, char *argv[])
   float res[3] = { 1.0, 1.0, 1.0};
   DoubleArrayType::Pointer north = lamproj->getNorthSquare();
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/MarcLambert_North.vtk", north.get(), dims, res, "double", true);
-
-
 
 
   DoubleArrayType::Pointer stereoProj = lamproj->createStereographicProjection(1501);
