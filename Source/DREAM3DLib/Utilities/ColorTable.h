@@ -36,6 +36,8 @@
 #ifndef _ColorTable_H_
 #define _ColorTable_H_
 
+#include <vector>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 
 /**
@@ -95,9 +97,7 @@ class DREAM3DLib_EXPORT ColorTable
      * @param max
      * @param min
     */
-    static void GetColorCorrespondingToValue(float val,
-                                             float &r, float &g, float &b,
-                                             float max, float min);
+    static void GetColorTable(int numColors, std::vector<float> &colors);
 
   private:
     ColorTable(const ColorTable&); // Copy Constructor Not Implemented
