@@ -352,21 +352,31 @@ set(DREAM3D_EXTRA_PLUGINS "" CACHE LIST "Semicolon delimited list of Extra Exter
 # and the user will have to put the entire path into CMake manually.
 foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
-  #message(STATUS "Looking for Plugin: ${userPlugin}...")
+  message(STATUS "Plugin: ${userPlugin}...")
+
+  if(DEFINED ${userPlugin}_SOURCE_DIR AND "${${userPlugin}_SOURCE_DIR}" STREQUAL "")
+  #  message(STATUS "${userPlugin}_SOURCE_DIR Empty")
+    set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
+    set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
+  endif()
+
+
   if(NOT DEFINED ${userPlugin}_SOURCE_DIR)
       set(pluginSearchDir ${PROJECT_CODE_DIR}/Plugins/${userPlugin})
       if(EXISTS ${pluginSearchDir})
         set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-        message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+        message(STATUS "Plugin: Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
       else()
         set(pluginSearchDir ${DREAM3DProj_SOURCE_DIR}/../${userPlugin})
         if(EXISTS ${pluginSearchDir})
             set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "")
-            message(STATUS "Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
+            message(STATUS "Plugin: Defining ${userPlugin}_SOURCE_DIR to ${${userPlugin}_SOURCE_DIR}")
         endif()
       endif()
   endif()
 
+
+ # message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
   #Now that we have defined where the user's plugin directory is at we
   # need to make sure it have a CMakeLists.txt file in it
   if(EXISTS ${${userPlugin}_SOURCE_DIR}/CMakeLists.txt)
@@ -375,13 +385,17 @@ foreach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
   endif()
 
 # By this point we should have everything defined and ready to go...
+#  message(STATUS "${userPlugin}_SOURCE_DIR: ${${userPlugin}_SOURCE_DIR}")
+#  message(STATUS "${userPlugin}_IMPORT_FILE: ${${userPlugin}_IMPORT_FILE}")
+
+
   if(DEFINED ${userPlugin}_SOURCE_DIR AND DEFINED ${userPlugin}_IMPORT_FILE)
-      message(STATUS "Adding Plugin ${${userPlugin}_SOURCE_DIR}")
+      message(STATUS "Plugin: Adding Plugin ${${userPlugin}_SOURCE_DIR}")
       DREAM3D_COMPILE_PLUGIN(PLUGIN_NAME ${userPlugin}
         PLUGIN_SOURCE_DIR ${${userPlugin}_SOURCE_DIR})
   else()
       set(${userPlugin}_SOURCE_DIR ${pluginSearchDir} CACHE PATH "" FORCE)
-      message(FATAL_ERROR "The directory for plugin ${userPlugin} was not found. Please set this directory manually")
+      message(FATAL_ERROR "Plugin: The directory for plugin ${userPlugin} was not found. Please set this directory manually")
   endif()
 
 endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
