@@ -1684,7 +1684,7 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, Su
         updateArrayNameComboBox(vdc->getEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget:
-        updateArrayNameComboBox(smdc->getPointArrayNameList(), propertyName);
+        updateArrayNameComboBox(smdc->getVertexArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget:
         updateArrayNameComboBox(smdc->getFaceArrayNameList(), propertyName);

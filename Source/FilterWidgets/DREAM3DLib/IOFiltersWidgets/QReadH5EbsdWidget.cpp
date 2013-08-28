@@ -163,10 +163,10 @@ void QReadH5EbsdWidget::setupGui()
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
 
-  arraySelectionWidget->setSurfaceMeshEnabled(false);
-  arraySelectionWidget->setSolidMeshEnabled(false);
-  arraySelectionWidget->removeSurfaceMeshData();
-  arraySelectionWidget->removeSolidMeshData();
+  arraySelectionWidget->setSurfaceEnabled(false);
+  arraySelectionWidget->setVertexEnabled(false);
+  arraySelectionWidget->removeSurfaceData();
+  arraySelectionWidget->removeVertexData();
 }
 
 // -----------------------------------------------------------------------------

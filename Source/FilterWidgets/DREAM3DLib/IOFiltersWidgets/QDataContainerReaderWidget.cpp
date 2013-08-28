@@ -252,7 +252,7 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
   {
     QVariant p_ReadEdgeData = prefs.value("ReadEdgeData");
     QCheckBox* le = findChild<QCheckBox*>("ReadEdgeData");
-    if (le) { le->setChecked(p_ReadVertexData.toBool()); }
+    if (le) { le->setChecked(p_ReadEdgeData.toBool()); }
   }
 
   arraySelectionWidget->readOptions(prefs, "ArraySelections");

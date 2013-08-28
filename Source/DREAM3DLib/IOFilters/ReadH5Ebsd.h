@@ -86,19 +86,19 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexEnsembleArrays)
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
@@ -135,17 +135,17 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                             std::set<std::string> selectedFieldArrays,
                                             std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedFaceArrays,
                                                   std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFieldArrays,
                                                   std::set<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays);
+    virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                std::set<std::string> selectedFieldArrays,
+                                                std::set<std::string> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

@@ -153,7 +153,7 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
   populateArrayList(vertexFieldArrayList, fieldNames, NULL);
 
   std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
-  populateArrayList(vertexEnesembleArrayList, ensembleNames, NULL);
+  populateArrayList(vertexEnsembleArrayList, ensembleNames, NULL);
 }
 
 
