@@ -297,8 +297,8 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   int numColors = config.numColors;
   int scaleHeight = imageHeight * 0.25;
   int scaleWidth = 50;
-  int penWidth = int(scaleHeight/numColors);
-  scaleHeight = penWidth*numColors;
+  int colorWidth = int(scaleHeight/numColors);
+  scaleHeight = colorWidth*numColors;
 
   QPointF topLeft(imageWidth * .625, imageHeight * .625);
 
@@ -319,9 +319,8 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
     b = colors[3*i+2];
     colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
   }
-  // Index 0 is all white which is every pixel outside of the Pole Figure circle
-  colorTable[numColors] = ColorTable::makeRgba(255, 255, 255, 255);
 
+  int penWidth = 1;
 
   // Now start from the top and draw colored lines down the scale bar
   int yLinePos = topLeft.y() + size.height();
@@ -331,13 +330,16 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
 
   for(int i = 0; i < numColors; ++i)
   {
-    QColor c(colorTable[i]);
-    painter.setPen(QPen(c, penWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
-    start.setY(yLinePos);
-    end.setX(topLeft.x() + scaleWidth);
-    end.setY(yLinePos);
-    painter.drawLine(start, end);
-    yLinePos = yLinePos-penWidth;
+    for(int j = 0; j < colorWidth; j++)
+    {
+      QColor c(colorTable[i]);
+      painter.setPen(QPen(c, penWidth, Qt::SolidLine, Qt::SquareCap, Qt::RoundJoin));
+      start.setY(yLinePos);
+      end.setX(topLeft.x() + scaleWidth);
+      end.setY(yLinePos);
+      painter.drawLine(start, end);
+      yLinePos--;
+    }
   }
 
   // Draw the border of the scale bar
