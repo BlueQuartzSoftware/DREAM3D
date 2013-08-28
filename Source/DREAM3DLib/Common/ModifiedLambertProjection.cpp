@@ -228,7 +228,10 @@ double ModifiedLambertProjection::getValue(Square square, int index)
 double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqCoord)
 {
  // float sqCoord[2] = { sqCoord0[0] - 0.5*m_StepSize, sqCoord0[1] - 0.5*m_StepSize};
-  int abinMod, bbinMod;
+  int abin1, bbin1;
+  int abin2, bbin2;
+  int abin3, bbin3;
+  int abin4, bbin4;
   int abinSign, bbinSign;
   float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
   float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;
@@ -240,27 +243,36 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
   modY -= 0.5;
   abinSign = modX/fabs(modX);
   bbinSign = modY/fabs(modY);
-  if((abin+abinSign) < m_Dimension-1 && (abin+abinSign) > 0) abinMod = abin+abinSign;
-  else abinMod = abin;
-  if((bbin+bbinSign) < m_Dimension-1 && (bbin+bbinSign) > 0) bbinMod = bbin+bbinSign;
-  else bbinMod = bbin;
+  abin1 = abin;
+  bbin1 = bbin;
+  abin2 = abin+abinSign;
+  bbin2 = bbin;
+  if(abin2 < 0 || abin2 > m_Dimension-1) abin2 = abin2 - (abinSign*m_Dimension), bbin2 = m_Dimension-bbin2-1;
+  abin3 = abin;
+  bbin3 = bbin+bbinSign;
+  if(bbin3 < 0 || bbin3 > m_Dimension-1) abin3 = m_Dimension-abin3-1, bbin3 = bbin3 - (bbinSign*m_Dimension);
+  abin4 = abin+abinSign;
+  bbin4 = bbin+bbinSign;
+  if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 >= 0 && bbin4 <= m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = m_Dimension-bbin4-1;
+  else if((abin4 >= 0 && abin4 <= m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = m_Dimension-abin4-1, bbin4 = bbin4 - (bbinSign*m_Dimension);
+  else if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = bbin4 - (bbinSign*m_Dimension);
   modX = fabs(modX);
   modY = fabs(modY);
   if (square == NorthSquare)
   {
-    float intensity1 = m_NorthSquare->GetValue((abin)+(bbin*m_Dimension));
-    float intensity2 = m_NorthSquare->GetValue((abinMod)+(bbin*m_Dimension));
-    float intensity3 = m_NorthSquare->GetValue((abin)+(bbinMod*m_Dimension));
-    float intensity4 = m_NorthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
+    float intensity1 = m_NorthSquare->GetValue((abin1)+(bbin1*m_Dimension));
+    float intensity2 = m_NorthSquare->GetValue((abin2)+(bbin2*m_Dimension));
+    float intensity3 = m_NorthSquare->GetValue((abin3)+(bbin3*m_Dimension));
+    float intensity4 = m_NorthSquare->GetValue((abin4)+(bbin4*m_Dimension));
     float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
     return interpolatedIntensity;
   }
   else
   {
-    float intensity1 = m_SouthSquare->GetValue((abin)+(bbin*m_Dimension));
-    float intensity2 = m_SouthSquare->GetValue((abinMod)+(bbin*m_Dimension));
-    float intensity3 = m_SouthSquare->GetValue((abin)+(bbinMod*m_Dimension));
-    float intensity4 = m_SouthSquare->GetValue((abinMod)+(bbinMod*m_Dimension));
+    float intensity1 = m_SouthSquare->GetValue((abin1)+(bbin1*m_Dimension));
+    float intensity2 = m_SouthSquare->GetValue((abin2)+(bbin2*m_Dimension));
+    float intensity3 = m_SouthSquare->GetValue((abin3)+(bbin3*m_Dimension));
+    float intensity4 = m_SouthSquare->GetValue((abin4)+(bbin4*m_Dimension));
     float interpolatedIntensity = ((intensity1*(1-modX)*(1-modY))+(intensity2*(modX)*(1-modY))+(intensity3*(1-modX)*(modY))+(intensity4*(modX)*(modY)));
     return interpolatedIntensity;
   }

@@ -63,26 +63,28 @@ void ColorTable::GetColorTable(int numColors, std::vector<float> &colors)
   static const int numColorNodes = 8;
   float color[numColorNodes][3] =
   {
-    {0.0f, 1.0f/255.0f, 253.0f/255.0f},    // blue
+    {0.0f, 0.0f/255.0f, 255.0f/255.0f},    // blue
     {105.0f/255.0f, 145.0f/255.0f, 2.0f/255.0f},    // yellow
-    {1.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
+    {0.0f/255.0f, 255.0f/255.0f, 29.0f/255.0f},    // Green
     {180.0f/255.0f, 255.0f/255.0f, 0.0f/255.0f},
     {255.0f/255.0f, 215.0f/255.0f, 6.0f/255.0f},
     {255.0f/255.0f, 143.0f/255.0f, 1.0f/255.0f},
     {255.0f/255.0f, 69.0f/255.0f, 0.0f/255.0f},
-    {253.0f/255.0f, 1.0f/255.0f, 0.0f/255.0f}     // red
+    {255.0f/255.0f, 0.0f/255.0f, 0.0f/255.0f}     // red
   };
 
   float val, r, g, b;
   float step = 1.0/float(numColors);
-  float nodeStep = 1.0/float(numColorNodes);
-  for (int i = 0; i < (numColors - 1); i++)
+  float nodeStep = 1.0/float(numColorNodes-1);
+  for (int i = 0; i < (numColors); i++)
   {
     val = float(i)*step;
-    float currFraction = (val/nodeStep) - int(val/nodeStep);
-    r = color[i][0] * (1.0 - currFraction) + color[i + 1][0] * currFraction;
-    g = color[i][1] * (1.0 - currFraction) + color[i + 1][1] * currFraction;
-    b = color[i][2] * (1.0 - currFraction) + color[i + 1][2] * currFraction;
+    int currColorBin = int(val/nodeStep);
+    float currFraction = (val/nodeStep) - currColorBin;
+    if(currColorBin > numColorNodes-1) currColorBin = numColorNodes-1;
+    r = color[currColorBin][0] * (1.0 - currFraction) + color[currColorBin + 1][0] * currFraction;
+    g = color[currColorBin][1] * (1.0 - currFraction) + color[currColorBin + 1][1] * currFraction;
+    b = color[currColorBin][2] * (1.0 - currFraction) + color[currColorBin + 1][2] * currFraction;
     colors[3*i] = r;
     colors[3*i+1] = g;
     colors[3*i+2] = b;
