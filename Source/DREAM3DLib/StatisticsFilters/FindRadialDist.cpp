@@ -121,7 +121,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
@@ -168,7 +168,7 @@ void FindRadialDist::preflight()
 // -----------------------------------------------------------------------------
 void FindRadialDist::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -208,7 +208,7 @@ void FindRadialDist::execute()
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_radialdist()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   float x, y, z;
   float xn, yn, zn;
@@ -336,7 +336,7 @@ void FindRadialDist::find_radialdist()
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_boundingbox()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t size = m->getNumFieldTuples();
 
   float coords[7];

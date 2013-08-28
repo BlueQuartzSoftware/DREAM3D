@@ -115,7 +115,7 @@ void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_OutputFile.empty() == true)
   {
@@ -146,7 +146,7 @@ void AvizoUniformCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -213,7 +213,7 @@ std::string AvizoUniformCoordinateWriter::generateHeader()
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getVoxelDataContainer()->getDimensions(x, y, z);
+  getVolumeDataContainer()->getDimensions(x, y, z);
   ss << "define Lattice " << x << " " << y << " " << z << "\n\n";
 
   ss << "Parameters {\n";
@@ -227,9 +227,9 @@ std::string AvizoUniformCoordinateWriter::generateHeader()
   ss << "     }\n";
   ss << "     Content \"" << x << "x" << y << "x" << z << " int, uniform coordinates\",\n";
   float origin[3];
-  getVoxelDataContainer()->getOrigin(origin);
+  getVolumeDataContainer()->getOrigin(origin);
   float res[3];
-  getVoxelDataContainer()->getResolution(res);
+  getVolumeDataContainer()->getResolution(res);
   ss << "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n";
   ss << "     BoundingBox " << origin[0] << " " << origin[0] + (res[0] * x);
   ss << " " << origin[1] << " " << origin[1] + (res[1] * x);
@@ -254,12 +254,12 @@ int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
   writer.writeString(start);
   if(true == m_WriteBinaryFile)
   {
-    writer.writeArray(m_GrainIds, getVoxelDataContainer()->getTotalPoints());
+    writer.writeArray(m_GrainIds, getVolumeDataContainer()->getTotalPoints());
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getVoxelDataContainer()->getTotalPoints();
+    int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
     int count = 0;
     std::stringstream ss;
     for (int64_t i = 0; i < totalPoints; ++i)

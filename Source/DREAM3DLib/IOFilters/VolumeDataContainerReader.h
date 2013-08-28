@@ -33,10 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SolidMeshDataContainerReader_H_
-#define _SolidMeshDataContainerReader_H_
+#ifndef _VolumeDataContainerReader_H_
+#define _VolumeDataContainerReader_H_
 
 #include <string>
+
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -45,27 +47,39 @@
 
 
 /**
- * @class SolidMeshDataContainerReader SolidMeshDataContainerReader.h /IOFilters/SolidMeshDataContainerReader.h
+ * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SolidMeshDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(SolidMeshDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainerReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, AbstractFilter)
 
-    virtual ~SolidMeshDataContainerReader();
+    virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
+    typedef std::list<std::string> NameListType;
 
 
     /**
@@ -74,13 +88,13 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Reader"; }
+    virtual const std::string getHumanLabel() { return "Voxel DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -111,8 +125,10 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
     */
     virtual void preflight();
 
+    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
+
   protected:
-    SolidMeshDataContainerReader();
+    VolumeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -124,10 +140,16 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    int gatherData(bool preflight);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                       std::vector<std::string> &namesRead,
+                       std::set<std::string> &namesToRead);
+    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
+
   private:
 
-    SolidMeshDataContainerReader(const SolidMeshDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const SolidMeshDataContainerReader&); // Operator '=' Not Implemented
+    VolumeDataContainerReader(const VolumeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SolidMeshDataContainerReader_H_ */
+#endif /* _VolumeDataContainerReader_H_ */

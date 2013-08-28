@@ -45,7 +45,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 
 #include "DREAM3DLib/IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
@@ -86,9 +86,10 @@ void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt
   DataContainerReader* filter = DataContainerReader::SafeObjectDownCast<AbstractFilter*, DataContainerReader*>(filt);
   blockSignals(true);
   setInputFile( QString::fromStdString( filter->getInputFile() ) );
-  setReadVoxelData( filter->getReadVoxelData() );
-  setReadSurfaceMeshData( filter->getReadSurfaceMeshData() );
-  setReadSolidMeshData( filter->getReadSolidMeshData() );
+  setReadVolumeData( filter->getReadVolumeData() );
+  setReadSurfaceData( filter->getReadSurfaceData() );
+  setReadVertexData( filter->getReadVertexData() );
+  setReadEdgeData( filter->getReadEdgeData() );
   blockSignals(false);
   arraySelectionWidget->blockSignals(true);
   arraySelectionWidget->setArraySelections(filter);
@@ -103,9 +104,10 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter(bool defaultValues
   DataContainerReader::Pointer filter = DataContainerReader::New();
   if (defaultValues == true) { return filter; }
   filter->setInputFile( getInputFile().toStdString() );
-  filter->setReadVoxelData( getReadVoxelData() );
-  filter->setReadSurfaceMeshData( getReadSurfaceMeshData() );
-  filter->setReadSolidMeshData( getReadSolidMeshData() );
+  filter->setReadVolumeData( getReadVolumeData() );
+  filter->setReadSurfaceData( getReadSurfaceData() );
+  filter->setReadVertexData( getReadVertexData() );
+  filter->setReadEdgeData( getReadEdgeData() );
 
   arraySelectionWidget->getArraySelections(filter.get());
 
@@ -119,8 +121,10 @@ QFilterWidget* QDataContainerReaderWidget::createDeepCopy()
 {
   QDataContainerReaderWidget* w = new QDataContainerReaderWidget(NULL);
   w->setInputFile( getInputFile() );
-  w->setReadVoxelData( getReadVoxelData() );
-  w->setReadSurfaceMeshData( getReadSurfaceMeshData() );
+  w->setReadVolumeData( getReadVolumeData() );
+  w->setReadSurfaceData( getReadSurfaceData() );
+  w->setReadVertexData( getReadVertexData() );
+  w->setReadEdgeData( getReadEdgeData() );
   return w;
 }
 
@@ -155,7 +159,7 @@ void QDataContainerReaderWidget::arraySelectionWidgetChanged()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_ReadVoxelData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadVolumeData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -163,7 +167,7 @@ void QDataContainerReaderWidget::on_ReadVoxelData_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_ReadSurfaceMeshData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadSurfaceData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -171,7 +175,15 @@ void QDataContainerReaderWidget::on_ReadSurfaceMeshData_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::on_ReadSolidMeshData_stateChanged(int state)
+void QDataContainerReaderWidget::on_ReadVertexData_stateChanged(int state)
+{
+  emit parametersChanged();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void QDataContainerReaderWidget::on_ReadEdgeData_stateChanged(int state)
 {
   emit parametersChanged();
 }
@@ -201,9 +213,10 @@ void QDataContainerReaderWidget::writeOptions(QSettings &prefs)
 {
   prefs.setValue("Filter_Name", "DataContainerReader" );
   prefs.setValue("InputFile", QDir::toNativeSeparators(getInputFile()) );
-  prefs.setValue("ReadVoxelData", getReadVoxelData() );
-  prefs.setValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
-  prefs.setValue("ReadSolidMeshData", getReadSolidMeshData() );
+  prefs.setValue("ReadVolumeData", getReadVolumeData() );
+  prefs.setValue("ReadSurfaceData", getReadSurfaceData() );
+  prefs.setValue("ReadVertexData", getReadVertexData() );
+  prefs.setValue("ReadEdgeData", getReadEdgeData() );
   arraySelectionWidget->writeOptions(prefs, "ArraySelections");
 }
 
@@ -220,21 +233,26 @@ void QDataContainerReaderWidget::readOptions(QSettings &prefs)
     setInputFile(path);
   }
   {
-    QVariant p_ReadVoxelData = prefs.value("ReadVoxelData");
-    QCheckBox* le = findChild<QCheckBox*>("ReadVoxelData");
-    if (le) { le->setChecked(p_ReadVoxelData.toBool()); }
+    QVariant p_ReadVolumeData = prefs.value("ReadVolumeData");
+    QCheckBox* le = findChild<QCheckBox*>("ReadVolumeData");
+    if (le) { le->setChecked(p_ReadVolumeData.toBool()); }
   }
   {
-    QVariant p_ReadSurfaceMeshData = prefs.value("ReadSurfaceMeshData");
-    QCheckBox* le = findChild<QCheckBox*>("ReadSurfaceMeshData");
+    QVariant p_ReadSurfaceData = prefs.value("ReadSurfaceData");
+    QCheckBox* le = findChild<QCheckBox*>("ReadSurfaceData");
     if (le) {
-     le->setChecked(p_ReadSurfaceMeshData.toBool());
+     le->setChecked(p_ReadSurfaceData.toBool());
     }
   }
   {
-    QVariant p_ReadSolidMeshData = prefs.value("ReadSolidMeshData");
-    QCheckBox* le = findChild<QCheckBox*>("ReadSolidMeshData");
-    if (le) { le->setChecked(p_ReadSolidMeshData.toBool()); }
+    QVariant p_ReadVertexData = prefs.value("ReadVertexData");
+    QCheckBox* le = findChild<QCheckBox*>("ReadVertexData");
+    if (le) { le->setChecked(p_ReadVertexData.toBool()); }
+  }
+  {
+    QVariant p_ReadEdgeData = prefs.value("ReadEdgeData");
+    QCheckBox* le = findChild<QCheckBox*>("ReadEdgeData");
+    if (le) { le->setChecked(p_ReadVertexData.toBool()); }
   }
 
   arraySelectionWidget->readOptions(prefs, "ArraySelections");
@@ -303,7 +321,7 @@ bool QDataContainerReaderWidget::verifyPathExists(QString outFilePath, QLineEdit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QDataContainerReaderWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
@@ -313,7 +331,7 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VoxelDataContainer::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
@@ -334,7 +352,7 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
   m_YOrigin->setText(QString::number(origin[1]));
   m_ZOrigin->setText(QString::number(origin[2]));
 
-  if (ReadVoxelData->isChecked() == true)
+  if (ReadVolumeData->isChecked() == true)
   {
 
     hid_t fileId = -1;
@@ -346,7 +364,7 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VoxelDataContainer::Poin
     // This should automatically close the file when we leave this function
     //HDF5ScopedFileSentinel sentinel(&fileId, true);
 
-    VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+    VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
     reader->setHdfFileId(fileId);
     int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
 

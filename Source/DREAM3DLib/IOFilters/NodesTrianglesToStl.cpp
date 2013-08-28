@@ -202,7 +202,7 @@ void NodesTrianglesToStl::execute()
   int err = 0;
   std::stringstream ss;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

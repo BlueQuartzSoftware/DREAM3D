@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
@@ -71,7 +71,7 @@ int main(int argc, char** argv)
   START_CLOCK;
 
   int err = 0;
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
 
 
   std::string nodesFileName = argv[1];
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
   binaryReader->setBinaryTrianglesFile(trianglesFileName);
   binaryReader->setMessagePrefix(binaryReader->getNameOfClass());
   binaryReader->addObserver(&observer);
-  binaryReader->setSurfaceMeshDataContainer(sm.get());
+  binaryReader->setSurfaceDataContainer(sm.get());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
@@ -107,7 +107,7 @@ int main(int argc, char** argv)
   filter->setTripleLineLambda(0.125f);
   filter->setQuadPointLambda(0.65f);
 
-  filter->setSurfaceMeshDataContainer(sm.get());
+  filter->setSurfaceDataContainer(sm.get());
   filter->setMessagePrefix(filter->getNameOfClass());
   filter->addObserver(&observer);
   filter->setIterationSteps(50);

@@ -48,7 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::FindNRingNeighbors() :
-m_SurfaceMeshDataContainer(NULL),
+m_SurfaceDataContainer(NULL),
   m_TriangleId(-1),
   m_RegionId0(0),
   m_RegionId1(0),
@@ -89,14 +89,14 @@ DREAM3D::SurfaceMesh::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
 // -----------------------------------------------------------------------------
 void FindNRingNeighbors::generate()
 {
-  BOOST_ASSERT(m_SurfaceMeshDataContainer != NULL);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  BOOST_ASSERT(m_SurfaceDataContainer != NULL);
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   // Clear out any previous triangles
   m_NRingTriangles.clear();
 
   // Get the Triangle List from the Data Container
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // Make sure we have the proper connectivity built
@@ -107,7 +107,7 @@ void FindNRingNeighbors::generate()
     node2TrianglePtr =sm->getMeshVertLinks();
   }
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -177,7 +177,7 @@ void FindNRingNeighbors::generate()
 void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 {
 
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
   DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);

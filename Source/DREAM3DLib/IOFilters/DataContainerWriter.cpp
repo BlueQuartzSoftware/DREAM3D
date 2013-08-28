@@ -46,9 +46,10 @@
 
 
 #include "DREAM3DLib/HDF5/H5FilterParametersWriter.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/SolidMeshDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/SurfaceDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VertexDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/EdgeDataContainerWriter.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #define APPEND_DATA_TRUE 1
@@ -61,9 +62,10 @@
 DataContainerWriter::DataContainerWriter() :
   AbstractFilter(),
   m_WritePipeline(true),
-  m_WriteVoxelData(true),
-  m_WriteSurfaceMeshData(true),
-  m_WriteSolidMeshData(false),
+  m_WriteVolumeData(true),
+  m_WriteSurfaceData(true),
+  m_WriteEdgeData(false),
+  m_WriteVertexData(false),
   m_WriteXdmfFile(true),
   m_FileId(-1)
 {
@@ -96,29 +98,36 @@ void DataContainerWriter::setupFilterParameters()
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write Voxel Data");
-    option->setPropertyName("WriteVoxelData");
+    option->setHumanLabel("Write Volume DataContainer");
+    option->setPropertyName("WriteVolumeData");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write SurfaceMesh Data");
-    option->setPropertyName("WriteSurfaceMeshData");
+    option->setHumanLabel("Write Surface DataContainer");
+    option->setPropertyName("WriteSurfaceData");
     option->setWidgetType(FilterParameter::BooleanWidget);
     option->setValueType("bool");
     parameters.push_back(option);
   }
-//  {
-//    FilterParameter::Pointer option = FilterParameter::New();
-//    option->setHumanLabel("Write Solid Mesh");
-//    option->setPropertyName("WriteSolidMeshData");
-//    option->setWidgetType(FilterParameter::BooleanWidget);
-//    option->setValueType("bool");
-//    parameters.push_back(option);
-//  }
-
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Edge DataContainer");
+    option->setPropertyName("WriteEdgeData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Vertex DataContainer");
+    option->setPropertyName("WriteVertexData");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Xdmf File");
@@ -141,9 +150,10 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
   /* Code to read the values goes between these statements */
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-  setWriteVoxelData( reader->readValue("WriteVoxelData", getWriteVoxelData()) );
-  setWriteSurfaceMeshData( reader->readValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() ) );
-  setWriteSolidMeshData( reader->readValue("WriteSolidMeshData", getWriteSolidMeshData() ) );
+  setWriteVolumeData( reader->readValue("WriteVolumeData", getWriteVolumeData()) );
+  setWriteEdgeData( reader->readValue("WriteEdgeData", getWriteEdgeData() ) );
+  setWriteSurfaceData( reader->readValue("WriteSurfaceData", getWriteSurfaceData() ) );
+  setWriteVertexData( reader->readValue("WriteVertexData", getWriteVertexData() ) );
   setWriteXdmfFile( reader->readValue("WriteXdmfFile", getWriteXdmfFile()) );
 /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
@@ -156,9 +166,10 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("OutputFile", getOutputFile() );
-  writer->writeValue("WriteVoxelData", getWriteVoxelData() );
-  writer->writeValue("WriteSurfaceMeshData", getWriteSurfaceMeshData() );
-  writer->writeValue("WriteSolidMeshData", getWriteSolidMeshData() );
+  writer->writeValue("WriteVolumeData", getWriteVolumeData() );
+  writer->writeValue("WriteEdgeData", getWriteEdgeData() );
+  writer->writeValue("WriteSurfaceData", getWriteSurfaceData() );
+  writer->writeValue("WritevertexData", getWriteVertexData() );
   writer->writeValue("WriteXdmfFile", getWriteXdmfFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
@@ -207,7 +218,7 @@ void DataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -272,11 +283,11 @@ void DataContainerWriter::execute()
   err = writePipeline();
 
   /* WRITE THE VOXEL DATA TO THE HDF5 FILE */
-  if (getVoxelDataContainer() != NULL && m_WriteVoxelData == true)
+  if (getVolumeDataContainer() != NULL && m_WriteVolumeData == true)
   {
-    VoxelDataContainerWriter::Pointer writer = VoxelDataContainerWriter::New();
+    VolumeDataContainerWriter::Pointer writer = VolumeDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setVoxelDataContainer(getVoxelDataContainer());
+    writer->setVolumeDataContainer(getVolumeDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&xdmf);
@@ -292,11 +303,11 @@ void DataContainerWriter::execute()
   }
 
   /* WRITE THE SurfaceMesh DATA TO THE HDF5 FILE */
-  if (NULL != getSurfaceMeshDataContainer() && m_WriteSurfaceMeshData == true)
+  if (NULL != getSurfaceDataContainer() && m_WriteSurfaceData == true)
   {
-    SurfaceMeshDataContainerWriter::Pointer writer = SurfaceMeshDataContainerWriter::New();
+    SurfaceDataContainerWriter::Pointer writer = SurfaceDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    writer->setSurfaceDataContainer(getSurfaceDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&xdmf);
@@ -311,21 +322,40 @@ void DataContainerWriter::execute()
     }
   }
 
-  if (NULL != getSolidMeshDataContainer() && m_WriteSolidMeshData == true)
+  if (NULL != getVertexDataContainer() && m_WriteVertexData == true)
   {
-    SolidMeshDataContainerWriter::Pointer writer = SolidMeshDataContainerWriter::New();
+    VertexDataContainerWriter::Pointer writer = VertexDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    writer->setVertexDataContainer(getVertexDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&xdmf);
     ss.str("");
-    ss << getMessagePrefix() << " |--> Writing Solid Mesh Data ";
+    ss << getMessagePrefix() << " |--> Writing Vertex Data ";
     writer->setMessagePrefix(ss.str());
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Writing the Solid Mesh Data", writer->getErrorCondition());
+      notifyErrorMessage("Error Writing the Vertex Data", writer->getErrorCondition());
+      return;
+    }
+  }
+
+  if (NULL != getEdgeDataContainer() && m_WriteEdgeData == true)
+  {
+    EdgeDataContainerWriter::Pointer writer = EdgeDataContainerWriter::New();
+    writer->setHdfFileId(m_FileId);
+    writer->setEdgeDataContainer(getEdgeDataContainer());
+    writer->setObservers(getObservers());
+    writer->setWriteXdmfFile(getWriteXdmfFile());
+    writer->setXdmfOStream(&xdmf);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing Edge Data ";
+    writer->setMessagePrefix(ss.str());
+    writer->execute();
+    if (writer->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Writing the Edge Data", writer->getErrorCondition());
       return;
     }
   }

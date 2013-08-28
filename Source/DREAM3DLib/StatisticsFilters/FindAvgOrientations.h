@@ -49,7 +49,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class FindAvgOrientations FindAvgOrientations.h DREAM3DLib/GenericFilters/FindAvgOrientations.h

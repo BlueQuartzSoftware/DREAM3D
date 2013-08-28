@@ -157,7 +157,7 @@ void FieldDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

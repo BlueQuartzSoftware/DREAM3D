@@ -143,7 +143,7 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
@@ -165,7 +165,7 @@ void AddBadData::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
   {
@@ -197,7 +197,7 @@ void  AddBadData::add_noise()
  notifyStatusMessage("Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
 

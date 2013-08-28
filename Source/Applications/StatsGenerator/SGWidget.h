@@ -40,7 +40,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -69,8 +69,8 @@ class SGWidget : public QWidget
      DREAM3D_VIRTUAL_INSTANCE_PROPERTY(float, TotalPhaseFraction)
      DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-    virtual void extractStatsData(VoxelDataContainer::Pointer m, int index);
-    virtual int gatherStatsData(VoxelDataContainer::Pointer m);
+    virtual void extractStatsData(VolumeDataContainer::Pointer m, int index);
+    virtual int gatherStatsData(VolumeDataContainer::Pointer m);
 
     virtual QString getComboString();
     virtual QString getTabTitle();

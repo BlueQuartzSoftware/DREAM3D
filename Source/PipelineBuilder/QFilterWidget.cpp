@@ -1662,7 +1662,7 @@ QString QFilterWidget::getFileType(std::string propName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   // This section will update any combo boxes that are "Array Name" lists for the Voxel arrays.
   std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
@@ -1704,7 +1704,7 @@ void QFilterWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, Sur
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QFilterWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   //  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
 }
@@ -1740,9 +1740,9 @@ void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayN
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
-                                               SurfaceMeshDataContainer::Pointer smdc,
-                                               SolidMeshDataContainer::Pointer sdc,
+void QFilterWidget::updateArraySelectionWidget(VolumeDataContainer::Pointer vdc,
+                                               SurfaceDataContainer::Pointer smdc,
+                                               VertexDataContainer::Pointer sdc,
                                                QString propertyName)
 {
   //  ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, propertyName);

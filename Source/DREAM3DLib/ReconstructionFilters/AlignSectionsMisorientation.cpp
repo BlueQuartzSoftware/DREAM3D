@@ -158,7 +158,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -194,7 +194,7 @@ void AlignSectionsMisorientation::preflight()
 void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -226,7 +226,7 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;

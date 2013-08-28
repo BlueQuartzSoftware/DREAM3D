@@ -43,7 +43,7 @@
 #include <QtGui/QWidget>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/StatisticsFilters/GenerateEnsembleStatistics.h"
 
 #include "PipelineBuilder/QFilterWidget.h"
@@ -71,8 +71,8 @@ class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGen
     QString getFilterGroup();
 
 
-    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
-    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);
 
     virtual void openHtmlHelpFile();
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);

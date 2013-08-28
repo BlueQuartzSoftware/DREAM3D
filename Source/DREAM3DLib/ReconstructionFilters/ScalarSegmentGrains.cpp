@@ -220,7 +220,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
   if(m_ScalarArrayName.empty() == true)
@@ -248,7 +248,7 @@ void ScalarSegmentGrains::preflight()
 void ScalarSegmentGrains::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -397,7 +397,7 @@ void ScalarSegmentGrains::execute()
 int64_t ScalarSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);

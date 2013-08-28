@@ -245,7 +245,7 @@ void RotateSampleRefFrame::preflight()
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 
@@ -344,7 +344,7 @@ void RotateSampleRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -303,7 +303,7 @@ bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QReadH5EbsdWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
@@ -313,7 +313,7 @@ void QReadH5EbsdWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QReadH5EbsdWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
 {
   arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);

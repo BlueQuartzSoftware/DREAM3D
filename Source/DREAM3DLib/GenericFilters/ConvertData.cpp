@@ -65,7 +65,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VoxelDataContainer* m, int32_t scalarType, const std::string &name)
+  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const std::string &name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->GetNumberOfTuples();
@@ -280,7 +280,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_SelectedCellArrayName.empty() == true)
   {
@@ -373,7 +373,7 @@ void ConvertData::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

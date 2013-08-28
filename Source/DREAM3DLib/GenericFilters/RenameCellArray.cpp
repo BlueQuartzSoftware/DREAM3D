@@ -113,7 +113,7 @@ int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -157,7 +157,7 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

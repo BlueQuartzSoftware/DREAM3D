@@ -45,7 +45,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class FindSurfaceVoxelFractions FindSurfaceVoxelFractions.h DREAM3DLib/GenericFilters/FindSurfaceVoxelFractions.h

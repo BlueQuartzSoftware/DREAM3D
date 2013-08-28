@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -265,7 +265,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      m_DataContainer = VoxelDataContainer::New();
+      m_DataContainer = VolumeDataContainer::New();
       std::stringstream ss;
       hid_t fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true); // Open the file Read Only
       if(fileId < 0)
@@ -276,9 +276,9 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       }
       HDF5ScopedFileSentinel sentinel(&fileId, true);
 
-      VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+      VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
       reader->setHdfFileId(fileId);
-      reader->setVoxelDataContainer(m_DataContainer.get());
+      reader->setVolumeDataContainer(m_DataContainer.get());
       reader->setReadCellData(false);
       reader->setReadFieldData(false);
       reader->setReadEnsembleData(true);
@@ -287,7 +287,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       int err = reader->getErrorCondition();
       if(err < 0)
       {
-        m_DataContainer = VoxelDataContainer::NullPointer();
+        m_DataContainer = VolumeDataContainer::NullPointer();
         QMessageBox::critical(this, tr("DREAM.3D"), tr("The DREAM3D Data File could not be read."), QMessageBox::Ok, QMessageBox::Ok);
         return;
       }
@@ -295,7 +295,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
       if (NULL == iPtr.get())
       {
-        m_DataContainer = VoxelDataContainer::NullPointer();
+        m_DataContainer = VolumeDataContainer::NullPointer();
         QMessageBox::critical(this, tr("DREAM.3D"), tr("The Ensemble Array 'PhaseTypes' was not found in the File"), QMessageBox::Ok, QMessageBox::Ok);
         return;
       }

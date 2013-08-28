@@ -148,7 +148,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -225,7 +225,7 @@ void MatchCrystallography::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -290,7 +290,7 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::initializeArrays(int ensem)
 {
-  // VoxelDataContainer* m = getVoxelDataContainer();
+  // VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -334,7 +334,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumFieldTuples();
@@ -365,7 +365,7 @@ void MatchCrystallography::determine_volumes()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_boundary_areas()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
@@ -404,7 +404,7 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-      VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
   int numbins = 0;
   float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -514,7 +514,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neigh
 // -----------------------------------------------------------------------------
 void MatchCrystallography::matchCrystallography(int ensem)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -835,7 +835,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::measure_misorientations(int ensem)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"

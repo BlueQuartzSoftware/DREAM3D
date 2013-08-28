@@ -167,7 +167,7 @@ int ReadH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
+int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m)
 {
   int err = 0;
   /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -209,11 +209,11 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     ss.str("");
-    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -377,7 +377,7 @@ void ReadH5Ebsd::preflight()
 void ReadH5Ebsd::execute()
 {
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
@@ -531,7 +531,7 @@ void ReadH5Ebsd::execute()
 
       RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
       rot_Euler->setObservers(this->getObservers());
-      rot_Euler->setVoxelDataContainer(getVoxelDataContainer());
+      rot_Euler->setVolumeDataContainer(getVolumeDataContainer());
       rot_Euler->setRotationAngle(m_EulerTransformationAngle);
       rot_Euler->setRotationAxis(eulerAxis);
       rot_Euler->execute();
@@ -546,7 +546,7 @@ void ReadH5Ebsd::execute()
 
       RotateSampleRefFrame::Pointer rot_Sample = RotateSampleRefFrame::New();
       rot_Sample->setObservers(this->getObservers());
-      rot_Sample->setVoxelDataContainer(getVoxelDataContainer());
+      rot_Sample->setVolumeDataContainer(getVolumeDataContainer());
       rot_Sample->setRotationAngle(m_SampleTransformationAngle);
       rot_Sample->setRotationAxis(sampleAxis);
       rot_Sample->setsliceBySlice(true);
@@ -717,7 +717,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   if (m_SelectedVoxelCellArrays.find(m_CellPhasesArrayName) != m_SelectedVoxelCellArrays.end() )
@@ -791,7 +791,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
@@ -880,7 +880,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
 
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   float x, y;

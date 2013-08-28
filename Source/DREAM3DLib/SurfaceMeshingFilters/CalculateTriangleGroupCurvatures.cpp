@@ -45,7 +45,7 @@
 
 #include <Eigen/Dense>
 
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
@@ -62,7 +62,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
                                                                    DoubleArrayType::Pointer principleDirection2,
                                                                    DoubleArrayType::Pointer gaussianCurvature,
                                                                    DoubleArrayType::Pointer meanCurvature,
-                                                                   SurfaceMeshDataContainer* sm,
+                                                                   SurfaceDataContainer* sm,
                                                                    AbstractFilter* parent):
   m_NRing(nring),
   m_TriangleIds(triangleIds),
@@ -73,7 +73,7 @@ CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
   m_PrincipleDirection2(principleDirection2),
   m_GaussianCurvature(gaussianCurvature),
   m_MeanCurvature(meanCurvature),
-  m_SurfaceMeshDataContainer(sm),
+  m_SurfaceDataContainer(sm),
   m_ParentFilter(parent)
 {
 
@@ -111,10 +111,10 @@ void CalculateTriangleGroupCurvatures::operator()() const
 {
 
   // Get the Triangles Array
-//  DREAM3D::SurfaceMesh::FaceList_t::Pointer trianglesPtr = m_SurfaceMeshDataContainer->getFaces();
+//  DREAM3D::SurfaceMesh::FaceList_t::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
 //  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
-  IDataArray::Pointer flPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -122,7 +122,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
 
   // Make Sure we have triangle centroids calculated
-  IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceCentroids);
+  IDataArray::Pointer centroidPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceCentroids);
   if (NULL == centroidPtr.get())
   {
     std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
@@ -131,7 +131,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
 
   // Make sure we have triangle normals calculated
-  IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals);
+  IDataArray::Pointer normalPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals);
   if (NULL == normalPtr.get())
   {
     std::cout << "Triangle Normals are required for this algorithm" << std::endl;
@@ -169,7 +169,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setRegionId0(grain0);
     nRingNeighborAlg->setRegionId1(grain1);
     nRingNeighborAlg->setRing(m_NRing);
-    nRingNeighborAlg->setSurfaceMeshDataContainer(m_SurfaceMeshDataContainer);
+    nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
     nRingNeighborAlg->generate();
 
     DREAM3D::SurfaceMesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();

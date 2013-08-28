@@ -195,21 +195,21 @@ void ScaleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   setErrorCondition(0);
   if (m_ApplyToVoxelVolume == true)
   {
-    VoxelDataContainer* m = getVoxelDataContainer();
+    VolumeDataContainer* m = getVolumeDataContainer();
     if(NULL == m)
     {
       setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", getErrorCondition());
+      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
     }
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+    SurfaceDataContainer* sm = getSurfaceDataContainer();
     if(NULL == sm)
     {
       setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
     }
     else
     {
@@ -240,7 +240,7 @@ void ScaleVolume::preflight()
 // -----------------------------------------------------------------------------
 void ScaleVolume::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -281,7 +281,7 @@ void ScaleVolume::updateSurfaceMesh()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -296,7 +296,7 @@ void ScaleVolume::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
   DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
   // First get the min/max coords.

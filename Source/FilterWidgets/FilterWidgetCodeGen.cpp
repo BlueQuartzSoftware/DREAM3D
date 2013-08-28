@@ -110,12 +110,12 @@ void copyFile(const std::string &src, const std::string &dest)
 // -----------------------------------------------------------------------------
 void extractHelpIndexEntries(AbstractFilter* filter)
 {
-  VoxelDataContainer::Pointer vdc = VoxelDataContainer::New();
-  SurfaceMeshDataContainer::Pointer surf = SurfaceMeshDataContainer::New();
-  SolidMeshDataContainer::Pointer sol = SolidMeshDataContainer::New();
-  filter->setVoxelDataContainer(vdc.get());
-  filter->setSurfaceMeshDataContainer(surf.get());
-  filter->setSolidMeshDataContainer(sol.get());
+  VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+  SurfaceDataContainer::Pointer surf = SurfaceDataContainer::New();
+  VertexDataContainer::Pointer sol = VertexDataContainer::New();
+  filter->setVolumeDataContainer(vdc.get());
+  filter->setSurfaceDataContainer(surf.get());
+  filter->setVertexDataContainer(sol.get());
   filter->preflight();
   CreatedArrayHelpIndexEntry::VectorType entries = filter->getCreatedArrayHelpIndexEntries();
 
@@ -273,7 +273,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -302,7 +302,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     {
       fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, %s)\n\n", prop.c_str());
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -1135,7 +1135,7 @@ else
   {
 
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)\n{\n", filter.c_str());
+    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)\n{\n", filter.c_str());
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];

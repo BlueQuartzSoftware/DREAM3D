@@ -245,9 +245,10 @@ namespace DREAM3D
     const std::string FileVersionName("FileVersion");
     const std::string FileVersion("4.0");
     const std::string DataContainerName("DataContainer");
-    const std::string VoxelDataContainerName("VoxelDataContainer");
-    const std::string SurfaceMeshDataContainerName("SurfaceMeshDataContainer");
-    const std::string SolidMeshDataContainerName("SolidMeshDataContainer");
+    const std::string VolumeDataContainerName("VolumeDataContainer");
+    const std::string SurfaceDataContainerName("SurfaceDataContainer");
+    const std::string VertexDataContainerName("VertexDataContainer");
+    const std::string EdgeDataContainerName("EdgeDataContainer");
     const std::string VoxelDataName("VoxelData");
     const std::string PipelineGroupName("Pipeline");
     const std::string ObjectType("ObjectType");

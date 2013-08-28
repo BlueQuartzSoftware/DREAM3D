@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 
 
@@ -67,9 +67,10 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteVoxelData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceMeshData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSolidMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVolumeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
 

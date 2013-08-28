@@ -107,7 +107,7 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -123,7 +123,7 @@ void RenumberGrains::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -145,7 +145,7 @@ void RenumberGrains::preflight()
 void RenumberGrains::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

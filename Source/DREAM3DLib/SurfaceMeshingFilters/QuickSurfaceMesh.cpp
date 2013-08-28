@@ -89,14 +89,14 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-      SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+      SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-384);
   }
   else
@@ -129,8 +129,8 @@ void QuickSurfaceMesh::preflight()
 void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

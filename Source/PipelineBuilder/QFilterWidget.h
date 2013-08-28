@@ -134,8 +134,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
-    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);
+    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc);
 
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
@@ -153,9 +153,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      * @param smdc SurfaceMesh Data Container
      * @param sdc SolidMesh Data Container
      */
-    virtual void updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
-                                            SurfaceMeshDataContainer::Pointer smdc,
-                                            SolidMeshDataContainer::Pointer sdc,
+    virtual void updateArraySelectionWidget(VolumeDataContainer::Pointer vdc,
+                                            SurfaceDataContainer::Pointer smdc,
+                                            VertexDataContainer::Pointer sdc,
                                             QString propertyName);
 
     /**

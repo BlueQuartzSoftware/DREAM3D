@@ -41,9 +41,9 @@
 
 #include "ui_ArraySelectionWidget.h"
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/VertexDataContainer.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -73,9 +73,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void populateArrayNames(VoxelDataContainer::Pointer vdc,
-                                    SurfaceMeshDataContainer::Pointer smdc,
-                                    SolidMeshDataContainer::Pointer sdc);
+    virtual void populateArrayNames(VolumeDataContainer::Pointer vdc,
+                                    SurfaceDataContainer::Pointer smdc,
+                                    VertexDataContainer::Pointer sdc);
     /**
      * @brief This method examines the selections in each of the array lists and if an array is selected
      * it is removed from the data container.
@@ -83,9 +83,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void removeSelectionsFromDataContainers(VoxelDataContainer::Pointer vdc,
-                                    SurfaceMeshDataContainer::Pointer smdc,
-                                    SolidMeshDataContainer::Pointer sdc);
+    virtual void removeSelectionsFromDataContainers(VolumeDataContainer::Pointer vdc,
+                                    SurfaceDataContainer::Pointer smdc,
+                                    VertexDataContainer::Pointer sdc);
 
     /**
      * @brief This method examines the selections in each of the array lists and if an array is <b>NOT</b> selected
@@ -94,9 +94,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void removeNonSelectionsFromDataContainers(VoxelDataContainer::Pointer vdc,
-                                    SurfaceMeshDataContainer::Pointer smdc,
-                                    SolidMeshDataContainer::Pointer sdc);
+    virtual void removeNonSelectionsFromDataContainers(VolumeDataContainer::Pointer vdc,
+                                    SurfaceDataContainer::Pointer smdc,
+                                    VertexDataContainer::Pointer sdc);
 
     /**
      * @brief
@@ -104,33 +104,33 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     template<typename Filter>
     void getArraySelections(Filter* filter)
     {
-      filter->setVoxelSelectedArrayNames( getSelectedArrays(voxelCellArrayList),
-                                          getSelectedArrays(voxelFieldArrayList),
-                                          getSelectedArrays(voxelEnsembleArrayList));
-      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceMeshVertexArrayList),
-                                                getSelectedArrays(surfaceMeshFaceArrayList),
-                                                getSelectedArrays(surfaceMeshEdgeArrayList),
-                                                getSelectedArrays(surfaceMeshFieldArrayList),
-                                                getSelectedArrays(surfaceMeshEnsembleArrayList));
-      filter->setSolidMeshSelectedArrayNames( getSelectedArrays(solidMeshVertexArrayList),
-                                              getSelectedArrays(solidMeshFaceArrayList),
-                                              getSelectedArrays(solidMeshEdgeArrayList));
+      filter->setVolumeSelectedArrayNames( getSelectedArrays(volumeCellArrayList),
+                                          getSelectedArrays(volumeFieldArrayList),
+                                          getSelectedArrays(volumeEnsembleArrayList));
+      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceVertexArrayList),
+                                                getSelectedArrays(surfaceFaceArrayList),
+                                                getSelectedArrays(surfaceEdgeArrayList),
+                                                getSelectedArrays(surfaceFieldArrayList),
+                                                getSelectedArrays(surfaceEnsembleArrayList));
+      filter->setVertexSelectedArrayNames( getSelectedArrays(vertexVertexArrayList),
+                                                getSelectedArrays(vertexFieldArrayList),
+                                                getSelectedArrays(vertexEnsembleArrayList));
     }
 
     template<typename Filter>
     void setArraySelections(Filter* filter)
     {
-      setSelectedArrays( filter->getSelectedVoxelCellArrays(), voxelCellArrayList );
-      setSelectedArrays( filter->getSelectedVoxelFieldArrays(), voxelFieldArrayList );
-      setSelectedArrays( filter->getSelectedVoxelEnsembleArrays(), voxelEnsembleArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceMeshVertexArrays(), surfaceMeshVertexArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceMeshFaceArrays(), surfaceMeshFaceArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceMeshEdgeArrays(), surfaceMeshEdgeArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceMeshFieldArrays(), surfaceMeshFieldArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceMeshEnsembleArrays(), surfaceMeshEnsembleArrayList );
-      setSelectedArrays( filter->getSelectedSolidMeshVertexArrays(), solidMeshVertexArrayList );
-      setSelectedArrays( filter->getSelectedSolidMeshFaceArrays(), solidMeshFaceArrayList );
-      setSelectedArrays( filter->getSelectedSolidMeshEdgeArrays(), solidMeshEdgeArrayList );
+      setSelectedArrays( filter->getSelectedVolumeCellArrays(), volumeCellArrayList );
+      setSelectedArrays( filter->getSelectedVolumeFieldArrays(), volumeFieldArrayList );
+      setSelectedArrays( filter->getSelectedVolumeEnsembleArrays(), volumeEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceVertexArrays(), surfaceVertexArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceFaceArrays(), surfaceFaceArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceEdgeArrays(), surfaceEdgeArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceFieldArrays(), surfaceFieldArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceEnsembleArrays(), surfaceEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedVertexVertexArrays(), vertexVertexArrayList );
+      setSelectedArrays( filter->getSelectedVertexFaceArrays(), vertexFaceArrayList );
+      setSelectedArrays( filter->getSelectedVertexEdgeArrays(), vertexEdgeArrayList );
     }
 
     /**
@@ -149,37 +149,37 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @brief setVoxelDataEnabled Enable/Disable the Voxel Tab
      * @param b
      */
-    virtual void setVoxelDataEnabled(bool b);
+    virtual void setVolumeDataEnabled(bool b);
 
     /**
      * @brief setSurfaceMeshEnabled Enable/Disable the Surface Mesh Tab
      * @param b
      */
-    virtual void setSurfaceMeshEnabled(bool b);
+    virtual void setSurfaceEnabled(bool b);
 
     /**
      * @brief setSolidMeshEnabled Enable/Disable the solid mesh tab
      * @param b
      */
-    virtual void setSolidMeshEnabled(bool b);
+    virtual void setVertexEnabled(bool b);
 
     /**
      * @brief setVoxelDataEnabled Show the Voxel Tab
      * @param b
      */
-    virtual void removeVoxelData();
+    virtual void removeVolumeData();
 
     /**
      * @brief setSurfaceMeshEnabled Show the Surface Mesh Tab
      * @param b
      */
-    virtual void removeSurfaceMeshData();
+    virtual void removeSurfaceData();
 
     /**
      * @brief setSolidMeshEnabled Show the solid mesh tab
      * @param b
      */
-    virtual void removeSolidMeshData();
+    virtual void removeVertexData();
 
   signals:
     void arrayListsChanged();
@@ -187,24 +187,24 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
   protected slots:
     void arrayListUpdated(QListWidgetItem* item);
 
-    void on_voxelCellCB_stateChanged(int state);
-    void on_voxelFieldCB_stateChanged(int state);
-    void on_voxelEnsembleCB_stateChanged(int state);
+    void on_volumeCellCB_stateChanged(int state);
+    void on_volumeFieldCB_stateChanged(int state);
+    void on_volumeEnsembleCB_stateChanged(int state);
 
 
-    void on_smVertexArraysCB_stateChanged(int state);
-    void on_smFaceArraysCB_stateChanged(int state);
-    void on_smEdgeArraysCB_stateChanged(int state);
-    void on_smFieldArraysCB_stateChanged(int state);
-    void on_smEnsembleArraysCB_stateChanged(int state);
+    void on_surfaceVertexArraysCB_stateChanged(int state);
+    void on_surfaceFaceArraysCB_stateChanged(int state);
+    void on_surfaceEdgeArraysCB_stateChanged(int state);
+    void on_surfaceFieldArraysCB_stateChanged(int state);
+    void on_surfaceEnsembleArraysCB_stateChanged(int state);
 
   protected:
 
     void toggleListSelections(QListWidget* w, int state);
 
-    virtual void populateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
-    virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
-    virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+    virtual void populateVolumeArrayNames(VolumeDataContainer::Pointer vdc);
+    virtual void populateSurfaceArrayNames(SurfaceDataContainer::Pointer smdc);
+    virtual void populateVertexArrayNames(VertexDataContainer::Pointer sdc);
 
     virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox *cb = NULL);
     virtual void populateArrayList(QListWidget* listWidget,

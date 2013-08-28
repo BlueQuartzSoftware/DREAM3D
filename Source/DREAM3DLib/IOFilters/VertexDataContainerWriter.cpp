@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SolidMeshDataContainerWriter.h"
+#include "VertexDataContainerWriter.h"
 
 
 
@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainerWriter::SolidMeshDataContainerWriter() :
+VertexDataContainerWriter::VertexDataContainerWriter() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
@@ -53,14 +53,14 @@ SolidMeshDataContainerWriter::SolidMeshDataContainerWriter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainerWriter::~SolidMeshDataContainerWriter()
+VertexDataContainerWriter::~VertexDataContainerWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::setupFilterParameters()
+void VertexDataContainerWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
 
@@ -70,7 +70,7 @@ void SolidMeshDataContainerWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VertexDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -81,7 +81,7 @@ void SolidMeshDataContainerWriter::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VertexDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -94,11 +94,11 @@ int SolidMeshDataContainerWriter::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SolidMeshDataContainer* m = getSolidMeshDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
   {
@@ -116,7 +116,7 @@ void SolidMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::preflight()
+void VertexDataContainerWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -126,12 +126,12 @@ void SolidMeshDataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::execute()
+void VertexDataContainerWriter::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SolidMeshDataContainer* m = getSolidMeshDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -149,7 +149,7 @@ void SolidMeshDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VertexDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }

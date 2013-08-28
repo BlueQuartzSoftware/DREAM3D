@@ -33,43 +33,36 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-#ifndef _VoxelDataContainerWriter_H_
-#define _VoxelDataContainerWriter_H_
+#ifndef _VertexDataContainerWriter_H_
+#define _VertexDataContainerWriter_H_
 
 #include <string>
-
-#include <hdf5.h>
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
 
 /**
- * @class VoxelDataContainerWriter VoxelDataContainerWriter.h /IOFiltersFilters/VoxelDataContainerWriter.h
+ * @class VertexDataContainerWriter VertexDataContainerWriter.h /IOFilters/VertexDataContainerWriter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VertexDataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(VertexDataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(VertexDataContainerWriter, AbstractFilter)
 
-    virtual ~VoxelDataContainerWriter();
+    virtual ~VertexDataContainerWriter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
-
-    typedef std::list<std::string> NameListType;
 
     void setXdmfOStream(std::ostream* xdmf);
 
@@ -79,13 +72,13 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Voxel DataContainer Writer"; }
+    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -98,7 +91,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
+    
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -117,7 +110,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    VoxelDataContainerWriter();
+    VertexDataContainerWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -129,66 +122,11 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
-    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
-                              float spacing[3], float origin[3]);
-
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
-    int writeVertexData(hid_t dcGid);
-    int writeEdgeData(hid_t dcGid);
-    int writeFaceData(hid_t dcGid);
-    int writeCellData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
-
-    void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
-    //void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeXdmfGridFooter(const std::string &label);
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
-     {
-      herr_t err = 0;
-      int numComp = 1;
-      std::vector<int> eData(v.size());
-      for (size_t i = 0; i < v.size(); ++i)
-      {
-        eData[i] = v[i];
-      }
-
-      if(eData.size() > 0)
-      {
-        K* eDataPtr = const_cast<K*>(&(eData.front()));
-        int num = static_cast<int>(eData.size() / numComp);
-        int32_t rank = 1;
-        hsize_t dims[1] =
-        { (hsize_t)num * (hsize_t)numComp };
-
-        err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);
-        err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
-
-        if(err < 0)
-        {
-          setErrorCondition(err);
-          std::stringstream ss;
-          ss << "Error writing Ensemble data set '" << label << "'";
-        }
-      }
-
-      return err;
-    }
-
   private:
     std::ostream* m_XdmfPtr;
 
-    VoxelDataContainerWriter(const VoxelDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelDataContainerWriter&); // Operator '=' Not Implemented
+    VertexDataContainerWriter(const VertexDataContainerWriter&); // Copy Constructor Not Implemented
+    void operator=(const VertexDataContainerWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _VoxelDataContainerWriter_H_ */
+#endif /* _VertexDataContainerWriter_H_ */
