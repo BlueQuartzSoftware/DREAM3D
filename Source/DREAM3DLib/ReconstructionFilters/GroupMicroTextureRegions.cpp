@@ -64,6 +64,8 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_ContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
+  m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -75,7 +77,8 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_AvgQuats(NULL),
   m_Active(NULL),
   m_FieldPhases(NULL),
-  m_NeighborList(NULL),
+  m_ContiguousNeighborList(NULL),
+  m_NonContiguousNeighborList(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -171,8 +174,8 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   if(m_UseNonContiguousNeighbors == false)
   {
       // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-      if(m_NeighborList == NULL)
+      m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      if(m_ContiguousNeighborList == NULL)
       {
         ss << "NeighborLists Array Not Initialized correctly" << std::endl;
         setErrorCondition(-304);
@@ -182,8 +185,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   else
   {
       // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
-      if(m_NeighborList == NULL)
+      m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
+      if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
       {
         ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
         setErrorCondition(-305);
@@ -244,7 +248,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  NeighborList<int>& neighborlist = *m_NeighborList;
+  NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
+  NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
 
   float angcur = 180.0f;
   std::vector<int> microtexturelist;
@@ -264,7 +269,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   unsigned int phase1, phase2;
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
-
+  int size1 = 0, size2 = 0, size = 0;
   parentnumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
@@ -277,7 +282,9 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
-        int size = int(neighborlist[firstgrain].size());
+        size1 = int(neighborlist[firstgrain].size());
+
+        if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
         QuaternionMathF::Copy(avgQuats[firstgrain], q1);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
         OrientationMath::QuattoMat(q1, g1);
@@ -289,37 +296,43 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         //dividing by the magnitudes (they would be 1)
         MatrixMath::Normalize3x1(c1);
 
-
-        for (int l = 0; l < size; l++)
+        size_t neigh;
+        for (int k = 0; k < 2; k++)
         {
-          angcur = 180.0f;
-          size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (k == 0) size = size1;
+          else if (k == 1) size = size2;
+          for (int l = 0; l < size; l++)
           {
-            phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
-            if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
+            angcur = 180.0f;
+            if (k == 0) neigh = neighborlist[firstgrain][l];
+            else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
+            if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
             {
-              QuaternionMathF::Copy(avgQuats[neigh], q2);
-//              q2[0] = 1;
-//              q2[1] = m_AvgQuats[5*neigh+1];
-//              q2[2] = m_AvgQuats[5*neigh+2];
-//              q2[3] = m_AvgQuats[5*neigh+3];
-//              q2[4] = m_AvgQuats[5*neigh+4];
-              OrientationMath::QuattoMat(q2, g2);
-              //transpose the g matrix so when caxis is multiplied by it
-              //it will give the sample direction that the caxis is along
-              MatrixMath::Transpose3x3(g2, g2t);
-              MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
-              //normalize so that the dot product can be taken below without
-              //dividing by the magnitudes (they would be 1)
-              MatrixMath::Normalize3x1(c2);
-
-              w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
-              w = acosf(w);
-              if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
+              phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
+              if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
               {
-                parentnumbers[neigh] = parentcount;
-                microtexturelist.push_back(neigh);
+                QuaternionMathF::Copy(avgQuats[neigh], q2);
+//                q2[0] = 1;
+//                q2[1] = m_AvgQuats[5*neigh+1];
+//                q2[2] = m_AvgQuats[5*neigh+2];
+//                q2[3] = m_AvgQuats[5*neigh+3];
+//                q2[4] = m_AvgQuats[5*neigh+4];
+                OrientationMath::QuattoMat(q2, g2);
+                //transpose the g matrix so when caxis is multiplied by it
+                //it will give the sample direction that the caxis is along
+                MatrixMath::Transpose3x3(g2, g2t);
+                MatrixMath::Multiply3x3with3x1(g2t, caxis, c2);
+                //normalize so that the dot product can be taken below without
+                //dividing by the magnitudes (they would be 1)
+                MatrixMath::Normalize3x1(c2);
+
+                w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+                w = acosf(w);
+                if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
+                {
+                  parentnumbers[neigh] = parentcount;
+                  microtexturelist.push_back(neigh);
+                }
               }
             }
           }
