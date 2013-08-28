@@ -107,7 +107,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       filter->setVolumeSelectedArrayNames( getSelectedArrays(volumeCellArrayList),
                                           getSelectedArrays(volumeFieldArrayList),
                                           getSelectedArrays(volumeEnsembleArrayList));
-      filter->setSurfaceMeshSelectedArrayNames( getSelectedArrays(surfaceVertexArrayList),
+      filter->setSurfaceSelectedArrayNames( getSelectedArrays(surfaceVertexArrayList),
                                                 getSelectedArrays(surfaceFaceArrayList),
                                                 getSelectedArrays(surfaceEdgeArrayList),
                                                 getSelectedArrays(surfaceFieldArrayList),
@@ -129,8 +129,8 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       setSelectedArrays( filter->getSelectedSurfaceFieldArrays(), surfaceFieldArrayList );
       setSelectedArrays( filter->getSelectedSurfaceEnsembleArrays(), surfaceEnsembleArrayList );
       setSelectedArrays( filter->getSelectedVertexVertexArrays(), vertexVertexArrayList );
-      setSelectedArrays( filter->getSelectedVertexFaceArrays(), vertexFaceArrayList );
-      setSelectedArrays( filter->getSelectedVertexEdgeArrays(), vertexEdgeArrayList );
+      setSelectedArrays( filter->getSelectedVertexFieldArrays(), vertexFieldArrayList );
+      setSelectedArrays( filter->getSelectedVertexEnsembleArrays(), vertexEnsembleArrayList );
     }
 
     /**

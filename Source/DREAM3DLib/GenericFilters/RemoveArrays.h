@@ -60,33 +60,33 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexEnsembleArrays)
 
     virtual ~RemoveArrays();
 
     typedef std::set<std::string> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
                                             std::set<std::string> selectedFieldArrays,
                                             std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedFaceArrays,
                                                   std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFieldArrays,
                                                   std::set<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                 std::set<std::string> selectedFaceArrays,
                                                 std::set<std::string> selectedEdgeArrays);
 

@@ -269,41 +269,41 @@ void EdgeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 // -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::writeXdmfGridHeader()
 {
-  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
-  {
-    return;
-  }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
-  if (NULL == faces.get())
-  {
-    return;
-  }
-  DREAM3D::SurfaceMesh::VertListPointer_t verts = getEdgeDataContainer()->getVertices();
-  if(NULL == verts.get())
-  {
-    return;
-  }
+  //if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  //{
+  //  return;
+  //}
+  //DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
+  //if (NULL == faces.get())
+  //{
+  //  return;
+  //}
+  //DREAM3D::SurfaceMesh::VertListPointer_t verts = getEdgeDataContainer()->getVertices();
+  //if(NULL == verts.get())
+  //{
+  //  return;
+  //}
 
-  std::ostream& out = *m_XdmfPtr;
-  out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
+  //std::ostream& out = *m_XdmfPtr;
+  //out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
 
-  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
-  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
-  out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << std::endl;
-  out << "      </DataItem>" << std::endl;
-  out << "    </Topology>" << std::endl;
+  //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
+  //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
+  //ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  //std::vector<char> nameBuffer(nameSize, 0);
+  //nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  //std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  //hdfFileName = MXAFileInfo::filename(hdfFileName);
+  //out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << std::endl;
+  //out << "      </DataItem>" << std::endl;
+  //out << "    </Topology>" << std::endl;
 
-  out << "    <Geometry Type=\"XYZ\">" << std::endl;
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
-  out << "        " << hdfFileName << ":/EdgeDataContainer/Vertices" << std::endl;
-  out << "      </DataItem>" << std::endl;
-  out << "    </Geometry>" << std::endl;
-  out << "" << std::endl;
+  //out << "    <Geometry Type=\"XYZ\">" << std::endl;
+  //out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
+  //out << "        " << hdfFileName << ":/EdgeDataContainer/Vertices" << std::endl;
+  //out << "      </DataItem>" << std::endl;
+  //out << "    </Geometry>" << std::endl;
+  //out << "" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -311,19 +311,19 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::writeXdmfGridFooter()
 {
-  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
-  {
-    return;
-  }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
-  if (NULL == faces.get())
-  {
-    return;
-  }
-  std::ostream& out = *m_XdmfPtr;
-  out << "  </Grid>" << std::endl;
-  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << std::endl;
-  out << std::endl;
+  //if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  //{
+  //  return;
+  //}
+  //DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
+  //if (NULL == faces.get())
+  //{
+  //  return;
+  //}
+  //std::ostream& out = *m_XdmfPtr;
+  //out << "  </Grid>" << std::endl;
+  //out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << std::endl;
+  //out << std::endl;
 }
 
 
