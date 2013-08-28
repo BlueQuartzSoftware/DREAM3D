@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SurfaceMeshDataContainerWriter.h"
+#include "EdgeDataContainerWriter.h"
 
 
 
@@ -69,7 +69,7 @@ public:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshDataContainerWriter::SurfaceMeshDataContainerWriter() :
+EdgeDataContainerWriter::EdgeDataContainerWriter() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
@@ -81,14 +81,14 @@ SurfaceMeshDataContainerWriter::SurfaceMeshDataContainerWriter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshDataContainerWriter::~SurfaceMeshDataContainerWriter()
+EdgeDataContainerWriter::~EdgeDataContainerWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::setupFilterParameters()
+void EdgeDataContainerWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
 
@@ -98,7 +98,7 @@ void SurfaceMeshDataContainerWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void EdgeDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -109,7 +109,7 @@ void SurfaceMeshDataContainerWriter::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int EdgeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -122,11 +122,11 @@ int SurfaceMeshDataContainerWriter::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  EdgeDataContainer* m = getEdgeDataContainer();
 
   if(NULL == m)
   {
@@ -145,7 +145,7 @@ void SurfaceMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::preflight()
+void EdgeDataContainerWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -155,12 +155,12 @@ void SurfaceMeshDataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::execute()
+void EdgeDataContainerWriter::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  EdgeDataContainer* sm = getEdgeDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -170,27 +170,27 @@ void SurfaceMeshDataContainerWriter::execute()
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::SurfaceMeshDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::EdgeDataContainerName.c_str(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::SurfaceMeshDataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::EdgeDataContainerName << std::endl;
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceMeshDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::EdgeDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceMeshDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::EdgeDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
   // Add some VTK hints into the group
-  err = createVtkObjectGroup(DREAM3D::HDF5::SurfaceMeshDataContainerName, H5_VTK_POLYDATA);
+  err = createVtkObjectGroup(DREAM3D::HDF5::EdgeDataContainerName, H5_VTK_POLYDATA);
   if (err < 0)  {
     return;
   }
@@ -213,25 +213,6 @@ void SurfaceMeshDataContainerWriter::execute()
   }
 
   err = writeVertexAttributeData(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-
-  err = writeFaces(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-  err = writeMeshFaceNeighborLists(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-  err = writeFaceAttributeData(dcGid);
   if (err < 0)
   {
     return;
@@ -278,7 +259,7 @@ void SurfaceMeshDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void EdgeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -286,18 +267,18 @@ void SurfaceMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
+void EdgeDataContainerWriter::writeXdmfGridHeader()
 {
   if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   {
     return;
   }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
   }
-  DREAM3D::SurfaceMesh::VertListPointer_t verts = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertListPointer_t verts = getEdgeDataContainer()->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -313,13 +294,13 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/Faces" << std::endl;
+  out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << std::endl;
   out << "      </DataItem>" << std::endl;
   out << "    </Topology>" << std::endl;
 
   out << "    <Geometry Type=\"XYZ\">" << std::endl;
   out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
-  out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/Vertices" << std::endl;
+  out << "        " << hdfFileName << ":/EdgeDataContainer/Vertices" << std::endl;
   out << "      </DataItem>" << std::endl;
   out << "    </Geometry>" << std::endl;
   out << "" << std::endl;
@@ -328,13 +309,13 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::writeXdmfGridFooter()
+void EdgeDataContainerWriter::writeXdmfGridFooter()
 {
   if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   {
     return;
   }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
@@ -349,7 +330,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
+std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
                                                                               const std::string &groupName,
                                                                               IDataArray::Pointer array,
                                                                               const std::string &centering,
@@ -379,7 +360,7 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
     std::string hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
 
-    out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+    out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
     out << "      </DataItem>" << std::endl;
     out << "    </Attribute>" << std::endl << std::endl;
   }
@@ -405,7 +386,7 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
     std::string hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
-    out << "        " << hdfFileName << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+    out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
     out << "        </DataItem>" << std::endl;
     out << "      </DataItem>" << std::endl;
     out << "    </Attribute>" << std::endl << std::endl;
@@ -430,7 +411,7 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
     nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
     std::string hdfFileName2(&(nameBuffer2.front()), nameSize2);
     hdfFileName2 = MXAFileInfo::filename(hdfFileName2);
-    out << "        " << hdfFileName2 << ":/SurfaceMeshDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+    out << "        " << hdfFileName2 << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
     out << "        </DataItem>" << std::endl;
     out << "      </DataItem>" << std::endl;
     out << "    </Attribute>" << std::endl << std::endl;
@@ -441,12 +422,12 @@ std::string SurfaceMeshDataContainerWriter::writeXdmfAttributeDataHelper(int num
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
 {
 #if 0
       <Attribute Name="Node Type" Center="Node">
       <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/SurfaceMeshDataContainer/POINT_DATA/SurfaceMeshNodeType
+        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/EdgeDataContainer/POINT_DATA/SurfaceMeshNodeType
       </DataItem>
     </Attribute>
 #endif
@@ -478,7 +459,7 @@ void SurfaceMeshDataContainerWriter::writeXdmfAttributeData(const std::string &g
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int EdgeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
@@ -498,9 +479,9 @@ int SurfaceMeshDataContainerWriter::createVtkObjectGroup(const std::string &hdfG
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeVertices(hid_t dcGid)
+int EdgeDataContainerWriter::writeVertices(hid_t dcGid)
 {
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  EdgeDataContainer* sm = getEdgeDataContainer();
   DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
@@ -523,14 +504,14 @@ int SurfaceMeshDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
+int EdgeDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
 {
-  MeshVertLinks::Pointer links = getSurfaceMeshDataContainer()->getMeshVertLinks();
+  MeshVertLinks::Pointer links = getEdgeDataContainer()->getMeshVertLinks();
   if (NULL == links.get())
   {
     return 0;
   }
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  EdgeDataContainer* sm = getEdgeDataContainer();
   DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
@@ -579,11 +560,11 @@ int SurfaceMeshDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
+int EdgeDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  EdgeDataContainer* sm = getEdgeDataContainer();
 
   // Write the Vertex Data
   err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
@@ -606,7 +587,7 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = sm->getPointArrayNameList();
+  NameListType names = sm->getVertexArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
@@ -630,148 +611,10 @@ int SurfaceMeshDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
   return err;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
-{
-  MeshFaceNeighbors::Pointer links = getSurfaceMeshDataContainer()->getMeshFaceNeighborLists();
-  if (NULL == links.get())
-  {
-    return 0;
-  }
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
-  if (NULL == facesPtr.get())
-  {
-    return -1;
-  }
-
-  herr_t err = -1;
-  size_t total = 0;
-  size_t nFaces = facesPtr->GetNumberOfTuples();
-  for(size_t v = 0; v < nFaces; ++v)
-  {
-    total += links->getNumberOfFaces(v);
-  }
-
-  size_t totalBytes = nFaces * sizeof(uint16_t) + total * sizeof(int32_t);
-
-  // Allocate a flat array to copy the data into
-  std::vector<uint8_t> buffer(totalBytes, 0);
-  uint8_t* bufPtr = &(buffer.front());
-  size_t offset = 0;
-
-  for(size_t v = 0; v < nFaces; ++v)
-  {
-    uint16_t ncells = links->getNumberOfFaces(v);
-    int32_t* cells = links->getNeighborListPointer(v);
-    ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
-    offset += sizeof(uint16_t);
-    ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-    offset += ncells*sizeof(int32_t);
-  }
-
-  int32_t rank = 1;
-  hsize_t dims[1] = {totalBytes};
-
-  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, rank, dims, bufPtr);
-  if (err < 0)
-  {
-    notifyErrorMessage("Error writing the Mesh Face Neighbor Lists", -998);
-    return err;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeFaces(hid_t dcGid)
-{
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
-  if (facesPtr.get() == NULL)
-  {
-    return -1;
-  }
-
-  int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_FaceNumElements};
-
-  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
-
-  herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
-  }
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-
-  // Write the Face Data
-  err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = sm->getFaceArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = sm->getFaceData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-    writeXdmfAttributeData(H5_FACE_DATA_GROUP_NAME, array, "Cell");
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-  return err;
-}
-
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeEdges(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 {
   herr_t err = 0;
  // notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
@@ -781,11 +624,11 @@ int SurfaceMeshDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  EdgeDataContainer* sm = getEdgeDataContainer();
 
   // Write the Face Data
   err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
@@ -832,11 +675,11 @@ int SurfaceMeshDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeFieldData(hid_t dcGid)
+int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  EdgeDataContainer* m = getEdgeDataContainer();
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
@@ -846,7 +689,7 @@ int SurfaceMeshDataContainerWriter::writeFieldData(hid_t dcGid)
 
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -985,11 +828,11 @@ int SurfaceMeshDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  EdgeDataContainer* m = getEdgeDataContainer();
 
   // Write the Ensemble data
   err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);

@@ -148,7 +148,7 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
 
   if(m_SelectedCellArrayName.empty() == true)
@@ -172,7 +172,7 @@ void SingleThresholdCells::preflight()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

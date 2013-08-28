@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-//#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
 /**
  * @brief The MeshVertLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -129,6 +129,16 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    void getEdgePoints(DREAM3D::SurfaceMesh::EdgeList_t::Pointer Edges, size_t cellId, size_t npts, size_t* pts)
+    {
+      DREAM3D::SurfaceMesh::Edge_t& Edge = *(Edges->GetPointer(cellId));
+      pts[0] = Edge.verts[0];
+      pts[1] = Edge.verts[1];
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void generateMeshVertLinks(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
                                DREAM3D::SurfaceMesh::FaceListPointer_t Faces )
     {
@@ -170,6 +180,58 @@ class MeshVertLinks
       for (cellId=0; cellId < numCells; cellId++)
       {
         getCellPoints(Faces, cellId, npts, pts);
+        for (size_t j=0; j < npts; j++)
+        {
+          this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
+        }
+      }
+
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void generateMeshVertLinksEdges(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
+                               DREAM3D::SurfaceMesh::EdgeListPointer_t Edges )
+    {
+
+      size_t numPts = nodes->GetNumberOfTuples();
+      size_t numCells = Edges->GetNumberOfTuples();
+
+      // Allocate the basic structures
+      allocate(numPts);
+
+      size_t cellId;
+      unsigned short* linkLoc;
+
+      // fill out lists with number of references to cells
+      typedef boost::shared_array<unsigned short> SharedShortArray_t;
+      SharedShortArray_t linkLocPtr(new unsigned short[numPts]);
+      linkLoc = linkLocPtr.get();
+
+      ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
+
+
+      size_t pts[2];
+      size_t npts = 2; // ALWAYS 3 points for a Face
+
+      //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
+      // traverse data to determine number of uses of each point
+      for (cellId=0; cellId < numCells; cellId++)
+      {
+        getEdgePoints(Edges, cellId, npts, pts);
+        for (size_t j=0; j < npts; j++)
+        {
+          this->incrementLinkCount(pts[j]);
+        }
+      }
+
+      // now allocate storage for the links
+      this->allocateLinks(numPts);
+
+      for (cellId=0; cellId < numCells; cellId++)
+      {
+        getEdgePoints(Edges, cellId, npts, pts);
         for (size_t j=0; j < npts; j++)
         {
           this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);

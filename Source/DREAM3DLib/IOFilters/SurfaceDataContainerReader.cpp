@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "SurfaceMeshDataContainerReader.h"
+#include "SurfaceDataContainerReader.h"
 
 
 #include <vector>
@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshDataContainerReader::SurfaceMeshDataContainerReader() :
+SurfaceDataContainerReader::SurfaceDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_ReadVertexData(true),
@@ -66,14 +66,14 @@ SurfaceMeshDataContainerReader::SurfaceMeshDataContainerReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SurfaceMeshDataContainerReader::~SurfaceMeshDataContainerReader()
+SurfaceDataContainerReader::~SurfaceDataContainerReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerReader::setupFilterParameters()
+void SurfaceDataContainerReader::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
@@ -82,7 +82,7 @@ void SurfaceMeshDataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void SurfaceDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -93,7 +93,7 @@ void SurfaceMeshDataContainerReader::readFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int SurfaceDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -106,11 +106,11 @@ int SurfaceMeshDataContainerReader::writeFilterParameters(AbstractFilterParamete
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
   {
@@ -137,7 +137,7 @@ void SurfaceMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, si
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerReader::preflight()
+void SurfaceDataContainerReader::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -147,7 +147,7 @@ void SurfaceMeshDataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainerReader::execute()
+void SurfaceDataContainerReader::execute()
 {
   int err = 0;
   std::stringstream ss;
@@ -165,7 +165,7 @@ void SurfaceMeshDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherData(bool preflight)
+int SurfaceDataContainerReader::gatherData(bool preflight)
 {
   std::stringstream ss;
 
@@ -178,11 +178,11 @@ int SurfaceMeshDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceMeshDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceMeshDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
@@ -216,7 +216,7 @@ int SurfaceMeshDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 {
     std::vector<std::string> readNames;
     herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
@@ -232,7 +232,7 @@ int SurfaceMeshDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
 {
     std::vector<std::string> readNames;
     herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
@@ -248,7 +248,7 @@ int SurfaceMeshDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
 {
   int err = 0;
   std::vector<hsize_t> dims;
@@ -261,7 +261,7 @@ int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
       DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-      getSurfaceMeshDataContainer()->setVertices(vertices);
+      getSurfaceDataContainer()->setVertices(vertices);
     }
   }
   else
@@ -291,7 +291,7 @@ int SurfaceMeshDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
 {
   int err = 0;
   std::vector<hsize_t> dims;
@@ -303,7 +303,7 @@ int SurfaceMeshDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
     if (err >= 0)
     {
       DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
-      getSurfaceMeshDataContainer()->setFaces(triangles);
+      getSurfaceDataContainer()->setFaces(triangles);
     }
   }
   else
@@ -331,7 +331,7 @@ int SurfaceMeshDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 {
   int err = 0;
 //  std::vector<hsize_t> dims;
@@ -344,7 +344,7 @@ int SurfaceMeshDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //    if (err >= 0)
 //    {
 //      StructArray<DREAM3D::SurfaceMesh::Edge_t>::Pointer edges = StructArray<DREAM3D::SurfaceMesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
-//      getSurfaceMeshDataContainer()->setEdges(edges);
+//      getSurfaceDataContainer()->setEdges(edges);
 //    }
 //  }
 //  else
@@ -365,9 +365,9 @@ int SurfaceMeshDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readVertices(hid_t dcGid)
+int SurfaceDataContainerReader::readVertices(hid_t dcGid)
 {
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   herr_t err = 0;
   std::vector<hsize_t> dims;
   H5T_class_t type_class;
@@ -395,9 +395,9 @@ int SurfaceMeshDataContainerReader::readVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
 {
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
@@ -442,7 +442,7 @@ int SurfaceMeshDataContainerReader::readMeshVertLinks(hid_t dcGid, bool prefligh
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readVertexAttributeData(hid_t dcGid)
+int SurfaceDataContainerReader::readVertexAttributeData(hid_t dcGid)
 {
   int err = -1;
 
@@ -452,9 +452,9 @@ int SurfaceMeshDataContainerReader::readVertexAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readFaces(hid_t dcGid)
+int SurfaceDataContainerReader::readFaces(hid_t dcGid)
 {
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   herr_t err = 0;
   std::vector<hsize_t> dims;
@@ -488,9 +488,9 @@ int SurfaceMeshDataContainerReader::readFaces(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool preflight)
 {
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (NULL == facesPtr.get())
   {
@@ -538,7 +538,7 @@ int SurfaceMeshDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, b
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readFaceAttributeData(hid_t dcGid)
+int SurfaceDataContainerReader::readFaceAttributeData(hid_t dcGid)
 {
   herr_t err = -1;
   // H5_FACE_DATA_GROUP_NAME
@@ -550,7 +550,7 @@ int SurfaceMeshDataContainerReader::readFaceAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readEdges(hid_t dcGid)
+int SurfaceDataContainerReader::readEdges(hid_t dcGid)
 {
   herr_t err = -1;
 
@@ -561,7 +561,7 @@ int SurfaceMeshDataContainerReader::readEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
                                                 std::vector<std::string> &namesRead,
                                                 std::set<std::string> &namesToRead)
 {
@@ -616,23 +616,23 @@ int SurfaceMeshDataContainerReader::readGroupsData(hid_t dcGid, const std::strin
     {
       if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceMeshDataContainer()->addVertexData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addVertexData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FACE_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceMeshDataContainer()->addFaceData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addFaceData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceMeshDataContainer()->addEdgeData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addEdgeData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceMeshDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceMeshDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VoxelDataContainerWriter.h"
+#include "VolumeDataContainerWriter.h"
 
 
 #include "MXA/Utilities/MXAFileInfo.h"
@@ -49,7 +49,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerWriter::VoxelDataContainerWriter() :
+VolumeDataContainerWriter::VolumeDataContainerWriter() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
@@ -61,14 +61,14 @@ VoxelDataContainerWriter::VoxelDataContainerWriter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerWriter::~VoxelDataContainerWriter()
+VolumeDataContainerWriter::~VolumeDataContainerWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::setupFilterParameters()
+void VolumeDataContainerWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
@@ -77,7 +77,7 @@ void VoxelDataContainerWriter::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VolumeDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -88,7 +88,7 @@ void VoxelDataContainerWriter::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VolumeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -101,11 +101,11 @@ int VoxelDataContainerWriter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
   {
@@ -123,7 +123,7 @@ void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::preflight()
+void VolumeDataContainerWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -133,12 +133,12 @@ void VoxelDataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::execute()
+void VolumeDataContainerWriter::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -152,20 +152,20 @@ void VoxelDataContainerWriter::execute()
 
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.c_str(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), H5P_DEFAULT );
+  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -179,7 +179,7 @@ void VoxelDataContainerWriter::execute()
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
   m->getOrigin(origin);
-  err = writeMetaInfo(DREAM3D::HDF5::VoxelDataContainerName, volDims, spacing, origin);
+  err = writeMetaInfo(DREAM3D::HDF5::VolumeDataContainerName, volDims, spacing, origin);
   if (err < 0)
   {
     ss.str("");
@@ -244,7 +244,7 @@ void VoxelDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VolumeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -253,9 +253,9 @@ void VoxelDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
+void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -273,9 +273,9 @@ void VoxelDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
+void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -294,9 +294,9 @@ void VoxelDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, cons
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeXdmfGridFooter(const std::string &label)
+void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string &label)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -309,7 +309,7 @@ void VoxelDataContainerWriter::writeXdmfGridFooter(const std::string &label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
@@ -349,11 +349,11 @@ int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
+int VolumeDataContainerWriter::writeVertexData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
@@ -402,11 +402,11 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
+int VolumeDataContainerWriter::writeEdgeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
@@ -455,11 +455,11 @@ int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
+int VolumeDataContainerWriter::writeFaceData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
@@ -508,11 +508,11 @@ int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
+int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t volDims[3] =
   { m->getXPoints(), m->getYPoints(), m->getZPoints() };
   float spacing[3] =
@@ -531,7 +531,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
 
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
+  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
@@ -583,11 +583,11 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
+int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
@@ -597,7 +597,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -736,11 +736,11 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Write the Ensemble data
   err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
@@ -791,7 +791,7 @@ int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VolumeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);

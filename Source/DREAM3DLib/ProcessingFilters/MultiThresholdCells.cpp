@@ -125,7 +125,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
@@ -159,7 +159,7 @@ void MultiThresholdCells::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

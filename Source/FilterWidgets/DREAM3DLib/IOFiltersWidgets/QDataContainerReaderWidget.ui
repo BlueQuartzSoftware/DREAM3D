@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>604</width>
-    <height>382</height>
+    <width>1025</width>
+    <height>644</height>
    </rect>
   </property>
   <property name="minimumSize">
@@ -69,26 +69,33 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QCheckBox" name="ReadVoxelData">
-       <property name="text">
-        <string>Read Voxel Data</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="ReadSurfaceMeshData">
-       <property name="text">
-        <string>Read Surface Mesh</string>
-       </property>
-      </widget>
-     </item>
-     <item>
-      <widget class="QCheckBox" name="ReadSolidMeshData">
+      <widget class="QCheckBox" name="ReadVertexData">
        <property name="enabled">
-        <bool>false</bool>
+        <bool>true</bool>
        </property>
        <property name="text">
-        <string>Read Solid Mesh</string>
+        <string>Read Vertex DataContainer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="ReadEdgeData">
+       <property name="text">
+        <string>Read Edge DataContainer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="ReadSurfaceData">
+       <property name="text">
+        <string>Read Surface DataContainer</string>
+       </property>
+      </widget>
+     </item>
+     <item>
+      <widget class="QCheckBox" name="ReadVolumeData">
+       <property name="text">
+        <string>Read Volume DataContainer</string>
        </property>
       </widget>
      </item>

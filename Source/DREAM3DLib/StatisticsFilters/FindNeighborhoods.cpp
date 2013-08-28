@@ -118,7 +118,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Field Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
@@ -174,7 +174,7 @@ void FindNeighborhoods::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -199,7 +199,7 @@ void FindNeighborhoods::execute()
 void FindNeighborhoods::find_neighborhoods()
 {
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   float x, y, z;
   float xn, yn, zn;

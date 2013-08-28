@@ -156,7 +156,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -211,7 +211,7 @@ void GroupMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -246,7 +246,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
   NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
@@ -355,7 +355,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {

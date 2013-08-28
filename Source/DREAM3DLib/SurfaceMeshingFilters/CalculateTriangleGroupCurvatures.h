@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-class SurfaceMeshDataContainer;
+class SurfaceDataContainer;
 
 
 /**
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
                                      DoubleArrayType::Pointer principleDirection2,
                                      DoubleArrayType::Pointer gaussianCurvature,
                                      DoubleArrayType::Pointer meanCurvature,
-                                     SurfaceMeshDataContainer* sm,
+                                     SurfaceDataContainer* sm,
                                      AbstractFilter* parent);
 
     virtual ~CalculateTriangleGroupCurvatures();
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
     DoubleArrayType::Pointer m_PrincipleDirection2;
     DoubleArrayType::Pointer m_GaussianCurvature;
     DoubleArrayType::Pointer m_MeanCurvature;
-    SurfaceMeshDataContainer* m_SurfaceMeshDataContainer;
+    SurfaceDataContainer* m_SurfaceDataContainer;
     AbstractFilter* m_ParentFilter;
 };
 

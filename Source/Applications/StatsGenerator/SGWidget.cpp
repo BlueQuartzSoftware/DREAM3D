@@ -55,7 +55,7 @@ SGWidget::~SGWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void SGWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
 {
   BOOST_ASSERT(false);
 }
@@ -71,7 +71,7 @@ QString SGWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SGWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int SGWidget::gatherStatsData(VolumeDataContainer::Pointer m)
 {
   return -1;
 }

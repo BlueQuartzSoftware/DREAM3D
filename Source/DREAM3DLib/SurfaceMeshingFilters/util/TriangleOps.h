@@ -46,7 +46,7 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 
-class SurfaceMeshDataContainer;
+class SurfaceDataContainer;
 
 /**
  * @brief The TriangleOps class
@@ -66,7 +66,7 @@ class TriangleOps
 
     static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
-    static std::vector<int32_t> findAdjacentTriangles(SurfaceMeshDataContainer* sm,
+    static std::vector<int32_t> findAdjacentTriangles(SurfaceDataContainer* sm,
                                                         int32_t triangleIndex,
                                                         int32_t label);
 

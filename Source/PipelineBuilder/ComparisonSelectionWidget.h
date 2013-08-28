@@ -46,9 +46,9 @@
 
 #include "ui_ComparisonSelectionWidget.h"
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/VertexDataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -97,9 +97,9 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @param smdc
      * @param sdc
      */
-    virtual void populateArrayNames(VoxelDataContainer::Pointer vdc,
-                                    SurfaceMeshDataContainer::Pointer smdc,
-                                    SolidMeshDataContainer::Pointer sdc);
+    virtual void populateArrayNames(VolumeDataContainer::Pointer vdc,
+                                    SurfaceDataContainer::Pointer smdc,
+                                    VertexDataContainer::Pointer sdc);
 
 
     /**
@@ -138,9 +138,9 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
 
 
-    virtual void populateVoxelArrayNames(VoxelDataContainer::Pointer vdc);
-    virtual void populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer smdc);
-    virtual void populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer sdc);
+    virtual void populateVoxelArrayNames(VolumeDataContainer::Pointer vdc);
+    virtual void populateSurfaceMeshArrayNames(SurfaceDataContainer::Pointer smdc);
+    virtual void populateSolidMeshArrayNames(VertexDataContainer::Pointer sdc);
 
 
   private:

@@ -109,11 +109,11 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -157,7 +157,7 @@ void GenerateUniqueEdges::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -187,7 +187,7 @@ void GenerateUniqueEdges::execute()
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
@@ -256,7 +256,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -400,8 +400,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  getSurfaceMeshDataContainer()->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  getSurfaceMeshDataContainer()->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
+  getSurfaceDataContainer()->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  getSurfaceDataContainer()->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
 
   notifyStatusMessage("Complete");
   return;

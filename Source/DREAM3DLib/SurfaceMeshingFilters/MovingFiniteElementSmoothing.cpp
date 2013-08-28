@@ -256,11 +256,11 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
   setErrorCondition(0);
   std::stringstream ss;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -326,7 +326,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 
 
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

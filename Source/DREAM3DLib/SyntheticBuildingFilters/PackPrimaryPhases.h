@@ -48,7 +48,7 @@
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/ShapeOps/ShapeOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 

@@ -219,10 +219,10 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -256,10 +256,10 @@ void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -290,8 +290,8 @@ void GenerateFaceIPFColoring::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);

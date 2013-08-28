@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 
 
 /**
@@ -58,7 +58,7 @@ class FindNRingNeighbors
 
     virtual ~FindNRingNeighbors();
 
-    DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
 
     DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
 

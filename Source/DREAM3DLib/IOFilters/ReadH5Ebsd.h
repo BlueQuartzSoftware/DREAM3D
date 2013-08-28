@@ -52,7 +52,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
 
@@ -150,7 +150,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m);
+    int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
     H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
@@ -214,10 +214,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getVolumeDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 

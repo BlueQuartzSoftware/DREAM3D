@@ -62,6 +62,10 @@ namespace DREAM3D
       Double_t pos[3];
     } VertD_t;
 
+    typedef struct
+    {
+        int verts[2];
+    } Edge_t;
 
     const int32_t k_VertexNumElements = 3;
 
@@ -70,14 +74,23 @@ namespace DREAM3D
         int verts[3];
     } Face_t;
 
+    typedef struct
+    {
+        std::vector<int64_t> verts;
+    } Cell_t;
+
     // This constant values needs to be the number of total integers that are encoded into the Face Structure
     const int32_t k_FaceNumElements = 3;
 
     typedef StructArray<Vert_t> VertList_t;
+    typedef StructArray<Edge_t> EdgeList_t;
     typedef StructArray<Face_t> FaceList_t;
+    typedef StructArray<Cell_t> CellList_t;
 
     typedef VertList_t::Pointer VertListPointer_t;
+    typedef EdgeList_t::Pointer EdgeListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
+    typedef CellList_t::Pointer CellListPointer_t;
 
     typedef std::set<int32_t> UniqueFaceIds_t;
     typedef std::map<int32_t, UniqueFaceIds_t > VertexFaceMap_t;

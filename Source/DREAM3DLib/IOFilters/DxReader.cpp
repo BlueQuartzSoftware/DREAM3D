@@ -138,7 +138,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -233,7 +233,7 @@ void DxReader::execute()
 // -----------------------------------------------------------------------------
 int DxReader::readHeader()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   std::stringstream ss;
   int error = 0;
 
@@ -354,7 +354,7 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     ss.clear();

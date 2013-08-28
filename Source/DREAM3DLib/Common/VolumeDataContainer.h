@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VoxelDataContainer_H_
-#define _VoxelDataContainer_H_
+#ifndef _VolumeDataContainer_H_
+#define _VolumeDataContainer_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
@@ -57,10 +57,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshCellNeighbors.hpp"
 
 /**
- * @class VoxelDataContainer VoxelDataContainer DREAM3DLib/Common/VoxelDataContainer.h
+ * @class VolumeDataContainer VolumeDataContainer DREAM3DLib/Common/VolumeDataContainer.h
  * @brief This data container holds data the represents a structured rectangular
  * grid of data typically referred to as a Voxel Volume
  * @author Michael A. Jackson for BlueQuartz Software
@@ -68,23 +69,78 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
+class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainer)
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainer, Observable)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainer)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainer, Observable)
 
-    virtual ~VoxelDataContainer();
+    virtual ~VolumeDataContainer();
 
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Vertex)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Edge)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Cell)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Ensemble)
 
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getVertexData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getEdgeData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::EdgeListPointer_t, Edges)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::FaceListPointer_t, Faces)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::CellListPointer_t, Cells)
+
+    /**
+     * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of
+     */
+    void buildMeshVertLinks();
+
+    /**
+     * @brief removeMeshVertLinks Removes the VertLinks data structures to reclaim memory
+     */
+    void removeMeshVertLinks();
+
+    /**
+     * @brief getMeshVertLinks Returns the vert Links object
+     * @return
+     */
+    MeshVertLinks::Pointer getMeshVertLinks();
+
+    /**
+     * @brief setMeshVertLinks
+     * @param vertLinks
+     */
+    void setMeshVertLinks(MeshVertLinks::Pointer vertLinks);
+
+    /**
+     * @brief buildMeshFaceNeighborLists Creates the list of Faces that share a common edge with a Face. Since
+     * we create non-manifold meshes we can have more than 3 neighbors.
+     */
+    void buildMeshCellNeighborLists();
+
+    /**
+     * @brief removeMeshFaceNeighborLists Remove the Face neighbor lists to reclaim memory.
+     */
+    void removeMeshCellNeighborLists();
+
+    /**
+     * @brief getMeshFaceNeighborLists Returns the Face Neighbor lists object
+     * @return
+     */
+    MeshCellNeighbors::Pointer getMeshCellNeighborLists();
+
+    /**
+     * @brief setMeshFaceNeighborLists
+     * @param neighbors
+     */
+    void setMeshCellNeighborLists(MeshCellNeighbors::Pointer neighbors);
 
    /**
    * @brief Adds/overwrites the data for a named array
@@ -430,7 +486,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
 
 
   protected:
-    VoxelDataContainer();
+    VolumeDataContainer();
 
   private:
 
@@ -441,8 +497,11 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     std::map<std::string, IDataArray::Pointer> m_FieldData;
     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-    VoxelDataContainer(const VoxelDataContainer&);
-    void operator =(const VoxelDataContainer&);
+    MeshVertLinks::Pointer m_MeshVertLinks;
+    MeshCellNeighbors::Pointer m_CellNeighbors;
+
+    VolumeDataContainer(const VolumeDataContainer&);
+    void operator =(const VolumeDataContainer&);
 };
 
 #endif

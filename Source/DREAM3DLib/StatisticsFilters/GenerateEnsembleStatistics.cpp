@@ -160,7 +160,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -272,7 +272,7 @@ void GenerateEnsembleStatistics::preflight()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -361,7 +361,7 @@ void GenerateEnsembleStatistics::execute()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -443,7 +443,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 }
 void GenerateEnsembleStatistics::gatherAspectRatioStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -542,7 +542,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -619,7 +619,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 }
 void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -696,7 +696,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 }
 void GenerateEnsembleStatistics::gatherODFStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -785,7 +785,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
 }
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -900,7 +900,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

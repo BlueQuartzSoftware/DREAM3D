@@ -140,7 +140,7 @@ void RenameFieldArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameFieldArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

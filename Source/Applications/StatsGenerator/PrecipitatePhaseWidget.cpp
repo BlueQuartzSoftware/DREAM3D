@@ -711,7 +711,7 @@ void PrecipitatePhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PrecipitatePhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int PrecipitatePhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -835,7 +835,7 @@ int PrecipitatePhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PrecipitatePhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void PrecipitatePhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;

@@ -53,11 +53,11 @@
 #include "H5Support/H5Lite.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -661,7 +661,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   int nPhases = phaseTabs->count();
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
@@ -719,13 +719,13 @@ void StatsGeneratorUI::on_actionSave_triggered()
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(fileId);
 
-  VoxelDataContainerWriter::Pointer writer = VoxelDataContainerWriter::New();
-  writer->setVoxelDataContainer(m.get());
+  VolumeDataContainerWriter::Pointer writer = VolumeDataContainerWriter::New();
+  writer->setVolumeDataContainer(m.get());
   writer->setHdfFileId(fileId);
   writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
-  writer = VoxelDataContainerWriter::NullPointer();
+  writer = VolumeDataContainerWriter::NullPointer();
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
@@ -822,7 +822,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   // Instantiate a Reader object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   {
     // We are going to scope this next section so that we make sure the HDF5 file gets closed after the reading is complete
     std::stringstream ss;
@@ -836,9 +836,9 @@ void StatsGeneratorUI::openFile(QString h5file)
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(fileId);
 
-    VoxelDataContainerReader::Pointer reader = VoxelDataContainerReader::New();
+    VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
     reader->setHdfFileId(fileId);
-    reader->setVoxelDataContainer(m.get());
+    reader->setVolumeDataContainer(m.get());
     reader->setReadCellData(false);
     reader->setReadFieldData(false);
     reader->setReadEnsembleData(true);

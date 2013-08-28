@@ -108,7 +108,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
@@ -186,7 +186,7 @@ void FindSlipTransmissionMetrics::preflight()
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

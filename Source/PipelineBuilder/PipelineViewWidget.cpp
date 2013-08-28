@@ -311,9 +311,9 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Create the DataContainer object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
+  VertexDataContainer::Pointer solid = VertexDataContainer::New();
 
   std::stringstream ss;
 
@@ -332,9 +332,9 @@ void PipelineViewWidget::preflightPipeline()
 
       AbstractFilter::Pointer filter = fw->getFilter(false);
 
-      filter->setVoxelDataContainer(m.get());
-      filter->setSurfaceMeshDataContainer(sm.get());
-      filter->setSolidMeshDataContainer(solid.get());
+      filter->setVolumeDataContainer(m.get());
+      filter->setSurfaceDataContainer(sm.get());
+      filter->setVertexDataContainer(solid.get());
 
       filter->preflight();
       int err = filter->getErrorCondition();

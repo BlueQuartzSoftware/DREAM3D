@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>582</width>
+    <width>600</width>
     <height>300</height>
    </rect>
   </property>
@@ -22,9 +22,9 @@
   <property name="currentIndex">
    <number>0</number>
   </property>
-  <widget class="QWidget" name="voxel_data">
+  <widget class="QWidget" name="volume_data">
    <attribute name="title">
-    <string>Voxel Data</string>
+    <string>Volume Data</string>
    </attribute>
    <layout class="QGridLayout" name="gridLayout">
     <property name="horizontalSpacing">
@@ -37,16 +37,16 @@
      <number>0</number>
     </property>
     <item row="1" column="0">
-     <widget class="QListWidget" name="voxelCellArrayList"/>
+     <widget class="QListWidget" name="volumeCellArrayList"/>
     </item>
     <item row="1" column="2">
-     <widget class="QListWidget" name="voxelEnsembleArrayList"/>
+     <widget class="QListWidget" name="volumeEnsembleArrayList"/>
     </item>
     <item row="1" column="1">
-     <widget class="QListWidget" name="voxelFieldArrayList"/>
+     <widget class="QListWidget" name="volumeFieldArrayList"/>
     </item>
     <item row="0" column="0">
-     <widget class="QCheckBox" name="voxelCellCB">
+     <widget class="QCheckBox" name="volumeCellCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -62,7 +62,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QCheckBox" name="voxelFieldCB">
+     <widget class="QCheckBox" name="volumeFieldCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -78,7 +78,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="voxelEnsembleCB">
+     <widget class="QCheckBox" name="volumeEnsembleCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -95,9 +95,9 @@ font-size: 11pt;
     </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="surfacemesh_data">
+  <widget class="QWidget" name="surface_data">
    <attribute name="title">
-    <string>Surface Mesh Data</string>
+    <string>Surface Data</string>
    </attribute>
    <layout class="QGridLayout" name="gridLayout_2">
     <property name="horizontalSpacing">
@@ -109,27 +109,11 @@ font-size: 11pt;
     <property name="margin">
      <number>0</number>
     </property>
-    <item row="0" column="1">
-     <widget class="QCheckBox" name="smFaceArraysCB">
-      <property name="styleSheet">
-       <string notr="true">QCheckBox 
-{
-font-size: 11pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Face Data</string>
-      </property>
-      <property name="tristate">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="1">
-     <widget class="QListWidget" name="surfaceMeshFaceArrayList"/>
+    <item row="1" column="6">
+     <widget class="QListWidget" name="surfaceEnsembleArrayList"/>
     </item>
     <item row="0" column="0">
-     <widget class="QCheckBox" name="smVertexArraysCB">
+     <widget class="QCheckBox" name="surfaceVertexArraysCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -145,51 +129,10 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="1" column="2">
-     <widget class="QListWidget" name="surfaceMeshEdgeArrayList"/>
+     <widget class="QListWidget" name="surfaceEdgeArrayList"/>
     </item>
-    <item row="0" column="2">
-     <widget class="QCheckBox" name="smEdgeArraysCB">
-      <property name="styleSheet">
-       <string notr="true">QCheckBox 
-{
-font-size: 11pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Edge Data</string>
-      </property>
-      <property name="tristate">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="1" column="0">
-     <widget class="QListWidget" name="surfaceMeshVertexArrayList"/>
-    </item>
-    <item row="1" column="3">
-     <widget class="QListWidget" name="surfaceMeshFieldArrayList"/>
-    </item>
-    <item row="1" column="4">
-     <widget class="QListWidget" name="surfaceMeshEnsembleArrayList"/>
-    </item>
-    <item row="0" column="3">
-     <widget class="QCheckBox" name="smFieldArraysCB">
-      <property name="styleSheet">
-       <string notr="true">QCheckBox 
-{
-font-size: 11pt;
-}</string>
-      </property>
-      <property name="text">
-       <string>Field Data</string>
-      </property>
-      <property name="tristate">
-       <bool>true</bool>
-      </property>
-     </widget>
-    </item>
-    <item row="0" column="4">
-     <widget class="QCheckBox" name="smEnsembleArraysCB">
+    <item row="0" column="6">
+     <widget class="QCheckBox" name="surfaceEnsembleArraysCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -204,11 +147,68 @@ font-size: 11pt;
       </property>
      </widget>
     </item>
+    <item row="0" column="2">
+     <widget class="QCheckBox" name="surfaceEdgeArraysCB">
+      <property name="styleSheet">
+       <string notr="true">QCheckBox 
+{
+font-size: 11pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Edge Data</string>
+      </property>
+      <property name="tristate">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="0" column="5">
+     <widget class="QCheckBox" name="surfaceFieldArraysCB">
+      <property name="styleSheet">
+       <string notr="true">QCheckBox 
+{
+font-size: 11pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Field Data</string>
+      </property>
+      <property name="tristate">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="5">
+     <widget class="QListWidget" name="surfaceFieldArrayList"/>
+    </item>
+    <item row="1" column="0">
+     <widget class="QListWidget" name="surfaceVertexArrayList"/>
+    </item>
+    <item row="0" column="3">
+     <widget class="QCheckBox" name="surfaceFaceArraysCB">
+      <property name="styleSheet">
+       <string notr="true">QCheckBox 
+{
+font-size: 11pt;
+}</string>
+      </property>
+      <property name="text">
+       <string>Face Data</string>
+      </property>
+      <property name="tristate">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="1" column="3">
+     <widget class="QListWidget" name="surfaceFaceArrayList"/>
+    </item>
    </layout>
   </widget>
-  <widget class="QWidget" name="solidmesh_data">
+  <widget class="QWidget" name="vertex_data">
    <attribute name="title">
-    <string>Solid Mesh Data</string>
+    <string>Vertex Data</string>
    </attribute>
    <layout class="QGridLayout" name="gridLayout_3">
     <property name="horizontalSpacing">
@@ -230,25 +230,25 @@ font-size: 11pt;
     <item row="0" column="1">
      <widget class="QLabel" name="label_9">
       <property name="text">
-       <string>Triangle Data</string>
+       <string>Field Data</string>
       </property>
      </widget>
     </item>
     <item row="0" column="2">
      <widget class="QLabel" name="label_10">
       <property name="text">
-       <string>Edge Data</string>
+       <string>Ensemble Data</string>
       </property>
      </widget>
     </item>
     <item row="1" column="0">
-     <widget class="QListWidget" name="solidMeshVertexArrayList"/>
+     <widget class="QListWidget" name="vertexVertexArrayList"/>
     </item>
     <item row="1" column="1">
-     <widget class="QListWidget" name="solidMeshFaceArrayList"/>
+     <widget class="QListWidget" name="vertexFieldArrayList"/>
     </item>
     <item row="1" column="2">
-     <widget class="QListWidget" name="solidMeshEdgeArrayList"/>
+     <widget class="QListWidget" name="vertexEnsembleArrayList"/>
     </item>
    </layout>
   </widget>

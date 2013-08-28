@@ -394,15 +394,15 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else {
     DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
@@ -434,7 +434,7 @@ void M3CSliceBySlice::preflight()
 void M3CSliceBySlice::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -671,9 +671,9 @@ void M3CSliceBySlice::execute()
   ss << getMessagePrefix() << " |--> " << binaryReader->getNameOfClass();
   binaryReader->setMessagePrefix(ss.str());
   binaryReader->setObservers(getObservers());
-  binaryReader->setVoxelDataContainer(getVoxelDataContainer());
-  binaryReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  binaryReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
+  binaryReader->setVolumeDataContainer(getVolumeDataContainer());
+  binaryReader->setSurfaceDataContainer(getSurfaceDataContainer());
+  binaryReader->setVertexDataContainer(getVertexDataContainer());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
@@ -700,7 +700,7 @@ void M3CSliceBySlice::execute()
 bool M3CSliceBySlice::volumeHasGhostLayer()
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
   size_t index = 0;
   int32_t* p = m_GrainIds;
   bool p_value = false;
@@ -731,9 +731,9 @@ bool M3CSliceBySlice::volumeHasGhostLayer()
 int32_t M3CSliceBySlice::volumeHasGrainValuesOfZero()
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
 
-  IDataArray::Pointer grainIdsPtr = getVoxelDataContainer()->getCellData(getGrainIdsArrayName());
+  IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
   int32_t count = grainIdsPtr->GetNumberOfTuples();
 
   bool renumber = false;
@@ -770,9 +770,9 @@ int32_t M3CSliceBySlice::volumeHasGrainValuesOfZero()
 void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
 
-  IDataArray::Pointer grainIdsPtr = getVoxelDataContainer()->getCellData(getGrainIdsArrayName());
+  IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
   int32_t count = grainIdsPtr->GetNumberOfTuples();
 
   for (int i = 0; i < count; ++i) {

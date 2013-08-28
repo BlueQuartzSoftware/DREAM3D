@@ -98,11 +98,11 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -145,7 +145,7 @@ void SharedGrainFaceFilter::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -157,11 +157,11 @@ void SharedGrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
 //  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -244,7 +244,7 @@ void SharedGrainFaceFilter::execute()
 
   m_SharedGrainFaces = faces;
 
-  getSurfaceMeshDataContainer()->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
+  getSurfaceDataContainer()->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

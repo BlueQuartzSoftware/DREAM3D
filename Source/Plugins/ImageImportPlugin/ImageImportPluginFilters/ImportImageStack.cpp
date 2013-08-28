@@ -125,7 +125,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (m_ImageFileList.size() == 0)
   {
@@ -202,7 +202,7 @@ void ImportImageStack::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

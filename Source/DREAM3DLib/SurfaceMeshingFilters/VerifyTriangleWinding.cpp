@@ -267,11 +267,11 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -324,11 +324,11 @@ void VerifyTriangleWinding::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshDataContainer DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SurfaceDataContainer DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -344,9 +344,9 @@ void VerifyTriangleWinding::execute()
     conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
-    conn->setVoxelDataContainer(getVoxelDataContainer());
-    conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-    conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->setVolumeDataContainer(getVolumeDataContainer());
+    conn->setSurfaceDataContainer(getSurfaceDataContainer());
+    conn->setVertexDataContainer(getVertexDataContainer());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {
@@ -360,19 +360,19 @@ void VerifyTriangleWinding::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshVertLinks = false;
-  MeshVertLinks::Pointer vertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
+  MeshVertLinks::Pointer vertLinks = getSurfaceDataContainer()->getMeshVertLinks();
   if (NULL == vertLinks.get())
   {
     clearMeshVertLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+    getSurfaceDataContainer()->buildMeshVertLinks();
   }
   if (getCancel() == true) { return; }
   bool clearFaceNeighbors = false;
-  MeshFaceNeighbors::Pointer triangleNeighbors = getSurfaceMeshDataContainer()->getMeshFaceNeighborLists();
+  MeshFaceNeighbors::Pointer triangleNeighbors = getSurfaceDataContainer()->getMeshFaceNeighborLists();
   if (NULL == triangleNeighbors)
   {
     clearFaceNeighbors = true;
-    getSurfaceMeshDataContainer()->buildMeshFaceNeighborLists();
+    getSurfaceDataContainer()->buildMeshFaceNeighborLists();
   }
 
   // Execute the actual verification step.
@@ -384,16 +384,16 @@ void VerifyTriangleWinding::execute()
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getSurfaceMeshDataContainer()->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+    IDataArray::Pointer removedConnectviity = getSurfaceDataContainer()->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
     BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
   if (clearMeshVertLinks == true)
   {
-    getSurfaceMeshDataContainer()->removeMeshVertLinks();
+    getSurfaceDataContainer()->removeMeshVertLinks();
   }
   if (clearFaceNeighbors == true)
   {
-    getSurfaceMeshDataContainer()->removeMeshFaceNeighborLists();
+    getSurfaceDataContainer()->removeMeshFaceNeighborLists();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -404,7 +404,7 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap)
 {
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer masterFaceList = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceList_t::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -412,7 +412,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
     return;
   }
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -435,10 +435,10 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices)
 {
 
-  DREAM3D::SurfaceMesh::Vert_t* verts = getSurfaceMeshDataContainer()->getVertices()->GetPointer(0);
-  DREAM3D::SurfaceMesh::Face_t* triangles = getSurfaceMeshDataContainer()->getFaces()->GetPointer(0);
+  DREAM3D::SurfaceMesh::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
+  DREAM3D::SurfaceMesh::Face_t* triangles = getSurfaceDataContainer()->getFaces()->GetPointer(0);
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
@@ -475,7 +475,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   if (normal.x < 0.0f)
   {
     ReverseTriangleWinding::Pointer reverse = ReverseTriangleWinding::New();
-    reverse->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    reverse->setSurfaceDataContainer(getSurfaceDataContainer());
     reverse->setObservers(getObservers());
     reverse->setMessagePrefix(getMessagePrefix());
     reverse->execute();
@@ -528,7 +528,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer masterFaceList = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::SurfaceMesh::FaceList_t::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -536,13 +536,13 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     return getErrorCondition();
   }
   DREAM3D::SurfaceMesh::Face_t* triangles = masterFaceList->GetPointer(0);
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   int numFaces = masterFaceList->GetNumberOfTuples();
 
-  DREAM3D::SurfaceMesh::VertList_t::Pointer masterNodeListPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t::Pointer masterNodeListPtr = getSurfaceDataContainer()->getVertices();
   if(NULL == masterNodeListPtr.get())
   {
     setErrorCondition(-555);
@@ -677,7 +677,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
       //   std::cout << " $ tIndex: " << triangleIndex << std::endl;
 
-      std::vector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceMeshDataContainer(), triangleIndex, currentLabel);
+      std::vector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceDataContainer(), triangleIndex, currentLabel);
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
         // std::cout << "  ^ AdjTri index: " << *adjTri << std::endl;

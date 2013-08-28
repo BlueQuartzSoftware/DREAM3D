@@ -121,7 +121,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   typedef std::set<std::string> NameList_t;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL != m)
   {
     for(NameList_t::iterator iter = m_SelectedVoxelCellArrays.begin(); iter != m_SelectedVoxelCellArrays.end(); ++iter)
@@ -140,7 +140,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL != sm)
   {
     for(NameList_t::iterator iter = m_SelectedSurfaceMeshVertexArrays.begin(); iter != m_SelectedSurfaceMeshVertexArrays.end(); ++iter)
@@ -165,20 +165,12 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
   }
 
-  SolidMeshDataContainer* sol = getSolidMeshDataContainer();
+  VertexDataContainer* sol = getVertexDataContainer();
   if (NULL != sol)
   {
     for(NameList_t::iterator iter = m_SelectedSolidMeshVertexArrays.begin(); iter != m_SelectedSolidMeshVertexArrays.end(); ++iter)
     {
       sol->removeVertexData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSolidMeshFaceArrays.begin(); iter != m_SelectedSolidMeshFaceArrays.end(); ++iter)
-    {
-      sol->removeFaceData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSolidMeshEdgeArrays.begin(); iter != m_SelectedSolidMeshEdgeArrays.end(); ++iter)
-    {
-      sol->removeEdgeData(*iter);
     }
   }
 
@@ -203,7 +195,7 @@ void RemoveArrays::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

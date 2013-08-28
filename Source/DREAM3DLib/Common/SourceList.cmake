@@ -18,9 +18,10 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/GbcdDataArray.hpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshDataContainer.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/SolidMeshDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VolumeDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/EdgeDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VertexDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
@@ -69,9 +70,10 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersReader.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilterParametersWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/VoxelDataContainer.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceMeshDataContainer.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/SolidMeshDataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VolumeDataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceDataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/EdgeDataContainer.cpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/VertexDataContainer.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DRandom.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp

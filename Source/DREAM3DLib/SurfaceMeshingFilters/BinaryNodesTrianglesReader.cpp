@@ -122,11 +122,11 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
   std::stringstream ss;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
   if (getBinaryNodesFile().empty() == true)
@@ -186,7 +186,7 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceMeshDataContainer *sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer *sm = getSurfaceDataContainer();
   int err = 0;
   setErrorCondition(err);
 

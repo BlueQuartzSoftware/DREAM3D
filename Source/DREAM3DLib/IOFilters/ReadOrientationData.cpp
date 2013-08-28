@@ -134,11 +134,11 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     ss.str("");
-    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -287,7 +287,7 @@ void ReadOrientationData::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -330,7 +330,7 @@ void ReadOrientationData::readAngFile()
     notifyErrorMessage("AngReader could not read the .ang file.", getErrorCondition());
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();
@@ -429,7 +429,7 @@ void ReadOrientationData::readCtfFile()
     notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int64_t dims[3];
   dims[0] = reader.getXCells();
@@ -546,7 +546,7 @@ void ReadOrientationData::readMicFile()
     notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();

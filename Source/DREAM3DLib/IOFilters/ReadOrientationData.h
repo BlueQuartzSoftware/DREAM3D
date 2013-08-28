@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
@@ -212,12 +212,12 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       m_CrystalStructures = crystalStructures->GetPointer(0);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstants = latticeConstants->GetPointer(0);
-      getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 

@@ -113,7 +113,7 @@ void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -131,7 +131,7 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeHeader()
 {
-    VoxelDataContainer* m = getVoxelDataContainer();
+    VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;
@@ -190,7 +190,7 @@ int SPParksWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeFile()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;

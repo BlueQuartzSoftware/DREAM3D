@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshDataContainerReader_H_
-#define _SurfaceMeshDataContainerReader_H_
+#ifndef _SurfaceDataContainerReader_H_
+#define _SurfaceDataContainerReader_H_
 
 #include <string>
 
@@ -45,20 +45,20 @@
 
 
 /**
- * @class SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.h DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h
+ * @class SurfaceDataContainerReader SurfaceDataContainerReader.h DREAM3DLib/IOFilters/SurfaceDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerReader, AbstractFilter)
 
-    virtual ~SurfaceMeshDataContainerReader();
+    virtual ~SurfaceDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
@@ -125,7 +125,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
 
   protected:
-    SurfaceMeshDataContainerReader();
+    SurfaceDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -161,8 +161,8 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
   private:
 
-    SurfaceMeshDataContainerReader(const SurfaceMeshDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshDataContainerReader&); // Operator '=' Not Implemented
+    SurfaceDataContainerReader(const SurfaceDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshDataContainerReader_H_ */
+#endif /* _SurfaceDataContainerReader_H_ */
