@@ -241,8 +241,10 @@ double ModifiedLambertProjection::getInterpolatedValue(Square square, float* sqC
   modY -= bbin;
   modX -= 0.5;
   modY -= 0.5;
-  abinSign = modX/fabs(modX);
-  bbinSign = modY/fabs(modY);
+  if(modX == 0.0) abinSign = 1;
+  else abinSign = modX/fabs(modX);
+  if(modY == 0.0) bbinSign = 1;
+  else bbinSign = modY/fabs(modY);
   abin1 = abin;
   bbin1 = bbin;
   abin2 = abin+abinSign;
