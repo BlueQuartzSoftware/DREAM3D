@@ -426,9 +426,9 @@ int DirListTest()
   }
 
   std::string ppath = MXADir::parentPath(MXAUnitTest::MXATestBinaryDirectory);
-  //std::cout << "Child Path: " << MXAUnitTest::MXATestBinaryDirectory << std::endl;
-  //std::cout << "ppath: " << ppath << std::endl;
-  //std::cout << "Ref Path:   " << MXAUnitTest::MXABuildDir << std::endl;
+//  std::cout << "ppath:                               " << ppath << std::endl;
+//  std::cout << "MXAUnitTest::MXATestBinaryDirectory: " << MXAUnitTest::MXATestBinaryDirectory << std::endl;
+//  std::cout << "MXAUnitTest::MXABuildDir:            " << MXAUnitTest::MXABuildDir << std::endl;
   int equal  = ppath.compare(MXAUnitTest::MXABuildDir);
   DREAM3D_REQUIRE_EQUAL(equal, 0);
   return err;
