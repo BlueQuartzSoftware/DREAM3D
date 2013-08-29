@@ -46,15 +46,15 @@ class GenericExample : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelEnsembleArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceMeshEdgeArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshPointArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshFaceArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSolidMeshEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeCellArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVolumeEnsembleArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfacePointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceFaceArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedSurfaceEdgeArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexPointArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexFieldArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVertexEnsembleArrayName)
 
 
     /**

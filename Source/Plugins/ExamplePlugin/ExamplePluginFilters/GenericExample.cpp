@@ -156,7 +156,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Cell Array Name");
-    option->setPropertyName("SelectedVoxelCellArrayName");
+    option->setPropertyName("SelectedVolumeCellArrayName");
     option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -166,7 +166,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Field Array Name");
-    option->setPropertyName("SelectedVoxelFieldArrayName");
+    option->setPropertyName("SelectedVolumeFieldArrayName");
     option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -176,7 +176,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Voxel Ensemble Array Name");
-    option->setPropertyName("SelectedVoxelEnsembleArrayName");
+    option->setPropertyName("SelectedVolumeEnsembleArrayName");
     option->setWidgetType(FilterParameter::VoxelEnsembleArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -187,7 +187,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Point Array Name");
-    option->setPropertyName("SelectedSurfaceMeshPointArrayName");
+    option->setPropertyName("SelectedSurfacePointArrayName");
     option->setWidgetType(FilterParameter::SurfaceMeshVertexArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -197,7 +197,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Face Array Name");
-    option->setPropertyName("SelectedSurfaceMeshFaceArrayName");
+    option->setPropertyName("SelectedSurfaceFaceArrayName");
     option->setWidgetType(FilterParameter::SurfaceMeshFaceArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -207,7 +207,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SurfaceMesh Edge Array Name");
-    option->setPropertyName("SelectedSurfaceMeshEdgeArrayName");
+    option->setPropertyName("SelectedSurfaceEdgeArrayName");
     option->setWidgetType(FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -218,7 +218,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Point Array Name");
-    option->setPropertyName("SelectedSolidMeshPointArrayName");
+    option->setPropertyName("SelectedVertexPointArrayName");
     option->setWidgetType(FilterParameter::SolidMeshVertexArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -228,7 +228,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Face Array Name");
-    option->setPropertyName("SelectedSolidMeshFaceArrayName");
+    option->setPropertyName("SelectedVertexFieldArrayName");
     option->setWidgetType(FilterParameter::SolidMeshFaceArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -238,7 +238,7 @@ void GenericExample::setupFilterParameters()
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("SolidMesh Edge Array Name");
-    option->setPropertyName("SelectedSolidMeshEdgeArrayName");
+    option->setPropertyName("SelectedVertexEnsembleArrayName");
     option->setWidgetType(FilterParameter::SolidMeshEdgeArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
@@ -278,15 +278,15 @@ void GenericExample::readFilterParameters(AbstractFilterParametersReader* reader
   setOrigin( reader->readValue("Origin", getOrigin()) );
   setCrystalSymmetryRotations( reader->readValue("CrystalSymmetryRotations", getCrystalSymmetryRotations()) );
 
-  setSelectedVoxelCellArrayName( reader->readValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName()) );
-  setSelectedVoxelFieldArrayName( reader->readValue("SelectedVoxelFieldArrayName", getSelectedVoxelFieldArrayName()) );
-  setSelectedVoxelEnsembleArrayName( reader->readValue("SelectedVoxelEnsembleArrayName", getSelectedVoxelEnsembleArrayName()) );
-  setSelectedSurfaceMeshPointArrayName( reader->readValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName()) );
-  setSelectedSurfaceMeshFaceArrayName( reader->readValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName()) );
-  setSelectedSurfaceMeshEdgeArrayName( reader->readValue("SelectedSurfaceMeshEdgeArrayName", getSelectedSurfaceMeshEdgeArrayName()) );
-  setSelectedSolidMeshPointArrayName( reader->readValue("SelectedSolidMeshPointArrayName", getSelectedSolidMeshPointArrayName()) );
-  setSelectedSolidMeshFaceArrayName( reader->readValue("SelectedSolidMeshFaceArrayName", getSelectedSolidMeshFaceArrayName()) );
-  setSelectedSolidMeshEdgeArrayName( reader->readValue("SelectedSolidMeshEdgeArrayName", getSelectedSolidMeshEdgeArrayName()) );
+  setSelectedVolumeCellArrayName( reader->readValue("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName()) );
+  setSelectedVolumeFieldArrayName( reader->readValue("SelectedVolumeFieldArrayName", getSelectedVolumeFieldArrayName()) );
+  setSelectedVolumeEnsembleArrayName( reader->readValue("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName()) );
+  setSelectedSurfacePointArrayName( reader->readValue("SelectedSurfacePointArrayName", getSelectedSurfacePointArrayName()) );
+  setSelectedSurfaceFaceArrayName( reader->readValue("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName()) );
+  setSelectedSurfaceEdgeArrayName( reader->readValue("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName()) );
+  setSelectedVertexPointArrayName( reader->readValue("SelectedVertexPointArrayName", getSelectedVertexPointArrayName()) );
+  setSelectedVertexFieldArrayName( reader->readValue("SelectedVertexFieldArrayName", getSelectedVertexFieldArrayName()) );
+  setSelectedVertexEnsembleArrayName( reader->readValue("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName()) );
 
 
   setStrVector( reader->readValue("StrVector", getStrVector() ) );
@@ -314,15 +314,15 @@ int GenericExample::writeFilterParameters(AbstractFilterParametersWriter* writer
   writer->writeValue("Origin", getOrigin());
   writer->writeValue("CrystalSymmetryRotations", getCrystalSymmetryRotations());
 
-  writer->writeValue("SelectedVoxelCellArrayName", getSelectedVoxelCellArrayName());
-  writer->writeValue("SelectedVoxelFieldArrayName", getSelectedVoxelFieldArrayName());
-  writer->writeValue("SelectedVoxelEnsembleArrayName", getSelectedVoxelEnsembleArrayName());
-  writer->writeValue("SelectedSurfaceMeshPointArrayName", getSelectedSurfaceMeshPointArrayName());
-  writer->writeValue("SelectedSurfaceMeshFaceArrayName", getSelectedSurfaceMeshFaceArrayName());
-  writer->writeValue("SelectedSurfaceMeshEdgeArrayName", getSelectedSurfaceMeshEdgeArrayName());
-  writer->writeValue("SelectedSolidMeshPointArrayName", getSelectedSolidMeshPointArrayName());
-  writer->writeValue("SelectedSolidMeshFaceArrayName", getSelectedSolidMeshFaceArrayName());
-  writer->writeValue("SelectedSolidMeshEdgeArrayName", getSelectedSolidMeshEdgeArrayName());
+  writer->writeValue("SelectedVolumeCellArrayName", getSelectedVolumeCellArrayName());
+  writer->writeValue("SelectedVolumeFieldArrayName", getSelectedVolumeFieldArrayName());
+  writer->writeValue("SelectedVolumeEnsembleArrayName", getSelectedVolumeEnsembleArrayName());
+  writer->writeValue("SelectedSurfacePointArrayName", getSelectedSurfacePointArrayName());
+  writer->writeValue("SelectedSurfaceFaceArrayName", getSelectedSurfaceFaceArrayName());
+  writer->writeValue("SelectedSurfaceEdgeArrayName", getSelectedSurfaceEdgeArrayName());
+  writer->writeValue("SelectedVertexPointArrayName", getSelectedVertexPointArrayName());
+  writer->writeValue("SelectedVertexFieldArrayName", getSelectedVertexFieldArrayName());
+  writer->writeValue("SelectedVertexEnsembleArrayName", getSelectedVertexEnsembleArrayName());
 
   writer->writeValue("StrVector", getStrVector());
 
@@ -372,7 +372,7 @@ void GenericExample::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
