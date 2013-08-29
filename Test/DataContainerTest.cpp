@@ -84,7 +84,7 @@ dataContainer->addCellData(name, m_msgType##Ptr);
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::DataContainerIOTest::TestFile);
+//  MXADir::remove(UnitTest::DataContainerIOTest::TestFile);
 }
 
 
@@ -138,6 +138,7 @@ void TestDataContainerWriter()
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
+  neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors);
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
 
   for(int i = 0; i < 4; ++i)
