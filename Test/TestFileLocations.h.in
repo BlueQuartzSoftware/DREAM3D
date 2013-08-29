@@ -168,8 +168,8 @@ namespace UnitTest
 namespace MXAUnitTest
 {
   const std::string MXATempDir("@TEST_TEMP_DIR@/");
-  const std::string MXATestBinaryDirectory("@TEST_TEMP_DIR_NATIVE@");
-  const std::string MXABuildDir("@MXA_BINARY_DIR_NATIVE@");
+  const std::string MXATestBinaryDirectory("@DREAM3DProj_BIN_DIR_NATIVE@");
+  const std::string MXABuildDir("@DREAM3DProj_BUILD_DIR_NATIVE@");
 
 #if defined (WIN32)
   static const char DirSeparator = '\\';
