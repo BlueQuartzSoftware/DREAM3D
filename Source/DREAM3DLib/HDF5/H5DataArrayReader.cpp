@@ -333,6 +333,8 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
+  std::string keyname;
+  err = H5Lite::readStringAttribute(gid, name, "Linked NumNeighbors Dataset", keyname);
   err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
@@ -359,6 +361,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -369,6 +372,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -379,6 +383,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -389,6 +394,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -399,6 +405,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -409,6 +416,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -419,6 +427,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -429,6 +438,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -446,6 +456,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<float>::Pointer ptr = NeighborList<float>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -456,6 +467,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std
         {
           NeighborList<double>::Pointer ptr = NeighborList<double>::New();
           ptr->SetName(name);
+          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
