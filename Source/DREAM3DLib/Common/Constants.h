@@ -51,6 +51,43 @@
 namespace DREAM3D
 {
 
+  /**
+   * @brief Rgb An ARGB quadruplet on the format #AARRGGBB, equivalent to an unsigned int and The type also holds a value for the alpha-channel.
+   */
+  typedef uint32_t Rgb;
+  const Rgb  RGB_MASK    = 0x00ffffff;                // masks RGB values
+
+  inline int dRed(Rgb rgb)
+  {
+    return ((rgb >> 16) & 0xff);
+  }
+
+  inline int dGreen(Rgb rgb)
+  {
+    return ((rgb >> 8) & 0xff);
+  }
+
+  inline int dBlue(Rgb rgb)
+  {
+    return (rgb & 0xff);
+  }
+
+  inline int dAlpha(Rgb rgb)
+  {
+    return rgb >> 24;
+  }
+
+  inline int dGray(Rgb rgb)
+  {
+    return  (((rgb >> 16) & 0xff) * 11 + ((rgb >> 8) & 0xff) * 16 + (rgb & 0xff) * 5)/32;
+  }
+
+  inline Rgb dRgb(int r, int g, int b, int a)
+  {
+    return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
+  }
+
+
   namespace FilterGroups
   {
     const std::string GenericFilters("Generic");
@@ -530,46 +567,5 @@ namespace DREAM3D
 
 
 }
-
-
-#if 0
-const double Textures[15][3] =
-{
-  { 0.610865,0.785398,0.0},
-  { 1.029744,0.645772,1.099557},
-  { 1.570796,0.610865,0.785398},
-  { 1.029744,0.506145,1.099557},
-  { 0.820305,0.645772,1.099557},
-  { 0.0,0.610865,0.785398},
-  { 0.0,0.785398,0.0},
-  { 0.0,0.0,0.0},
-  { 0.0,0.349066,0.0},
-  { 0.0,0.610865,0.0},
-  { 0.349066,0.0,0.0},
-  { 0.610865,0.0,0.0},
-  { 1.22173,0.785398,0.0},
-  { 0.959931,0.349066,0.0},
-  { 0.959931,1.308997,0.436332}};
-
-
-
-// Keep these to remember the names of the texture components in order
-//  const int Brassbin = {0.610865,0.785398,0.0};
-//  const int Sbin = {0.959931,0.610865,1.134464};
-//  const int Copperbin = {1.570796,0.523599,0.785398};
-//  const int Shear1bin = {0.0,0.0,0.785398};
-//  const int Shear2bin = {0.0,0.959931,0.785398};
-//  const int Shear3bin = {0.0,0.610865,0.785398};
-//  const int Gossbin = {0.0,0.785398,0.0};
-//  const int Cubebin = {0.0,0.0,0.0};
-//  const int RC1bin = {0.0,0.349066,0.0};
-//  const int RC2bin = {0.0,0.610865,0.0};
-//  const int RC3bin = {0.349066,0.0,0.0};
-//  const int RC4bin = {0.610865,0.0,0.0};
-//  const int Pbin = {1.22173,0.785398,0.0};
-//  const int Qbin = {0.959931,0.349066,0.0};
-//  const int Rbin = {0.959931,1.308997,0.436332};
-#endif
-
 
 #endif /* _DREAM3D_CONSTANTS_H_ */

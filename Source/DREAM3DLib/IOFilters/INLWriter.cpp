@@ -338,15 +338,10 @@ int INLWriter::writeFile()
         {
           if(symmetry == Ebsd::CrystalStructure::Cubic_High)
           {
-            CubicOps ops;
-            ops.generateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, false);
             symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
-
           }
           else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
           {
-            HexagonalOps ops;
-            ops.generateIPFColor(phi1, phi, phi2, refDir[0], refDir[1], refDir[2], rgba, false);
             symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
           }
           else
