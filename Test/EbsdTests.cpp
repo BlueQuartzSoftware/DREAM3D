@@ -95,71 +95,52 @@ void TestCrystalStructureTest()
 void TestEbsdColoring()
 {
 
-  float phi1 = 207.1653;
-  float phi = 44.2854;
-  float phi2 = 146.5178;
-  float ref0 = 0;
-  float ref1 = 0;
-  float ref2 = 1;
+  // Create 1 of every type of Ops class. This condenses the code below
+  std::vector<OrientationOps::Pointer> ops;
+  ops.push_back(HexagonalOps::New());
+  ops.push_back(CubicOps::New());
+  ops.push_back(HexagonalLowOps::New());
+  ops.push_back(CubicLowOps::New());
+  ops.push_back(TriclinicOps::New());
+  ops.push_back(MonoclinicOps::New());
+  ops.push_back(OrthoRhombicOps::New());
+  ops.push_back(TetragonalLowOps::New());
+  ops.push_back(TetragonalOps::New());
+  ops.push_back(TrigonalLowOps::New());
+  ops.push_back(TrigonalOps::New());
 
-  uint8_t rgb[3];
-  {
-    CubicOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    CubicLowOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    HexagonalOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    HexagonalLowOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    MonoclinicOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    OrthoRhombicOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    TetragonalLowOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    TetragonalOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    TriclinicOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    TrigonalLowOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  {
-    TrigonalOps ops;
-    ops.generateIPFColor(phi1, phi, phi2, ref0, ref1, ref2, rgb, true);
-  }
-  std::cout << (int)(rgb[0]) << " " << (int)(rgb[1]) << " " << (int)(rgb[2]) << " " << std::endl;
+  double refDir[3] = {0.0, 0.0, 1.0};
+  double dEuler[3] = {207.1653, 44.2854, 146.5178};
+  DREAM3D::Rgb argb = 0x00000000;
+  size_t idx = 0;
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+  argb = ops[idx++]->generateIPFColor(dEuler, refDir, false);
+
+  DREAM3D_REQUIRE_EQUAL(idx, Ebsd::CrystalStructure::LaueGroupEnd)
+
+  std::cout << DREAM3D::dRed(argb) << " " << DREAM3D::dGreen(argb) << " " << DREAM3D::dBlue(argb) << " " << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //  Use test framework
 // -----------------------------------------------------------------------------
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
   int err = EXIT_SUCCESS;
   DREAM3D_REGISTER_TEST( TestEbsdColoring() )
 
-      DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
+  DREAM3D_REGISTER_TEST( TestCrystalStructureTest() )
 
-      PRINT_TEST_SUMMARY();
+  PRINT_TEST_SUMMARY();
   return err;
 }
 
