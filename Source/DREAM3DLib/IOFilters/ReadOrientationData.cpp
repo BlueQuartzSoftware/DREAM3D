@@ -109,9 +109,9 @@ void ReadOrientationData::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -199,7 +199,13 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       dims[1] = reader.getYCells();
       dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
       m->setDimensions(dims[0], dims[1], dims[2]);
-      m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+      if (reader.getZStep() != 0.0f) {
+        m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+      }
+      else
+      {
+        m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+      }
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
       names = fields.getFilterFields<std::vector<std::string> > ();
@@ -255,14 +261,14 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     }
 
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+        CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
-    typedef DataArray<unsigned int> XTalStructArrayType;
+        typedef DataArray<unsigned int> XTalStructArrayType;
     CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
+        CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
+        StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
     m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
 
     ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
@@ -421,7 +427,7 @@ void ReadOrientationData::readCtfFile()
   int err = 0;
   CtfReader reader;
   reader.setFileName(m_InputFile);
- // reader.readOnlySliceIndex(0);
+  // reader.readOnlySliceIndex(0);
   err = reader.readFile();
   if (err < 0)
   {
@@ -436,7 +442,13 @@ void ReadOrientationData::readCtfFile()
   dims[1] = reader.getYCells();
   dims[2] = reader.getZCells(); // With CTF files there can be more than a single slice
   m->setDimensions(dims[0], dims[1], dims[2]);
-  m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+  if (reader.getZStep() != 0.0f) {
+    m->setResolution(reader.getXStep(), reader.getYStep(), reader.getZStep());
+  }
+  else
+  {
+    m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
+  }
   m->setOrigin(0.0f, 0.0f, 0.0f);
 
   err = loadInfo<CtfReader, CtfPhase>(&reader);
@@ -467,7 +479,7 @@ void ReadOrientationData::readCtfFile()
     {
       if (phasePtr[i] < 1)
       {
-         phasePtr[i] = 1;
+        phasePtr[i] = 1;
       }
     }
     iArray = Int32ArrayType::CreateArray(totalPoints, DREAM3D::CellData::Phases);
