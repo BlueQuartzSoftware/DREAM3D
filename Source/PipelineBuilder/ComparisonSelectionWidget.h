@@ -48,6 +48,7 @@
 
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/EdgeDataContainer.h"
 #include "DREAM3DLib/Common/VertexDataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
@@ -83,9 +84,9 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
       CellListType,
       FieldListType,
       EnsembleListType,
-      PointListType,
+      VertexListType,
+      EdgeListType,
       FaceListType,
-      EdgeListType
     };
 
     DREAM3D_INSTANCE_PROPERTY(ArrayListType, ArrayListType)
@@ -97,9 +98,10 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @param smdc
      * @param sdc
      */
-    virtual void populateArrayNames(VolumeDataContainer::Pointer vdc,
-                                    SurfaceDataContainer::Pointer smdc,
-                                    VertexDataContainer::Pointer sdc);
+    virtual void populateArrayNames(VolumeDataContainer::Pointer vldc,
+                                    SurfaceDataContainer::Pointer sdc,
+                                    EdgeDataContainer::Pointer edc,
+                                    VertexDataContainer::Pointer vdc);
 
 
     /**
@@ -138,9 +140,10 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
 
 
 
-    virtual void populateVoxelArrayNames(VolumeDataContainer::Pointer vdc);
-    virtual void populateSurfaceMeshArrayNames(SurfaceDataContainer::Pointer smdc);
-    virtual void populateSolidMeshArrayNames(VertexDataContainer::Pointer sdc);
+    virtual void populateVolumeArrayNames(VolumeDataContainer::Pointer vldc);
+    virtual void populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc);
+    virtual void populateEdgeArrayNames(EdgeDataContainer::Pointer edc);
+    virtual void populateVertexArrayNames(VertexDataContainer::Pointer vdc);
 
 
   private:

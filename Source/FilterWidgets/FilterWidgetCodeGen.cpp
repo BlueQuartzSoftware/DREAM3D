@@ -1007,7 +1007,7 @@ else
       }
       fprintf(f, "   }\n");
     }
-    else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
+    else if (opt->getWidgetType() >= FilterParameter::VolumeVertexArrayNameSelectionWidget
              && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     {
       implementArrayNameComboBoxUpdated = true;
@@ -1147,14 +1147,14 @@ else
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
         fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
     }
     fprintf(f, "}\n");

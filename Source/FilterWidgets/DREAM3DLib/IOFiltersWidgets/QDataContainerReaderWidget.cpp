@@ -321,7 +321,7 @@ bool QDataContainerReaderWidget::verifyPathExists(QString outFilePath, QLineEdit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
+void QDataContainerReaderWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
