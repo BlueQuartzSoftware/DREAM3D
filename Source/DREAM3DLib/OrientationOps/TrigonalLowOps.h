@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT TrigonalLowOps : public OrientationOps
      * @param refDir The sample reference direction
      * @return Returns the ARGB Quadruplet DREAM3D::Rgb
      */
-    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, double* refDir);
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, QuatF &refFrame);
 
     /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler

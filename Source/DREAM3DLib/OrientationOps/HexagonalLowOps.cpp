@@ -1249,7 +1249,7 @@ std::vector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF &q, double* refDir)
+DREAM3D::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF &q, QuatF &refFrame)
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 
