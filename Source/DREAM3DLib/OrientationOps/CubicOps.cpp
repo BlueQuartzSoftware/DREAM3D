@@ -1455,7 +1455,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   //float theta1 = 0.0f;
   //float theta2 = 90.0f;
 
-  //ColorTable::Rgba color;
+  //DREAM3D::Rgb color;
   //size_t idx = 0;
   //size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
   //// Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from

@@ -113,7 +113,7 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
         r = colors[3*bin];
         g = colors[3*bin+1];
         b = colors[3*bin+2];
-        rgbaPtr[idx] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
+        rgbaPtr[idx] = DREAM3D::dRgb(r*255, g*255, b*255, 255);
       }
       else // Outside the Circle - Set pixel to White
       {
