@@ -60,15 +60,23 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
@@ -78,17 +86,24 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
 
     typedef std::set<std::string> ArrayList_t;
 
-    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedCellArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                   std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFieldArrays,
                                                   std::set<std::string> selectedEnsembleArrays);
     virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays);
+                                                  std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

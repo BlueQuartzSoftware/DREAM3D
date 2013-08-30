@@ -1033,13 +1033,13 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
       w->setArrayListType(ComparisonSelectionWidget::EnsembleListType);
       break;
     case FilterParameter::VertexArrayComparisonSelectionWidget:
-      w->setArrayListType(ComparisonSelectionWidget::PointListType);
-      break;
-    case FilterParameter::FaceArrayComparisonSelectionWidget:
-      w->setArrayListType(ComparisonSelectionWidget::FaceListType);
+      w->setArrayListType(ComparisonSelectionWidget::VertexListType);
       break;
     case FilterParameter::EdgeArrayComparisonSelectionWidget:
       w->setArrayListType(ComparisonSelectionWidget::EdgeListType);
+      break;
+    case FilterParameter::FaceArrayComparisonSelectionWidget:
+      w->setArrayListType(ComparisonSelectionWidget::FaceListType);
       break;
     default:
       break;
