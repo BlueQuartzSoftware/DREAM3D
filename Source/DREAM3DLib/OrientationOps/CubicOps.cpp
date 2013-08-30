@@ -1241,7 +1241,7 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
   _rgb[2] = _rgb[2] / max;
 
 
-  return DREAM3D::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
+  return RgbColor::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
 }
 
 // -----------------------------------------------------------------------------
@@ -1259,7 +1259,7 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
   float green = (r2+max2)/range2;
   float blue = (r3+max3)/range3;
 
-  return DREAM3D::dRgb(red * 255, green * 255, blue * 255, 255);
+  return RgbColor::dRgb(red * 255, green * 255, blue * 255, 255);
 }
 
 // -----------------------------------------------------------------------------
@@ -1530,7 +1530,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, double* refDir)
 {
-  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 
   return rgb;
 }

@@ -51,6 +51,8 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -133,9 +135,9 @@ class CalculateFaceIPFColorsImpl
             refDir[2] = m_Normals[3*i+2];
 
             argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
-            m_Colors[6*i] = DREAM3D::dRed(argb);
-            m_Colors[6*i + 1] = DREAM3D::dGreen(argb);
-            m_Colors[6*i + 2] = DREAM3D::dBlue(argb);
+            m_Colors[6*i] = RgbColor::dRed(argb);
+            m_Colors[6*i + 1] = RgbColor::dGreen(argb);
+            m_Colors[6*i + 2] = RgbColor::dBlue(argb);
           }
         }
         else // Phase 1 was Zero so assign a black color
@@ -160,9 +162,9 @@ class CalculateFaceIPFColorsImpl
             refDir[2] = -m_Normals[3*i+2];
 
             argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
-            m_Colors[6*i + 3] = DREAM3D::dRed(argb);
-            m_Colors[6*i + 4] = DREAM3D::dGreen(argb);
-            m_Colors[6*i + 5] = DREAM3D::dBlue(argb);
+            m_Colors[6*i + 3] = RgbColor::dRed(argb);
+            m_Colors[6*i + 4] = RgbColor::dGreen(argb);
+            m_Colors[6*i + 5] = RgbColor::dBlue(argb);
           }
         }
         else

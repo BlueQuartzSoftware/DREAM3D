@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -517,7 +517,7 @@ DREAM3D::Rgb TriclinicOps::generateIPFColor(double phi1, double phi, double phi2
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
 
-  return DREAM3D::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
+  return RgbColor::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
 }
 
 // -----------------------------------------------------------------------------
@@ -540,7 +540,7 @@ DREAM3D::Rgb TriclinicOps::generateRodriguesColor(float r1, float r2, float r3)
   green = green / max1;
   blue = blue / max2;
 
-  return DREAM3D::dRgb(red * 255, green * 255, blue * 255, 255);
+  return RgbColor::dRgb(red * 255, green * 255, blue * 255, 255);
 
 }
 
@@ -671,7 +671,7 @@ std::vector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb TriclinicOps::generateMisorientationColor(const QuatF &q, double* refDir)
 {
-  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 
   return rgb;
 }
