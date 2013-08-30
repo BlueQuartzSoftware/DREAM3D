@@ -55,7 +55,7 @@
 #include <limits>
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
@@ -333,7 +333,7 @@ void MovingFiniteElementSmoothing::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  DREAM3D::SurfaceMesh::VertListPointer_t floatNodesPtr = m->getVertices();
+  DREAM3D::Mesh::VertListPointer_t floatNodesPtr = m->getVertices();
   if(NULL == floatNodesPtr.get())
   {
     setErrorCondition(-555);
@@ -341,7 +341,7 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = m->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = m->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -351,18 +351,18 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  DREAM3D::SurfaceMesh::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  DREAM3D::Mesh::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->GetNumberOfTuples();
   int ntri = trianglesPtr->GetNumberOfTuples();
 
 
-  StructArray<DREAM3D::SurfaceMesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::SurfaceMesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<DREAM3D::Mesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::Mesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  DREAM3D::SurfaceMesh::VertD_t* nodes = nodesDPtr->GetPointer(0);
+  DREAM3D::Mesh::VertD_t* nodes = nodesDPtr->GetPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -443,11 +443,11 @@ void MovingFiniteElementSmoothing::execute()
       return;
     }
 
-    StructArray<DREAM3D::SurfaceMesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::SurfaceMesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
-    DREAM3D::SurfaceMesh::Edge_t* edges = edgesStructArray->GetPointer(0);
+    StructArray<DREAM3D::Mesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
+    DREAM3D::Mesh::Edge_t* edges = edgesStructArray->GetPointer(0);
 
-    StructArray<DREAM3D::SurfaceMesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::SurfaceMesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
-    DREAM3D::SurfaceMesh::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
+    StructArray<DREAM3D::Mesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
+    DREAM3D::Mesh::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
@@ -778,12 +778,12 @@ void MovingFiniteElementSmoothing::execute()
     Dihedral_max = -1.; //  added may 10, ADR
     double LDistance, deltaLDistance;
 
-    typedef NodeFunctions<DREAM3D::SurfaceMesh::VertD_t, double> NodeFunctionsType;
-    typedef TriangleFunctions<DREAM3D::SurfaceMesh::VertD_t, double> TriangleFunctionsType;
+    typedef NodeFunctions<DREAM3D::Mesh::VertD_t, double> NodeFunctionsType;
+    typedef TriangleFunctions<DREAM3D::Mesh::VertD_t, double> TriangleFunctionsType;
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
-      DREAM3D::SurfaceMesh::Face_t& rtri = triangles[t];
+      DREAM3D::Mesh::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
       n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
@@ -807,7 +807,7 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
-        DREAM3D::SurfaceMesh::VertD_t& node_i = nodes[i];
+        DREAM3D::Mesh::VertD_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))

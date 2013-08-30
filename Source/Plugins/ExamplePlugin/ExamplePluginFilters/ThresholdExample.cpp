@@ -95,7 +95,7 @@ void ThresholdExample::setupFilterParameters()
     ComparisonFilterParameter::Pointer parameter = ComparisonFilterParameter::New();
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
-    parameter->setWidgetType(FilterParameter::PointArrayComparisonSelectionWidget);
+    parameter->setWidgetType(FilterParameter::VertexArrayComparisonSelectionWidget);
     parameter->setValueType("std::vector<ComparisonInput_t>");
     options.push_back(parameter);
   }

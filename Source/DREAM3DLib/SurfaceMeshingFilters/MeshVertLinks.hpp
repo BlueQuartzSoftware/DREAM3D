@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 
 /**
  * @brief The MeshVertLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -118,9 +118,9 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getCellPoints(DREAM3D::SurfaceMesh::FaceList_t::Pointer Faces, size_t cellId, size_t npts, size_t* pts)
+    void getCellPoints(DREAM3D::Mesh::FaceList_t::Pointer Faces, size_t cellId, size_t npts, size_t* pts)
     {
-      DREAM3D::SurfaceMesh::Face_t& Face = *(Faces->GetPointer(cellId));
+      DREAM3D::Mesh::Face_t& Face = *(Faces->GetPointer(cellId));
       pts[0] = Face.verts[0];
       pts[1] = Face.verts[1];
       pts[2] = Face.verts[2];
@@ -129,9 +129,9 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getEdgePoints(DREAM3D::SurfaceMesh::EdgeList_t::Pointer Edges, size_t cellId, size_t npts, size_t* pts)
+    void getEdgePoints(DREAM3D::Mesh::EdgeList_t::Pointer Edges, size_t cellId, size_t npts, size_t* pts)
     {
-      DREAM3D::SurfaceMesh::Edge_t& Edge = *(Edges->GetPointer(cellId));
+      DREAM3D::Mesh::Edge_t& Edge = *(Edges->GetPointer(cellId));
       pts[0] = Edge.verts[0];
       pts[1] = Edge.verts[1];
     }
@@ -139,8 +139,8 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateMeshVertLinks(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
-                               DREAM3D::SurfaceMesh::FaceListPointer_t Faces )
+    void generateMeshVertLinksFaces(DREAM3D::Mesh::VertListPointer_t nodes,
+                               DREAM3D::Mesh::FaceListPointer_t Faces )
     {
 
       size_t numPts = nodes->GetNumberOfTuples();
@@ -191,8 +191,8 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateMeshVertLinksEdges(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
-                               DREAM3D::SurfaceMesh::EdgeListPointer_t Edges )
+    void generateMeshVertLinksEdges(DREAM3D::Mesh::VertListPointer_t nodes,
+                               DREAM3D::Mesh::EdgeListPointer_t Edges )
     {
 
       size_t numPts = nodes->GetNumberOfTuples();

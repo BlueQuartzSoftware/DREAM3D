@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -275,8 +275,8 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   std::map<int, int> nodeIdToIndex;
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 //  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
@@ -301,8 +301,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
+  DREAM3D::Mesh::FaceListPointer_t trianglePtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::Face_t* triangles = trianglePtr->GetPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);

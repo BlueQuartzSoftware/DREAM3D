@@ -64,7 +64,7 @@ void LinkFieldMapToCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
     option->setPropertyName("SelectedCellDataArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);

@@ -66,7 +66,7 @@ void CopyFieldArrayToCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Field Array Name");
     option->setPropertyName("SelectedFieldArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);

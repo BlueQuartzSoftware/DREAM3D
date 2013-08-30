@@ -66,14 +66,12 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
@@ -150,8 +148,8 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
     int readFaceAttributeData(hid_t dcGid);
-//    int readFieldData(hid_t dcGid);
-//    int readEnsembleData(hid_t dcGid);
+    int readFieldData(hid_t dcGid);
+    int readEnsembleData(hid_t dcGid);
 
 
     int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,

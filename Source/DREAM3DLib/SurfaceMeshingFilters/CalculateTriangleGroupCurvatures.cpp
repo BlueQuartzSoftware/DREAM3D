@@ -111,8 +111,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
 {
 
   // Get the Triangles Array
-//  DREAM3D::SurfaceMesh::FaceList_t::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
-//  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+//  DREAM3D::Mesh::FaceList_t::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
+//  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   IDataArray::Pointer flPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -172,7 +172,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
     nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
     nRingNeighborAlg->generate();
 
-    DREAM3D::SurfaceMesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+    DREAM3D::Mesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
@@ -314,7 +314,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, DREAM3D::SurfaceMesh::UniqueFaceIds_t &triPatch,
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, DREAM3D::Mesh::UniqueFaceIds_t &triPatch,
                                                                               double* data,
                                                                               const std::string &name) const
 {

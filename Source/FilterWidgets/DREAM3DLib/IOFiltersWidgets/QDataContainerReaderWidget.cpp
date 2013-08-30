@@ -331,10 +331,10 @@ void QDataContainerReaderWidget::preflightAboutToExecute(VolumeDataContainer::Po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
+void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
-  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
-  arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
+  arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);
 
   // -- This section fills in the GUI elements for the Dims, Res and Origin
   int64_t dims[3] = {0, 0, 0};

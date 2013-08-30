@@ -57,7 +57,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
@@ -80,25 +80,25 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
     virtual ~SurfaceDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::EdgeListPointer_t, Edges)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::FaceListPointer_t, Faces)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::EdgeListPointer_t, Edges)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::FaceListPointer_t, Faces)
 
 
     DOES_DATASET_EXIST_DECL(VertexData)
-    DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(EdgeData)
+    DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(FieldData)
     DOES_DATASET_EXIST_DECL(EnsembleData)
 
@@ -395,8 +395,8 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
    private:
 
      std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_FaceData;
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
+     std::map<std::string, IDataArray::Pointer> m_FaceData;
      std::map<std::string, IDataArray::Pointer> m_FieldData;
      std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 

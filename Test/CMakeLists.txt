@@ -15,6 +15,7 @@ set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files
 
 # --------------------------------------------------------------------------
 macro (ConvertPathToHeaderCompatible INPUT)
+#message(STATUS "INPUT: ${INPUT} ${${INPUT}} ")
     if(WIN32)
       STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
@@ -34,8 +35,8 @@ set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5T
 ConvertPathToHeaderCompatible(TEST_TEMP_DIR)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
-ConvertPathToHeaderCompatible(DREAM3DTest_BINARY_DIR_NATIVE)
-ConvertPathToHeaderCompatible(MXA_BINARY_DIR_NATIVE)
+ConvertPathToHeaderCompatible(DREAM3DTest_BUILD_DIR_NATIVE)
+#ConvertPathToHeaderCompatible(MXA_BINARY_DIR_NATIVE)
 
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)

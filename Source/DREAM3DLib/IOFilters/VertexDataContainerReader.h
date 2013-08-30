@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Reader"; }
+    virtual const std::string getHumanLabel() { return "Vertex DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

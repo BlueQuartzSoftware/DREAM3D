@@ -57,10 +57,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
+#include "DREAM3DLib/Common/MeshStructs.h"
 
 
 /**
@@ -87,7 +85,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
 
     DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(FieldData)

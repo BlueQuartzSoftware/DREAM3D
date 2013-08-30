@@ -86,15 +86,23 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
@@ -135,11 +143,18 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
+    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                             std::set<std::string> selectedEdgeArrays,
+                                                             std::set<std::string> selectedFaceArrays,
+                                                             std::set<std::string> selectedCellArrays,
+                                                             std::set<std::string> selectedFieldArrays,
+                                                             std::set<std::string> selectedEnsembleArrays);
     virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedEdgeArrays,
                                                   std::set<std::string> selectedFieldArrays,
                                                   std::set<std::string> selectedEnsembleArrays);

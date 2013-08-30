@@ -203,8 +203,8 @@ void SurfaceMeshToVtk::execute()
   setErrorCondition(0);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
-  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
@@ -279,7 +279,7 @@ void SurfaceMeshToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -304,7 +304,7 @@ void SurfaceMeshToVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = triangles.GetNumberOfTuples();
@@ -464,7 +464,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 
 
   // Write the Node Type Data to the file
-  DREAM3D::SurfaceMesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
+  DREAM3D::Mesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
  // int swapped;
@@ -693,7 +693,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
 
   // Write the triangle region ids
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -717,7 +717,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for(int i = 0; i < nT; ++i)
   {
-    //DREAM3D::SurfaceMesh::Face_t& t = triangles[i]; // Get the current Node
+    //DREAM3D::Mesh::Face_t& t = triangles[i]; // Get the current Node
 
     if(m_WriteBinaryFile == true)
     {

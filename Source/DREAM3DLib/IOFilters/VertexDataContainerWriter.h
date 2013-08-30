@@ -36,6 +36,7 @@
 #ifndef _VertexDataContainerWriter_H_
 #define _VertexDataContainerWriter_H_
 
+#include <sstream>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -64,6 +65,8 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
+    typedef std::list<std::string> NameListType;
+
     void setXdmfOStream(std::ostream* xdmf);
 
     /**
@@ -78,7 +81,7 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Writer"; }
+    virtual const std::string getHumanLabel() { return "Vertex DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -121,6 +124,19 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+
+    int writeVertices(hid_t dcGid);
+    int writeVertexAttributeData(hid_t dcGid);
+    int writeFieldData(hid_t dcGid);
+    int writeEnsembleData(hid_t dcGid);
+
+    void writeXdmfGridHeader();
+    void writeXdmfGridFooter();
+    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
+    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+
 
   private:
     std::ostream* m_XdmfPtr;

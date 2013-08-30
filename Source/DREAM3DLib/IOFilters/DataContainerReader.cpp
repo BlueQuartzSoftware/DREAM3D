@@ -95,6 +95,9 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
   setReadEdgeData( reader->readValue("ReadEdgeData", getReadEdgeData() ) );
   setReadVertexData( reader->readValue("ReadVertexData", getReadVertexData() ) );
 
+  setSelectedVolumeVertexArrays( reader->readValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() ) );
+  setSelectedVolumeFaceArrays( reader->readValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() ) );
+  setSelectedVolumeEdgeArrays( reader->readValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() ) );
   setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
   setSelectedVolumeFieldArrays( reader->readValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() ) );
   setSelectedVolumeEnsembleArrays( reader->readValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() ) );
@@ -127,6 +130,9 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
   writer->writeValue("ReadEdgeData", getReadEdgeData() );
   writer->writeValue("ReadVertexData", getReadVertexData() );
 
+  writer->writeValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() );
+  writer->writeValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() );
+  writer->writeValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() );
   writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
   writer->writeValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() );
   writer->writeValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() );
@@ -303,6 +309,9 @@ void DataContainerReader::execute()
   {
     VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
     volumeReader->setHdfFileId(fileId);
+    volumeReader->setVertexArraysToRead(m_SelectedVolumeVertexArrays);
+    volumeReader->setFaceArraysToRead(m_SelectedVolumeFaceArrays);
+    volumeReader->setEdgeArraysToRead(m_SelectedVolumeEdgeArrays);
     volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
     volumeReader->setFieldArraysToRead(m_SelectedVolumeFieldArrays);
     volumeReader->setEnsembleArraysToRead(m_SelectedVolumeEnsembleArrays);
@@ -458,10 +467,16 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                                     std::set<std::string> selectedFieldArrays,
-                                                     std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedCellArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
+  m_SelectedVolumeVertexArrays = selectedVertexArrays;
+  m_SelectedVolumeFaceArrays = selectedFaceArrays;
+  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
   m_SelectedVolumeFieldArrays = selectedFieldArrays;
   m_SelectedVolumeEnsembleArrays = selectedEnsembleArrays;
@@ -472,14 +487,14 @@ void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> sele
 //
 // -----------------------------------------------------------------------------
 void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
                                                            std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFaceArrays,
                                                            std::set<std::string> selectedFieldArrays,
                                                            std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
   m_SelectedSurfaceFieldArrays = selectedFieldArrays;
   m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;

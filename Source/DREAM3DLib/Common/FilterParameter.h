@@ -78,24 +78,31 @@ class FilterParameter
       FloatVec3Widget,
       AxisAngleWidget,
       /* **** DO NOT PUT ANY OTHER WIDGETS BETWEEN THIS ***** */
-      VoxelCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
-      VoxelFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
-      VoxelEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
-      SurfaceMeshVertexArrayNameSelectionWidget,
-      SurfaceMeshFaceArrayNameSelectionWidget,
-      SurfaceMeshEdgeArrayNameSelectionWidget,
-      SurfaceMeshFieldArrayNameSelectionWidget,
-      SurfaceMeshEnsembleArrayNameSelectionWidget,
-      SolidMeshVertexArrayNameSelectionWidget,
-      SolidMeshFaceArrayNameSelectionWidget,
-      SolidMeshEdgeArrayNameSelectionWidget,
+      VolumeVertexArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
+      VolumeEdgeArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VolumeFaceArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
+      VolumeCellArrayNameSelectionWidget, // ComboBox where the Cell Array names are used to populate
+      VolumeFieldArrayNameSelectionWidget, //ComboBox where the Field Array names are used to populate
+      VolumeEnsembleArrayNameSelectionWidget, //ComboBox where the Ensemble Array names are used to populate
+      SurfaceVertexArrayNameSelectionWidget,
+      SurfaceFaceArrayNameSelectionWidget,
+      SurfaceEdgeArrayNameSelectionWidget,
+      SurfaceFieldArrayNameSelectionWidget,
+      SurfaceEnsembleArrayNameSelectionWidget,
+      EdgeVertexArrayNameSelectionWidget,
+      EdgeEdgeArrayNameSelectionWidget,
+      EdgeFieldArrayNameSelectionWidget,
+      EdgeEnsembleArrayNameSelectionWidget,
+      VertexVertexArrayNameSelectionWidget,
+      VertexFieldArrayNameSelectionWidget,
+      VertexEnsembleArrayNameSelectionWidget,
       /* ****  AND THIS LINE ******** */
       ArraySelectionWidget, // This is the generic array name selection tool where the user can select multiple arrays with checkboxes from all data containers
       /* This widget presents a blank table and the user clicks an "Add" button to add arrays and Opertors */
       CellArrayComparisonSelectionWidget,
       FieldArrayComparisonSelectionWidget,
       EnsembleArrayComparisonSelectionWidget,
-      PointArrayComparisonSelectionWidget,
+      VertexArrayComparisonSelectionWidget,
       FaceArrayComparisonSelectionWidget,
       EdgeArrayComparisonSelectionWidget,
       CustomWidget

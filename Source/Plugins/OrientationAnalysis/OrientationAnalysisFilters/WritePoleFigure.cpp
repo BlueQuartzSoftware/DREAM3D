@@ -132,7 +132,7 @@ void WritePoleFigure::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Eulers Array");
     option->setPropertyName("CellEulerAnglesArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);

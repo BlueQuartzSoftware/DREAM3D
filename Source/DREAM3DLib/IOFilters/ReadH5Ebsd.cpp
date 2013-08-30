@@ -563,10 +563,16 @@ void ReadH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                             std::set<std::string> selectedEdgeArrays,
+                                                             std::set<std::string> selectedFaceArrays,
+                                                             std::set<std::string> selectedCellArrays,
+                                                             std::set<std::string> selectedFieldArrays,
+                                                             std::set<std::string> selectedEnsembleArrays)
 {
+  m_SelectedVolumeVertexArrays = selectedVertexArrays;
+  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
+  m_SelectedVolumeFaceArrays = selectedFaceArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
   m_SelectedVolumeFieldArrays = selectedFieldArrays;
   m_SelectedVolumeEnsembleArrays = selectedEnsembleArrays;
@@ -576,22 +582,33 @@ void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedCellA
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
+{
+  // Empty because there is no Surface data in an H5Ebsd file
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ReadH5Ebsd::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFieldArrays,
                                                            std::set<std::string> selectedEnsembleArrays)
 {
-  // Empty because there is no Surface Mesh data in an H5Ebsd file
+  // Empty because there is no Edge data in an H5Ebsd file
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays)
+                                                std::set<std::string> selectedFieldArrays,
+                                                std::set<std::string> selectedEnsembleArrays)
 {
-  // Empty because there is no Solid Mesh data in an H5Ebsd file
+  // Empty because there is no Vertex data in an H5Ebsd file
 }
 
 // -----------------------------------------------------------------------------

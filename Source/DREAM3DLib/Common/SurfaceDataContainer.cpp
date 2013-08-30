@@ -53,8 +53,8 @@
 SurfaceDataContainer::SurfaceDataContainer() :
 Observable(),
 m_NumVertexTuples(0),
-m_NumFaceTuples(0),
-m_NumEdgeTuples(0)
+m_NumEdgeTuples(0),
+m_NumFaceTuples(0)
 {
 
 }
@@ -71,8 +71,8 @@ SurfaceDataContainer::~SurfaceDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EdgeData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FieldData)
 DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EnsembleData)
 
@@ -82,7 +82,7 @@ DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EnsembleData)
 void SurfaceDataContainer::buildMeshVertLinks()
 {
   m_MeshVertLinks = MeshVertLinks::New();
-  m_MeshVertLinks->generateMeshVertLinks(m_Vertices, m_Faces);
+  m_MeshVertLinks->generateMeshVertLinksFaces(m_Vertices, m_Faces);
 }
 
 // -----------------------------------------------------------------------------

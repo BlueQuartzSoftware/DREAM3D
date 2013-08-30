@@ -81,8 +81,8 @@ class CalculateFaceIPFColorsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting DREAM3D::SurfaceMesh::Face_t Index
-     * @param end The ending DREAM3D::SurfaceMesh::Face_t Index
+     * @param start The starting DREAM3D::Mesh::Face_t Index
+     * @param end The ending DREAM3D::Mesh::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
