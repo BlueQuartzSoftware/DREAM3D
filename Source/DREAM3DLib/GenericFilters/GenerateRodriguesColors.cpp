@@ -94,8 +94,8 @@ void GenerateRodriguesColors::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -127,12 +127,12 @@ void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fi
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellRodriguesColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
@@ -185,11 +185,24 @@ void GenerateRodriguesColors::execute()
     m_GoodVoxels = goodVoxels->GetPointer(0);
   }
 
-
+  // Create 1 of every type of Ops class. This condenses the code below
+  std::vector<OrientationOps::Pointer> ops;
+  ops.push_back(HexagonalOps::New());
+  ops.push_back(CubicOps::New());
+  ops.push_back(HexagonalLowOps::New());
+  ops.push_back(CubicLowOps::New());
+  ops.push_back(TriclinicOps::New());
+  ops.push_back(MonoclinicOps::New());
+  ops.push_back(OrthoRhombicOps::New());
+  ops.push_back(TetragonalLowOps::New());
+  ops.push_back(TetragonalOps::New());
+  ops.push_back(TrigonalLowOps::New());
+  ops.push_back(TrigonalOps::New());
 
   int phase;
   size_t index = 0;
   float r1, r2, r3;
+  DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
@@ -200,64 +213,15 @@ void GenerateRodriguesColors::execute()
     m_CellRodriguesColors[index + 1] = 0;
     m_CellRodriguesColors[index + 2] = 0;
 
-    if(missingGoodVoxels == true || m_GoodVoxels[i] == true)
+    // Make sure we are using a valid Euler Angles with valid crystal symmetry
+    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
       OrientationMath::EulertoRod(r1, r2, r3, m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2]);
-      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High)
-      {
-        CubicOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_Low)
-      {
-        CubicLowOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-      {
-        HexagonalOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_Low)
-      {
-        HexagonalLowOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
-      {
-        TrigonalOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_Low)
-      {
-        TrigonalLowOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_High)
-      {
-        TetragonalOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Tetragonal_Low)
-      {
-        TetragonalLowOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::OrthoRhombic)
-      {
-        OrthoRhombicOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Monoclinic)
-      {
-        MonoclinicOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
-      else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Triclinic)
-      {
-        TriclinicOps ops;
-        ops.generateRodriguesColor(r1, r2, r3, m_CellRodriguesColors+index);
-      }
+      argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(r1, r2, r3);
+      m_CellRodriguesColors[index] = DREAM3D::dRed(argb);
+      m_CellRodriguesColors[index + 1] = DREAM3D::dGreen(argb);
+      m_CellRodriguesColors[index + 2] = DREAM3D::dBlue(argb);
     }
   }
 

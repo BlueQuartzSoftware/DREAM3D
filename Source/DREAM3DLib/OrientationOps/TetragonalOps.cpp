@@ -499,15 +499,15 @@ bool TetragonalOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+DREAM3D::Rgb TetragonalOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
-  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+  return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+DREAM3D::Rgb TetragonalOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -568,20 +568,14 @@ void TetragonalOps::generateIPFColor(double phi1, double phi, double phi2, doubl
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
 
-  // Multiply by 255 to get an R/G/B value
-  _rgb[0] = _rgb[0] * 255.0f;
-  _rgb[1] = _rgb[1] * 255.0f;
-  _rgb[2] = _rgb[2] * 255.0f;
+  return DREAM3D::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
 
-  rgb[0] = static_cast<unsigned char>(_rgb[0]);
-  rgb[1] = static_cast<unsigned char>(_rgb[1]);
-  rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+DREAM3D::Rgb TetragonalOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f*TetraDim1InitValue;
   float range2 = 2.0f*TetraDim2InitValue;
@@ -598,14 +592,8 @@ void TetragonalOps::generateRodriguesColor(float r1, float r2, float r3, unsigne
   green = green / max1;
   blue = blue / max2;
 
-  // Multiply by 255 to get an R/G/B value
-  red = red * 255.0f;
-  green = green * 255.0f;
-  blue = blue * 255.0f;
+  return DREAM3D::dRgb(red * 255, green * 255, blue * 255, 255);
 
-  rgb[0] = static_cast<unsigned char> (red);
-  rgb[1] = static_cast<unsigned char> (green);
-  rgb[2] = static_cast<unsigned char> (blue);
 }
 
 // -----------------------------------------------------------------------------

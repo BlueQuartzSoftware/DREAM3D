@@ -106,9 +106,9 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setReferenceDir( reader->readValue("ReferenceDir", getReferenceDir() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -143,12 +143,12 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
+      typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
@@ -201,8 +201,6 @@ void GenerateIPFColors::execute()
     m_GoodVoxels = goodVoxels->GetPointer(0);
   }
 
-
-
   int phase;
   size_t index = 0;
 
@@ -222,7 +220,9 @@ void GenerateIPFColors::execute()
   ops.push_back(TrigonalLowOps::New());
   ops.push_back(TrigonalOps::New());
 
-
+  double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
+  double dEuler[3] = {0.0, 0.0, 0.0};
+  DREAM3D::Rgb argb = 0x00000000;
 
   // Write the IPF Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
@@ -232,13 +232,18 @@ void GenerateIPFColors::execute()
     m_CellIPFColors[index] = 0;
     m_CellIPFColors[index + 1] = 0;
     m_CellIPFColors[index + 2] = 0;
+    dEuler[0] = m_CellEulerAngles[index];
+    dEuler[1] = m_CellEulerAngles[index + 1];
+    dEuler[2] = m_CellEulerAngles[index + 2];
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      ops[m_CrystalStructures[phase]]->generateIPFColor(m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2],
-            m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z, m_CellIPFColors + index, false);
+      argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
+      m_CellIPFColors[index] = DREAM3D::dRed(argb);
+      m_CellIPFColors[index + 1] = DREAM3D::dGreen(argb);
+      m_CellIPFColors[index + 2] = DREAM3D::dBlue(argb);
     }
   }
 
