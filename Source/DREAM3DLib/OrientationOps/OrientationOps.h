@@ -163,6 +163,15 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual void generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb) = 0;
 
     /**
+     * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
+     * @param q Quaternion
+     * @param refDir The sample reference direction
+     * @return A DREAM3D::Rgb value
+     */
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, double* refDir) = 0;
+
+
+    /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler
      * angles that are passed in.
      * @param eulers The Euler Angles to generate the pole figure from.

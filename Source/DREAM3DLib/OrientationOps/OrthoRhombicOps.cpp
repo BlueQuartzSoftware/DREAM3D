@@ -698,3 +698,14 @@ std::vector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFig
 
   return poleFigures;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF &q, double* refDir)
+{
+  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+
+  return rgb;
+}
+

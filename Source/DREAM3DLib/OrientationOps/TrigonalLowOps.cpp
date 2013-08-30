@@ -723,3 +723,14 @@ std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigu
 
   return poleFigures;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb TrigonalLowOps::generateMisorientationColor(const QuatF &q, double* refDir)
+{
+  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+
+  return rgb;
+}
+

@@ -1536,3 +1536,15 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   //}
   return image;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, double* refDir)
+{
+  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+
+  return rgb;
+}
+
