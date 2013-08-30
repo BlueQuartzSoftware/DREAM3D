@@ -78,7 +78,7 @@ m_WriteGlobAlpha(false),
 m_WriteGrainReferenceMisorientations(false),
 m_WriteGrainReferenceCAxisMisorientations(false),
 m_WriteKernelAverageMisorientations(false),
-m_WriteIPFColors(false),
+//m_WriteIPFColors(false),
 m_WriteGBEuclideanDistanceMap(false),
 m_WriteTJEuclideanDistanceMap(false),
 m_WriteQPEuclideanDistanceMap(false),
@@ -201,14 +201,14 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Write IPF Colors");
-    option->setPropertyName("WriteIPFColors");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
+//  {
+//    FilterParameter::Pointer option = FilterParameter::New();
+//    option->setHumanLabel("Write IPF Colors");
+//    option->setPropertyName("WriteIPFColors");
+//    option->setWidgetType(FilterParameter::BooleanWidget);
+//    option->setValueType("bool");
+//    parameters.push_back(option);
+//  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Schmid Factors");
@@ -286,7 +286,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setWriteGrainReferenceCAxisMisorientations( reader->readValue("WriteGrainReferenceCAxisMisorientations", false) );
   setWriteGoodVoxels( reader->readValue("WriteGoodVoxels", false) );
   setWriteGlobAlpha( reader->readValue("WriteGlobAlpha", false) );
-  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
+//  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
   setWriteSchmidFactors( reader->readValue("WriteSchmidFactors", false) );
   setWriteGBEuclideanDistanceMap( reader->readValue("WriteGBEuclideanDistanceMap", false) );
   setWriteTJEuclideanDistanceMap( reader->readValue("WriteTJEuclideanDistanceMap", false) );
@@ -319,7 +319,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
   writer->writeValue("WriteGrainReferenceMisorientations", getWriteGrainReferenceMisorientations() );
   writer->writeValue("WriteGrainReferenceCAxisMisorientations", getWriteGrainReferenceCAxisMisorientations() );
   writer->writeValue("WriteKernelAverageMisorientations", getWriteKernelAverageMisorientations() );
-  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+//  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
@@ -406,10 +406,10 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, ss, -304, float, FloatArrayType, voxels, 1)
   }
-  if(m_WriteIPFColors == true)
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
-  }
+//  if(m_WriteIPFColors == true)
+//  {
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+//  }
   if(m_WriteGBEuclideanDistanceMap == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
@@ -581,12 +581,12 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
-  if(m_WriteIPFColors == true)
-  {
-    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VoxelDataContainer>(m));
-    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
-    scalarsToWrite.push_back(w0);
-  }
+//  if(m_WriteIPFColors == true)
+//  {
+//    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VoxelDataContainer>(m));
+//    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+//    scalarsToWrite.push_back(w0);
+//  }
 
   if (m_WriteEulerAngles == true)
   {
