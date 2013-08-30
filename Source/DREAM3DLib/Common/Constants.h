@@ -243,7 +243,7 @@ namespace DREAM3D
   namespace HDF5
   {
     const std::string FileVersionName("FileVersion");
-    const std::string FileVersion("4.0");
+    const std::string FileVersion("5.0");
     const std::string DataContainerName("DataContainer");
     const std::string VolumeDataContainerName("VolumeDataContainer");
     const std::string SurfaceDataContainerName("SurfaceDataContainer");

@@ -113,7 +113,7 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
   if(NULL == m)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "Edge DataContainer is missing", getErrorCondition());
   }
 
   if(m_HdfFileId < 0)
@@ -255,7 +255,7 @@ int EdgeDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
-      DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+      DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
       getEdgeDataContainer()->setVertices(vertices);
     }
   }
@@ -298,7 +298,7 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
 //    if (err >= 0)
 //    {
-//      StructArray<DREAM3D::SurfaceMesh::Edge_t>::Pointer edges = StructArray<DREAM3D::SurfaceMesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
+//      StructArray<DREAM3D::Mesh::Edge_t>::Pointer edges = StructArray<DREAM3D::Mesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
 //      getEdgeDataContainer()->setEdges(edges);
 //    }
 //  }
@@ -335,9 +335,9 @@ int EdgeDataContainerReader::readVertices(hid_t dcGid)
     return err;
   }
   // Allocate the data
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
   // Read the data
-  DREAM3D::SurfaceMesh::Float_t* data = reinterpret_cast<DREAM3D::SurfaceMesh::Float_t*>(verticesPtr->GetPointer(0));
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);
@@ -353,7 +353,7 @@ int EdgeDataContainerReader::readVertices(hid_t dcGid)
 int EdgeDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
 {
   EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;

@@ -182,8 +182,8 @@ void WriteAbaqusSurfaceMesh::execute()
       return;
   }
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = sm->getFaces();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::Mesh::FaceListPointer_t trianglePtr = sm->getFaces();
 
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
@@ -233,8 +233,8 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
 // -----------------------------------------------------------------------------
 int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 {
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
   size_t numNodes = nodesPtr->GetNumberOfTuples();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
@@ -243,7 +243,7 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 
   for(size_t i = 1; i <= numNodes; ++i)
   {
-    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i-1];
+    DREAM3D::Mesh::Vert_t& n = nodes[i-1];
     fprintf(f, "%lu, %0.6f, %0.6f, %0.6f\n", i, n.pos[0], n.pos[1], n.pos[2]);
   }
 
@@ -256,8 +256,8 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 {
   int err = 0;
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
+  DREAM3D::Mesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::Face_t* triangles = trianglePtr->GetPointer(0);
   size_t numTri = trianglePtr->GetNumberOfTuples();
 
   fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
@@ -286,8 +286,8 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   std::stringstream ss;
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());

@@ -313,10 +313,10 @@ void QReadH5EbsdWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc, SurfaceDataContainer::Pointer smdc, VertexDataContainer::Pointer sdc)
+void QReadH5EbsdWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
-  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
-  arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
+  arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);
 
   updateFileInfoWidgets();
 }

@@ -44,7 +44,7 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
 
 /**
@@ -117,8 +117,8 @@ class MeshCellNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateNeighborLists(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
-                               DREAM3D::SurfaceMesh::CellListPointer_t cells,
+    void generateNeighborLists(DREAM3D::Mesh::VertListPointer_t nodes,
+                               DREAM3D::Mesh::CellListPointer_t cells,
                                MeshVertLinks::Pointer cellLinks)
     {
 
@@ -138,7 +138,7 @@ class MeshCellNeighbors
       for(size_t t = 0; t < nCells; ++t)
       {
         //   std::cout << "Analyzing Cell " << t << std::endl;
-        DREAM3D::SurfaceMesh::Cell_t& seedCell = *(cells->GetPointer(t));
+        DREAM3D::Mesh::Cell_t& seedCell = *(cells->GetPointer(t));
         for(size_t v = 0; v < seedCell.verts.size(); ++v)
         {
           //   std::cout << " vert " << v << std::endl;
@@ -150,7 +150,7 @@ class MeshCellNeighbors
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      std::cout << "   Comparing Cell " << vertIdxs[vt] << std::endl;
-            DREAM3D::SurfaceMesh::Cell_t& vertTri = *(cells->GetPointer(vertIdxs[vt]));
+            DREAM3D::Mesh::Cell_t& vertTri = *(cells->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches

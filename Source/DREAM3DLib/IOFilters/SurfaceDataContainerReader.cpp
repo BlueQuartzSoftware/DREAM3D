@@ -55,7 +55,6 @@ SurfaceDataContainerReader::SurfaceDataContainerReader() :
   m_ReadVertexData(true),
   m_ReadEdgeData(true),
   m_ReadFaceData(true),
-  m_ReadCellData(true),
   m_ReadFieldData(true),
   m_ReadEnsembleData(true),
   m_ReadAllArrays(false)
@@ -260,7 +259,7 @@ int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
-      DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+      DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
       getSurfaceDataContainer()->setVertices(vertices);
     }
   }
@@ -302,7 +301,7 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
     if (err >= 0)
     {
-      DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+      DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
       getSurfaceDataContainer()->setFaces(triangles);
     }
   }
@@ -343,7 +342,7 @@ int SurfaceDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
 //    if (err >= 0)
 //    {
-//      StructArray<DREAM3D::SurfaceMesh::Edge_t>::Pointer edges = StructArray<DREAM3D::SurfaceMesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
+//      StructArray<DREAM3D::Mesh::Edge_t>::Pointer edges = StructArray<DREAM3D::Mesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
 //      getSurfaceDataContainer()->setEdges(edges);
 //    }
 //  }
@@ -380,9 +379,9 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
     return err;
   }
   // Allocate the data
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
   // Read the data
-  DREAM3D::SurfaceMesh::Float_t* data = reinterpret_cast<DREAM3D::SurfaceMesh::Float_t*>(verticesPtr->GetPointer(0));
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);
@@ -398,7 +397,7 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
 int SurfaceDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -469,7 +468,7 @@ int SurfaceDataContainerReader::readFaces(hid_t dcGid)
     return err;
   }
   // Allocate the Face_t structures
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces);
   // We need this to properly use H5Lite because the data is stored as int32_t in 5 columns
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
   // Read the data from the file
@@ -491,7 +490,7 @@ int SurfaceDataContainerReader::readFaces(hid_t dcGid)
 int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool preflight)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (NULL == facesPtr.get())
   {
     return -1;

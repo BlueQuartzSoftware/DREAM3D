@@ -311,9 +311,10 @@ void PipelineViewWidget::preflightPipeline()
 
 
   // Create the DataContainer object
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-  VertexDataContainer::Pointer solid = VertexDataContainer::New();
+  VolumeDataContainer::Pointer vl = VolumeDataContainer::New();
+  SurfaceDataContainer::Pointer s = SurfaceDataContainer::New();
+  EdgeDataContainer::Pointer e = EdgeDataContainer::New();
+  VertexDataContainer::Pointer v = VertexDataContainer::New();
 
   std::stringstream ss;
 
@@ -328,13 +329,14 @@ void PipelineViewWidget::preflightPipeline()
     {
       fw->setHasPreflightErrors(false);
       fw->setHasPreflightWarnings(false);
-      fw->preflightAboutToExecute(m, sm, solid);
+      fw->preflightAboutToExecute(vl, s, e, v);
 
       AbstractFilter::Pointer filter = fw->getFilter(false);
 
-      filter->setVolumeDataContainer(m.get());
-      filter->setSurfaceDataContainer(sm.get());
-      filter->setVertexDataContainer(solid.get());
+      filter->setVolumeDataContainer(vl.get());
+      filter->setSurfaceDataContainer(s.get());
+      filter->setEdgeDataContainer(e.get());
+      filter->setVertexDataContainer(v.get());
 
       filter->preflight();
       int err = filter->getErrorCondition();
@@ -358,7 +360,7 @@ void PipelineViewWidget::preflightPipeline()
       }
 
       // Tell the widget that we have arrays and to possibly update its gui
-      fw->preflightDoneExecuting(m, sm, solid);
+      fw->preflightDoneExecuting(vl, s, e, v);
     }
   }
 

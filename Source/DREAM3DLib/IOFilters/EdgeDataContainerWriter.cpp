@@ -273,12 +273,12 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
   //{
   //  return;
   //}
-  //DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
+  //DREAM3D::Mesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
   //if (NULL == faces.get())
   //{
   //  return;
   //}
-  //DREAM3D::SurfaceMesh::VertListPointer_t verts = getEdgeDataContainer()->getVertices();
+  //DREAM3D::Mesh::VertListPointer_t verts = getEdgeDataContainer()->getVertices();
   //if(NULL == verts.get())
   //{
   //  return;
@@ -315,7 +315,7 @@ void EdgeDataContainerWriter::writeXdmfGridFooter()
   //{
   //  return;
   //}
-  //DREAM3D::SurfaceMesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
+  //DREAM3D::Mesh::FaceListPointer_t faces = getEdgeDataContainer()->getFaces();
   //if (NULL == faces.get())
   //{
   //  return;
@@ -482,16 +482,16 @@ int EdgeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPat
 int EdgeDataContainerWriter::writeVertices(hid_t dcGid)
 {
   EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_VertexNumElements};
+  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
 
-  DREAM3D::SurfaceMesh::Float_t* data = reinterpret_cast<DREAM3D::SurfaceMesh::Float_t*>(verticesPtr->GetPointer(0));
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {
@@ -512,7 +512,7 @@ int EdgeDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
     return 0;
   }
   EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;

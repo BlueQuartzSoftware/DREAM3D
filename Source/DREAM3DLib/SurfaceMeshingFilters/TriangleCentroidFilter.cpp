@@ -50,12 +50,12 @@
  */
 class CalculateCentroidsImpl
 {
-    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
-    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
+    DREAM3D::Mesh::VertListPointer_t m_Nodes;
+    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
     double* m_Centroids;
 
   public:
-    CalculateCentroidsImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, double* centroids) :
+    CalculateCentroidsImpl(DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::FaceListPointer_t triangles, double* centroids) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Centroids(centroids)
@@ -65,8 +65,8 @@ class CalculateCentroidsImpl
     void generate(size_t start, size_t end) const
     {
 
-      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
-      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
@@ -209,9 +209,9 @@ void TriangleCentroidFilter::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

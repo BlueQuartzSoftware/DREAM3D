@@ -55,11 +55,11 @@ namespace Detail
  */
 class UpdateVerticesImpl
 {
-    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
+    DREAM3D::Mesh::VertListPointer_t m_Nodes;
     float* m_Delta;
 
   public:
-    UpdateVerticesImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, float* delta) :
+    UpdateVerticesImpl(DREAM3D::Mesh::VertListPointer_t nodes, float* delta) :
       m_Nodes(nodes),
       m_Delta(delta)
     {
@@ -70,7 +70,7 @@ class UpdateVerticesImpl
     void generate(size_t start, size_t end) const
     {
 
-      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
         nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
@@ -295,8 +295,8 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
   // First get the min/max coords.
 

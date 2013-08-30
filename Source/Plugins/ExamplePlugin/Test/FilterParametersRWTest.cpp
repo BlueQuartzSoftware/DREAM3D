@@ -66,10 +66,10 @@
 #define SelectedCellArrayNameTestValue "SelectedCellArrayNameTestValue"
 #define SelectedFieldArrayNameTestValue "SelectedFieldArrayNameTestValue"
 #define SelectedEnsembleArrayNameTestValue "SelectedEnsembleArrayNameTestValue"
-#define SurfaceMeshPointArrayNameTestValue "SurfaceMeshPointArrayNameTestValue"
+#define SurfaceMeshVertexArrayNameTestValue "SurfaceMeshVertexArrayNameTestValue"
 #define SurfaceMeshFaceArrayNameTestValue "SurfaceMeshFaceArrayNameTestValue"
 #define SurfaceMeshEdgeArrayNameTestValue "SurfaceMeshEdgeArrayNameTestValue"
-#define SolidMeshPointArrayNameTestValue "SolidMeshPointArrayNameTestValue"
+#define SolidMeshVertexArrayNameTestValue "SolidMeshVertexArrayNameTestValue"
 #define SolidMeshFaceArrayNameTestValue "SolidMeshFaceArrayNameTestValue"
 #define SolidMeshEdgeArrayNameTestValue "SolidMeshEdgeArrayNameTestValue"
 #define CellComparisonInputsArrayName1 "CellComparisonInputsArrayName1"
@@ -452,18 +452,18 @@ void GenericExampleTest()
   filt->setSelectedVolumeCellArrayName(SelectedCellArrayNameTestValue);
   filt->setSelectedVolumeFieldArrayName(SelectedFieldArrayNameTestValue);
   filt->setSelectedVolumeEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
-  filt->setSelectedSurfacePointArrayName(SurfaceMeshPointArrayNameTestValue);
+  filt->setSelectedSurfaceVertexArrayName(SurfaceMeshVertexArrayNameTestValue);
   filt->setSelectedSurfaceFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
   filt->setSelectedSurfaceEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
-  filt->setSelectedVertexPointArrayName(SolidMeshPointArrayNameTestValue);
+  filt->setSelectedVertexVertexArrayName(SolidMeshVertexArrayNameTestValue);
   filt->setSelectedVertexFieldArrayName(SolidMeshFaceArrayNameTestValue);
   filt->setSelectedVertexEnsembleArrayName(SolidMeshEdgeArrayNameTestValue);
 
   std::vector<std::string> strVector;
-  strVector.push_back(SurfaceMeshPointArrayNameTestValue);
+  strVector.push_back(SurfaceMeshVertexArrayNameTestValue);
   strVector.push_back(SurfaceMeshFaceArrayNameTestValue);
   strVector.push_back(SurfaceMeshEdgeArrayNameTestValue);
-  strVector.push_back(SolidMeshPointArrayNameTestValue);
+  strVector.push_back(SolidMeshVertexArrayNameTestValue);
   strVector.push_back(SolidMeshFaceArrayNameTestValue);
   strVector.push_back(SolidMeshEdgeArrayNameTestValue);
 
@@ -537,10 +537,10 @@ void GenericExampleTest()
   DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, ==, filt->getSelectedVolumeCellArrayName() )
   DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, ==, filt->getSelectedVolumeFieldArrayName() )
   DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedVolumeEnsembleArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshPointArrayNameTestValue, ==, filt->getSelectedSurfacePointArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshVertexArrayNameTestValue, ==, filt->getSelectedSurfaceVertexArrayName() )
   DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, ==, filt->getSelectedSurfaceFaceArrayName() )
   DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSelectedSurfaceEdgeArrayName() )
-  DREAM3D_REQUIRED( SolidMeshPointArrayNameTestValue, ==, filt->getSelectedVertexPointArrayName() )
+  DREAM3D_REQUIRED( SolidMeshVertexArrayNameTestValue, ==, filt->getSelectedVertexVertexArrayName() )
   DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, ==, filt->getSelectedVertexFieldArrayName() )
   DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, ==, filt->getSelectedVertexEnsembleArrayName() )
 
@@ -573,10 +573,10 @@ void GenericExampleTest()
   // Test the string vector
   std::vector<std::string> strVectorRead = filt->getStrVector();
 
-  DREAM3D_REQUIRED(SurfaceMeshPointArrayNameTestValue, ==, strVectorRead[0])
+  DREAM3D_REQUIRED(SurfaceMeshVertexArrayNameTestValue, ==, strVectorRead[0])
   DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, strVectorRead[1])
   DREAM3D_REQUIRED(SurfaceMeshEdgeArrayNameTestValue, ==, strVectorRead[2])
-  DREAM3D_REQUIRED(SolidMeshPointArrayNameTestValue, ==, strVectorRead[3])
+  DREAM3D_REQUIRED(SolidMeshVertexArrayNameTestValue, ==, strVectorRead[3])
   DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, strVectorRead[4])
   DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, strVectorRead[5])
 

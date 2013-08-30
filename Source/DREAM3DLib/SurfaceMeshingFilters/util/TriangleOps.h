@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 
@@ -58,11 +58,11 @@ class TriangleOps
 
     static int getLabelIndex(int32_t* t, int label);
 
-    std::vector<int> getNodeIndices(DREAM3D::SurfaceMesh::Face_t &t, int32_t* faceLabel, int label);
+    std::vector<int> getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label);
 
-    static void flipWinding(DREAM3D::SurfaceMesh::Face_t& triangle);
+    static void flipWinding(DREAM3D::Mesh::Face_t& triangle);
 
-    static VectorType computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D::SurfaceMesh::Vert_t& n1, DREAM3D::SurfaceMesh::Vert_t& n2);
+    static VectorType computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::Vert_t& n1, DREAM3D::Mesh::Vert_t& n2);
 
     static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
@@ -70,11 +70,11 @@ class TriangleOps
                                                         int32_t triangleIndex,
                                                         int32_t label);
 
-    static bool verifyWinding(DREAM3D::SurfaceMesh::Face_t& source, DREAM3D::SurfaceMesh::Face_t& tri,
+    static bool verifyWinding(DREAM3D::Mesh::Face_t& source, DREAM3D::Mesh::Face_t& tri,
                                 int32_t* faceLabelSource, int32_t* faceLabelTri, int32_t label);
 
 
-    static void getWindingIndices4(DREAM3D::SurfaceMesh::Face_t &triangle, int32_t* faceLabel, int ids[4], int32_t label);
+    static void getWindingIndices4(DREAM3D::Mesh::Face_t &triangle, int32_t* faceLabel, int ids[4], int32_t label);
 
   protected:
     TriangleOps();

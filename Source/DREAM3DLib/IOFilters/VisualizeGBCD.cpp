@@ -246,9 +246,9 @@ void VisualizeGBCD::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

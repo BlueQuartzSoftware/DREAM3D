@@ -102,7 +102,7 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   if(NULL == m)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SolidMesh DataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "Vertex DataContainer is missing", getErrorCondition());
   }
   if(m_HdfFileId < 0)
   {

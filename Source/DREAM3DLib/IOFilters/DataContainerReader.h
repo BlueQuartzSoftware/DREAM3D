@@ -68,6 +68,9 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
@@ -114,12 +117,15 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                   std::set<std::string> selectedFaceArrays,
                                                   std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedCellArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedFaceArrays,
                                                   std::set<std::string> selectedFieldArrays,
                                                   std::set<std::string> selectedEnsembleArrays);
     virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,

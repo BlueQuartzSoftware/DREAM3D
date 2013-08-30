@@ -292,12 +292,12 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   {
     return;
   }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
   }
-  DREAM3D::SurfaceMesh::VertListPointer_t verts = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::VertListPointer_t verts = getSurfaceDataContainer()->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -334,7 +334,7 @@ void SurfaceDataContainerWriter::writeXdmfGridFooter()
   {
     return;
   }
-  DREAM3D::SurfaceMesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
@@ -501,16 +501,16 @@ int SurfaceDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroup
 int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_VertexNumElements};
+  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
 
-  DREAM3D::SurfaceMesh::Float_t* data = reinterpret_cast<DREAM3D::SurfaceMesh::Float_t*>(verticesPtr->GetPointer(0));
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {
@@ -531,7 +531,7 @@ int SurfaceDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
     return 0;
   }
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -642,7 +642,7 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
     return 0;
   }
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (NULL == facesPtr.get())
   {
     return -1;
@@ -692,14 +692,14 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
   if (facesPtr.get() == NULL)
   {
     return -1;
   }
 
   int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), DREAM3D::SurfaceMesh::k_FaceNumElements};
+  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_FaceNumElements};
 
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
 

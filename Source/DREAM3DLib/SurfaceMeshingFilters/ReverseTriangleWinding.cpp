@@ -49,10 +49,10 @@
  */
 class ReverseWindingImpl
 {
-    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
+    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
 
   public:
-    ReverseWindingImpl(DREAM3D::SurfaceMesh::FaceListPointer_t triangles) :
+    ReverseWindingImpl(DREAM3D::Mesh::FaceListPointer_t triangles) :
       m_Triangles(triangles)
     {}
     virtual ~ReverseWindingImpl(){}
@@ -64,7 +64,7 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
@@ -280,7 +280,7 @@ void ReverseTriangleWinding::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

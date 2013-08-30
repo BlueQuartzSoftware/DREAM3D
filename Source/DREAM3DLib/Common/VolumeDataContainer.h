@@ -92,10 +92,10 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::EdgeListPointer_t, Edges)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::FaceListPointer_t, Faces)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::CellListPointer_t, Cells)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::EdgeListPointer_t, Edges)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::FaceListPointer_t, Faces)
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::CellListPointer_t, Cells)
 
     /**
      * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of

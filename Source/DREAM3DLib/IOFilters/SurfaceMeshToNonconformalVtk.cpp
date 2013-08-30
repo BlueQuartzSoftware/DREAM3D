@@ -190,8 +190,8 @@ void SurfaceMeshToNonconformalVtk::execute()
   setErrorCondition(0);
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
-  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
@@ -269,7 +269,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
+    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -292,7 +292,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Write the triangle indices into the vtk File
   notifyStatusMessage("Writing Faces ....");
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
 
@@ -507,7 +507,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
 
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -530,7 +530,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 
 
   //Get the Number of Vertex points in the mesh with a valid node type
-  DREAM3D::SurfaceMesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
+  DREAM3D::Mesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
   int numNodes = nodes.GetNumberOfTuples();
   int nNodes = 0;
   // int swapped;
@@ -596,7 +596,7 @@ template<typename SurfaceDataContainer, typename T>
 void writeCellScalarData(SurfaceDataContainer* dc, const std::string &dataName, const std::string &dataType,
                          bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -665,7 +665,7 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
                          bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
 
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -744,7 +744,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
                          bool writeBinaryData, const std::string &vtkAttributeType,
                          FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
 {
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
   int triangleCount = triangles.GetNumberOfTuples();
 
@@ -796,7 +796,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
     return -1;
   }
   // Write the triangle region ids
-  StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   if (NULL != flPtr.get())
   {
