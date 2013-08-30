@@ -93,9 +93,44 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
     virtual void getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7);
     virtual void generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *c1, FloatArrayType *c2, FloatArrayType *c3);
 
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param eulers Pointer to the 3 component Euler Angle
+     * @param refDir Pointer to the 3 Component Reference Direction
+     * @param rgb [output] The pointer to store the RGB value
+     * @param convertDegrees Are the input angles in Degrees
+     */
+
     virtual void generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees);
-    virtual void generateIPFColor(double e0, double e1, double e2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+    /**
+     * @brief generateIPFColor Generates an RGB Color from a Euler Angle and Reference Direction
+     * @param e0 First component of the Euler Angle
+     * @param e1 Second component of the Euler Angle
+     * @param e2 Third component of the Euler Angle
+     * @param dir0 First component of the Reference Direction
+     * @param dir1 Second component of the Reference Direction
+     * @param dir2 Third component of the Reference Direction
+     * @param rgb [output] The pointer to store the RGB value
+     * @param convertDegrees Are the input angles in Degrees
+     */
+    virtual void generateIPFColor(double e0, double e1, double phi2, double dir0, double dir1, double dir2, uint8_t* rgb, bool convertDegrees);
+
+    /**
+     * @brief generateRodriguesColor Generates an RGB Color from a Rodrigues Vector
+     * @param r1 First component of the Rodrigues Vector
+     * @param r2 Second component of the Rodrigues Vector
+     * @param r3 Third component of the Rodrigues Vector
+     * @param rgb [output] The pointer to store the RGB value
+     */
     virtual void generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb);
+
+    /**
+     * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
+     * @param q Quaternion
+     * @param refDir The sample reference direction
+     * @return A DREAM3D::Rgb value
+     */
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, double* refDir);
 
     /**
      * @brief generatePoleFigure This method will generate a number of pole figures for this crystal symmetry and the Euler

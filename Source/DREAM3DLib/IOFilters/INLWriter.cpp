@@ -312,8 +312,8 @@ int INLWriter::writeFile()
   int32_t grainId;
   int32_t phaseId;
 
-  unsigned char rgba[4] = {0,0,0,255};
-  float refDir[3] = {0.0f, 0.0f, 1.0f};
+ // unsigned char rgba[4] = {0,0,0,255};
+  //float refDir[3] = {0.0f, 0.0f, 1.0f};
 
 
   size_t index = 0;
@@ -332,7 +332,7 @@ int INLWriter::writeFile()
         zPos = origin[2] + (z * res[2]);
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
-        rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
+       // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {

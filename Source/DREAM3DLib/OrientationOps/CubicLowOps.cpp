@@ -830,3 +830,16 @@ std::vector<UInt8ArrayType::Pointer> CubicLowOps::generatePoleFigure(PoleFigureC
 
   return poleFigures;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb CubicLowOps::generateMisorientationColor(const QuatF &q, double* refDir)
+{
+  DREAM3D::Rgb rgb = DREAM3D::dRgb(0,0,0,0);
+
+  return rgb;
+}
+
+
+
