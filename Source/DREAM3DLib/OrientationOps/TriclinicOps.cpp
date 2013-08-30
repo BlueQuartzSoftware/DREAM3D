@@ -669,7 +669,7 @@ std::vector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb TriclinicOps::generateMisorientationColor(const QuatF &q, QuatF &refFrame)
+DREAM3D::Rgb TriclinicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 

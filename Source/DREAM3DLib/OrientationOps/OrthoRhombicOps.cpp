@@ -690,7 +690,7 @@ std::vector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFig
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF &q, QuatF &refFrame)
+DREAM3D::Rgb OrthoRhombicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 

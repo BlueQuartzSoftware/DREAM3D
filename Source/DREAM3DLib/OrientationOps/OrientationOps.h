@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param refDir The sample reference direction
      * @return A DREAM3D::Rgb value
      */
-    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, QuatF &refFrame) = 0;
+    virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, const QuatF &refFrame) = 0;
 
 
     /**
