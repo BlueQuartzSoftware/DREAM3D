@@ -44,6 +44,7 @@
 
 #include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -51,42 +52,8 @@
 namespace DREAM3D
 {
 
-  /**
-   * @brief Rgb An ARGB quadruplet on the format #AARRGGBB, equivalent to an unsigned int and The type also holds a value for the alpha-channel.
-   */
   typedef uint32_t Rgb;
   const Rgb  RGB_MASK    = 0x00ffffff;                // masks RGB values
-
-  inline int dRed(Rgb rgb)
-  {
-    return ((rgb >> 16) & 0xff);
-  }
-
-  inline int dGreen(Rgb rgb)
-  {
-    return ((rgb >> 8) & 0xff);
-  }
-
-  inline int dBlue(Rgb rgb)
-  {
-    return (rgb & 0xff);
-  }
-
-  inline int dAlpha(Rgb rgb)
-  {
-    return rgb >> 24;
-  }
-
-  inline int dGray(Rgb rgb)
-  {
-    return  (((rgb >> 16) & 0xff) * 11 + ((rgb >> 8) & 0xff) * 16 + (rgb & 0xff) * 5)/32;
-  }
-
-  inline Rgb dRgb(int r, int g, int b, int a)
-  {
-    return ((a & 0xff) << 24) | ((r & 0xff) << 16) | ((g & 0xff) << 8) | (b & 0xff);
-  }
-
 
   namespace FilterGroups
   {

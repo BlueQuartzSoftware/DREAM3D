@@ -317,7 +317,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
     r = colors[3*i];
     g = colors[3*i+1];
     b = colors[3*i+2];
-    colorTable[i] = DREAM3D::dRgb(r*255, g*255, b*255, 255);
+    colorTable[i] = RgbColor::dRgb(r*255, g*255, b*255, 255);
   }
 
   int penWidth = 1;

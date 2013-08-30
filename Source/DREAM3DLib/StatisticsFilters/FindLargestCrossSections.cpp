@@ -215,9 +215,9 @@ void FindLargestCrossSections::find_crosssections()
   }
   for(int i = 0; i < outPlane; i++)
   {
-    for (size_t i = 0; i < numgrains * 1; i++)
+    for (size_t g = 0; g < numgrains * 1; g++)
     {
-      graincounts[i] = 0.0f;
+      graincounts[g] = 0.0f;
     }
     istride = i*stride1;
     for (int j = 0; j < inPlane1; j++)
@@ -231,10 +231,10 @@ void FindLargestCrossSections::find_crosssections()
         graincounts[gnum]++;
       }
     }
-    for (size_t i = 1; i < numgrains; i++)
+    for (size_t g = 1; g < numgrains; g++)
     {
-      area = graincounts[i] * res_scalar;
-      if(area > m_LargestCrossSections[i]) m_LargestCrossSections[i] = area;
+      area = graincounts[g] * res_scalar;
+      if(area > m_LargestCrossSections[g]) m_LargestCrossSections[g] = area;
     }
   }
 }

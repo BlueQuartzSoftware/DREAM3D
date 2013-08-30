@@ -51,6 +51,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -219,9 +220,9 @@ void GenerateRodriguesColors::execute()
     {
       OrientationMath::EulertoRod(r1, r2, r3, m_CellEulerAngles[index], m_CellEulerAngles[index + 1], m_CellEulerAngles[index + 2]);
       argb = ops[m_CrystalStructures[phase]]->generateRodriguesColor(r1, r2, r3);
-      m_CellRodriguesColors[index] = DREAM3D::dRed(argb);
-      m_CellRodriguesColors[index + 1] = DREAM3D::dGreen(argb);
-      m_CellRodriguesColors[index + 2] = DREAM3D::dBlue(argb);
+      m_CellRodriguesColors[index] = RgbColor::dRed(argb);
+      m_CellRodriguesColors[index + 1] = RgbColor::dGreen(argb);
+      m_CellRodriguesColors[index + 2] = RgbColor::dBlue(argb);
     }
   }
 

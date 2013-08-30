@@ -50,7 +50,7 @@
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 
 
@@ -127,7 +127,7 @@ void TestEbsdColoring()
 
   DREAM3D_REQUIRE_EQUAL(idx, Ebsd::CrystalStructure::LaueGroupEnd)
 
-  std::cout << DREAM3D::dRed(argb) << " " << DREAM3D::dGreen(argb) << " " << DREAM3D::dBlue(argb) << " " << std::endl;
+  std::cout << RgbColor::dRed(argb) << " " << RgbColor::dGreen(argb) << " " << RgbColor::dBlue(argb) << " " << std::endl;
 }
 
 // -----------------------------------------------------------------------------

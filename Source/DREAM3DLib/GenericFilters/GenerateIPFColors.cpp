@@ -50,7 +50,7 @@
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -241,9 +241,9 @@ void GenerateIPFColors::execute()
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
       argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
-      m_CellIPFColors[index] = DREAM3D::dRed(argb);
-      m_CellIPFColors[index + 1] = DREAM3D::dGreen(argb);
-      m_CellIPFColors[index + 2] = DREAM3D::dBlue(argb);
+      m_CellIPFColors[index] = RgbColor::dRed(argb);
+      m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
+      m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
     }
   }
 
