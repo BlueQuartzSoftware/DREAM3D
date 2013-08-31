@@ -35,6 +35,7 @@ set(_PublicFilters
   RenameFieldArray
   ScaleVolume
   ConvertData
+  GenerateMisorientationColors
 )
 
 
