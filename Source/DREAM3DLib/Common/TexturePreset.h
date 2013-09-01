@@ -72,11 +72,11 @@ class DREAM3DLib_EXPORT TexturePreset
 
     virtual ~TexturePreset();
 
-    MXA_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
+    DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
     MXA_INSTANCE_STRING_PROPERTY(Name)
-    MXA_INSTANCE_PROPERTY(double, Euler1)
-    MXA_INSTANCE_PROPERTY(double, Euler2)
-    MXA_INSTANCE_PROPERTY(double, Euler3)
+    DREAM3D_INSTANCE_PROPERTY(double, Euler1)
+    DREAM3D_INSTANCE_PROPERTY(double, Euler2)
+    DREAM3D_INSTANCE_PROPERTY(double, Euler3)
 
   protected:
     TexturePreset();

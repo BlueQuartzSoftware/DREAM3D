@@ -38,7 +38,8 @@
 #include <iostream>
 #include <vector>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -134,7 +135,7 @@ class GenerateGrainIds : public AbstractFilter
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::DxIOTest::TestFile);
+  QFile::remove(UnitTest::DxIOTest::TestFile);
 #endif
 }
 

@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "H5FilterParametersWriter.h"
 
-#include "MXA/Utilities/StringUtils.h"
+
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -68,7 +68,7 @@ int H5FilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
   {
     return -1;
   }
-  std::string name = StringUtils::numToString(index);
+  std::string name = QString::number(index);
   m_CurrentGroupId = H5Utilities::createGroup(m_GroupId, name);
   err = H5Lite::writeStringAttribute(m_GroupId, name, "ClassName", filter->getNameOfClass());
   err = H5Lite::writeStringAttribute(m_GroupId, name, "HumanLabel", filter->getHumanLabel());

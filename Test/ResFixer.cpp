@@ -51,7 +51,8 @@
 
 #include "MXA/Common/MXASetGetMacros.h"
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #define kBufferSize 1024
@@ -74,8 +75,8 @@ class AngResFixer
     /** @brief Sets the file name of the ebsd file to be read */
     MXA_INSTANCE_STRING_PROPERTY(FileName)
     MXA_INSTANCE_STRING_PROPERTY(OutputFileName)
-    MXA_INSTANCE_PROPERTY(float, XStepFix)
-    MXA_INSTANCE_PROPERTY(float, YStepFix)
+    DREAM3D_INSTANCE_PROPERTY(float, XStepFix)
+    DREAM3D_INSTANCE_PROPERTY(float, YStepFix)
   private:
 
 

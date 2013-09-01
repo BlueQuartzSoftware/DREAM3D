@@ -42,10 +42,12 @@
 
 #include <string.h>
 
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+
+#include <QtCore/QString>
 
 /**
  * @file EbsdSEtGetMacros.h
@@ -201,11 +203,11 @@ static Pointer New args \
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
-* @brief Creates a std::string constant for the Property so that the property
+* @brief Creates a QString constant for the Property so that the property
 * can be retrieved by name.
 */
 #define EBSD_PROPERTY_CONSTANT(prpty) \
-  const std::string prpty ( #prpty );
+  const QString prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -262,20 +264,21 @@ static Pointer New args \
 * @brief Creates a "setter" method to set the property.
 */
 #define EBSD_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const std::string &value) { this->varname = value; }
+  void set##prpty(const QString &value) { this->varname = value; }\
+  void set##prpty(QString* value) { this->varname = *value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define EBSD_GET_STRING_PROPERTY( prpty, varname) \
-  std::string get##prpty() { return varname; }
+  QString get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
 #define EBSD_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
   EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -283,7 +286,7 @@ static Pointer New args \
 
 #define EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
     virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
     virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -298,7 +301,7 @@ static Pointer New args \
   void set##prpty(m_msgType value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
+      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;} }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
@@ -307,7 +310,7 @@ static Pointer New args \
   m_msgType get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
+      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl; return 0;} }
 
 
 #define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
@@ -351,22 +354,22 @@ namespace Ebsd
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
-    bad_lexical_cast(const std::string& s)
-      : std::runtime_error(s)
+    bad_lexical_cast(const QString& s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
-    bad_any_cast(const std::string& s)
-      : std::runtime_error(s)
+    bad_any_cast(const QString& s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   template<typename T>
-  T lexical_cast(const std::string &s)
+  T lexical_cast(const QString &s)
   {
-    std::istringstream i(s);
+    std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

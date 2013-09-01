@@ -155,9 +155,9 @@ int H5CtfReader::readHeader(hid_t parId)
     return -1;
   }
 
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
@@ -165,7 +165,7 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
@@ -181,7 +181,7 @@ int H5CtfReader::readHeader(hid_t parId)
     return -1;
   }
 
-  std::list<std::string> names;
+  std::list<QString> names;
   err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
@@ -191,7 +191,7 @@ int H5CtfReader::readHeader(hid_t parId)
     return -1;
   }
   m_Phases.clear();
-  for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+  for (std::list<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
@@ -214,7 +214,7 @@ int H5CtfReader::readHeader(hid_t parId)
   }
   err = H5Gclose(phasesGid);
 
-  std::string completeHeader;
+  QString completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
 
@@ -246,9 +246,9 @@ int H5CtfReader::readData(hid_t parId)
   }
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
-  std::list<std::string> columnNames;
+  std::list<QString> columnNames;
   err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
-  for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
+  for (std::list<QString>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
   {
     if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) != m_ArrayNames.end())
     {
@@ -289,7 +289,7 @@ int H5CtfReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfReader::setArraysToRead(std::set<std::string> names)
+void H5CtfReader::setArraysToRead(std::set<QString> names)
 {
   m_ArrayNames = names;
 }

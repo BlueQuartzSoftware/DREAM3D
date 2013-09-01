@@ -84,10 +84,10 @@ include_directories(${EbsdLib_BINARY_DIR})
 
 #-- Include all the Source Files
 # -- Include the Utiliy Sources
-include ( ${EbsdLib_SOURCE_DIR}/Utilities/SourceList.cmake)
+#include ( ${EbsdLib_SOURCE_DIR}/Utilities/SourceList.cmake)
 include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
-include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
-include ( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
+#include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
+#include ( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
 
 
 set(EbsdLib_SRCS
@@ -130,9 +130,8 @@ set(EbsdLib_PROJECT_SRCS
 if(DEFINED DREAM3DProj_BINARY_DIR)
 
     add_library(${PROJECT_NAME} ${LIB_TYPE} ${EbsdLib_PROJECT_SRCS})
-    if(EbsdLib_ENABLE_HDF5)
-        target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support)
-    endif()
+    target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} H5Support ${QT_QTCORE_LIBRARY})
+
 
     LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )
 

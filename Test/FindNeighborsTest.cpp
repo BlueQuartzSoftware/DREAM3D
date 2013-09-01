@@ -41,7 +41,8 @@
 
 #include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
@@ -89,8 +90,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
-  MXADir::remove(UnitTest::FindNeighborTest::VtkOutputFile);
+  QFile::remove(UnitTest::FindNeighborTest::OutputFile);
+  QFile::remove(UnitTest::FindNeighborTest::VtkOutputFile);
 }
 
 

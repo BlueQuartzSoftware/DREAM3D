@@ -92,7 +92,7 @@ void H5MicVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  std::set<std::string> arrayNames = getArraysToRead();
+  std::set<QString> arrayNames = getArraysToRead();
 
 
   H5MICREADER_ALLOCATE_ARRAY(Euler1, float)
@@ -121,7 +121,7 @@ void H5MicVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5MicVolumeReader::getPointerByName(const std::string &fieldName)
+void* H5MicVolumeReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -136,7 +136,7 @@ void* H5MicVolumeReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5MicVolumeReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType H5MicVolumeReader::getPointerType(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
@@ -157,7 +157,7 @@ std::vector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  std::string index = StringUtils::numToString(getZStart());
+  QString index = QString::number(getZStart());
 
   // Open the hdf5 file and read the data
   hid_t fileId = H5Utilities::openFile(getFileName(), true);
@@ -215,7 +215,7 @@ int H5MicVolumeReader::loadData(int64_t xpoints,
   {
     H5MicReader::Pointer reader = H5MicReader::New();
     reader->setFileName(getFileName());
-    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
+    reader->setHDF5Path(QString::number(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
     reader->setSampleTransformationAngle(getSampleTransformationAngle());
     reader->setSampleTransformationAxis(getSampleTransformationAxis());

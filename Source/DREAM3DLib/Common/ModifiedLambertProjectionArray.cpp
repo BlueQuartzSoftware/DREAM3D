@@ -37,7 +37,7 @@
 
 #include <list>
 
-#include "MXA/Utilities/StringUtils.h"
+
 
 
 #include "H5Support/H5Utilities.h"
@@ -425,7 +425,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
     return -1;
   }
 
-  std::string dsetName = StringUtils::numToString(m_Phase);
+  std::string dsetName = QString::number(m_Phase);
   ModifiedLambertProjection::Pointer tmp = m_ModifiedLambertProjectionArray[0];
   tmp->getDimension();
   int lambertDimension = tmp->getDimension();

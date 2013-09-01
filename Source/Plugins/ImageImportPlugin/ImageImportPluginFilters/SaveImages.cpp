@@ -43,7 +43,8 @@
 #include <QtGui/QColor>
 
 #include "MXA/MXA.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 // -----------------------------------------------------------------------------
 //

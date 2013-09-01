@@ -41,7 +41,8 @@
 #include <map>
 #include <vector>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -84,7 +85,7 @@ dataContainer->addCellData(name, m_msgType##Ptr);
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::DataContainerIOTest::TestFile);
+  QFile::remove(UnitTest::DataContainerIOTest::TestFile);
 }
 
 

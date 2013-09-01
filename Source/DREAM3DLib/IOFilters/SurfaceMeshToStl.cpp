@@ -40,7 +40,8 @@
 
 #include "MXA/MXA.h"
 #include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Common/MXAMath.h"
 
 // -----------------------------------------------------------------------------

@@ -71,8 +71,8 @@ class RolledPreset : public AbstractMicrostructurePreset
     void initializeAxisODFTableModel(SGAxisODFWidget* widget);
 
 
-    MXA_INSTANCE_PROPERTY(float, AspectRatio1)
-    MXA_INSTANCE_PROPERTY(float, AspectRatio2)
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
     RolledPreset();

@@ -114,7 +114,7 @@ void CtfReader::initPointers(size_t numElements)
 // -----------------------------------------------------------------------------
 void CtfReader::deletePointers()
 {
-  typedef std::map<std::string, void*> NamePointerMapType;
+  typedef std::map<QString, void*> NamePointerMapType;
 
   for (NamePointerMapType::iterator iter = m_NamePointerMap.begin(); iter != m_NamePointerMap.end(); ++iter )
   {
@@ -141,10 +141,10 @@ void CtfReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfReader::setPointerByName(const std::string &name, void* p)
+void CtfReader::setPointerByName(const QString &name, void* p)
 {
   // First we need to see if the pointer already exists
-  std::map<std::string, int>::iterator iter = m_NameIndexMap.find(name);
+  std::map<QString, int>::iterator iter = m_NameIndexMap.find(name);
   if (iter == m_NameIndexMap.end())
   {
     // Data does not exist in Map
@@ -174,10 +174,10 @@ void CtfReader::setPointerByName(const std::string &name, void* p)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* CtfReader::getPointerByName(const std::string &fieldName)
+void* CtfReader::getPointerByName(const QString &fieldName)
 {
   void* ptr = NULL;
-  std::map<std::string, void*>::iterator iter = m_NamePointerMap.find(fieldName);
+  std::map<QString, void*>::iterator iter = m_NamePointerMap.find(fieldName);
   if(iter != m_NamePointerMap.end())
   {
     ptr = (*iter).second;
@@ -189,7 +189,7 @@ void* CtfReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType CtfReader::getPointerType(const QString &fieldName)
 {
  // std::cout << "fieldName: " << fieldName << std::endl;
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
@@ -215,7 +215,7 @@ Ebsd::NumType CtfReader::getPointerType(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getTypeSize(const std::string &fieldName)
+int CtfReader::getTypeSize(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return 4;}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return 4;}
@@ -239,7 +239,7 @@ int CtfReader::getTypeSize(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataParser::Pointer CtfReader::getParser(const std::string &fieldName, void* ptr, size_t size)
+DataParser::Pointer CtfReader::getParser(const QString &fieldName, void* ptr, size_t size)
 {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Int32Parser::New(static_cast<int32_t*>(ptr), size, fieldName);}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return FloatParser::New(static_cast<float*>(ptr), size, fieldName);}
@@ -276,12 +276,12 @@ int CtfReader::readHeaderOnly()
     return -100;
   }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   // Parse the header
-  std::vector<std::vector<std::string> > headerLines;
+  std::vector<std::vector<QString> > headerLines;
   err = getHeaderLines(in, headerLines);
   err = parseHeaderLines(headerLines);
   return err;
@@ -303,12 +303,12 @@ int CtfReader::readFile()
     return -100;
   }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   // Parse the header
-  std::vector<std::vector<std::string> > headerLines;
+  std::vector<std::vector<QString> > headerLines;
   err = getHeaderLines(in, headerLines);
   if (err < 0) { return err;}
   err = parseHeaderLines(headerLines);
@@ -344,7 +344,7 @@ int CtfReader::readData(std::ifstream &in)
 {
   // Delete any currently existing pointers
   deletePointers();
-  std::stringstream ss;
+  QStringstream ss;
   // Initialize new pointers
   size_t yCells = getYCells();
   size_t xCells = getXCells();
@@ -367,7 +367,7 @@ int CtfReader::readData(std::ifstream &in)
   while (buf[idx] != 0 && idx < kBufferSize) { ++idx; }
   if(buf[idx - 1] < 32) { buf[idx - 1] = 0; }
 
-  std::vector<std::string> tokens = tokenize(buf, '\t');
+  std::vector<QString> tokens = tokenize(buf, '\t');
 
   m_ColumnData.resize(tokens.size());
   m_DataParsers.resize(tokens.size());
@@ -465,13 +465,13 @@ int CtfReader::readData(std::ifstream &in)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLines)
+int CtfReader::parseHeaderLines(std::vector<std::vector<QString> > &headerLines)
 {
   int err = 0;
   size_t size = headerLines.size();
   for (size_t i = 0; i < size; ++i)
   {
-    std::vector<std::string> line = headerLines[i];
+    std::vector<QString> line = headerLines[i];
     //  std::cout << "Parsing Header Line: " << line[0] << std::endl;
     if(line[0].compare(Ebsd::Ctf::NumPhases) == 0)
     {
@@ -530,10 +530,10 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
       {
         std::cout << "---------------------------" << std::endl;
         std::cout << "Could not find header entry for key '" << line[0] << "'" << std::endl;
-//        std::string upper(line[0]);
+//        QString upper(line[0]);
 //        std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
 //        std::cout << "#define ANG_" << upper << "     \"" << line[0] << "\"" << std::endl;
-//        std::cout << "const std::string " << line[0] << "(ANG_" << upper << ");" << std::endl;
+//        std::cout << "const QString " << line[0] << "(ANG_" << upper << ");" << std::endl;
 //        std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << line[0] << "Ebsd::Ctf::" << line[0] << std::endl;
 //        std::cout << "m_Headermap[Ebsd::Ctf::" << line[0] << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ctf::" << line[0] << ");" << std::endl;
       }
@@ -555,7 +555,7 @@ int CtfReader::parseHeaderLines(std::vector<std::vector<std::string> > &headerLi
 // -----------------------------------------------------------------------------
 //  Read the data part of the .ctf file
 // -----------------------------------------------------------------------------
-void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
+void CtfReader::parseDataLine(const QString &line, size_t row, size_t col, size_t offset, size_t xCells, size_t yCells )
 {
   /* When reading the data there should be at least 11 cols of data.
    */
@@ -574,7 +574,7 @@ void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, s
     }
   }
 
-  std::vector<std::string> tokens = tokenize( &(cLine.front()), '\t');
+  std::vector<QString> tokens = tokenize( &(cLine.front()), '\t');
   BOOST_ASSERT(tokens.size() == m_DataParsers.size());
 
   for (unsigned int i = 0; i < m_DataParsers.size(); ++i)
@@ -588,19 +588,19 @@ void CtfReader::parseDataLine(const std::string &line, size_t row, size_t col, s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfReader::tokenize(char* buf, char delimiter)
+std::vector<QString> CtfReader::tokenize(char* buf, char delimiter)
 {
-  std::vector<std::string> output;
-  std::string values(buf);
-  std::string::size_type start = 0;
-  std::string::size_type pos = 0;
+  std::vector<QString> output;
+  QString values(buf);
+  QString::size_type start = 0;
+  QString::size_type pos = 0;
 //  std::cout << "-----------------------------" << std::endl;
-  while(pos != std::string::npos && pos != values.size() - 1)
+  while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
     output.push_back(values.substr(start, pos-start));
  //   std::cout << "Adding: " << output.back() << std::endl;
-    if (pos != std::string::npos)
+    if (pos != QString::npos)
     {
       start = pos + 1;
     }
@@ -611,7 +611,7 @@ std::vector<std::string> CtfReader::tokenize(char* buf, char delimiter)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines)
+int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<QString> > &headerLines)
 {
   int err = 0;
   char buf[kBufferSize];
@@ -623,7 +623,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
     ::memset(buf, 0, kBufferSize);
     reader.getline(buf, kBufferSize);
     // Append the line to the complete header
-    appendOriginalHeader(std::string(buf));
+    appendOriginalHeader(QString(buf));
 
     // Replace the newline at the end of the line with a NULL character
     int i = 0;
@@ -632,13 +632,13 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 
 
 
-    std::vector<std::string> tokens;
+    std::vector<QString> tokens;
 
-    std::string prj(buf, 4);
+    QString prj(buf, 4);
     if (prj.compare("Prj ") == 0)
     {
       tokens.push_back(Ebsd::Ctf::Prj);
-      tokens.push_back(std::string(buf + 5));
+      tokens.push_back(QString(buf + 5));
     }
     else
     {
@@ -655,7 +655,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
       {
         ::memset(buf, 0, kBufferSize);
         reader.getline(buf, kBufferSize);
-        appendOriginalHeader(std::string(buf));
+        appendOriginalHeader(QString(buf));
         i = 0;
         while (buf[i] != 0 && i < kBufferSize) { ++i; }
         if(buf[i - 1] < 32) { buf[i - 1] = 0; }
@@ -686,7 +686,7 @@ int CtfReader::getHeaderLines(std::ifstream &reader, std::vector<std::vector<std
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool CtfReader::isDataHeaderLine(std::vector<std::string> &columns)
+bool CtfReader::isDataHeaderLine(std::vector<QString> &columns)
 {
     if (columns.size() != 11)
         return false;
@@ -743,10 +743,10 @@ void CtfReader::setYDimension(int ydim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfReader::getColumnNames()
+std::vector<QString> CtfReader::getColumnNames()
 {
-  std::vector<std::string> names;
-  for (std::map<std::string, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
+  std::vector<QString> names;
+  for (std::map<QString, int>::iterator iter = m_NameIndexMap.begin(); iter != m_NameIndexMap.end(); ++iter )
   {
     names.push_back((*iter).first);
   }

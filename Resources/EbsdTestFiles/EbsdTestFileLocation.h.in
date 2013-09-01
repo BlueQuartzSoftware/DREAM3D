@@ -1,37 +1,37 @@
 #ifndef _EbsdTestFileLocation_h_
 #define _EbsdTestFileLocation_h_
 
-#include <string>
+#include <QtCore/QString>
 
 #define REMOVE_TEST_FILES 1
 
 
 namespace EbsdImportTest {
-  const std::string FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
-  const std::string TestFile1("Test_1.ang");
-  const std::string TestFile2("Test_2.ang");
-  const std::string TestFile3("Test_3.ang");
-  const std::string H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromAng.h5ebsd");
-  const std::string MissingHeader1("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_1.ang");
-  const std::string GridMissing("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/GridMissing.ang");
-  const std::string MissingHeader3("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_3.ang");
-  const std::string HexHeader("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/HexHeader.ang");
-  const std::string ShortFile("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/ShortFile.ang");
+  const QString FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
+  const QString TestFile1("Test_1.ang");
+  const QString TestFile2("Test_2.ang");
+  const QString TestFile3("Test_3.ang");
+  const QString H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromAng.h5ebsd");
+  const QString MissingHeader1("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_1.ang");
+  const QString GridMissing("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/GridMissing.ang");
+  const QString MissingHeader3("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_3.ang");
+  const QString HexHeader("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/HexHeader.ang");
+  const QString ShortFile("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/ShortFile.ang");
 }
 
 namespace UnitTest
 {
-  
+
   namespace CtfReaderTest
   {
-    const std::string FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
-    const std::string EuropeanInputFile1("Test_European_1.ctf");
-    const std::string USInputFile1("Test_US_1.ctf");
-    const std::string EuropeanInputFile2("Test_European_2.ctf");
-    const std::string USInputFile2("Test_US_2.ctf");
-    const std::string H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromCtf.h5ebsd");
+    const QString FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
+    const QString EuropeanInputFile1("Test_European_1.ctf");
+    const QString USInputFile1("Test_US_1.ctf");
+    const QString EuropeanInputFile2("Test_European_2.ctf");
+    const QString USInputFile2("Test_US_2.ctf");
+    const QString H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromCtf.h5ebsd");
   }
-  
+
 }
 
 

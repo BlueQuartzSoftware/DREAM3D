@@ -37,7 +37,8 @@
 #include <vector>
 
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -116,7 +117,7 @@ namespace Detail
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::RawBinaryReaderTest::OutputFile);
+  QFile::remove(UnitTest::RawBinaryReaderTest::OutputFile);
 #endif
 }
 

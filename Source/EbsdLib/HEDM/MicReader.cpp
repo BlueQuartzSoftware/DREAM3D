@@ -206,7 +206,7 @@ void MicReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* MicReader::getPointerByName(const std::string &fieldName)
+void* MicReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -223,7 +223,7 @@ void* MicReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType MicReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType MicReader::getPointerType(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
@@ -245,15 +245,15 @@ int MicReader::readHeaderOnly()
   int err = 1;
   char buf[kBufferSize];
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   m_CurrentPhase = MicPhase::New();
   m_PhaseVector.push_back(m_CurrentPhase);
 
-  std::string parentPath = MXAFileInfo::parentPath(getFileName());
-  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
+  QString parentPath = MXAFileInfo::parentPath(getFileName());
+  QString name = MXAFileInfo::fileNameWithOutExtension(getFileName());
   if(parentPath.empty() == true) name = name + ".config";
   else name = parentPath + MXAFileInfo::Separator + name + ".config";
   std::ifstream inHeader(name.c_str());
@@ -287,7 +287,7 @@ int MicReader::readHeaderOnly()
 // -----------------------------------------------------------------------------
 int MicReader::readFile()
 {
-  std::stringstream ss;
+  QStringstream ss;
   int err = 1;
   char buf[kBufferSize];
   std::ifstream in(getFileName().c_str());
@@ -299,13 +299,13 @@ int MicReader::readFile()
     return -100;
   }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
 
-  std::string parentPath = MXAFileInfo::parentPath(getFileName());
-  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
+  QString parentPath = MXAFileInfo::parentPath(getFileName());
+  QString name = MXAFileInfo::fileNameWithOutExtension(getFileName());
   if(parentPath.empty() == true) name = name + ".config";
   else name = parentPath + MXAFileInfo::Separator + name + ".config";
   std::ifstream inHeader(name.c_str());
@@ -371,7 +371,7 @@ int MicReader::readFile()
     m_CurrentPhase->parseZandCoordinates(buf,0,kBufferSize);
   }
   m_CurrentPhase->setPhaseIndex(1);
-  std::string symm = getSampleSymmetry();
+  QString symm = getSampleSymmetry();
   m_CurrentPhase->setSymmetry(symm);
   m_PhaseVector.push_back(m_CurrentPhase);
 
@@ -582,7 +582,7 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
   }
   wordEnd = i;
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  QString word( &(buf[wordStart]), wordEnd - wordStart);
 
   if (word.size() == 0)
   {
@@ -595,10 +595,10 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
     /*
       std::cout << "---------------------------" << std::endl;
       std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
-      std::string upper(word);
+      QString upper(word);
       std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
       std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
-      std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
+      std::cout << "const QString " << word << "(ANG_" << upper << ");" << std::endl;
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
       std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
@@ -623,7 +623,7 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the Mic file
 // -----------------------------------------------------------------------------
-void MicReader::parseDataLine(const std::string &line, size_t i)
+void MicReader::parseDataLine(const QString &line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:

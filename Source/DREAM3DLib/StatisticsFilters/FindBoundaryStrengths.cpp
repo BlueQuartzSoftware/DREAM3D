@@ -39,7 +39,8 @@
 // MXA Includes
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 // DREAM3D includes
 #include "DREAM3DLib/Common/DREAM3DMath.h"

@@ -33,12 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef EBSDREADER_H_
-#define EBSDREADER_H_
+#ifndef _EBSDREADER_H_
+#define _EBSDREADER_H_
 
-#include <string>
-#include <map>
-
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -75,9 +75,9 @@ class EbsdLib_EXPORT EbsdReader
     /** @brief Allow the user to set the origin of the scan */
     EBSD_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, UserZDir)
     EBSD_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     EBSD_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
 
     /** @brief Sets the file name of the ebsd file to be read */
     EBSD_INSTANCE_STRING_PROPERTY(FileName)
@@ -90,7 +90,7 @@ class EbsdLib_EXPORT EbsdReader
      * @brief Appends text to the current Original Header Text
      * @param more The text to be appended
      */
-    void appendOriginalHeader(const std::string &more);
+    void appendOriginalHeader(const QString &more);
 
 
     /* These variables pertain to the memory that this class or subclass will allocate
@@ -132,14 +132,14 @@ class EbsdLib_EXPORT EbsdReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    virtual void* getPointerByName(const std::string &fieldName) = 0;
+    virtual void* getPointerByName(const QString &fieldName) = 0;
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    virtual Ebsd::NumType getPointerType(const std::string &fieldName) = 0;
+    virtual Ebsd::NumType getPointerType(const QString &fieldName) = 0;
 
     /**
     * @brief Reads the complete EBSD data file storing all columns of data and the
@@ -204,7 +204,7 @@ class EbsdLib_EXPORT EbsdReader
       }
 
   protected:
-    std::map<std::string, EbsdHeaderEntry::Pointer> m_HeaderMap;
+    QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;
 
 
   private:

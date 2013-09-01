@@ -41,8 +41,9 @@
 #ifndef ANGPHASE_H_
 #define ANGPHASE_H_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QTextStream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -92,10 +93,10 @@ class EbsdLib_EXPORT HKLFamily
      * @brief Prints this class to the output stream. Useful for debuggin
      * @param stream The stream to print to
      */
-    void printSelf(std::ostream &stream)
+    void printSelf(QTextStream &stream)
     {
       stream << Ebsd::Ang::HKLFamilies;
-      std::cout << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << std::endl;
+      stream << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << "\n";
     }
 
     /**
@@ -160,10 +161,10 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
     EBSD_INSTANCE_STRING_PROPERTY(Info)
     EBSD_INSTANCE_PROPERTY(uint32_t, Symmetry)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants)
     EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
-    EBSD_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
-    EBSD_INSTANCE_PROPERTY(std::vector<int>, Categories)
+    EBSD_INSTANCE_PROPERTY(QVector<HKLFamily::Pointer>, HKLFamilies)
+    EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
 
 
     void parsePhase(char* value, size_t start, size_t length);
@@ -176,7 +177,7 @@ class EbsdLib_EXPORT AngPhase
     void parseHKLFamilies(char* value, size_t start, size_t length);
     void parseCategories(char* value, size_t start, size_t length);
 
-    void printSelf(std::ostream &stream);
+    void printSelf(QTextStream &stream);
 
     /**
      * @brief Returns the type of crystal structure for this phase.

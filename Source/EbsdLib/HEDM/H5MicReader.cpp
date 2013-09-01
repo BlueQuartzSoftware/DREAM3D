@@ -169,7 +169,7 @@ int H5MicReader::readHeader(hid_t parId)
     return -1;
   }
 
-  std::list<std::string> names;
+  std::list<QString> names;
   err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
@@ -179,7 +179,7 @@ int H5MicReader::readHeader(hid_t parId)
     return -1;
   }
   m_Phases.clear();
-  for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
+  for (std::list<QString>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     MicPhase::Pointer m_CurrentPhase = MicPhase::New();
@@ -193,7 +193,7 @@ int H5MicReader::readHeader(hid_t parId)
     err = H5Gclose(pid);
   }
 
-  std::string completeHeader;
+  QString completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
   err = H5Gclose(phasesGid);
@@ -262,7 +262,7 @@ int H5MicReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5MicReader::setArraysToRead(std::set<std::string> names)
+void H5MicReader::setArraysToRead(std::set<QString> names)
 {
   m_ArrayNames = names;
 }

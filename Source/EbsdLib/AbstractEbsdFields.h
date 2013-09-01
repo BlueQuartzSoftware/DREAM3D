@@ -37,7 +37,7 @@
 #define ABSTRACTEBSDFIELDS_H_
 
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 
@@ -57,7 +57,7 @@ class EbsdLib_EXPORT AbstractEbsdFields
 
     virtual ~AbstractEbsdFields();
 
-    virtual std::vector<std::string> getFieldNames() = 0;
+    virtual std::vector<QString> getFieldNames() = 0;
 
 
 };

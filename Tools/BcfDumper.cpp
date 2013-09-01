@@ -39,7 +39,8 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "TiffUtilities.h"

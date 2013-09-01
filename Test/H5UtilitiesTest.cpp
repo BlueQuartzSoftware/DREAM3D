@@ -41,11 +41,9 @@ standard C++ library."
 #include <list>
 #include <string>
 
-//--MXA Includes
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/StringUtils.h"
+#include <QtCore/QFile>
+#include <QtCore/QDateTime>
+#include <QtCore/QtDebug>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
@@ -74,7 +72,7 @@ size_t AttrSize = 0;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::H5UtilTest::FileName);
+  QFile::remove(UnitTest::H5UtilTest::FileName);
 #endif
 }
 
@@ -113,7 +111,7 @@ herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string &dsetNa
 template<typename T>
 herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string &dsetName)
 {
-  //std::cout << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute" << std::endl;
+  //std::cout << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute";
   AttrSize++;
   T value = 0x0;
   herr_t err = -1;
@@ -297,7 +295,7 @@ herr_t testWritePointer2DArrayDataset(hid_t file_id)
   err = testWriteScalarAttribute<float32>(file_id, dsetName);
   err = testWriteScalarAttribute<float64>(file_id, dsetName);
 
-  std::cout << " Passed" << std::endl;
+  std::cout << " Passed";
   return err;
 }
 
@@ -309,10 +307,10 @@ void H5UtilitiesTest()
   // herr_t err = -1;
    hid_t   file_id;
    /* Create a new file using default properties. */
-   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
    DREAM3D_REQUIRE(file_id > 0);
 
-   // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------" << std::endl;
+   // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------";
    DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int32_t>(file_id) >= 0);
 
    hid_t dsetId = H5Utilities::openHDF5Object(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>");
@@ -410,7 +408,7 @@ void H5UtilitiesTest()
 // -----------------------------------------------------------------------------
 void StressTestCreateGroups()
 {
-  std::cout << logTime() << " Starting StressTestCreateGroups()" << std::endl;
+  qDebug() << QDateTime::currentDateTime() << " Starting StressTestCreateGroups()";
   char path[64];
   ::memset(path, 0, 64);
   int err = 0;
@@ -418,15 +416,15 @@ void StressTestCreateGroups()
   hid_t   grpId;
 
   /* Create a new file using default properties. */
-  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
 
 
   for (int i = 0; i < 100; ++i) {
-    std::cout << logTime() << "Outer Loop: " << i << std::endl;
+    qDebug() << QDateTime::currentDateTime() << "Outer Loop: " << i;
 //    err = H5Fclose(file_id);
 //    DREAM3D_REQUIRE(err >= 0);
-//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
     ::memset(path, 0, 64);
     snprintf(path, 64, "/%03d", i);
     grpId = H5Utilities::createGroup(file_id, path);
@@ -468,7 +466,7 @@ void StressTestCreateGroups()
 #if __APPLE__
 void HDF5Darwin2GBWriteTest()
 {
-  std::cout << "sizeof(ssize_t): " << sizeof(ssize_t) << std::endl;
+  std::cout << "sizeof(ssize_t): " << sizeof(ssize_t);
   size_t dim1 = 3;
   size_t dim0 = 178956971;
   int* data = (int*)(malloc(sizeof(int) * dim0 * dim1));

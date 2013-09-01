@@ -44,7 +44,7 @@
 
 #include <sstream>
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -82,7 +82,7 @@ class EbsdLib_EXPORT CtfPhase
     /**
      * @brief Parses a header line into a CtfPhase class
      */
-    void parsePhase(const std::vector<std::string> &tokens);
+    void parsePhase(const std::vector<QString> &tokens);
 
     /**
      * @brief Prints some debugging info about this class
@@ -94,13 +94,13 @@ class EbsdLib_EXPORT CtfPhase
      */
     unsigned int determineCrystalStructure();
 
-    std::string getMaterialName();
+    QString getMaterialName();
 
     /**
      * @brief Converts a string to a number
      */
     template<typename T>
-    bool stringToNum(T &t, const std::string &s)
+    bool stringToNum(T &t, const QString &s)
     {
       // Filter the line to convert European comma style decimals to US/UK style points
       std::vector<char> cLine(s.size()+1);
@@ -109,7 +109,7 @@ class EbsdLib_EXPORT CtfPhase
       {
         if (cLine[c] == ',') { cLine[c] = '.';}
       }
-      std::istringstream iss(std::string( &(cLine.front()) ) );
+      std::istringstream iss(QString( &(cLine.front()) ) );
       return !(iss >> t).fail();
     }
 
@@ -117,18 +117,18 @@ class EbsdLib_EXPORT CtfPhase
      * @brief Parses a header line into string "tokens"
      */
     template<typename T>
-    std::vector<T> tokenize(const std::string &values, char delimiter)
+    std::vector<T> tokenize(const QString &values, char delimiter)
     {
       std::vector<T> output;
-      std::string::size_type start = 0;
-      std::string::size_type pos = 0;
-      while(pos != std::string::npos && pos != values.size() - 1)
+      QString::size_type start = 0;
+      QString::size_type pos = 0;
+      while(pos != QString::npos && pos != values.size() - 1)
       {
         pos = values.find(delimiter, start);
         T value = 0;
         stringToNum(value, values.substr(start, pos-start));
         output.push_back(value);
-        if (pos != std::string::npos)
+        if (pos != QString::npos)
         {
           start = pos + 1;
         }

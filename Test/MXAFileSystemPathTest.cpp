@@ -12,6 +12,7 @@
 #include <MXA/Utilities/MXADir.h>
 #include <MXA/Utilities/MXAFileInfo.h>
 
+
 #include "TestFileLocations.h"
 #include "UnitTestSupport.hpp"
 
@@ -32,7 +33,7 @@ void RemoveTestFiles()
 {
   std::cout << "|--Removing Test files" << std::endl;
 #if REMOVE_TEST_FILES
-  MXADir::remove(MXAUnitTest::MXAFileSystemPathTest::OutputFile);
+  QFile::remove(MXAUnitTest::MXAFileSystemPathTest::OutputFile);
 #endif
 }
 
@@ -79,13 +80,13 @@ void CheckFile(const std::string &filepath,
 
     // Now try to delete the file
     std::cout << "|--  Delete: '" << filepath << "'" << std::endl;
-    ok = MXADir::remove(filepath);
+    ok = QFile::remove(filepath);
     DREAM3D_REQUIRE_EQUAL(ok, true);
     exists = MXADir::exists(filepath);
     DREAM3D_REQUIRE_EQUAL(exists, false);
 
     std::cout << "|--  Delete Again:" << std::endl;
-    ok = MXADir::remove(filepath);
+    ok = QFile::remove(filepath);
     DREAM3D_REQUIRE_EQUAL(ok, false);
 }
 

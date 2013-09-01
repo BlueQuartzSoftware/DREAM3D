@@ -66,9 +66,9 @@ void AngPhase::parsePhase(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
-  std::stringstream ss(data);
-  ss >> m_PhaseIndex;
+  QByteArray buf(&(value[start]), strlen(value) - start);
+  bool ok = false;
+  m_PhaseIndex = buf.toInt(&ok, 10);
 }
 
 // -----------------------------------------------------------------------------
@@ -95,8 +95,8 @@ void AngPhase::parseMaterialName(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
-  m_MaterialName = data;
+  QByteArray data(&(value[start]), len - start);
+  m_MaterialName = QString(data);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,8 +123,8 @@ void AngPhase::parseFormula(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
-  m_Formula = data;
+  QByteArray data(&(value[start]), len - start);
+  m_Formula = QString(data);
 }
 
 // -----------------------------------------------------------------------------
@@ -151,8 +151,8 @@ void AngPhase::parseInfo(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
-  m_Info = data;
+  QByteArray data(&(value[start]), len - start);
+  m_Info = QString(data);
 }
 
 // -----------------------------------------------------------------------------
@@ -164,11 +164,9 @@ void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
-  std::stringstream ss(data);
-  unsigned int symm;
-  ss >> symm;
-  m_Symmetry = symm;
+  QByteArray data(&(value[start]), strlen(value) - start);
+  bool ok = false;
+  m_Symmetry = data.toUInt(&ok, 10);
 }
 
 // -----------------------------------------------------------------------------
@@ -197,14 +195,16 @@ void AngPhase::parseLatticeConstants(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
-  std::stringstream ss(data);
-  float lc;
-  while(ss.good() )
-  {
-    ss >> lc;
-    m_LatticeConstants.push_back(lc);
-  }
+  QByteArray buf(&(value[start]), len - start);
+  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
+  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
+  bool ok = false;
+  m_LatticeConstants.push_back(tokens[0].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[1].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[2].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[3].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[4].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[5].toFloat(&ok));
 
 }
 
@@ -217,9 +217,9 @@ void AngPhase::parseNumberFamilies(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
-  std::stringstream ss(data);
-  ss >> m_NumberFamilies;
+  QByteArray data(&(value[start]), strlen(value) - start);
+  bool ok = false;
+  m_NumberFamilies = data.toInt(&ok, 10);
 }
 
 // -----------------------------------------------------------------------------
@@ -232,17 +232,18 @@ void AngPhase::parseHKLFamilies(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
-  std::stringstream ss(data);
-
-  while(ss.good() )
+  QByteArray buf(&(value[start]), strlen(value) - start);
+  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
+  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
+  bool ok = false;
+  family->h = tokens[0].toInt(&ok, 10);
+  family->k = tokens[1].toInt(&ok, 10);
+  family->l = tokens[2].toInt(&ok, 10);
+  family->s1 = tokens[3].toInt(&ok, 10);
+  family->diffractionIntensity = tokens[4].toFloat(&ok);
+  if (tokens.size() > 5)
   {
-    ss >> family->h;
-    ss >> family->k;
-    ss >> family->l;
-    ss >> family->s1;
-    ss >> family->diffractionIntensity;
-    ss >> family->s2;
+    family->s2 = tokens[5].toInt(&ok, 10);
   }
   if (family->s1 > 1) { family->s1 = 1; }
   if (family->s2 > 1) { family->s2 = 1; }
@@ -275,49 +276,49 @@ void AngPhase::parseCategories(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
-  std::stringstream ss(data);
-  int cat;
-  while(ss.good() )
+  QByteArray buf(&(value[start]), len - start);
+  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
+  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
+  bool ok = false;
+  foreach(QByteArray cat, tokens)
   {
-    ss >> cat;
-    m_Categories.push_back(cat);
+    m_Categories.push_back(cat.toInt(&ok, 10));
   }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::printSelf(std::ostream &stream)
+void AngPhase::printSelf(QTextStream &stream)
 {
-  stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << std::endl;
-  stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << std::endl;
-  stream << Ebsd::Ang::Formula << ": " << m_Formula << std::endl;
-  stream << Ebsd::Ang::Info << ": " << m_Info << std::endl;
-  stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << std::endl;
+  stream << Ebsd::Ang::Phase << ": " << m_PhaseIndex << QString("\n");
+  stream << Ebsd::Ang::MaterialName << ": " << m_MaterialName << QString("\n");
+  stream << Ebsd::Ang::Formula << ": " << m_Formula << QString("\n");
+  stream << Ebsd::Ang::Info << ": " << m_Info << QString("\n");
+  stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << QString("\n");
 
   stream << Ebsd::Ang::LatticeConstants;
-  for (std::vector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
+  for (QVector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
   {
     stream << " " << *iter;
   }
-  stream << std::endl;
+  stream << QString("\n");
 
-  stream << Ebsd::Ang::NumberFamilies << ": " << m_NumberFamilies << std::endl;
+  stream << Ebsd::Ang::NumberFamilies << ": " << m_NumberFamilies << QString("\n");
 
 
-  for (std::vector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
+  for (QVector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
   {
    (*iter)->printSelf(stream);
   }
 
 
   stream << Ebsd::Ang::Categories;
-  for (std::vector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
+  for (QVector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
   {
     stream << " " << *iter;
   }
-  stream << std::endl;
+  stream << QString("\n");
 
 }
 

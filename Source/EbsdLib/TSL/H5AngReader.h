@@ -42,11 +42,13 @@
 
 #include <hdf5.h>
 
-#include <vector>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QSet>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
+
 #include "AngReader.h"
 #include "AngPhase.h"
 
@@ -136,13 +138,13 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */
-    std::vector<AngPhase::Pointer> getPhases() { return m_Phases; }
+    QVector<AngPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(std::set<std::string> names);
+    virtual void setArraysToRead(QSet<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -169,8 +171,8 @@ class EbsdLib_EXPORT H5AngReader : public AngReader
     int readData(hid_t parId);
 
   private:
-    std::vector<AngPhase::Pointer> m_Phases;
-    std::set<std::string> m_ArrayNames;
+    QVector<AngPhase::Pointer> m_Phases;
+    QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5AngReader(const H5AngReader&); // Copy Constructor Not Implemented

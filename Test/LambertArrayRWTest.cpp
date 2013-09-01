@@ -35,7 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <vector>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
@@ -53,7 +54,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::DxIOTest::TestFile);
+  QFile::remove(UnitTest::DxIOTest::TestFile);
 #endif
 }
 

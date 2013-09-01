@@ -69,7 +69,7 @@ void MicPhase::printSelf(std::ostream &stream)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseString(char* value, size_t start, size_t length, std::string &data)
+void MicPhase::parseString(char* value, size_t start, size_t length, QString &data)
 {
   if (value[start] == ':')
   {
@@ -90,7 +90,7 @@ void MicPhase::parseString(char* value, size_t start, size_t length, std::string
   {
     len--;
   }
-  std::string data2(&(value[start]), len - start);
+  QString data2(&(value[start]), len - start);
   data = data2;
 }
 
@@ -98,7 +98,7 @@ void MicPhase::parseString(char* value, size_t start, size_t length, std::string
      * @brief Converts a string to a number
      */
 template<typename T>
-bool stringToNum(T &t, const std::string &s)
+bool stringToNum(T &t, const QString &s)
 {
   // Filter the line to convert European comma style decimals to US/UK style points
   std::vector<char> cLine(s.size()+1);
@@ -107,7 +107,7 @@ bool stringToNum(T &t, const std::string &s)
   {
     if (cLine[c] == ',') { cLine[c] = '.';}
   }
-  std::istringstream iss(std::string( &(cLine.front()) ) );
+  std::istringstream iss(QString( &(cLine.front()) ) );
   return !(iss >> t).fail();
 }
 
@@ -115,18 +115,18 @@ bool stringToNum(T &t, const std::string &s)
 * @brief Parses a header line into string "tokens"
 */
 template<typename T>
-std::vector<T> tokenize(const std::string &values, char delimiter)
+std::vector<T> tokenize(const QString &values, char delimiter)
 {
   std::vector<T> output;
-  std::string::size_type start = 0;
-  std::string::size_type pos = 0;
-  while(pos != std::string::npos && pos != values.size() - 1)
+  QString::size_type start = 0;
+  QString::size_type pos = 0;
+  while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
     T value = 0;
     stringToNum(value, values.substr(start, pos-start));
     output.push_back(value);
-    if (pos != std::string::npos)
+    if (pos != QString::npos)
     {
       start = pos + 1;
     }
@@ -140,7 +140,7 @@ std::vector<T> tokenize(const std::string &values, char delimiter)
 // -----------------------------------------------------------------------------
 void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
 {
-  std::string data;
+  QString data;
   parseString(value, start, length, data);
   std::vector<float> constants = tokenize<float>(data, ',');
   m_LatticeConstants.resize(6);
@@ -153,7 +153,7 @@ void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
 {
-  std::string data;
+  QString data;
   parseString(value, start, length, data);
   std::vector<float> constants = tokenize<float>(data, ',');
     m_LatticeConstants[3] = constants[0];
@@ -165,7 +165,7 @@ void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 void MicPhase::parseBasisAtoms(char* value, size_t start, size_t length)
 {
-  std::string data;
+  QString data;
   parseString(value, start, length, data);
   m_BasisAtoms = data;
 }
@@ -174,7 +174,7 @@ void MicPhase::parseBasisAtoms(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 void MicPhase::parseZandCoordinates(char* value, size_t start, size_t length)
 {
-  std::string data;
+  QString data;
   parseString(value, start, length, data);
   m_ZandCoordinates.push_back(data);
 }
@@ -195,9 +195,9 @@ unsigned int MicPhase::determineCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MicPhase::getMaterialName()
+QString MicPhase::getMaterialName()
 {
-  std::string name = "Nickel";
+  QString name = "Nickel";
   m_PhaseName = name;
 
   return m_PhaseName;

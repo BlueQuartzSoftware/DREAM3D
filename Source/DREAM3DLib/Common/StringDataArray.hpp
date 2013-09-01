@@ -40,7 +40,7 @@
 #include <string>
 #include <vector>
 
-#include "MXA/Utilities/StringUtils.h"
+
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

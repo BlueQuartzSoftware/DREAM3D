@@ -71,7 +71,7 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
     void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
 
-    MXA_INSTANCE_PROPERTY(float, PercentRecrystallized)
+    DREAM3D_INSTANCE_PROPERTY(float, PercentRecrystallized)
 
   protected:
     RecrystallizedPreset();

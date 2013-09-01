@@ -41,7 +41,8 @@
 #include <iostream>
 #include <string>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Utilities/AngleFileLoader.h"
@@ -58,7 +59,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::AngleFileLoaderTest::OutputFile);
+  QFile::remove(UnitTest::AngleFileLoaderTest::OutputFile);
 #endif
 }
 

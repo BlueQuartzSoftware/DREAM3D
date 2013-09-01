@@ -35,7 +35,8 @@
 #include <string>
 
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -122,9 +123,9 @@ void setErrorCondition(int err)
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::SyntheticBuilderTest::CsvFile);
-  MXADir::remove(UnitTest::SyntheticBuilderTest::OutputFile);
-  MXADir::remove(UnitTest::SyntheticBuilderTest::VtkOutputFile);
+  QFile::remove(UnitTest::SyntheticBuilderTest::CsvFile);
+  QFile::remove(UnitTest::SyntheticBuilderTest::OutputFile);
+  QFile::remove(UnitTest::SyntheticBuilderTest::VtkOutputFile);
 }
 
 // -----------------------------------------------------------------------------

@@ -50,7 +50,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
- // MXADir::remove();
+ // QFile::remove();
 #endif
 }
 

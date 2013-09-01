@@ -40,7 +40,7 @@
 #ifndef _CTFREADER_H_
 #define _CTFREADER_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <map>
 #include <vector>
 #include <fstream>
@@ -71,10 +71,10 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
     EBSD_TYPE_MACRO_SUPER(CtfReader, EbsdReader)
 
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Channel, Ebsd::Ctf::ChannelTextFile)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Channel, Ebsd::Ctf::ChannelTextFile)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, ZCells, Ebsd::Ctf::ZCells)
@@ -84,7 +84,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
+    EbsdHeader_INSTANCE_PROPERTY(CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
@@ -112,8 +112,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
-    void setPointerByName(const std::string &name, void* p);
+    void* getPointerByName(const QString &fieldName);
+    void setPointerByName(const QString &name, void* p);
 
 
 
@@ -122,11 +122,11 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
-    int getTypeSize(const std::string &fieldName);
-    DataParser::Pointer getParser(const std::string &fieldName, void* ptr, size_t size);
+    Ebsd::NumType getPointerType(const QString &fieldName);
+    int getTypeSize(const QString &fieldName);
+    DataParser::Pointer getParser(const QString &fieldName, void* ptr, size_t size);
 
-    std::vector<std::string> getColumnNames();
+    std::vector<QString> getColumnNames();
 
     /**
     * @brief Reads the complete HKL .ctf file.
@@ -167,8 +167,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
   private:
     int m_SingleSliceRead;
     std::vector<void*>  m_ColumnData;
-    std::map<std::string, int> m_NameIndexMap;
-    std::map<std::string, void*> m_NamePointerMap;
+    std::map<QString, int> m_NameIndexMap;
+    std::map<QString, void*> m_NamePointerMap;
     std::vector<DataParser::Pointer> m_DataParsers;
 
     /**
@@ -176,7 +176,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param buf
      * @param delimiter
      */
-    std::vector<std::string> tokenize(char* buf, char delimiter);
+    std::vector<QString> tokenize(char* buf, char delimiter);
 
     /**
      * @brief
@@ -184,7 +184,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param headerLines
      * @return
      */
-    int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+    int getHeaderLines(std::ifstream &reader, std::vector<std::vector<QString> > &headerLines);
 
     /**
     * Checks that the line is the header of the columns for the data.
@@ -194,12 +194,12 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @return <code>true</code> if the line is the columns header line,
     *         <code>false</code> otherwise
     */
-    bool isDataHeaderLine(std::vector<std::string> &columns);
+    bool isDataHeaderLine(std::vector<QString> &columns);
 
     /**
     *
     */
-    int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
+    int parseHeaderLines(std::vector<std::vector<QString> > &headerLines);
 	
 	/**
      * @brief
@@ -216,7 +216,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @param yCells Number of Y Data Points
     * @param col The current Column of Data
     */
-    void parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    void parseDataLine(const QString &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

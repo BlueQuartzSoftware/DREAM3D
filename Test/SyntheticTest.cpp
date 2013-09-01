@@ -38,7 +38,8 @@
 #include <string>
 
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -56,7 +57,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::SyntheticTest::OutputFile);
+  QFile::remove(UnitTest::SyntheticTest::OutputFile);
 #endif
 }
 

@@ -36,7 +36,9 @@
 
 #include <string.h>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QtDebug>
 
 #include "H5Support/H5Lite.h"
 #include "H5Support/H5Utilities.h"
@@ -54,7 +56,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(EbsdImportTest::H5EbsdOutputFile);
+  QFile::remove(EbsdImportTest::H5EbsdOutputFile);
 #endif
 }
 
@@ -86,7 +88,7 @@ void TestMissingHeaders()
   DREAM3D_REQUIRE_EQUAL(step, 0.0f)
 
   err = reader.readFile();
-  std::cout << reader.getErrorMessage() << std::endl;
+  qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, ==, -110)
 }
 
@@ -106,7 +108,7 @@ void TestMissingGrid()
 
 
   err = reader.readFile();
-  std::cout << reader.getErrorMessage() << std::endl;
+  qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, ==, -300)
 }
 
@@ -125,7 +127,7 @@ void TestHexGrid()
 
 
   err = reader.readFile();
-  std::cout << reader.getErrorMessage() << std::endl;
+  qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, ==, -400)
 }
 
@@ -138,7 +140,7 @@ void TestShortFile()
   reader.setFileName(EbsdImportTest::ShortFile);
   int err = reader.readFile();
   // It should read through this header just fine but die when reading the file because there is not enough data being read
-  std::cout << reader.getErrorMessage() << std::endl;
+  qDebug() << reader.getErrorMessage();
   DREAM3D_REQUIRED(err, <, 0)
 }
 

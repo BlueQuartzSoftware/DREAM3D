@@ -1,37 +1,52 @@
+/* ============================================================================
+ * Copyright (c) 2013 Michael A. Jackson (BlueQuartz Software)
+ *
+ * Redistribution and use in source and binary forms, with or without modification,
+ * are permitted provided that the following conditions are met:
+ *
+ * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *
+ * Redistributions in binary form must reproduce the above copyright notice, this
+ * list of conditions and the following disclaimer in the documentation and/or
+ * other materials provided with the distribution.
+ *
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+ * DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+ * SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER
+ * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
+ * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
+ * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-07-D-5800
+ *
+ * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _QH5Utilities_H_
+#define _QH5Utilities_H_
 
-//
-//  Copyright (c) 2007, 2010 Michael A. Jackson for BlueQuartz Software
-//  All rights reserved.
-//  BSD License: http://www.opensource.org/licenses/bsd-license.html
-//
-//  This code was written under United States Air Force Contract number
-//                           FA8650-04-C-5229
-//
-
-#ifndef _HDF5_UTILITIES_H_
-#define _HDF5_UTILITIES_H_
-
-
-// C++ Includes
-#include <map>
-#include <list>
-#include <string>
-
-//-- HDF Headers
-#include <hdf5.h>
 
 #include "H5Support/H5Support.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
-/* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
- * this class. If this is being compiled as part of H5SupportDataModel this should
- * _always_ be defined. If this code is being used as part of another project
- * then this should probably NOT be defined.
- */
-
-#if defined (H5Support_NAMESPACE)
-namespace H5Support_NAMESPACE {
+#if !defined (H5Support_USE_QT)
+#error THIS FILE SHOULD NOT BE INCLUDED UNLESS THE H5Support_USE_QT is also defined
 #endif
+
+
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QList>
+
 
 /**
  * @brief General Utilities for working with the HDF5 data files and API
@@ -39,28 +54,18 @@ namespace H5Support_NAMESPACE {
  * @date March 2007
  * @version $Revision: 1.2 $
  */
-class H5Utilities
+class QH5Utilities
 {
 
 public:
 
-  virtual ~H5Utilities();
+  virtual ~QH5Utilities();
 
 
-  #if 1
-  enum CustomHDFDataTypes {
-   H5Support_GROUP = 1,
-   H5Support_DATASET = 2,
-   H5Support_TYPE = 4,
-   H5Support_LINK = 8,
-   H5Support_ANY = 15
-  };
-  #endif
+  static H5Support_EXPORT hid_t openFile(const QString &filename, bool readOnly=false);
 
-  // -----------HDF5 File Operations
-  static H5Support_EXPORT hid_t openFile(const std::string &filename, bool readOnly=false);
+  static H5Support_EXPORT hid_t createFile(const QString &filename);
 
-  static H5Support_EXPORT hid_t createFile(const std::string &filename);
 
   static H5Support_EXPORT herr_t closeFile(hid_t &fileId);
 
@@ -71,7 +76,7 @@ public:
   * @param trim set to False to trim the path
   * @return  The path to the object relative to the objId
   */
-  static H5Support_EXPORT std::string getObjectPath(hid_t objId, bool trim=false);
+  static H5Support_EXPORT QString getObjectPath(hid_t objId, bool trim=false);
 
   /**
   * @brief Returns the hdf object type
@@ -80,7 +85,7 @@ public:
   * @param objType The type of the object
   * @return  Negative value on error
   */
-  static H5Support_EXPORT herr_t getObjectType(hid_t objId, const std::string &objName, int32_t *objType);
+  static H5Support_EXPORT herr_t getObjectType(hid_t objId, const QString &objName, int32_t *objType);
 
   /**
   * @brief Retrieves the object name for a given index
@@ -89,7 +94,7 @@ public:
   * @param name The variable to store the name
   * @return Negative value is error
   */
-  static H5Support_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name);
+  static H5Support_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, QString &name);
 
   /**
   * @brief Returns if a given hdf5 object is a group
@@ -97,7 +102,7 @@ public:
   * @param objName The name of the object to check
   * @return True if the given hdf5 object id is a group
   */
-  static H5Support_EXPORT bool isGroup(hid_t objId, const std::string &objName);
+  static H5Support_EXPORT bool isGroup(hid_t objId, const QString &objName);
 
 
   /**
@@ -106,7 +111,7 @@ public:
   * @param objectPath The path of the object to open
   * @return The hdf5 id of the opened object. Negative value is error.
   */
-  static H5Support_EXPORT hid_t openHDF5Object(hid_t locId, const std::string &objectPath);
+  static H5Support_EXPORT hid_t openHDF5Object(hid_t locId, const QString &objectPath);
 
   /**
   * @brief Closes the object id
@@ -116,7 +121,7 @@ public:
   static H5Support_EXPORT herr_t closeHDF5Object(hid_t locId);
 
 
-  static H5Support_EXPORT std::string HDFClassTypeAsStr(hid_t class_type);
+  static H5Support_EXPORT QString HDFClassTypeAsStr(hid_t class_type);
 
   /**
   * @brief prints the class type of the given class
@@ -132,7 +137,7 @@ public:
   * @param names Variable to store the list
   * @return
   */
-  static H5Support_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<std::string>& names);
+  static H5Support_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<QString> &names);
 
   /**
    * @brief Creates a HDF Group by checking if the group already exists. If the
@@ -142,7 +147,7 @@ public:
    * @param group The name of the group to create. Note that this group name should
    * not be any sort of 'path'. It should be a single group.
    */
-  static H5Support_EXPORT hid_t createGroup(hid_t loc_id, const std::string &group);
+  static H5Support_EXPORT hid_t createGroup(hid_t loc_id, const QString &group);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -151,7 +156,7 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static H5Support_EXPORT herr_t  createGroupsFromPath(const std::string &pathToCheck, hid_t parent);
+  static H5Support_EXPORT herr_t  createGroupsFromPath(const QString &pathToCheck, hid_t parent);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -160,14 +165,14 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static H5Support_EXPORT herr_t createGroupsForDataset(const std::string &datasetPath, hid_t parent);
+  static H5Support_EXPORT herr_t createGroupsForDataset(const QString &datasetPath, hid_t parent);
 
   /**
   * @brief Extracts the object name from a given path
   * @param path The path which to extract the object name
   * @return The name of the object
   */
-  static H5Support_EXPORT std::string extractObjectName(const std::string &path);
+  static H5Support_EXPORT QString extractObjectName(const QString &path);
 
   // -------------- HDF Attribute Methods ----------------------------
   /**
@@ -178,8 +183,8 @@ public:
   * @return True if the attribute exists.
   */
   static H5Support_EXPORT bool probeForAttribute(hid_t loc_id,
-                                            const std::string &obj_name,
-                                            const std::string &attr_name);
+                                            const QString &obj_name,
+                                            const QString &attr_name);
 
 
   /**
@@ -188,7 +193,7 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negate value is error
   */
-  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, std::list<std::string> &names);
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, QList<QString> &names);
 
   /**
   * @brief Returns a list of all the attribute names
@@ -197,21 +202,16 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negative value is error
   */
-  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
-                                                  std::list<std::string> &names);
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const QString &obj_name,
+                                                  QList<QString> &names);
 
 
 protected:
-  H5Utilities() {} //This is just a bunch of Static methods
+  QH5Utilities() {} //This is just a bunch of Static methods
 
 private:
-    H5Utilities(const H5Utilities&);   //Copy Constructor Not Implemented
-    void operator=(const H5Utilities&); //Copy Assignment Not Implemented
+    QH5Utilities(const QH5Utilities&);   //Copy Constructor Not Implemented
+    void operator=(const QH5Utilities&); //Copy Assignment Not Implemented
 };
 
-#if defined (H5Support_NAMESPACE)
-}
-#endif
-
-#endif /* _HDF5_UTILITIES_H_ */
-
+#endif /* _QH5Utilities_H_ */

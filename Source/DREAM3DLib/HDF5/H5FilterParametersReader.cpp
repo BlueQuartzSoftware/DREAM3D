@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "H5FilterParametersReader.h"
 
-#include "MXA/Utilities/StringUtils.h"
+
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
@@ -69,7 +69,7 @@ int H5FilterParametersReader::openFilterGroup(AbstractFilter* filter, int index)
     return -1;
   }
 
-  std::string name = StringUtils::numToString(index);
+  std::string name = QString::number(index);
   m_CurrentGroupId = H5Gopen(m_GroupId, name.c_str(), H5P_DEFAULT);
   return err;
 }

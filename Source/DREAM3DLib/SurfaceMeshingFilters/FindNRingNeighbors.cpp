@@ -37,7 +37,8 @@
 
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"

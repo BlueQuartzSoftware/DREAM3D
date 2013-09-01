@@ -42,7 +42,8 @@
 #include <fstream>
 #include <sstream>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MD5.h"
 
@@ -466,7 +467,7 @@ void parseSourceFileForMarker(const std::string filename, const std::string mark
     }
   }
   copyFile(tempfile, filename);
-  if ( !MXADir::remove(tempfile) )
+  if ( !QFile::remove(tempfile) )
   {
     std::cout << "FILE NOT REMOVED: " << tempfile << std::endl;
   }

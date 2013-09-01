@@ -88,7 +88,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
     void enableMDFTab(bool b);
 
-    MXA_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+    DREAM3D_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
 
     void setPhaseIndex(int value);
     int getPhaseIndex();
@@ -109,7 +109,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void drawODFPlotGrid(QwtPlot* plot);
 
-    MXA_INSTANCE_PROPERTY(bool, Initializing)
+    DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();

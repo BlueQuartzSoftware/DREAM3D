@@ -88,7 +88,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
     void enableMDFTab(bool b);
 
-    MXA_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+    DREAM3D_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
 
     void setPhaseIndex(int value);
     int getPhaseIndex();
@@ -117,7 +117,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void poleFigureGenerationComplete();
 
     protected:
-      MXA_INSTANCE_PROPERTY(bool, Initializing)
+      DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
     private:
       int      m_PhaseIndex;

@@ -87,9 +87,10 @@
 
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/StringUtils.h"
+
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -173,7 +174,7 @@ class SMTempFile
     virtual ~SMTempFile()
     {
       if (m_AutoDelete == true) {
-        MXADir::remove(m_FilePath); }
+        QFile::remove(m_FilePath); }
     }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilePath)

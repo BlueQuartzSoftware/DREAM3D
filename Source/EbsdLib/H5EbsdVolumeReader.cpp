@@ -81,7 +81,7 @@ void H5EbsdVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5EbsdVolumeReader::getPointerByName(const std::string &fieldName)
+void* H5EbsdVolumeReader::getPointerByName(const QString &fieldName)
 {
   return NULL;
 }
@@ -89,7 +89,7 @@ void* H5EbsdVolumeReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5EbsdVolumeReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType H5EbsdVolumeReader::getPointerType(const QString &fieldName)
 {
   return Ebsd::UnknownNumType;
 }
@@ -106,7 +106,7 @@ int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5EbsdVolumeReader::setArraysToRead(std::set<std::string> names)
+void H5EbsdVolumeReader::setArraysToRead(QSet<QString> names)
 {
   m_ArrayNames = names;
 }
@@ -114,7 +114,7 @@ void H5EbsdVolumeReader::setArraysToRead(std::set<std::string> names)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> H5EbsdVolumeReader::getArraysToRead()
+QSet<QString> H5EbsdVolumeReader::getArraysToRead()
 {
   return m_ArrayNames;
 }

@@ -37,7 +37,8 @@
 #include "SurfaceMeshToNodesTrianglesEdges.h"
 
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 

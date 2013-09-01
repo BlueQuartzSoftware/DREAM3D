@@ -43,7 +43,8 @@
 #include <limits>
 #include <string>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "H5Support/H5Utilities.h"
 
@@ -66,8 +67,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::StatsDataTest::TestFile);
-  MXADir::remove(UnitTest::StatsDataTest::TestFile2);
+  QFile::remove(UnitTest::StatsDataTest::TestFile);
+  QFile::remove(UnitTest::StatsDataTest::TestFile2);
 }
 
 // -----------------------------------------------------------------------------

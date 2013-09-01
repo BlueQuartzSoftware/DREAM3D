@@ -119,7 +119,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(std::set<std::string> names);
+    virtual void setArraysToRead(std::set<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -141,7 +141,7 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
 
   private:
     std::vector<CtfPhase::Pointer> m_Phases;
-    std::set<std::string> m_ArrayNames;
+    std::set<QString> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5CtfReader(const H5CtfReader&); // Copy Constructor Not Implemented

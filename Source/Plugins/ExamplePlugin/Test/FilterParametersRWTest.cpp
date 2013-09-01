@@ -32,7 +32,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -182,7 +183,7 @@ FilterPipeline::Pointer m_PipelineFromFile;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::FilterParametersRWTest::OutputFile);
+  QFile::remove(UnitTest::FilterParametersRWTest::OutputFile);
 #endif
 }
 

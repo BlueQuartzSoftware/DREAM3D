@@ -56,7 +56,8 @@
 
 #include "MXA/MXA.h"
 #include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"

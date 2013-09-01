@@ -48,7 +48,7 @@
 #include "hdf5.h"
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -79,7 +79,7 @@ class EbsdLib_EXPORT H5MicImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param MicFile The absolute path to the input .Mic file
      */
-    int importFile(hid_t fileId, int64_t index, const std::string &MicFile);
+    int importFile(hid_t fileId, int64_t index, const QString &MicFile);
 
     /**
      * @brief Writes the phase data into the HDF5 file

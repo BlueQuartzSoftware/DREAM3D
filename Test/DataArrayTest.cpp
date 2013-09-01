@@ -34,7 +34,8 @@
 #include <iostream>
 #include <string>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -67,7 +68,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::DataArrayTest::TestFile);
+  QFile::remove(UnitTest::DataArrayTest::TestFile);
 #endif
 }
 

@@ -66,7 +66,7 @@ EbsdReader::~EbsdReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EbsdReader::appendOriginalHeader(const std::string &more)
+void EbsdReader::appendOriginalHeader(const QString &more)
 {
   m_OriginalHeader.append(more);
 }

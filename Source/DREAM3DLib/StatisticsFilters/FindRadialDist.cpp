@@ -40,7 +40,8 @@
 #include <fstream>
 
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"

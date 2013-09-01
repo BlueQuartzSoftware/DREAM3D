@@ -1,7 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
- * All rights reserved.
+ * Copyright (c) 2013 Michael A. Jackson (BlueQuartz Software)
  *
  * Redistribution and use in source and binary forms, with or without modification,
  * are permitted provided that the following conditions are met:
@@ -13,8 +11,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -33,40 +31,44 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _H5Functions_H_
+#define _H5Functions_H_
 
-#include "AngFields.h"
-#include "AngConstants.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AngFields::AngFields()
-{
-}
+//-- HDF Headers
+#include <hdf5.h>
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AngFields::~AngFields()
-{
-}
+#include "H5Support/H5Support.h"
+#include "H5Support/H5SupportDLLExport.h"
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<QString> AngFields::getFieldNames()
-{
-  std::vector<QString> fields;
-  fields.push_back(Ebsd::Ang::Phi1);
-  fields.push_back(Ebsd::Ang::Phi);
-  fields.push_back(Ebsd::Ang::Phi2);
-  fields.push_back(Ebsd::Ang::ImageQuality);
-  fields.push_back(Ebsd::Ang::ConfidenceIndex);
-  fields.push_back(Ebsd::Ang::PhaseData);
-  fields.push_back(Ebsd::Ang::XPosition);
-  fields.push_back(Ebsd::Ang::YPosition);
-  fields.push_back(Ebsd::Ang::SEMSignal);
-  fields.push_back(Ebsd::Ang::Fit);
+//TODO: Add tests for the find* methods
 
-  return fields;
-}
+#define CloseH5A(aid, err, retError)\
+   err = H5Aclose( attr_id );\
+   if (err<0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute." << std::endl;retErr = err;}
+
+#define CloseH5D(did, err, retError)\
+  err = H5Dclose(did);\
+  if (err < 0) { std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset." << std::endl; retError = err;}
+
+#define CloseH5S(sid, err, retError)\
+  err = H5Sclose(sid); \
+  if ( err < 0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing Dataspace." << std::endl;retErr = err;}
+
+#define CloseH5T(tid, err, retError)\
+  err = H5Tclose(tid);\
+  if (err < 0 ) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType" << std::endl; retErr = err;}
+
+#define HDF_ERROR_HANDLER_OFF\
+  herr_t (*_oldHDF_error_func)(hid_t, void *);\
+  void *_oldHDF_error_client_data;\
+  H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
+  H5Eset_auto(H5E_DEFAULT, NULL, NULL);
+
+#define HDF_ERROR_HANDLER_ON  H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
+
+
+#define UNUSED(x) ((void)(x));
+
+
+#endif /* _H5Functions_H_ */

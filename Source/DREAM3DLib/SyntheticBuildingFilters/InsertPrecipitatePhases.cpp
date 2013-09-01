@@ -39,7 +39,8 @@
 #include <map>
 
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/MatrixMath.h"

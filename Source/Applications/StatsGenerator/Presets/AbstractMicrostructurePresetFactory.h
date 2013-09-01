@@ -39,7 +39,7 @@
 #include <string>
 #include <vector>
 
-#include <MXA/Common/MXASetGetMacros.h>
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "AbstractMicrostructurePreset.h"
 

@@ -54,7 +54,7 @@
 using namespace H5Support_NAMESPACE;
 #endif
 
-#define AIM_STRING std::string
+#define AIM_STRING QString
 
 #define CHECK_FOR_CANCELED(AClass)\
     if (m_Cancel == true){\
@@ -152,7 +152,7 @@ int H5CtfImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFile)
+int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString &ctfFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -246,7 +246,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
 //  std::cout << "Writing Slice " << actualSlice << " as " << z << std::endl;
   int err = 0;
   // Start creating the HDF5 group structures for this file
-  hid_t ctfGroup = H5Utilities::createGroup(fileId, StringUtils::numToString(z));
+  hid_t ctfGroup = H5Utilities::createGroup(fileId, QString::number(z));
   if(ctfGroup < 0)
   {
     std::ostringstream ss;
@@ -270,9 +270,9 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
     return -1;
   }
 
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Prj, Ebsd::Ctf::Prj);
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Author, Ebsd::Ctf::Author);
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, JobMode, Ebsd::Ctf::JobMode);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, QString, Prj, Ebsd::Ctf::Prj);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, QString, Author, Ebsd::Ctf::Author);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, QString, JobMode, Ebsd::Ctf::JobMode);
   WRITE_EBSD_HEADER_DATA(reader, int, XCells, Ebsd::Ctf::XCells)
   xDim = reader.getXCells();
   WRITE_EBSD_HEADER_DATA(reader, int, YCells, Ebsd::Ctf::YCells)
@@ -294,7 +294,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE1, Ebsd::Ctf::AcqE1);
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE2, Ebsd::Ctf::AcqE2);
   WRITE_EBSD_HEADER_DATA(reader, float, AcqE3, Ebsd::Ctf::AcqE3);
-  WRITE_EBSD_HEADER_STRING_DATA(reader, std::string, Euler, Ebsd::Ctf::Euler);
+  WRITE_EBSD_HEADER_STRING_DATA(reader, QString, Euler, Ebsd::Ctf::Euler);
   WRITE_EBSD_HEADER_DATA(reader, int, Mag, Ebsd::Ctf::Mag);
   WRITE_EBSD_HEADER_DATA(reader, int, Coverage, Ebsd::Ctf::Coverage);
   WRITE_EBSD_HEADER_DATA(reader, int, Device, Ebsd::Ctf::Device);
@@ -319,7 +319,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
   // Close this group
   err = H5Gclose(phasesGid);
 
-  std::string ctfCompleteHeader = reader.getOriginalHeader();
+  QString ctfCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, ctfCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, reader.getFileName());
 
@@ -345,7 +345,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
   { reader.getXCells() * reader.getYCells() };
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
-  std::vector<std::string> columnNames = reader.getColumnNames();
+  std::vector<QString> columnNames = reader.getColumnNames();
   for (size_t i = 0; i < columnNames.size(); ++i)
   {
     numType = reader.getPointerType(columnNames[i]);
@@ -448,10 +448,10 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
   for (std::vector<CtfPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     CtfPhase* p = (*phase).get();
-    hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
+    hid_t pid = H5Utilities::createGroup(phasesGid, QString::number(p->getPhaseIndex()));
 
     WRITE_PHASE_DATA_ARRAY( (*phase), float, pid, LatticeConstants, Ebsd::Ctf::LatticeConstants);
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, PhaseName, Ebsd::Ctf::PhaseName)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, PhaseName, Ebsd::Ctf::PhaseName)
     WRITE_PHASE_HEADER_DATA((*phase), int, LaueGroup, Ebsd::Ctf::LaueGroup)
 
     err = H5Lite::writeStringAttribute(pid, Ebsd::Ctf::LaueGroup, "Name",
@@ -466,9 +466,9 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
     }
 
     WRITE_PHASE_HEADER_DATA((*phase), int, SpaceGroup, Ebsd::Ctf::SpaceGroup)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Internal1, Ebsd::Ctf::Internal1)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Internal2, Ebsd::Ctf::Internal2)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Comment, Ebsd::Ctf::Comment)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Internal1, Ebsd::Ctf::Internal1)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Internal2, Ebsd::Ctf::Internal2)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Comment, Ebsd::Ctf::Comment)
     err = H5Gclose(pid);
   }
   return err;

@@ -37,7 +37,7 @@
 #ifndef CTFFIELDS_H_
 #define CTFFIELDS_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "EbsdLib/EbsdConstants.h"
@@ -61,7 +61,7 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     virtual ~CtfFields();
     EBSD_TYPE_MACRO_SUPER(CtfFields, AbstractEbsdFields)
 
-    virtual std::vector<std::string> getFieldNames();
+    virtual std::vector<QString> getFieldNames();
 
     template<typename T>
     T getFilterFields()
