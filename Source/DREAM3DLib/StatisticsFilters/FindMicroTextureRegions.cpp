@@ -190,9 +190,17 @@ void FindMicroTextureRegions::find_microtextureregions()
   {
     float xlength = (microtextureregionxmaxs[i] - microtextureregionxmins[i]) + xRes;
     float ylength = (microtextureregionymaxs[i] - microtextureregionymins[i]) + yRes;
-    float zlength = (microtextureregionzmaxs[i] - microtextureregionzmins[i]) + zRes;
-    float prismvolume = xlength * ylength * zlength;
-    m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes * zRes) / prismvolume;
+    if (zPoints == 1)
+    {
+      float zlength = (microtextureregionzmaxs[i] - microtextureregionzmins[i]) + zRes;
+      float prismvolume = xlength * ylength * zlength;
+      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes * zRes) / prismvolume;
+    }
+    else
+    {
+      float rectanglevolume = xlength * ylength;
+      m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes) / rectanglevolume;
+    }
   }
 
 }
