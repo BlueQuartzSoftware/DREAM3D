@@ -783,7 +783,7 @@ DREAM3D::Rgb TetragonalOps::generateMisorientationColor(const QuatF &q, const Qu
   zo1=zo/tan(M_PI/8);
 
   //eq c3.3
-  k=2.0f*atan2(y01, xo1);
+  k=2.0f*atan2(yo1, xo1);
   xo2=sqrtf(xo1*xo1+yo1*yo1)*cos(k);
   yo2=sqrtf(xo1*xo1+yo1*yo1)*sin(k);
   zo2=zo1;
