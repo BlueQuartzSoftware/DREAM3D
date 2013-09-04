@@ -41,8 +41,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
-#include "DREAM3DLib/Common/IDataArray.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -190,7 +189,7 @@ void FindNeighborhoods::execute()
   }
 
   find_neighborhoods();
- notifyStatusMessage("FindNeighborhoods Completed");
+  notifyStatusMessage("FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -204,8 +203,6 @@ void FindNeighborhoods::find_neighborhoods()
   float x, y, z;
   float xn, yn, zn;
   float dx, dy, dz;
-
-
 
   std::vector<std::vector<int> > neighborhoodlist;
 
@@ -265,43 +262,43 @@ void FindNeighborhoods::find_neighborhoods()
   }
   for (size_t i = 1; i < totalFields; i++)
   {
-      if (i%1000 == 0)
+    if (i%1000 == 0)
+    {
+      ss.str("");
+      ss << "Working On Grain " << i << " of " << totalFields;
+      notifyStatusMessage(ss.str());
+    }
+    x = m_Centroids[3*i];
+    y = m_Centroids[3*i+1];
+    z = m_Centroids[3*i+2];
+    bin1 = bins[i];
+    for (size_t j = i+1; j < totalFields; j++)
+    {
+      bin2 = bins[j];
+      if(bin1 == bin2)
       {
-        ss.str("");
-        ss << "Working On Grain " << i << " of " << totalFields;
-        notifyStatusMessage(ss.str());
+          m_Neighborhoods[i]++;
+          neighborhoodlist[i].push_back(j);
+          m_Neighborhoods[j]++;
+          neighborhoodlist[j].push_back(i);
       }
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
-      bin1 = bins[i];
-      for (size_t j = i+1; j < totalFields; j++)
+      else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
       {
-        bin2 = bins[j];
-        if(bin1 == bin2)
+        xn = m_Centroids[3*j];
+        yn = m_Centroids[3*j+1];
+        zn = m_Centroids[3*j+2];
+        dx = fabs(x - xn);
+        dy = fabs(y - yn);
+        dz = fabs(z - zn);
+        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
         {
-            m_Neighborhoods[i]++;
-            neighborhoodlist[i].push_back(j);
-            m_Neighborhoods[j]++;
-            neighborhoodlist[j].push_back(i);
-        }
-        else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
-        {
-          xn = m_Centroids[3*j];
-          yn = m_Centroids[3*j+1];
-          zn = m_Centroids[3*j+2];
-          dx = fabs(x - xn);
-          dy = fabs(y - yn);
-          dz = fabs(z - zn);
-          if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
-          {
-              m_Neighborhoods[i]++;
-              neighborhoodlist[i].push_back(j);
-              m_Neighborhoods[j]++;
-              neighborhoodlist[j].push_back(i);
-          }
+          m_Neighborhoods[i]++;
+          neighborhoodlist[i].push_back(j);
+          m_Neighborhoods[j]++;
+          neighborhoodlist[j].push_back(i);
         }
       }
+    }
   }
   for (size_t i = 1; i < totalFields; i++)
   {
