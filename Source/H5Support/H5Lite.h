@@ -333,7 +333,7 @@ static herr_t writeVectorDataset (hid_t loc_id,
   hid_t dataType = H5Lite::HDFTypeForPrimitive(data.front());
   if(dataType == -1)
   {
-    return -1;
+    return -100;
   }
   //Create the DataSpace
   std::vector<uint64_t>::size_type size = dims.size();
@@ -346,7 +346,7 @@ static herr_t writeVectorDataset (hid_t loc_id,
   sid = H5Screate_simple( static_cast<int>(size), &(_dims.front()), NULL );
   if (sid < 0)
   {
-    return sid;
+    return -101;
   }
   // Create the Dataset
   did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
@@ -355,21 +355,21 @@ static herr_t writeVectorDataset (hid_t loc_id,
     err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(data.front()) );
     if (err < 0 ) {
       std::cout << "Error Writing Data" << std::endl;
-      retErr = err;
+      retErr = -102;
     }
     err = H5Dclose( did );
     if (err < 0) {
       std::cout << "Error Closing Dataset." << std::endl;
-      retErr = err;
+      retErr = -103;
     }
   } else {
-    retErr = did;
+    retErr = -104;
   }
   /* Terminate access to the data space. */
   err= H5Sclose( sid );
   if (err< 0) {
     std::cout << "Error Closing Dataspace" << std::endl;
-    retErr = err;
+    retErr = -105;
   }
   return retErr;
 }
