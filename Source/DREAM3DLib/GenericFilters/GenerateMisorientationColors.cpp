@@ -246,6 +246,15 @@ void GenerateMisorientationColors::execute()
     cellQuat = quats[i];
 
     if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+    /*
+    if(
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::OrthoRhombic &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_Low &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Tetragonal_High
+       )
+       */
     {
         setErrorCondition(-1);
         notifyErrorMessage("Unsupported Crystal Structure", -1);
