@@ -178,6 +178,9 @@ namespace DREAM3D
     const std::string MisorientationList("MisorientationList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
     const std::string LMG("LMG");
+    const std::string MicroTextureRegionNumCells("MicroTextureRegionNumCells");
+    const std::string MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
+
   }
 
   namespace EnsembleData

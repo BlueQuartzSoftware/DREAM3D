@@ -40,6 +40,7 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   GenerateEnsembleStatistics
+  FindMicroTextureRegions
 )
 
 
