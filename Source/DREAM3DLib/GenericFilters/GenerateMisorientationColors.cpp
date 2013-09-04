@@ -29,9 +29,6 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateMisorientationColors.h"
 
@@ -238,7 +235,7 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
-  // Write the IPF Coloring Cell Data
+  // Write the Misorientation Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
@@ -247,6 +244,13 @@ void GenerateMisorientationColors::execute()
     m_MisorientationColor[index + 1] = 0;
     m_MisorientationColor[index + 2] = 0;
     cellQuat = quats[i];
+
+    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+    {
+        setErrorCondition(-1);
+        notifyErrorMessage("Unsupported Crystal Structure", -1);
+        return;
+    }
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)

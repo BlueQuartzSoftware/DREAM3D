@@ -726,6 +726,8 @@ DREAM3D::Rgb TetragonalOps::generateMisorientationColor(const QuatF &q, const Qu
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 
+  BOOST_ASSERT(false);
+
   return rgb;
 }
 
