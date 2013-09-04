@@ -36,15 +36,14 @@
 #ifndef H5CTFVOLUMEREADER_H_
 #define H5CTFVOLUMEREADER_H_
 
-//-- STL Includes
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 //-- EbsdLib Includes
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-
 #include "EbsdLib/HKL/CtfPhase.h"
 
 
@@ -97,7 +96,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @brief
      * @return
      */
-    std::vector<CtfPhase::Pointer> getPhases();
+    QVector<CtfPhase::Pointer> getPhases();
 
 
 
@@ -127,7 +126,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     H5CtfVolumeReader();
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
+    QVector<CtfPhase::Pointer> m_Phases;
 
     H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented

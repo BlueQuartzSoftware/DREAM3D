@@ -33,12 +33,15 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
+#ifndef _AngHeaderEntry_H_
+#define _AngHeaderEntry_H_
 
 
 #include <string.h>
-#include <iostream>
+
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
+#include <QtCore/QtDebug>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -67,11 +70,10 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
       T value = static_cast<T>(0);
       return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
     }
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      std::string data( &(value[start]), strlen(value) - start);
-      std::stringstream ss(data);
+      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
+      QTextStream ss(&value);
       ss >> m_value;
     }
     void print(std::ostream &out) {
@@ -116,15 +118,11 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] == ' ')
-      {
-        ++start;
-      }
-      std::string data( &(value[start]), strlen(value) - start);
-      m_value = QString::fromStdString(data);
+      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
+      value = value.trimmed(); // remove leading/trailing white space
+      m_value = QString(value);
     }
     void print(std::ostream &out) {
       out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
@@ -156,6 +154,5 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-
-
+#endif /* _AngHeaderEntry_H_ */
 

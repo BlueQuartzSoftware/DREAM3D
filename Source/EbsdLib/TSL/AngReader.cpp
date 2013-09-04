@@ -35,11 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AngReader.h"
 
-#include <iostream>
-//#include <fstream>
-#include <sstream>
+
 #include <algorithm>
 
+#include <QtCore/QObject>
 #include <QtCore/QFile>
 #include <QtCore/QTextStream>
 
@@ -215,7 +214,7 @@ int AngReader::readHeaderOnly()
   {
     //::memset(buf, 0, kBufferSize);
     buf = in.readLine();
-    parseHeaderLine(buf.data(), buf.count());
+    parseHeaderLine(buf);
     if (getHeaderIsComplete() == false) {
       origHeader.append(buf);
     }
@@ -233,11 +232,12 @@ int AngReader::readFile()
   setErrorCode(0);
   setErrorMessage("");
   QByteArray buf;
-  QFile in(getFileName());
   setHeaderIsComplete(false);
+
+  QFile in(getFileName());
   if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    QString msg = QString("Ang file could not be opened: ") + getFileName();
+    QString msg = QObject::tr("Ang file could not be opened: %1").arg(getFileName());
     setErrorCode(-100);
     setErrorMessage(msg);
     return -100;
@@ -250,11 +250,15 @@ int AngReader::readFile()
 
   while (!in.atEnd() && false == getHeaderIsComplete())
   {
-    // ::memset(buf, 0, kBufferSize);
     buf = in.readLine();
-    parseHeaderLine(buf.data(), buf.count());
-    if (getHeaderIsComplete() == false) {
+    if (buf.at(0) != '#')
+    {
+      setHeaderIsComplete(true);
+    }
+    else
+    {
       origHeader.append(buf);
+      parseHeaderLine(buf);
     }
   }
   // Update the Original Header variable
@@ -349,7 +353,7 @@ void AngReader::readData(QFile &in, QByteArray &buf)
   // The buf variable already has the first line of data in it
   for(size_t i = 0; i < totalDataRows; ++i)
   {
-    this->parseDataLine(buf.data(), i);
+    this->parseDataLine(buf, i);
    // ::memset(buf, 0, bufSize); // Clear the buffer
     buf = in.readLine();
     ++counter;
@@ -383,37 +387,18 @@ void AngReader::readData(QFile &in, QByteArray &buf)
 // -----------------------------------------------------------------------------
 //  Read the Header part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseHeaderLine(char* buf, size_t length)
+void AngReader::parseHeaderLine(QByteArray &buf)
 {
-  if (buf[0] != '#')
-  {
-    setHeaderIsComplete(true);
-    return;
-  }
-  // Start at the first character and walk until you find another non-space character
-  size_t i = 1;
-  while(buf[i] == ' ')
-  {
-    ++i;
-  }
-  size_t wordStart = i;
-  size_t wordEnd = i+1;
-  while(1)
-  {
-    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
-    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
-    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
-    else { break;}
-  }
-  wordEnd = i;
+  bool ok = false;
 
-  if (wordEnd - wordStart == 0)
-  {
-    return;
-  }
+  buf = buf.mid(1); // remove the '#' charater
+  buf = buf.trimmed(); // remove leading/trailing white space
+  buf = buf.simplified(); // remove multiple white space characters internal to the array
 
-  QByteArray wordBuf( &(buf[wordStart]), wordEnd - wordStart);
-  QString word(wordBuf);
+  // now split the array based on spaces
+  QList<QByteArray> tokens = buf.split(' ');
+  QString word(tokens.at(0));
+  if(word.lastIndexOf(':') > 0) { word.chop(1); }
 
   // If the word is "Phase" then we need to construct a "Phase" class and
   //  store all the meta data for the phase into that class. When we are done
@@ -423,41 +408,41 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   if (word.compare(Ebsd::Ang::Phase) == 0)
   {
     m_CurrentPhase = AngPhase::New();
-    m_CurrentPhase->parsePhase(buf, wordEnd, length);
+    m_CurrentPhase->setPhaseIndex(tokens.at(1).toInt(&ok, 10));
     // Parsing the phase is complete, now add it to the vector of Phases
     m_PhaseVector.push_back(m_CurrentPhase);
   }
   else if (word.compare(Ebsd::Ang::MaterialName) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseMaterialName(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseMaterialName(tokens);
   }
   else if (word.compare(Ebsd::Ang::Formula) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseFormula(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseFormula(tokens);
   }
   else if (word.compare(Ebsd::Ang::Info) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseInfo(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseInfo(tokens);
   }
   else if (word.compare(Ebsd::Ang::Symmetry) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseSymmetry(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->setSymmetry(tokens.at(1).toUInt(&ok, 10));
   }
   else if (word.compare(Ebsd::Ang::LatticeConstants) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseLatticeConstants(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseLatticeConstants(tokens);
   }
   else if (word.compare(Ebsd::Ang::NumberFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseNumberFamilies(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->setNumberFamilies(tokens.at(1).toInt(&ok, 10));
   }
   else if (word.compare(Ebsd::Ang::HKLFamilies) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseHKLFamilies(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseHKLFamilies(tokens);
   }
   else if (word.compare(Ebsd::Ang::Categories) == 0 && m_CurrentPhase.get() != NULL)
   {
-    m_CurrentPhase->parseCategories(buf, wordEnd, length);
+    if (tokens.size() > 1) m_CurrentPhase->parseCategories(tokens);
   }
   else
   {
@@ -481,9 +466,9 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 #endif
       return;
     }
-    else
+    else if (tokens.size() > 1)
     {
-      p->parseValue(buf, wordEnd, length);
+      p->parseValue(tokens[1]);
 #if 0
       std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
       std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
@@ -497,7 +482,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseDataLine(char *line, size_t i)
+void AngReader::parseDataLine(QByteArray &line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -519,7 +504,7 @@ void AngReader::parseDataLine(char *line, size_t i)
   int ph = -1;
   size_t offset = 0;
   size_t fieldsRead = 0;
-  fieldsRead = sscanf(line, "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
+  fieldsRead = sscanf(line.data(), "%f %f %f %f %f %f %f %d %f %f", &p1, &p,&p2, &x, &y, &iqual, &conf, &ph, &semSignal, &fit);
 
   offset = i;
 

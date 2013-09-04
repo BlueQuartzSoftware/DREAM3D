@@ -34,14 +34,20 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-
+#ifndef _CTFHEADERENTRY_H_
+#define _CTFHEADERENTRY_H_
 
 
 #include <string.h>
-#include <iostream>
 
-#include "EbsdLib/EbsdSetGetMacros.h"
+#include "H5Support/QH5Lite.h"
+
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
+#include <QtCore/QtDebug>
+
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
 
@@ -64,21 +70,20 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     virtual ~CtfHeaderEntry() {}
 
     QString getKey() { return m_key; }
-    QString getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+    QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
       // Simple Naieve filter to remove European style decimals that use a comma
-      for (size_t c = start; c < length; ++c)
+      for (int c = 0; c < value.size(); ++c)
       {
-        if (value[c] == ',') { value[c] = '.';}
+        if (value.at(c) == ',') { value[c] = '.';}
       }
-      QString data( &(value[start]), strlen(value) - start);
-      QStringstream ss(data);
+      QTextStream ss(&value);
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -119,13 +124,13 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
       m_value = QString(value);
     }
 
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
@@ -152,8 +157,5 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-
-
-
-
+#endif /* _CTFHEADERENTRY_H_ */
 

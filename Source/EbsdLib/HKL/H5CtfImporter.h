@@ -33,16 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-#ifndef H5CTFIMPORTER_H_
-#define H5CTFIMPORTER_H_
+#ifndef _H5CTFIMPORTER_H_
+#define _H5CTFIMPORTER_H_
 
 #include "hdf5.h"
 
-#include <vector>
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
 #include "EbsdLib/EbsdLib.h"
@@ -131,4 +127,4 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     void operator=(const H5CtfImporter&); // Operator '=' Not Implemented
 };
 
-#endif /* H5CTFIMPORTER_H_ */
+#endif /* _H5CTFIMPORTER_H_ */

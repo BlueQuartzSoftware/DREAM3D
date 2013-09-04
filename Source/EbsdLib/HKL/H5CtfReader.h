@@ -33,17 +33,13 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-#ifndef H5CTFREADER_H_
-#define H5CTFREADER_H_
+#ifndef _H5CTFREADER_H_
+#define _H5CTFREADER_H_
 
 #include <hdf5.h>
 
-#include <vector>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QSet>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -57,7 +53,7 @@
  * @date Aug 2, 2011
  * @version 1.0
  *
- * HKL OIM Scans are stored in the HDF5 file into a heirarchy of folders where
+ * HKL EBSD Scans are stored in the HDF5 file into a heirarchy of folders where
  * each folder stores an individual .ctf file. The folder has a simple index as
  * its name, for example if the index of the .ctf file was 11 then the HDF folder
  * that contains that .ctf file's data has an HDF Group name of "11". Within this
@@ -113,13 +109,13 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
      * @brief Returns a vector of AngPhase objects corresponding to the phases
      * present in the file
      */
-    std::vector<CtfPhase::Pointer> getPhases() { return m_Phases; }
+    QVector<CtfPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(std::set<QString> names);
+    virtual void setArraysToRead(QSet<QString> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -140,12 +136,12 @@ class EbsdLib_EXPORT H5CtfReader : public CtfReader
     int readData(hid_t parId);
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
-    std::set<QString> m_ArrayNames;
+    QVector<CtfPhase::Pointer> m_Phases;
+    QSet<QString> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5CtfReader(const H5CtfReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfReader&); // Operator '=' Not Implemented
 };
 
-#endif /* H5CTFREADER_H_ */
+#endif /* _H5CTFREADER_H_ */

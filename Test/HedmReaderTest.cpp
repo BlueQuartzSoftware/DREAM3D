@@ -34,51 +34,36 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef ANGFIELDS_H_
-#define ANGFIELDS_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <string.h>
 
-#include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/EbsdSetGetMacros.h"
-#include "EbsdLib/EbsdLib.h"
-#include "EbsdLib/AbstractEbsdFields.h"
-#include "EbsdLib/TSL/AngConstants.h"
+#include "EbsdLib/HEDM/MicReader.h"
 
-/**
- * @class AngFields AngFields.h EbsdLib/TSL/AngFields.h
- * @brief This class simply holds the names of the columns that are present in the
- * TSL .ang file.
- * @author Michael A. Jackson for BlueQuartz Software
- * @date Aug 18, 2011
- * @version 1.0
- */
-class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
+
+#include "UnitTestSupport.hpp"
+#include "HedmTestFileLocation.h"
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void TestHedmReader()
 {
-  public:
-    AngFields();
-    virtual ~AngFields();
+  MicReader reader;
+  reader.setFileName(UnitTest::HedmReaderTest::MicFile);
+  int err =  reader.readFile();
+  DREAM3D_REQUIRE(err >= 0);
 
-    virtual QVector<QString> getFieldNames();
+}
 
-    template<typename T>
-    T getFilterFields()
-    {
-      T fields;
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int main(int argc, char **argv)
+{
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestHedmReader() )
 
-      fields.push_back(Ebsd::Ang::ImageQuality);
-      fields.push_back(Ebsd::Ang::ConfidenceIndex);
 
-      fields.push_back(Ebsd::Ang::SEMSignal);
-      fields.push_back(Ebsd::Ang::Fit);
-
-      return fields;
-    }
-
-  private:
-    AngFields(const AngFields&); // Copy Constructor Not Implemented
-    void operator=(const AngFields&); // Operator '=' Not Implemented
-};
-
-#endif /* ANGFIELDS_H_ */
+  PRINT_TEST_SUMMARY();
+  return err;
+}

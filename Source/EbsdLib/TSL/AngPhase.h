@@ -167,15 +167,15 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
 
 
-    void parsePhase(char* value, size_t start, size_t length);
-    void parseMaterialName(char* value, size_t start, size_t length);
-    void parseFormula(char* value, size_t start, size_t length);
-    void parseInfo(char* value, size_t start, size_t length);
-    void parseSymmetry(char* value, size_t start, size_t length);
-    void parseLatticeConstants(char* value, size_t start, size_t length);
-    void parseNumberFamilies(char* value, size_t start, size_t length);
-    void parseHKLFamilies(char* value, size_t start, size_t length);
-    void parseCategories(char* value, size_t start, size_t length);
+  //  void parsePhase(char* value, size_t start, size_t length);
+    void parseMaterialName(QList<QByteArray> tokens);
+    void parseFormula(QList<QByteArray> tokens);
+    void parseInfo(QList<QByteArray> tokens);
+  //  void parseSymmetry(char* value, size_t start, size_t length);
+    void parseLatticeConstants(QList<QByteArray> tokens);
+  //  void parseNumberFamilies(char* value, size_t start, size_t length);
+    void parseHKLFamilies(QList<QByteArray> tokens);
+    void parseCategories(QList<QByteArray> tokens);
 
     void printSelf(QTextStream &stream);
 

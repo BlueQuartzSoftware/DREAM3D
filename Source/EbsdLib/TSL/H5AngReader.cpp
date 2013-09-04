@@ -154,8 +154,6 @@ int H5AngReader::readHeader(hid_t parId)
     setErrorMessage("H5AngReader Error: Could not open 'Header' Group");
     return -1;
   }
-  QString sBuf;
-  QTextStream ss(&sBuf);
 
   READ_EBSD_HEADER_DATA("H5AngReader", AngHeaderEntry<float>, float, TEMPIXPerUM, Ebsd::Ang::TEMPIXPerUM)
   READ_EBSD_HEADER_DATA("H5AngReader", AngHeaderEntry<float>, float, XStar, Ebsd::Ang::XStar)
@@ -244,8 +242,7 @@ int H5AngReader::readHeader(hid_t parId)
 // -----------------------------------------------------------------------------
 int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
 {
-  QString sBuf;
-  QTextStream ss(&sBuf);
+
   hid_t dataset, memtype;
   herr_t status = 1;
   HKLFamily_t data;
@@ -268,9 +265,8 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
     if (status < 0)
     {
       setErrorCode(-90011);
-      ss.string()->clear();
-      ss << "H5AngReader Error: Could not read the HKLFamily data for family number " << i;
-      setErrorMessage(ss.string());
+      QString ss = QObject::tr("H5AngReader Error: Could not read the HKLFamily data for family number ").arg(i);
+      setErrorMessage(ss);
       break;
     }
     status = H5Dclose(dataset); // Close the data set

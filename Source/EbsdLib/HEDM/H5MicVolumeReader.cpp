@@ -38,11 +38,13 @@
 
 #include <cmath>
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include <QtCore/QString>
+
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/Utilities/StringUtils.h"
+
 #include "EbsdLib/HEDM/H5MicReader.h"
 
 #if defined (H5Support_NAMESPACE)
@@ -92,7 +94,7 @@ void H5MicVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  std::set<QString> arrayNames = getArraysToRead();
+  QSet<QString> arrayNames = getArraysToRead();
 
 
   H5MICREADER_ALLOCATE_ARRAY(Euler1, float)
@@ -152,7 +154,7 @@ Ebsd::NumType H5MicVolumeReader::getPointerType(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
+QVector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
 {
   m_Phases.clear();
 
@@ -160,7 +162,7 @@ std::vector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
   QString index = QString::number(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = H5Utilities::openFile(getFileName(), true);
+  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
   if(fileId < 0)
   {
     std::cout << "Error: Could not open .h5ebsd file for reading." << std::endl;
@@ -168,7 +170,7 @@ std::vector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
   }
   herr_t err = 0;
 
-  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, index.toLatin1().data(), H5P_DEFAULT);
   H5MicReader::Pointer reader = H5MicReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
@@ -176,12 +178,12 @@ std::vector<MicPhase::Pointer> H5MicVolumeReader::getPhases()
   {
     std::cout << "Error reading the header information from the .h5ebsd file" << std::endl;
     err = H5Gclose(gid);
-    err = H5Utilities::closeFile(fileId);
+    err = QH5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
   err = H5Gclose(gid);
-  err = H5Utilities::closeFile(fileId);
+  err = QH5Utilities::closeFile(fileId);
   return m_Phases;
 }
 

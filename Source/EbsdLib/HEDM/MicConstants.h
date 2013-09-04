@@ -41,7 +41,7 @@
 #define MicCONSTANTS_H_
 
 #include <QtCore/QString>
-#include <vector>
+#include <QtCore/QVector>
 
 #define DECLARE_STRING_CONST(var)\
   const QString var(#var);

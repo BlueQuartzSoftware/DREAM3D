@@ -49,10 +49,10 @@
   m_msgType t;\
   err = QH5Lite::readScalarDataset(gid, key, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(key);\
     setErrorCode(-90001);\
-    setErrorMessage(ss.string());\
+    setErrorMessage(ss);\
     err = H5Gclose(gid);\
     return -1; }\
   else {\
@@ -67,10 +67,10 @@
   QString t;\
   err = QH5Lite::readStringDataset(gid, key, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << key << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(key);\
     setErrorCode(-90002);\
-    setErrorMessage(ss.string());\
+    setErrorMessage(ss);\
     err = H5Gclose(gid);\
     return -1; }\
   else {\
@@ -86,10 +86,10 @@
   QString t;\
   err = QH5Lite::readStringDataset(pid, fqKey, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(fqKey);\
     setErrorCode(-90003);\
-    setErrorMessage(ss.string());\
+    setErrorMessage(ss);\
     err = H5Gclose(pid); H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
     else {\
@@ -102,10 +102,10 @@
   m_msgType t;\
   err = QH5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(fqKey);\
     setErrorCode(-90004);\
-    setErrorMessage(ss.string());\
+    setErrorMessage(ss);\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
@@ -118,10 +118,10 @@
   m_msgType t;\
   err = QH5Lite::readScalarDataset(pid, fqKey, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(fqKey);\
     setErrorCode(-90005);\
-    setErrorMessage(ss.string());\
+    setErrorMessage(ss);\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
@@ -134,10 +134,10 @@
   m_msgType t;\
   err = QH5Lite::readVectorDataset(pid, fqKey, t);\
   if (err < 0) {\
-    ss.string()->clear();\
-    ss <<  cname << ": The header value for '" << fqKey << "' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?\n";\
-    setErrorCode(-90006);\
-    setErrorMessage(ss.string());\
+    QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
+    .arg(cname).arg(fqKey);\
+    setErrorCode(-90005);\
+    setErrorMessage(ss);\
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\

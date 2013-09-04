@@ -195,11 +195,9 @@ class EbsdLib_EXPORT EbsdReader
   #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
           _mm_free(ptr );
   #else
-          //delete[] ptr;
           free(ptr);
   #endif
           ptr = NULL;
-   //       m_NumberOfElements = 0;
         }
       }
 

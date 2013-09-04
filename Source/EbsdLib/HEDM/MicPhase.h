@@ -42,7 +42,7 @@
 #define MicPHASE_H_
 
 #include <QtCore/QString>
-#include <vector>
+#include <QtCore/QVector>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -67,19 +67,16 @@ class EbsdLib_EXPORT MicPhase
     virtual ~MicPhase();
 
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
-//    EBSD_INSTANCE_STRING_PROPERTY(LatticeAngles)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants)
     EBSD_INSTANCE_STRING_PROPERTY(BasisAtoms)
     EBSD_INSTANCE_STRING_PROPERTY(Symmetry)
-  EBSD_INSTANCE_PROPERTY(std::vector<QString>, ZandCoordinates)
+    EBSD_INSTANCE_PROPERTY(QVector<QString>, ZandCoordinates)
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
-    void parseLatticeConstants(char* value, size_t start, size_t length);
-    void parseLatticeAngles(char* value, size_t start, size_t length);
-    void parseBasisAtoms(char* value, size_t start, size_t length);
-    void parseZandCoordinates(char* value, size_t start, size_t length);
-
-  void parseString(char* value, size_t start, size_t length, QString &data);
+    void parseLatticeConstants(QByteArray &data);
+    void parseLatticeAngles(QByteArray &data);
+    void parseBasisAtoms(QByteArray &data);
+    void parseZandCoordinates(QByteArray &data);
 
     void printSelf(std::ostream &stream);
 

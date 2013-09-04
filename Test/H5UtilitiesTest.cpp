@@ -41,6 +41,8 @@ standard C++ library."
 #include <list>
 #include <string>
 
+#include <boost/assert.hpp>
+
 #include <QtCore/QFile>
 #include <QtCore/QDateTime>
 #include <QtCore/QtDebug>

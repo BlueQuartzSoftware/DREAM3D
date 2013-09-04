@@ -60,190 +60,114 @@ AngPhase::~AngPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parsePhase(char* value, size_t start, size_t length)
+//void AngPhase::parsePhase(char* value, size_t start, size_t length)
+//{
+//  if (value[start] == ':')
+//  {
+//    ++start;
+//  } // move past the ":" character
+//  QByteArray buf(&(value[start]), strlen(value) - start);
+//  bool ok = false;
+//  m_PhaseIndex = buf.toInt(&ok, 10);
+//}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void AngPhase::parseMaterialName(QList<QByteArray> tokens)
 {
-  if (value[start] == ':')
+  m_MaterialName.clear();
+  for(int i = 1; i < tokens.size(); ++i)
   {
-    ++start;
-  } // move past the ":" character
-  QByteArray buf(&(value[start]), strlen(value) - start);
-  bool ok = false;
-  m_PhaseIndex = buf.toInt(&ok, 10);
+    m_MaterialName.append(tokens.at(i)).append(" ");
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseMaterialName(char* value, size_t start, size_t length)
+void AngPhase::parseFormula(QList<QByteArray> tokens)
 {
-  if (value[start] == ':')
+  m_Formula.clear();
+  for(int i = 1; i < tokens.size(); ++i)
   {
-    ++start;
-  } // move past the ":" character
-  while (value[start] == ' ' || value[start] == '\t')
-  {
-    ++start;
+    m_Formula.append(tokens.at(i)).append(" ");
   }
-
-  size_t len = strlen(value);
-  // Strip off training new line and carriage returns
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  QByteArray data(&(value[start]), len - start);
-  m_MaterialName = QString(data);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseFormula(char* value, size_t start, size_t length)
+void AngPhase::parseInfo(QList<QByteArray> tokens)
 {
-  if (value[start] == ':')
+  m_Info.clear();
+  for(int i = 1; i < tokens.size(); ++i)
   {
-    ++start;
-  } // move past the ":" character
-  while (value[start] == ' ' || value[start] == '\t')
-  {
-    ++start;
+    m_Info.append(tokens.at(i)).append(" ");
   }
-
-  size_t len = strlen(value);
-  // Strip off training new line and carriage returns
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  QByteArray data(&(value[start]), len - start);
-  m_Formula = QString(data);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseInfo(char* value, size_t start, size_t length)
-{
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  while (value[start] == ' ' || value[start] == '\t')
-  {
-    ++start;
-  }
-
-  size_t len = strlen(value);
-  // Strip off training new line and carriage returns
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  QByteArray data(&(value[start]), len - start);
-  m_Info = QString(data);
-}
+//void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
+//{
+//  if (value[start] == ':')
+//  {
+//    ++start;
+//  } // move past the ":" character
+//  QByteArray data(&(value[start]), strlen(value) - start);
+//  bool ok = false;
+//  m_Symmetry = data.toUInt(&ok, 10);
+//}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
-{
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  QByteArray data(&(value[start]), strlen(value) - start);
-  bool ok = false;
-  m_Symmetry = data.toUInt(&ok, 10);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AngPhase::parseLatticeConstants(char* value, size_t start, size_t length)
+void AngPhase::parseLatticeConstants(QList<QByteArray> tokens)
 {
   m_LatticeConstants.clear();
 
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  while (value[start] == ' ' || value[start] == '\t')
-  {
-    ++start;
-  }
-
-  size_t len = strlen(value);
-  // Strip off training new line and carriage returns
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  QByteArray buf(&(value[start]), len - start);
-  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
-  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
   bool ok = false;
-  m_LatticeConstants.push_back(tokens[0].toFloat(&ok));
   m_LatticeConstants.push_back(tokens[1].toFloat(&ok));
   m_LatticeConstants.push_back(tokens[2].toFloat(&ok));
   m_LatticeConstants.push_back(tokens[3].toFloat(&ok));
   m_LatticeConstants.push_back(tokens[4].toFloat(&ok));
   m_LatticeConstants.push_back(tokens[5].toFloat(&ok));
+  m_LatticeConstants.push_back(tokens[6].toFloat(&ok));
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseNumberFamilies(char* value, size_t start, size_t length)
-{
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  QByteArray data(&(value[start]), strlen(value) - start);
-  bool ok = false;
-  m_NumberFamilies = data.toInt(&ok, 10);
-}
+//void AngPhase::parseNumberFamilies(char* value, size_t start, size_t length)
+//{
+//  if (value[start] == ':')
+//  {
+//    ++start;
+//  } // move past the ":" character
+//  QByteArray data(&(value[start]), strlen(value) - start);
+//  bool ok = false;
+//  m_NumberFamilies = data.toInt(&ok, 10);
+//}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseHKLFamilies(char* value, size_t start, size_t length)
+void AngPhase::parseHKLFamilies(QList<QByteArray> tokens)
 {
   HKLFamily::Pointer family = HKLFamily::New();
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  QByteArray buf(&(value[start]), strlen(value) - start);
-  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
-  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
+
   bool ok = false;
-  family->h = tokens[0].toInt(&ok, 10);
-  family->k = tokens[1].toInt(&ok, 10);
-  family->l = tokens[2].toInt(&ok, 10);
-  family->s1 = tokens[3].toInt(&ok, 10);
-  family->diffractionIntensity = tokens[4].toFloat(&ok);
-  if (tokens.size() > 5)
+  family->h = tokens[1].toInt(&ok, 10);
+  family->k = tokens[2].toInt(&ok, 10);
+  family->l = tokens[3].toInt(&ok, 10);
+  family->s1 = tokens[4].toInt(&ok, 10);
+  family->diffractionIntensity = tokens[5].toFloat(&ok);
+  if (tokens.size() > 6)
   {
-    family->s2 = tokens[5].toInt(&ok, 10);
+    family->s2 = tokens[6].toInt(&ok, 10);
   }
   if (family->s1 > 1) { family->s1 = 1; }
   if (family->s2 > 1) { family->s2 = 1; }
@@ -253,36 +177,13 @@ void AngPhase::parseHKLFamilies(char* value, size_t start, size_t length)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AngPhase::parseCategories(char* value, size_t start, size_t length)
+void AngPhase::parseCategories(QList<QByteArray> tokens)
 {
   m_Categories.clear();
-
-  if (value[start] == ':')
-  {
-    ++start;
-  } // move past the ":" character
-  while (value[start] == ' ' || value[start] == '\t')
-  {
-    ++start;
-  }
-
-  size_t len = strlen(value);
-  // Strip off training new line and carriage returns
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  if (value[len-1] == '\r' || value[len-1] == '\n')
-  {
-    len--;
-  }
-  QByteArray buf(&(value[start]), len - start);
-  buf = buf.simplified(); // Trims beginning and ending white space and ensures only a single space between elements
-  QList<QByteArray> tokens = buf.split(' '); // Splits into tokens using the SPACE delimiter
   bool ok = false;
-  foreach(QByteArray cat, tokens)
+  for(int i = 1; i < tokens.size(); ++i)
   {
-    m_Categories.push_back(cat.toInt(&ok, 10));
+    m_Categories.push_back(tokens.at(i).toInt(&ok, 10));
   }
 }
 

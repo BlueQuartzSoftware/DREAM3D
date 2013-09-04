@@ -31,15 +31,22 @@ file(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMP
 file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BUILD_DIR_NATIVE)
 file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" DREAM3DProj_BUILD_DIR_NATIVE)
 file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/Bin" DREAM3DProj_BIN_DIR_NATIVE)
+file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/EbsdTestFiles/" EBSD_REFERENCE_DATA_DIR_NATIVE)
+file(TO_NATIVE_PATH "${PROJECT_RESOURCES_DIR}/HedmTestFiles/" HEDM_REFERENCE_DATA_DIR_NATIVE)
+
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
 set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
 ConvertPathToHeaderCompatible(DREAM3DTest_BUILD_DIR_NATIVE)
 ConvertPathToHeaderCompatible(DREAM3DProj_BUILD_DIR_NATIVE)
 ConvertPathToHeaderCompatible(DREAM3DProj_BIN_DIR_NATIVE)
+ConvertPathToHeaderCompatible(EBSD_REFERENCE_DATA_DIR_NATIVE)
+ConvertPathToHeaderCompatible(HEDM_REFERENCE_DATA_DIR_NATIVE)
 
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
+configure_file(${PROJECT_RESOURCES_DIR}/HedmTestFiles/HedmTestFileLocation.h.in
+               ${DREAM3DTest_BINARY_DIR}/HedmTestFileLocation.h @ONLY IMMEDIATE)
 configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
                ${DREAM3DTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
 
@@ -88,9 +95,6 @@ target_link_libraries(AngImportTest ${QT_QTCORE_LIBRARY} EbsdLib)
 set_target_properties(AngImportTest PROPERTIES FOLDER Test)
 add_test(AngImportTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/AngImportTest)
 
-
-if(0)
-
 # --------------------------------------------------------------------------
 # CTF Data File Testing
 # --------------------------------------------------------------------------
@@ -99,6 +103,17 @@ target_link_libraries(CtfReaderTest EbsdLib)
 set_target_properties(CtfReaderTest PROPERTIES FOLDER Test)
 add_test(CtfReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/CtfReaderTest)
 
+
+# --------------------------------------------------------------------------
+# HEDM Tests
+# --------------------------------------------------------------------------
+add_executable(HedmReaderTest HedmReaderTest.cpp )
+target_link_libraries(HedmReaderTest EbsdLib)
+set_target_properties(HedmReaderTest PROPERTIES FOLDER Test)
+add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
+
+
+if(0)
 
 
 # --------------------------------------------------------------------------

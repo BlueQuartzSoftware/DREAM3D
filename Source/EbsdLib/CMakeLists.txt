@@ -85,9 +85,9 @@ include_directories(${EbsdLib_BINARY_DIR})
 #-- Include all the Source Files
 # -- Include the Utiliy Sources
 #include ( ${EbsdLib_SOURCE_DIR}/Utilities/SourceList.cmake)
-include ( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
-#include ( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
-#include ( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
+include( ${EbsdLib_SOURCE_DIR}/TSL/SourceList.cmake)
+include( ${EbsdLib_SOURCE_DIR}/HKL/SourceList.cmake)
+include( ${EbsdLib_SOURCE_DIR}/HEDM/SourceList.cmake)
 
 
 set(EbsdLib_SRCS

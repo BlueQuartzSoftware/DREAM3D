@@ -33,12 +33,14 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
+#ifndef _MicHeaderEntry_H_
+#define _MicHeaderEntry_H_
 
 #include <string.h>
-#include <iostream>
+
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -59,20 +61,23 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
   public:
     EBSD_SHARED_POINTERS(MicHeaderEntry<T >)
     HEADERENTRY_NEW_SUPERCLASS(MicHeaderEntry<T>, EbsdHeaderEntry)
+    HEADERENTRY_NEW_SUPERCLASS_VALUE(MicHeaderEntry<T>, EbsdHeaderEntry)
 
     virtual ~MicHeaderEntry() {}
 
     QString getKey() { return m_key; }
-    QString getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
-    void parseValue(char* value, size_t start, size_t length)
+    QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
+
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      QString data( &(value[start]), strlen(value) - start);
-      QStringstream ss(data);
+      value = value.trimmed();
+      value = value.simplified();
+      QTextStream ss(&value);
       ss >> m_value;
     }
+
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -113,18 +118,13 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] < 33)
-      {
-        ++start;
-      }
-      QString data( &(value[start]), strlen(value) - start);
-      m_value = data;
+      m_value = QString(value.trimmed());
     }
+
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
@@ -153,6 +153,5 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-
-
+#endif /* _MicHeaderEntry_H_ */
 

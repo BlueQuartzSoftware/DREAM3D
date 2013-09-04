@@ -33,21 +33,17 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
-#ifndef CTFPHASE_H_
-#define CTFPHASE_H_
+#ifndef _CTFPHASE_H_
+#define _CTFPHASE_H_
 
 #include <string.h>
 
-#include <sstream>
-#include <vector>
+
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 
 #include "CtfConstants.h"
@@ -69,7 +65,7 @@ class EbsdLib_EXPORT CtfPhase
 
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants) // 1x6 array
+    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants) // 1x6 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName)
     EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::LaueGroupTable, LaueGroup) // <== Laue Group
 
@@ -78,11 +74,10 @@ class EbsdLib_EXPORT CtfPhase
     EBSD_INSTANCE_STRING_PROPERTY(Internal2)
     EBSD_INSTANCE_STRING_PROPERTY(Comment)
 
-
     /**
      * @brief Parses a header line into a CtfPhase class
      */
-    void parsePhase(const std::vector<QString> &tokens);
+    void parsePhase(QByteArray &line);
 
     /**
      * @brief Prints some debugging info about this class
@@ -96,52 +91,13 @@ class EbsdLib_EXPORT CtfPhase
 
     QString getMaterialName();
 
-    /**
-     * @brief Converts a string to a number
-     */
-    template<typename T>
-    bool stringToNum(T &t, const QString &s)
-    {
-      // Filter the line to convert European comma style decimals to US/UK style points
-      std::vector<char> cLine(s.size()+1);
-      ::memcpy( &(cLine.front()), s.c_str(), s.size() + 1);
-      for (size_t c = 0; c < cLine.size(); ++c)
-      {
-        if (cLine[c] == ',') { cLine[c] = '.';}
-      }
-      std::istringstream iss(QString( &(cLine.front()) ) );
-      return !(iss >> t).fail();
-    }
-
-    /**
-     * @brief Parses a header line into string "tokens"
-     */
-    template<typename T>
-    std::vector<T> tokenize(const QString &values, char delimiter)
-    {
-      std::vector<T> output;
-      QString::size_type start = 0;
-      QString::size_type pos = 0;
-      while(pos != QString::npos && pos != values.size() - 1)
-      {
-        pos = values.find(delimiter, start);
-        T value = 0;
-        stringToNum(value, values.substr(start, pos-start));
-        output.push_back(value);
-        if (pos != QString::npos)
-        {
-          start = pos + 1;
-        }
-      }
-      return output;
-    }
-
-
   protected:
     CtfPhase();
 
-   private:
+    void convertEuropeanDecimals(QByteArray &line);
+
+  private:
     CtfPhase(const CtfPhase&); // Copy Constructor Not Implemented
-     void operator=(const CtfPhase&); // Operator '=' Not Implemented
- };
-#endif /* CTFPHASE_H_ */
+    void operator=(const CtfPhase&); // Operator '=' Not Implemented
+};
+#endif /* _CTFPHASE_H_ */

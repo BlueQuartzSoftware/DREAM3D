@@ -37,7 +37,7 @@
 #ifndef _H5MicDATALOADER_H_
 #define _H5MicDATALOADER_H_
 
-#include <vector>
+#include <QtCore/QVector>
 
 //-- Ebsd Lib Includes
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -90,7 +90,7 @@ class EbsdLib_EXPORT H5MicVolumeReader : public H5EbsdVolumeReader
      * @brief
      * @return
      */
-    std::vector<MicPhase::Pointer> getPhases();
+    QVector<MicPhase::Pointer> getPhases();
     /**
       * @brief Returns the pointer to the data for a given field
       * @param fieldName The name of the field to return the pointer to.
@@ -117,7 +117,7 @@ class EbsdLib_EXPORT H5MicVolumeReader : public H5EbsdVolumeReader
     H5MicVolumeReader();
 
   private:
-    std::vector<MicPhase::Pointer> m_Phases;
+    QVector<MicPhase::Pointer> m_Phases;
 
     H5MicVolumeReader(const H5MicVolumeReader&);    // Copy Constructor Not Implemented
     void operator=(const H5MicVolumeReader&);  // Operator '=' Not Implemented

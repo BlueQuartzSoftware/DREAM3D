@@ -153,12 +153,12 @@ private:
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
-    void parseHeaderLine(char* buf, size_t length);
+    void parseHeaderLine(QByteArray &buf);
 
   /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void parseDataLine(char* line, size_t i);
+    void parseDataLine(QByteArray &line, size_t i);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented
