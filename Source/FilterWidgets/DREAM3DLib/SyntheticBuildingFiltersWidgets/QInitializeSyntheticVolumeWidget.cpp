@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -265,44 +265,26 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      m_DataContainer = VolumeDataContainer::New();
       std::stringstream ss;
-      hid_t fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true); // Open the file Read Only
-      if(fileId < 0)
-      {
-        ss.str("");
-        ss << ": Error opening input file '" << m_InputFile->text().toStdString() << "'";
-        return;
-      }
 
-      //Check to see if version of .dream3d file is prior to new data container names
-      std::string m_FileVersion;
-      float fVersion;
-      bool check;
-      int err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
-      check = StringUtils::stringToNum(fVersion, m_FileVersion);
-      if(fVersion < 5.0 || err < 0)
-      {
-        H5Utilities::closeFile(fileId);
-        fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), false); // Re-Open the file as Read/Write
-        err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
-        err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
-        err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-        H5Utilities::closeFile(fileId);
-        fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true); // Re-Open the file as Read Only
-      }
+      m_DataContainer = VolumeDataContainer::New();
 
-      HDF5ScopedFileSentinel sentinel(&fileId, true);
+      std::set<std::string> selectedArrays;
+      selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+      selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+      selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
-      VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
-      reader->setHdfFileId(fileId);
+      DataContainerReader::Pointer reader = DataContainerReader::New();
+      reader->setInputFile(m_InputFile->text().toStdString());
       reader->setVolumeDataContainer(m_DataContainer.get());
-      reader->setReadCellData(false);
-      reader->setReadFieldData(false);
-      reader->setReadEnsembleData(true);
-      reader->setReadAllArrays(true); // THIS IS VERY IMPORTANT to set otherwise nothing gets read.
+      reader->setReadVolumeData(true);
+      reader->setReadSurfaceData(false);
+      reader->setReadEdgeData(false);
+      reader->setReadVertexData(false);
+      reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+      reader->setReadAllArrays(false);
       reader->execute();
-      err = reader->getErrorCondition();
+      int err = reader->getErrorCondition();
       if(err < 0)
       {
         m_DataContainer = VolumeDataContainer::NullPointer();
