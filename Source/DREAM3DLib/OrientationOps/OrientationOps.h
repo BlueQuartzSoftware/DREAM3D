@@ -164,8 +164,8 @@ class DREAM3DLib_EXPORT OrientationOps
 
     /**
      * @brief generateMisorientationColor Generates a color based on the method developed by C. Schuh and S. Patala.
-     * @param q Quaternion
-     * @param refDir The sample reference direction
+     * @param q A Quaternion representing the crystal direction
+     * @param refDir A Quaternion representing the sample reference direction
      * @return A DREAM3D::Rgb value
      */
     virtual DREAM3D::Rgb generateMisorientationColor(const QuatF &q, const QuatF &refFrame) = 0;

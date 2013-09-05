@@ -22,7 +22,7 @@ int main(int argc, char *argv[])
   AngReader reader;
   reader.setFileName("/Users/Shared/Data/Ang_Data/Small_IN100/Small_IN100_1.ang");
   int err = reader.readFile();
-
+  if(err < 0) { return EXIT_FAILURE; }
   int count = reader.getNumberOfElements();
 
   float* phi1 = reader.getPhi1Pointer();
