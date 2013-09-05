@@ -1545,8 +1545,6 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
-  //DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
-
   float n1, n2, n3, w;
   float x, x1, x2, x3, x4, x5, x6, x7;
   float y, y1, y2, y3, y4, y5, y6, y7;
@@ -1667,63 +1665,9 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
       s=s/v;
   }
 
-  return ColorUtilities::convertHSVtoRgb(h,s,v);
-  #if 0
-  //hsv to rgb (from wikipedia hsv/hsl page)
-  c = v*s;
-  k=c*(1-fabs(fmod(h*6,2)-1));//x in wiki article
-  h=h*6;
-  r=0;
-  g=0;
-  b=0;
+  DREAM3D::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
 
-  if(h>=0)
-  {
-      if(h<1)
-      {
-          r=c;
-          g=k;
-      }
-      else if(h<2)
-      {
-          r=k;
-          g=c;
-      }
-      else if(h<3)
-      {
-          g=c;
-          b=k;
-      }
-      else if(h<4)
-      {
-          g=k;
-          b=c;
-      }
-      else if (h<5)
-      {
-          r=k;
-          b=c;
-      }
-      else if(h<6)
-      {
-          r=c;
-          b=k;
-      }
-  }
-
-  //adjust lumosity and invert
-  r=(r+(v-c));
-  g=(g+(v-c));
-  b=(b+(v-c));
-
-  //now standard 0-1 rgb, needs rotation
-  k=r;
-  r=1-g;
-  g=b;
-  b=k;
-
-  rgb=RgbColor::dRgb(r*255, g*255, b*255, 0);
-  return rgb;
-  #endif
+  //now standard 0-255 rgb, needs rotation
+  return RgbColor::dRgb(255-RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
 }
 
