@@ -197,7 +197,7 @@ int main(int argc, char **argv)
   WRITE_STRUCTURED_POINTS_HEADER("ASCII", m)
 
 
-//  VoxelIPFColorScalarWriter<VoxelDataContainer> ipfWriter(m.get());
+//  VoxelIPFColorScalarWriter<VolumeDataContainer> ipfWriter(m.get());
 //  ipfWriter.m_WriteBinaryFiles = false;
 //  ipfWriter.writeScalars(f);
 
