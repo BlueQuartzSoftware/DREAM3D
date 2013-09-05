@@ -274,6 +274,24 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         ss << ": Error opening input file '" << m_InputFile->text().toStdString() << "'";
         return;
       }
+
+      //Check to see if version of .dream3d file is prior to new data container names
+      std::string m_FileVersion;
+      float fVersion;
+      bool check;
+      int err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
+      check = StringUtils::stringToNum(fVersion, m_FileVersion);
+      if(fVersion < 5.0 || err < 0)
+      {
+        H5Utilities::closeFile(fileId);
+        fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), false); // Re-Open the file as Read/Write
+        err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+        err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+        err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+        H5Utilities::closeFile(fileId);
+        fileId = H5Utilities::openFile(m_InputFile->text().toStdString(), true); // Re-Open the file as Read Only
+      }
+
       HDF5ScopedFileSentinel sentinel(&fileId, true);
 
       VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
@@ -284,7 +302,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       reader->setReadEnsembleData(true);
       reader->setReadAllArrays(true); // THIS IS VERY IMPORTANT to set otherwise nothing gets read.
       reader->execute();
-      int err = reader->getErrorCondition();
+      err = reader->getErrorCondition();
       if(err < 0)
       {
         m_DataContainer = VolumeDataContainer::NullPointer();
