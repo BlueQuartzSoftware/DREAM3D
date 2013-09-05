@@ -59,7 +59,7 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 
@@ -103,26 +103,26 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
     DOES_DATASET_EXIST_DECL(EnsembleData)
 
     /**
-     * @brief buildMeshVertLinks Creates the list of Faces for each vertex that the vertex is a part of
+     * @brief buildMeshLinks Creates the list of Faces for each vertex that the vertex is a part of
      */
-    void buildMeshVertLinks();
+    void buildMeshLinks();
 
     /**
-     * @brief removeMeshVertLinks Removes the VertLinks data structures to reclaim memory
+     * @brief removeMeshLinks Removes the VertLinks data structures to reclaim memory
      */
-    void removeMeshVertLinks();
+    void removeMeshLinks();
 
     /**
-     * @brief getMeshVertLinks Returns the vert Links object
+     * @brief getMeshLinks Returns the vert Links object
      * @return
      */
-    MeshVertLinks::Pointer getMeshVertLinks();
+    MeshLinks::Pointer getMeshLinks();
 
     /**
-     * @brief setMeshVertLinks
+     * @brief setMeshLinks
      * @param vertLinks
      */
-    void setMeshVertLinks(MeshVertLinks::Pointer vertLinks);
+    void setMeshLinks(MeshLinks::Pointer vertLinks);
 
     /**
      * @brief buildMeshFaceNeighborLists Creates the list of Faces that share a common edge with a Face. Since
@@ -400,7 +400,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      std::map<std::string, IDataArray::Pointer> m_FieldData;
      std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-     MeshVertLinks::Pointer m_MeshVertLinks;
+     MeshLinks::Pointer m_MeshLinks;
      MeshFaceNeighbors::Pointer m_FaceNeighbors;
 
      SurfaceDataContainer(const SurfaceDataContainer&);

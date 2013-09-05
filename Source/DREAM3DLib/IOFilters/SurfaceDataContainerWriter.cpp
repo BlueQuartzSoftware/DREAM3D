@@ -206,7 +206,7 @@ void SurfaceDataContainerWriter::execute()
     return;
   }
 
-  err = writeMeshVertLinks(dcGid);
+  err = writeMeshLinks(dcGid);
   if (err < 0)
   {
     return;
@@ -523,9 +523,9 @@ int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
+int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  MeshVertLinks::Pointer links = getSurfaceDataContainer()->getMeshVertLinks();
+  MeshLinks::Pointer links = getSurfaceDataContainer()->getMeshLinks();
   if (NULL == links.get())
   {
     return 0;
@@ -565,7 +565,7 @@ int SurfaceDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
   int32_t rank = 1;
   hsize_t dims[1] = {totalBytes};
 
-  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshVertLinksName, rank, dims, bufPtr);
+  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshLinksName, rank, dims, bufPtr);
   if (err < 0)
   {
     notifyErrorMessage("Error writing the Mesh Vert Links", -999);

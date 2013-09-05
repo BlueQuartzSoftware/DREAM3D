@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 
 // -----------------------------------------------------------------------------
@@ -100,11 +100,11 @@ void FindNRingNeighbors::generate()
   DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // Make sure we have the proper connectivity built
-  MeshVertLinks::Pointer node2TrianglePtr =sm->getMeshVertLinks();
+  MeshLinks::Pointer node2TrianglePtr =sm->getMeshLinks();
   if (node2TrianglePtr.get() == NULL)
   {
-    sm->buildMeshVertLinks();
-    node2TrianglePtr =sm->getMeshVertLinks();
+    sm->buildMeshLinks();
+    node2TrianglePtr =sm->getMeshLinks();
   }
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);

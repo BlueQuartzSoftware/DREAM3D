@@ -257,7 +257,7 @@ namespace DREAM3D
     const std::string VerticesName("Vertices");
     const std::string FacesName("Faces");
     const std::string EdgesName("Edges");
-    const std::string MeshVertLinksName("MeshVertLinks");
+    const std::string MeshLinksName("MeshLinks");
     const std::string MeshFaceNeighborLists("MeshFaceNeighborLists");
 
     //  const std::string Grain_ID("Grain_ID");

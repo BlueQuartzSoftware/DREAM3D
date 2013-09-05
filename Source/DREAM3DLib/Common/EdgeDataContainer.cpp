@@ -77,34 +77,34 @@ DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::buildMeshVertLinks()
+void EdgeDataContainer::buildMeshLinks()
 {
-  m_MeshVertLinks = MeshVertLinks::New();
-  m_MeshVertLinks->generateMeshVertLinksEdges(m_Vertices, m_Edges);
+  m_MeshLinks = MeshLinks::New();
+  m_MeshLinks->generateMeshLinksEdges(m_Vertices, m_Edges);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::removeMeshVertLinks()
+void EdgeDataContainer::removeMeshLinks()
 {
-  m_MeshVertLinks = MeshVertLinks::NullPointer();
+  m_MeshLinks = MeshLinks::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::setMeshVertLinks(MeshVertLinks::Pointer vertLinks)
+void EdgeDataContainer::setMeshLinks(MeshLinks::Pointer vertLinks)
 {
-  m_MeshVertLinks = vertLinks;
+  m_MeshLinks = vertLinks;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MeshVertLinks::Pointer EdgeDataContainer::getMeshVertLinks()
+MeshLinks::Pointer EdgeDataContainer::getMeshLinks()
 {
-  return m_MeshVertLinks;
+  return m_MeshLinks;
 }
 
 // -----------------------------------------------------------------------------

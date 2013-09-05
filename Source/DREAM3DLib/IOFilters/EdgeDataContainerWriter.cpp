@@ -206,7 +206,7 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeMeshVertLinks(dcGid);
+  err = writeMeshLinks(dcGid);
   if (err < 0)
   {
     return;
@@ -504,9 +504,9 @@ int EdgeDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
+int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  MeshVertLinks::Pointer links = getEdgeDataContainer()->getMeshVertLinks();
+  MeshLinks::Pointer links = getEdgeDataContainer()->getMeshLinks();
   if (NULL == links.get())
   {
     return 0;
@@ -546,7 +546,7 @@ int EdgeDataContainerWriter::writeMeshVertLinks(hid_t dcGid)
   int32_t rank = 1;
   hsize_t dims[1] = {totalBytes};
 
-  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshVertLinksName, rank, dims, bufPtr);
+  err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshLinksName, rank, dims, bufPtr);
   if (err < 0)
   {
     notifyErrorMessage("Error writing the Mesh Vert Links", -999);

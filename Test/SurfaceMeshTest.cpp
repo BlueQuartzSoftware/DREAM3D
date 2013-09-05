@@ -47,7 +47,7 @@
 #include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
@@ -94,7 +94,7 @@ int main(int argc, char** argv)
 
 
   START_CLOCK;
-  sm->buildMeshVertLinks();
+  sm->buildMeshLinks();
   // END_CLOCK("Building Cell Links");
 
   START_CLOCK;

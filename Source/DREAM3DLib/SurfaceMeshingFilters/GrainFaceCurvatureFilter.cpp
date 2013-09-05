@@ -311,12 +311,12 @@ void GrainFaceCurvatureFilter::execute()
 
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  bool clearMeshVertLinks = false;
-  MeshVertLinks::Pointer vertLinks = getSurfaceDataContainer()->getMeshVertLinks();
+  bool clearMeshLinks = false;
+  MeshLinks::Pointer vertLinks = getSurfaceDataContainer()->getMeshLinks();
   if (NULL == vertLinks.get())
   {
-    clearMeshVertLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceDataContainer()->buildMeshVertLinks();
+    clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
+    getSurfaceDataContainer()->buildMeshLinks();
   }
 
   // Group the Faces by common neighboring grain face. This means that each group of triangles
@@ -447,9 +447,9 @@ void GrainFaceCurvatureFilter::execute()
   }
   getSurfaceDataContainer()->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
   getSurfaceDataContainer()->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
-  if (clearMeshVertLinks == true)
+  if (clearMeshLinks == true)
   {
-    getSurfaceDataContainer()->removeMeshVertLinks();
+    getSurfaceDataContainer()->removeMeshLinks();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

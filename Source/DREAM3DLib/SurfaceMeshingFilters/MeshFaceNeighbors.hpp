@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 /**
  * @brief The MeshFaceNeighbors class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -119,7 +119,7 @@ class MeshFaceNeighbors
     // -----------------------------------------------------------------------------
     void generateNeighborLists(DREAM3D::Mesh::VertListPointer_t nodes,
                                DREAM3D::Mesh::FaceListPointer_t faces,
-                               MeshVertLinks::Pointer cellLinks)
+                               MeshLinks::Pointer cellLinks)
     {
 
       size_t nFaces = faces->GetNumberOfTuples();

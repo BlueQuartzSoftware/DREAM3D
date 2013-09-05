@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _MeshVertLinks_hpp_H_
-#define _MeshVertLinks_hpp_H_
+#ifndef _MeshLinks_hpp_H_
+#define _MeshLinks_hpp_H_
 
 
 #include <string.h>
@@ -46,16 +46,16 @@
 #include "DREAM3DLib/Common/MeshStructs.h"
 
 /**
- * @brief The MeshVertLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
+ * @brief The MeshLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
-class MeshVertLinks
+class MeshLinks
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(MeshVertLinks)
-    DREAM3D_STATIC_NEW_MACRO(MeshVertLinks)
-    DREAM3D_TYPE_MACRO(MeshVertLinks)
+    DREAM3D_SHARED_POINTERS(MeshLinks)
+    DREAM3D_STATIC_NEW_MACRO(MeshLinks)
+    DREAM3D_TYPE_MACRO(MeshLinks)
 
     class FaceList {
       public:
@@ -66,7 +66,7 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~MeshVertLinks()
+    virtual ~MeshLinks()
     {
       if ( this->Array == NULL )
       {
@@ -118,7 +118,7 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getCellPoints(DREAM3D::Mesh::FaceList_t::Pointer Faces, size_t cellId, size_t npts, size_t* pts)
+    void getFacePoints(DREAM3D::Mesh::FaceList_t::Pointer Faces, size_t cellId, size_t npts, size_t* pts)
     {
       DREAM3D::Mesh::Face_t& Face = *(Faces->GetPointer(cellId));
       pts[0] = Face.verts[0];
@@ -139,7 +139,7 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateMeshVertLinksFaces(DREAM3D::Mesh::VertListPointer_t nodes,
+    void generateMeshLinksFaces(DREAM3D::Mesh::VertListPointer_t nodes,
                                DREAM3D::Mesh::FaceListPointer_t Faces )
     {
 
@@ -167,7 +167,7 @@ class MeshVertLinks
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getCellPoints(Faces, cellId, npts, pts);
+        getFacePoints(Faces, cellId, npts, pts);
         for (size_t j=0; j < npts; j++)
         {
           this->incrementLinkCount(pts[j]);
@@ -179,7 +179,7 @@ class MeshVertLinks
 
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getCellPoints(Faces, cellId, npts, pts);
+        getFacePoints(Faces, cellId, npts, pts);
         for (size_t j=0; j < npts; j++)
         {
           this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
@@ -191,7 +191,7 @@ class MeshVertLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateMeshVertLinksEdges(DREAM3D::Mesh::VertListPointer_t nodes,
+    void generateMeshLinksEdges(DREAM3D::Mesh::VertListPointer_t nodes,
                                DREAM3D::Mesh::EdgeListPointer_t Edges )
     {
 
@@ -264,12 +264,12 @@ class MeshVertLinks
     }
 
   protected:
-    MeshVertLinks():Array(NULL),Size(0) {}
+    MeshLinks():Array(NULL),Size(0) {}
 
     //----------------------------------------------------------------------------
     void allocate(size_t sz, size_t ext=1000)
     {
-      static MeshVertLinks::FaceList linkInit = {0,NULL};
+      static MeshLinks::FaceList linkInit = {0,NULL};
 
 
       // This makes sure we deallocate any lists that have been created
@@ -288,7 +288,7 @@ class MeshVertLinks
 
       this->Size = sz;
       // Allocate a whole new set of structures
-      this->Array = new MeshVertLinks::FaceList[sz];
+      this->Array = new MeshLinks::FaceList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
@@ -320,11 +320,11 @@ class MeshVertLinks
     FaceList* Array;   // pointer to data
     size_t Size;
 
-    MeshVertLinks(const MeshVertLinks&); // Copy Constructor Not Implemented
-    void operator=(const MeshVertLinks&); // Operator '=' Not Implemented
+    MeshLinks(const MeshLinks&); // Copy Constructor Not Implemented
+    void operator=(const MeshLinks&); // Operator '=' Not Implemented
 
 };
 
 
 
-#endif /* _MeshVertLinks_hpp_H_ */
+#endif /* _MeshLinks_hpp_H_ */

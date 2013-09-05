@@ -266,8 +266,8 @@ int EdgeDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
     {
     }
   }
-  // This will conditionally read all the MeshVertLinks data if preflight is true
-  err = readMeshVertLinks(dcGid, preflight);
+  // This will conditionally read all the MeshLinks data if preflight is true
+  err = readMeshLinks(dcGid, preflight);
   if (err < 0)
   {
   }
@@ -350,7 +350,7 @@ int EdgeDataContainerReader::readVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
+int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 {
   EdgeDataContainer* sm = getEdgeDataContainer();
   DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
@@ -359,36 +359,36 @@ int EdgeDataContainerReader::readMeshVertLinks(hid_t dcGid, bool preflight)
     return -1;
   }
 
-  MeshVertLinks::Pointer meshVertLinks = MeshVertLinks::New();
+  MeshLinks::Pointer MeshLinks = MeshLinks::New();
 
   size_t nVerts = verticesPtr->GetNumberOfTuples();
   herr_t err = 0;
   std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size = 0;
-  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshVertLinksName, dims, type_class, type_size);
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
   if (err < 0)
   {
     return err;
   }
   else
   {
-    sm->setMeshVertLinks(meshVertLinks);
+    sm->setMeshLinks(MeshLinks);
   }
 
   if (false == preflight && type_size > 0)
   {
     //Read the array into the buffer
     std::vector<uint8_t> buffer;
-    err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshVertLinksName, buffer);
+    err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Reading Vertex Links from Data file", getErrorCondition());
       return err;
     }
-    meshVertLinks->deserializeLinks(buffer, nVerts);
-    sm->setMeshVertLinks(meshVertLinks);
+    MeshLinks->deserializeLinks(buffer, nVerts);
+    sm->setMeshLinks(MeshLinks);
   }
 
   return err;
