@@ -583,7 +583,7 @@ void VtkRectilinearGridWriter::execute()
 
 //  if(m_WriteIPFColors == true)
 //  {
-//    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VoxelDataContainer>(m));
+//    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VolumeDataContainer>(m));
 //    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
 //    scalarsToWrite.push_back(w0);
 //  }
