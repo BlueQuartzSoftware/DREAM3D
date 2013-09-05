@@ -1168,15 +1168,15 @@ bool CubicOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubicOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+DREAM3D::Rgb CubicOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
-  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+  return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -1240,20 +1240,14 @@ void CubicOps::generateIPFColor(double phi1, double phi, double phi2, double ref
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
 
-  // Multiply by 255 to get an R/G/B value
-  _rgb[0] = _rgb[0] * 255.0f;
-  _rgb[1] = _rgb[1] * 255.0f;
-  _rgb[2] = _rgb[2] * 255.0f;
 
-  rgb[0] = static_cast<unsigned char>(_rgb[0]);
-  rgb[1] = static_cast<unsigned char>(_rgb[1]);
-  rgb[2] = static_cast<unsigned char>(_rgb[2]);
+  return RgbColor::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f*CubicDim1InitValue;
   float range2 = 2.0f*CubicDim2InitValue;
@@ -1265,14 +1259,7 @@ void CubicOps::generateRodriguesColor(float r1, float r2, float r3, unsigned cha
   float green = (r2+max2)/range2;
   float blue = (r3+max3)/range3;
 
-  // Multiply by 255 to get an R/G/B value
-  red = red * 255.0f;
-  green = green * 255.0f;
-  blue = blue * 255.0f;
-
-  rgb[0] = static_cast<unsigned char> (red);
-  rgb[1] = static_cast<unsigned char> (green);
-  rgb[2] = static_cast<unsigned char> (blue);
+  return RgbColor::dRgb(red * 255, green * 255, blue * 255, 255);
 }
 
 // -----------------------------------------------------------------------------
@@ -1455,7 +1442,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   //float theta1 = 0.0f;
   //float theta2 = 90.0f;
 
-  //ColorTable::Rgba color;
+  //DREAM3D::Rgb color;
   //size_t idx = 0;
   //size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
   //// Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
@@ -1536,3 +1523,186 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   //}
   return image;
 }
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
+{
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+
+  float n1, n2, n3, w;
+  float x, x1, x2, x3, x4, x5, x6, x7;
+  float y, y1, y2, y3, y4, y5, y6, y7;
+  float z, z1, z2, z3, z4, z5, z6, z7;
+  float k, h, s, v, c, r, g, b;
+
+  QuatF q1, q2;
+  QuaternionMathF::Copy(q, q1);
+  QuaternionMathF::Copy(refFrame, q2);
+
+  //get disorientation
+  w=getMisoQuat(q1, q2, n1, n2, n3);
+  n1=fabs(n1);
+  n2=fabs(n2);
+  n3=fabs(n3);
+
+  if(n1>=n2 && n1>=n3)//n1 largest
+  {
+      x=n1;
+      if(n2>=n3)
+      {
+          y=n2;
+          z=n3;
+      }
+      else
+      {
+          y=n3;
+          z=n2;
+      }
+  }
+  else if(n2>=n1 && n2>=n3)//n2 largest
+  {
+      x=n2;
+      if(n1>=n3)
+      {
+          y=n1;
+          z=n3;
+      }
+      else
+      {
+          y=n3;
+          z=n1;
+      }
+  }
+  else//n3 largest
+  {
+      x=n3;
+      if(n1>=n2)
+      {
+          y=n1;
+          z=n2;
+      }
+      else
+      {
+          y=n2;
+          z=n1;
+      }
+  }
+
+  //eq c9.1
+  k=tan(w/2.0f);
+  x=x*k;
+  y=y*k;
+  z=z*k;
+
+  //eq c9.2
+  x1=x;
+  y1=y;
+  z1=z;
+  if(x>=(1.0f/3.0f) && atan2(z, y)>=((1.0f-2.0f*x)/x))
+  {
+      y1=(x*(y+z))/(1.0f-x);
+      z1=(x*z*(y+z))/(y*(1.0f-x));
+  }
+
+  //eq c9.3
+  x2=x1-tan(M_PI/8.0f);
+  y2=y1*cos((3.0f*M_PI)/8.0f)-z1*sin((3.0f*M_PI)/8.0f);
+  z2=y1*sin((3.0f*M_PI)/8.0f)+z1*cos((3.0f*M_PI)/8.0f);
+
+  //eq c9.4
+  x3=x2;
+  y3=y2*(1+(y2/z2)*tan(M_PI/8.0f));
+  z3=z2+y2*tan(M_PI/8.0f);
+
+  //eq c9.5
+  x4=x3;
+  y4=(y3*cos(M_PI/8.0f))/tan(M_PI/8.0f);
+  z4=z3-x3/cos(M_PI/8.0f);
+
+  //eq c9.6
+  k=atan2(-x4, y4);
+  x5=x4*(sin(k)+fabs(cos(k)));
+  y5=y4*(sin(k)+fabs(cos(k)));
+  z5=z4;
+
+  //eq c9.7
+  k=atan2(-x5, y5);
+  x6=-sqrt(x5*x5+y5*y5)*sin(2.0f*k);
+  y6=sqrt(x5*x5+y5*y5)*cos(2.0f*k);
+  z6=z5;
+
+  //eq c9.8 these hsv are from 0 to 1 in cartesian coordinates
+  //x7=(x6-y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
+  x7=(x6*sqrt(3.0f)-y6)/(2.0f*tan(M_PI/8.0f));
+  y7=(x6+y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
+  z7=z6*(cos(M_PI/8.0f)/tan(M_PI/8.0f));
+
+  //convert to traditional hsv (0-1)
+  h=fmod(atan2f(y7, x7)+2.0f*M_PI, 2.0f*M_PI)/(2.0f*M_PI);
+  s=sqrt(x7*x7+y7*y7);
+  v=z7;
+  if(v>0)
+  {
+      s=s/v;
+  }
+
+  //hsv to rgb (from wikipedia hsv/hsl page)
+  c = v*s;
+  k=c*(1-fabs(fmod(h*6,2)-1));//x in wiki article
+  h=h*6;
+  r=0;
+  g=0;
+  b=0;
+
+  if(h>=0)
+  {
+      if(h<1)
+      {
+          r=c;
+          g=k;
+      }
+      else if(h<2)
+      {
+          r=k;
+          g=c;
+      }
+      else if(h<3)
+      {
+          g=c;
+          b=k;
+      }
+      else if(h<4)
+      {
+          g=k;
+          b=c;
+      }
+      else if (h<5)
+      {
+          r=k;
+          b=c;
+      }
+      else if(h<6)
+      {
+          r=c;
+          b=k;
+      }
+  }
+
+  //adjust lumosity and invert
+  r=(r+(v-c));
+  g=(g+(v-c));
+  b=(b+(v-c));
+
+  //now standard 0-1 rgb, needs rotation
+  k=r;
+  r=1-g;
+  g=b;
+  b=k;
+
+  rgb=RgbColor::dRgb(r*255, g*255, b*255, 0);
+  return rgb;
+}
+

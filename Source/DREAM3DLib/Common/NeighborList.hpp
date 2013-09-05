@@ -272,28 +272,47 @@ class NeighborList : public IDataArray
      */
     virtual int writeH5Data(hid_t parentId)
     {
-
       int err = 0;
 
-      // Generate the number of neighbors array and also compute the total number
-      // of elements that would be needed to flatten the array
+      // Generate the NumNeighbors array and also compute the total number
+      // of elements that would be needed to flatten the array so we
+      // can compare this with what is written in the file. If they are
+      // different we are going to overwrite what is in the file with what
+      // we compute here.
       std::vector<int32_t> numNeighbors(_data.size());
-
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
         numNeighbors[dIdx] = static_cast<int32_t>(_data[dIdx]->size());
         total += _data[dIdx]->size();
       }
-
+	  
       // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
       if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
-        rewrite = true;
+        // The NumNeighbors Array is NOT already in the file so write it to the file
+		    std::vector<hsize_t> dims(1, numNeighbors.size());
+		    err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
+		    if(err < 0)
+		    {
+			    return -603;
+		    }
+		    err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
+		    if(err < 0)
+		    {
+			    return -605;
+		    }
+		    err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+		    if(err < 0)
+		    {
+			    return -604;
+		    }
       }
       else
       {
+        // The NumNeighbors array is in the dream3d file so read it up into memory and compare with what
+        // we have in memory.
         std::vector<int32_t> fileNumNeigh(_data.size());
         err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
@@ -316,11 +335,13 @@ class NeighborList : public IDataArray
         }
       }
 
-      // Write out the NumNeighbors Array
+      // Write out the NumNeighbors Array because something was different between what we computed at
+      // the top of the function versus what is in memory
       if(rewrite == true)
       {
-        std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
+	      hsize_t dims[1] = {numNeighbors.size()};
+		    hsize_t rank = 1;
+		    err = H5Lite::replacePointerDataset(parentId, m_NumNeighborsArrayName, rank, dims, &(numNeighbors.front()) );
         if(err < 0)
         {
           return -603;
@@ -354,6 +375,7 @@ class NeighborList : public IDataArray
         currentStart += _data[dIdx]->size();
       }
 
+      // Now we can actually write the actual array data.
       int32_t rank = 1;
       hsize_t dims[1] = { total };
       if (total > 0)

@@ -306,7 +306,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
 
   //Get all the colors that we will need
 
-  std::vector<ColorTable::Rgba> colorTable(numColors);
+  std::vector<DREAM3D::Rgb> colorTable(numColors);
   std::vector<float> colors(3*numColors, 0.0);
   ColorTable::GetColorTable(numColors, colors);
 
@@ -317,7 +317,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
     r = colors[3*i];
     g = colors[3*i+1];
     b = colors[3*i+2];
-    colorTable[i] = ColorTable::makeRgba(r*255, g*255, b*255, 255);
+    colorTable[i] = RgbColor::dRgb(r*255, g*255, b*255, 255);
   }
 
   int penWidth = 1;
@@ -342,6 +342,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
     }
   }
 
+  qRgba(10, 20, 30, 255);
   // Draw the border of the scale bar
   penWidth = 2;
   painter.setPen(QPen(QColor(0, 0, 0, 255), penWidth, Qt::SolidLine, Qt::RoundCap, Qt::RoundJoin));

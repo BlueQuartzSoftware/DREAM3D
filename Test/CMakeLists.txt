@@ -327,5 +327,3 @@ add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
 # --------------------------------------------------------------------------
 add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
 set_target_properties(UMich PROPERTIES FOLDER Test)
-
-

@@ -29,11 +29,8 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "GenerateIPFColors.h"
+#include "GenerateMisorientationColors.h"
 
 
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -55,45 +52,55 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateIPFColors::GenerateIPFColors() :
+GenerateMisorientationColors::GenerateMisorientationColors() :
   AbstractFilter(),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_CellIPFColorsArrayName(DREAM3D::CellData::IPFColor),
+  m_MisorientationColorArrayName(DREAM3D::CellData::MisorientationColor),
   m_CellPhases(NULL),
-  m_CellEulerAngles(NULL),
+  m_Quats(NULL),
   m_CrystalStructures(NULL),
-  m_CellIPFColors(NULL)
+  m_MisorientationColor(NULL)
 {
+  m_ReferenceAxis.x=0.0f;
+  m_ReferenceAxis.y=0.0f;
+  m_ReferenceAxis.z=1.0f;
+  m_ReferenceAngle=0.0f;
 
-  m_ReferenceDir.x = 0.0f;
-  m_ReferenceDir.y = 0.0f;
-  m_ReferenceDir.z = 1.0f;
   setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-GenerateIPFColors::~GenerateIPFColors()
+GenerateMisorientationColors::~GenerateMisorientationColors()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::setupFilterParameters()
+void GenerateMisorientationColors::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
-    option->setHumanLabel("Reference Direction");
-    option->setPropertyName("ReferenceDir");
+    option->setHumanLabel("Reference Orientation Axis");
+    option->setPropertyName("ReferenceAxis");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
+    parameters.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Reference Orientation Angle");
+    option->setPropertyName("ReferenceAngle");
+    option->setWidgetType(FilterParameter::DoubleWidget);
+    option->setValueType("float");
+    option->setCastableValueType("double");
     parameters.push_back(option);
   }
   setFilterParameters(parameters);
@@ -102,12 +109,13 @@ void GenerateIPFColors::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void GenerateMisorientationColors::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-  setReferenceDir( reader->readValue("ReferenceDir", getReferenceDir() ) );
+  setReferenceAxis( reader->readValue("ReferenceAxis", getReferenceAxis() ) );
+  setReferenceAngle( reader->readValue("ReferenceAngle", getReferenceAngle() ) );
   /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
@@ -115,12 +123,13 @@ void GenerateIPFColors::readFilterParameters(AbstractFilterParametersReader* rea
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("ReferenceDir", getReferenceDir() );
+  writer->writeValue("ReferenceAxis", getReferenceAxis() );
+  writer->writeValue("ReferenceAngle", getReferenceAngle() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -128,34 +137,34 @@ int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellIPFColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::preflight()
+void GenerateMisorientationColors::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -165,12 +174,12 @@ void GenerateIPFColors::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GenerateIPFColors::execute()
+void GenerateMisorientationColors::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -205,7 +214,7 @@ void GenerateIPFColors::execute()
   size_t index = 0;
 
   // Make sure we are dealing with a unit 1 vector.
-  MatrixMath::Normalize3x1(m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z);
+  MatrixMath::Normalize3x1(m_ReferenceAxis.x, m_ReferenceAxis.y, m_ReferenceAxis.z);
   // Create 1 of every type of Ops class. This condenses the code below
   std::vector<OrientationOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
@@ -220,30 +229,46 @@ void GenerateIPFColors::execute()
   ops.push_back(TrigonalLowOps::New());
   ops.push_back(TrigonalOps::New());
 
-  double refDir[3] = {m_ReferenceDir.x, m_ReferenceDir.y, m_ReferenceDir.z};
-  double dEuler[3] = {0.0, 0.0, 0.0};
+  QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
+
+  QuatF refQuat = {m_ReferenceAxis.x*sin(m_ReferenceAngle), m_ReferenceAxis.y*sin(m_ReferenceAngle), m_ReferenceAxis.z*sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+  QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
-  // Write the IPF Coloring Cell Data
+  // Write the Misorientation Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
     phase = m_CellPhases[i];
     index = i * 3;
-    m_CellIPFColors[index] = 0;
-    m_CellIPFColors[index + 1] = 0;
-    m_CellIPFColors[index + 2] = 0;
-    dEuler[0] = m_CellEulerAngles[index];
-    dEuler[1] = m_CellEulerAngles[index + 1];
-    dEuler[2] = m_CellEulerAngles[index + 2];
+    m_MisorientationColor[index] = 0;
+    m_MisorientationColor[index + 1] = 0;
+    m_MisorientationColor[index + 2] = 0;
+    cellQuat = quats[i];
+
+    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+    /*
+    if(
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::OrthoRhombic &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_Low &&
+       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Tetragonal_High
+       )
+       */
+    {
+        setErrorCondition(-1);
+        notifyErrorMessage("Unsupported Crystal Structure", -1);
+        return;
+    }
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
         && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
-      argb = ops[m_CrystalStructures[phase]]->generateIPFColor(dEuler, refDir, false);
-      m_CellIPFColors[index] = RgbColor::dRed(argb);
-      m_CellIPFColors[index + 1] = RgbColor::dGreen(argb);
-      m_CellIPFColors[index + 2] = RgbColor::dBlue(argb);
+      argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
+      m_MisorientationColor[index] = RgbColor::dRed(argb);
+      m_MisorientationColor[index + 1] = RgbColor::dGreen(argb);
+      m_MisorientationColor[index + 2] = RgbColor::dBlue(argb);
     }
   }
 
