@@ -40,7 +40,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -167,34 +167,34 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 void InitializeSyntheticVolume::preflight()
 {
   std::stringstream ss;
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   dataCheck(true, 1, 1, 1);
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return;
-  }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  std::set<std::string> selectedArrays;
+  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
-  read_data->preflight();
-  if (read_data->getErrorCondition() < 0)
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_InputFile);
+  reader->setVolumeDataContainer(m);
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadEdgeData(false);
+  reader->setReadVertexData(false);
+  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setReadAllArrays(false);
+  reader->preflight();
+  int err = reader->getErrorCondition();
+  if(err < 0)
   {
-    setErrorCondition(read_data->getErrorCondition());
+    setErrorCondition(err);
   }
+
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -212,26 +212,21 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return;
-  }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+  std::set<std::string> selectedArrays;
+  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setReadAllArrays(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
-  read_data->execute();
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_InputFile);
+  reader->setVolumeDataContainer(m);
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadEdgeData(false);
+  reader->setReadVertexData(false);
+  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setReadAllArrays(false);
+  reader->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);
