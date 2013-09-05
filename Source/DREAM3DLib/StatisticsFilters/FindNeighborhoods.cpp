@@ -53,8 +53,9 @@ m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_MultiplesOfAverage(1),
 m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
+m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_MultiplesOfAverage(1),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
@@ -245,7 +246,7 @@ void FindNeighborhoods::find_neighborhoods()
   float sizeZ = float(zP)*zRes;
   int numXBins = int(sizeX/criticalDistance);
   int numYBins = int(sizeY/criticalDistance);
-  int numZBins = int(sizeZ/criticalDistance);
+//  int numZBins = int(sizeZ/criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
   std::vector<size_t> bins(totalFields, 0);

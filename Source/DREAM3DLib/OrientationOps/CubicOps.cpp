@@ -1444,10 +1444,8 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High IPF Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
-
   float indexConst1 = 0.414 / imageDim;
   float indexConst2 = 0.207 / imageDim;
-  //float tslConst1 = (90.0f * M_PI) / 180.0f;
   float temp = 0.0f;
   float red1 = 0.0f;
   float green1 = 0.0f;
@@ -1472,14 +1470,8 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
   float x1alt = 0.0f;
   float theta = 0.0f;
   float k_RootOfHalf = sqrt(0.5);
-  uint8_t rgb[3];
-
-  float redDir[3] = {0, -DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
   float cd[3];
-  float d[3];
-  float fRgb[3] = { 0.0f, 0.0f, 0.0f };
-  float theta1 = 0.0f;
-  float theta2 = 90.0f;
+
 
   DREAM3D::Rgb color;
   size_t idx = 0;
@@ -1521,7 +1513,6 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
       phi = acos(red1);
       x1alt = x1 / k_RootOfHalf;
       x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
-      //theta = acos(x1alt / cos((tslConst1) - phi));
       theta = acos(x1alt);
 
       if (phi < (45 * DREAM3D::Constants::k_PiOver180) ||

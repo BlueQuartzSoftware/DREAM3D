@@ -278,9 +278,10 @@ QString QGenerateEnsembleStatisticsWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vdc,
-                                                                SurfaceDataContainer::Pointer smdc,
-                                                                VertexDataContainer::Pointer sdc)
+void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc,
+                                                                SurfaceDataContainer::Pointer sdc,
+                                                                EdgeDataContainer::Pointer edc,
+                                                                VertexDataContainer::Pointer vdc)
 {
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   // Add the PhaseTypes Array into the VolumeDataContainer if the user has set them up.
@@ -306,9 +307,10 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContai
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vdc,
-                                                               SurfaceDataContainer::Pointer smdc,
-                                                               VertexDataContainer::Pointer sdc)
+void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc,
+                                                                SurfaceDataContainer::Pointer sdc,
+                                                                EdgeDataContainer::Pointer edc,
+                                                                VertexDataContainer::Pointer vdc)
 {
 
 }
