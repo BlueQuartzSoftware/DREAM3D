@@ -124,6 +124,7 @@ namespace DREAM3D
     const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
     const std::string ConfidenceIndex("Confidence Index");
     const std::string IPFColor("IPFColor");
+    const std::string MisorientationColor("MisorientationColor");
     const std::string RodriguesColor("RodriguesColor");
     const std::string EulerColor("EulerColor");
     const std::string GlobAlpha("GlobAlpha");

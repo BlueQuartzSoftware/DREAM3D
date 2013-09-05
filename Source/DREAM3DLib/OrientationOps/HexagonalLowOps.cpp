@@ -1253,6 +1253,8 @@ DREAM3D::Rgb HexagonalLowOps::generateMisorientationColor(const QuatF &q, const 
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
 
+  BOOST_ASSERT(false);
+
   return rgb;
 }
 
