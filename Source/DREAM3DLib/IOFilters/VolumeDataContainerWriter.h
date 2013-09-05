@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VoxelDataContainerWriter_H_
-#define _VoxelDataContainerWriter_H_
+#ifndef _VolumeDataContainerWriter_H_
+#define _VolumeDataContainerWriter_H_
 
 #include <string>
 
@@ -50,20 +50,20 @@
 
 
 /**
- * @class VoxelDataContainerWriter VoxelDataContainerWriter.h /IOFiltersFilters/VoxelDataContainerWriter.h
+ * @class VolumeDataContainerWriter VolumeDataContainerWriter.h /IOFiltersFilters/VolumeDataContainerWriter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerWriter, AbstractFilter)
 
-    virtual ~VoxelDataContainerWriter();
+    virtual ~VolumeDataContainerWriter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    VoxelDataContainerWriter();
+    VolumeDataContainerWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -187,8 +187,8 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
   private:
     std::ostream* m_XdmfPtr;
 
-    VoxelDataContainerWriter(const VoxelDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelDataContainerWriter&); // Operator '=' Not Implemented
+    VolumeDataContainerWriter(const VolumeDataContainerWriter&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _VoxelDataContainerWriter_H_ */
+#endif /* _VolumeDataContainerWriter_H_ */

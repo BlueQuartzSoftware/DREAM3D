@@ -84,8 +84,8 @@ class CalculateFaceMisorientationColorsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting DREAM3D::SurfaceMesh::Face_t Index
-     * @param end The ending DREAM3D::SurfaceMesh::Face_t Index
+     * @param start The starting DREAM3D::Mesh::Face_t Index
+     * @param end The ending DREAM3D::Mesh::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
@@ -238,10 +238,10 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -274,10 +274,10 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -308,8 +308,8 @@ void GenerateFaceMisorientationColoring::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
-  VoxelDataContainer* m = getVoxelDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);

@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
@@ -76,14 +76,13 @@ class NodeFunctions
 /**
  * @brief
  */
- #if 0
 template<typename Node, typename T>
 class EdgeFunctions
 {
     public:
     virtual ~EdgeFunctions(){}
 
-    static T Length(typename DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::Edge_t* e)
+    static T Length(typename DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::Edge_t* e)
     {
       int nid0 = e->verts[0];
       int nid1 = e->verts[1];
@@ -97,7 +96,6 @@ class EdgeFunctions
     EdgeFunctions(const EdgeFunctions&); // Copy Constructor Not Implemented
     void operator=(const EdgeFunctions&); // Operator '=' Not Implemented
 };
-#endif
 
 
 /**

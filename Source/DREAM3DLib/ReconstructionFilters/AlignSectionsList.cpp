@@ -151,7 +151,7 @@ void AlignSectionsList::preflight()
 void AlignSectionsList::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -180,7 +180,7 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ifstream inFile;

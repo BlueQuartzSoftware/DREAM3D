@@ -122,7 +122,7 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -224,7 +224,7 @@ int VtkGrainIdReader::readHeader()
 
   int err = 0;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     std::stringstream ss;
@@ -300,20 +300,20 @@ int VtkGrainIdReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   size_t dims[3];
   err = parseSizeT_3V(buf, dims, 0);
-  getVoxelDataContainer()->setDimensions(dims);
+  getVolumeDataContainer()->setDimensions(dims);
 
 #if 1
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
-  getVoxelDataContainer()->setOrigin(origin);
+  getVolumeDataContainer()->setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
   float resolution[3];
   err = parseFloat3V(buf, resolution, 1.0f);
-  getVoxelDataContainer()->setResolution(resolution);
+  getVolumeDataContainer()->setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
 #endif
@@ -368,7 +368,7 @@ int VtkGrainIdReader::readFile()
 
   // These should have been set from reading the header
   size_t dims[3];
-  getVoxelDataContainer()->getDimensions(dims);
+  getVolumeDataContainer()->getDimensions(dims);
 
 #if 0
   size_t dim = 0;
@@ -422,7 +422,7 @@ int VtkGrainIdReader::readFile()
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
-  getVoxelDataContainer()->setResolution(xscale, yscale, zscale);
+  getVolumeDataContainer()->setResolution(xscale, yscale, zscale);
 #endif
 
   // Now we need to search for the 'GrainID' and
@@ -442,8 +442,8 @@ int VtkGrainIdReader::readFile()
 
   //size_t index = 0;
   //Cell Data is one less in each direction
-//  getVoxelDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-//  getVoxelDataContainer()->getDimensions(dims);
+//  getVolumeDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
+//  getVolumeDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
 
@@ -515,7 +515,7 @@ int VtkGrainIdReader::readFile()
   }
 
   // push our grain id data into the DataContainer map
-  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  getVolumeDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
   instream.close();
   return err;

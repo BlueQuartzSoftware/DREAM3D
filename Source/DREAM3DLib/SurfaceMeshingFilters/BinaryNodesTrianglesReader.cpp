@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -122,11 +122,11 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
   std::stringstream ss;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
   if (getBinaryNodesFile().empty() == true)
@@ -186,7 +186,7 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceMeshDataContainer *sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer *sm = getSurfaceDataContainer();
   int err = 0;
   setErrorCondition(err);
 
@@ -260,7 +260,7 @@ int BinaryNodesTrianglesReader::read()
   notifyStatusMessage(s.str());
 
   // Allocate all the nodes
-  typedef DREAM3D::SurfaceMesh::Vert_t Vert_t;
+  typedef DREAM3D::Mesh::Vert_t Vert_t;
   StructArray<Vert_t>::Pointer m_NodeListPtr = StructArray<Vert_t>::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   Vert_t* m_NodeList = m_NodeListPtr->GetPointer(0);
 
@@ -282,7 +282,7 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-    DREAM3D::SurfaceMesh::Vert_t& node = m_NodeList[nRecord.nodeId];
+    DREAM3D::Mesh::Vert_t& node = m_NodeList[nRecord.nodeId];
     node.pos[0] = nRecord.x;
     node.pos[1] = nRecord.y;
     node.pos[2] = nRecord.z;
@@ -294,7 +294,7 @@ int BinaryNodesTrianglesReader::read()
   notifyStatusMessage(s.str());
 
   // Allocate all the Triangle Objects
-  typedef DREAM3D::SurfaceMesh::Face_t Face_t;
+  typedef DREAM3D::Mesh::Face_t Face_t;
   StructArray<Face_t>::Pointer m_TriangleListPtr = StructArray<Face_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
   Face_t* m_TriangleList = m_TriangleListPtr->GetPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(Face_t) * nTriangles);
@@ -314,7 +314,7 @@ int BinaryNodesTrianglesReader::read()
       break;
     }
 
-    DREAM3D::SurfaceMesh::Face_t& triangle = m_TriangleList[tRecord.triId];
+    DREAM3D::Mesh::Face_t& triangle = m_TriangleList[tRecord.triId];
 
     triangle.verts[0] = tRecord.nodeId_0;
     triangle.verts[1] = tRecord.nodeId_1;

@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 
 
 /**
@@ -58,7 +58,7 @@ class FindNRingNeighbors
 
     virtual ~FindNRingNeighbors();
 
-    DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
 
     DREAM3D_INSTANCE_PROPERTY(int, TriangleId)
 
@@ -80,7 +80,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
 
-    DREAM3D::SurfaceMesh::UniqueFaceIds_t &getNRingTriangles();
+    DREAM3D::Mesh::UniqueFaceIds_t &getNRingTriangles();
 
     /**
      * @brief generate
@@ -105,7 +105,7 @@ class FindNRingNeighbors
       FindNRingNeighbors();
 
   private:
-    DREAM3D::SurfaceMesh::UniqueFaceIds_t  m_NRingTriangles;
+    DREAM3D::Mesh::UniqueFaceIds_t  m_NRingTriangles;
 
     FindNRingNeighbors(const FindNRingNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNRingNeighbors&); // Operator '=' Not Implemented

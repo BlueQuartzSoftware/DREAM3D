@@ -111,7 +111,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(getOutputFile().empty() == true)
   {
@@ -147,7 +147,7 @@ int PhWriter::writeHeader()
 int PhWriter::writeFile()
 {
 //   std::string OutputName;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;

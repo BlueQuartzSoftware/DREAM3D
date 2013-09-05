@@ -33,11 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshDataContainerWriter_H_
-#define _SurfaceMeshDataContainerWriter_H_
+#ifndef _VolumeDataContainerReader_H_
+#define _VolumeDataContainerReader_H_
 
-#include <sstream>
 #include <string>
+
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,28 +47,39 @@
 
 
 /**
- * @class SurfaceMeshDataContainerWriter SurfaceMeshDataContainerWriter.h DREAm3DLib/IOFilters/SurfaceMeshDataContainerWriter.h
+ * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, AbstractFilter)
 
-    virtual ~SurfaceMeshDataContainerWriter();
+    virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
-
-    void setXdmfOStream(std::ostream* xdmf);
 
 
     /**
@@ -76,13 +88,13 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Writer"; }
+    virtual const std::string getHumanLabel() { return "Voxel DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -113,8 +125,10 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     */
     virtual void preflight();
 
+    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
+
   protected:
-    SurfaceMeshDataContainerWriter();
+    VolumeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -126,29 +140,16 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
-
-    int writeVertices(hid_t dcGid);
-    int writeFaces(hid_t dcGid);
-    int writeEdges(hid_t dcGid);
-    int writeMeshVertLinks(hid_t dcGid);
-    int writeMeshFaceNeighborLists(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
-    int writeFaceAttributeData(hid_t dcGid);
-    int writeEdgeAttributeData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
-
-    void writeXdmfGridHeader();
-    void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
-    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+    int gatherData(bool preflight);
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                       std::vector<std::string> &namesRead,
+                       std::set<std::string> &namesToRead);
+    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
-    std::ostream* m_XdmfPtr;
 
-    SurfaceMeshDataContainerWriter(const SurfaceMeshDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshDataContainerWriter&); // Operator '=' Not Implemented
+    VolumeDataContainerReader(const VolumeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshDataContainerWriter_H_ */
+#endif /* _VolumeDataContainerReader_H_ */

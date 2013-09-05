@@ -55,11 +55,11 @@ namespace Detail
  */
 class UpdateVerticesImpl
 {
-    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
+    DREAM3D::Mesh::VertListPointer_t m_Nodes;
     float* m_Delta;
 
   public:
-    UpdateVerticesImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, float* delta) :
+    UpdateVerticesImpl(DREAM3D::Mesh::VertListPointer_t nodes, float* delta) :
       m_Nodes(nodes),
       m_Delta(delta)
     {
@@ -70,7 +70,7 @@ class UpdateVerticesImpl
     void generate(size_t start, size_t end) const
     {
 
-      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
         nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
@@ -198,22 +198,22 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   if (m_ApplyToVoxelVolume == true)
   {
-    VoxelDataContainer* m = getVoxelDataContainer();
+    VolumeDataContainer* m = getVolumeDataContainer();
     if(NULL == m)
     {
       setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", getErrorCondition());
+      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
     }
   }
 
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+    SurfaceDataContainer* sm = getSurfaceDataContainer();
     if(NULL == sm)
     {
       setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
     }
     else
     {
@@ -244,7 +244,7 @@ void AdjustVolumeOrigin::preflight()
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -280,7 +280,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -295,8 +295,8 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
   // First get the min/max coords.
 

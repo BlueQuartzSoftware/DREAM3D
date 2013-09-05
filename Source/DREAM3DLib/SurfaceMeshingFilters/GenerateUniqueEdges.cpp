@@ -109,11 +109,11 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -157,7 +157,7 @@ void GenerateUniqueEdges::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -187,11 +187,11 @@ void GenerateUniqueEdges::execute()
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
-  DREAM3D::SurfaceMesh::Face_t* faces = trianglesPtr->GetPointer(0);
+  DREAM3D::Mesh::Face_t* faces = trianglesPtr->GetPointer(0);
 
   notifyStatusMessage("Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
@@ -202,7 +202,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   for(size_t t = 0; t < totalPoints; ++t)
   {
     //Get the Triangle
-    DREAM3D::SurfaceMesh::Face_t& tri = faces[t];
+    DREAM3D::Mesh::Face_t& tri = faces[t];
 
     //Edge 0
     int i = 0;
@@ -256,7 +256,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -266,13 +266,13 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   int ntri = trianglesPtr->GetNumberOfTuples();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
   std::map<int64_t, int> uedges_id_map;
 
-  std::map<int64_t, DREAM3D::SurfaceMesh::UniqueFaceIds_t > edgeTriangleSet;
+  std::map<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
 
   int edge_id = 0;
   int cur_edge_id = 0;
@@ -296,7 +296,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     if (getCancel() == true) { return; }
 
-    DREAM3D::SurfaceMesh::Face_t& tri = triangles[i];
+    DREAM3D::Mesh::Face_t& tri = triangles[i];
     // Edge 0
     edge.v0 = tri.verts[0];
     edge.v1 = tri.verts[1];
@@ -385,14 +385,14 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 
     ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->GetPointer(index));
-    DREAM3D::SurfaceMesh::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
+    DREAM3D::Mesh::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();
     if (entry.count > 0)
     {
       entry.data = (int*)(malloc(sizeof(int) * entry.count));
       int index = 0;
-      for(DREAM3D::SurfaceMesh::UniqueFaceIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
+      for(DREAM3D::Mesh::UniqueFaceIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
       {
         entry.data[index++] = *tIter; // Copy the value from the triangle Ids set into the ManagedPointer
       }
@@ -400,8 +400,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  getSurfaceMeshDataContainer()->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  getSurfaceMeshDataContainer()->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
+  getSurfaceDataContainer()->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  getSurfaceDataContainer()->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
 
   notifyStatusMessage("Complete");
   return;

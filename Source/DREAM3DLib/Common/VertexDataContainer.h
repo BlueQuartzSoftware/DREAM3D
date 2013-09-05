@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _SOLIDMESHDATACONTAINER_H_
-#define _SOLIDMESHDATACONTAINER_H_
+#ifndef VERTEXDATACONTAINER_H_
+#define VERTEXDATACONTAINER_H_
 
 #if defined (_MSC_VER)
 #define WIN32_LEAN_AND_MEAN   // Exclude rarely-used stuff from Windows headers
@@ -47,6 +47,9 @@
 #include <sstream>
 #include <list>
 
+//-- Boost includes
+#include <boost/shared_array.hpp>
+
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -54,46 +57,41 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/Common/SolidMeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
+#include "DREAM3DLib/Common/MeshStructs.h"
+
 
 /**
- * @class SolidMeshDataContainer SolidMeshDataContainer.h DREAM3DLib/Common/SolidMeshDataContainer.h
+ * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/Common/VertexDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 28, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
+class DREAM3DLib_EXPORT VertexDataContainer : public Observable
 {
   public:
-    DREAM3D_SHARED_POINTERS (SolidMeshDataContainer)
-    DREAM3D_STATIC_NEW_MACRO (SolidMeshDataContainer)
-    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainer, Observable)
+    DREAM3D_SHARED_POINTERS (VertexDataContainer)
+    DREAM3D_STATIC_NEW_MACRO (VertexDataContainer)
+    DREAM3D_TYPE_MACRO_SUPER(VertexDataContainer, Observable)
 
-    virtual ~SolidMeshDataContainer();
+    virtual ~VertexDataContainer();
 
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::SurfaceMesh::VertListPointer_t, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(StructArray<Tetrahedron>::Pointer, Tetrahedrons)
-
+    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
 
     DOES_DATASET_EXIST_DECL(VertexData)
-    DOES_DATASET_EXIST_DECL(FaceData)
-    DOES_DATASET_EXIST_DECL(EdgeData)
+    DOES_DATASET_EXIST_DECL(FieldData)
+    DOES_DATASET_EXIST_DECL(EnsembleData)
 
-
-  /**
+    /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
@@ -125,13 +123,13 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * Point group
      * @return
      */
-    std::list<std::string> getPointArrayNameList();
+    std::list<std::string> getVertexArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Point group
      * @return
      */
-    int getNumPointArrays();
+    int getNumVertexArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
@@ -140,19 +138,20 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      */
     DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
 
+
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceData(const std::string &name, IDataArray::Pointer data);
+    void addFieldData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceData(const std::string &name);
+    IDataArray::Pointer getFieldData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -160,87 +159,106 @@ class DREAM3DLib_EXPORT SolidMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceData(const std::string &name);
+    IDataArray::Pointer removeFieldData(const std::string &name);
 
     /**
-     * @brief Removes all the Face Arrays
+     * @brief Removes all the Field Arrays
      */
-    void clearFaceData();
+    void clearFieldData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Face (Formerly Grain) group
+     * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFaceArrayNameList();
+    std::list<std::string> getFieldArrayNameList();
 
     /**
-     * @brief Returns the total number of arrays that are stored in the Face group
+     * @brief Returns the total number of arrays that are stored in the Field group
      * @return
      */
-    int getNumFaceArrays();
+    int getNumFieldArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
 
     /**
-     * @brief Resizes all of the Face Arrays to have 'size' tuples
+     * @brief Resizes all of the Field Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFaceDataArrays(size_t size);
+    void resizeFieldDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const std::string &name);
+    IDataArray::Pointer getEnsembleData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method.
+     * method
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeData(const std::string &name);
+    IDataArray::Pointer removeEnsembleData(const std::string &name);
 
     /**
-     * @brief Removes all the ensemble data
+     * @brief Removes all the Ensemble Arrays
      */
-    void clearEdgeData();
+    void clearEnsembleData();
 
-    std::list<std::string> getEdgeArrayNameList();
+    /**
+     * @brief Returns a list that contains the names of all the arrays currently stored in the
+     * Ensemble (Formerly Grain) group
+     * @return
+     */
+    std::list<std::string> getEnsembleArrayNameList();
 
-    int getNumEdgeArrays();
+    /**
+     * @brief Returns the total number of arrays that are stored in the Ensemble group
+     * @return
+     */
+    int getNumEnsembleArrays();
 
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
+    /**
+     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
+     * in during a set of filtering operations then the a value of '32' would be returned.
+     * @return
+     */
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+
+    /**
+     * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
+     * @param size The number of tuples that each DataArray should contain.
+     */
+    void resizeEnsembleDataArrays(size_t size);
+
+
 
   protected:
-     SolidMeshDataContainer();
+     VertexDataContainer();
 
    private:
 
      std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_FaceData;
-     std::map<std::string, IDataArray::Pointer> m_EdgeData;
+     std::map<std::string, IDataArray::Pointer> m_FieldData;
+     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-     MeshVertLinks::Pointer m_MeshVertLinks;
-     MeshFaceNeighbors::Pointer m_FaceNeighbors;
-
-     SolidMeshDataContainer(const SolidMeshDataContainer&);
-     void operator =(const SolidMeshDataContainer&);
+     VertexDataContainer(const VertexDataContainer&);
+     void operator =(const VertexDataContainer&);
 
 };
 
-#endif /* _SOLIDMESHDATACONTAINER_H_ */
+#endif /* VERTEXDATACONTAINER_H_ */

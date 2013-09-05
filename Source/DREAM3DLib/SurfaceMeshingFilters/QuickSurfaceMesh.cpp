@@ -89,20 +89,20 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-      SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+      SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-384);
   }
   else
   {
-    DREAM3D::SurfaceMesh::VertListPointer_t vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    DREAM3D::Mesh::VertListPointer_t vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+    DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
     DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
     DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 
@@ -129,8 +129,8 @@ void QuickSurfaceMesh::preflight()
 void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -464,12 +464,12 @@ void QuickSurfaceMesh::execute()
   }
 
   //now create node and triangle arrays knowing the number that will be needed
-  DREAM3D::SurfaceMesh::VertListPointer_t vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(nodeCount, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::VertListPointer_t vertices = DREAM3D::Mesh::VertList_t::CreateArray(nodeCount, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces);
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(triangleCount, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(nodeCount, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
-  DREAM3D::SurfaceMesh::Vert_t* vertex = vertices.get()->GetPointer(0);
-  DREAM3D::SurfaceMesh::Face_t* triangle = triangles.get()->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* vertex = vertices.get()->GetPointer(0);
+  DREAM3D::Mesh::Face_t* triangle = triangles.get()->GetPointer(0);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
   int8_t* nodeTypes = nodeTypePtr->GetPointer(0);
 
@@ -477,7 +477,7 @@ void QuickSurfaceMesh::execute()
 
   //Cycle through again assigning coordinates to each node and assigning node numbers and grain labels to each triangle
   triangleCount = 0;
-  //const DREAM3D::SurfaceMesh::Float_t k_Two = static_cast<DREAM3D::SurfaceMesh::Float_t>(2.0);
+  //const DREAM3D::Mesh::Float_t k_Two = static_cast<DREAM3D::Mesh::Float_t>(2.0);
   for(size_t k = 0; k < zP; k++)
   {
     for(size_t j = 0; j < yP; j++)

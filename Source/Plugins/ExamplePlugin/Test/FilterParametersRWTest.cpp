@@ -66,10 +66,10 @@
 #define SelectedCellArrayNameTestValue "SelectedCellArrayNameTestValue"
 #define SelectedFieldArrayNameTestValue "SelectedFieldArrayNameTestValue"
 #define SelectedEnsembleArrayNameTestValue "SelectedEnsembleArrayNameTestValue"
-#define SurfaceMeshPointArrayNameTestValue "SurfaceMeshPointArrayNameTestValue"
+#define SurfaceMeshVertexArrayNameTestValue "SurfaceMeshVertexArrayNameTestValue"
 #define SurfaceMeshFaceArrayNameTestValue "SurfaceMeshFaceArrayNameTestValue"
 #define SurfaceMeshEdgeArrayNameTestValue "SurfaceMeshEdgeArrayNameTestValue"
-#define SolidMeshPointArrayNameTestValue "SolidMeshPointArrayNameTestValue"
+#define SolidMeshVertexArrayNameTestValue "SolidMeshVertexArrayNameTestValue"
 #define SolidMeshFaceArrayNameTestValue "SolidMeshFaceArrayNameTestValue"
 #define SolidMeshEdgeArrayNameTestValue "SolidMeshEdgeArrayNameTestValue"
 #define CellComparisonInputsArrayName1 "CellComparisonInputsArrayName1"
@@ -122,50 +122,50 @@
 #define FloatWidgetXTestValue 6.0f
 #define FloatWidgetYTestValue 7.234f
 #define FloatWidgetZTestValue 12.3f
-#define SelectedVoxelCellArraysString1 "SelectedVoxelCellArraysString1"
-#define SelectedVoxelCellArraysString2 "SelectedVoxelCellArraysString2"
-#define SelectedVoxelCellArraysString3 "SelectedVoxelCellArraysString3"
-#define SelectedVoxelCellArraysString4 "SelectedVoxelCellArraysString4"
-#define SelectedVoxelFieldArraysString1 "SelectedVoxelFieldArraysString1"
-#define SelectedVoxelFieldArraysString2 "SelectedVoxelFieldArraysString2"
-#define SelectedVoxelFieldArraysString3 "SelectedVoxelFieldArraysString3"
-#define SelectedVoxelFieldArraysString4 "SelectedVoxelFieldArraysString4"
-#define SelectedVoxelEnsembleArraysString1 "SelectedVoxelEnsembleArraysString1"
-#define SelectedVoxelEnsembleArraysString2 "SelectedVoxelEnsembleArraysString2"
-#define SelectedVoxelEnsembleArraysString3 "SelectedVoxelEnsembleArraysString3"
-#define SelectedVoxelEnsembleArraysString4 "SelectedVoxelEnsembleArraysString4"
-#define SelectedSurfaceMeshVertexArraysString1 "SelectedSurfaceMeshVertexArraysString1"
-#define SelectedSurfaceMeshVertexArraysString2 "SelectedSurfaceMeshVertexArraysString2"
-#define SelectedSurfaceMeshVertexArraysString3 "SelectedSurfaceMeshVertexArraysString3"
-#define SelectedSurfaceMeshVertexArraysString4 "SelectedSurfaceMeshVertexArraysString4"
-#define SelectedSurfaceMeshFaceArraysString1 "SelectedSurfaceMeshFaceArraysString1"
-#define SelectedSurfaceMeshFaceArraysString2 "SelectedSurfaceMeshFaceArraysString2"
-#define SelectedSurfaceMeshFaceArraysString3 "SelectedSurfaceMeshFaceArraysString3"
-#define SelectedSurfaceMeshFaceArraysString4 "SelectedSurfaceMeshFaceArraysString4"
-#define SelectedSurfaceMeshEdgeArraysString1 "SelectedSurfaceMeshEdgeArraysString1"
-#define SelectedSurfaceMeshEdgeArraysString2 "SelectedSurfaceMeshEdgeArraysString2"
-#define SelectedSurfaceMeshEdgeArraysString3 "SelectedSurfaceMeshEdgeArraysString3"
-#define SelectedSurfaceMeshEdgeArraysString4 "SelectedSurfaceMeshEdgeArraysString4"
-#define SelectedSurfaceMeshFieldArraysString1 "SelectedSurfaceMeshFieldArraysString1"
-#define SelectedSurfaceMeshFieldArraysString2 "SelectedSurfaceMeshFieldArraysString2"
-#define SelectedSurfaceMeshFieldArraysString3 "SelectedSurfaceMeshFieldArraysString3"
-#define SelectedSurfaceMeshFieldArraysString4 "SelectedSurfaceMeshFieldArraysString4"
-#define SelectedSurfaceMeshEnsembleArraysString1 "SelectedSurfaceMeshEnsembleArraysString1"
-#define SelectedSurfaceMeshEnsembleArraysString2 "SelectedSurfaceMeshEnsembleArraysString2"
-#define SelectedSurfaceMeshEnsembleArraysString3 "SelectedSurfaceMeshEnsembleArraysString3"
-#define SelectedSurfaceMeshEnsembleArraysString4 "SelectedSurfaceMeshEnsembleArraysString4"
-#define SelectedSolidMeshVertexArraysString1 "SelectedSolidMeshVertexArraysString1"
-#define SelectedSolidMeshVertexArraysString2 "SelectedSolidMeshVertexArraysString2"
-#define SelectedSolidMeshVertexArraysString3 "SelectedSolidMeshVertexArraysString3"
-#define SelectedSolidMeshVertexArraysString4 "SelectedSolidMeshVertexArraysString4"
-#define SelectedSolidMeshFaceArraysString1 "SelectedSolidMeshFaceArraysString1"
-#define SelectedSolidMeshFaceArraysString2 "SelectedSolidMeshFaceArraysString2"
-#define SelectedSolidMeshFaceArraysString3 "SelectedSolidMeshFaceArraysString3"
-#define SelectedSolidMeshFaceArraysString4 "SelectedSolidMeshFaceArraysString4"
-#define SelectedSolidMeshEdgeArraysString1 "SelectedSolidMeshEdgeArraysString1"
-#define SelectedSolidMeshEdgeArraysString2 "SelectedSolidMeshEdgeArraysString2"
-#define SelectedSolidMeshEdgeArraysString3 "SelectedSolidMeshEdgeArraysString3"
-#define SelectedSolidMeshEdgeArraysString4 "SelectedSolidMeshEdgeArraysString4"
+#define SelectedVolumeCellArraysString1 "SelectedVolumeCellArraysString1"
+#define SelectedVolumeCellArraysString2 "SelectedVolumeCellArraysString2"
+#define SelectedVolumeCellArraysString3 "SelectedVolumeCellArraysString3"
+#define SelectedVolumeCellArraysString4 "SelectedVolumeCellArraysString4"
+#define SelectedVolumeFieldArraysString1 "SelectedVolumeFieldArraysString1"
+#define SelectedVolumeFieldArraysString2 "SelectedVolumeFieldArraysString2"
+#define SelectedVolumeFieldArraysString3 "SelectedVolumeFieldArraysString3"
+#define SelectedVolumeFieldArraysString4 "SelectedVolumeFieldArraysString4"
+#define SelectedVolumeEnsembleArraysString1 "SelectedVolumeEnsembleArraysString1"
+#define SelectedVolumeEnsembleArraysString2 "SelectedVolumeEnsembleArraysString2"
+#define SelectedVolumeEnsembleArraysString3 "SelectedVolumeEnsembleArraysString3"
+#define SelectedVolumeEnsembleArraysString4 "SelectedVolumeEnsembleArraysString4"
+#define SelectedSurfaceVertexArraysString1 "SelectedSurfaceVertexArraysString1"
+#define SelectedSurfaceVertexArraysString2 "SelectedSurfaceVertexArraysString2"
+#define SelectedSurfaceVertexArraysString3 "SelectedSurfaceVertexArraysString3"
+#define SelectedSurfaceVertexArraysString4 "SelectedSurfaceVertexArraysString4"
+#define SelectedSurfaceFaceArraysString1 "SelectedSurfaceFaceArraysString1"
+#define SelectedSurfaceFaceArraysString2 "SelectedSurfaceFaceArraysString2"
+#define SelectedSurfaceFaceArraysString3 "SelectedSurfaceFaceArraysString3"
+#define SelectedSurfaceFaceArraysString4 "SelectedSurfaceFaceArraysString4"
+#define SelectedSurfaceEdgeArraysString1 "SelectedSurfaceEdgeArraysString1"
+#define SelectedSurfaceEdgeArraysString2 "SelectedSurfaceEdgeArraysString2"
+#define SelectedSurfaceEdgeArraysString3 "SelectedSurfaceEdgeArraysString3"
+#define SelectedSurfaceEdgeArraysString4 "SelectedSurfaceEdgeArraysString4"
+#define SelectedSurfaceFieldArraysString1 "SelectedSurfaceFieldArraysString1"
+#define SelectedSurfaceFieldArraysString2 "SelectedSurfaceFieldArraysString2"
+#define SelectedSurfaceFieldArraysString3 "SelectedSurfaceFieldArraysString3"
+#define SelectedSurfaceFieldArraysString4 "SelectedSurfaceFieldArraysString4"
+#define SelectedSurfaceEnsembleArraysString1 "SelectedSurfaceEnsembleArraysString1"
+#define SelectedSurfaceEnsembleArraysString2 "SelectedSurfaceEnsembleArraysString2"
+#define SelectedSurfaceEnsembleArraysString3 "SelectedSurfaceEnsembleArraysString3"
+#define SelectedSurfaceEnsembleArraysString4 "SelectedSurfaceEnsembleArraysString4"
+#define SelectedVertexVertexArraysString1 "SelectedVertexVertexArraysString1"
+#define SelectedVertexVertexArraysString2 "SelectedVertexVertexArraysString2"
+#define SelectedVertexVertexArraysString3 "SelectedVertexVertexArraysString3"
+#define SelectedVertexVertexArraysString4 "SelectedVertexVertexArraysString4"
+#define SelectedVertexFieldArraysString1 "SelectedVertexFieldArraysString1"
+#define SelectedVertexFieldArraysString2 "SelectedVertexFieldArraysString2"
+#define SelectedVertexFieldArraysString3 "SelectedVertexFieldArraysString3"
+#define SelectedVertexFieldArraysString4 "SelectedVertexFieldArraysString4"
+#define SelectedVertexEnsembleArraysString1 "SelectedVertexEnsembleArraysString1"
+#define SelectedVertexEnsembleArraysString2 "SelectedVertexEnsembleArraysString2"
+#define SelectedVertexEnsembleArraysString3 "SelectedVertexEnsembleArraysString3"
+#define SelectedVertexEnsembleArraysString4 "SelectedVertexEnsembleArraysString4"
 
 enum TestCases
 {
@@ -232,49 +232,49 @@ void ArraySelectionExampleTest()
 
   ArraySelectionExample::Pointer filt = ArraySelectionExample::New();
 
-  std::set<std::string> set1 = getSet(SelectedVoxelCellArraysString1, SelectedVoxelCellArraysString2,
-                                      SelectedVoxelCellArraysString3, SelectedVoxelCellArraysString4);
-  filt->setSelectedVoxelCellArrays(set1);
+  std::set<std::string> set1 = getSet(SelectedVolumeCellArraysString1, SelectedVolumeCellArraysString2,
+                                      SelectedVolumeCellArraysString3, SelectedVolumeCellArraysString4);
+  filt->setSelectedVolumeCellArrays(set1);
 
-  std::set<std::string> set2 = getSet(SelectedVoxelFieldArraysString1, SelectedVoxelFieldArraysString2,
-                                      SelectedVoxelFieldArraysString3, SelectedVoxelFieldArraysString4);
-  filt->setSelectedVoxelFieldArrays(set2);
+  std::set<std::string> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
+                                      SelectedVolumeFieldArraysString3, SelectedVolumeFieldArraysString4);
+  filt->setSelectedVolumeFieldArrays(set2);
 
-  std::set<std::string> set3 = getSet(SelectedVoxelEnsembleArraysString1, SelectedVoxelEnsembleArraysString2,
-                                      SelectedVoxelEnsembleArraysString3, SelectedVoxelEnsembleArraysString4);
-  filt->setSelectedVoxelEnsembleArrays(set3);
+  std::set<std::string> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
+                                      SelectedVolumeEnsembleArraysString3, SelectedVolumeEnsembleArraysString4);
+  filt->setSelectedVolumeEnsembleArrays(set3);
 
-  std::set<std::string> set4 = getSet(SelectedSurfaceMeshVertexArraysString1, SelectedSurfaceMeshVertexArraysString2,
-                                      SelectedSurfaceMeshVertexArraysString3, SelectedSurfaceMeshVertexArraysString4);
-  filt->setSelectedSurfaceMeshVertexArrays(set4);
+  std::set<std::string> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
+                                      SelectedSurfaceVertexArraysString3, SelectedSurfaceVertexArraysString4);
+  filt->setSelectedSurfaceVertexArrays(set4);
 
-  std::set<std::string> set5 = getSet(SelectedSurfaceMeshFaceArraysString1, SelectedSurfaceMeshFaceArraysString2,
-                                      SelectedSurfaceMeshFaceArraysString3, SelectedSurfaceMeshFaceArraysString4);
-  filt->setSelectedSurfaceMeshFaceArrays(set5);
+  std::set<std::string> set5 = getSet(SelectedSurfaceFaceArraysString1, SelectedSurfaceFaceArraysString2,
+                                      SelectedSurfaceFaceArraysString3, SelectedSurfaceFaceArraysString4);
+  filt->setSelectedSurfaceFaceArrays(set5);
 
-  std::set<std::string> set6 = getSet(SelectedSurfaceMeshEdgeArraysString1, SelectedSurfaceMeshEdgeArraysString2,
-                                      SelectedSurfaceMeshEdgeArraysString3, SelectedSurfaceMeshEdgeArraysString4);
-  filt->setSelectedSurfaceMeshEdgeArrays(set6);
+  std::set<std::string> set6 = getSet(SelectedSurfaceEdgeArraysString1, SelectedSurfaceEdgeArraysString2,
+                                      SelectedSurfaceEdgeArraysString3, SelectedSurfaceEdgeArraysString4);
+  filt->setSelectedSurfaceEdgeArrays(set6);
 
-  std::set<std::string> set7 = getSet(SelectedSurfaceMeshFieldArraysString1, SelectedSurfaceMeshFieldArraysString2,
-                                      SelectedSurfaceMeshFieldArraysString3, SelectedSurfaceMeshFieldArraysString4);
-  filt->setSelectedSurfaceMeshFieldArrays(set7);
+  std::set<std::string> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
+                                      SelectedSurfaceFieldArraysString3, SelectedSurfaceFieldArraysString4);
+  filt->setSelectedSurfaceFieldArrays(set7);
 
-  std::set<std::string> set8 = getSet(SelectedSurfaceMeshEnsembleArraysString1, SelectedSurfaceMeshEnsembleArraysString2,
-                                      SelectedSurfaceMeshEnsembleArraysString3, SelectedSurfaceMeshEnsembleArraysString4);
-  filt->setSelectedSurfaceMeshEnsembleArrays(set8);
+  std::set<std::string> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
+                                      SelectedSurfaceEnsembleArraysString3, SelectedSurfaceEnsembleArraysString4);
+  filt->setSelectedSurfaceEnsembleArrays(set8);
 
-  std::set<std::string> set9 = getSet(SelectedSolidMeshVertexArraysString1, SelectedSolidMeshVertexArraysString2,
-                                      SelectedSolidMeshVertexArraysString3, SelectedSolidMeshVertexArraysString4);
-  filt->setSelectedSolidMeshVertexArrays(set9);
+  std::set<std::string> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
+                                      SelectedVertexVertexArraysString3, SelectedVertexVertexArraysString4);
+  filt->setSelectedVertexVertexArrays(set9);
 
-  std::set<std::string> set10 = getSet(SelectedSolidMeshFaceArraysString1, SelectedSolidMeshFaceArraysString2,
-                                       SelectedSolidMeshFaceArraysString3, SelectedSolidMeshFaceArraysString4);
-  filt->setSelectedSolidMeshFaceArrays(set10);
+  std::set<std::string> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
+                                       SelectedVertexFieldArraysString3, SelectedVertexFieldArraysString4);
+  filt->setSelectedVertexFieldArrays(set10);
 
-  std::set<std::string> set11 = getSet(SelectedSolidMeshEdgeArraysString1, SelectedSolidMeshEdgeArraysString2,
-                                       SelectedSolidMeshEdgeArraysString3, SelectedSolidMeshEdgeArraysString4);
-  filt->setSelectedSolidMeshEdgeArrays(set11);
+  std::set<std::string> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
+                                       SelectedVertexEnsembleArraysString3, SelectedVertexEnsembleArraysString4);
+  filt->setSelectedVertexEnsembleArrays(set11);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
@@ -301,126 +301,126 @@ void ArraySelectionExampleTest()
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
 
-  std::set<std::string> set1Read = filt->getSelectedVoxelCellArrays();
+  std::set<std::string> set1Read = filt->getSelectedVolumeCellArrays();
   std::set<std::string>::iterator iter = set1Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVoxelCellArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelCellArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelCellArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelCellArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, ==, *iter)
 
-      std::set<std::string> set2Read = filt->getSelectedVoxelFieldArrays();
+      std::set<std::string> set2Read = filt->getSelectedVolumeFieldArrays();
   iter = set2Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVoxelFieldArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelFieldArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelFieldArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelFieldArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set3Read = filt->getSelectedVoxelEnsembleArrays();
+      std::set<std::string> set3Read = filt->getSelectedVolumeEnsembleArrays();
   iter = set3Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVoxelEnsembleArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelEnsembleArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelEnsembleArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVoxelEnsembleArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString4, ==, *iter)
 
-      std::set<std::string> set4Read = filt->getSelectedSurfaceMeshVertexArrays();
+      std::set<std::string> set4Read = filt->getSelectedSurfaceVertexArrays();
   iter = set4Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceMeshVertexArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshVertexArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshVertexArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshVertexArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString4, ==, *iter)
 
-      std::set<std::string> set5Read = filt->getSelectedSurfaceMeshFaceArrays();
+      std::set<std::string> set5Read = filt->getSelectedSurfaceFaceArrays();
   iter = set5Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFaceArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFaceArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFaceArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFaceArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString4, ==, *iter)
 
-      std::set<std::string> set6Read = filt->getSelectedSurfaceMeshEdgeArrays();
+      std::set<std::string> set6Read = filt->getSelectedSurfaceEdgeArrays();
   iter = set6Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEdgeArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEdgeArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEdgeArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEdgeArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, ==, *iter)
 
-      std::set<std::string> set7Read = filt->getSelectedSurfaceMeshFieldArrays();
+      std::set<std::string> set7Read = filt->getSelectedSurfaceFieldArrays();
   iter = set7Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFieldArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFieldArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFieldArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshFieldArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set8Read = filt->getSelectedSurfaceMeshEnsembleArrays();
+      std::set<std::string> set8Read = filt->getSelectedSurfaceEnsembleArrays();
   iter = set8Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEnsembleArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEnsembleArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEnsembleArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceMeshEnsembleArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString4, ==, *iter)
 
-      std::set<std::string> set9Read = filt->getSelectedSolidMeshVertexArrays();
+      std::set<std::string> set9Read = filt->getSelectedVertexVertexArrays();
   iter = set9Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSolidMeshVertexArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshVertexArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshVertexArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshVertexArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, ==, *iter)
 
-      std::set<std::string> set10Read = filt->getSelectedSolidMeshFaceArrays();
+      std::set<std::string> set10Read = filt->getSelectedVertexFieldArrays();
   iter = set10Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSolidMeshFaceArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshFaceArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshFaceArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshFaceArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set11Read = filt->getSelectedSolidMeshEdgeArrays();
+      std::set<std::string> set11Read = filt->getSelectedVertexEnsembleArrays();
   iter = set11Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSolidMeshEdgeArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString4, ==, *iter)
 
 
   H5Gclose(pipelineGroupId); // Closes the "Pipeline" group
@@ -449,21 +449,21 @@ void GenericExampleTest()
   filt->setOutputPath(OutputPathTestValue);
   filt->setWriteAlignmentShifts(WriteAlignmentShiftsTestValue);
   filt->setConversionType(ConversionTypeTestValue);
-  filt->setSelectedVoxelCellArrayName(SelectedCellArrayNameTestValue);
-  filt->setSelectedVoxelFieldArrayName(SelectedFieldArrayNameTestValue);
-  filt->setSelectedVoxelEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
-  filt->setSelectedSurfaceMeshPointArrayName(SurfaceMeshPointArrayNameTestValue);
-  filt->setSelectedSurfaceMeshFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
-  filt->setSelectedSurfaceMeshEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
-  filt->setSelectedSolidMeshPointArrayName(SolidMeshPointArrayNameTestValue);
-  filt->setSelectedSolidMeshFaceArrayName(SolidMeshFaceArrayNameTestValue);
-  filt->setSelectedSolidMeshEdgeArrayName(SolidMeshEdgeArrayNameTestValue);
+  filt->setSelectedVolumeCellArrayName(SelectedCellArrayNameTestValue);
+  filt->setSelectedVolumeFieldArrayName(SelectedFieldArrayNameTestValue);
+  filt->setSelectedVolumeEnsembleArrayName(SelectedEnsembleArrayNameTestValue);
+  filt->setSelectedSurfaceVertexArrayName(SurfaceMeshVertexArrayNameTestValue);
+  filt->setSelectedSurfaceFaceArrayName(SurfaceMeshFaceArrayNameTestValue);
+  filt->setSelectedSurfaceEdgeArrayName(SurfaceMeshEdgeArrayNameTestValue);
+  filt->setSelectedVertexVertexArrayName(SolidMeshVertexArrayNameTestValue);
+  filt->setSelectedVertexFieldArrayName(SolidMeshFaceArrayNameTestValue);
+  filt->setSelectedVertexEnsembleArrayName(SolidMeshEdgeArrayNameTestValue);
 
   std::vector<std::string> strVector;
-  strVector.push_back(SurfaceMeshPointArrayNameTestValue);
+  strVector.push_back(SurfaceMeshVertexArrayNameTestValue);
   strVector.push_back(SurfaceMeshFaceArrayNameTestValue);
   strVector.push_back(SurfaceMeshEdgeArrayNameTestValue);
-  strVector.push_back(SolidMeshPointArrayNameTestValue);
+  strVector.push_back(SolidMeshVertexArrayNameTestValue);
   strVector.push_back(SolidMeshFaceArrayNameTestValue);
   strVector.push_back(SolidMeshEdgeArrayNameTestValue);
 
@@ -534,15 +534,15 @@ void GenericExampleTest()
   DREAM3D_REQUIRED( OutputPathTestValue, ==, filt->getOutputPath() )
   DREAM3D_REQUIRED( WriteAlignmentShiftsTestValue, ==, filt->getWriteAlignmentShifts() )
   DREAM3D_REQUIRED( ConversionTypeTestValue, ==, filt->getConversionType() )
-  DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, ==, filt->getSelectedVoxelCellArrayName() )
-  DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, ==, filt->getSelectedVoxelFieldArrayName() )
-  DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedVoxelEnsembleArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshPointArrayNameTestValue, ==, filt->getSelectedSurfaceMeshPointArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, ==, filt->getSelectedSurfaceMeshFaceArrayName() )
-  DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSelectedSurfaceMeshEdgeArrayName() )
-  DREAM3D_REQUIRED( SolidMeshPointArrayNameTestValue, ==, filt->getSelectedSolidMeshPointArrayName() )
-  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, ==, filt->getSelectedSolidMeshFaceArrayName() )
-  DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, ==, filt->getSelectedSolidMeshEdgeArrayName() )
+  DREAM3D_REQUIRED( SelectedCellArrayNameTestValue, ==, filt->getSelectedVolumeCellArrayName() )
+  DREAM3D_REQUIRED( SelectedFieldArrayNameTestValue, ==, filt->getSelectedVolumeFieldArrayName() )
+  DREAM3D_REQUIRED( SelectedEnsembleArrayNameTestValue, ==, filt->getSelectedVolumeEnsembleArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshVertexArrayNameTestValue, ==, filt->getSelectedSurfaceVertexArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshFaceArrayNameTestValue, ==, filt->getSelectedSurfaceFaceArrayName() )
+  DREAM3D_REQUIRED( SurfaceMeshEdgeArrayNameTestValue, ==, filt->getSelectedSurfaceEdgeArrayName() )
+  DREAM3D_REQUIRED( SolidMeshVertexArrayNameTestValue, ==, filt->getSelectedVertexVertexArrayName() )
+  DREAM3D_REQUIRED( SolidMeshFaceArrayNameTestValue, ==, filt->getSelectedVertexFieldArrayName() )
+  DREAM3D_REQUIRED( SolidMeshEdgeArrayNameTestValue, ==, filt->getSelectedVertexEnsembleArrayName() )
 
   // Test the IntVec3Widget
   IntVec3Widget_t intWidgetRead = filt->getDimensions();
@@ -573,10 +573,10 @@ void GenericExampleTest()
   // Test the string vector
   std::vector<std::string> strVectorRead = filt->getStrVector();
 
-  DREAM3D_REQUIRED(SurfaceMeshPointArrayNameTestValue, ==, strVectorRead[0])
+  DREAM3D_REQUIRED(SurfaceMeshVertexArrayNameTestValue, ==, strVectorRead[0])
   DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, strVectorRead[1])
   DREAM3D_REQUIRED(SurfaceMeshEdgeArrayNameTestValue, ==, strVectorRead[2])
-  DREAM3D_REQUIRED(SolidMeshPointArrayNameTestValue, ==, strVectorRead[3])
+  DREAM3D_REQUIRED(SolidMeshVertexArrayNameTestValue, ==, strVectorRead[3])
   DREAM3D_REQUIRED(SolidMeshFaceArrayNameTestValue, ==, strVectorRead[4])
   DREAM3D_REQUIRED(SolidMeshEdgeArrayNameTestValue, ==, strVectorRead[5])
 

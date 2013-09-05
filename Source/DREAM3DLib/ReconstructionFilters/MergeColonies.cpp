@@ -225,7 +225,7 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -268,7 +268,7 @@ void MergeColonies::preflight()
 // -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -355,7 +355,7 @@ void MergeColonies::merge_colonies()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   NeighborList<int>& neighborlist = *m_NeighborList;
 
@@ -477,7 +477,7 @@ void MergeColonies::merge_colonies()
 // -----------------------------------------------------------------------------
 void MergeColonies::characterize_colonies()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t numgrains = m->getNumFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
@@ -559,7 +559,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 // -----------------------------------------------------------------------------
 void MergeColonies::identify_globAlpha()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   std::vector<int> betaSize(numParents,0);
   std::vector<int> totalSize(numParents,0);

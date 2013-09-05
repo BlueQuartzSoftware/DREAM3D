@@ -144,7 +144,7 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
@@ -178,7 +178,7 @@ void AlignSectionsMutualInformation::preflight()
 void AlignSectionsMutualInformation::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -213,7 +213,7 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
@@ -416,7 +416,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
 void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

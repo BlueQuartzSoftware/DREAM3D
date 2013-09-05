@@ -427,7 +427,7 @@ class NeighborList : public IDataArray
       /*
      <Attribute Name="MisorientationList" AttributeType="Scalar" Center="Cell">
       <DataItem Format="HDF" Dimensions="52140" NumberType="Float" Precision="4" >
-        test40638_01.dream3d:/VoxelDataContainer/FIELD_DATA/MisorientationList
+        test40638_01.dream3d:/VolumeDataContainer/FIELD_DATA/MisorientationList
       </DataItem>
     </Attribute>
     */

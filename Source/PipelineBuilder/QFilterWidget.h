@@ -134,8 +134,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
-    virtual void preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);
+    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
+    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
 
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
@@ -153,9 +153,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
      * @param smdc SurfaceMesh Data Container
      * @param sdc SolidMesh Data Container
      */
-    virtual void updateArraySelectionWidget(VoxelDataContainer::Pointer vdc,
-                                            SurfaceMeshDataContainer::Pointer smdc,
-                                            SolidMeshDataContainer::Pointer sdc,
+    virtual void updateArraySelectionWidget(VolumeDataContainer::Pointer vdc,
+                                            SurfaceDataContainer::Pointer smdc,
+                                            VertexDataContainer::Pointer sdc,
                                             QString propertyName);
 
     /**
@@ -234,6 +234,9 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual QString getFileExtension(std::string propName);
     virtual QString getFileType(std::string propName);
 
+    void setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
+    void setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);

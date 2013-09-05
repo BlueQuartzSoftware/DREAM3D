@@ -56,7 +56,7 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
 #include "DREAM3DLib/Common/PrecipitateStatsData.h"
@@ -97,7 +97,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     unsigned int getCrystalStructure();
 
     int getOrientationData(StatsData* statsData, unsigned int phaseType);
-    void extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
+    void extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType);
 
     void setPlotTabTitles(QString t1, QString t2, QString t3);
 

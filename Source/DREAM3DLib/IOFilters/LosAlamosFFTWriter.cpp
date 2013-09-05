@@ -121,7 +121,7 @@ void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(getOutputFile().empty() == true)
   {
     ss.str("");
@@ -157,7 +157,7 @@ int LosAlamosFFTWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int LosAlamosFFTWriter::writeFile()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     std::stringstream ss;

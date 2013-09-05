@@ -52,7 +52,7 @@
 
 class FindEuclideanMap
 {
-    VoxelDataContainer* m;
+    VolumeDataContainer* m;
     int mapType;
 
   public:
@@ -60,7 +60,7 @@ class FindEuclideanMap
      * @brief
      * @param datacontainer
      */
-    FindEuclideanMap(VoxelDataContainer* datacontainer, int type) :
+    FindEuclideanMap(VolumeDataContainer* datacontainer, int type) :
       m(datacontainer),
       mapType(type)
     {
@@ -271,7 +271,7 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -294,7 +294,7 @@ void FindEuclideanDistMap::preflight()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -319,7 +319,7 @@ void FindEuclideanDistMap::execute()
 // -----------------------------------------------------------------------------
 void FindEuclideanDistMap::find_euclideandistmap()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int64_t totalPoints = m->getTotalPoints();
 

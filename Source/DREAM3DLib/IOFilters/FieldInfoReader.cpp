@@ -147,7 +147,7 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -194,7 +194,7 @@ int  FieldInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int  FieldInfoReader::readFile()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     std::stringstream ss;
@@ -301,7 +301,7 @@ int  FieldInfoReader::readFile()
     }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
-    renum->setVoxelDataContainer(m);
+    renum->setVolumeDataContainer(m);
     renum->setObservers(getObservers());
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();

@@ -182,7 +182,7 @@ QString BoundaryPhaseWidget::getComboString()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BoundaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int BoundaryPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -222,7 +222,7 @@ int BoundaryPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void BoundaryPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void BoundaryPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
 {
 
   setPhaseIndex(index);

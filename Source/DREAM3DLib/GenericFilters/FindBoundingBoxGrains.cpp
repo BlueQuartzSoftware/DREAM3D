@@ -88,7 +88,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -301, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -301)
@@ -96,7 +96,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	setErrorCondition(0);
 	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
 	find_graincentroids->setObservers(this->getObservers());
-	find_graincentroids->setVoxelDataContainer(getVoxelDataContainer());
+	find_graincentroids->setVolumeDataContainer(getVolumeDataContainer());
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -301, float, FloatArrayType, fields, 3)
@@ -107,7 +107,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	setErrorCondition(0);
 	FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
 	find_surfacegrains->setObservers(this->getObservers());
-	find_surfacegrains->setVoxelDataContainer(getVoxelDataContainer());
+	find_surfacegrains->setVolumeDataContainer(getVolumeDataContainer());
 	if(preflight == true) find_surfacegrains->preflight();
 	if(preflight == false) find_surfacegrains->execute();
     GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
@@ -129,7 +129,7 @@ void FindBoundingBoxGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -157,7 +157,7 @@ void FindBoundingBoxGrains::execute()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t size = m->getNumFieldTuples();
   float boundbox[7];
   float coords[7];
@@ -216,7 +216,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
 }
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t size = m->getNumFieldTuples();
   float boundbox[5];
   float coords[5];

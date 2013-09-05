@@ -78,17 +78,17 @@ void RemoveArrays::setupFilterParameters()
 void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
-  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
-  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
-  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
-  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() ) );
-  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() ) );
-  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() ) );
-  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() ) );
-  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() ) );
-  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() ) );
-  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() ) );
-  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() ) );
+  setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
+  setSelectedVolumeFieldArrays( reader->readValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() ) );
+  setSelectedVolumeEnsembleArrays( reader->readValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() ) );
+  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
+  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+  setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
+  setSelectedVertexFieldArrays( reader->readValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() ) );
+  setSelectedVertexEnsembleArrays( reader->readValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -98,17 +98,17 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
-  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
-  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
-  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() );
-  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() );
-  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() );
-  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() );
-  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() );
-  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() );
-  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() );
-  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() );
+  writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
+  writer->writeValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() );
+  writer->writeValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+  writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
+  writer->writeValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() );
+  writer->writeValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() );
   writer->closeFilterGroup();
   return ++index;
 }
@@ -121,18 +121,18 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   typedef std::set<std::string> NameList_t;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL != m)
   {
-    for(NameList_t::iterator iter = m_SelectedVoxelCellArrays.begin(); iter != m_SelectedVoxelCellArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
     {
       m->removeCellData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVoxelFieldArrays.begin(); iter != m_SelectedVoxelFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeFieldArrays.begin(); iter != m_SelectedVolumeFieldArrays.end(); ++iter)
     {
       m->removeFieldData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVoxelEnsembleArrays.begin(); iter != m_SelectedVoxelEnsembleArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeEnsembleArrays.begin(); iter != m_SelectedVolumeEnsembleArrays.end(); ++iter)
     {
       m->removeEnsembleData(*iter);
     }
@@ -140,45 +140,37 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL != sm)
   {
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshVertexArrays.begin(); iter != m_SelectedSurfaceMeshVertexArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceVertexArrays.begin(); iter != m_SelectedSurfaceVertexArrays.end(); ++iter)
     {
       sm->removeVertexData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFaceArrays.begin(); iter != m_SelectedSurfaceMeshFaceArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFaceArrays.begin(); iter != m_SelectedSurfaceFaceArrays.end(); ++iter)
     {
       sm->removeFaceData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEdgeArrays.begin(); iter != m_SelectedSurfaceMeshEdgeArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceEdgeArrays.begin(); iter != m_SelectedSurfaceEdgeArrays.end(); ++iter)
     {
       sm->removeEdgeData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshFieldArrays.begin(); iter != m_SelectedSurfaceMeshFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFieldArrays.begin(); iter != m_SelectedSurfaceFieldArrays.end(); ++iter)
     {
       sm->removeFieldData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceMeshEnsembleArrays.begin(); iter != m_SelectedSurfaceMeshEnsembleArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceEnsembleArrays.begin(); iter != m_SelectedSurfaceEnsembleArrays.end(); ++iter)
     {
       sm->removeEnsembleData(*iter);
     }
   }
 
-  SolidMeshDataContainer* sol = getSolidMeshDataContainer();
+  VertexDataContainer* sol = getVertexDataContainer();
   if (NULL != sol)
   {
-    for(NameList_t::iterator iter = m_SelectedSolidMeshVertexArrays.begin(); iter != m_SelectedSolidMeshVertexArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVertexVertexArrays.begin(); iter != m_SelectedVertexVertexArrays.end(); ++iter)
     {
       sol->removeVertexData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSolidMeshFaceArrays.begin(); iter != m_SelectedSolidMeshFaceArrays.end(); ++iter)
-    {
-      sol->removeFaceData(*iter);
-    }
-    for(NameList_t::iterator iter = m_SelectedSolidMeshEdgeArrays.begin(); iter != m_SelectedSolidMeshEdgeArrays.end(); ++iter)
-    {
-      sol->removeEdgeData(*iter);
     }
   }
 
@@ -203,11 +195,11 @@ void RemoveArrays::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage("The Volume DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -219,41 +211,58 @@ void RemoveArrays::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                                     std::set<std::string> selectedFieldArrays,
-                                                     std::set<std::string> selectedEnsembleArrays)
+void RemoveArrays::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedCellArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
-  m_SelectedVoxelCellArrays = selectedCellArrays;
-  m_SelectedVoxelFieldArrays = selectedFieldArrays;
-  m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedVolumeCellArrays = selectedVertexArrays;
+  m_SelectedVolumeCellArrays = selectedEdgeArrays;
+  m_SelectedVolumeCellArrays = selectedFaceArrays;
+  m_SelectedVolumeCellArrays = selectedCellArrays;
+  m_SelectedVolumeFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+void RemoveArrays::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
+{
+  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
+}
+
+void RemoveArrays::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
                                                            std::set<std::string> selectedEdgeArrays,
                                                            std::set<std::string> selectedFieldArrays,
                                                            std::set<std::string> selectedEnsembleArrays)
 {
-  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
-  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedEdgeVertexArrays = selectedVertexArrays;
+  m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
+  m_SelectedEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                     std::set<std::string> selectedFaceArrays,
-                                                     std::set<std::string> selectedEdgeArrays)
+void RemoveArrays::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFieldArrays,
+                                                     std::set<std::string> selectedEnsembleArrays)
 {
-  m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+  m_SelectedVertexVertexArrays = selectedVertexArrays;
+  m_SelectedVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexEnsembleArrays = selectedEnsembleArrays;
 }
 
 

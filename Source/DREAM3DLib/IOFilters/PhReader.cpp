@@ -152,7 +152,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
   {
@@ -210,7 +210,7 @@ void PhReader::execute()
   /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
    * The array will get allocated down in the 'readFile()' method.
    */
-  if (NULL == getVoxelDataContainer())
+  if (NULL == getVolumeDataContainer())
   {
     std::stringstream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
@@ -253,7 +253,7 @@ void PhReader::execute()
 // -----------------------------------------------------------------------------
 int PhReader::readHeader()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int nx = 0;
   int ny = 0;
@@ -280,7 +280,7 @@ int PhReader::readHeader()
 int  PhReader::readFile()
 {
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
@@ -299,7 +299,7 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
+  getVolumeDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

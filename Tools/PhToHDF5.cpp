@@ -298,10 +298,10 @@ int writePhDataToHDF5File(const std::string &h5File, std::vector<int> &data, int
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::HDF5::VoxelDataContainerName, data, DREAM3D::CellData::GrainIds.c_str(), numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds.c_str() << "' to " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -317,10 +317,10 @@ int writeEulerDataToHDF5File(const std::string &h5File, std::vector<float> &data
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::HDF5::VoxelDataContainerName, data, DREAM3D::CellData::EulerAngles.c_str(), numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles.c_str() << "' to " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.

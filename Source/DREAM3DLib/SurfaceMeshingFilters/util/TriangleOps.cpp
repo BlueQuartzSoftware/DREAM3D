@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 namespace SM = DREAM3D::SurfaceMesh;
@@ -56,14 +56,14 @@ TriangleOps::~TriangleOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer* sm,
+std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
                                                         int32_t triangleIndex,
                                                         int32_t label)
 {
   std::vector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
-  DREAM3D::SurfaceMesh::FaceList_t::Pointer facesPtr = sm->getFaces();
-//  DREAM3D::SurfaceMesh::Face_t* faces = facesPtr->GetPointer(0);
+  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+//  DREAM3D::Mesh::Face_t* faces = facesPtr->GetPointer(0);
   IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -109,7 +109,7 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceMeshDataContainer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::getWindingIndices4(DREAM3D::SurfaceMesh::Face_t &triangle,
+void TriangleOps::getWindingIndices4(DREAM3D::Mesh::Face_t &triangle,
                                      int32_t *faceLabel,
                                      int ids[4], int32_t label)
 {
@@ -134,8 +134,8 @@ void TriangleOps::getWindingIndices4(DREAM3D::SurfaceMesh::Face_t &triangle,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool TriangleOps::verifyWinding(DREAM3D::SurfaceMesh::Face_t &source,
-                                DREAM3D::SurfaceMesh::Face_t &tri,
+bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t &source,
+                                DREAM3D::Mesh::Face_t &tri,
                                 int32_t* faceLabelSource,
                                 int32_t* faceLabelTri,
                                 int32_t label)
@@ -191,7 +191,7 @@ int TriangleOps::getLabelIndex(int32_t *t, int label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> TriangleOps::getNodeIndices(DREAM3D::SurfaceMesh::Face_t &t, int32_t* faceLabel, int label)
+std::vector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label)
 {
   std::vector<int > tNodes(3);
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
@@ -213,7 +213,7 @@ std::vector<int> TriangleOps::getNodeIndices(DREAM3D::SurfaceMesh::Face_t &t, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TriangleOps::flipWinding(DREAM3D::SurfaceMesh::Face_t &t)
+void TriangleOps::flipWinding(DREAM3D::Mesh::Face_t &t)
 {
   int tmp = t.verts[0];
   t.verts[0] = t.verts[2];
@@ -223,7 +223,7 @@ void TriangleOps::flipWinding(DREAM3D::SurfaceMesh::Face_t &t)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VectorType TriangleOps::computeNormal(DREAM3D::SurfaceMesh::Vert_t& n0, DREAM3D::SurfaceMesh::Vert_t& n1, DREAM3D::SurfaceMesh::Vert_t& n2)
+VectorType TriangleOps::computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::Vert_t& n1, DREAM3D::Mesh::Vert_t& n2)
 {
   double vert0[3];
   double vert1[3];

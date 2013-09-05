@@ -163,10 +163,10 @@ void QReadH5EbsdWidget::setupGui()
   connect(arraySelectionWidget, SIGNAL(arrayListsChanged()),
           this, SLOT(arraySelectionWidgetChanged()));
 
-  arraySelectionWidget->setSurfaceMeshEnabled(false);
-  arraySelectionWidget->setSolidMeshEnabled(false);
-  arraySelectionWidget->removeSurfaceMeshData();
-  arraySelectionWidget->removeSolidMeshData();
+  arraySelectionWidget->setSurfaceEnabled(false);
+  arraySelectionWidget->setVertexEnabled(false);
+  arraySelectionWidget->removeSurfaceData();
+  arraySelectionWidget->removeVertexData();
 }
 
 // -----------------------------------------------------------------------------
@@ -303,7 +303,7 @@ bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QReadH5EbsdWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
@@ -313,10 +313,10 @@ void QReadH5EbsdWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)
+void QReadH5EbsdWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
-  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
-  arraySelectionWidget->removeNonSelectionsFromDataContainers(vdc, smdc, sdc);
+  arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);
 
   updateFileInfoWidgets();
 }

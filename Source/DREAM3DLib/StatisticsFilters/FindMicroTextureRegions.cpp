@@ -61,7 +61,7 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
 
@@ -87,7 +87,7 @@ void FindMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -111,7 +111,7 @@ void FindMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::find_microtextureregions()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   size_t nummicrotextureregions = m->getNumFieldTuples();

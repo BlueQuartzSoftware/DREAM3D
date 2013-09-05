@@ -97,6 +97,6 @@ void QFilterPipeline::on_CancelWorker()
 void QFilterPipeline::run()
 {
   FilterPipeline::run(); // Execute the pipeline
-  //setVoxelDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
+  //setVolumeDataContainer(DataContainer::NullPointer()); // This _should_ clean up the memory as nothing else should have
   // a reference to the DataContainer
 }

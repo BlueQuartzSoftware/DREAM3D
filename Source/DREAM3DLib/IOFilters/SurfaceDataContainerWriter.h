@@ -33,9 +33,10 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SolidMeshDataContainerWriter_H_
-#define _SolidMeshDataContainerWriter_H_
+#ifndef _SurfaceDataContainerWriter_H_
+#define _SurfaceDataContainerWriter_H_
 
+#include <sstream>
 #include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -45,26 +46,29 @@
 
 
 /**
- * @class SolidMeshDataContainerWriter SolidMeshDataContainerWriter.h /IOFilters/SolidMeshDataContainerWriter.h
+ * @class SurfaceDataContainerWriter SurfaceDataContainerWriter.h DREAm3DLib/IOFilters/SurfaceDataContainerWriter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SolidMeshDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SolidMeshDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceDataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerWriter, AbstractFilter)
 
-    virtual ~SolidMeshDataContainerWriter();
+    virtual ~SurfaceDataContainerWriter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
+    typedef std::list<std::string> NameListType;
+
     void setXdmfOStream(std::ostream* xdmf);
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -72,13 +76,13 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Writer"; }
+    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -110,7 +114,7 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SolidMeshDataContainerWriter();
+    SurfaceDataContainerWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -122,11 +126,29 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
+    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+
+    int writeVertices(hid_t dcGid);
+    int writeFaces(hid_t dcGid);
+    int writeEdges(hid_t dcGid);
+    int writeMeshLinks(hid_t dcGid);
+    int writeMeshFaceNeighborLists(hid_t dcGid);
+    int writeVertexAttributeData(hid_t dcGid);
+    int writeFaceAttributeData(hid_t dcGid);
+    int writeEdgeAttributeData(hid_t dcGid);
+    int writeFieldData(hid_t dcGid);
+    int writeEnsembleData(hid_t dcGid);
+
+    void writeXdmfGridHeader();
+    void writeXdmfGridFooter();
+    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
+    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+
   private:
     std::ostream* m_XdmfPtr;
 
-    SolidMeshDataContainerWriter(const SolidMeshDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SolidMeshDataContainerWriter&); // Operator '=' Not Implemented
+    SurfaceDataContainerWriter(const SurfaceDataContainerWriter&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceDataContainerWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _SolidMeshDataContainerWriter_H_ */
+#endif /* _SurfaceDataContainerWriter_H_ */

@@ -49,10 +49,10 @@
  */
 class ReverseWindingImpl
 {
-    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
+    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
 
   public:
-    ReverseWindingImpl(DREAM3D::SurfaceMesh::FaceListPointer_t triangles) :
+    ReverseWindingImpl(DREAM3D::Mesh::FaceListPointer_t triangles) :
       m_Triangles(triangles)
     {}
     virtual ~ReverseWindingImpl(){}
@@ -64,7 +64,7 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
@@ -222,11 +222,11 @@ void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fie
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -266,7 +266,7 @@ void ReverseTriangleWinding::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -280,7 +280,7 @@ void ReverseTriangleWinding::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
