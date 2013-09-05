@@ -40,6 +40,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
@@ -160,6 +161,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   int32_t err = 0;
+  std::string m_FileVersion;
+  float fVersion;
+  bool check;
 
   if (getInputFile().empty() == true)
   {
@@ -176,7 +180,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
   else
   {
     // Read the Meta Data and Array names from the file
-    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file as Read Only
     if(fileId < 0)
     {
       ss.str("");
@@ -184,6 +188,20 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       setErrorCondition(-150);
       addErrorMessage(getHumanLabel(), ss.str(), err);
       return;
+    }
+
+    //Check to see if version of .dream3d file is prior to new data container names
+    err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
+    check = StringUtils::stringToNum(fVersion, m_FileVersion);
+    if(fVersion < 5.0 || err < 0)
+    {
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+      err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -299,8 +317,20 @@ void DataContainerReader::execute()
 
   // Read our File Version string to the Root "/" group
   std::string fileVersion;
+  float fVersion;
 
   err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  bool check = StringUtils::stringToNum(fVersion, fileVersion);
+  if(fVersion < 5.0 || err < 0)
+  {
+    H5Utilities::closeFile(fileId);
+    fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+    err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+    H5Utilities::closeFile(fileId);
+    fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+  }
 
   err = readExistingPipelineFromFile(fileId);
 
