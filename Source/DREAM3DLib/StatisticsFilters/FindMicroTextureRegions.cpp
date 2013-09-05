@@ -11,12 +11,12 @@
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
 AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_MicroTextureRegionNumCellsArrayName(DREAM3D::FieldData::MicroTextureRegionNumCells),
 m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FieldData::MicroTextureRegionFractionOccupied),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL),
 m_MicroTextureRegionNumCells(NULL),
-m_MicroTextureRegionFractionOccupied(NULL)
+m_MicroTextureRegionFractionOccupied(NULL),
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -162,7 +162,7 @@ void FindMicroTextureRegions::find_microtextureregions()
     m_MicroTextureRegionNumCells[i] = static_cast<int32_t>( microtextureregioncounts[i] );
   }
 
-  float x, y, z, xmax, ymax, zmax, xmin, ymin, zmin;
+  float x, y, z;
   size_t zStride, yStride;
   for(size_t i=0;i<zPoints;i++)
   {

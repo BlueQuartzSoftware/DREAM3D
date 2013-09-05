@@ -53,8 +53,9 @@
 SurfaceDataContainer::SurfaceDataContainer() :
 Observable(),
 m_NumVertexTuples(0),
-m_NumEdgeTuples(0),
-m_NumFaceTuples(0)
+m_NumFaceTuples(0),
+m_NumEdgeTuples(0)
+
 {
 
 }

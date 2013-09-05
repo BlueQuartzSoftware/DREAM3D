@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Neighborhoods"; }
 
     /**
@@ -90,7 +90,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -112,7 +112,7 @@ private:
     int32_t* m_Neighborhoods;
     NeighborList<int>* m_NeighborhoodList;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

@@ -44,11 +44,11 @@
 class DREAM3DLib_EXPORT RgbColor
 {
 public:
-	 /**
+   /**
    * @brief Rgb An ARGB quadruplet on the format #AARRGGBB, equivalent to an unsigned int and The type also holds a value for the alpha-channel.
    */
-  
- 
+
+
 
   inline static int dRed(DREAM3D::Rgb rgb)
   {
@@ -81,16 +81,11 @@ public:
   }
 
 protected:
-	RgbColor() {};
+  RgbColor() {};
 
 
 
 };
-
-
-
-
-
 
 /**
  * @class ColorTable ColorTable.h /Utilities/ColorTable.h

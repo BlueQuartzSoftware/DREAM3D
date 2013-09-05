@@ -30,75 +30,25 @@
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
+ *                           FA8650-10-D-5210
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _QGenerateEnsembleStatisticsWidget_H_
-#define _QGenerateEnsembleStatisticsWidget_H_
-
-
-#include <QtCore/QObject>
-#include <QtCore/QSettings>
-#include <QtCore/QUrl>
-#include <QtGui/QWidget>
+#ifndef _ColorUtilities_H_
+#define _ColorUtilities_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/StatisticsFilters/GenerateEnsembleStatistics.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
-#include "PipelineBuilder/QFilterWidget.h"
-
-#include "FilterWidgets/ui_QGenerateEnsembleStatisticsWidget.h"
-
-class DistributionTypeWidget;
-
-/**
- * @brief The QGenerateEnsembleStatisticsWidget class
- */
-class QGenerateEnsembleStatisticsWidget : public QFilterWidget, private Ui::QGenerateEnsembleStatisticsWidget
+class DREAM3DLib_EXPORT ColorUtilities
 {
-    Q_OBJECT
   public:
-    QGenerateEnsembleStatisticsWidget(QWidget* parent = NULL);
-    ~QGenerateEnsembleStatisticsWidget();
+    ~ColorUtilities();
 
-    virtual AbstractFilter::Pointer getFilter(bool defaultValues);
-    void writeOptions(QSettings &prefs);
-    void readOptions(QSettings &prefs);
-
-    QFilterWidget* createDeepCopy();
-
-    QString getFilterGroup();
-
-
-    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
-    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
-
-    virtual void openHtmlHelpFile();
-    virtual void getGuiParametersFromFilter(AbstractFilter* filt);
+  static DREAM3D::Rgb convertHSVtoRgb(float h, float s, float v);
 
   protected:
-    void setupGui();
-
-
-  private slots:
-    void on_addPhaseType_clicked();
-    void on_removePhaseType_clicked();
-    void inputChanged();
-
-
-  private:
-    QString m_FilterGroup;
-
-
-    QGenerateEnsembleStatisticsWidget(const QGenerateEnsembleStatisticsWidget&); // Copy Constructor Not Implemented
-    void operator=(const QGenerateEnsembleStatisticsWidget&); // Operator '=' Not Implemented
-
-
+     ColorUtilities();
 };
 
 
-
-
-
-#endif /* _QGenerateEnsembleStatisticsWidget_H_ */
+#endif /* _ColorUtilities_H_ */
