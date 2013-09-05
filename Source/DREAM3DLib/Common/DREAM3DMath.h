@@ -141,6 +141,7 @@ namespace DREAM3D
     static const double k_PiOver8 = M_PI/8.0;
     static const double k_PiOver12 = M_PI/12.0;
     static const double k_Sqrt2 = sqrt(2.0);
+    static const double k_Sqrt3 = sqrt(3.0);
     static const double k_HalfSqrt2 = 0.5 * sqrt(2.0);
     static const double k_1OverRoot2 = 1.0/sqrt(2.0);
     static const double k_1OverRoot3 = 1.0/sqrt(3.0);
@@ -154,6 +155,9 @@ namespace DREAM3D
     static const double k_ACos1 = acos(1.0);
 
     static const double k_Tan_OneEigthPi = tan(k_PiOver8);
+    static const double k_Cos_OneEigthPi = cos(k_PiOver8);
+    static const double k_Cos_ThreeEightPi = cos(3.0*k_PiOver8);
+    static const double k_Sin_ThreeEightPi = sin(3.0*k_PiOver8);
 
 
 

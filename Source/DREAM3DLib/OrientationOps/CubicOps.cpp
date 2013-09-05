@@ -1545,8 +1545,6 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
-  //DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
-
   float n1, n2, n3, w;
   float x, x1, x2, x3, x4, x5, x6, x7;
   float y, y1, y2, y3, y4, y5, y6, y7;
@@ -1563,51 +1561,7 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
   n2=fabs(n2);
   n3=fabs(n3);
 
-
-  //_TripletSort(n1, n2, n3, x, y, z);
-
-  if(n1>=n2 && n1>=n3)//n1 largest
-  {
-      x=n1;
-      if(n2>=n3)
-      {
-          y=n2;
-          z=n3;
-      }
-      else
-      {
-          y=n3;
-          z=n2;
-      }
-  }
-  else if(n2>=n1 && n2>=n3)//n2 largest
-  {
-      x=n2;
-      if(n1>=n3)
-      {
-          y=n1;
-          z=n3;
-      }
-      else
-      {
-          y=n3;
-          z=n1;
-      }
-  }
-  else//n3 largest
-  {
-      x=n3;
-      if(n1>=n2)
-      {
-          y=n1;
-          z=n2;
-      }
-      else
-      {
-          y=n2;
-          z=n1;
-      }
-  }
+  _TripletSort(n1, n2, n3, z, y, x);
 
   //eq c9.1
   k=tan(w/2.0f);
@@ -1619,7 +1573,7 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
   x1=x;
   y1=y;
   z1=z;
-  if(x>=(1.0f/3.0f) && atan2(z, y)>=((1.0f-2.0f*x)/x))
+  if(x>=DREAM3D::Constants::k_1Over3 && atan2(z, y)>=((1.0f-2.0f*x)/x))
   {
       y1=(x*(y+z))/(1.0f-x);
       z1=(x*z*(y+z))/(y*(1.0f-x));
@@ -1627,18 +1581,18 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
 
   //eq c9.3
   x2=x1-DREAM3D::Constants::k_Tan_OneEigthPi;
-  y2=y1*cos((3.0f*M_PI)/8.0f)-z1*sin((3.0f*M_PI)/8.0f);
-  z2=y1*sin((3.0f*M_PI)/8.0f)+z1*cos((3.0f*M_PI)/8.0f);
+  y2=y1*DREAM3D::Constants::k_Cos_ThreeEightPi-z1*DREAM3D::Constants::k_Sin_ThreeEightPi;
+  z2=y1*DREAM3D::Constants::k_Sin_ThreeEightPi+z1*DREAM3D::Constants::k_Cos_ThreeEightPi;
 
   //eq c9.4
   x3=x2;
-  y3=y2*(1+(y2/z2)*tan(M_PI/8.0f));
-  z3=z2+y2*tan(M_PI/8.0f);
+  y3=y2*(1+(y2/z2)*DREAM3D::Constants::k_Tan_OneEigthPi);
+  z3=z2+y2*DREAM3D::Constants::k_Tan_OneEigthPi;
 
   //eq c9.5
   x4=x3;
-  y4=(y3*cos(M_PI/8.0f))/tan(M_PI/8.0f);
-  z4=z3-x3/cos(M_PI/8.0f);
+  y4=(y3*DREAM3D::Constants::k_Cos_OneEigthPi)/DREAM3D::Constants::k_Tan_OneEigthPi;
+  z4=z3-x3/DREAM3D::Constants::k_Cos_OneEigthPi;
 
   //eq c9.6
   k=atan2(-x4, y4);
@@ -1653,13 +1607,12 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
   z6=z5;
 
   //eq c9.8 these hsv are from 0 to 1 in cartesian coordinates
-  //x7=(x6-y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
-  x7=(x6*sqrt(3.0f)-y6)/(2.0f*tan(M_PI/8.0f));
-  y7=(x6+y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
-  z7=z6*(cos(M_PI/8.0f)/tan(M_PI/8.0f));
+  x7=(x6*DREAM3D::Constants::k_Sqrt3-y6)/(2.0f*DREAM3D::Constants::k_Tan_OneEigthPi);
+  y7=(x6+y6*DREAM3D::Constants::k_Sqrt3)/(2.0f*DREAM3D::Constants::k_Tan_OneEigthPi);
+  z7=z6*(DREAM3D::Constants::k_Cos_OneEigthPi/DREAM3D::Constants::k_Tan_OneEigthPi);
 
   //convert to traditional hsv (0-1)
-  h=fmod(atan2f(y7, x7)+2.0f*M_PI, 2.0f*M_PI)/(2.0f*M_PI);
+  h=fmod(atan2f(y7, x7)+M_2PI, M_2PI)/M_2PI;
   s=sqrt(x7*x7+y7*y7);
   v=z7;
   if(v>0)
@@ -1667,63 +1620,9 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
       s=s/v;
   }
 
-  return ColorUtilities::convertHSVtoRgb(h,s,v);
-  #if 0
-  //hsv to rgb (from wikipedia hsv/hsl page)
-  c = v*s;
-  k=c*(1-fabs(fmod(h*6,2)-1));//x in wiki article
-  h=h*6;
-  r=0;
-  g=0;
-  b=0;
+  DREAM3D::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
 
-  if(h>=0)
-  {
-      if(h<1)
-      {
-          r=c;
-          g=k;
-      }
-      else if(h<2)
-      {
-          r=k;
-          g=c;
-      }
-      else if(h<3)
-      {
-          g=c;
-          b=k;
-      }
-      else if(h<4)
-      {
-          g=k;
-          b=c;
-      }
-      else if (h<5)
-      {
-          r=k;
-          b=c;
-      }
-      else if(h<6)
-      {
-          r=c;
-          b=k;
-      }
-  }
-
-  //adjust lumosity and invert
-  r=(r+(v-c));
-  g=(g+(v-c));
-  b=(b+(v-c));
-
-  //now standard 0-1 rgb, needs rotation
-  k=r;
-  r=1-g;
-  g=b;
-  b=k;
-
-  rgb=RgbColor::dRgb(r*255, g*255, b*255, 0);
-  return rgb;
-  #endif
+  //now standard 0-255 rgb, needs rotation
+  return RgbColor::dRgb(255-RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
 }
 
