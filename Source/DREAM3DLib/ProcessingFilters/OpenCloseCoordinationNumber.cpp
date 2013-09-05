@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -127,7 +127,7 @@ int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersW
 void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -214,7 +214,7 @@ void OpenCloseCoordinationNumber::execute()
   int current = 0;
   int most = 0;
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
 
   std::vector<int > n(numgrains + 1,0);
 
@@ -269,9 +269,9 @@ void OpenCloseCoordinationNumber::execute()
         int neighbor = m_Neighbors[point];
         if (coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
         {
-            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
             {
-              std::string name = *iter;
+              QString name = *iter;
               IDataArray::Pointer p = m->getCellData(*iter);
               p->CopyTuple(neighbor, point);
             }

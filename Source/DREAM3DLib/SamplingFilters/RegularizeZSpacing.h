@@ -37,7 +37,7 @@
 #ifndef RegularizeZSpacing_H_
 #define RegularizeZSpacing_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -67,9 +67,9 @@ class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(float, NewZRes)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const std::string getHumanLabel() { return "Regularize Z Spacing"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getHumanLabel() { return "Regularize Z Spacing"; }
 
     virtual void setupFilterParameters();
     /**

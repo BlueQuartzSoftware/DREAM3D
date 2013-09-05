@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
-    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() {return "Initialize Synthetic Volume";}
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)

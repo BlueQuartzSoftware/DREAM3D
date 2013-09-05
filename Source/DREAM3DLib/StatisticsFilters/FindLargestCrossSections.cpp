@@ -36,7 +36,7 @@
 
 #include "FindLargestCrossSections.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -75,7 +75,7 @@ void FindLargestCrossSections::setupFilterParameters()
     option->setPropertyName("Plane");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");
@@ -112,7 +112,7 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
 

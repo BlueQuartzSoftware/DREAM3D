@@ -36,7 +36,7 @@
 
 #include "FindMDF.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/GenericFilters/FindNeighbors.h"
@@ -103,7 +103,7 @@ int FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
@@ -147,7 +147,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     if(m_NeighborList == NULL)
     {
       ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" ;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
 	}
@@ -165,7 +165,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     if(m_SharedSurfaceAreaList == NULL)
 	{
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly" ;
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
 	}

@@ -37,7 +37,7 @@
 #define DecimateSolidMesh_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, GoalElementNumber)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Decimate Solid Mesh"; }
+		virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+     virtual const QString getHumanLabel() { return "Decimate Solid Mesh"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

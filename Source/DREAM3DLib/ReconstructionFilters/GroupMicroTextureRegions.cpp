@@ -37,7 +37,7 @@
 #include "GroupMicroTextureRegions.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -155,7 +155,7 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -177,7 +177,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
       if(m_ContiguousNeighborList == NULL)
       {
-        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+        ss << "NeighborLists Array Not Initialized correctly" ;
         setErrorCondition(-304);
         addErrorMessage(getHumanLabel(), ss.str(), -1);
       }
@@ -189,7 +189,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
       if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
       {
-        ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
+        ss << "NeighborhoodLists Array Not Initialized correctly" ;
         setErrorCondition(-305);
         addErrorMessage(getHumanLabel(), ss.str(), -1);
       }

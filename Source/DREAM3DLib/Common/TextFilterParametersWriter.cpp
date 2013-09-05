@@ -70,7 +70,7 @@ int TextFilterParametersWriter::closeFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, const std::string value)
+int TextFilterParametersWriter::writeValue(const QString name, const QString value)
 {
   int err = -1;
   return err;
@@ -79,7 +79,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, const std::st
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, const std::vector<std::string> value)
+int TextFilterParametersWriter::writeValue(const QString name, const std::vector<QString> value)
 {
   int err = -1;
   return err;
@@ -89,7 +89,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, const std::ve
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, int8_t value)
+int TextFilterParametersWriter::writeValue(const QString name, int8_t value)
 {
   int err = -1;
   return err;
@@ -98,7 +98,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int8_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, int16_t value)
+int TextFilterParametersWriter::writeValue(const QString name, int16_t value)
 {
   int err = -1;
   return err;
@@ -107,7 +107,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int16_t value
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, int32_t value)
+int TextFilterParametersWriter::writeValue(const QString name, int32_t value)
 {
   int err = -1;
   return err;
@@ -116,7 +116,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int32_t value
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, int64_t value)
+int TextFilterParametersWriter::writeValue(const QString name, int64_t value)
 {
   int err = -1;
   return err;
@@ -125,7 +125,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, int64_t value
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, uint8_t value)
+int TextFilterParametersWriter::writeValue(const QString name, uint8_t value)
 {
   int err = -1;
   return err;
@@ -134,7 +134,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint8_t value
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, uint16_t value)
+int TextFilterParametersWriter::writeValue(const QString name, uint16_t value)
 {
   int err = -1;
   return err;
@@ -143,7 +143,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint16_t valu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, uint32_t value)
+int TextFilterParametersWriter::writeValue(const QString name, uint32_t value)
 {
   int err = -1;
   return err;
@@ -152,7 +152,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint32_t valu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, uint64_t value)
+int TextFilterParametersWriter::writeValue(const QString name, uint64_t value)
 {
   int err = -1;
   return err;
@@ -161,7 +161,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, uint64_t valu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, float value)
+int TextFilterParametersWriter::writeValue(const QString name, float value)
 {
   int err = -1;
   return err;
@@ -170,7 +170,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, float value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, double value)
+int TextFilterParametersWriter::writeValue(const QString name, double value)
 {
   int err = -1;
   return err;
@@ -179,7 +179,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<int8_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<int8_t> value)
 {
   int err = -1;
   return err;
@@ -188,7 +188,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<int16_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<int16_t> value)
 {
   int err = -1;
   return err;
@@ -197,7 +197,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<int32_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<int32_t> value)
 {
   int err = -1;
   return err;
@@ -206,7 +206,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<int64_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<int64_t> value)
 {
   int err = -1;
   return err;
@@ -215,7 +215,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<i
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<uint8_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<uint8_t> value)
 {
   int err = -1;
   return err;
@@ -224,7 +224,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<uint16_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<uint16_t> value)
 {
   int err = -1;
   return err;
@@ -233,7 +233,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<uint32_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<uint32_t> value)
 {
   int err = -1;
   return err;
@@ -242,7 +242,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<uint64_t> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<uint64_t> value)
 {
   int err = -1;
   return err;
@@ -251,7 +251,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<u
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<float> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<float> value)
 {
   int err = -1;
   return err;
@@ -260,7 +260,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<double> value)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<double> value)
 {
   int err = -1;
   return err;
@@ -269,7 +269,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t v)
+int TextFilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
 {
   int err = -1;
   return err;
@@ -278,7 +278,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, IntVec3Widget
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, FloatVec3Widget_t v)
+int TextFilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v)
 {
   int err = -1;
   return err;
@@ -287,7 +287,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, FloatVec3Widg
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v, int vectorPos)
+int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int vectorPos)
 {
   int err = -1;
   return err;
@@ -296,7 +296,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, ComparisonInp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
+int TextFilterParametersWriter::writeValue(const QString name, std::vector<AxisAngleInput_t> v)
 {
   int err = -1;
   return err;
@@ -305,7 +305,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, std::vector<A
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v, int vectorPos)
+int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)
 {
   int err = -1;
   return err;
@@ -314,7 +314,7 @@ int TextFilterParametersWriter::writeValue(const std::string name, AxisAngleInpu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const std::string name, std::set<std::string> v)
+int TextFilterParametersWriter::writeValue(const QString name, QSet<QString> v)
 {
   int err = -1;
   return err;

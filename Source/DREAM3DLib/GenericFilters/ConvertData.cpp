@@ -38,9 +38,9 @@
 #include <stdio.h>
 
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Common/IO/MXAFileReader64.h"
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
 
 namespace Detail
 {
@@ -65,7 +65,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VoxelDataContainer* m, int32_t scalarType, const std::string &name)
+  void ConvertData(T* ptr, VoxelDataContainer* m, int32_t scalarType, const QString &name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->GetNumberOfTuples();
@@ -218,7 +218,7 @@ void ConvertData::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -279,10 +279,10 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(m_SelectedCellArrayName.empty() == true)
+  if(m_SelectedCellArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
@@ -290,7 +290,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if(m_OutputArrayName.empty() == true)
+  if(m_OutputArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
@@ -371,7 +371,7 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

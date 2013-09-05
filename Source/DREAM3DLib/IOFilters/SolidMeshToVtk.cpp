@@ -37,8 +37,8 @@
 #include "SolidMeshToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -117,9 +117,9 @@ int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer
 void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -181,7 +181,7 @@ class ScopedFileMonitor
 void SolidMeshToVtk::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -199,12 +199,13 @@ void SolidMeshToVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
       ss.str("");
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -217,7 +218,7 @@ void SolidMeshToVtk::execute()
   {
       ss.str("");
       ss << "Error creating file '" << getOutputVtkFile() << "'";
-      notifyErrorMessage(ss.str(), -18542);
+      notifyErrorMessage(ss, -18542);
       setErrorCondition(-18542);
       return;
   }

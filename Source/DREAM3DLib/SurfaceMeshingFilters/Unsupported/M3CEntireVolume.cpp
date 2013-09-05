@@ -35,10 +35,10 @@
 
 #include "M3CEntireVolume.h"
 
-#include "MXA/Common/MXAMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 
 #ifndef M_PI
@@ -114,7 +114,7 @@ int M3CEntireVolume::writeFilterParameters(AbstractFilterParametersWriter* write
 void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
@@ -161,13 +161,13 @@ void M3CEntireVolume::preflight()
 void M3CEntireVolume::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << " VoxelDataContainer was NULL";
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
@@ -178,7 +178,7 @@ void M3CEntireVolume::execute()
   if(getSurfaceMeshDataContainer() == NULL)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << " SurfaceMeshDataContainer was NULL";
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
@@ -199,7 +199,7 @@ void M3CEntireVolume::execute()
   if(err < 0)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << "Error Creating the Surface Mesh";
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
@@ -266,7 +266,7 @@ static int nsTable_2d[20][8] =
 int M3CEntireVolume::createMesh()
 {
 
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
@@ -606,7 +606,7 @@ int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3]
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-voxel* M3CEntireVolume::initialize_micro_from_dx_file(int &xDim, int &yDim, int &zDim, double dx, double dy, double dz, const std::string ifn)
+voxel* M3CEntireVolume::initialize_micro_from_dx_file(int &xDim, int &yDim, int &zDim, double dx, double dy, double dz, const QString ifn)
 {
   int i, j, k;
   int id;
@@ -1176,7 +1176,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
     //if(edgeCount!=0 && edgeCount==4){ printf("%3d", edgeCount);}
   }
 
-  std::stringstream ss;
+  QString ss;
   ss << "total number of identified face edges = " <<  eid;
   notifyStatusMessage(ss.str());
 }
@@ -1555,7 +1555,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
                                                   int xDim)
 {
   int32_t* p = points->GetPointer(0);
-  std::stringstream ss;
+  QString ss;
 
   int i, ii, i1, i2, j, k, kk;
   int sqID[6];
@@ -1683,7 +1683,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
       {
         ss.str("");
         ss << "corners are wrongfully burnt in this marching cube: cube id =" << i << " number burnt = " << nburnt;
-        notifyErrorMessage(ss.str(), -1001);
+        notifyErrorMessage(ss, -1001);
       }
       // update nodeKind of body center node in the current marching cube...
       if(nkFlag > 0)
@@ -1792,7 +1792,7 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
                                                         Segment* e1,
                                                         int nfedge)
 {
-  std::stringstream ss;
+  QString ss;
   int ii, i, j, jj, k, kk, k1;
   int loopID;
   int tail, head, coin;
@@ -1966,7 +1966,7 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
       // do nothing...
       ss.str("");
       ss << "something wrong in counting # case 0 triangles... " << numN << " " << nfedge;
-      notifyErrorMessage(ss.str(), -1000);
+      notifyErrorMessage(ss, -1000);
     }
   }
 
@@ -2696,7 +2696,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
                                            int nsp,
                                            int xDim)
 {
-  std::stringstream ss;
+  QString ss;
   int i, ii, i1, i2, k;
   int sqID[6];
   int tsq; // current sq id...
@@ -2841,7 +2841,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
       {
         ss.str("");
         ss << "Somthing's wrong in counting face centers turned on..." << nFC << "  " <<  i;
-        notifyErrorMessage(ss.str(), -1001);
+        notifyErrorMessage(ss, -1001);
       }
 
       free(arrayFE);
@@ -4606,7 +4606,7 @@ void M3CEntireVolume::update_triangle_sides_with_fedge(Triangle* t,
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, int nT)
 {
-  std::stringstream ss;
+  QString ss;
   int i, j, k, kk, m, mm;
   int cmcID, nmcID; // marching cube ids for the current triangle and next triangle...
   int nIEDmc, nIEmc; // number of inner edges, including duplicates, and unique inner edges in the current marching cube...
@@ -4726,7 +4726,7 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
                                                      ISegment* ie,
                                                      int nT, int nfedge)
 {
-  std::stringstream ss;
+  QString ss;
   int i, j, k, kk, m, mm, ii, jj, jjj;
   int cmcID, nmcID; // marching cube ids for the current triangle and next triangle...
   int nIEDmc; // number of inner edges, including duplicates, and unique inner edges in the current marching cube...
@@ -4919,7 +4919,7 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
           {
             ss.str("");
             ss << "something's wrong in counting inner edge kind!!! " << tedgeKind;
-            notifyErrorMessage(ss.str(), -1001);
+            notifyErrorMessage(ss, -1001);
           }
           IEindex++;
         }

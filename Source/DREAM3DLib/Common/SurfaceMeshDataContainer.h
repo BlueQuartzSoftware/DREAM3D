@@ -43,9 +43,9 @@
 
 //-- C++ includes
 #include <vector>
-#include <map>
+#include <QMap>
 #include <sstream>
-#include <list>
+#include <QtCore/QList>
 
 //-- Boost includes
 #include <boost/shared_array.hpp>
@@ -152,14 +152,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexData(const std::string &name);
+    IDataArray::Pointer getVertexData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const QString &name);
 
     /**
      * @brief Removes all the Point Arrays
@@ -179,7 +179,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * Point group
      * @return
      */
-    std::list<std::string> getPointArrayNameList();
+    QList<QString> getPointArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Point group
@@ -199,14 +199,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceData(const std::string &name, IDataArray::Pointer data);
+    void addFaceData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceData(const std::string &name);
+    IDataArray::Pointer getFaceData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -214,7 +214,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceData(const std::string &name);
+    IDataArray::Pointer removeFaceData(const QString &name);
 
     /**
      * @brief Removes all the Face Arrays
@@ -226,7 +226,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * Face (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFaceArrayNameList();
+    QList<QString> getFaceArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Face group
@@ -252,14 +252,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const std::string &name);
+    IDataArray::Pointer getEdgeData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -267,14 +267,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeData(const std::string &name);
+    IDataArray::Pointer removeEdgeData(const QString &name);
 
     /**
      * @brief Removes all the ensemble data
      */
     void clearEdgeData();
 
-    std::list<std::string> getEdgeArrayNameList();
+    QList<QString> getEdgeArrayNameList();
 
     int getNumEdgeArrays();
 
@@ -285,14 +285,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addFieldData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getFieldData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -300,7 +300,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeFieldData(const QString &name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -312,7 +312,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFieldArrayNameList();
+    QList<QString> getFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
@@ -338,14 +338,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addEnsembleData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getEnsembleData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -353,7 +353,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeEnsembleData(const QString &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -365,7 +365,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getEnsembleArrayNameList();
+    QList<QString> getEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group
@@ -393,11 +393,11 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_FaceData;
-     std::map<std::string, IDataArray::Pointer> m_EdgeData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+     QMap<QString, IDataArray::Pointer> m_VertexData;
+     QMap<QString, IDataArray::Pointer> m_FaceData;
+     QMap<QString, IDataArray::Pointer> m_EdgeData;
+     QMap<QString, IDataArray::Pointer> m_FieldData;
+     QMap<QString, IDataArray::Pointer> m_EnsembleData;
 
      MeshVertLinks::Pointer m_MeshVertLinks;
      MeshFaceNeighbors::Pointer m_FaceNeighbors;

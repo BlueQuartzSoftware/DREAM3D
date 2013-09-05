@@ -37,13 +37,13 @@
 #include "FindBoundaryStrengths.h"
 
 // MXA Includes
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
 // DREAM3D includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -136,7 +136,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
 void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -175,7 +175,7 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
 void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
@@ -200,7 +200,7 @@ void FindBoundaryStrengths::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::execute()
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == m || NULL == sm)

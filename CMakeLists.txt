@@ -78,10 +78,10 @@ set(CMP_VERSION_MAJOR "4.3")
 set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 # Build shared libraries
-OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
 set(LIB_TYPE STATIC)
 if(BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
+  #message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
     set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
     if(MSVC)
@@ -250,9 +250,6 @@ if(DREAM3D_BUILD_TESTING)
 endif()
 
 
-#--------------------- START MASSIVE COMMENT OUT
-if(0)
-
 
 #--- This needs to be set here as we are going to look for files in this directory
 set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
@@ -265,6 +262,10 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_
 
 
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
+
+
+#--------------------- START MASSIVE COMMENT OUT
+if(0)
 
 
 # Build the static QtSupport library - which MUST be a static library or the linking

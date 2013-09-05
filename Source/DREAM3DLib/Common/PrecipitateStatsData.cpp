@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PrecipitateStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5PrecipitateStatsDataDelegate.h"
 
@@ -62,7 +62,7 @@ PrecipitateStatsData::~PrecipitateStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string PrecipitateStatsData::getStatsType()
+QString PrecipitateStatsData::getStatsType()
 {
   return DREAM3D::HDF5::PrecipitateStatsData;
 }
@@ -87,7 +87,7 @@ FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  std::cout << d << std::endl;
+  //  qDebug() << d ;
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }

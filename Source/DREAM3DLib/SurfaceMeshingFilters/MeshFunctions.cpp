@@ -38,7 +38,7 @@
 
 #include "MeshFunctions.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
     a[1] *= rnorm;
     a[2] *= rnorm;
   }
-  //  std::cout << "MinDIhedral, a: " << a[0] <<" " << a[1] <<" " << a[2] << std::endl ;
+  //  qDebug() << "MinDIhedral, a: " << a[0] <<" " << a[1] <<" " << a[2]  ;
   b[0] = n2.coord[0] - n0.coord[0];
   b[1] = n2.coord[1] - n0.coord[1];
   b[2] = n2.coord[2] - n0.coord[2];
@@ -177,7 +177,7 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
     b[1] *= rnorm;
     b[2] *= rnorm;
   }
-  //  std::cout << "MinDIhedral, b: " << b[0] <<" " << b[1] <<" " << b[2] << std::endl ;
+  //  qDebug() << "MinDIhedral, b: " << b[0] <<" " << b[1] <<" " << b[2]  ;
   c[0] = n2.coord[0] - n1.coord[0];
   c[1] = n2.coord[1] - n1.coord[1];
   c[2] = n2.coord[2] - n1.coord[2];
@@ -189,7 +189,7 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
     c[1] *= rnorm;
     c[2] *= rnorm;
   }
-  //  std::cout << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2] << std::endl ;
+  //  qDebug() << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2]  ;
   w1 = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
   if(w1 < -1.) w1 = -1.;
   if(w1 > 1.) w1 = 1.;
@@ -199,12 +199,12 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
   w3 = c[0] * b[0] + c[1] * b[1] + c[2] * b[2];
   if(w3 < -1.) w3 = -1.;
   if(w3 > 1.) w3 = 1.;
-  //  std::cout << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3 << std::endl ;
+  //  qDebug() << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3  ;
   double d1 = acos(w1);
   double d2 = acos(w2);
   double d3 = acos(w3);
   // debug
-  //  std::cout << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI << std::endl ;
+  //  qDebug() << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI  ;
   min = d1;
   if(d2 < min) min = d2;
   if(d3 < min) min = d3;

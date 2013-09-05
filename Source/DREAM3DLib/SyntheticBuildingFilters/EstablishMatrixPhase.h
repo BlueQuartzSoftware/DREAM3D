@@ -37,7 +37,7 @@
 #ifndef EstablishMatrixPhase_H_
 #define EstablishMatrixPhase_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -75,9 +75,9 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Establish Matrix Phase"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Establish Matrix Phase"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

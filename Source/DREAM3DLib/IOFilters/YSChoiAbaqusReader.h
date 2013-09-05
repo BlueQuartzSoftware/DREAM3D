@@ -32,9 +32,9 @@
 #define YSCHOIABAQUSREADER_H_
 
 #include <string.h> // needed for the ::memcpy function below
-#include <string>
+#include <QtCore/QString>
 
-#include "MXA/Common/MXAEndian.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
 	virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

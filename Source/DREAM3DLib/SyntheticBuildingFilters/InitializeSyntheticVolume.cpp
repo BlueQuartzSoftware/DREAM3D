@@ -36,8 +36,8 @@
 #include "InitializeSyntheticVolume.h"
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
@@ -127,7 +127,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   //Cell Data
@@ -135,7 +135,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
 
-  if(m_InputFile.empty() == true)
+  if(m_InputFile.isEmpty() == true)
   {
     ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
@@ -166,13 +166,13 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  std::stringstream ss;
+  QString ss;
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
   getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");
@@ -202,7 +202,7 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -212,7 +212,7 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");

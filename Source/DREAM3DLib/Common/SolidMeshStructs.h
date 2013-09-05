@@ -33,7 +33,7 @@
 #define _Solid_MESH_STRUCTS_H_
 
 
-#include <string>
+#include <QtCore/QString>
 
 #define num_neigh 26
 

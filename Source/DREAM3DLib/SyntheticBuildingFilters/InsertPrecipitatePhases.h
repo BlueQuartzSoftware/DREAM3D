@@ -37,7 +37,7 @@
 #ifndef InsertPrecipitatePhases_H_
 #define InsertPrecipitatePhases_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -105,9 +105,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();
     /**
@@ -173,7 +173,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float sizez;
     float totalvol;
 
-    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;

@@ -87,7 +87,7 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SampleId)
     EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, ScanID, Ebsd::Ang::ScanId)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
+    EBSD_INSTANCE_PROPERTY(QVector<AngPhase::Pointer>, PhaseVector)
 
     EBSD_INSTANCE_PROPERTY(bool, ReadHexGrid)
 

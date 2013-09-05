@@ -36,10 +36,10 @@
 
 #include "DataContainerReader.h"
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
@@ -140,10 +140,10 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   int32_t err = 0;
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -158,7 +158,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
   else
   {
     // Read the Meta Data and Array names from the file
-    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+    hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
     if(fileId < 0)
     {
       ss.str("");
@@ -244,10 +244,10 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   int32_t err = 0;
-  std::stringstream ss;
+  QString ss;
   // dataCheck(false, 1, 1, 1);
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
     ss.str("");
@@ -261,9 +261,9 @@ void DataContainerReader::execute()
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   // Read our File Version string to the Root "/" group
-  std::string fileVersion;
+  QString fileVersion;
 
-  err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
   err = readExistingPipelineFromFile(fileId);
 
@@ -352,17 +352,17 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<std::string> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
+  QList<QString> groupList;
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, QH5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  std::string classNameStr = "";
+  QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 #if (__APPLE__)
 #warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
 #endif
@@ -403,9 +403,9 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                                     std::set<std::string> selectedFieldArrays,
-                                                     std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
+                                                     QSet<QString> selectedFieldArrays,
+                                                     QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -416,11 +416,11 @@ void DataContainerReader::setVoxelSelectedArrayNames(std::set<std::string> selec
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                           QSet<QString> selectedFaceArrays,
+                                                           QSet<QString> selectedEdgeArrays,
+                                                           QSet<QString> selectedFieldArrays,
+                                                           QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -433,9 +433,9 @@ void DataContainerReader::setSurfaceMeshSelectedArrayNames(std::set<std::string>
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                         std::set<std::string> selectedFaceArrays,
-                                                         std::set<std::string> selectedEdgeArrays)
+void DataContainerReader::setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                         QSet<QString> selectedFaceArrays,
+                                                         QSet<QString> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;

@@ -36,15 +36,15 @@
 
 #include "SPParksWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
-//#include <string>
+//#include <QtCore/QString>
 #include <sstream>
 //#include <iomanip>
-//#include <map>
+//#include <QMap>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -113,7 +113,7 @@ int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -135,7 +135,7 @@ int SPParksWriter::writeHeader()
     VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
@@ -168,20 +168,20 @@ int SPParksWriter::writeHeader()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() ;
     return -1;
   }
 
-  outfile << "-" << std::endl;
-  outfile << "3 dimension" << std::endl;
-  outfile << totalpoints << " sites" << std::endl;
-  outfile << "26 max neighbors" << std::endl;
-  outfile << "0 " << udims[0] << " xlo xhi" << std::endl;
-  outfile << "0 " << udims[1] << " ylo yhi" << std::endl;
-  outfile << "0 " << udims[2] << " zlo zhi" << std::endl;
-  outfile << std::endl;
-  outfile << "Values" << std::endl;
-  outfile << std::endl;
+  outfile << "-" ;
+  outfile << "3 dimension" ;
+  outfile << totalpoints << " sites" ;
+  outfile << "26 max neighbors" ;
+  outfile << "0 " << udims[0] << " xlo xhi" ;
+  outfile << "0 " << udims[1] << " ylo yhi" ;
+  outfile << "0 " << udims[2] << " zlo zhi" ;
+  outfile ;
+  outfile << "Values" ;
+  outfile ;
   outfile.close();
   return 0;
 }
@@ -194,7 +194,7 @@ int SPParksWriter::writeFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
@@ -227,7 +227,7 @@ int SPParksWriter::writeFile()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary | std::ios_base::app);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() ;
     return -1;
   }
 
@@ -237,7 +237,7 @@ int SPParksWriter::writeFile()
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  std::stringstream ss;
+  QString ss;
 
   int increment = totalpoints * .01;
 

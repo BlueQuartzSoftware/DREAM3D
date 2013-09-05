@@ -37,10 +37,10 @@
 #include "WriteAbaqusSurfaceMesh.h"
 
 #include <stdio.h>
-#include "MXA/MXA.h"
+
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
@@ -111,7 +111,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  if (m_OutputFile.empty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -154,7 +154,7 @@ void WriteAbaqusSurfaceMesh::preflight()
 void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
@@ -173,12 +173,13 @@ void WriteAbaqusSurfaceMesh::execute()
 
    // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -192,7 +193,7 @@ void WriteAbaqusSurfaceMesh::execute()
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < trianglePtr->GetNumberOfTuples(); i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -285,7 +286,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   int err = 0;
 
-  std::stringstream ss;
+  QString ss;
 
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
   DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = getSurfaceMeshDataContainer()->getFaces();
@@ -300,7 +301,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -310,7 +311,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int spin = 0;
 
   //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     if(spin < 0) { continue; }

@@ -36,7 +36,7 @@
 #include "NodesTrianglesToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
+
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -148,14 +148,14 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (m_TrianglesFile.empty() == true)
+  if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
   }
-  else if (MXADir::exists(m_TrianglesFile) == false)
+  else if (QDir::exists(m_TrianglesFile) == false)
   {
 
     if (preflight == true)
@@ -166,12 +166,12 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_NodesFile.empty() == true)
+  if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (MXADir::exists(m_NodesFile)== false)
+  else if (QDir::exists(m_NodesFile)== false)
   {
 
     if (preflight == true)
@@ -182,7 +182,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -203,7 +203,7 @@ void NodesTrianglesToVtk::preflight()
 void NodesTrianglesToVtk::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
 
   dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)
@@ -389,7 +389,7 @@ void NodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
 //# first line = number of nodes
 //# column 1 = node id, starts from zero.
@@ -437,7 +437,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   int err = 0;
   int nodeId = 0;
@@ -470,7 +470,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
 //# first line = number of triangles
 //# column 1 = triangle id, starts from zero
@@ -544,7 +544,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIICellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   int nread = 0;
   // Open the triangles file for reading

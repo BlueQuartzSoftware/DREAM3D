@@ -36,7 +36,7 @@
 #ifndef _CreatedArrayHelpIndexEntry_H_
 #define _CreatedArrayHelpIndexEntry_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

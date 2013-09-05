@@ -37,13 +37,13 @@
 #ifndef NEIGHBORLIST_H_
 #define NEIGHBORLIST_H_
 
-#include <string>
-#include <map>
+#include <QtCore/QString>
+#include <QMap>
 #include <vector>
 
 #include <boost/shared_ptr.hpp>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -69,7 +69,7 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       return NeighborList<T>::New();
     }
@@ -90,7 +90,7 @@ class NeighborList : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -118,10 +118,10 @@ class NeighborList : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return NeighborList<T>::ClassName();}
+    virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const std::string &name) { m_Name = name; }
-    std::string GetName() { return m_Name; }
+    void SetName(const QString &name) { m_Name = name; }
+    QString GetName() { return m_Name; }
 
 
     void takeOwnership() {    }
@@ -248,7 +248,7 @@ class NeighborList : public IDataArray
     virtual int32_t Resize(size_t numTuples) { return RawResize(numTuples); }
 
     //FIXME: These need to be implemented
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
     {
       SharedVectorType sharedVec = _data[i];
       VectorType* vec = sharedVec.get();
@@ -260,7 +260,7 @@ class NeighborList : public IDataArray
       }
     }
 
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QDataStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -288,14 +288,14 @@ class NeighborList : public IDataArray
 
       // Check to see if the NumNeighbors is already written to the file
       bool rewrite = false;
-      if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
+      if (QH5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
         rewrite = true;
       }
       else
       {
         std::vector<int32_t> fileNumNeigh(_data.size());
-        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
+        err = QH5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
           return -602;
@@ -320,17 +320,17 @@ class NeighborList : public IDataArray
       if(rewrite == true)
       {
         std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
+        err = QH5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
         if(err < 0)
         {
           return -603;
         }
-        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
+        err = QH5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, QString(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -605;
         }
-        err = H5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
+        err = QH5Lite::writeStringAttribute(parentId, m_NumNeighborsArrayName, DREAM3D::HDF5::ObjectType, "DataArray<T>");
         if(err < 0)
         {
           return -604;
@@ -358,24 +358,24 @@ class NeighborList : public IDataArray
       hsize_t dims[1] = { total };
       if (total > 0)
       {
-        err = H5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
+        err = QH5Lite::writePointerDataset(parentId, GetName(), rank, dims, &(flat.front()));
         if(err < 0)
         {
           return -605;
         }
-        err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
+        err = QH5Lite::writeScalarAttribute(parentId, GetName(), QString(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -606;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
+        err = QH5Lite::writeStringAttribute(parentId, GetName(), DREAM3D::HDF5::ObjectType, getNameOfClass());
         if(err < 0)
         {
           return -607;
         }
 
-        err = H5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
+        err = QH5Lite::writeStringAttribute(parentId, GetName(), "Linked NumNeighbors Dataset", m_NumNeighborsArrayName);
         if(err < 0)
         {
           return -608;
@@ -392,14 +392,14 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-            const std::string &groupPath, const std::string &label)
+    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+            const QString &groupPath, const QString &label)
     {
 
-      std::stringstream dimStr;
+      QString dimStr;
       dimStr << volDims[0] << " " << volDims[1] << " " << volDims[2] << " ";
       int precision = 0;
-      std::string xdmfTypeName;
+      QString xdmfTypeName;
       GetXdmfTypeAndSize(xdmfTypeName, precision);
 
       /*
@@ -409,12 +409,12 @@ class NeighborList : public IDataArray
       </DataItem>
     </Attribute>
     */
-      out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">" << std::endl;
+      out << "    <Attribute Name=\"" << GetName() << label << "\" AttributeType=\"Scalar\" Center=\"Node\">" ;
       out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
-      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
-      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
-      out << "      </DataItem>" << std::endl;
-      out << "    </Attribute>" << std::endl << std::endl;
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" ;
+      out << "        " << hdfFileName << groupPath << "/" << GetName() ;
+      out << "      </DataItem>" ;
+      out << "    </Attribute>"  ;
       return 1;
     }
 
@@ -432,9 +432,9 @@ class NeighborList : public IDataArray
       std::vector<int32_t> numNeighbors;
 
       // Check to see if the NumNeighbors exists in the file, which it must.
-      if(H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
+      if(QH5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
       {
-        err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
+        err = QH5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, numNeighbors);
         if(err < 0)
         {
           return -702;
@@ -447,7 +447,7 @@ class NeighborList : public IDataArray
       }
 
       std::vector<T> flat;
-      err = H5Lite::readVectorDataset(parentId, GetName(), flat);
+      err = QH5Lite::readVectorDataset(parentId, GetName(), flat);
       if (err < 0)
       {
         return err;
@@ -628,7 +628,7 @@ class NeighborList : public IDataArray
       m_Name("NeighborList")  {    }
 
   private:
-    std::string m_Name;
+    QString m_Name;
 
     std::vector<SharedVectorType> _data;
 

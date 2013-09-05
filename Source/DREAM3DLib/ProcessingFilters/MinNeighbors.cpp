@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -121,7 +121,7 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
@@ -277,7 +277,7 @@ void MinNeighbors::assign_badpoints()
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
-			  std::stringstream ss;
+			  QString ss;
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -329,16 +329,16 @@ void MinNeighbors::assign_badpoints()
 		  }
 		}
 	}
-    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+    QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor >= 0 && m_GrainIds[neighbor] >= 0)
       {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }
@@ -371,7 +371,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	std::stringstream ss;
+	QString ss;
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

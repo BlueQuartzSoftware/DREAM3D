@@ -40,7 +40,7 @@
 #include <vector>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -133,7 +133,7 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -144,7 +144,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     return;
   }
 
-  if (m_InputFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
@@ -157,12 +157,12 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (m_InputFile.empty() == false)
+  else if (m_InputFile.isEmpty() == false)
   {
     int64_t dims[3];
 
-    std::string ext = MXAFileInfo::extension(m_InputFile);
-    std::vector<std::string> names;
+    QString ext = QFileInfo::extension(m_InputFile);
+    std::vector<QString> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       AngReader reader;
@@ -175,7 +175,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       AngFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<std::vector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -208,7 +208,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<std::vector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -235,7 +235,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<std::vector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -291,7 +291,7 @@ void ReadOrientationData::preflight()
 void ReadOrientationData::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -302,7 +302,7 @@ void ReadOrientationData::execute()
   }
   setErrorCondition(0);
 
-  std::string ext = MXAFileInfo::extension(m_InputFile);
+  QString ext = QFileInfo::extension(m_InputFile);
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     readAngFile();

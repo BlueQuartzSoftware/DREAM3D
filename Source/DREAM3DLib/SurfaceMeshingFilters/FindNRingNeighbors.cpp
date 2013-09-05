@@ -35,8 +35,8 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -120,8 +120,8 @@ void FindNRingNeighbors::generate()
 #if 1
   if ( check0 == false && check1 == false)
   {
-    std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
-    std::cout << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << std::endl;
+    qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 ;
+    qDebug() << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] ;
     return;
   }
 #endif
@@ -164,7 +164,7 @@ void FindNRingNeighbors::generate()
 
 //  if (m_TriangleId == 1000)
 //  {
-//    std::stringstream ss;
+//    QString ss;
 //    ss << "/tmp/" << m_Ring << "_RingNeighborhood.vtk";
 //    writeVTKFile(ss.str());
 //  }
@@ -175,7 +175,7 @@ void FindNRingNeighbors::generate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
+void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 {
 
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
@@ -184,7 +184,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
-  std::stringstream ss;
+  QString ss;
 
 
   FILE* vtkFile = NULL;
@@ -251,7 +251,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (std::set<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
+  for (QSet<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
   {
     int32_t tid = *iter;
     tData[1] = triangles[tid].verts[0];

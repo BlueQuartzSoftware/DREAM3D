@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
 
@@ -63,7 +63,7 @@ StatsData::~StatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string StatsData::getStatsType()
+QString StatsData::getStatsType()
 {
   return DREAM3D::HDF5::StatsData;
 }

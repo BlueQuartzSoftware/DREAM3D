@@ -36,10 +36,10 @@
 
 #include "DxWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -119,18 +119,18 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getOutputFile().empty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if (MXADir::exists(parentPath) == false)
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+  if (QDir::exists(parentPath) == false)
   {
     ss.str("");
     ss <<  "The directory path for the output file does not exist.";
@@ -169,7 +169,7 @@ int DxWriter::writeFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -196,16 +196,17 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
+  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -236,15 +237,15 @@ int DxWriter::writeFile()
   }
   totalPoints = fileXDim * fileYDim * fileZDim;
   //Write the header
-  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
-  out << "origin 0 0 0" << std::endl;
-  out << "delta  1 0 0" << std::endl;
-  out << "delta  0 1 0" << std::endl;
-  out << "delta  0 0 1" << std::endl;
-  out << std::endl;
-  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
-  out << std::endl;
-  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << std::endl;
+  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim ;
+  out << "origin 0 0 0" ;
+  out << "delta  1 0 0" ;
+  out << "delta  0 1 0" ;
+  out << "delta  0 0 1" ;
+  out ;
+  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim ;
+  out ;
+  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" ;
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;
@@ -256,7 +257,7 @@ int DxWriter::writeFile()
       if(rnIndex == 20)
       {
         rnIndex = 0;
-        out << std::endl;
+        out ;
       }
       rnIndex++;
     }
@@ -272,7 +273,7 @@ int DxWriter::writeFile()
       {
         out << "-4 ";
       }
-      out << std::endl;
+      out ;
     }
     for (DimType y = 0; y < dims[1]; ++y)
     {
@@ -299,7 +300,7 @@ int DxWriter::writeFile()
       {
         out << "-6 ";
       }
-      out << std::endl;
+      out ;
     }
     // Add a trailing surface Row for this plane if needed
     if(m_AddSurfaceLayer)
@@ -308,7 +309,7 @@ int DxWriter::writeFile()
       {
         out << "-7 ";
       }
-      out << std::endl;
+      out ;
     }
   }
 
@@ -321,21 +322,21 @@ int DxWriter::writeFile()
       out << "-8 ";
       if(rnIndex == 20)
       {
-        out << std::endl;
+        out ;
         rnIndex = 0;
       }
       rnIndex++;
     }
   }
-  out << std::endl;
-  out << "attribute \"dep\" string \"connections\"" << std::endl;
-  out << std::endl;
-  out << "object \"DREAM3D Generated\" class field" << std::endl;
-  out << "component  \"positions\"    value 1" << std::endl;
-  out << "component  \"connections\"  value 2" << std::endl;
-  out << "component  \"data\"         value 3" << std::endl;
-  out << "" << std::endl;
-  out << "end" << std::endl;
+  out ;
+  out << "attribute \"dep\" string \"connections\"" ;
+  out ;
+  out << "object \"DREAM3D Generated\" class field" ;
+  out << "component  \"positions\"    value 1" ;
+  out << "component  \"connections\"  value 2" ;
+  out << "component  \"data\"         value 3" ;
+  out << "" ;
+  out << "end" ;
 
   out.close();
 #if 0

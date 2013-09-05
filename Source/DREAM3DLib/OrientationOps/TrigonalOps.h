@@ -37,7 +37,7 @@
 #ifndef TrigonalOPS_H_
 #define TrigonalOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -57,9 +57,9 @@
 class DREAM3DLib_EXPORT TrigonalOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(TrigonalOps)
-    MXA_TYPE_MACRO_SUPER(TrigonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(TrigonalOps)
+    DREAM3D_SHARED_POINTERS(TrigonalOps)
+    DREAM3D_TYPE_MACRO_SUPER(TrigonalOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(TrigonalOps)
 
     TrigonalOps();
     virtual ~TrigonalOps();

@@ -37,7 +37,7 @@
 
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 FileWriter::FileWriter() :
-AbstractFilter()
+  AbstractFilter()
 {
 
 }
@@ -100,14 +100,15 @@ void FileWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+  QString parentPath = fi.path();
+  QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
 

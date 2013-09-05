@@ -58,9 +58,9 @@ class IFilterFactory
      * this method so we are going to crash the program.
      */
     virtual AbstractFilter::Pointer create() { BOOST_ASSERT(false); return AbstractFilter::NullPointer();}
-    virtual std::string getFilterGroup() { BOOST_ASSERT(false); return ""; }
-    virtual std::string getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
-    virtual std::string getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
+    virtual QString getFilterGroup() { BOOST_ASSERT(false); return ""; }
+    virtual QString getFilterSubGroup() { BOOST_ASSERT(false); return ""; }
+    virtual QString getFilterHumanLabel() { BOOST_ASSERT(false); return ""; }
 
 
   protected:

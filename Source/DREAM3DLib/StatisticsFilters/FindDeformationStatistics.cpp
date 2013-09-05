@@ -36,7 +36,7 @@
 
 #include "FindDeformationStatistics.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -144,7 +144,7 @@ int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWri
 void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -201,7 +201,7 @@ void FindDeformationStatistics::execute()
     return;
   }
 
-  //  std::string filename = m_OutputFile1;
+  //  QString filename = m_OutputFile1;
   std::ofstream outFile;
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
@@ -452,8 +452,8 @@ void FindDeformationStatistics::execute()
       }
     }
   }
-  outFile << "Kernel Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << std::endl;
+  outFile << "Kernel Misorientation Data" ;
+  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" ;
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
   for (int i = 0; i < 20; i++)
   {
@@ -474,12 +474,12 @@ void FindDeformationStatistics::execute()
                            << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
                            << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
                            << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
-                           << kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
+                           << kmvdis[i][0] << "	" << kmvdis[i][1] ;
   }
-  outFile << std::endl;
-  outFile << std::endl;
-  outFile << "Grain Average Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << std::endl;
+  outFile ;
+  outFile ;
+  outFile << "Grain Average Misorientation Data" ;
+  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" ;
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
   for (int i = 0; i < 20; i++)
   {
@@ -500,23 +500,23 @@ void FindDeformationStatistics::execute()
                             << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
                             << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
                             << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
-                            << gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
+                            << gamvdis[i][0] << "	" << gamvdis[i][1] ;
   }
-  outFile << std::endl;
-  outFile << std::endl;
-  outFile << "KAM DIST		GAM DIST" << std::endl;
+  outFile ;
+  outFile ;
+  outFile << "KAM DIST		GAM DIST" ;
   for (int i = 0; i < 20; i++)
   {
-    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << std::endl;
+    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] ;
   }
   outFile.close();
 
-  // std::string filename2 = m_OutputFile2;
+  // QString filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
   vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
-    std::cout << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" << std::endl;
+    qDebug() << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" ;
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");

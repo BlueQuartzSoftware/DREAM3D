@@ -37,7 +37,7 @@
 #ifndef JumbleOrientations_H_
 #define JumbleOrientations_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <numeric>
 #include <limits>
 
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(FieldEulerAnglesArrayName)
 
-    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const std::string getHumanLabel() {return "Jumble Orientations";}
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() {return "Jumble Orientations";}
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

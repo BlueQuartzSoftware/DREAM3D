@@ -36,7 +36,7 @@
 #ifndef _ReverseTriangleWinding_H_
 #define _ReverseTriangleWinding_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -70,14 +70,14 @@ class DREAM3DLib_EXPORT ReverseTriangleWinding : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Reverse Triangle Winding Filter"; }
+    virtual const QString getHumanLabel() { return "Reverse Triangle Winding Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

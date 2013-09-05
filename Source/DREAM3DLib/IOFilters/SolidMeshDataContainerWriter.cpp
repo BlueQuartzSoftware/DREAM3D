@@ -97,7 +97,7 @@ int SolidMeshDataContainerWriter::writeFilterParameters(AbstractFilterParameters
 void SolidMeshDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SolidMeshDataContainer* m = getSolidMeshDataContainer();
 
   if(NULL == m)
@@ -129,7 +129,7 @@ void SolidMeshDataContainerWriter::preflight()
 void SolidMeshDataContainerWriter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SolidMeshDataContainer* m = getSolidMeshDataContainer();
   if(NULL == m)
@@ -149,7 +149,7 @@ void SolidMeshDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void SolidMeshDataContainerWriter::setXdmfOStream(QDataStream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }

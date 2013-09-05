@@ -37,7 +37,7 @@
 #include "SegmentGrains.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -100,7 +100,7 @@ int SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
 }
 
@@ -119,7 +119,7 @@ void SegmentGrains::execute()
 {
   setErrorCondition(0);
   VoxelDataContainer* m = getVoxelDataContainer();
-  std::stringstream ss;
+  QString ss;
   if(NULL == m)
   {
     setErrorCondition(-1);

@@ -35,11 +35,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "EbsdToH5Ebsd.h"
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -141,7 +141,7 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -153,8 +153,8 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   else
   {
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
-    std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
-    std::vector<std::string> columnNames;
+    QString ext = QFileInfo::extension(m_EbsdFileList.front());
+    std::vector<QString> columnNames;
 //    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -177,13 +177,13 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       return;
     }
 //    columnNames = ebsdFields->getFieldNames();
-//    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+//    for(std::vector<QString>::size_type i = 0; i < columnNames.size(); ++i)
 //    {
 //      addCreatedCellData(columnNames[i]);
 //    }
   }
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     ss.str("");
     ss << "The output file must be set before executing this filter.";
@@ -207,13 +207,13 @@ void EbsdToH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
-  std::stringstream ss;
+  QString ss;
   herr_t err = 0;
   hid_t fileId = -1;
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
-    std::string s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
+    QString s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
 
     ss << "EbsdToH5Ebsd input filename was empty";
@@ -223,10 +223,12 @@ void EbsdToH5Ebsd::execute()
   }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       PipelineMessage em (getHumanLabel(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
@@ -234,7 +236,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   // Create File
-  fileId = H5Utilities::createFile(m_OutputFile);
+  fileId = QH5Utilities::createFile(m_OutputFile);
   if(fileId < 0)
   {
     err = -1;
@@ -247,7 +249,7 @@ void EbsdToH5Ebsd::execute()
 
   HDF5ScopedFileSentinel sentinel(&fileId, true);
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZResolution, m_ZResolution);
   if(err < 0)
   {
     ss.str("");
@@ -256,7 +258,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
   unsigned int ui = static_cast<unsigned int>(m_RefFrameZDir);
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::StackingOrder, ui);
   if(err < 0)
   {
     ss.str("");
@@ -265,8 +267,8 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  std::string s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
-  err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
+  QString s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
+  err = QH5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
   if(err < 0)
   {
     ss.str("");
@@ -275,7 +277,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::SampleTransformationAngle, m_SampleTransformationAngle);
   if(err < 0)
   {
     ss.str("");
@@ -285,7 +287,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   std::vector<hsize_t> dims(1,3);
-  err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
+  err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
   if(err < 0)
   {
     ss.str("");
@@ -294,7 +296,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::EulerTransformationAngle, m_EulerTransformationAngle);
   if(err < 0)
   {
     ss.str("");
@@ -303,7 +305,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::EulerTransformationAxis, dims, m_EulerTransformationAxis);
+  err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::EulerTransformationAxis, dims, m_EulerTransformationAxis);
   if(err < 0)
   {
     ss.str("");
@@ -316,10 +318,10 @@ void EbsdToH5Ebsd::execute()
 
   // Write the Manufacturer of the OIM file here
   // This list will grow to be the number of EBSD file formats we support
-  std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
+  QString ext = QFileInfo::extension(m_EbsdFileList.front());
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
+    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
     if(err < 0)
     {
       ss.str("");
@@ -331,7 +333,7 @@ void EbsdToH5Ebsd::execute()
   }
   else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
+    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ctf::Manufacturer);
     if(err < 0)
     {
       ss.str("");
@@ -343,7 +345,7 @@ void EbsdToH5Ebsd::execute()
   }
   else if(ext.compare(Ebsd::Mic::FileExt) == 0)
   {
-    err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Mic::Manufacturer);
+    err = QH5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Mic::Manufacturer);
     if(err < 0)
     {
       ss.str("");
@@ -396,12 +398,12 @@ void EbsdToH5Ebsd::execute()
   int64_t biggestxDim = 0;
   int64_t biggestyDim = 0;
   int totalSlicesImported = 0;
-  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (std::vector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
+    QString ebsdFName = *filepath;
     progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
-    std::string msg = "Converting File: " + ebsdFName;
+    QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
     notifyStatusMessage(msg.c_str());
@@ -436,7 +438,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   // Write Z index start, Z index end and Z Resolution to the HDF5 file
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZStartIndex, m_ZStartIndex);
   if(err < 0)
   {
     ss.str("");
@@ -446,7 +448,7 @@ void EbsdToH5Ebsd::execute()
   }
 
   m_ZEndIndex = m_ZStartIndex + totalSlicesImported - 1;
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::ZEndIndex, m_ZEndIndex);
   if(err < 0)
   {
     ss.str("");
@@ -455,7 +457,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XPoints, biggestxDim);
   if(err < 0)
   {
     ss.str("");
@@ -464,7 +466,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YPoints, biggestyDim);
   if(err < 0)
   {
     ss.str("");
@@ -473,7 +475,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::XResolution, xRes);
   if(err < 0)
   {
     ss.str("");
@@ -482,7 +484,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  err = H5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
+  err = QH5Lite::writeScalarDataset(fileId, Ebsd::H5::YResolution, yRes);
   if(err < 0)
   {
     ss.str("");
@@ -496,9 +498,9 @@ void EbsdToH5Ebsd::execute()
     // Write an Index data set which contains all the z index values which
     // should help speed up the reading side of this file
     std::vector<hsize_t> dims(1, indices.size());
-    err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
+    err = QH5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
   }
-  err = H5Utilities::closeFile(fileId);
+  err = QH5Utilities::closeFile(fileId);
   fileId = -1;
   notifyStatusMessage("Import Complete");
 }

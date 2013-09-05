@@ -36,7 +36,7 @@
 
 #include "FindNeighborhoods.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -117,7 +117,7 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Field Data
@@ -134,7 +134,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
-      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" ;
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -198,7 +198,7 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   float x, y, z;

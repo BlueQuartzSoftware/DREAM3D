@@ -125,7 +125,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   IDataArray::Pointer centroidPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceCentroids);
   if (NULL == centroidPtr.get())
   {
-    std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
+    qDebug() << "Triangle Centroids are required for this algorithm" ;
     return;
   }
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
@@ -134,7 +134,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   IDataArray::Pointer normalPtr = m_SurfaceMeshDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals);
   if (NULL == normalPtr.get())
   {
-    std::cout << "Triangle Normals are required for this algorithm" << std::endl;
+    qDebug() << "Triangle Normals are required for this algorithm" ;
     return;
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());
@@ -158,7 +158,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeMean = (m_MeanCurvature.get() != NULL);
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
-  std::stringstream ss;
+  QString ss;
   std::vector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(std::vector<int>::size_type i = 0; i < tCount; ++i)
@@ -175,8 +175,8 @@ void CalculateTriangleGroupCurvatures::operator()() const
     DREAM3D::SurfaceMesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), std::string("Patch_Centroids"));
-    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), std::string("Patch_Normals"));
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), QString("Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), QString("Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
@@ -316,7 +316,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, DREAM3D::SurfaceMesh::UniqueFaceIds_t &triPatch,
                                                                               double* data,
-                                                                              const std::string &name) const
+                                                                              const QString &name) const
 {
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
   extractedData->SetNumberOfComponents(3);
@@ -329,7 +329,7 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   ++i;
   triPatch.erase(triId);
 
-  for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  for(QSet<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
     int32_t t = *iter;
     extractedData->SetComponent(i, 0, data[t*3]);

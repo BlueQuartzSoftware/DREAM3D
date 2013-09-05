@@ -40,10 +40,10 @@
 
 #include <stdlib.h>
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <cmath>
 #include <fstream>
-#include <list>
+#include <QtCore/QList>
 #include <algorithm>
 #include <numeric>
 #include <sstream>
@@ -110,9 +110,9 @@ DREAM3DRandom rg;
 using namespace VolMesh;
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const std::string &readname1, const std::string &readname2,
-                    const std::string &writename1, const std::string &writename1a,
-                    const std::string &writename2, const std::string &writename3,
+int MeshGenerator_Main(const QString &readname1, const QString &readname2,
+                    const QString &writename1, const QString &writename1a,
+                    const QString &writename2, const QString &writename3,
                     float xDim, float yDim, float zDim,
                     float xRes, float yRes, float zRes,
                     int numGrains)
@@ -623,7 +623,7 @@ void delete_triangles()
         edgeorder[1] = 2, edgeorder[2] = 1;
       int size = 0;
       float avgmisorient = 0;
-      while (!affectedtrianglelist.empty() && keep == 0)
+      while (!affectedtrianglelist.isEmpty() && keep == 0)
       {
         int trianglenum = affectedtrianglelist.front();
         if (originaltriangle[trianglenum].trianglekilled != 1)
@@ -1733,9 +1733,9 @@ void make_nodes(int iter)
 //  itoa(iter, num, 10);
 //  strcat(fileout, num);
 //  strcat(fileout, fileoutext);
-  std::stringstream ss;
+  QString ss;
   ss << "pointcheck" << iter << ".vtk";
-  std::string fileout = ss.str();
+  QString fileout = ss.str();
 
   //  ofstream outFile;
   //  outFile.open(fileout, std::ios_base::binary);
@@ -2111,7 +2111,7 @@ void make_nodes(int iter)
    outFile << "1 " << i+numsurfnodes-numgoodsurfnodes << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.empty())
+   while(!trianglelist.isEmpty())
    {
    int firsttriangle = trianglelist.front();
    outFile << "3 " << triangle[firsttriangle].firstnodeleft << " " << triangle[firsttriangle].secondnodeleft << " " << triangle[firsttriangle].thirdnodeleft << endl;
@@ -2128,7 +2128,7 @@ void make_nodes(int iter)
    outFile << "1" << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.empty())
+   while(!trianglelist.isEmpty())
    {
    int firsttriangle = trianglelist.front();
    outFile << "5" << endl;
@@ -2149,7 +2149,7 @@ void make_nodes(int iter)
    outFile << grainname << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.empty())
+   while(!trianglelist.isEmpty())
    {
    int firsttriangle = trianglelist.front();
    outFile << iter << endl;

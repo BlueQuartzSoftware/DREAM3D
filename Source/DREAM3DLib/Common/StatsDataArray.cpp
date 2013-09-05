@@ -35,12 +35,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "StatsDataArray.h"
 
-#include <list>
+#include <QtCore/QList>
 
 
 
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,14 +61,14 @@ StatsDataArray::~StatsDataArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::SetName(const std::string &name)
+void StatsDataArray::SetName(const QString &name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string StatsDataArray::GetName()
+QString StatsDataArray::GetName()
 {
   return m_Name;
 }
@@ -245,14 +245,14 @@ int32_t StatsDataArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printTuple(std::ostream &out, size_t i, char delimiter)
+void StatsDataArray::printTuple(QDataStream &out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printComponent(std::ostream &out, size_t i, int j)
+void StatsDataArray::printComponent(QDataStream &out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }
@@ -263,7 +263,7 @@ void StatsDataArray::printComponent(std::ostream &out, size_t i, int j)
 int StatsDataArray::writeH5Data(hid_t parentId)
 {
   herr_t err = 0;
-  hid_t gid = H5Utilities::createGroup(parentId, DREAM3D::HDF5::Statistics);
+  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::HDF5::Statistics);
   if (gid < 0)
   {
     return -1;
@@ -272,15 +272,15 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
     if (m_StatsDataArray[i].get() != NULL) {
-    std::string indexString = QString::number(i);
-    hid_t tupleId = H5Utilities::createGroup(gid, indexString);
-    err |= H5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
-    err |= H5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
+    QString indexString = QString::number(i);
+    hid_t tupleId = QH5Utilities::createGroup(gid, indexString);
+    err |= QH5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
+    err |= QH5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
     err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
-    err |= H5Utilities::closeHDF5Object(tupleId);
+    err |= QH5Utilities::closeHDF5Object(tupleId);
     }
   }
-  err |= H5Utilities::closeHDF5Object(gid);
+  err |= QH5Utilities::closeHDF5Object(gid);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -288,29 +288,31 @@ int StatsDataArray::writeH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 int StatsDataArray::readH5Data(hid_t parentId)
 {
+  bool ok = false;
   int err = 0;
-  std::string statsType;
-  hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  QString statsType;
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
   if(gid < 0)
   {
     return err;
   }
 
-  std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
+  QList<QString> names;
+  err = QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
   if(err < 0)
   {
-    err |= H5Utilities::closeHDF5Object(gid);
+    err |= QH5Utilities::closeHDF5Object(gid);
     return err;
   }
 
-  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter)
+  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     int index = 0;
     statsType = "";
-    StringUtils::stringToNum(index, *iter);
-    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
-    hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
+
+    index = QString(*iter).toInt(&ok, 10);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
+    hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)
     {
       continue;
@@ -348,14 +350,14 @@ int StatsDataArray::readH5Data(hid_t parentId)
     }
     else
     {
-      std::cout << "The Type of the stats data could not be read." << std::endl;
+      qDebug() << "The Type of the stats data could not be read." ;
       return -1100;
     }
-    err |= H5Utilities::closeHDF5Object(statId);
+    err |= QH5Utilities::closeHDF5Object(statId);
   }
 
   // Do not forget to close the object
-  err |= H5Utilities::closeHDF5Object(gid);
+  err |= QH5Utilities::closeHDF5Object(gid);
 
   return err;
 }

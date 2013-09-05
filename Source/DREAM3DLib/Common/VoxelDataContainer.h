@@ -43,9 +43,9 @@
 
 //-- C++ includes
 #include <vector>
-#include <map>
+#include <QMap>
 #include <sstream>
-#include <list>
+#include <QtCore/QList>
 
 //-- EBSD Lib Includes
 #include "EbsdLib/EbsdConstants.h"
@@ -91,14 +91,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    virtual void addVertexData(const std::string &name, IDataArray::Pointer data);
+    virtual void addVertexData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getVertexData(const std::string &name);
+    virtual IDataArray::Pointer getVertexData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -106,13 +106,13 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeVertexData(const std::string &name);
+    virtual IDataArray::Pointer removeVertexData(const QString &name);
 
     /**
     * @brief Renames a Vertex data array from the Data Container 
     * @param name The name of the array
     */
-    virtual bool renameVertexData(const std::string &oldname, const std::string &newname);
+    virtual bool renameVertexData(const QString &oldname, const QString &newname);
 
 	/**
      * @brief Removes all the Vertex Arrays
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * Vertex (Formerly Vertex) group
     * @return
     */
-    virtual std::list<std::string> getVertexArrayNameList();
+    virtual QList<QString> getVertexArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Vertex group
@@ -144,14 +144,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    virtual void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    virtual void addEdgeData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getEdgeData(const std::string &name);
+    virtual IDataArray::Pointer getEdgeData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -159,13 +159,13 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeEdgeData(const std::string &name);
+    virtual IDataArray::Pointer removeEdgeData(const QString &name);
 
     /**
     * @brief Renames a Edge data array from the Data Container 
     * @param name The name of the array
     */
-    virtual bool renameEdgeData(const std::string &oldname, const std::string &newname);
+    virtual bool renameEdgeData(const QString &oldname, const QString &newname);
 
 	/**
      * @brief Removes all the Edge Arrays
@@ -177,7 +177,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * Edge (Formerly Edge) group
     * @return
     */
-    virtual std::list<std::string> getEdgeArrayNameList();
+    virtual QList<QString> getEdgeArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Edge group
@@ -197,14 +197,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    virtual void addFaceData(const std::string &name, IDataArray::Pointer data);
+    virtual void addFaceData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getFaceData(const std::string &name);
+    virtual IDataArray::Pointer getFaceData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -212,13 +212,13 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeFaceData(const std::string &name);
+    virtual IDataArray::Pointer removeFaceData(const QString &name);
 
     /**
     * @brief Renames a Face data array from the Data Container 
     * @param name The name of the array
     */
-    virtual bool renameFaceData(const std::string &oldname, const std::string &newname);
+    virtual bool renameFaceData(const QString &oldname, const QString &newname);
 
 	/**
      * @brief Removes all the Face Arrays
@@ -230,7 +230,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * Face (Formerly Face) group
     * @return
     */
-    virtual std::list<std::string> getFaceArrayNameList();
+    virtual QList<QString> getFaceArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Face group
@@ -250,14 +250,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
    * @param name The name that the array will be known by
    * @param data The IDataArray::Pointer that will hold the data
    */
-    virtual void addCellData(const std::string &name, IDataArray::Pointer data);
+    virtual void addCellData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getCellData(const std::string &name);
+    virtual IDataArray::Pointer getCellData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -265,13 +265,13 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeCellData(const std::string &name);
+    virtual IDataArray::Pointer removeCellData(const QString &name);
 
     /**
     * @brief Renames a cell data array from the Data Container 
     * @param name The name of the array
     */
-    virtual bool renameCellData(const std::string &oldname, const std::string &newname);
+    virtual bool renameCellData(const QString &oldname, const QString &newname);
 
 	/**
      * @brief Removes all the Cell Arrays
@@ -283,7 +283,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * Cell (Formerly Cell) group
     * @return
     */
-    virtual std::list<std::string> getCellArrayNameList();
+    virtual QList<QString> getCellArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Cell group
@@ -303,14 +303,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addFieldData(const std::string &name, IDataArray::Pointer data);
+    virtual void addFieldData(const QString &name, IDataArray::Pointer data);
 
     /**
     * @brief Returns the array for a given named array or the equivelant to a
     * null pointer if the name does not exist.
     * @param name The name of the data array
     */
-    virtual IDataArray::Pointer getFieldData(const std::string &name);
+    virtual IDataArray::Pointer getFieldData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -318,13 +318,13 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeFieldData(const std::string &name);
+    virtual IDataArray::Pointer removeFieldData(const QString &name);
 
     /**
     * @brief Renames a field data array from the Data Container 
     * @param name The name of the array
     */
-    virtual bool renameFieldData(const std::string &oldname, const std::string &newname);
+    virtual bool renameFieldData(const QString &oldname, const QString &newname);
 
 	/**
      * @brief Removes all the Field Arrays
@@ -336,7 +336,7 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * Field (Formerly Grain) group
     * @return
     */
-    virtual std::list<std::string> getFieldArrayNameList();
+    virtual QList<QString> getFieldArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Field group
@@ -362,14 +362,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name that the array will be known by
     * @param data The IDataArray::Pointer that will hold the data
     */
-    virtual void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    virtual void addEnsembleData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    virtual IDataArray::Pointer getEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer getEnsembleData(const QString &name);
 
     /**
     * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -377,14 +377,14 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
     * @param name The name of the array
     * @return
     */
-    virtual IDataArray::Pointer removeEnsembleData(const std::string &name);
+    virtual IDataArray::Pointer removeEnsembleData(const QString &name);
 
     /**
      * @brief Removes all the ensemble data
      */
     virtual void clearEnsembleData();
 
-    virtual std::list<std::string> getEnsembleArrayNameList();
+    virtual QList<QString> getEnsembleArrayNameList();
 
      /**
      * @brief Returns if a data set with the name exists in the data container for the Cell Data
@@ -434,12 +434,12 @@ class DREAM3DLib_EXPORT VoxelDataContainer : public Observable
 
   private:
 
-    std::map<std::string, IDataArray::Pointer> m_VertexData;
-    std::map<std::string, IDataArray::Pointer> m_EdgeData;
-    std::map<std::string, IDataArray::Pointer> m_FaceData;
-    std::map<std::string, IDataArray::Pointer> m_CellData;
-    std::map<std::string, IDataArray::Pointer> m_FieldData;
-    std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+    QMap<QString, IDataArray::Pointer> m_VertexData;
+    QMap<QString, IDataArray::Pointer> m_EdgeData;
+    QMap<QString, IDataArray::Pointer> m_FaceData;
+    QMap<QString, IDataArray::Pointer> m_CellData;
+    QMap<QString, IDataArray::Pointer> m_FieldData;
+    QMap<QString, IDataArray::Pointer> m_EnsembleData;
 
     VoxelDataContainer(const VoxelDataContainer&);
     void operator =(const VoxelDataContainer&);

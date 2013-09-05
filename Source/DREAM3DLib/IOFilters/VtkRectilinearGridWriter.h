@@ -37,7 +37,7 @@
 #ifndef VTKRECTILINEARGRIDWRITER_H_
 #define VTKRECTILINEARGRIDWRITER_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -116,9 +116,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+          qDebug() << "Error Writing Binary VTK Data into file " ;
           fclose(f);
           return -1;
         }
@@ -200,17 +200,17 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
      * @return
      */
     template<typename T>
-    static int WriteDataArrayToFile(const std::string &filename, DataArray<T>* data, size_t* dims, float* res,
-                                    const std::string &dataType, bool writeBinary )
+    static int WriteDataArrayToFile(const QString &filename, DataArray<T>* data, size_t* dims, float* res,
+                                    const QString &dataType, bool writeBinary )
     {
       int err = 0;
       FILE* f = NULL;
       f = fopen(filename.c_str(), "wb");
       if(NULL == f)
       {
-        std::cout << "Could not open file for writing" << std::endl;
-        std::cout << "  FileName: " << filename << std::endl;
-        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+        qDebug() << "Could not open file for writing" ;
+        qDebug() << "  FileName: " << filename ;
+        qDebug() << "  Dataset Name: " << data->GetName() ;
         return -1;
       }
       // Write the correct header
@@ -240,9 +240,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
       if (totalWritten != (total))
       {
-        std::cout << "Error Writing Binary VTK Data:" << std::endl;
-        std::cout << "  FileName: " << filename << std::endl;
-        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+        qDebug() << "Error Writing Binary VTK Data:" ;
+        qDebug() << "  FileName: " << filename ;
+        qDebug() << "  Dataset Name: " << data->GetName() ;
       }
 #ifdef MXA_LITTLE_ENDIAN
       data->byteSwapElements();
@@ -283,7 +283,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
+    int write(const QString &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
 
 

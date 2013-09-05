@@ -38,7 +38,7 @@
 #define MERGETWINS_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -84,9 +84,9 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Merge Twins"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const QString getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterParameters();
   virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

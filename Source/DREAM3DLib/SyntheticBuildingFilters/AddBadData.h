@@ -37,7 +37,7 @@
 #ifndef AddBadData_H_
 #define AddBadData_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
-    virtual const std::string getHumanLabel() { return "Add Bad Data"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
     DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)

@@ -36,11 +36,11 @@
 
 #include "CropVolume.h"
 
-#include <map>
+#include <QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
@@ -191,7 +191,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -216,7 +216,7 @@ void CropVolume::preflight()
 
   VoxelDataContainer* m = getVoxelDataContainer();
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -329,7 +329,7 @@ void CropVolume::execute()
     return;
   }
 
-  std::stringstream ss;
+  QString ss;
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if (dims[0] <= m_XMax)
   {
@@ -360,10 +360,10 @@ void CropVolume::execute()
   int64_t colold, rowold, planeold;
   int64_t index;
   int64_t index_old;
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
   for (int64_t i = 0; i < m_ZP; i++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
     planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
@@ -378,9 +378,9 @@ void CropVolume::execute()
         col = k;
         index_old = planeold + rowold + colold;
         index = plane + row + col;
-        for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          std::string name = *iter;
+          QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
           p->CopyTuple(index_old, index);
         }
@@ -392,9 +392,9 @@ void CropVolume::execute()
 
 
   // Resize all the other Voxel Arrays
-  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    std::string name = *iter;
+    QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }
@@ -412,7 +412,7 @@ void CropVolume::execute()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
-    std::stringstream ss;
+    QString ss;
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

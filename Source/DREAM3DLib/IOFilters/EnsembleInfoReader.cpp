@@ -37,11 +37,11 @@
 
 #include "EnsembleInfoReader.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -117,10 +117,10 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -163,7 +163,7 @@ int  EnsembleInfoReader::readFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -174,7 +174,7 @@ int  EnsembleInfoReader::readFile()
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);

@@ -36,14 +36,14 @@
 
 #include "FindRadialDist.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
@@ -121,7 +121,7 @@ int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer
 void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
@@ -134,15 +134,15 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-  if (getOutputFile().empty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if (MXADir::exists(parentPath) == false)
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+  if (QDir::exists(parentPath) == false)
   {
     ss.str("");
     ss <<  "The directory path for the output file does not exist.";
@@ -186,12 +186,14 @@ void FindRadialDist::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -216,7 +218,7 @@ void FindRadialDist::find_radialdist()
   float dist;
   size_t numgrains = m->getNumFieldTuples();
 
-  bool writeFile = !m_OutputFile.empty();
+  bool writeFile = !m_OutputFile.isEmpty();
 
 
   std::ofstream outFile;
@@ -316,7 +318,7 @@ void FindRadialDist::find_radialdist()
     {
       outFile << float(i)*binSize << " ";
     }
-    outFile << std::endl;
+    outFile ;
     for (size_t i = 0; i < count.size(); i++)
     {
       for (int j = 0; j < numbins; j++)
@@ -325,7 +327,7 @@ void FindRadialDist::find_radialdist()
         if(count[i][j] == 0) value = 0;
         outFile << value << " ";
       }
-      outFile << std::endl;
+      outFile ;
     }
   }
 

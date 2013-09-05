@@ -174,7 +174,7 @@ int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWrit
 void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -249,7 +249,7 @@ void GrainFaceCurvatureFilter::preflight()
 void GrainFaceCurvatureFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
@@ -380,13 +380,13 @@ void GrainFaceCurvatureFilter::execute()
   tbb::task_group* g = new tbb::task_group;
 //  if(true)
 //  {
-//    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
-//    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
+//    qDebug() << "Default Number of Threads to Use: " << init.default_num_threads() ;
+//    qDebug() << "GrainFaceCurvatureFilter Running in Parallel." ;
 //  }
 #else
   //if()
 //  {
-//    std::cout << "CalculateFaceGroupCurvatures Running in Serial." << std::endl;
+//    qDebug() << "CalculateFaceGroupCurvatures Running in Serial." ;
 //  }
 #endif
   // typedef here for conveneince
@@ -462,8 +462,8 @@ void GrainFaceCurvatureFilter::execute()
 void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
-  std::stringstream ss;
-  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << std::endl;
+  QString ss;
+  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" ;
   notifyStatusMessage(ss.str());
 }
 

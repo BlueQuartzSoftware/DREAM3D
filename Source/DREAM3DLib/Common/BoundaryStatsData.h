@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
 
-    virtual std::string getStatsType();
+    virtual QString getStatsType();
     virtual unsigned int getPhaseType();
   protected:
     BoundaryStatsData();

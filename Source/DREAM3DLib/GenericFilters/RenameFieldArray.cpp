@@ -114,9 +114,9 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if(m_SelectedFieldArrayName.empty() == true)
+  if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
      addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -148,7 +148,7 @@ void RenameFieldArray::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   bool check = m->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 

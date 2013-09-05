@@ -36,7 +36,7 @@
 #ifndef _StructArray_H_
 #define _StructArray_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -57,9 +57,9 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of StructArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -81,7 +81,7 @@ class StructArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = StructArray<T>::CreateArray(numElements, name);
       return p;
@@ -92,7 +92,7 @@ class StructArray : public IDataArray
      */
     virtual ~StructArray()
     {
-      //std::cout << "~StructArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~StructArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -114,7 +114,7 @@ class StructArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -124,7 +124,7 @@ class StructArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString(){ return "struct"; }
+    virtual QString getTypeAsString(){ return "struct"; }
 
         /**
     * @brief Returns the HDF Type for a given primitive value.
@@ -132,9 +132,9 @@ class StructArray : public IDataArray
      * from
      * @return The HDF5 native type for the value
      */
-    virtual std::string getFullNameOfClass()
+    virtual QString getFullNameOfClass()
     {
-      std::string theType = getTypeAsString();
+      QString theType = getTypeAsString();
       theType = "StructArray<" + theType + ">";
       return theType;
     }
@@ -144,7 +144,7 @@ class StructArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -153,7 +153,7 @@ class StructArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString GetName()
     {
       return m_Name;
     }
@@ -205,7 +205,7 @@ class StructArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->m_IsAllocated = true;
@@ -514,7 +514,7 @@ class StructArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -530,7 +530,7 @@ class StructArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QDataStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -557,8 +557,8 @@ class StructArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+                                    const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -688,7 +688,7 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -701,7 +701,7 @@ class StructArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -710,7 +710,7 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -747,7 +747,7 @@ class StructArray : public IDataArray
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
     StructArray(const StructArray&); //Not Implemented

@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 /**
  * @brief The CalculateAreasImpl class
@@ -150,7 +150,7 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -197,7 +197,7 @@ void TriangleAreaFilter::preflight()
 void TriangleAreaFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)

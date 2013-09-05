@@ -36,7 +36,7 @@
 #ifndef _SolidMeshDataContainerWriter_H_
 #define _SolidMeshDataContainerWriter_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -64,21 +64,21 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    void setXdmfOStream(std::ostream* xdmf);
+    void setXdmfOStream(QDataStream* xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "SolidMesh DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -123,7 +123,7 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    std::ostream* m_XdmfPtr;
+    QDataStream* m_XdmfPtr;
 
     SolidMeshDataContainerWriter(const SolidMeshDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const SolidMeshDataContainerWriter&); // Operator '=' Not Implemented

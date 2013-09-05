@@ -33,9 +33,9 @@
 #define _SURFACE_MESH_STRUCTS_H_
 
 #include <vector>
-#include <string>
-#include <set>
-#include <map>
+#include <QtCore/QString>
+#include <QtCore/QSet>
+#include <QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
@@ -79,8 +79,8 @@ namespace DREAM3D
     typedef VertList_t::Pointer VertListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
 
-    typedef std::set<int32_t> UniqueFaceIds_t;
-    typedef std::map<int32_t, UniqueFaceIds_t > VertexFaceMap_t;
+    typedef QSet<int32_t> UniqueFaceIds_t;
+    typedef QMap<int32_t, UniqueFaceIds_t > VertexFaceMap_t;
 
   }
 }

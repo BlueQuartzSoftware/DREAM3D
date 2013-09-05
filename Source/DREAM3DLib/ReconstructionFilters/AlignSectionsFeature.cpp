@@ -36,12 +36,12 @@
 
 #include "AlignSectionsFeature.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -114,10 +114,10 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
@@ -210,7 +210,7 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;

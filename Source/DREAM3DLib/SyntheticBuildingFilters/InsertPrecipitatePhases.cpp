@@ -36,15 +36,15 @@
 
 #include "InsertPrecipitatePhases.h"
 
-#include <map>
+#include <QMap>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
@@ -189,7 +189,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -220,7 +220,7 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning Correctly" << std::endl;
+    ss << "Stats Array Not Initialized At Beginning Correctly" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
@@ -233,9 +233,9 @@ void InsertPrecipitatePhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
-    std::stringstream ss;
+    QString ss;
     ss << ClassName() << " needs the Csv Output File Set and it was not.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
@@ -458,7 +458,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
-        std::stringstream ss;
+        QString ss;
         ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
         notifyStatusMessage(ss.str());
 
@@ -533,7 +533,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   fillingerror = 1;
   for (size_t i = firstPrecipitateField; i < numgrains; i++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Packing Grains - Placing Grain #" << i;
     notifyStatusMessage(ss.str());
 
@@ -614,7 +614,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   int totalAdjustments = static_cast<int>(10 * ((numgrains-firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
     if(iteration % 100 == 0) notifyStatusMessage(ss.str());
 
@@ -637,7 +637,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       //      int32_t fldPhse = m_FieldPhases[randomgrain];
       //      StatsData::Pointer  phaseStatsData = statsDataArray[fldPhse];
       //      int precision = 0;
-      //      std::string xdmfType = "";
+      //      QString xdmfType = "";
       //      phaseStatsData->GetXdmfTypeAndSize(xdmfType, precision);
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
       if (NULL == pp)
@@ -1229,12 +1229,12 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
 
   // init any values for each of the Shape Ops
-  for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     (*ops).second->init();
   }
   // Create our Argument Map
-  std::map<ShapeOps::ArgName, float> shapeArgMap;
+  QMap<ShapeOps::ArgName, float> shapeArgMap;
   shapeArgMap[ShapeOps::Omega3] = omega3;
   shapeArgMap[ShapeOps::VolCur] = volcur;
   shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1360,12 +1360,12 @@ void InsertPrecipitatePhases::assign_voxels()
     unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
     // init any values for each of the Shape Ops
-    for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
     // Create our Argument Map
-    std::map<ShapeOps::ArgName, float> shapeArgMap;
+    QMap<ShapeOps::ArgName, float> shapeArgMap;
     shapeArgMap[ShapeOps::Omega3] = omega3;
     shapeArgMap[ShapeOps::VolCur] = volcur;
     shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1538,12 +1538,12 @@ void InsertPrecipitatePhases::assign_gaps()
       unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
       // init any values for each of the Shape Ops
-      for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+      for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
       {
         (*ops).second->init();
       }
       // Create our Argument Map
-      std::map<ShapeOps::ArgName, float> shapeArgMap;
+      QMap<ShapeOps::ArgName, float> shapeArgMap;
       shapeArgMap[ShapeOps::Omega3] = omega3;
       shapeArgMap[ShapeOps::VolCur] = volcur;
       shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1874,25 +1874,26 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(m_CsvOutputFile);
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
 
-  std::string filename = getCsvOutputFile();
+  QString filename = getCsvOutputFile();
 
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-firstPrecipitateField << std::endl;
+  outFile << m->getNumFieldTuples()-firstPrecipitateField ;
   // Get all the names of the arrays from the Data Container
-  std::list<std::string> headers = m->getFieldArrayNameList();
+  QList<QString> headers = m->getFieldArrayNameList();
 
   std::vector<IDataArray::Pointer> data;
 
@@ -1902,7 +1903,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
@@ -1922,11 +1923,11 @@ void InsertPrecipitatePhases::write_goal_attributes()
       data.push_back(p);
     }
   }
-  outFile << std::endl;
+  outFile ;
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  std::stringstream ss;
+  QString ss;
   float threshold = 0.0f;
 
   // Skip the first grain
@@ -1950,6 +1951,6 @@ void InsertPrecipitatePhases::write_goal_attributes()
       outFile << space;
       (*p)->printTuple(outFile, i, space);
     }
-    outFile << std::endl;
+    outFile ;
   }
 }

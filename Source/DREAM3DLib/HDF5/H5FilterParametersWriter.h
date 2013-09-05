@@ -38,7 +38,7 @@
 
 #include "hdf5.h"
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -63,38 +63,38 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int openFilterGroup(AbstractFilter *filter, int index);
     virtual int closeFilterGroup();
 
-    virtual int writeValue(const std::string name, const std::string value);
-    virtual int writeValue(const std::string name, const std::vector<std::string> value);
+    virtual int writeValue(const QString name, const QString value);
+    virtual int writeValue(const QString name, const std::vector<QString> value);
 
-    virtual int writeValue(const std::string name, int8_t value);
-    virtual int writeValue(const std::string name, int16_t value);
-    virtual int writeValue(const std::string name, int32_t value);
-    virtual int writeValue(const std::string name, int64_t value);
-    virtual int writeValue(const std::string name, uint8_t value);
-    virtual int writeValue(const std::string name, uint16_t value);
-    virtual int writeValue(const std::string name, uint32_t value);
-    virtual int writeValue(const std::string name, uint64_t value);
-    virtual int writeValue(const std::string name, float value);
-    virtual int writeValue(const std::string name, double value);
+    virtual int writeValue(const QString name, int8_t value);
+    virtual int writeValue(const QString name, int16_t value);
+    virtual int writeValue(const QString name, int32_t value);
+    virtual int writeValue(const QString name, int64_t value);
+    virtual int writeValue(const QString name, uint8_t value);
+    virtual int writeValue(const QString name, uint16_t value);
+    virtual int writeValue(const QString name, uint32_t value);
+    virtual int writeValue(const QString name, uint64_t value);
+    virtual int writeValue(const QString name, float value);
+    virtual int writeValue(const QString name, double value);
 
-    virtual int writeValue(const std::string name, std::vector<int8_t> value);
-    virtual int writeValue(const std::string name, std::vector<int16_t> value);
-    virtual int writeValue(const std::string name, std::vector<int32_t> value);
-    virtual int writeValue(const std::string name, std::vector<int64_t> value);
-    virtual int writeValue(const std::string name, std::vector<uint8_t> value);
-    virtual int writeValue(const std::string name, std::vector<uint16_t> value);
-    virtual int writeValue(const std::string name, std::vector<uint32_t> value);
-    virtual int writeValue(const std::string name, std::vector<uint64_t> value);
-    virtual int writeValue(const std::string name, std::vector<float> value);
-    virtual int writeValue(const std::string name, std::vector<double> value);
+    virtual int writeValue(const QString name, std::vector<int8_t> value);
+    virtual int writeValue(const QString name, std::vector<int16_t> value);
+    virtual int writeValue(const QString name, std::vector<int32_t> value);
+    virtual int writeValue(const QString name, std::vector<int64_t> value);
+    virtual int writeValue(const QString name, std::vector<uint8_t> value);
+    virtual int writeValue(const QString name, std::vector<uint16_t> value);
+    virtual int writeValue(const QString name, std::vector<uint32_t> value);
+    virtual int writeValue(const QString name, std::vector<uint64_t> value);
+    virtual int writeValue(const QString name, std::vector<float> value);
+    virtual int writeValue(const QString name, std::vector<double> value);
 
-    virtual int writeValue(const std::string name, IntVec3Widget_t v);
-    virtual int writeValue(const std::string name, FloatVec3Widget_t v);
-    virtual int writeValue(const std::string name, std::vector<ComparisonInput_t> v);
-    virtual int writeValue(const std::string name, ComparisonInput_t v, int vectorPos);
-    virtual int writeValue(const std::string name, std::vector<AxisAngleInput_t> v);
-    virtual int writeValue(const std::string name, AxisAngleInput_t v, int vectorPos);
-    virtual int writeValue(const std::string name, std::set<std::string> v);
+    virtual int writeValue(const QString name, IntVec3Widget_t v);
+    virtual int writeValue(const QString name, FloatVec3Widget_t v);
+    virtual int writeValue(const QString name, std::vector<ComparisonInput_t> v);
+    virtual int writeValue(const QString name, ComparisonInput_t v, int vectorPos);
+    virtual int writeValue(const QString name, std::vector<AxisAngleInput_t> v);
+    virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos);
+    virtual int writeValue(const QString name, QSet<QString> v);
 
     protected:
       H5FilterParametersWriter();

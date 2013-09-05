@@ -37,14 +37,14 @@
 #include "GenerateUniqueEdges.h"
 
 
-#include <set>
+#include <QtCore/QSet>
 
 
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 
 
 
-typedef std::set<int64_t>  EdgeSet_t;
+typedef QSet<int64_t>  EdgeSet_t;
 typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 
 
@@ -108,7 +108,7 @@ int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -155,7 +155,7 @@ void GenerateUniqueEdges::preflight()
 void GenerateUniqueEdges::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
@@ -228,7 +228,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   }
 
   notifyStatusMessage("Stage 1 of 2");
- // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
+ // qDebug() << "uedges_id_set size: " << uedges_id_set.size() ;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;
@@ -270,9 +270,9 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
-  std::map<int64_t, int> uedges_id_map;
+  QMap<int64_t, int> uedges_id_map;
 
-  std::map<int64_t, DREAM3D::SurfaceMesh::UniqueFaceIds_t > edgeTriangleSet;
+  QMap<int64_t, DREAM3D::SurfaceMesh::UniqueFaceIds_t > edgeTriangleSet;
 
   int edge_id = 0;
   int cur_edge_id = 0;
@@ -280,10 +280,10 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
 
-  typedef std::map<int64_t, int>::iterator EdgesIdMapIterator_t;
+  typedef QMap<int64_t, int>::iterator EdgesIdMapIterator_t;
 
   float curPercent = 0.0;
-  std::stringstream ss;
+  QString ss;
 
   for(int i = 0; i < ntri; ++i)
   {
@@ -366,7 +366,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   float total = static_cast<float>(uedges_id_map.size());
 
 
-  for(std::map<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
+  for(QMap<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
 
     if ( progIndex/total * 100.0f > (curPercent) )

@@ -36,7 +36,7 @@
 #include "GBCDTriangleDumper.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -114,9 +114,9 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
 void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -162,7 +162,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -195,7 +195,7 @@ void GBCDTriangleDumper::preflight()
 void GBCDTriangleDumper::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)

@@ -38,7 +38,7 @@
 #define AlignSectionsMisorientation_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const std::string getHumanLabel() { return "Align Sections (Misorientation)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const QString getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

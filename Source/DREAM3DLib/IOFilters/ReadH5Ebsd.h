@@ -39,7 +39,7 @@
 #define ReadH5Ebsd_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -86,19 +86,19 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
@@ -113,9 +113,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
 
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read H5Ebsd File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read H5Ebsd File"; }
 
     /**
     * @brief This method will write the options to a file
@@ -135,17 +135,17 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
+                                            QSet<QString> selectedFieldArrays,
+                                            QSet<QString> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                  QSet<QString> selectedFaceArrays,
+                                                  QSet<QString> selectedEdgeArrays,
+                                                  QSet<QString> selectedFieldArrays,
+                                                  QSet<QString> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                QSet<QString> selectedFaceArrays,
+                                                QSet<QString> selectedEdgeArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);

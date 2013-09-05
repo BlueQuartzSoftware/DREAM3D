@@ -38,13 +38,14 @@
 #define TEXTUREPRESET_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 
@@ -52,13 +53,13 @@
 class DREAM3DLib_EXPORT TexturePreset
 {
   public:
-    MXA_SHARED_POINTERS(TexturePreset)
+    DREAM3D_SHARED_POINTERS(TexturePreset)
     typedef std::vector<Pointer> Container;
 
-    MXA_STATIC_NEW_MACRO(TexturePreset)
-    MXA_TYPE_MACRO(TexturePreset)
+    DREAM3D_STATIC_NEW_MACRO(TexturePreset)
+    DREAM3D_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
-                       const std::string &name,
+                       const QString &name,
                        double e1, double e2, double e3)
     {
       Pointer p (new TexturePreset);
@@ -73,7 +74,7 @@ class DREAM3DLib_EXPORT TexturePreset
     virtual ~TexturePreset();
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, CrystalStructure)
-    MXA_INSTANCE_STRING_PROPERTY(Name)
+    DREAM3D_INSTANCE_STRING_PROPERTY(Name)
     DREAM3D_INSTANCE_PROPERTY(double, Euler1)
     DREAM3D_INSTANCE_PROPERTY(double, Euler2)
     DREAM3D_INSTANCE_PROPERTY(double, Euler3)

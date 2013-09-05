@@ -75,7 +75,7 @@ int ThresholdFilterHelper::execute(IDataArray *input, IDataArray *output)
 {
   if (NULL == input) { return -1; }
   m_Output->initializeWithZeros();
-  std::string dType = input->getTypeAsString();
+  QString dType = input->getTypeAsString();
 
   FILTER_DATA_HELPER(dType, comparisonOperator, float);
   FILTER_DATA_HELPER(dType, comparisonOperator, double);

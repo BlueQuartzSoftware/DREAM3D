@@ -116,7 +116,7 @@ int GenerateRodriguesColors::writeFilterParameters(AbstractFilterParametersWrite
 void GenerateRodriguesColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -153,7 +153,7 @@ void GenerateRodriguesColors::preflight()
 void GenerateRodriguesColors::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

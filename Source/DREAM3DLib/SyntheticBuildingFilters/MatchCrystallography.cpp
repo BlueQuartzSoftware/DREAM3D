@@ -36,7 +36,7 @@
 
 #include "MatchCrystallography.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -147,7 +147,7 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
 void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
   // Cell Data
@@ -170,7 +170,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       if (NULL == m->getFieldData(m_NeighborListArrayName).get())
   {
     ss.str("");
-    ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." ;
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -182,7 +182,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
     ss.str("");
-    ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." ;
     setErrorCondition(-306);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -194,7 +194,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getEnsembleData(m_StatsDataArrayName).get())
   {
     ss.str("");
-    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." ;
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -243,7 +243,7 @@ void MatchCrystallography::execute()
   }
 
 
-  std::stringstream ss;
+  QString ss;
   ss << "Determining Volumes";
   notifyStatusMessage(ss.str());
   determine_volumes();
@@ -311,7 +311,7 @@ void MatchCrystallography::initializeArrays(int ensem)
   else
   {
     setErrorCondition(-55000);
-    std::stringstream ss;
+    QString ss;
     ss << "Improper PhaseType for MatchCrystallography";
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
@@ -415,7 +415,7 @@ void MatchCrystallography::assign_eulers(int ensem)
 
   int totalFields = m->getNumFieldTuples();
 
-  std::stringstream ss;
+  QString ss;
   for (int i = 1; i < totalFields; i++)
   {
     phase = m_FieldPhases[i];
@@ -554,7 +554,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem]) { numbins = 36 * 36 * 12; }
   while (badtrycount < (m_MaxIterations/10) && iterations < m_MaxIterations)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
     //      notifyStatusMessage(ss.str());
     currentodferror = 0;
@@ -855,7 +855,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
   //float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);
-  std::stringstream ss;
+  QString ss;
   for (size_t i = 1; i < totalFields; i++)
   {
     if(m_FieldPhases[i] == ensem)

@@ -38,7 +38,7 @@
 #include "VtkRectilinearGridWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -334,10 +334,10 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     ss << "The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -347,8 +347,9 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   // Make sure what we are checking is an actual file name and not a directory
   if (MXAFileInfo::isDirectory(m_OutputFile) == false)
   {
-    std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-    if (MXADir::exists(parentPath) == false)
+    QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    if (QDir::exists(parentPath) == false)
     {
       ss.str("");
       ss <<  "The directory path for the output file does not exist.";
@@ -462,12 +463,14 @@ void VtkRectilinearGridWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -620,7 +623,7 @@ void VtkRectilinearGridWriter::execute()
 
   if (err < 0)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error writing output vtk file '" << m_OutputFile << "'\n ";
     addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
@@ -633,7 +636,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const std::string &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const QString &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
 {
   int err = 0;
   FILE* f = NULL;
@@ -660,7 +663,7 @@ int VtkRectilinearGridWriter::write(const std::string &file, VoxelDataContainer*
   size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
-  std::stringstream ss;
+  QString ss;
   int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
   for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)

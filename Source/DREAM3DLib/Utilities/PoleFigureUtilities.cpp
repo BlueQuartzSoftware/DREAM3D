@@ -37,7 +37,7 @@
 
 
 #include "PoleFigureUtilities.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
@@ -67,9 +67,9 @@ PoleFigureUtilities::~PoleFigureUtilities()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeVtkFile(FloatArrayType* xyz, const std::string &filename)
+void writeVtkFile(FloatArrayType* xyz, const QString &filename)
 {
-  std::stringstream ss;
+  QString ss;
   FILE* f = NULL;
   f = fopen(filename.c_str(), "wb");
   if(NULL == f)

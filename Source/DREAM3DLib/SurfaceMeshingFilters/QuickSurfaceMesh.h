@@ -37,7 +37,7 @@
 #define QuickSurfaceMesh_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -61,9 +61,9 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
    //------ Required Cell Data
   DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
-     virtual const std::string getHumanLabel() { return "Quick Surface Mesh"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
+     virtual const QString getHumanLabel() { return "Quick Surface Mesh"; }
 
   virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

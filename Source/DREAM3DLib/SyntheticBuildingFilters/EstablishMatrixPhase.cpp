@@ -36,11 +36,11 @@
 
 #include "EstablishMatrixPhase.h"
 
-#include <map>
+#include <QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
@@ -98,7 +98,7 @@ int EstablishMatrixPhase::writeFilterParameters(AbstractFilterParametersWriter* 
 void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -115,7 +115,7 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized Correctly" << std::endl;
+    ss << "Stats Array Not Initialized Correctly" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), -308);
   }

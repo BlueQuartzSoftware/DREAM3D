@@ -91,9 +91,9 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t* dims, const std::string &name, bool allocateArray = true)
+    static Pointer CreateArray(size_t* dims, const QString &name, bool allocateArray = true)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -116,7 +116,7 @@ class GbcdDataArray : public IDataArray
      * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4,
-                              const std::string &name, bool allocateArray = true)
+                              const QString &name, bool allocateArray = true)
     {
       GbcdDataArray<T>* d = new GbcdDataArray<T> (dim0, dim1, dim2, dim3, dim4, true);
       if (allocateArray && d->Allocate() < 0)
@@ -136,7 +136,7 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
       return p;
@@ -148,7 +148,7 @@ class GbcdDataArray : public IDataArray
      */
     virtual ~GbcdDataArray()
     {
-      //std::cout << "~GbcdDataArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~GbcdDataArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -190,7 +190,7 @@ class GbcdDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
    //   T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -248,7 +248,7 @@ class GbcdDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const std::string &name)
+    virtual void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -257,7 +257,7 @@ class GbcdDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    virtual std::string GetName()
+    virtual QString GetName()
     {
       return m_Name;
     }
@@ -316,7 +316,7 @@ class GbcdDataArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->Size = newSize;
@@ -493,12 +493,12 @@ class GbcdDataArray : public IDataArray
       return RawResize(numElements);
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
     }
 
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QDataStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -509,9 +509,9 @@ class GbcdDataArray : public IDataArray
      * from
      * @return The HDF5 native type for the value
      */
-    std::string getFullNameOfClass()
+    QString getFullNameOfClass()
     {
-      std::string theType = getTypeAsString();
+      QString theType = getTypeAsString();
       theType = "GbcdDataArray<" + theType + ">";
       return theType;
     }
@@ -520,7 +520,7 @@ class GbcdDataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    std::string getTypeAsString()
+    QString getTypeAsString()
     {
       T value = static_cast<T>(0);
       if (typeid(value) == typeid(float)) return "float";
@@ -574,10 +574,10 @@ class GbcdDataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) return "bool";
 
-      // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
+      // qDebug()  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) ;
       const char* name = typeid(value).name();
       if (NULL != name && name[0] == 'l' ) {
-        std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
+        qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." ;
       }
       return "UnknownType";
     }
@@ -600,8 +600,8 @@ class GbcdDataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
-    const std::string &label)
+    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
+    const QString &label)
     {
       int err = -1;
       return err;
@@ -769,7 +769,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -782,7 +782,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -791,7 +791,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -830,7 +830,7 @@ class GbcdDataArray : public IDataArray
     // unsigned long long int MUD_FLAP_4;
     size_t m_Dims[5];
     //  unsigned long long int MUD_FLAP_5;
-    std::string m_Name;
+    QString m_Name;
 
 
     GbcdDataArray(const GbcdDataArray&); //Not Implemented

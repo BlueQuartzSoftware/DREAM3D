@@ -36,11 +36,11 @@
 
 #include "ClearData.h"
 
-#include <map>
+#include <QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ int ClearData::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
@@ -279,7 +279,7 @@ void ClearData::execute()
 
 
   int index;
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
   for (int k = m_ZMin; k < m_ZMax+1; k++)
   {
     for (int j = m_YMin; j < m_YMax+1; j++)
@@ -287,9 +287,9 @@ void ClearData::execute()
       for (int i = m_XMin; i < m_XMax+1; i++)
       {
         index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
-        for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          std::string name = *iter;
+          QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
           p->InitializeTuple(index,0);
         }

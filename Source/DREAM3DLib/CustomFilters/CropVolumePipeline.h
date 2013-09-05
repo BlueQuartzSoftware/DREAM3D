@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT CropVolumePipeline : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::CustomFilters;}
-    virtual const std::string getHumanLabel() { return "Crop Volume Filter"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::CustomFilters;}
+    virtual const QString getHumanLabel() { return "Crop Volume Filter"; }
 
 
     /**

@@ -36,11 +36,11 @@
 
 #include "INLWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -131,9 +131,9 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -190,13 +190,13 @@ int INLWriter::writeFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
-  std::stringstream ss;
+  QString ss;
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
@@ -219,12 +219,13 @@ int INLWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
     ss.str("");
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -234,7 +235,7 @@ int INLWriter::writeFile()
   {
     ss.str("");
     ss << "Error Opening File for writing '" << getOutputFile() << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -267,7 +268,7 @@ int INLWriter::writeFile()
   fclose(f);
     ss.str("");
     ss << "The MaterialNames Ensemble Array was not in the Data Container";
-    notifyErrorMessage(ss.str(), -1111);
+    notifyErrorMessage(ss, -1111);
     setErrorCondition(-1111);
     return -1;
   }
@@ -292,7 +293,7 @@ int INLWriter::writeFile()
     fprintf(f, "#\r\n");
   }
 
-  std::set<int32_t> uniqueGrainIds;
+  QSet<int32_t> uniqueGrainIds;
   for(int64_t i = 0; i < totalPoints; ++i)
   {
     uniqueGrainIds.insert(m_GrainIds[i]);

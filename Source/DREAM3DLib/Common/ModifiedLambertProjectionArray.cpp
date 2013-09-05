@@ -35,12 +35,12 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ModifiedLambertProjectionArray.h"
 
-#include <list>
+#include <QtCore/QList>
 
 
 
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -61,14 +61,14 @@ ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::SetName(const std::string &name)
+void ModifiedLambertProjectionArray::SetName(const QString &name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string ModifiedLambertProjectionArray::GetName()
+QString ModifiedLambertProjectionArray::GetName()
 {
   return m_Name;
 }
@@ -245,20 +245,20 @@ int32_t ModifiedLambertProjectionArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printTuple(std::ostream &out, size_t i, char delimiter)
+void ModifiedLambertProjectionArray::printTuple(QDataStream &out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printComponent(std::ostream &out, size_t i, int j)
+void ModifiedLambertProjectionArray::printComponent(QDataStream &out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }
 
 // -------------------------------------------------------------------------- */
-void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSize, double* north, double* south)
+void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, double* north, double* south)
 {
   hid_t dataspace = -1, dataset = -1;
   hid_t filespace = -1;
@@ -284,7 +284,7 @@ void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSiz
   status = H5Dset_extent(dataset, newDims);
   if (status < 0)
   {
-    std::cout << "Error Extending Data set" << std::endl;
+    qDebug() << "Error Extending Data set" ;
     BOOST_ASSERT(false);
   }
   /*// Select a hyperslab.*/
@@ -305,7 +305,7 @@ void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSiz
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
   if (status < 0)
   {
-    std::cout << "Error appending north square" << std::endl;
+    qDebug() << "Error appending north square" ;
   }
 
 
@@ -319,7 +319,7 @@ void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSiz
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" ;
   }
 
 
@@ -330,7 +330,7 @@ void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSiz
 /* -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------- */
-void Create2DExpandableDataset(hid_t gid, const std::string &dsetName, int lambertSize, hsize_t chunk_dim,
+void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSize, hsize_t chunk_dim,
                                double* north, double* south)
 {
 
@@ -385,7 +385,7 @@ void Create2DExpandableDataset(hid_t gid, const std::string &dsetName, int lambe
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" ;
   }
 
   filespace = H5Dget_space(dataset);
@@ -399,7 +399,7 @@ void Create2DExpandableDataset(hid_t gid, const std::string &dsetName, int lambe
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" ;
   }
 
   H5Dclose(dataset);
@@ -419,13 +419,13 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
   {
     return -2;
   }
-  hid_t gid = H5Utilities::createGroup(parentId, DREAM3D::HDF5::GBCD);
+  hid_t gid = QH5Utilities::createGroup(parentId, DREAM3D::HDF5::GBCD);
   if (gid < 0)
   {
     return -1;
   }
 
-  std::string dsetName = QString::number(m_Phase);
+  QString dsetName = QString::number(m_Phase);
   ModifiedLambertProjection::Pointer tmp = m_ModifiedLambertProjectionArray[0];
   tmp->getDimension();
   int lambertDimension = tmp->getDimension();
@@ -450,9 +450,9 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
     }
   }
 
-  err = H5Lite::writeScalarAttribute(gid, dsetName, "Lambert Dimension", lambertDimension);
-  err = H5Lite::writeScalarAttribute(gid, dsetName, "Lambert Sphere Radius", sphereRadius);
-  err = H5Utilities::closeHDF5Object(gid);
+  err = QH5Lite::writeScalarAttribute(gid, dsetName, "Lambert Dimension", lambertDimension);
+  err = QH5Lite::writeScalarAttribute(gid, dsetName, "Lambert Sphere Radius", sphereRadius);
+  err = QH5Utilities::closeHDF5Object(gid);
   return err;
 }
 // -----------------------------------------------------------------------------
@@ -461,38 +461,38 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
 int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 {
   int err = 0;
-  std::string statsType;
-  hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
+  QString statsType;
+  hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
   if(gid < 0)
   {
     return err;
   }
 
-  std::list<std::string> names;
-  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
+  QList<QString> names;
+  err = QH5Utilities::getGroupObjects(gid, QH5Utilities::H5Support_GROUP, names);
   if(err < 0)
   {
-    err |= H5Utilities::closeHDF5Object(gid);
+    err |= QH5Utilities::closeHDF5Object(gid);
     return err;
   }
 
-  for (std::list<std::string>::iterator iter = names.begin(); iter != names.end(); ++iter)
+  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     int index = 0;
     statsType = "";
     StringUtils::stringToNum(index, *iter);
-    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
-    hid_t statId = H5Utilities::openHDF5Object(gid, *iter);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
+    hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)
     {
       continue;
       err |= -1;
     }
-    err |= H5Utilities::closeHDF5Object(statId);
+    err |= QH5Utilities::closeHDF5Object(statId);
   }
 
   // Do not forget to close the object
-  err |= H5Utilities::closeHDF5Object(gid);
+  err |= QH5Utilities::closeHDF5Object(gid);
 
   return err;
 }

@@ -36,7 +36,7 @@
 
 #include "GoldfeatherReader.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -128,10 +128,10 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -199,7 +199,7 @@ void GoldfeatherReader::preflight()
 void GoldfeatherReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)

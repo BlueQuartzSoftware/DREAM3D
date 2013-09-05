@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateFaceMisorientationColoring.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -237,7 +237,7 @@ int GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterPara
 void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -273,7 +273,7 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
 void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -306,7 +306,7 @@ void GenerateFaceMisorientationColoring::preflight()
 void GenerateFaceMisorientationColoring::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   VoxelDataContainer* m = getVoxelDataContainer();

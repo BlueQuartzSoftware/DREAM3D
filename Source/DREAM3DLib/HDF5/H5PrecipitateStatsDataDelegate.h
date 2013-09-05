@@ -37,7 +37,7 @@
 #ifndef _H5PrecipitateStatsData_DELEGATE_H_
 #define _H5PrecipitateStatsData_DELEGATE_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 
@@ -89,18 +89,18 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     int readODFWeights(hid_t pid, PrecipitateStatsData* data);
     int readAxisODFWeights(hid_t pid, PrecipitateStatsData* data);
 
-    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
+    int writeWeightsData(hid_t pid, const QString &hdf5GroupName,
                                               VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
                               uint32_t disType,
-                              const std::string &hdf5GroupName,
+                              const QString &hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+    uint32_t readDistributionType(hid_t pid, const QString &hdf5GroupName);
 
     int readDistributionData(hid_t pid,
-                              const std::string &hdf5GroupName,
+                              const QString &hdf5GroupName,
                               VectorOfFloatArray colData);
 
 

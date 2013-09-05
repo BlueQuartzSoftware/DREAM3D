@@ -38,9 +38,9 @@
 #include <stdio.h>
 
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Common/IO/MXAFileReader64.h"
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
@@ -96,10 +96,10 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename, int skipHeaderBytes)
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, int skipHeaderBytes)
 {
   int err = 0;
-  uint64_t fileSize = MXAFileInfo::fileSize(filename);
+  uint64_t fileSize = QFileInfo::fileSize(filename);
   size_t allocatedBytes = p->GetSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
@@ -207,7 +207,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -243,7 +243,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");
     parameter->setChoices(choices);
@@ -355,10 +355,10 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -371,7 +371,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if(m_OutputArrayName.empty() == true)
+  if(m_OutputArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
@@ -459,7 +459,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     // Sanity Check Allocated Bytes versus size of file
-    uint64_t fileSize = MXAFileInfo::fileSize(m_InputFile);
+    uint64_t fileSize = QFileInfo::fileSize(m_InputFile);
     int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
     if (check == -1)
     {
@@ -502,7 +502,7 @@ void RawBinaryReader::preflight()
 void RawBinaryReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

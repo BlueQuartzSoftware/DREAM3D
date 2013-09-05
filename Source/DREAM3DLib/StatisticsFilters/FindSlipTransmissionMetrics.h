@@ -44,11 +44,11 @@
 
 #include <cstddef>
 #include <vector>
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 #include <cmath>
 #include <fstream>
-#include <list>
+#include <QtCore/QList>
 #include <algorithm>
 #include <numeric>
 
@@ -91,9 +91,9 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Neighbor Slip Transmission Metrics"; }
 
     virtual void setupFilterParameters();
     /**

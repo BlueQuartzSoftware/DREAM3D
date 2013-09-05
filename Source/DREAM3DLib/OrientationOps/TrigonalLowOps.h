@@ -37,7 +37,7 @@
 #ifndef TrigonalLowOPS_H_
 #define TrigonalLowOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -60,9 +60,9 @@
 class DREAM3DLib_EXPORT TrigonalLowOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(TrigonalLowOps)
-    MXA_TYPE_MACRO_SUPER(TrigonalLowOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(TrigonalLowOps)
+    DREAM3D_SHARED_POINTERS(TrigonalLowOps)
+    DREAM3D_TYPE_MACRO_SUPER(TrigonalLowOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(TrigonalLowOps)
 
     TrigonalLowOps();
     virtual ~TrigonalLowOps();

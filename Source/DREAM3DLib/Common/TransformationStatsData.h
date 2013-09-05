@@ -94,13 +94,13 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
     }
 
-    virtual std::string getStatsType();
+    virtual QString getStatsType();
     virtual unsigned int getPhaseType();
 
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)

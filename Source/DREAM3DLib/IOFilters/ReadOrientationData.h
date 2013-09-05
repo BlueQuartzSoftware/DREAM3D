@@ -36,7 +36,7 @@
 #ifndef _ReadOrientationData_H_
 #define _ReadOrientationData_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdReader.h"
 
@@ -87,20 +87,20 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Read Orientation Data"; }
+    virtual const QString getHumanLabel() { return "Read Orientation Data"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -35,11 +35,11 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "Hex2SqrConverter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "H5Support/H5Utilities.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+#include "H5Support/QH5Utilities.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -120,7 +120,7 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -145,7 +145,7 @@ void Hex2SqrConverter::preflight()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::execute()
 {
-  std::stringstream ss;
+  QString ss;
   herr_t err = 0;
 
   std::vector<int> indices;
@@ -177,22 +177,22 @@ void Hex2SqrConverter::execute()
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
  // int totalSlicesImported = 0;
-  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (std::vector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
+    QString ebsdFName = *filepath;
 
     progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
-    std::string msg = "Converting File: " + ebsdFName;
+    QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
     notifyStatusMessage(msg.c_str());
 
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
-    std::string ext = MXAFileInfo::extension(ebsdFName);
-    std::string base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
-    std::string path = MXAFileInfo::parentPath(ebsdFName);
+    QString ext = QFileInfo::extension(ebsdFName);
+    QString base = QFileInfo::fileNameWithOutExtension(ebsdFName);
+    QString path = QFileInfo::parentPath(ebsdFName);
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
         AngReader reader;
@@ -215,8 +215,8 @@ void Hex2SqrConverter::execute()
         }
         else
         {
-            std::string origHeader = reader.getOriginalHeader();
-            if (origHeader.empty() == true)
+            QString origHeader = reader.getOriginalHeader();
+            if (origHeader.isEmpty() == true)
             {
               ss.str();
               ss << "Header could not be retrieved: " << ebsdFName;
@@ -224,9 +224,9 @@ void Hex2SqrConverter::execute()
               addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
             }
             char buf[kBufferSize];
-            std::stringstream in(origHeader);
+            QString in(origHeader);
 
-            std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
+            QString newEbsdFName = path + "/Sqr_" + base + "." + ext;
             std::ofstream outFile;
             outFile.open(newEbsdFName.c_str());
 
@@ -253,11 +253,11 @@ void Hex2SqrConverter::execute()
             int* phase = reader.getPhaseDataPointer();
             while (!in.eof())
             {
-                std::string line;
+                QString line;
                 ::memset(buf, 0, kBufferSize);
                 in.getline(buf, kBufferSize);
                 line = modifyAngHeaderLine(buf, kBufferSize);
-                if(m_HeaderIsComplete == false) outFile << line << std::endl;
+                if(m_HeaderIsComplete == false) outFile << line ;
             }
             for(int j = 0; j < m_NumRows; j++)
             {
@@ -291,14 +291,14 @@ void Hex2SqrConverter::execute()
                     dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
                     if(dist1 <= dist2 || row1 == (HexNumRows-1)) {point = point1;}
                     else {point = point2;}
-                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
+                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" ;
                 }
             }
         }
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-        std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
+        qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." ;
     }
     else
     {
@@ -318,9 +318,9 @@ void Hex2SqrConverter::execute()
 // -----------------------------------------------------------------------------
 //  Modify the Header line of the ANG file if necessary
 // -----------------------------------------------------------------------------
-std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
+QString Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
 {
-  std::string line = "";
+  QString line = "";
   if (buf[0] != '#')
   {
     line = buf;
@@ -344,7 +344,7 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   }
   wordEnd = i;
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  QString word( &(buf[wordStart]), wordEnd - wordStart);
 
   if (word.size() == 0)
   {
@@ -382,16 +382,16 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   return line;
 }
 
-std::string Hex2SqrConverter::int_to_string(int value)
+QString Hex2SqrConverter::int_to_string(int value)
 {
-    std::stringstream oss;
+    QString oss;
     oss << value;
     return oss.str();
 }
 
-std::string Hex2SqrConverter::float_to_string(float value)
+QString Hex2SqrConverter::float_to_string(float value)
 {
-    std::stringstream oss;
+    QString oss;
     oss << value;
     return oss.str();
 }

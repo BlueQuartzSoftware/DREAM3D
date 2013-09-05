@@ -36,12 +36,12 @@
 
 #include "AlignSectionsMutualInformation.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -143,10 +143,10 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
@@ -268,7 +268,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
@@ -388,7 +388,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if(getWriteAlignmentShifts() == true)
     {
-      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] ;
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;
@@ -470,7 +470,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   unsigned int phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
     graincount = 1;
     noseeds = 0;

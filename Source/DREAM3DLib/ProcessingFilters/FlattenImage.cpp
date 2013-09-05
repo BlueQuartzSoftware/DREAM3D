@@ -43,7 +43,7 @@
 #endif
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 class FlattenImageImpl
 {
@@ -119,7 +119,7 @@ void FlattenImage::setupFilterParameters()
     option->setPropertyName("FlattenMethod");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("Lightness");
     choices.push_back("Average");
     choices.push_back("Luminosity");
@@ -159,7 +159,7 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
 
@@ -238,7 +238,7 @@ void FlattenImage::execute()
 
   size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();
 
-  //  std::cout << "FlattenImage: " << m_ConversionFactor << std::endl;
+  //  qDebug() << "FlattenImage: " << m_ConversionFactor ;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {

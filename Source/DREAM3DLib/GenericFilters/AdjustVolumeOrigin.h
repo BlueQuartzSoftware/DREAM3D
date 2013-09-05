@@ -37,8 +37,8 @@
 #ifndef _AdjustVolumeOrigin_H_
 #define _AdjustVolumeOrigin_H_
 
-#include <string>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QSet>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -73,14 +73,14 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Change Origin of Volume"; }
+    virtual const QString getHumanLabel() { return "Change Origin of Volume"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

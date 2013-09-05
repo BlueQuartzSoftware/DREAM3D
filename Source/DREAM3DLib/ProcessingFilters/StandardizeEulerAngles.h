@@ -65,9 +65,9 @@ class DREAM3DLib_EXPORT StandardizeEulerAngles : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::RegularizationFilters; }
-    virtual const std::string getHumanLabel() { return "Standardize Euler Angles"; }
+    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RegularizationFilters; }
+    virtual const QString getHumanLabel() { return "Standardize Euler Angles"; }
 
     virtual void setupFilterParameters();
     /**

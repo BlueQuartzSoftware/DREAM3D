@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -219,11 +219,11 @@ int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* w
 void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
 
-  if(m_ScalarArrayName.empty() == true)
+  if(m_ScalarArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -265,7 +265,7 @@ void ScalarSegmentGrains::execute()
     return;
   }
 
-  std::stringstream ss;
+  QString ss;
 
   m_InputData = m->getCellData(m_ScalarArrayName);
   if (NULL == m_InputData.get())
@@ -273,7 +273,7 @@ void ScalarSegmentGrains::execute()
     ss.str("");
     ss << "Selected array '" << m_ScalarArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
     setErrorCondition(-11001);
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -285,7 +285,7 @@ void ScalarSegmentGrains::execute()
     m_GrainIds[i] = 0;
   }
 
-  std::string dType = m_InputData->getTypeAsString();
+  QString dType = m_InputData->getTypeAsString();
   if(m_InputData->GetNumberOfComponents() != 1)
   {
     m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
@@ -358,7 +358,7 @@ void ScalarSegmentGrains::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
-    std::set<int32_t> grainIdSet;
+    QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
     for(size_t i = 1; i < totalFields; ++i)
     {
@@ -401,7 +401,7 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

@@ -36,11 +36,11 @@
 
 #include "AddOrientationNoise.h"
 
-#include <map>
+#include <QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
@@ -114,7 +114,7 @@ int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* w
 void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data

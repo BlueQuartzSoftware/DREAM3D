@@ -36,7 +36,7 @@
 #ifndef _SolidMeshDataContainerReader_H_
 #define _SolidMeshDataContainerReader_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -62,9 +62,9 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
 
@@ -73,14 +73,14 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerReader : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SolidMesh DataContainer Reader"; }
+    virtual const QString getHumanLabel() { return "SolidMesh DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -36,12 +36,12 @@
 
 #include "AlignSectionsMisorientation.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -157,11 +157,11 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
 
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
@@ -275,7 +275,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    std::stringstream ss;
+    QString ss;
     progInt = ((float)iter/dims[2])*100.0f;
     ss << "Determining Shifts - " << progInt << "% Complete";
     notifyStatusMessage(ss.str());
@@ -366,7 +366,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] ;
     }
   }
   if (getWriteAlignmentShifts() == true) {

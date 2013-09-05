@@ -38,7 +38,7 @@
 #define FindGrainReferenceMisorientations_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -83,9 +83,9 @@ class DREAM3DLib_EXPORT FindGrainReferenceMisorientations : public AbstractFilte
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Reference Misorientations"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Reference Misorientations"; }
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, ReferenceOrientation)
 

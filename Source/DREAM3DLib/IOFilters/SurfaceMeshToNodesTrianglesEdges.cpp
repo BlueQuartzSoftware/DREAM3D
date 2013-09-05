@@ -39,7 +39,7 @@
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 
  #define WRITE_EDGES_FILE 0
@@ -132,19 +132,19 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
 
-  if(true == m_OutputNodesFile.empty())
+  if(true == m_OutputNodesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
   }
   #if WRITE_EDGES_FILE
-  if(true == m_OutputEdgesFile.empty())
+  if(true == m_OutputEdgesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
   }
   #endif
-  if(true == m_OutputTrianglesFile.empty())
+  if(true == m_OutputTrianglesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
     setErrorCondition(-382);
@@ -202,7 +202,7 @@ void SurfaceMeshToNodesTrianglesEdges::preflight()
 void SurfaceMeshToNodesTrianglesEdges::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
 
 
@@ -230,12 +230,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   notifyStatusMessage("Writing Nodes Text File");
-  std::string parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputNodesFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -261,12 +262,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 #if WRITE_EDGES_FILE
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Edges Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputEdgesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  parentPath = QFileInfo::parentPath(getOutputEdgesFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -312,12 +314,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Triangles Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputTrianglesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  parentPath = QFileInfo::parentPath(getOutputTrianglesFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }

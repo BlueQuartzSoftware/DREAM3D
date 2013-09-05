@@ -36,7 +36,7 @@
 
 #include "AdjustVolume.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
@@ -112,7 +112,7 @@ int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -209,7 +209,7 @@ void AdjustVolume::execute()
 //  oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
-    std::stringstream ss;
+    QString ss;
 	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
 	notifyStatusMessage(ss.str());
     iterations++;

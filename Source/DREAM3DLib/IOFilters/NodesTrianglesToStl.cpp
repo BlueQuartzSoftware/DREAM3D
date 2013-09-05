@@ -38,12 +38,12 @@
 #include <boost/shared_array.hpp>
 
 
-#include "MXA/Common/MXAEndian.h"
+
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/SurfaceMeshStructs.h"
 
 // -----------------------------------------------------------------------------
@@ -142,14 +142,14 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (m_TrianglesFile.empty() == true)
+  if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
-  else if (MXADir::exists(m_TrianglesFile) == false)
+  else if (QDir::exists(m_TrianglesFile) == false)
   {
 
     if (preflight == true)
@@ -160,12 +160,12 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_NodesFile.empty() == true)
+  if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (MXADir::exists(m_NodesFile)== false)
+  else if (QDir::exists(m_NodesFile)== false)
   {
 
     if (preflight == true)
@@ -176,7 +176,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_OutputStlDirectory.empty() == true)
+  if (m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -201,7 +201,7 @@ void NodesTrianglesToStl::preflight()
 void NodesTrianglesToStl::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
 
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -220,11 +220,11 @@ void NodesTrianglesToStl::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(getOutputStlDirectory(), true))
+  if(!QDir::mkdir(getOutputStlDirectory(), true))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -275,7 +275,7 @@ void NodesTrianglesToStl::execute()
   { 0.0f, 0.0f, 0.0f };
   size_t nread = 0;
   // Read the POINTS data (Vertex)
-  std::map<int, int> nodeIdToIndex;
+  QMap<int, int> nodeIdToIndex;
   DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
@@ -309,7 +309,7 @@ void NodesTrianglesToStl::execute()
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
@@ -340,13 +340,13 @@ void NodesTrianglesToStl::execute()
   int triCount = 0;
 
   //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     ss.str("");
     // Generate the output file name
-    ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
-    std::string filename = ss.str();
+    ss << getOutputStlDirectory() << QDir::Separator << getOutputStlPrefix() << spin << ".stl";
+    QString filename = ss.str();
     FILE* f = fopen(filename.c_str(), "wb");
     ScopedFileMonitor fPtr(f);
 
@@ -422,7 +422,7 @@ void NodesTrianglesToStl::execute()
       {
         ss.str("");
         ss << "Error Writing STL File. Not enough elements written for grain id " << spin << " Wrote " << totalWritten << " of 50.";
-        notifyErrorMessage(ss.str(), -1201);
+        notifyErrorMessage(ss, -1201);
       }
       triCount++;
     }
@@ -439,7 +439,7 @@ void NodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int triCount)
+int NodesTrianglesToStl::writeHeader(FILE* f, const QString &header, int triCount)
 {
   if (NULL == f)
   {
@@ -459,7 +459,7 @@ int NodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int tri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
+int NodesTrianglesToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
 {
   // We need to update the number of triangles in the file
   int err =0;

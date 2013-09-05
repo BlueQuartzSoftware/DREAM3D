@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "MatrixStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5MatrixStatsDataDelegate.h"
 
@@ -70,7 +70,7 @@ void MatrixStatsData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MatrixStatsData::getStatsType()
+QString MatrixStatsData::getStatsType()
 {
   return DREAM3D::HDF5::MatrixStatsData;
 }

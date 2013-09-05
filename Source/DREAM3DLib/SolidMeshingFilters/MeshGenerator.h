@@ -37,7 +37,7 @@
 #define MESHGENERATOR_H_
 
 #include <time.h>
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include <DREAM3D/Common/AIMRandomNG.h>
@@ -338,9 +338,9 @@ extern "C"
 
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const std::string &readname1, const std::string &readname2,
-                    const std::string &writename1, const std::string &writename1a,
-                    const std::string &writename2, const std::string &writename3,
+int MeshGenerator_Main(const QString &readname1, const QString &readname2,
+                    const QString &writename1, const QString &writename1a,
+                    const QString &writename2, const QString &writename3,
                     float xDim, float yDim, float zDim,
                     float xRes, float yRes, float zRes,
                     int numGrains);
@@ -348,8 +348,8 @@ int MeshGenerator_Main(const std::string &readname1, const std::string &readname
 
 
 
-  void read_nodes(std::string inname1);
-  void read_triangles(std::string inname3);
+  void read_nodes(QString inname1);
+  void read_triangles(QString inname3);
   void locate_graincenters();
   void delete_triangles();
   void clean_triangles();
@@ -360,9 +360,9 @@ int MeshGenerator_Main(const std::string &readname1, const std::string &readname
   void read_elements(int idea);
   void measure_elements();
   void improve_mesh();
-  void write_meshdata(std::string outname1);
-  void write_dihedralangles(std::string outname2);
-  void write_voxeldata(std::string outname3);
+  void write_meshdata(QString outname1);
+  void write_dihedralangles(QString outname2);
+  void write_voxeldata(QString outname3);
 
 
 #ifdef __cplusplus

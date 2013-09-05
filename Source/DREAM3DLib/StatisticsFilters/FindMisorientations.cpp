@@ -36,7 +36,7 @@
 
 #include "FindMisorientations.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -96,7 +96,7 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
@@ -109,7 +109,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   if (NULL == neighborListPtr.get())
   {
     ss.str("");
-    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." ;
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -129,7 +129,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     if (misorientationListPtr.get() == NULL)
     {
       ss.str("");
-      ss << "MisorientationLists Array Not Initialized correctly" << std::endl;
+      ss << "MisorientationLists Array Not Initialized correctly" ;
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }

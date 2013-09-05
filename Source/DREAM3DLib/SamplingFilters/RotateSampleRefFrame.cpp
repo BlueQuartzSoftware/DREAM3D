@@ -43,7 +43,7 @@
 #endif
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
@@ -233,7 +233,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
@@ -478,10 +478,10 @@ void RotateSampleRefFrame::execute()
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    //std::string name = *iter;
+    //QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

@@ -36,8 +36,8 @@
 #ifndef DREAM3DRANDOM_H_
 #define DREAM3DRANDOM_H_
 
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
+
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 

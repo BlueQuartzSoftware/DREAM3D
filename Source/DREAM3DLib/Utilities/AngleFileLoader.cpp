@@ -39,10 +39,10 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -74,19 +74,19 @@ AngleFileLoader::~AngleFileLoader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> AngleFileLoader::tokenize(char* buf, const char* delimiter)
+std::vector<QString> AngleFileLoader::tokenize(char* buf, const char* delimiter)
 {
-  std::vector<std::string> output;
-  std::string values(buf);
-  std::string::size_type start = 0;
-  std::string::size_type pos = 0;
-  //  std::cout << "-----------------------------" << std::endl;
-  while(pos != std::string::npos && pos != values.size() - 1)
+  std::vector<QString> output;
+  QString values(buf);
+  QString::size_type start = 0;
+  QString::size_type pos = 0;
+  //  qDebug() << "-----------------------------" ;
+  while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
     output.push_back(values.substr(start, pos-start));
-    //   std::cout << "Adding: " << output.back() << std::endl;
-    if (pos != std::string::npos)
+    //   qDebug() << "Adding: " << output.back() ;
+    if (pos != QString::npos)
     {
       start = pos + 1;
     }
@@ -139,7 +139,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   std::ifstream reader(getInputFile().c_str());
   ::memset(buf, 0, kBufferSize);
   reader.getline(buf, kBufferSize);
-  std::string s(buf);
+  QString s(buf);
   StringUtils::stringToNum<int>(numOrients, s);
 
   // Allocate enough for the angles
@@ -155,7 +155,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
     ::memset(buf, 0, kBufferSize);
     reader.getline(buf, kBufferSize);
-    std::vector<std::string> tokens;
+    std::vector<QString> tokens;
     tokens = tokenize(buf, getDelimiter().data());
 
 
@@ -200,7 +200,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     angles->SetComponent(i, 0, e1);
     angles->SetComponent(i, 1, e2);
     angles->SetComponent(i, 2, e3);
-    //   std::cout << "reading line: " << i << std::endl;
+    //   qDebug() << "reading line: " << i ;
   }
 
 

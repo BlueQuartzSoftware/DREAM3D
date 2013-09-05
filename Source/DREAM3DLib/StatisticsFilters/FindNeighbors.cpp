@@ -38,7 +38,7 @@
 
 #include <sstream>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/IDataArray.h"
@@ -95,7 +95,7 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -116,7 +116,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->addFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
-      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" ;
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -147,7 +147,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" ;
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
@@ -184,7 +184,7 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -240,7 +240,7 @@ void FindNeighbors::execute()
   neighborsurfacearealist.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Finding Neighbors - Initializing Neighbor Lists - " << (static_cast<float>(i)/totalFields)*100 << " Percent Complete";
  //   notifyStatusMessage(ss.str());
     m_NumNeighbors[i] = 0;
@@ -253,7 +253,7 @@ void FindNeighbors::execute()
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Finding Neighbors - Determining Neighbor Lists - " << (static_cast<float>(j)/totalPoints)*100 << " Percent Complete";
  //   notifyStatusMessage(ss.str());
     onsurf = 0;
@@ -299,11 +299,11 @@ void FindNeighbors::execute()
 
   for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
 
-    std::map<int, int> neighToCount;
+    QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
 
     // this increments the voxel counts for each grain
@@ -318,7 +318,7 @@ void FindNeighbors::execute()
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
-    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
+    for (QMap<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels

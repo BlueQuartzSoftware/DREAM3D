@@ -38,7 +38,7 @@
 #include <limits>
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -103,7 +103,7 @@ int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -140,7 +140,7 @@ void GenerateEulerColors::preflight()
 void GenerateEulerColors::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

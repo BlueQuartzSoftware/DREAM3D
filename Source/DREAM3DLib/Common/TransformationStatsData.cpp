@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "TransformationStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5TransformationStatsDataDelegate.h"
 
@@ -63,7 +63,7 @@ TransformationStatsData::~TransformationStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string TransformationStatsData::getStatsType()
+QString TransformationStatsData::getStatsType()
 {
   return DREAM3D::HDF5::TransformationStatsData;
 }
@@ -101,7 +101,7 @@ FloatArrayType::Pointer TransformationStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  std::cout << d << std::endl;
+  //  qDebug() << d ;
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }

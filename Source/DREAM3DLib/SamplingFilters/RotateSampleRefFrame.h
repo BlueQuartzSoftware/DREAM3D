@@ -59,9 +59,9 @@ class DREAM3DLib_EXPORT RotateSampleRefFrame : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
     DREAM3D_INSTANCE_PROPERTY(bool, sliceBySlice)
 
-    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
-    virtual const std::string getHumanLabel() { return "Rotate Sample Reference Frame"; }
+    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::RotationTransformationFilters; }
+    virtual const QString getHumanLabel() { return "Rotate Sample Reference Frame"; }
 
     virtual void setupFilterParameters();
     /**

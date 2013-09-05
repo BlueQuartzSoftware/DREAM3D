@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -158,7 +158,7 @@ int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -175,7 +175,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized Correctly" << std::endl;
+    ss << "NeighborLists Array Not Initialized Correctly" ;
     setErrorCondition(-304);
     addErrorMessage(getHumanLabel(), ss.str(), -304);
   }
@@ -239,7 +239,7 @@ void MergeTwins::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);
     pid[0] = 0;
-    std::set<int32_t> parentIdSet;
+    QSet<int32_t> parentIdSet;
     parentIdSet.insert(0);
     for(int i = 1; i < numParents; ++i)
     {

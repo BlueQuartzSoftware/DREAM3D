@@ -36,7 +36,7 @@
 #ifndef _VoxelDataContainerReader_H_
 #define _VoxelDataContainerReader_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 
@@ -71,15 +71,15 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<std::string> NameListType;
+    typedef QList<QString> NameListType;
 
 
     /**
@@ -87,14 +87,14 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Voxel DataContainer Reader"; }
+    virtual const QString getHumanLabel() { return "Voxel DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -141,9 +141,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                       std::vector<std::string> &namesRead,
-                       std::set<std::string> &namesToRead);
+    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                       std::vector<QString> &namesRead,
+                       QSet<QString> &namesToRead);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:

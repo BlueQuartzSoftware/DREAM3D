@@ -37,8 +37,8 @@
 #ifndef _DATACONTAINERWRITER_H_
 #define _DATACONTAINERWRITER_H_
 
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 
 #include <hdf5.h>
 
@@ -75,9 +75,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write DREAM3D Data File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
 
     virtual void setupFilterParameters();
     /**
@@ -118,8 +118,8 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     int writePipeline();
 
-    void writeXdmfHeader(std::ostream &out);
-    void writeXdmfFooter(std::ostream &out);
+    void writeXdmfHeader(QDataStream &out);
+    void writeXdmfFooter(QDataStream &out);
 
   private:
     hid_t m_FileId;

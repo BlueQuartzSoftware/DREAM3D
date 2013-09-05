@@ -65,7 +65,7 @@ private:
 };
 
 //#################### GLOBAL OPERATORS ####################
-//std::ostream& operator<<(std::ostream& os, Plane::CP rhs);
+//QDataStream& operator<<(QDataStream& os, Plane::CP rhs);
 
 
 

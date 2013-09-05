@@ -39,11 +39,11 @@
 
 #include <stdio.h>
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -151,10 +151,10 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -212,14 +212,14 @@ void PhReader::execute()
    */
   if (NULL == getVoxelDataContainer())
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorCondition(-48020);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 
-  std::stringstream ss;
+  QString ss;
   int err = 0;
 
   m_InStream = fopen(getInputFile().c_str(), "r");

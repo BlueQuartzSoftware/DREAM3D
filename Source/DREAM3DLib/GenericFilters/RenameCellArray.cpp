@@ -121,9 +121,9 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if(m_SelectedCellArrayName.empty() == true)
+  if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     ss << "An array from the Voxel Data Container must be selected.";
@@ -165,7 +165,7 @@ void RenameCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
 
@@ -173,7 +173,7 @@ void RenameCellArray::execute()
   {
   ss << "Array to be renamed could not be found in DataContainer";
   setErrorCondition(-11000);
-  notifyErrorMessage(ss.str(), getErrorCondition());
+  notifyErrorMessage(ss, getErrorCondition());
   }
 
   notifyStatusMessage("Complete");

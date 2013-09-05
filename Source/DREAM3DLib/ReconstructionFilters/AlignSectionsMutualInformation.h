@@ -38,7 +38,7 @@
 #define AlignSectionsMutualInformation_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const QString getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
     virtual void setupFilterParameters();
     /**

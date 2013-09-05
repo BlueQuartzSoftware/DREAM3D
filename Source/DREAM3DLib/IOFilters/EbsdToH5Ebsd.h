@@ -44,10 +44,10 @@
 
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
+
+
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QString>, EbsdFileList)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
@@ -88,9 +88,9 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
 
     virtual void setupFilterParameters();
     /**

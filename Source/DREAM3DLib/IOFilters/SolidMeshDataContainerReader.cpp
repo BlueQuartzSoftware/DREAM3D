@@ -36,8 +36,8 @@
 #include "SolidMeshDataContainerReader.h"
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -96,7 +96,7 @@ int SolidMeshDataContainerReader::writeFilterParameters(AbstractFilterParameters
 void SolidMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SolidMeshDataContainer* m = getSolidMeshDataContainer();
 
   if(NULL == m)
@@ -129,7 +129,7 @@ void SolidMeshDataContainerReader::preflight()
 void SolidMeshDataContainerReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

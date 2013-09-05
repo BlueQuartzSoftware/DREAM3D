@@ -73,7 +73,7 @@ void MultiThresholdFields::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back(DREAM3D::FieldData::GoodFields);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -124,12 +124,12 @@ int MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* 
 void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
-  //    std::cout << input.arrayName << "  " << input.compOperator << "  " << input.compValue << std::endl;
+  //    qDebug() << input.arrayName << "  " << input.compOperator << "  " << input.compValue ;
   //  }
   if (m_ComparisonInputs.size() == 0)
   {
@@ -157,7 +157,7 @@ void MultiThresholdFields::preflight()
 void MultiThresholdFields::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)

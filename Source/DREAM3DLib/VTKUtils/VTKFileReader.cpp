@@ -43,8 +43,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Common/MXAEndian.h"
+
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -137,7 +137,7 @@ int VTKFileReader::readHeader()
 {
 
   int err = 0;
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "FileName was not set and must be valid", -1);
@@ -157,17 +157,17 @@ int VTKFileReader::readHeader()
   instream.open(getInputFile().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << getInputFile() << std::endl;
+    qDebug() << logTime() << " vtk file could not be opened: " << getInputFile() ;
     return -1;
   }
   char buf[kBufferSize];
   instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
-  setComment(std::string(buf));
+  setComment(QString(buf));
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
-  std::string fileType(buf);
+  QString fileType(buf);
   if (fileType.find("BINARY", 0) == 0)
   {
     setFileIsBinary(true);
@@ -179,9 +179,9 @@ int VTKFileReader::readHeader()
   else
   {
     err = -1;
-    std::cout << logTime()
+    qDebug() << logTime()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+        ;
     return err;
   }
   ::memset(buf, 0, kBufferSize);
@@ -191,10 +191,10 @@ int VTKFileReader::readHeader()
     int n = sscanf(buf, "%s %s", text, &(text[16]) );
     if (n < 2)
     {
-      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
+      qDebug() << "Error Reading the type of data set. Was expecting 2 fields but got " << n ;
       return -1;
     }
-    std::string dataset(&(text[16]));
+    QString dataset(&(text[16]));
     setDatasetType(dataset);
   }
 
@@ -210,7 +210,7 @@ int VTKFileReader::readHeader()
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    std::stringstream s;
+    QString s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
                 << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
@@ -221,7 +221,7 @@ int VTKFileReader::readHeader()
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    std::stringstream s;
+    QString s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);

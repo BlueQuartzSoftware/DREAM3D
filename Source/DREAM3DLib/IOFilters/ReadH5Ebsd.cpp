@@ -39,7 +39,7 @@
 #include <vector>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -51,7 +51,7 @@
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/ProcessingFilters/RotateEulerRefFrame.h"
@@ -181,7 +181,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
   if(dims[0] * dims[1] * dims[2] > max)
   {
     err = -1;
-    std::stringstream s;
+    QString s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), s.str(), err);
@@ -191,7 +191,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
   if(dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    std::stringstream s;
+    QString s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
@@ -207,7 +207,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m)
 void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -218,7 +218,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     return;
   }
 
-  if (m_InputFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
@@ -231,7 +231,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (m_InputFile.empty() == false)
+  else if (m_InputFile.isEmpty() == false)
   {
     H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
     reader->setFileName(m_InputFile);
@@ -244,7 +244,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
       return;
     }
 
-    std::string manufacturer = reader->getManufacturer();
+    QString manufacturer = reader->getManufacturer();
     if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
     {
       m_Manufacturer = Ebsd::TSL;
@@ -280,7 +280,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
       addErrorMessage(getHumanLabel(), s.str(), -1);
@@ -290,7 +290,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
       s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
@@ -306,25 +306,25 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
 
   H5EbsdVolumeReader::Pointer reader;
-  std::vector<std::string> names;
+  std::vector<QString> names;
 
   if (m_Manufacturer == Ebsd::TSL)
   {
     AngFields fields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<std::vector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
     CtfFields fields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<std::vector<QString> > ();
   }
   else if (m_Manufacturer == Ebsd::HEDM)
   {
     MicFields fields;
     reader = H5MicVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<std::vector<QString> > ();
   }
   else
   {
@@ -375,7 +375,7 @@ void ReadH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::execute()
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -386,7 +386,7 @@ void ReadH5Ebsd::execute()
   }
   int err = 0;
   setErrorCondition(err);
-  std::string manufacturer;
+  QString manufacturer;
   // Get the Size and Resolution of the Volume
   {
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
@@ -408,7 +408,7 @@ void ReadH5Ebsd::execute()
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
       addErrorMessage(getHumanLabel(), s.str(), -1);
@@ -418,7 +418,7 @@ void ReadH5Ebsd::execute()
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
       s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
@@ -457,7 +457,7 @@ void ReadH5Ebsd::execute()
   else
   {
     setErrorCondition(-1);
-    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    QString msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(", ").append(Ebsd::Ang::Manufacturer).append(" and ").append(Ebsd::Mic::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -1);
@@ -512,7 +512,7 @@ void ReadH5Ebsd::execute()
   }
   else
   {
-    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    QString msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -10001);
@@ -562,9 +562,9 @@ void ReadH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
+                                            QSet<QString> selectedFieldArrays,
+                                            QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -574,11 +574,11 @@ void ReadH5Ebsd::setVoxelSelectedArrayNames(std::set<std::string> selectedCellAr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                           QSet<QString> selectedFaceArrays,
+                                                           QSet<QString> selectedEdgeArrays,
+                                                           QSet<QString> selectedFieldArrays,
+                                                           QSet<QString> selectedEnsembleArrays)
 {
   // Empty because there is no Surface Mesh data in an H5Ebsd file
 }
@@ -586,9 +586,9 @@ void ReadH5Ebsd::setSurfaceMeshSelectedArrayNames(std::set<std::string> selected
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays)
+void ReadH5Ebsd::setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                QSet<QString> selectedFaceArrays,
+                                                QSet<QString> selectedEdgeArrays)
 {
   // Empty because there is no Solid Mesh data in an H5Ebsd file
 }

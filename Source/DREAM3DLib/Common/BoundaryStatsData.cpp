@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "BoundaryStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5BoundaryStatsDataDelegate.h"
 
@@ -71,7 +71,7 @@ void BoundaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string BoundaryStatsData::getStatsType()
+QString BoundaryStatsData::getStatsType()
 {
   return DREAM3D::HDF5::BoundaryStatsData;
 }

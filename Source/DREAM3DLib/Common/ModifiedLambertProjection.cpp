@@ -36,10 +36,10 @@
 
 #include "ModifiedLambertProjection.h"
 
-#include <set>
+#include <QtCore/QSet>
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #define WRITE_LAMBERT_SQUARE_COORD_VTK 0
@@ -80,8 +80,8 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 
 
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
-  std::stringstream ss;
-  std::string filename("/tmp/");
+  QString ss;
+  QString filename("/tmp/");
   filename.append("ModifiedLambert_Square_Coords_").append(coords->GetName()).append(".vtk");
   FILE* f = NULL;
   f = fopen(filename.c_str(), "wb");

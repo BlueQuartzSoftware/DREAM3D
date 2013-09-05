@@ -38,7 +38,7 @@
 #define PACKPRIMARYPHASES_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include <boost/shared_array.hpp>
 
@@ -98,9 +98,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Pack Primary Phases"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
@@ -185,7 +185,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     StatsDataArray* m_StatsDataArray;
 
     // All other private variables
-    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;

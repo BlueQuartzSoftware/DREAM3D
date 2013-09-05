@@ -39,12 +39,12 @@
 // C Includes
 
 // C++ Includes
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
 
 // DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -155,13 +155,13 @@ void SurfaceMeshDataContainer::setMeshFaceNeighborLists(MeshFaceNeighbors::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "SurfaceMeshDataContainer::Adding Cell array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "SurfaceMeshDataContainer::Adding Cell array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_VertexData[name] = data;
@@ -171,30 +171,28 @@ void SurfaceMeshDataContainer::addVertexData(const std::string &name, IDataArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getVertexData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(name);
-  if ( it == m_VertexData.end() )
+  if ( m_VertexData.contains(name) == false )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return m_VertexData[name];
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeVertexData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
   if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_VertexData.erase(it);
   return p;
 }
@@ -210,12 +208,12 @@ void SurfaceMeshDataContainer::clearVertexData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SurfaceMeshDataContainer::getPointArrayNameList()
+QList<QString> SurfaceMeshDataContainer::getPointArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -234,27 +232,27 @@ int SurfaceMeshDataContainer::getNumPointArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getFaceData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getFaceData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
   if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_FaceData[name] = data;
@@ -264,15 +262,15 @@ void SurfaceMeshDataContainer::addFaceData(const std::string &name, IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removeFaceData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeFaceData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
   if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FaceData.erase(it);
   return p;
 }
@@ -288,12 +286,12 @@ void SurfaceMeshDataContainer::clearFaceData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SurfaceMeshDataContainer::getFaceArrayNameList()
+QList<QString> SurfaceMeshDataContainer::getFaceArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -312,10 +310,10 @@ int SurfaceMeshDataContainer::getNumFaceArrays()
 void SurfaceMeshDataContainer::resizeFaceDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFaceTuples = size;
@@ -324,27 +322,27 @@ void SurfaceMeshDataContainer::resizeFaceDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getEdgeData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getEdgeData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
   if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Edge array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Edge array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_EdgeData[name] = data;
@@ -355,15 +353,15 @@ void SurfaceMeshDataContainer::addEdgeData(const std::string &name, IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removeEdgeData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeEdgeData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
   if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EdgeData.erase(it);
   return p;
 }
@@ -380,12 +378,12 @@ void SurfaceMeshDataContainer::clearEdgeData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SurfaceMeshDataContainer::getEdgeArrayNameList()
+QList<QString> SurfaceMeshDataContainer::getEdgeArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -401,27 +399,27 @@ int SurfaceMeshDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
   if ( it == m_FieldData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addFieldData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_FieldData[name] = data;
@@ -431,15 +429,15 @@ void SurfaceMeshDataContainer::addFieldData(const std::string &name, IDataArray:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
   if ( it == m_FieldData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FieldData.erase(it);
   return p;
 }
@@ -455,12 +453,12 @@ void SurfaceMeshDataContainer::clearFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SurfaceMeshDataContainer::getFieldArrayNameList()
+QList<QString> SurfaceMeshDataContainer::getFieldArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -479,10 +477,10 @@ int SurfaceMeshDataContainer::getNumFieldArrays()
 void SurfaceMeshDataContainer::resizeFieldDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFieldTuples = size;
@@ -491,27 +489,27 @@ void SurfaceMeshDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::getEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
   if ( it == m_EnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceMeshDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void SurfaceMeshDataContainer::addEnsembleData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_EnsembleData[name] = data;
@@ -521,15 +519,15 @@ void SurfaceMeshDataContainer::addEnsembleData(const std::string &name, IDataArr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceMeshDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer SurfaceMeshDataContainer::removeEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
   if ( it == m_EnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EnsembleData.erase(it);
   return p;
 }
@@ -545,12 +543,12 @@ void SurfaceMeshDataContainer::clearEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> SurfaceMeshDataContainer::getEnsembleArrayNameList()
+QList<QString> SurfaceMeshDataContainer::getEnsembleArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -569,10 +567,10 @@ int SurfaceMeshDataContainer::getNumEnsembleArrays()
 void SurfaceMeshDataContainer::resizeEnsembleDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumEnsembleTuples = size;

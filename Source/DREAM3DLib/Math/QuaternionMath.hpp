@@ -37,7 +37,7 @@
 #define _QuaternionMath_H_
 
 #include <stdlib.h>
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 /**
  * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type

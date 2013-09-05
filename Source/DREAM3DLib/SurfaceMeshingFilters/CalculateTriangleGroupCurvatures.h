@@ -37,7 +37,7 @@
 #ifndef _CalculateTriangleGroupCurvatures_H_
 #define _CalculateTriangleGroupCurvatures_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
      */
     DataArray<double>::Pointer extractPatchData(int triId, DREAM3D::SurfaceMesh::UniqueFaceIds_t &triPatch,
                                                 double* data,
-                                                const std::string &name) const;
+                                                const QString &name) const;
   private:
     int m_NRing;
     std::vector<int> m_TriangleIds;

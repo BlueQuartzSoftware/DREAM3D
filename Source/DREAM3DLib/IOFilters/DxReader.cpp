@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DxReader.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 // -----------------------------------------------------------------------------
 //
@@ -137,10 +137,10 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -198,7 +198,7 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
 
   m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
@@ -234,17 +234,17 @@ void DxReader::execute()
 int DxReader::readHeader()
 {
   VoxelDataContainer* m = getVoxelDataContainer();
-  std::stringstream ss;
+  QString ss;
   int error = 0;
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
+  QString line;
+  QString delimeters(", ;\t"); /* delimeters to split the data */
+  std::vector<QString> tokens; /* vector to store the split data */
 
   getline(m_InStream, line, '\n');
   tokenize(line, tokens, delimeters);
 
-  // Process the header information and look for the std::string "counts"
+  // Process the header information and look for the QString "counts"
   // Then read the data size after that
   size_t pos1 = 0;
   while (pos1 == 0)
@@ -266,7 +266,7 @@ int DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss.clear();
-        ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
+        ss << "ERROR: Unable to read data dimensions from the header" ;
         addErrorMessage(getHumanLabel(), ss.str(), -7);
         setErrorCondition(-499);
         m_InStream.close();
@@ -293,10 +293,10 @@ int DxReader::readHeader()
     nz--;
   }
 
-//  std::cout << "INFO: DX data dimensions: " << std::endl;
-//  std::cout << "nz= " << nz << std::endl;
-//  std::cout << "ny= " << ny << std::endl;
-//  std::cout << "nx= " << nx << std::endl;
+//  qDebug() << "INFO: DX data dimensions: " ;
+//  qDebug() << "nz= " << nz ;
+//  qDebug() << "ny= " << ny ;
+//  qDebug() << "nx= " << nx ;
 
   //The DX file has a unique format of 20 entries on each line. I have
   //no idea who initiated this insanity but I am about to perpetuate
@@ -328,7 +328,7 @@ int DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss.clear();
-        ss << "ERROR: Unable to locate the last header line" << std::endl;
+        ss << "ERROR: Unable to locate the last header line" ;
         addErrorMessage(getHumanLabel(), ss.str(), -8);
         setErrorCondition(-496);
         m_InStream.close();
@@ -344,7 +344,7 @@ int DxReader::readHeader()
     tokens.clear();
   }
   m->setDimensions(nx, ny, nz);
-//  std::cout << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << std::endl;
+//  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;
   return error;
 }
 
@@ -353,7 +353,7 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
@@ -364,9 +364,9 @@ int DxReader::readFile()
     return -1;
   }
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
+  QString line;
+  QString delimeters(", ;\t"); /* delimeters to split the data */
+  std::vector<QString> tokens; /* vector to store the split data */
 
   int error, spin; /* dummy variables */
 
@@ -422,8 +422,8 @@ int DxReader::readFile()
   if(index != static_cast<size_t>(m->getTotalPoints()))
   {
     ss.clear();
-    ss << "ERROR: data size does not match header dimensions" << std::endl;
-    ss << "\t" << index << "\t" << m->getTotalPoints() << std::endl;
+    ss << "ERROR: data size does not match header dimensions" ;
+    ss << "\t" << index << "\t" << m->getTotalPoints() ;
     setErrorCondition(-495);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     m_InStream.close();
@@ -435,14 +435,14 @@ int DxReader::readFile()
 
 
   // Find the unique set of grain ids
-//  std::set<int32_t> grainIdSet;
+//  QSet<int32_t> grainIdSet;
 //  for (int64_t i = 0; i < totalPoints; ++i)
 //  {
 //    grainIdSet.insert(m_GrainIds[i]);
 //  }
-//  for (std::set<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+//  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
 //  {
-//    std::cout << "Grain ID: " << (*iter) << std::endl;
+//    qDebug() << "Grain ID: " << (*iter) ;
 //  }
 
   notifyStatusMessage("Complete");

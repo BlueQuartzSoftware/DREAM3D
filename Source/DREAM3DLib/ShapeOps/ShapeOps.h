@@ -37,18 +37,18 @@
 #ifndef SHAPEOPS_H_
 #define SHAPEOPS_H_
 
-#include <map>
+#include <QMap>
 
-#include "MXA/Common/MXASetGetMacros.h"
+
 #include "DREAM3DLib/DREAM3DLib.h"
 
 
 class DREAM3DLib_EXPORT ShapeOps
 {
   public:
-    MXA_SHARED_POINTERS(ShapeOps)
-    MXA_TYPE_MACRO(ShapeOps)
-    MXA_STATIC_NEW_MACRO(ShapeOps)
+    DREAM3D_SHARED_POINTERS(ShapeOps)
+    DREAM3D_TYPE_MACRO(ShapeOps)
+    DREAM3D_STATIC_NEW_MACRO(ShapeOps)
 
     virtual ~ShapeOps();
 
@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT ShapeOps
 
     float ShapeClass2Omega[41][2];
 
-    virtual float radcur1(std::map<ArgName, float> args);
+    virtual float radcur1(QMap<ArgName, float> args);
 
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
 

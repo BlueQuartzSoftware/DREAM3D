@@ -38,7 +38,7 @@
 
 #include <limits>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 // -----------------------------------------------------------------------------
 //
@@ -112,10 +112,10 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -157,7 +157,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
       addErrorMessage(getHumanLabel(), s.str(), -1);
@@ -167,7 +167,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QString s;
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
       s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
@@ -198,7 +198,7 @@ void H5VoxelFileReader::execute()
 {
   if(NULL == getVoxelDataContainer())
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -228,7 +228,7 @@ void H5VoxelFileReader::execute()
   DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
   eulers->SetNumberOfComponents(3);
 
-  std::string arrayname = "GrainID";
+  QString arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));
   if(err < 0)
   {

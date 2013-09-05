@@ -36,7 +36,7 @@
 
 #include "FindAxisODF.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindShapes.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
@@ -91,7 +91,7 @@ int FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 

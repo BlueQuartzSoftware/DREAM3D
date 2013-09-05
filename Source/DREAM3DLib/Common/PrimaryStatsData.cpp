@@ -35,10 +35,10 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PrimaryStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/HDF5/H5PrimaryStatsDataDelegate.h"
 
@@ -63,7 +63,7 @@ PrimaryStatsData::~PrimaryStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string PrimaryStatsData::getStatsType()
+QString PrimaryStatsData::getStatsType()
 {
   return DREAM3D::HDF5::PrimaryStatsData;
 }
@@ -100,7 +100,7 @@ FloatArrayType::Pointer PrimaryStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  std::cout << d << std::endl;
+  //  qDebug() << d ;
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }

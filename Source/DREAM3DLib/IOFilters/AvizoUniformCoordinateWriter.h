@@ -37,9 +37,9 @@
 #ifndef AvizoUniformCoordinateWriter_H_
 #define AvizoUniformCoordinateWriter_H_
 
-#include <string>
+#include <QtCore/QString>
 
-#include "MXA/Common/IO/MXAFileWriter64.h"
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -76,14 +76,14 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Avizo Uniform Coordinate Writer"; }
+    virtual const QString getHumanLabel() { return "Avizo Uniform Coordinate Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    std::string generateHeader();
+    QString generateHeader();
 
     /**
      * @brief Writes the data to the Avizo file

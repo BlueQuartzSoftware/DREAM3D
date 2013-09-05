@@ -36,7 +36,7 @@
 
 #include "SuperEllipsoidOps.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 
@@ -103,7 +103,7 @@ SuperEllipsoidOps::~SuperEllipsoidOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float SuperEllipsoidOps::radcur1(std::map<ArgName, float> args)
+float SuperEllipsoidOps::radcur1(QMap<ArgName, float> args)
 {
   float radcur1 = 0.0f;
   float Nvaluedist = 0.0f;

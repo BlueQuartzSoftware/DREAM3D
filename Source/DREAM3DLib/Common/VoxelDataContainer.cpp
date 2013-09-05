@@ -39,14 +39,14 @@
 // C Includes
 
 // C++ Includes
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
 // EbsdLib Includes
 #include "EbsdLib/EbsdConstants.h"
 
 // DREAM3D Includes
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -89,13 +89,13 @@ DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Vertex array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Vertex array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_VertexData[name] = data;
@@ -105,29 +105,27 @@ void VoxelDataContainer::addVertexData(const std::string &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getVertexData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(name);
-  if ( it == m_VertexData.end() )
+  if ( m_VertexData.contains(name) == false )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return m_VertexData[name];
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeVertexData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
   if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_VertexData.erase(it);
   return p;
 }
@@ -135,15 +133,15 @@ IDataArray::Pointer VoxelDataContainer::removeVertexData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameVertexData(const std::string &oldname, const std::string &newname)
+bool VoxelDataContainer::renameVertexData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(oldname);
   if ( it == m_VertexData.end() )
   {
-	  return false;
+    return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeVertexData(oldname);
   addVertexData(newname, p);
@@ -161,12 +159,12 @@ void VoxelDataContainer::clearVertexData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getVertexArrayNameList()
+QList<QString> VoxelDataContainer::getVertexArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -182,13 +180,13 @@ int VoxelDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Edge array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Edge array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_EdgeData[name] = data;
@@ -198,29 +196,29 @@ void VoxelDataContainer::addEdgeData(const std::string &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getEdgeData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getEdgeData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
   if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeEdgeData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeEdgeData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
   if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EdgeData.erase(it);
   return p;
 }
@@ -228,15 +226,15 @@ IDataArray::Pointer VoxelDataContainer::removeEdgeData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameEdgeData(const std::string &oldname, const std::string &newname)
+bool VoxelDataContainer::renameEdgeData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(oldname);
   if ( it == m_EdgeData.end() )
   {
-	  return false;
+    return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeEdgeData(oldname);
   addEdgeData(newname, p);
@@ -254,12 +252,12 @@ void VoxelDataContainer::clearEdgeData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getEdgeArrayNameList()
+QList<QString> VoxelDataContainer::getEdgeArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -275,13 +273,13 @@ int VoxelDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Face array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Face array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_FaceData[name] = data;
@@ -291,29 +289,29 @@ void VoxelDataContainer::addFaceData(const std::string &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getFaceData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getFaceData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
   if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeFaceData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeFaceData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
   if ( it == m_FaceData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FaceData.erase(it);
   return p;
 }
@@ -321,15 +319,15 @@ IDataArray::Pointer VoxelDataContainer::removeFaceData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameFaceData(const std::string &oldname, const std::string &newname)
+bool VoxelDataContainer::renameFaceData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(oldname);
   if ( it == m_FaceData.end() )
   {
-	  return false;
+    return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeFaceData(oldname);
   addFaceData(newname, p);
@@ -347,12 +345,12 @@ void VoxelDataContainer::clearFaceData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getFaceArrayNameList()
+QList<QString> VoxelDataContainer::getFaceArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -368,13 +366,13 @@ int VoxelDataContainer::getNumFaceArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addCellData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Cell array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Cell array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_CellData[name] = data;
@@ -384,29 +382,29 @@ void VoxelDataContainer::addCellData(const std::string &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getCellData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getCellData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
   if ( it == m_CellData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeCellData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeCellData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
   if ( it == m_CellData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_CellData.erase(it);
   return p;
 }
@@ -414,15 +412,15 @@ IDataArray::Pointer VoxelDataContainer::removeCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameCellData(const std::string &oldname, const std::string &newname)
+bool VoxelDataContainer::renameCellData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(oldname);
   if ( it == m_CellData.end() )
   {
-	  return false;
+    return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeCellData(oldname);
   addCellData(newname, p);
@@ -440,12 +438,12 @@ void VoxelDataContainer::clearCellData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getCellArrayNameList()
+QList<QString> VoxelDataContainer::getCellArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -463,27 +461,27 @@ int VoxelDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
   if ( it == m_FieldData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addFieldData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_FieldData[name] = data;
@@ -493,15 +491,15 @@ void VoxelDataContainer::addFieldData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
   if ( it == m_FieldData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FieldData.erase(it);
   return p;
 }
@@ -509,15 +507,15 @@ IDataArray::Pointer VoxelDataContainer::removeFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameFieldData(const std::string &oldname, const std::string &newname)
+bool VoxelDataContainer::renameFieldData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(oldname);
   if ( it == m_FieldData.end() )
   {
-	  return false;
+    return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeFieldData(oldname);
   addFieldData(newname, p);
@@ -535,12 +533,12 @@ void VoxelDataContainer::clearFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getFieldArrayNameList()
+QList<QString> VoxelDataContainer::getFieldArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -559,10 +557,10 @@ int VoxelDataContainer::getNumFieldArrays()
 void VoxelDataContainer::resizeFieldDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFieldTuples = size;
@@ -571,27 +569,27 @@ void VoxelDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::getEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
   if ( it == m_EnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VoxelDataContainer::addEnsembleData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
   }
   m_EnsembleData[name] = data;
@@ -602,15 +600,15 @@ void VoxelDataContainer::addEnsembleData(const std::string &name, IDataArray::Po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VoxelDataContainer::removeEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
   if ( it == m_EnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EnsembleData.erase(it);
   return p;
 }
@@ -627,12 +625,12 @@ void VoxelDataContainer::clearEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VoxelDataContainer::getEnsembleArrayNameList()
+QList<QString> VoxelDataContainer::getEnsembleArrayNameList()
 {
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }

@@ -36,7 +36,7 @@
 
 #include "GenerateEnsembleStatistics.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
@@ -159,7 +159,7 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
@@ -207,7 +207,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     if(m_SharedSurfaceAreaList == NULL)
     {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly" ;
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
@@ -216,7 +216,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     if(m_NeighborList == NULL)
     {
       ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" ;
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
     }
@@ -280,7 +280,7 @@ void GenerateEnsembleStatistics::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
   //  int totalPoints = m->getTotalPoints();
   //  int totalFields = m->getNumFieldTuples();

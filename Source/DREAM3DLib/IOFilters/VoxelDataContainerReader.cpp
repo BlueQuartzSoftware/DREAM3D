@@ -38,8 +38,8 @@
 
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
@@ -109,7 +109,7 @@ int VoxelDataContainerReader::writeFilterParameters(AbstractFilterParametersWrit
 void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   if(NULL == m)
@@ -154,7 +154,7 @@ void VoxelDataContainerReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss <<" DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -162,7 +162,7 @@ void VoxelDataContainerReader::execute()
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
-  std::stringstream ss;
+  QString ss;
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -202,7 +202,7 @@ void VoxelDataContainerReader::execute()
 int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
@@ -211,7 +211,7 @@ int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volD
   }
   if(dcGid < 0)
   {
-    err = H5Utilities::closeFile(fileId);
+    err = QH5Utilities::closeFile(fileId);
     ss.str("");
     ss <<": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
     setErrorCondition(-150);
@@ -231,7 +231,7 @@ int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volD
 // -----------------------------------------------------------------------------
 int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
 {
-  int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
@@ -240,7 +240,7 @@ int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], fl
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  err = QH5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
@@ -249,7 +249,7 @@ int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], fl
     return -1;
   }
 
-  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  err = QH5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
@@ -266,7 +266,7 @@ int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], fl
 int VoxelDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   int64_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =
@@ -313,7 +313,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadVertexData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
     if(err < 0)
     {
@@ -325,7 +325,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEdgeData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
     if(err < 0)
     {
@@ -337,7 +337,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFaceData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
     if(err < 0)
     {
@@ -349,7 +349,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
@@ -361,7 +361,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFieldData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -373,7 +373,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEnsembleData == true)
   {
-    std::vector<std::string> readNames;
+    std::vector<QString> readNames;
     err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -392,35 +392,35 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead)
+int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                std::vector<QString> &namesRead,
+                                                QSet<QString> &namesToRead)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening HDF5 Group " << groupName << std::endl;
+    ss << "Error opening HDF5 Group " << groupName ;
     setErrorCondition(-154);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return -154;
   }
 
   NameListType names;
-  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
-  std::string classType;
+  QH5Utilities::getGroupObjects(gid, QH5Utilities::H5Support_DATASET | QH5Utilities::H5Support_ANY, names);
+  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() ;
+  QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
-    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType ;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
     if(classType.find("DataArray") == 0)

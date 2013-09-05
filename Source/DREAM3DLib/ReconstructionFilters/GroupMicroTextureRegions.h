@@ -38,7 +38,7 @@
 #define GroupMicroTextureRegions_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)

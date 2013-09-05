@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -233,7 +233,7 @@ int SegmentBetaGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
@@ -322,7 +322,7 @@ void SegmentBetaGrains::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
-    std::set<int32_t> grainIdSet;
+    QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
     for(size_t i = 1; i < totalFields; ++i)
     {
@@ -365,7 +365,7 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

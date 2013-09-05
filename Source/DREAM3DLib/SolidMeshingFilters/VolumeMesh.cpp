@@ -56,7 +56,7 @@
 #endif
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+    QString outpath = m_OutputDirectory + QDir::Separator + m_OutputFilePrefix + filename;
 
 
 #if DREAM3D_USE_QT
@@ -149,9 +149,9 @@ void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 #ifdef DREAM3D_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
-     // std::cout << message.toStdString() << std::endl;
+     // qDebug() << message.toStdString() ;
 #else
-  std::cout << message << std::endl;
+  qDebug() << message ;
 #endif
 }
 
@@ -161,7 +161,7 @@ void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void VolumeMesh::on_CancelWorker()
 {
-  // std::cout << "VolumeMesh::cancelWorker()" << std::endl;
+  // qDebug() << "VolumeMesh::cancelWorker()" ;
   this->m_Cancel = true;
 }
 #endif

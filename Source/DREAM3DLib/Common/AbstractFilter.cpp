@@ -79,7 +79,7 @@ void AbstractFilter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name)
+bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString &name)
 {
   bool contains = false;
   // Check the previous filter
@@ -99,7 +99,7 @@ bool AbstractFilter::doesPipelineContainFilterBeforeThis(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const std::string &name)
+bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString &name)
 {
   bool contains = false;
   // Check the previous filter
@@ -141,7 +141,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   BOOST_ASSERT(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
+  qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" ;
   return -1;
 }
 
@@ -156,7 +156,7 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(const std::string &filterHumanLabel, const std::string &errorDescription, int errorCode)
+void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QString &errorDescription, int errorCode)
 {
   PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
   em.setFilterHumanLabel(getHumanLabel());
@@ -185,7 +185,7 @@ void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode)
+void AbstractFilter::addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode)
 {
   PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
   em.setFilterHumanLabel(getHumanLabel());

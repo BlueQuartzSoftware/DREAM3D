@@ -36,11 +36,11 @@
 #include "VoxelDataContainerWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
@@ -104,7 +104,7 @@ int VoxelDataContainerWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   if(NULL == m)
@@ -136,7 +136,7 @@ void VoxelDataContainerWriter::preflight()
 void VoxelDataContainerWriter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
@@ -152,11 +152,11 @@ void VoxelDataContainerWriter::execute()
 
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_HdfFileId);
+  err = QH5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName ;
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -165,7 +165,7 @@ void VoxelDataContainerWriter::execute()
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName ;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -183,7 +183,7 @@ void VoxelDataContainerWriter::execute()
   if (err < 0)
   {
     ss.str("");
-    ss <<  ":Error Writing header information to output file" << std::endl;
+    ss <<  ":Error Writing header information to output file" ;
     setErrorCondition(-62);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -244,7 +244,7 @@ void VoxelDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VoxelDataContainerWriter::setXdmfOStream(QDataStream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -259,57 +259,57 @@ void VoxelDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spa
   {
     return;
   }
-  std::ostream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << std::endl;
-  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << std::endl;
-  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << std::endl;
-  out << "      <!-- Origin -->" << std::endl;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << std::endl;
-  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << std::endl;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << std::endl;
-  out << "    </Geometry>" << std::endl;
+  QDataStream& out = *m_XdmfPtr;
+  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" ;
+  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" ;
+  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" ;
+  out << "      <!-- Origin -->" ;
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" ;
+  out << "      <!-- DxDyDz (Spacing/Resolution)-->" ;
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" ;
+  out << "    </Geometry>" ;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
+void VoxelDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
   {
     return;
   }
 
-  std::ostream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" << std::endl;
-  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" << std::endl;
-  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" << std::endl;
-  out << "        <!-- Origin -->" << std::endl;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" << std::endl;
-  out << "        <!-- DxDyDz (Spacing/Resolution)-->" << std::endl;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" << std::endl;
-  out << "      </Geometry>" << std::endl;
+  QDataStream& out = *m_XdmfPtr;
+  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" ;
+  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" ;
+  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" ;
+  out << "        <!-- Origin -->" ;
+  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" ;
+  out << "        <!-- DxDyDz (Spacing/Resolution)-->" ;
+  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" ;
+  out << "      </Geometry>" ;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeXdmfGridFooter(const std::string &label)
+void VoxelDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
   {
     return;
   }
-  std::ostream& out = *m_XdmfPtr;
-  out << "  </Grid>" << std::endl;
-  out << "    <!-- *************** END OF " << label << " *************** -->" << std::endl;
-  out << std::endl;
+  QDataStream& out = *m_XdmfPtr;
+  out << "  </Grid>" ;
+  out << "    <!-- *************** END OF " << label << " *************** -->" ;
+  out ;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+int VoxelDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
@@ -320,26 +320,26 @@ int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t 
 
   int32_t rank =1;
   hsize_t dims[1] = {3};
-  err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
+  err = QH5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
   if (err < 0)
   {
-    std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+    qDebug() << "Error Writing H5_DIMENSIONS array for " << hdfPath ;
   }
-  err = H5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
+  err = QH5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
   if (err < 0)
   {
-    std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+    qDebug() << "Error Writing H5_ORIGIN array for " << hdfPath ;
   }
-  err = H5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
+  err = QH5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
   if (err < 0)
   {
-    std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+    qDebug() << "Error Writing H5_SPACING array for " << hdfPath ;
   }
   int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
-  err = H5Lite::writeScalarAttribute(m_HdfFileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
+  err = QH5Lite::writeScalarAttribute(m_HdfFileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
   if (err < 0)
   {
-    std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
+    qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath ;
   }
 
   err |= H5Gclose(gid);
@@ -351,16 +351,16 @@ int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t 
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME ;
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -370,7 +370,7 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME ;
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -380,7 +380,7 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Vertex Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Vertex Data '" << *iter << "' to HDF5 File" ;
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = m->getVertexData(*iter);
     err = array->writeH5Data(VertexGroupId);
@@ -404,16 +404,16 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME ;
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -423,7 +423,7 @@ int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME ;
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -433,7 +433,7 @@ int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" ;
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = m->getEdgeData(*iter);
     err = array->writeH5Data(EdgeGroupId);
@@ -457,16 +457,16 @@ int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME ;
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -476,7 +476,7 @@ int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME ;
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -486,7 +486,7 @@ int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Face Data '" << *iter << "' to HDF5 File" ;
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = m->getFaceData(*iter);
     err = array->writeH5Data(FaceGroupId);
@@ -510,7 +510,7 @@ int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
   int64_t volDims[3] =
@@ -529,16 +529,16 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
   std::vector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = QFileInfo::filename(hdfFileName);
+  QString xdmfGroupPath = QString(":/") + VoxelDataContainer::ClassName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME ;
     setErrorCondition(-63);
     notifyErrorMessage( ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -548,7 +548,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME ;
     setErrorCondition(-64);
     notifyErrorMessage( ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -558,7 +558,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" ;
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = m->getCellData(*iter);
     err = array->writeH5Data(cellGroupId);
@@ -566,7 +566,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
     {
       ss.str("");
       ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      notifyErrorMessage(ss.str(), err);
+      notifyErrorMessage(ss, err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
@@ -585,7 +585,7 @@ int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
@@ -595,22 +595,22 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
   std::vector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = QFileInfo::filename(hdfFileName);
+  QString xdmfGroupPath = QString(":/") + VoxelDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
 
 
   // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
-    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME ;
     return err;
   }
-  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
@@ -620,7 +620,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME ;
     setErrorCondition(-65);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -683,7 +683,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
   // Write the NeighborLists onto their own grid
   // We need to determine how many total elements we are going to end up with and group the arrays by
   // those totals so we can minimize the number of grids
-  typedef std::map<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
+  typedef QMap<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
   SizeToIDataArrays_t sizeToDataArrays;
 
   for(VectorOfIDataArrays_t::iterator iter = neighborListArrays.begin(); iter < neighborListArrays.end(); ++iter)
@@ -738,28 +738,28 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QString ss;
   int err = 0;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME ;
     setErrorCondition(-66);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
 
   hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME ;
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -791,18 +791,18 @@ int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VoxelDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
-  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
-  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
+  // qDebug() << "   vtkH5DataWriter::WritePoints()" ;
+  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
+    qDebug() << "Error creating HDF Group " << hdfGroupPath ;
   }
-  err = H5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  err = QH5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
-    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
+    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath ;
   }
   return err;
 }

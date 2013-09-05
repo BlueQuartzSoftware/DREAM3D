@@ -36,7 +36,7 @@
 
 #include "FindSurfaceGrains.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -105,14 +105,14 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QString ss;
     ss << " DataContainer was NULL";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     return;
   }
   setErrorCondition(0);

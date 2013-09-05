@@ -36,7 +36,7 @@
 
 #include "FindSlipTransmissionMetrics.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -107,7 +107,7 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
 
@@ -120,7 +120,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   if(m_NeighborList == NULL)
   {
     ss.str("");
-    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+    ss << "NeighborLists Array Not Initialized correctly" ;
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), -305);
   }
@@ -131,7 +131,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
-    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -142,7 +142,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
-    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -153,7 +153,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
-    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -164,7 +164,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
-    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" ;
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }

@@ -36,13 +36,13 @@
 
 #include "PhWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
-#include <string>
+#include <QtCore/QString>
 #include <iomanip>
-#include <map>
+#include <QMap>
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -111,10 +111,10 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -147,11 +147,11 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int PhWriter::writeFile()
 {
-//   std::string OutputName;
+//   QString OutputName;
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
@@ -197,12 +197,13 @@ int PhWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      std::stringstream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return -1;
   }
@@ -211,20 +212,20 @@ int PhWriter::writeFile()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() ;
     return -1;
   }
 
 
   // Find the unique number of grains
-  std::map<int, bool> used;
+  QMap<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)
   {
     used[m_GrainIds[i]] = true;
   }
 
   int grains = 0;
-  typedef std::map<int, bool>::iterator iterator;
+  typedef QMap<int, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
     if((*i).second == true)
@@ -232,7 +233,7 @@ int PhWriter::writeFile()
       grains++;
     }
   }
-  //std::cout<<grains<< " " << used.size() << std::endl;
+  //qDebug()<<grains<< " " << used.size() ;
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -244,7 +245,7 @@ int PhWriter::writeFile()
 
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << m_GrainIds[k] << std::endl;
+    outfile << m_GrainIds[k] ;
   }
   outfile.close();
 

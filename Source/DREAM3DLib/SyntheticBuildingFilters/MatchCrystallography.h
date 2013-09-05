@@ -37,7 +37,7 @@
 #ifndef MATCHCRYSTALLOGRAPHY_H_
 #define MATCHCRYSTALLOGRAPHY_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <numeric>
 #include <limits>
 
@@ -97,9 +97,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const std::string getHumanLabel() {return "Match Crystallography";}
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
     /**

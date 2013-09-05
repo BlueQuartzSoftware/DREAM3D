@@ -37,7 +37,7 @@
 #ifndef _ModifiedLambertProjectionArray_H_
 #define _ModifiedLambertProjectionArray_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -72,12 +72,12 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return "ModifiedLambertProjectionArray"; }
+    virtual QString getTypeAsString() { return "ModifiedLambertProjectionArray"; }
 
     DREAM3D_INSTANCE_PROPERTY(int, Phase)
     DREAM3D_INSTANCE_PROPERTY(std::vector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       return ModifiedLambertProjectionArray::New();
     }
@@ -160,8 +160,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     /* **************** This is the interface for the IDataArray Class which MUST
      *  Be implemented. Most of it is useless and will simply ASSERT if called. */
 
-    void SetName(const std::string &name);
-    std::string GetName();
+    void SetName(const QString &name);
+    QString GetName();
 
     /**
      * @brief Makes this class responsible for freeing the memory.
@@ -252,8 +252,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples);
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',');
-    virtual void printComponent(std::ostream &out, size_t i, int j);
+    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',');
+    virtual void printComponent(QDataStream &out, size_t i, int j);
 
     /**
      *
@@ -271,8 +271,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-            const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+            const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -282,7 +282,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     ModifiedLambertProjectionArray();
 
   private:
-    std::string m_Name;
+    QString m_Name;
     bool m_IsAllocated;
 
     ModifiedLambertProjectionArray(const ModifiedLambertProjectionArray&); // Copy Constructor Not Implemented

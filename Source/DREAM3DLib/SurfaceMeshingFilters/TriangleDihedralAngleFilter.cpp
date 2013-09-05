@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 
 
@@ -175,7 +175,7 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -222,7 +222,7 @@ void TriangleDihedralAngleFilter::preflight()
 void TriangleDihedralAngleFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)

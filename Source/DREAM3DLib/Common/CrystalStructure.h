@@ -65,20 +65,20 @@ class  CrystalStructure
      * @param xtal
      * @return
      */
-    static std::string getCrystalStructureString(unsigned int xtal)
+    static QString getCrystalStructureString(unsigned int xtal)
     {
       switch(xtal)
       {
         case Ebsd::CrystalStructure::Hexagonal:
-          return std::string("Hexagonal");
+          return QString("Hexagonal");
         case Ebsd::CrystalStructure::Cubic:
-          return std::string("Cubic");
+          return QString("Cubic");
         case Ebsd::CrystalStructure::AxisOrthoRhombic:
-          return std::string("OrthoRhombic");
+          return QString("OrthoRhombic");
         default:
           break;
       }
-      return std::string("Unknown");
+      return QString("Unknown");
     }
 
 

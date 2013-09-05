@@ -37,9 +37,9 @@
 #define _FilterManager_H_
 
 
-#include <string>
-#include <map>
-#include <set>
+#include <QtCore/QString>
+#include <QMap>
+#include <QtCore/QSet>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT FilterManager
 
     virtual ~FilterManager();
 
-    typedef std::map<std::string, IFilterFactory::Pointer> Collection;
+    typedef QMap<QString, IFilterFactory::Pointer> Collection;
     /**
      * @brief Static instance to retrieve the global instance of this class
      * @return
@@ -71,7 +71,7 @@ class DREAM3DLib_EXPORT FilterManager
      * @param name The name of the filter
      * @param factory An instance of the factory
      */
-    static void RegisterFilterFactory(const std::string &name, IFilterFactory::Pointer factory);
+    static void RegisterFilterFactory(const QString &name, IFilterFactory::Pointer factory);
 
     /**
      * @brief RegisterKnownFilters This filter registers a factory for each filter that is included
@@ -97,34 +97,34 @@ class DREAM3DLib_EXPORT FilterManager
      * @param groupName The name of the group.
      * @return
      */
-    Collection getFactories(const std::string &groupName);
+    Collection getFactories(const QString &groupName);
 
     /**
      * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
      * @param subGroupName The name of the subgroup.
      * @return
      */
-    Collection getFactories(const std::string &groupName, const std::string &subGroupName);
+    Collection getFactories(const QString &groupName, const QString &subGroupName);
 
     /**
      * @brief Adds a Factory that creates QFilters
      * @param name
      * @param factory
      */
-    void addFilterFactory(const std::string &name, IFilterFactory::Pointer factory);
+    void addFilterFactory(const QString &name, IFilterFactory::Pointer factory);
 
     /**
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
      * @return
      */
-    std::set<std::string> getGroupNames();
+    QSet<QString> getGroupNames();
 
     /**
      * @brief getSubGroupNames For a given group, returns all the subgroups
      * @param groupName The name of the Filter group
      * @return
      */
-    std::set<std::string> getSubGroupNames(const std::string &groupName);
+    QSet<QString> getSubGroupNames(const QString &groupName);
 
 
     /**
@@ -132,14 +132,14 @@ class DREAM3DLib_EXPORT FilterManager
      * @param filterName
      * @return
      */
-    IFilterFactory::Pointer getFactoryForFilter(const std::string &filterName);
+    IFilterFactory::Pointer getFactoryForFilter(const QString &filterName);
 
     /**
      * @brief getFactoryForFilterHumanName For a given human label, the FilterFactory is given
      * @param humanName
      * @return
      */
-    IFilterFactory::Pointer getFactoryForFilterHumanName(const std::string &humanName);
+    IFilterFactory::Pointer getFactoryForFilterHumanName(const QString &humanName);
 
 
   protected:

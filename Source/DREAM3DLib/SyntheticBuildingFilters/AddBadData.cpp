@@ -36,11 +36,11 @@
 
 #include "AddBadData.h"
 
-#include <map>
+#include <QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
@@ -142,7 +142,7 @@ int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   // Cell Data
@@ -199,7 +199,7 @@ void  AddBadData::add_noise()
 
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
@@ -210,9 +210,9 @@ void  AddBadData::add_noise()
 		random = static_cast<float>( rg.genrand_res53() );
 		if(random < m_BoundaryVolFraction)
 		{
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
 			p->InitializeTuple(i,0); 
           }
@@ -223,9 +223,9 @@ void  AddBadData::add_noise()
 		random = static_cast<float>( rg.genrand_res53() );
 		if(random < m_PoissonVolFraction)
 		{
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
 			p->InitializeTuple(i,0); 
           }

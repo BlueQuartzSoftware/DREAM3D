@@ -106,7 +106,7 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -130,11 +130,11 @@ void RenumberGrains::preflight()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  std::list<std::string> headers = m->getFieldArrayNameList();
-  for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  QList<QString> headers = m->getFieldArrayNameList();
+  for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
       IDataArray::Pointer p = m->getFieldData(*iter);
-	  std::string type = p->getTypeAsString();
+	  QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
   }
 }
@@ -162,7 +162,7 @@ void RenumberGrains::execute()
     return;
   }
 
-  std::stringstream ss;
+  QString ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);
@@ -188,8 +188,8 @@ void RenumberGrains::execute()
 
   if(RemoveList.size() > 0)
   {
-    std::list<std::string> headers = m->getFieldArrayNameList();
-    for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    QList<QString> headers = m->getFieldArrayNameList();
+    for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       IDataArray::Pointer p = m->getFieldData(*iter);
       ss.str("");
@@ -197,10 +197,10 @@ void RenumberGrains::execute()
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
-	  std::string type = p->getTypeAsString();
+	  QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
-      //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
+      //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
     m->setNumFieldTuples(m->getNumFieldTuples() - RemoveList.size());
     totalFields = m->getNumFieldTuples();

@@ -44,7 +44,7 @@
 
 typedef struct { int x; int y; int z; } IntVec3Widget_t;
 typedef struct { float x; float y; float z; } FloatVec3Widget_t;
-typedef struct { std::string arrayName; int compOperator; double compValue; } ComparisonInput_t;
+typedef struct { QString arrayName; int compOperator; double compValue; } ComparisonInput_t;
 typedef struct { float angle; float h; float k; float l; } AxisAngleInput_t;
 
 /**
@@ -165,7 +165,7 @@ class ChoiceFilterParameter : public FilterParameter
 
     virtual ~ChoiceFilterParameter(){}
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
   protected:
@@ -189,7 +189,7 @@ class ComparisonFilterParameter : public FilterParameter
 
     virtual ~ComparisonFilterParameter(){}
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
   protected:

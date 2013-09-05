@@ -38,7 +38,7 @@
 
 
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 
@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT AngleFileLoader
 
 
     FloatArrayType::Pointer loadData();
-    std::vector<std::string> tokenize(char* buf, const char* delimiter);
+    std::vector<QString> tokenize(char* buf, const char* delimiter);
 
   protected:
     AngleFileLoader();

@@ -59,9 +59,9 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of ManagedArrayOfArraysTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -83,7 +83,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
@@ -95,7 +95,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual ~ManagedArrayOfArrays()
     {
-      //std::cout << "~ManagedArrayOfArraysTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~ManagedArrayOfArraysTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -115,18 +115,18 @@ class ManagedArrayOfArrays : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
     }
 
-    virtual std::string getTypeAsString() { return "ManagedArrayOfArrays";}
+    virtual QString getTypeAsString() { return "ManagedArrayOfArrays";}
     /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -135,7 +135,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString GetName()
     {
       return m_Name;
     }
@@ -183,7 +183,7 @@ class ManagedArrayOfArrays : public IDataArray
       this->Array = (Data_t*)malloc(newSize * sizeof(Data_t));
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " ;
         return -1;
       }
       this->Size = newSize;
@@ -484,7 +484,7 @@ class ManagedArrayOfArrays : public IDataArray
       return RawResize(numTuples );
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -493,7 +493,7 @@ class ManagedArrayOfArrays : public IDataArray
       //          out << Array[i + j];
       //        }
     }
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QDataStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -520,8 +520,8 @@ class ManagedArrayOfArrays : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+                                    const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -658,7 +658,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)malloc(newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " ;
           return 0;
         }
 
@@ -671,7 +671,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)realloc(this->Array, newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " ;
           return 0;
         }
       }
@@ -680,7 +680,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)malloc(newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " ;
           return 0;
         }
 
@@ -717,7 +717,7 @@ class ManagedArrayOfArrays : public IDataArray
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
     ManagedArrayOfArrays(const ManagedArrayOfArrays&); //Not Implemented

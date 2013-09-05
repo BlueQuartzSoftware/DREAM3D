@@ -37,11 +37,11 @@
 #include "FieldDataCSVWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
@@ -127,17 +127,17 @@ int FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void FieldDataCSVWriter::preflight()
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (getFieldDataFile().empty() == true)
+  if (getFieldDataFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getFieldDataFile());
-  if (MXADir::exists(parentPath) == false)
+  QString parentPath = QFileInfo::parentPath(getFieldDataFile());
+  if (QDir::exists(parentPath) == false)
   {
     ss.str("");
     ss <<  "The directory path for the output file does not exist.";
@@ -168,27 +168,28 @@ void FieldDataCSVWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(m_FieldDataFile);
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
 
 
 
-  std::string filename = getFieldDataFile();
+  QString filename = getFieldDataFile();
 
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-1 << std::endl;
+  outFile << m->getNumFieldTuples()-1 ;
   // Get all the names of the arrays from the Data Container
-  std::list<std::string> headers = m->getFieldArrayNameList();
+  QList<QString> headers = m->getFieldArrayNameList();
 
   std::vector<IDataArray::Pointer> data;
 
@@ -198,7 +199,7 @@ void FieldDataCSVWriter::execute()
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
@@ -218,11 +219,11 @@ void FieldDataCSVWriter::execute()
       data.push_back(p);
     }
   }
-  outFile << std::endl;
+  outFile ;
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  std::stringstream ss;
+  QString ss;
   float threshold = 0.0f;
 
   // Skip the first grain
@@ -246,20 +247,20 @@ void FieldDataCSVWriter::execute()
       outFile << space;
       (*p)->printTuple(outFile, i, space);
     }
-    outFile << std::endl;
+    outFile ;
   }
 
   if(m_WriteNeighborListData == true)
   {
     // Print the GrainIds Header before the rest of the headers
     // Loop throught the list and print the rest of the headers, ignoring those we don't want
-    for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
       IDataArray::Pointer p = m->getFieldData(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
-        outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+        outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) ;
         size_t numTuples = p->GetNumberOfTuples();
         //	  float threshold = 0.0f;
 
@@ -271,7 +272,7 @@ void FieldDataCSVWriter::execute()
           // Print a row of data
           outFile << space;
           p->printTuple(outFile, i, space);
-          outFile << std::endl;
+          outFile ;
         }
       }
     }

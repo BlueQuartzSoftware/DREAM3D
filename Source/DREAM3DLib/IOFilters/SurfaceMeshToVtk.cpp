@@ -37,8 +37,8 @@
 #include "SurfaceMeshToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -129,9 +129,9 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -192,7 +192,7 @@ class ScopedFileMonitor
 void SurfaceMeshToVtk::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -229,12 +229,13 @@ void SurfaceMeshToVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
       ss.str("");
       ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -247,7 +248,7 @@ void SurfaceMeshToVtk::execute()
   {
       ss.str("");
       ss << "Error creating file '" << getOutputVtkFile() << "'";
-      notifyErrorMessage(ss.str(), -18542);
+      notifyErrorMessage(ss, -18542);
       setErrorCondition(-18542);
       return;
   }
@@ -373,11 +374,11 @@ void SurfaceMeshToVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -410,12 +411,12 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                                bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -527,12 +528,12 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writeCellScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   // Write the Grain Face ID Data to the file
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -572,12 +573,12 @@ void writeCellScalarData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
+void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                                bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -625,12 +626,12 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh,
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));

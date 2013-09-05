@@ -44,10 +44,10 @@
 
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
+
+
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -82,15 +82,15 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, YResolution)
     DREAM3D_INSTANCE_PROPERTY(int, NumCols)
     DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<QString>, EbsdFileList)
 
     DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const std::string getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getHumanLabel() { return "Convert Hexagonal Grid Data to Square Grid Data (TSL - .ang)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -119,10 +119,10 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     /** @brief Modifies a single line of the header section of the TSL .ang file if necessary
     * @param line The line to possibly modify
     */
-    std::string modifyAngHeaderLine(char* buf, size_t length);
+    QString modifyAngHeaderLine(char* buf, size_t length);
 
-    std::string int_to_string(int value);
-    std::string float_to_string(float value);
+    QString int_to_string(int value);
+    QString float_to_string(float value);
 
     Hex2SqrConverter(const Hex2SqrConverter&); // Copy Constructor Not Implemented
     void operator=(const Hex2SqrConverter&); // Operator '=' Not Implemented

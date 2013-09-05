@@ -37,7 +37,7 @@
 #ifndef ClearData_H_
 #define ClearData_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -70,9 +70,9 @@ class DREAM3DLib_EXPORT ClearData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, YMax)
     DREAM3D_INSTANCE_PROPERTY(int, ZMax)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Clear Data"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Clear Data"; }
 
     virtual void setupFilterParameters();
     /**

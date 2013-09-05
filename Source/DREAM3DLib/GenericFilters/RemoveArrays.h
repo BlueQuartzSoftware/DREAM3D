@@ -37,8 +37,8 @@
 #ifndef _RemoveArrays_H_
 #define _RemoveArrays_H_
 
-#include <string>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QSet>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -60,49 +60,49 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
 
     virtual ~RemoveArrays();
 
-    typedef std::set<std::string> ArrayList_t;
+    typedef QSet<QString> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
+                                            QSet<QString> selectedFieldArrays,
+                                            QSet<QString> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                  QSet<QString> selectedFaceArrays,
+                                                  QSet<QString> selectedEdgeArrays,
+                                                  QSet<QString> selectedFieldArrays,
+                                                  QSet<QString> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                QSet<QString> selectedFaceArrays,
+                                                QSet<QString> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Delete Arrays"; }
+    virtual const QString getHumanLabel() { return "Delete Arrays"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

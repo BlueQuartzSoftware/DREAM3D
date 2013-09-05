@@ -36,18 +36,18 @@
 
 // C++ Includes
 #include <iomanip>
-#include <iostream>
-#include <string>
+#include <QtCore/QtDebug>
+#include <QtCore/QString>
 #include <sstream>
 
-#include <map>
+#include <QMap>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #define DIMS "DIMENSIONS"
@@ -141,10 +141,10 @@ int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -162,14 +162,14 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     char buf[size];
     // Read header from data file to figure out how many points there are
     std::ifstream in(getInputFile().c_str());
-    std::string word;
+    QString word;
     bool headerdone = false;
     int xpoints, ypoints, zpoints;
     float resx, resy, resz;
     while (headerdone == false)
     {
       in.getline(buf, size);
-      std::string line = buf;
+      QString line = buf;
       in >> word;
       if (DIMS == word)
       {
@@ -213,12 +213,12 @@ void YSChoiAbaqusReader::execute()
   char buf[size];
   // Read header from data file to figure out how many points there are
   std::ifstream in(getInputFile().c_str());
-  std::string word;
+  QString word;
   bool headerdone = false;
   while (headerdone == false)
   {
     in.getline(buf, size);
-    std::string line = buf;
+    QString line = buf;
     in >> word;
     if (DIMS == word)
     {
@@ -246,7 +246,7 @@ void YSChoiAbaqusReader::execute()
   int numgrains;
   in2 >> numgrains;
   in2.getline(buf, size);
-  std::string line = buf;
+  QString line = buf;
   in2 >> word >> word >> word >> word >> word >> word;
   dataCheck(false, totalpoints, numgrains+1, 2);
   //Read data file
@@ -278,7 +278,7 @@ void YSChoiAbaqusReader::execute()
       while (headerdone == false)
       {
         in.getline(buf, size);
-        std::string line = buf;
+        QString line = buf;
         in >> word;
         if (LOOKUP == word)
         {

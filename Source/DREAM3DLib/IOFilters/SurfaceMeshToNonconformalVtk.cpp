@@ -37,8 +37,8 @@
 #include "SurfaceMeshToNonconformalVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -116,9 +116,9 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -179,7 +179,7 @@ class ScopedFileMonitor
 void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QString ss;
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -216,12 +216,13 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
     ss.str("");
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -234,7 +235,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     ss.str("");
     ss << "Error creating file '" << getOutputVtkFile() << "'";
-    notifyErrorMessage(ss.str(), -18542);
+    notifyErrorMessage(ss, -18542);
     setErrorCondition(-18542);
     return;
   }
@@ -258,7 +259,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
-    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) ;}
   }
 
   fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
@@ -305,7 +306,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
 
   // Store all the unique Spins
-  std::map<int32_t, int32_t> grainTriangleCount;
+  QMap<int32_t, int32_t> grainTriangleCount;
   for (int i = 0; i < triangleCount; i++)
   {
     if (grainTriangleCount.find(faceLabels[i*2]) == grainTriangleCount.end())
@@ -332,7 +333,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   size_t totalCells = 0;
   // Loop over all the grains
-  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
     totalCells += (*grainIter).second;
   }
@@ -340,7 +341,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
 
   // Loop over all the grains
-  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
     int32_t gid = (*grainIter).first; // The current Grain Id
     int32_t numTriToWrite = (*grainIter).second; // The number of triangles for this grain
@@ -391,7 +392,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     }
     if (numTriToWrite != 0)
     {
-      std::cout << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second << std::endl;
+      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second ;
     }
 
   }
@@ -418,11 +419,11 @@ void SurfaceMeshToNonconformalVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -455,12 +456,12 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                          bool writeBinaryData, const std::string &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                          bool writeBinaryData, const QString &vtkAttributeType,
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -538,7 +539,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
   for (int i = 0; i < numNodes; i++)
   {
     if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
-    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) ;}
   }
   // This is the section header
   fprintf(vtkFile, "\n");
@@ -594,8 +595,8 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 template<typename SurfaceMeshDataContainer, typename T>
-void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellScalarData(SurfaceMeshDataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
 
@@ -606,7 +607,7 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     int32_t totalCellsWritten = 0;
@@ -616,7 +617,7 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
     fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id
@@ -662,8 +663,8 @@ void writeCellScalarData(SurfaceMeshDataContainer* dc, const std::string &dataNa
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
 
   StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
@@ -674,7 +675,7 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     int32_t totalCellsWritten = 0;
@@ -683,7 +684,7 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id
@@ -741,16 +742,16 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, const std::string &vtkAttributeType,
-                         FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, const QString &vtkAttributeType,
+                         FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   StructArray<DREAM3D::SurfaceMesh::Face_t>& triangles = *(dc->getFaces());
 
   int triangleCount = triangles.GetNumberOfTuples();
 
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  std::stringstream ss;
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -789,7 +790,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   int err = 0;
   if (NULL == vtkFile)
@@ -818,7 +819,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id

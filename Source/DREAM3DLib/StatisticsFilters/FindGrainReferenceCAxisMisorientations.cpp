@@ -39,7 +39,7 @@
 #include <limits>
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -110,7 +110,7 @@ int FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilter
 void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -140,7 +140,7 @@ void FindGrainReferenceCAxisMisorientations::preflight()
 void FindGrainReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   if(NULL == m)
   {
@@ -189,7 +189,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
     setErrorCondition(-666);
     ss.str("");
     ss << "The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: " << totalPoints;
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 #else

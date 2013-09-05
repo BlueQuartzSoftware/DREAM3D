@@ -36,9 +36,9 @@
 #include "AvizoRectilinearCoordinateWriter.h"
 
 
-#include "MXA/Common/LogTime.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
+
+#include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
@@ -118,10 +118,10 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     ss << "The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -162,12 +162,14 @@ void AvizoRectilinearCoordinateWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -181,14 +183,14 @@ void AvizoRectilinearCoordinateWriter::execute()
   MXAFileWriter64 writer(m_OutputFile);
   if(false == writer.initWriter())
   {
-    std::stringstream ss;
+    QString ss;
     ss << "Error opening file '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
 
-  std::string header = generateHeader();
+  QString header = generateHeader();
   writer.writeString(header);
 
   err = writeData(writer);
@@ -201,9 +203,9 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AvizoRectilinearCoordinateWriter::generateHeader()
+QString AvizoRectilinearCoordinateWriter::generateHeader()
 {
-  std::stringstream ss;
+  QString ss;
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
@@ -261,7 +263,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
   getVoxelDataContainer()->getResolution(res);
   char newLine = '\n';
 
-  std::string start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
+  QString start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
   writer.writeString(start);
   if (true == m_WriteBinaryFile)
   {
@@ -273,7 +275,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = getVoxelDataContainer()->getTotalPoints();
     int count = 0;
-    std::stringstream ss;
+    QString ss;
     for (int64_t i = 0; i < totalPoints; ++i)
     {
       ss << m_GrainIds[i];
@@ -316,7 +318,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
   {
     for (int d = 0; d < 3; ++d)
     {
-      std::stringstream ss;
+      QString ss;
       for (size_t i = 0; i < dims[d]; ++i)
       {
         ss << (origin[d] + (res[d] * i)) << " ";

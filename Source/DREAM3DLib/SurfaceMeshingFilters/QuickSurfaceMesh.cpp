@@ -88,7 +88,7 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -173,7 +173,7 @@ void QuickSurfaceMesh::execute()
   float zRes = m->getZRes();
 
   std::vector<int> m_NodeIds;
-  std::vector<std::set<int> > ownerLists;
+  std::vector<QSet<int> > ownerLists;
 
   size_t possibleNumNodes = (xP+1)*(yP+1)*(zP+1);
   m_NodeIds.resize(possibleNumNodes, -1);
