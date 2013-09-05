@@ -43,10 +43,16 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
+#include "DREAM3DLib/OrientationOps/HexagonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
+#include "DREAM3DLib/OrientationOps/TrigonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
+#include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/OrientationOps/TriclinicOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
+
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -86,6 +92,25 @@ class CalculateFaceIPFColorsImpl
      */
     void generate(size_t start, size_t end) const
     {
+
+      // Create 1 of every type of Ops class. This condenses the code below
+      std::vector<OrientationOps::Pointer> ops;
+      ops.push_back(HexagonalOps::New());
+      ops.push_back(CubicOps::New());
+      ops.push_back(HexagonalLowOps::New());
+      ops.push_back(CubicLowOps::New());
+      ops.push_back(TriclinicOps::New());
+      ops.push_back(MonoclinicOps::New());
+      ops.push_back(OrthoRhombicOps::New());
+      ops.push_back(TetragonalLowOps::New());
+      ops.push_back(TetragonalOps::New());
+      ops.push_back(TrigonalLowOps::New());
+      ops.push_back(TrigonalOps::New());
+
+      double refDir[3] = {0.0, 0.0, 0.0};
+      double dEuler[3] = {0.0, 0.0, 0.0};
+      DREAM3D::Rgb argb = 0x00000000;
+
       int grain1, grain2, phase1, phase2;
       for (size_t i = start; i < end; i++)
       {
@@ -93,38 +118,53 @@ class CalculateFaceIPFColorsImpl
         grain2 = m_Labels[2*i+1];
         if(grain1 > 0) phase1 = m_Phases[grain1];
         else phase1 = 0;
+
         if(grain2 > 0) phase2 = m_Phases[grain2];
         else phase2 = 0;
-        if(phase1 > 0)
+
+        if(phase1 > 0 )
         {
-          if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
+          // Make sure we are using a valid Euler Angles with valid crystal symmetry
+          if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            CubicOps ops;
-            ops.generateIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), false);
-          }
-          else if(m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
-          {
-            HexagonalOps ops;
-            ops.generateIPFColor(m_Eulers[3*grain1+0], m_Eulers[3*grain1+1], m_Eulers[3*grain1+2], m_Normals[3*i+0], m_Normals[3*i+1], m_Normals[3*i+2], m_Colors + (6*i), false);
+            dEuler[0] = m_Eulers[3*grain1+0];
+            dEuler[1] = m_Eulers[3*grain1+1];
+            dEuler[2] = m_Eulers[3*grain1+2];
+            refDir[0] = m_Normals[3*i+0];
+            refDir[1] = m_Normals[3*i+1];
+            refDir[2] = m_Normals[3*i+2];
+
+            argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
+            m_Colors[6*i] = RgbColor::dRed(argb);
+            m_Colors[6*i + 1] = RgbColor::dGreen(argb);
+            m_Colors[6*i + 2] = RgbColor::dBlue(argb);
           }
         }
-        else
+        else // Phase 1 was Zero so assign a black color
         {
           m_Colors[6*i+0] = 0;
           m_Colors[6*i+1] = 0;
           m_Colors[6*i+2] = 0;
         }
+
+
+        // Now compute for Phase 2
         if(phase2 > 0)
         {
-          if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Cubic_High)
+          // Make sure we are using a valid Euler Angles with valid crystal symmetry
+          if( m_CrystalStructures[phase1] < Ebsd::CrystalStructure::LaueGroupEnd )
           {
-            CubicOps ops;
-            ops.generateIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), false);
-          }
-          else if(m_CrystalStructures[phase2] == Ebsd::CrystalStructure::Hexagonal_High)
-          {
-            HexagonalOps ops;
-            ops.generateIPFColor(m_Eulers[3*grain2+0], m_Eulers[3*grain2+1], m_Eulers[3*grain2+2], -m_Normals[3*i+0], -m_Normals[3*i+1], -m_Normals[3*i+2], m_Colors + (6*i+3), false);
+            dEuler[0] = m_Eulers[3*grain2+0];
+            dEuler[1] = m_Eulers[3*grain2+1];
+            dEuler[2] = m_Eulers[3*grain2+2];
+            refDir[0] = -m_Normals[3*i+0];
+            refDir[1] = -m_Normals[3*i+1];
+            refDir[2] = -m_Normals[3*i+2];
+
+            argb = ops[m_CrystalStructures[phase1]]->generateIPFColor(dEuler, refDir, false);
+            m_Colors[6*i + 3] = RgbColor::dRed(argb);
+            m_Colors[6*i + 4] = RgbColor::dGreen(argb);
+            m_Colors[6*i + 5] = RgbColor::dBlue(argb);
           }
         }
         else
@@ -197,8 +237,8 @@ void GenerateFaceIPFColoring::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

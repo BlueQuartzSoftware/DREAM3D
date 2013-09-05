@@ -33,8 +33,6 @@
 
 #include "MXA/Common/LogTime.h"
 
-
-
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -46,6 +44,7 @@
 #include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 namespace Detail
 {

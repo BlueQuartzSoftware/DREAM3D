@@ -44,12 +44,16 @@
 
 #include <string>
 
+#include "DREAM3DLib/DREAM3DLib.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 namespace DREAM3D
 {
+
+  typedef uint32_t Rgb;
+  const Rgb  RGB_MASK    = 0x00ffffff;                // masks RGB values
 
   namespace FilterGroups
   {
@@ -120,6 +124,7 @@ namespace DREAM3D
     const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
     const std::string ConfidenceIndex("Confidence Index");
     const std::string IPFColor("IPFColor");
+    const std::string MisorientationColor("MisorientationColor");
     const std::string RodriguesColor("RodriguesColor");
     const std::string EulerColor("EulerColor");
     const std::string GlobAlpha("GlobAlpha");
@@ -174,6 +179,9 @@ namespace DREAM3D
     const std::string MisorientationList("MisorientationList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
     const std::string LMG("LMG");
+    const std::string MicroTextureRegionNumCells("MicroTextureRegionNumCells");
+    const std::string MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
+
   }
 
   namespace EnsembleData
@@ -531,46 +539,5 @@ namespace DREAM3D
 
 
 }
-
-
-#if 0
-const double Textures[15][3] =
-{
-  { 0.610865,0.785398,0.0},
-  { 1.029744,0.645772,1.099557},
-  { 1.570796,0.610865,0.785398},
-  { 1.029744,0.506145,1.099557},
-  { 0.820305,0.645772,1.099557},
-  { 0.0,0.610865,0.785398},
-  { 0.0,0.785398,0.0},
-  { 0.0,0.0,0.0},
-  { 0.0,0.349066,0.0},
-  { 0.0,0.610865,0.0},
-  { 0.349066,0.0,0.0},
-  { 0.610865,0.0,0.0},
-  { 1.22173,0.785398,0.0},
-  { 0.959931,0.349066,0.0},
-  { 0.959931,1.308997,0.436332}};
-
-
-
-// Keep these to remember the names of the texture components in order
-//  const int Brassbin = {0.610865,0.785398,0.0};
-//  const int Sbin = {0.959931,0.610865,1.134464};
-//  const int Copperbin = {1.570796,0.523599,0.785398};
-//  const int Shear1bin = {0.0,0.0,0.785398};
-//  const int Shear2bin = {0.0,0.959931,0.785398};
-//  const int Shear3bin = {0.0,0.610865,0.785398};
-//  const int Gossbin = {0.0,0.785398,0.0};
-//  const int Cubebin = {0.0,0.0,0.0};
-//  const int RC1bin = {0.0,0.349066,0.0};
-//  const int RC2bin = {0.0,0.610865,0.0};
-//  const int RC3bin = {0.349066,0.0,0.0};
-//  const int RC4bin = {0.610865,0.0,0.0};
-//  const int Pbin = {1.22173,0.785398,0.0};
-//  const int Qbin = {0.959931,0.349066,0.0};
-//  const int Rbin = {0.959931,1.308997,0.436332};
-#endif
-
 
 #endif /* _DREAM3D_CONSTANTS_H_ */

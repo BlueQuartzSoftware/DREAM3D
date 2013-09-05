@@ -161,7 +161,7 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
     surfvoxcounts[i] = 0.0f;
     voxcounts[i] = 0.0f;
   }
-  for (size_t j = 0; j < totalPoints; j++)
+  for (int64_t j = 0; j < totalPoints; j++)
   {
     int gnum = m_GrainIds[j];
     voxcounts[gnum]++;

@@ -41,7 +41,7 @@
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
-
+#include "DREAM3DLib/Utilities/ColorTable.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -468,15 +468,15 @@ bool TetragonalLowOps::inUnitTriangle(float eta, float chi)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, uint8_t* rgb, bool convertDegrees)
+DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double* eulers, double* refDir, bool convertDegrees)
 {
-  generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], rgb, convertDegrees);
+  return generateIPFColor(eulers[0], eulers[1], eulers[2], refDir[0], refDir[1], refDir[2], convertDegrees);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, uint8_t* rgb, bool degToRad)
+DREAM3D::Rgb TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, double refDir0, double refDir1, double refDir2, bool degToRad)
 {
   if (degToRad == true)
   {
@@ -537,24 +537,15 @@ void TetragonalLowOps::generateIPFColor(double phi1, double phi, double phi2, do
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
   _rgb[2] = _rgb[2] / max;
-//  _rgb[0] = (0.85f * _rgb[0]) + 0.15f;
-//  _rgb[1] = (0.85f * _rgb[1]) + 0.15f;
-//  _rgb[2] = (0.85f * _rgb[2]) + 0.15f;
 
-  // Multiply by 255 to get an R/G/B value
-  _rgb[0] = _rgb[0] * 255.0f;
-  _rgb[1] = _rgb[1] * 255.0f;
-  _rgb[2] = _rgb[2] * 255.0f;
+  return RgbColor::dRgb(_rgb[0] * 255, _rgb[1] * 255, _rgb[2] * 255, 255);
 
-  rgb[0] = static_cast<unsigned char>(_rgb[0]);
-  rgb[1] = static_cast<unsigned char>(_rgb[1]);
-  rgb[2] = static_cast<unsigned char>(_rgb[2]);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3, unsigned char* rgb)
+DREAM3D::Rgb TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3)
 {
   float range1 = 2.0f*TetraDim1InitValue;
   float range2 = 2.0f*TetraDim2InitValue;
@@ -571,14 +562,8 @@ void TetragonalLowOps::generateRodriguesColor(float r1, float r2, float r3, unsi
   green = green / max1;
   blue = blue / max2;
 
-  // Multiply by 255 to get an R/G/B value
-  red = red * 255.0f;
-  green = green * 255.0f;
-  blue = blue * 255.0f;
+  return RgbColor::dRgb(red * 255, green * 255, blue * 255, 255);
 
-  rgb[0] = static_cast<unsigned char> (red);
-  rgb[1] = static_cast<unsigned char> (green);
-  rgb[2] = static_cast<unsigned char> (blue);
 }
 
 // -----------------------------------------------------------------------------
@@ -703,3 +688,16 @@ std::vector<UInt8ArrayType::Pointer> TetragonalLowOps::generatePoleFigure(PoleFi
 
   return poleFigures;
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DREAM3D::Rgb TetragonalLowOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
+{
+  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+
+  BOOST_ASSERT(false);
+
+  return rgb;
+}
+

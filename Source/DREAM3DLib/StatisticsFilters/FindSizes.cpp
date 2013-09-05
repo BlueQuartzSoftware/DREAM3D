@@ -165,7 +165,7 @@ void FindSizes::find_sizes()
     graincounts[i] = 0.0f;
   }
 
-  for (size_t j = 0; j < totalPoints; j++)
+  for (int64_t j = 0; j < totalPoints; j++)
   {
     int gnum = m_GrainIds[j];
     graincounts[gnum]++;
@@ -198,7 +198,7 @@ void FindSizes::find_sizes2D()
   {
       graincounts[i] = 0.0f;
   }
-  for (size_t j = 0; j < totalPoints; j++)
+  for (int64_t j = 0; j < totalPoints; j++)
   {
     int gnum = m_GrainIds[j];
     graincounts[gnum]++;

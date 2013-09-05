@@ -307,111 +307,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 };
 
 
-
-/**
- * @brief This class will write the IPF colors to a Scalar array in the VTK file
- */
-template<typename T>
-class VoxelIPFColorScalarWriter : public VtkScalarWriter
-{
-  public:
-  VoxelIPFColorScalarWriter(T* r) : VtkScalarWriter(), r(r) {}
-  DREAM3D_TYPE_MACRO_SUPER(VoxelIPFColorScalarWriter<T>, VtkScalarWriter)\
-
-  virtual ~VoxelIPFColorScalarWriter(){}
-
-  int writeScalars(FILE* f)
-  {
-      int err = 0;
-      size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
-      VTK_IPF_COLOR_REFDIRECTION(RefDirection)
-      int phase;
-      unsigned char* rgba = NULL;
-      float red, green, blue;
-      size_t index = 0;
-      if (m_WriteBinaryFiles == true)
-      {
-        fprintf(f, "COLOR_SCALARS IPF_Colors 4\n");
-        rgba = new unsigned char[total * 4]; // We need the whole array because we build it and write it all at the end
-        ::memset(rgba, 255, total*4); // Splat 255 Across all the values
-      }
-      else
-      {
-        fprintf(f, "COLOR_SCALARS IPF_Colors 3\n");
-        rgba = new unsigned char[4]; // We just need 4 bytes for ASCII writing
-        rgba[3] = 255;
-      }
-
-      int64_t totalPoints = r->getTotalPoints();
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulerangles);
-
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
-
-      // Write the IPF Coloring Cell Data
-      for (size_t i = 0; i < total; i++)
-      {
-        phase = phases[i];
-        if(true == m_WriteBinaryFiles)
-        {
-          index = i * 4;
-        }
-        else
-        {
-          index = 0;
-        }
-        rgba[index] = 0;
-        rgba[index + 1] = 0;
-        rgba[index + 2] = 0;
-        if(phase > 0)
-        {
-          if(crystruct[phase] == Ebsd::CrystalStructure::Cubic_High)
-          {
-            CubicOps ops;
-            ops.generateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
-                                          RefDirection[0], RefDirection[1], RefDirection[2],
-                                          &rgba[index], false);
-          }
-          else if(crystruct[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-          {
-            HexagonalOps ops;
-            ops.generateIPFColor(eulerangles[3*i], eulerangles[3*i + 1], eulerangles[3*i + 2],
-                                    RefDirection[0], RefDirection[1], RefDirection[2], &rgba[index], false);
-          }
-        }
-
-        if(false == m_WriteBinaryFiles)
-        {
-          red = static_cast<float>(float(rgba[index]) / 255.0f);
-          green = static_cast<float>(float(rgba[index + 1]) / 255.0f);
-          blue = static_cast<float>(float(rgba[index + 2]) / 255.0f);
-          fprintf(f, "%f %f %f\n", red, green, blue);
-        }
-      }
-      // At this point we have the complete rgba Array so lets write it out to the file
-      if (true == m_WriteBinaryFiles)
-      {
-        size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
-        if (totalWritten != total * 4)
-        {
-          std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
-          fclose( f);
-          return -1;
-        }
-      }
-      // Clean up the allocated memory
-      delete[] rgba;
-
-      return err;
-    }
-
-  private:
-    T* r;
-    VoxelIPFColorScalarWriter(const VoxelIPFColorScalarWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelIPFColorScalarWriter&); // Operator '=' Not Implemented
-};
-
-
+#if 0
 /**
  * @brief This class will write the IPF colors to a Scalar array in the VTK file
  */
@@ -525,6 +421,8 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     VoxelRodriguesColorScalarWriter(const VoxelRodriguesColorScalarWriter&); // Copy Constructor Not Implemented
     void operator=(const VoxelRodriguesColorScalarWriter&); // Operator '=' Not Implemented
 };
+#endif
+
 
 /**
  * @class VTKRectilinearGridFileWriter VTKRectilinearGridFileWriter.h DREAM3D/Common/VTKUtils/VTKRectilinearGridFileWriter.h
