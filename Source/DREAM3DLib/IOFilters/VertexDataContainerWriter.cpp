@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "VoxelDataContainerWriter.h"
+#include "VertexDataContainerWriter.h"
 
 
 #include "MXA/Utilities/MXAFileInfo.h"
@@ -46,10 +46,28 @@
 
 #define WRITE_FIELD_XDMF 0
 
+class H5GroupAutoCloser
+{
+public:
+  H5GroupAutoCloser(hid_t* groupId) :
+  gid(groupId)
+  {}
+
+  virtual ~H5GroupAutoCloser()
+  {
+    if (*gid > 0)
+    {
+      H5Gclose(*gid);
+    }
+  }
+  private:
+   hid_t* gid;
+};
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerWriter::VoxelDataContainerWriter() :
+VertexDataContainerWriter::VertexDataContainerWriter() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
@@ -61,23 +79,24 @@ VoxelDataContainerWriter::VoxelDataContainerWriter() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerWriter::~VoxelDataContainerWriter()
+VertexDataContainerWriter::~VertexDataContainerWriter()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::setupFilterParameters()
+void VertexDataContainerWriter::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> parameters;
+
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VertexDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -88,7 +107,7 @@ void VoxelDataContainerWriter::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VertexDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -101,16 +120,16 @@ int VoxelDataContainerWriter::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "Vertex DataContainer is missing", getErrorCondition());
   }
   if(m_HdfFileId < 0)
   {
@@ -123,7 +142,7 @@ void VoxelDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::preflight()
+void VertexDataContainerWriter::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -133,88 +152,60 @@ void VoxelDataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::execute()
+void VertexDataContainerWriter::execute()
 {
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage("The SolidMesh DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, 1, 1, 1);
-  hid_t dcGid = -1;
-
-
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VoxelDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.c_str(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::VertexDataContainerName << std::endl;
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VoxelDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::VertexDataContainerName << std::endl;
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
-  // This just writes the header information
-  int64_t volDims[3] =
-  { m->getXPoints(), m->getYPoints(), m->getZPoints() };
-  float spacing[3] =
-  { m->getXRes(), m->getYRes(), m->getZRes() };
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
-  m->getOrigin(origin);
-  err = writeMetaInfo(DREAM3D::HDF5::VoxelDataContainerName, volDims, spacing, origin);
-  if (err < 0)
-  {
-    ss.str("");
-    ss <<  ":Error Writing header information to output file" << std::endl;
-    setErrorCondition(-62);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
+  // Add some VTK hints into the group
+  err = createVtkObjectGroup(DREAM3D::HDF5::VertexDataContainerName, H5_VTK_POLYDATA);
+  if (err < 0)  {
     return;
   }
 
-  err = writeVertexData(dcGid);
+  writeXdmfGridHeader();
+
+
+  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+
+  err = writeVertices(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEdgeData(dcGid);
+  err = writeVertexAttributeData(dcGid);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeFaceData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeCellData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -232,130 +223,208 @@ void VoxelDataContainerWriter::execute()
     return;
   }
 
+
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
+  dcGid = -1;
 
+  writeXdmfGridFooter();
 
-
+  /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VertexDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
 {
   m_XdmfPtr = xdmf;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
+void VertexDataContainerWriter::writeXdmfGridHeader()
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   {
     return;
   }
+  DREAM3D::Mesh::VertListPointer_t verts = getVertexDataContainer()->getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
+
   std::ostream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << std::endl;
-  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << std::endl;
-  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << std::endl;
-  out << "      <!-- Origin -->" << std::endl;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << std::endl;
-  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << std::endl;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << std::endl;
+  out << "  <Grid Name=\"Vertex DataContainer\">" << std::endl;
+
+  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->GetNumberOfTuples() << "\">" << std::endl;
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->GetNumberOfTuples() << " 1\">" << std::endl;
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << std::endl;
+  out << "      </DataItem>" << std::endl;
+  out << "    </Topology>" << std::endl;
+
+  out << "    <Geometry Type=\"XYZ\">" << std::endl;
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
+  out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << std::endl;
+  out << "      </DataItem>" << std::endl;
   out << "    </Geometry>" << std::endl;
+  out << "" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
+void VertexDataContainerWriter::writeXdmfGridFooter()
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
-  {
-    return;
-  }
-
-  std::ostream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" << std::endl;
-  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" << std::endl;
-  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" << std::endl;
-  out << "        <!-- Origin -->" << std::endl;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" << std::endl;
-  out << "        <!-- DxDyDz (Spacing/Resolution)-->" << std::endl;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" << std::endl;
-  out << "      </Geometry>" << std::endl;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainerWriter::writeXdmfGridFooter(const std::string &label)
-{
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVoxelDataContainer())
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   {
     return;
   }
   std::ostream& out = *m_XdmfPtr;
   out << "  </Grid>" << std::endl;
-  out << "    <!-- *************** END OF " << label << " *************** -->" << std::endl;
+  out << "    <!-- *************** END OF Vertex DataContainer *************** -->" << std::endl;
   out << std::endl;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
+                                                                              const std::string &groupName,
+                                                                              IDataArray::Pointer array,
+                                                                              const std::string &centering,
+                                                                              int precision, const std::string &xdmfTypeName)
+{
+  std::stringstream out;
+  std::stringstream dimStr;
+  std::stringstream dimStr1;
+  std::stringstream dimStr1half;
+  std::stringstream dimStr2;
+  std::stringstream dimStr2half;
+
+  out << "    <Attribute Name=\"" << array->GetName() << "\" ";
+  out << "AttributeType=\"" << attrType << "\" ";
+  dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+  out << "Center=\"" << centering << "\">" << std::endl;
+  // Open the <DataItem> Tag
+  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+  out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+
+  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  std::vector<char> nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+
+  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  hdfFileName = MXAFileInfo::filename(hdfFileName);
+
+  out << "        " << hdfFileName << ":/VertexDataContainer/" << groupName << "/" << array->GetName() << std::endl;
+  out << "      </DataItem>" << std::endl;
+  out << "    </Attribute>" << std::endl << std::endl;
+
+  return out.str();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
 {
-  herr_t err = 0;
-  err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
-  if (err < 0)  {
-    return err;
-  }
-  hid_t gid = H5Gopen(m_HdfFileId, hdfPath.c_str(), H5P_DEFAULT );
+#if 0
+      <Attribute Name="Node Type" Center="Node">
+      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
+        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/VertexDataContainer/POINT_DATA/VertexMeshNodeType
+      </DataItem>
+    </Attribute>
+#endif
+  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  { return; }
 
-  int32_t rank =1;
-  hsize_t dims[1] = {3};
-  err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
-  if (err < 0)
+
+
+  std::ostream& out = *m_XdmfPtr;
+  std::stringstream dimStr;
+  int precision = 0;
+  std::string xdmfTypeName;
+  array->GetXdmfTypeAndSize(xdmfTypeName, precision);
+  if (0 == precision)
   {
-    std::cout << "Error Writing H5_DIMENSIONS array for " << hdfPath << std::endl;
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+    return;
   }
-  err = H5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
+  int numComp = array->GetNumberOfComponents();
+  std::string attrType = "Scalar";
+  if(numComp > 2) attrType = "Vector";
+
+  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+
+  out << block << std::endl;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+{
+  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
+  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
   if (err < 0)
   {
-    std::cout << "Error Writing H5_ORIGIN array for " << hdfPath << std::endl;
+    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
   }
-  err = H5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
-  if (err < 0)
+  err = H5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  if(err < 0)
   {
-    std::cout << "Error Writing H5_SPACING array for " << hdfPath << std::endl;
+    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
   }
-  int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
-  err = H5Lite::writeScalarAttribute(m_HdfFileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
-  if (err < 0)
+  return err;
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerWriter::writeVertices(hid_t dcGid)
+{
+  VertexDataContainer* sm = getVertexDataContainer();
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  if (NULL == verticesPtr.get())
   {
-    std::cout << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << std::endl;
+    return -1;
   }
 
-  err |= H5Gclose(gid);
+  int32_t rank = 2;
+  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
+
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
+
+  herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
+  if (err < 0) {
+    setErrorCondition(err);
+    notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
+  }
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VertexDataContainer* sm = getVertexDataContainer();
 
-  // Write the Voxel Data
+  // Write the Vertex Data
   err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
@@ -366,7 +435,7 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  hid_t VertexGroupId = H5Gopen(dcGid, H5_VERTEX_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t cellGroupId = H5Gopen(dcGid, H5_VERTEX_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
@@ -376,218 +445,38 @@ int VoxelDataContainerWriter::writeVertexData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getVertexArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Vertex Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = m->getVertexData(*iter);
-    err = array->writeH5Data(VertexGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(VertexGroupId); // Close the Vertex Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(VertexGroupId); // Close the Vertex Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeEdgeData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t EdgeGroupId = H5Gopen(dcGid, H5_EDGE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getEdgeArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = m->getEdgeData(*iter);
-    err = array->writeH5Data(EdgeGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(EdgeGroupId); // Close the Edge Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(EdgeGroupId); // Close the Edge Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFaceData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t FaceGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getFaceArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = m->getFaceData(*iter);
-    err = array->writeH5Data(FaceGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(FaceGroupId); // Close the Face Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(FaceGroupId); // Close the Face Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeCellData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
-  int64_t volDims[3] =
-  { m->getXPoints(), m->getYPoints(), m->getZPoints() };
-  float spacing[3] =
-  { m->getXRes(), m->getYRes(), m->getZRes() };
-  float origin[3] =
-  { 0.0f, 0.0f, 0.0f };
-  m->getOrigin(origin);
-
-  writeCellXdmfGridHeader(origin, spacing, volDims);
-
-
-  // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
-
-  // Write the Voxel Data
-  err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    notifyErrorMessage( ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_CELL_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_CELL_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    notifyErrorMessage( ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = m->getCellArrayNameList();
+  NameListType names = sm->getVertexArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
     ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
     notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = m->getCellData(*iter);
+    IDataArray::Pointer array = sm->getVertexData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
       ss.str("");
       ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      notifyErrorMessage(ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
-    array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Cell)");
+    writeXdmfAttributeData(H5_VERTEX_DATA_GROUP_NAME, array, "Node");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
-  writeXdmfGridFooter("Cell Data");
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
+int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
@@ -597,7 +486,7 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 
   std::string hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VoxelDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -736,11 +625,11 @@ int VoxelDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int VertexDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VertexDataContainer* m = getVertexDataContainer();
 
   // Write the Ensemble data
   err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
@@ -787,22 +676,3 @@ int VoxelDataContainerWriter::writeEnsembleData(hid_t dcGid)
   return err;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VoxelDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
-{
-  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
-  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
-  if (err < 0)
-  {
-    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
-  }
-  err = H5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
-  }
-  return err;
-}

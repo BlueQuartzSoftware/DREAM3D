@@ -104,7 +104,7 @@ SGAxisODFWidget::~SGAxisODFWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGAxisODFWidget::extractStatsData(VoxelDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
+void SGAxisODFWidget::extractStatsData(VolumeDataContainer::Pointer m, int index, StatsData* statsData, unsigned int phaseType)
 {
 
   VectorOfFloatArray arrays(0);

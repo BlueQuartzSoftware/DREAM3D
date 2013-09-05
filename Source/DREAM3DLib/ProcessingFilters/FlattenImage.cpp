@@ -160,7 +160,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
   int numImageComp = 1;
@@ -198,7 +198,7 @@ void FlattenImage::preflight()
 // -----------------------------------------------------------------------------
 void FlattenImage::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -130,7 +130,7 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::remove_smallgrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;

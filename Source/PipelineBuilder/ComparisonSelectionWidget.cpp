@@ -152,17 +152,28 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateArrayNames(VoxelDataContainer::Pointer vdc,
-                                                   SurfaceMeshDataContainer::Pointer smdc,
-                                                   SolidMeshDataContainer::Pointer sdc)
+void ComparisonSelectionWidget::populateArrayNames(VolumeDataContainer::Pointer vldc,
+                                                   SurfaceDataContainer::Pointer sdc,
+                                                   EdgeDataContainer::Pointer edc,
+                                                   VertexDataContainer::Pointer vdc)
 {
 
-  if (m_ArrayListType >= CellListType && m_ArrayListType <= EnsembleListType )
+  if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )
   {
-    populateVoxelArrayNames(vdc);
+    populateVolumeArrayNames(vldc);
   }
-  else if (m_ArrayListType >= PointListType && m_ArrayListType <= EdgeListType)
-  { populateSurfaceMeshArrayNames(smdc);}
+  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= FaceListType)
+  { 
+    populateSurfaceArrayNames(sdc);
+  }
+  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= EdgeListType)
+  { 
+    populateEdgeArrayNames(edc);
+  }
+  else if (m_ArrayListType >= FieldListType && m_ArrayListType <= VertexListType)
+  { 
+    populateVertexArrayNames(vdc);
+  }
 
 
   // We need to do this each time the possible arrays names are changed upstream in the
@@ -195,13 +206,100 @@ void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> co
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Pointer vdc)
+void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer vldc)
 {
 
   std::list<std::string> cellNames;
+  if (m_ArrayListType == VertexListType)
+  {
+    cellNames = vldc->getVertexArrayNameList();
+  }
+  else if (m_ArrayListType == EdgeListType)
+  {
+    cellNames = vldc->getEdgeArrayNameList();
+  }
+  else if (m_ArrayListType == FaceListType)
+  {
+    cellNames = vldc->getFaceArrayNameList();
+  }
   if (m_ArrayListType == CellListType)
   {
-    cellNames = vdc->getCellArrayNameList();
+    cellNames = vldc->getCellArrayNameList();
+  }
+  else if (m_ArrayListType == FieldListType)
+  {
+    cellNames = vldc->getFieldArrayNameList();
+  }
+  else if (m_ArrayListType == EnsembleListType)
+  {
+    cellNames = vldc->getEnsembleArrayNameList();
+  }
+  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc)
+{
+  std::list<std::string> cellNames;
+  if (m_ArrayListType == VertexListType)
+  {
+    cellNames = sdc->getVertexArrayNameList();
+  }
+  else if (m_ArrayListType == EdgeListType)
+  {
+    cellNames = sdc->getEdgeArrayNameList();
+  }
+  else if (m_ArrayListType == FaceListType)
+  {
+    cellNames = sdc->getFaceArrayNameList();
+  }
+  else if (m_ArrayListType == FieldListType)
+  {
+    cellNames = sdc->getFieldArrayNameList();
+  }
+  else if (m_ArrayListType == EnsembleListType)
+  {
+    cellNames = sdc->getEnsembleArrayNameList();
+  }
+  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc)
+{
+  std::list<std::string> cellNames;
+  if (m_ArrayListType == VertexListType)
+  {
+    cellNames = edc->getVertexArrayNameList();
+  }
+  else if (m_ArrayListType == EdgeListType)
+  {
+    cellNames = edc->getEdgeArrayNameList();
+  }
+  else if (m_ArrayListType == FieldListType)
+  {
+    cellNames = edc->getFieldArrayNameList();
+  }
+  else if (m_ArrayListType == EnsembleListType)
+  {
+    cellNames = edc->getEnsembleArrayNameList();
+  }
+  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer vdc)
+{
+  std::list<std::string> cellNames;
+  if (m_ArrayListType == VertexListType)
+  {
+    cellNames = vdc->getVertexArrayNameList();
   }
   else if (m_ArrayListType == FieldListType)
   {
@@ -212,39 +310,6 @@ void ComparisonSelectionWidget::populateVoxelArrayNames(VoxelDataContainer::Poin
     cellNames = vdc->getEnsembleArrayNameList();
   }
   m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateSurfaceMeshArrayNames(SurfaceMeshDataContainer::Pointer vdc)
-{
-  std::list<std::string> cellNames;
-  if (m_ArrayListType == PointListType)
-  {
-    cellNames = vdc->getPointArrayNameList();
-  }
-  else if (m_ArrayListType == FaceListType)
-  {
-    cellNames = vdc->getFaceArrayNameList();
-  }
-  else if (m_ArrayListType == EdgeListType)
-  {
-    cellNames = vdc->getEdgeArrayNameList();
-  }
-  m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateSolidMeshArrayNames(SolidMeshDataContainer::Pointer vdc)
-{
-  std::list<std::string> cellNames = vdc->getPointArrayNameList();
-
-  std::list<std::string> fieldNames = vdc->getFaceArrayNameList();
-
-  std::list<std::string> ensembleNames = vdc->getEdgeArrayNameList();
 }
 
 // -----------------------------------------------------------------------------

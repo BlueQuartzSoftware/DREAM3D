@@ -145,7 +145,7 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
       GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
@@ -185,7 +185,7 @@ void FindDeformationStatistics::preflight()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

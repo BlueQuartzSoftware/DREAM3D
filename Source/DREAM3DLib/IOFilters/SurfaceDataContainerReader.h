@@ -33,12 +33,10 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VoxelDataContainerReader_H_
-#define _VoxelDataContainerReader_H_
+#ifndef _SurfaceDataContainerReader_H_
+#define _SurfaceDataContainerReader_H_
 
 #include <string>
-
-#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -47,40 +45,38 @@
 
 
 /**
- * @class VoxelDataContainerReader VoxelDataContainerReader.h DREAM3DLib/IOFilters/VoxelDataContainerReader.h
+ * @class SurfaceDataContainerReader SurfaceDataContainerReader.h DREAM3DLib/IOFilters/SurfaceDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(SurfaceDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerReader, AbstractFilter)
 
-    virtual ~VoxelDataContainerReader();
+    virtual ~SurfaceDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -94,7 +90,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Voxel DataContainer Reader"; }
+    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -125,10 +121,9 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     */
     virtual void preflight();
 
-    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
-    VoxelDataContainerReader();
+    SurfaceDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -141,15 +136,31 @@ class DREAM3DLib_EXPORT VoxelDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
+    int gatherVertexData(hid_t dcGid, bool preflight);
+    int gatherFaceData(hid_t dcGid, bool preflight);
+    int gatherEdgeData(hid_t dcGid, bool preflight);
+    int gatherFieldData(hid_t dcGid, bool preflight);
+    int gatherEnsembleData(hid_t dcGid, bool preflight);
+    int readVertices(hid_t dcGid);
+    int readFaces(hid_t dcGid);
+    int readEdges(hid_t dcGid);
+    int readMeshLinks(hid_t dcGid, bool preflight);
+    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
+    int readVertexAttributeData(hid_t dcGid);
+    int readFaceAttributeData(hid_t dcGid);
+    int readFieldData(hid_t dcGid);
+    int readEnsembleData(hid_t dcGid);
+
+
     int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                       std::vector<std::string> &namesRead,
-                       std::set<std::string> &namesToRead);
-    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead);
+
 
   private:
 
-    VoxelDataContainerReader(const VoxelDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const VoxelDataContainerReader&); // Operator '=' Not Implemented
+    SurfaceDataContainerReader(const SurfaceDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const SurfaceDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _VoxelDataContainerReader_H_ */
+#endif /* _SurfaceDataContainerReader_H_ */

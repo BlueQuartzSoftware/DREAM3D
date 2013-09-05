@@ -50,12 +50,12 @@
  */
 class CalculateAreasImpl
 {
-    DREAM3D::SurfaceMesh::VertListPointer_t m_Nodes;
-    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
+    DREAM3D::Mesh::VertListPointer_t m_Nodes;
+    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
     double* m_Areas;
 
   public:
-    CalculateAreasImpl(DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::FaceListPointer_t triangles, double* Areas) :
+    CalculateAreasImpl(DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::FaceListPointer_t triangles, double* Areas) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_Areas(Areas)
@@ -65,8 +65,8 @@ class CalculateAreasImpl
     void generate(size_t start, size_t end) const
     {
 
-      DREAM3D::SurfaceMesh::Vert_t* nodes = m_Nodes->GetPointer(0);
-      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
+      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
     float ABx, ABy, ABz, ACx, ACy, ACz;
       for (size_t i = start; i < end; i++)
@@ -151,11 +151,11 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -199,7 +199,7 @@ void TriangleAreaFilter::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -214,9 +214,9 @@ void TriangleAreaFilter::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = getSurfaceMeshDataContainer()->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

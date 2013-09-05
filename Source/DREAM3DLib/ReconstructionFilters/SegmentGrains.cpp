@@ -118,7 +118,7 @@ void SegmentGrains::preflight()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   std::stringstream ss;
   if(NULL == m)
   {

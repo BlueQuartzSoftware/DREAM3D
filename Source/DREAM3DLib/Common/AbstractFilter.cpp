@@ -34,9 +34,9 @@
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-m_VoxelDataContainer(NULL),
-m_SurfaceMeshDataContainer(NULL),
-m_SolidMeshDataContainer(NULL),
+m_VolumeDataContainer(NULL),
+m_SurfaceDataContainer(NULL),
+m_VertexDataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {

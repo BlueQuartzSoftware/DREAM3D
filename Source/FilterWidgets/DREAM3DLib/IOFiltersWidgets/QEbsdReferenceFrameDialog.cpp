@@ -50,7 +50,7 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
@@ -194,11 +194,11 @@ bool QEbsdReferenceFrameDialog::getNoTranschecked()
 void QEbsdReferenceFrameDialog::loadEbsdData()
 {
   if (m_EbsdFileName.isEmpty() == true) { return; }
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   ReadOrientationData::Pointer reader = ReadOrientationData::New();
   reader->setInputFile(m_EbsdFileName.toStdString());
-  reader->setVoxelDataContainer(m.get());
+  reader->setVolumeDataContainer(m.get());
   reader->execute();
   int err = reader->getErrorCondition();
   if (err < 0)
@@ -213,7 +213,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   {
     ConvertEulerAngles::Pointer convert = ConvertEulerAngles::New();
     convert->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
-    convert->setVoxelDataContainer(m.get());
+    convert->setVolumeDataContainer(m.get());
     convert->execute();
     err = convert->getErrorCondition();
     if (err < 0)
@@ -242,7 +242,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     ref.z = 1;
   }
   ipfColorFilter->setReferenceDir(ref);
-  ipfColorFilter->setVoxelDataContainer(m.get());
+  ipfColorFilter->setVolumeDataContainer(m.get());
   ipfColorFilter->execute();
   err = ipfColorFilter->getErrorCondition();
   if (err < 0)

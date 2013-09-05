@@ -83,7 +83,7 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -106,7 +106,7 @@ void FindSurfaceGrains::preflight()
 void FindSurfaceGrains::execute()
 {
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -139,7 +139,7 @@ void FindSurfaceGrains::execute()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::find_surfacegrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 //  int64_t totalPoints = m->getTotalPoints();
 
   size_t xPoints = m->getXPoints();
@@ -180,7 +180,7 @@ void FindSurfaceGrains::find_surfacegrains()
 }
 void FindSurfaceGrains::find_surfacegrains2D()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->getTotalPoints();
 
   //size_t dims[3] = {0,0,0};

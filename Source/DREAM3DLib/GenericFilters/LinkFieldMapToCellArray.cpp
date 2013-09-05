@@ -64,7 +64,7 @@ void LinkFieldMapToCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
     option->setPropertyName("SelectedCellDataArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -104,7 +104,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
   if (NULL == data.get())
@@ -156,7 +156,7 @@ void LinkFieldMapToCellArray::preflight()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

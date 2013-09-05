@@ -134,11 +134,11 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -177,7 +177,7 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -195,12 +195,12 @@ void GenerateSurfaceMeshConnectivity::execute()
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Vertex Triangle List");
-    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+    getSurfaceDataContainer()->buildMeshLinks();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Face Neighbors List");
-    getSurfaceMeshDataContainer()->buildMeshFaceNeighborLists();
+    getSurfaceDataContainer()->buildMeshFaceNeighborLists();
   }
 
   if (m_GenerateEdgeIdList == true)
@@ -211,9 +211,9 @@ void GenerateSurfaceMeshConnectivity::execute()
     ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
     conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
-    conn->setVoxelDataContainer(getVoxelDataContainer());
-    conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-    conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->setVolumeDataContainer(getVolumeDataContainer());
+    conn->setSurfaceDataContainer(getSurfaceDataContainer());
+    conn->setVertexDataContainer(getVertexDataContainer());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {

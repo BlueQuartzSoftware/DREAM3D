@@ -78,7 +78,7 @@ void SaveImages::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel(" Colors Array");
     option->setPropertyName("ColorsArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -154,7 +154,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
@@ -203,7 +203,7 @@ void SaveImages::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

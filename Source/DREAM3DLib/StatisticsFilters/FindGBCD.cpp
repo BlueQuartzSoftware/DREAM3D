@@ -363,10 +363,10 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -404,10 +404,10 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -438,14 +438,14 @@ void FindGBCD::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -460,9 +460,9 @@ void FindGBCD::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

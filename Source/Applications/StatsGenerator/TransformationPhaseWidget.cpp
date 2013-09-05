@@ -711,7 +711,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TransformationPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
+int TransformationPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
 {
   if (m_PhaseIndex < 1)
   {
@@ -835,7 +835,7 @@ int TransformationPhaseWidget::gatherStatsData(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void TransformationPhaseWidget::extractStatsData(VoxelDataContainer::Pointer m, int index)
+void TransformationPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int index)
 {
   setWidgetListEnabled(true);
   float mu = 1.0f;

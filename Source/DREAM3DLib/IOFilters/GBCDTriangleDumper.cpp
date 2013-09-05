@@ -125,10 +125,10 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   }
 
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -163,10 +163,10 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    addErrorMessage(getHumanLabel(), "VoxelDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -197,14 +197,14 @@ void GBCDTriangleDumper::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -215,7 +215,7 @@ void GBCDTriangleDumper::execute()
   notifyStatusMessage("Starting");
 
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

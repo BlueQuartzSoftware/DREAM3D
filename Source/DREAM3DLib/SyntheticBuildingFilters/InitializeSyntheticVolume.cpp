@@ -40,7 +40,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -128,7 +128,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
@@ -168,7 +168,7 @@ void InitializeSyntheticVolume::preflight()
 {
   std::stringstream ss;
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
@@ -184,12 +184,12 @@ void InitializeSyntheticVolume::preflight()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
-  read_data->setVoxelDataContainer(getVoxelDataContainer());
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -204,7 +204,7 @@ void InitializeSyntheticVolume::execute()
 {
   std::stringstream ss;
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -224,13 +224,13 @@ void InitializeSyntheticVolume::execute()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
   read_data->setReadAllArrays(true);
-  read_data->setVoxelDataContainer(getVoxelDataContainer());
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);

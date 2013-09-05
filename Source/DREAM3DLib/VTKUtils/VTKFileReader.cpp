@@ -145,7 +145,7 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  if (NULL == getVoxelDataContainer())
+  if (NULL == getVolumeDataContainer())
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
@@ -230,20 +230,20 @@ int VTKFileReader::readHeader()
   }
 
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
-  getVoxelDataContainer()->setDimensions(dcDims);
+  getVolumeDataContainer()->setDimensions(dcDims);
 
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
   err = parseFloat3V(buf, origin, 0.0f);
-  getVoxelDataContainer()->setOrigin(origin);
+  getVolumeDataContainer()->setOrigin(origin);
 
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   float resolution[3];
   err = parseFloat3V(buf, resolution, 1.0f);
-  getVoxelDataContainer()->setResolution(resolution);
+  getVolumeDataContainer()->setResolution(resolution);
 
   ::memset(buf, 0, kBufferSize);
 

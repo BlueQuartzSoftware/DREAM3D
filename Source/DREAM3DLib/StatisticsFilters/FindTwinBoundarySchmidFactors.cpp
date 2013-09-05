@@ -299,7 +299,7 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
@@ -316,7 +316,7 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
 {
   setErrorCondition(0);
   std::stringstream ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
@@ -337,7 +337,7 @@ void FindTwinBoundarySchmidFactors::preflight()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -346,7 +346,7 @@ void FindTwinBoundarySchmidFactors::execute()
   }
   setErrorCondition(0);
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);

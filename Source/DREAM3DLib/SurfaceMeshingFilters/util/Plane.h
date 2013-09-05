@@ -16,7 +16,7 @@
 #include <ostream>
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 
 
 /**
@@ -50,7 +50,7 @@ private:
 public:
   Plane(VectorType& normal, double d);
   Plane(VectorType& normal, VectorType& x);
-  Plane(VectorType& normal, DREAM3D::SurfaceMesh::Vert_t &x);
+  Plane(VectorType& normal, DREAM3D::Mesh::Vert_t &x);
 
   //#################### PUBLIC METHODS ####################
 public:

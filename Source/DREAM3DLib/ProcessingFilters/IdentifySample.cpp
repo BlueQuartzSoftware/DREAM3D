@@ -101,7 +101,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
   setErrorCondition(0);
   std::stringstream ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
 }
@@ -122,7 +122,7 @@ void IdentifySample::execute()
 {
   setErrorCondition(0);
   // int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -65,7 +65,7 @@ void RenameCellArray::setupFilterParameters()
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -113,7 +113,7 @@ int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -157,7 +157,7 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
