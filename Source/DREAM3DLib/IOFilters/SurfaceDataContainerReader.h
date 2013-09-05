@@ -144,7 +144,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     int readVertices(hid_t dcGid);
     int readFaces(hid_t dcGid);
     int readEdges(hid_t dcGid);
-    int readMeshVertLinks(hid_t dcGid, bool preflight);
+    int readMeshLinks(hid_t dcGid, bool preflight);
     int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
     int readFaceAttributeData(hid_t dcGid);

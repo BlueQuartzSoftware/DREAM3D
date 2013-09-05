@@ -79,18 +79,18 @@ DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::buildMeshVertLinks()
+void SurfaceDataContainer::buildMeshLinks()
 {
-  m_MeshVertLinks = MeshVertLinks::New();
-  m_MeshVertLinks->generateMeshVertLinksFaces(m_Vertices, m_Faces);
+  m_MeshLinks = MeshLinks::New();
+  m_MeshLinks->generateMeshLinksFaces(m_Vertices, m_Faces);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::removeMeshVertLinks()
+void SurfaceDataContainer::removeMeshLinks()
 {
-  m_MeshVertLinks = MeshVertLinks::NullPointer();
+  m_MeshLinks = MeshLinks::NullPointer();
 }
 
 // -----------------------------------------------------------------------------
@@ -98,17 +98,17 @@ void SurfaceDataContainer::removeMeshVertLinks()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::buildMeshFaceNeighborLists()
 {
-  bool deleteMeshVertLinks = false;
-  if (m_MeshVertLinks.get() == NULL)
+  bool deleteMeshLinks = false;
+  if (m_MeshLinks.get() == NULL)
   {
-    buildMeshVertLinks();
-    deleteMeshVertLinks = true;
+    buildMeshLinks();
+    deleteMeshLinks = true;
   }
   m_FaceNeighbors = MeshFaceNeighbors::New();
-  m_FaceNeighbors->generateNeighborLists(m_Vertices, m_Faces, m_MeshVertLinks);
-  if (deleteMeshVertLinks == true)
+  m_FaceNeighbors->generateNeighborLists(m_Vertices, m_Faces, m_MeshLinks);
+  if (deleteMeshLinks == true)
   {
-    m_MeshVertLinks = MeshVertLinks::NullPointer();
+    m_MeshLinks = MeshLinks::NullPointer();
   }
 }
 
@@ -123,17 +123,17 @@ void SurfaceDataContainer::removeMeshFaceNeighborLists()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::setMeshVertLinks(MeshVertLinks::Pointer vertLinks)
+void SurfaceDataContainer::setMeshLinks(MeshLinks::Pointer vertLinks)
 {
-  m_MeshVertLinks = vertLinks;
+  m_MeshLinks = vertLinks;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MeshVertLinks::Pointer SurfaceDataContainer::getMeshVertLinks()
+MeshLinks::Pointer SurfaceDataContainer::getMeshLinks()
 {
-  return m_MeshVertLinks;
+  return m_MeshLinks;
 }
 
 // -----------------------------------------------------------------------------

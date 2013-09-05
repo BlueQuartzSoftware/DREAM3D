@@ -66,19 +66,19 @@ class LaplacianSmoothingImpl
 {
     DREAM3D::Mesh::VertListPointer_t m_vertsPtr;
     DREAM3D::Mesh::VertList_t::Pointer m_newPositions;
-    MeshVertLinks::Pointer m_meshVertLinks;
+    MeshLinks::Pointer m_MeshLinks;
     DREAM3D::Mesh::FaceList_t::Pointer m_facesPtr;
     DataArray<float>::Pointer m_lambdasPtr;
 
   public:
     LaplacianSmoothingImpl(DREAM3D::Mesh::VertListPointer_t vertsPtr,
                            DREAM3D::Mesh::VertList_t::Pointer newPositions,
-                           MeshVertLinks::Pointer meshVertLinks,
+                           MeshLinks::Pointer MeshLinks,
                            DREAM3D::Mesh::FaceList_t::Pointer facesPtr,
                            DataArray<float>::Pointer lambdasPtr) :
       m_vertsPtr(vertsPtr),
       m_newPositions(newPositions),
-      m_meshVertLinks(meshVertLinks),
+      m_MeshLinks(MeshLinks),
       m_facesPtr(facesPtr),
       m_lambdasPtr(lambdasPtr)
     {}
@@ -108,7 +108,7 @@ class LaplacianSmoothingImpl
         newVert.pos[1] = currentVert.pos[1];
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
-        MeshVertLinks::FaceList& list = m_meshVertLinks->getFaceList(v);
+        MeshLinks::FaceList& list = m_MeshLinks->getFaceList(v);
         std::set<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
@@ -595,10 +595,10 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  MeshVertLinks::Pointer meshVertLinks = getSurfaceDataContainer()->getMeshVertLinks();
-  if (NULL == meshVertLinks.get())
+  MeshLinks::Pointer MeshLinks = getSurfaceDataContainer()->getMeshLinks();
+  if (NULL == MeshLinks.get())
   {
-    getSurfaceDataContainer()->buildMeshVertLinks();
+    getSurfaceDataContainer()->buildMeshLinks();
   }
 
 
@@ -657,13 +657,13 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     if (doParallel == true)
     {
       tbb::parallel_for(tbb::blocked_range<size_t>(0, numVerts),
-                        LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
+                        LaplacianSmoothingImpl(vertsPtr, newPositionsPtr,MeshLinks,facesPtr,lambdasPtr), tbb::auto_partitioner());
 
     }
     else
 #endif
     {
-      LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,meshVertLinks,facesPtr,lambdasPtr);
+      LaplacianSmoothingImpl serial(vertsPtr, newPositionsPtr,MeshLinks,facesPtr,lambdasPtr);
       serial.generate(0, numVerts);
     }
 

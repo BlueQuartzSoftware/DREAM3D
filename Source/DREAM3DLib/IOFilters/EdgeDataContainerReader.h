@@ -140,7 +140,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
     int gatherEnsembleData(hid_t dcGid, bool preflight);
     int readVertices(hid_t dcGid);
     int readEdges(hid_t dcGid);
-    int readMeshVertLinks(hid_t dcGid, bool preflight);
+    int readMeshLinks(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
 //    int readFieldData(hid_t dcGid);
 //    int readEnsembleData(hid_t dcGid);
