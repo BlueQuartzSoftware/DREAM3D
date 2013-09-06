@@ -65,7 +65,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
   m_ContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
   m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
