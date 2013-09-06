@@ -1,5 +1,5 @@
 [PipelineBuilder]
-Number_Filters=5
+Number_Filters=6
 Name=(05) Composite
 
 [0]
@@ -16,7 +16,7 @@ ZPoints=128
 Filter_Name=EstablishMatrixPhase
 
 [2]
-Filter_Name=FindNeighbors
+Filter_Name=FindSurfaceCells
 
 [3]
 Filter_Name=InsertPrecipitatePhases
@@ -25,6 +25,9 @@ WriteGoalAttributes=false
 CsvOutputFile=
 
 [4]
+Filter_Name=FindNeighbors
+
+[5]
 Filter_Name=DataContainerWriter
 OutputFile=Data/Output/CompositeOut.dream3d
 WriteVoxelData=true
