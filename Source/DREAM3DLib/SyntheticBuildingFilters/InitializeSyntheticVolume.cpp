@@ -236,6 +236,9 @@ void InitializeSyntheticVolume::preflight()
   {
     setErrorCondition(read_data->getErrorCondition());
   }
+
+  getVoxelDataContainer()->setDimensions(getXVoxels(), getYVoxels(), getZVoxels());
+  getVoxelDataContainer()->setResolution(getXRes(), getYRes(), getZRes());
 }
 
 // -----------------------------------------------------------------------------
