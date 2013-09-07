@@ -36,15 +36,15 @@
 
 #include "FindRadialDist.h"
 
-#include <QtCore/QtDebug>
-#include <fstream>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
+#include <QtCore/QtDebug>
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
@@ -83,7 +83,7 @@ FindRadialDist::~FindRadialDist()
 // -----------------------------------------------------------------------------
 void FindRadialDist::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -121,35 +121,37 @@ int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer
 void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -305, float, FloatArrayType, fields, 3)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, -302, float, FloatArrayType, fields, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
 
   if (getOutputFile().isEmpty() == true)
   {
-    ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if (QDir::exists(parentPath) == false)
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (MXAFileInfo::extension(getOutputFile()).compare("") == 0)
+
+  if (fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".csv"));
   }
@@ -169,7 +171,7 @@ void FindRadialDist::preflight()
 // -----------------------------------------------------------------------------
 void FindRadialDist::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -191,8 +193,7 @@ QString parentPath = fi.path();
     QDir dir;
   if(!dir.mkpath(parentPath))
   {
-      QString ss;
-      ss << "Error creating parent path '" << parentPath << "'";
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -211,7 +212,7 @@ QString parentPath = fi.path();
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_radialdist()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   float x, y, z;
   float xn, yn, zn;
@@ -224,7 +225,7 @@ void FindRadialDist::find_radialdist()
   std::ofstream outFile;
   if (writeFile)
   {
-    outFile.open(m_OutputFile.c_str());
+    outFile.open(m_OutputFile.toLatin1().data());
   }
   size_t udims[3] =
   { 0, 0, 0 };
@@ -318,7 +319,7 @@ void FindRadialDist::find_radialdist()
     {
       outFile << float(i)*binSize << " ";
     }
-    outFile ;
+    outFile << "\n";
     for (size_t i = 0; i < count.size(); i++)
     {
       for (int j = 0; j < numbins; j++)
@@ -327,7 +328,7 @@ void FindRadialDist::find_radialdist()
         if(count[i][j] == 0) value = 0;
         outFile << value << " ";
       }
-      outFile ;
+      outFile << "\n";
     }
   }
 
@@ -339,7 +340,7 @@ void FindRadialDist::find_radialdist()
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_boundingbox()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   size_t size = m->getNumFieldTuples();
 
   float coords[7];

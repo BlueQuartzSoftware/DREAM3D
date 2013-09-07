@@ -452,7 +452,7 @@ void set##name##Pointer(type* f)\
     if(err < 0) {\
       setErrorCondition(err);\
       QString msg = QString(Message);\
-      pipelineErrorMessage(msg.c_str());\
+      pipelineErrorMessage(msg.toLatin1().data());\
       updatePipelineProgress(0);\
       pipelineFinished();\
       return;   }

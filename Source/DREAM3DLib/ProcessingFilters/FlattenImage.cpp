@@ -112,14 +112,14 @@ FlattenImage::~FlattenImage()
 // -----------------------------------------------------------------------------
 void FlattenImage::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Flattening Method");
     option->setPropertyName("FlattenMethod");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<QString> choices;
+    QVector<QString> choices;
     choices.push_back("Lightness");
     choices.push_back("Average");
     choices.push_back("Luminosity");
@@ -159,8 +159,8 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
   //int err = 0;
 
   int numImageComp = 1;
@@ -174,15 +174,15 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -301, unsigned char, UCharArrayType, voxels, numImageComp)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -301, unsigned char, UCharArrayType, voxels, numImageComp)
 //  if(err == -301)
 //  {
 //    setErrorCondition(0);
 //    err = 0;
-//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -302, unsigned char, UCharArrayType, voxels, 3)
 //  }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -198,7 +198,7 @@ void FlattenImage::preflight()
 // -----------------------------------------------------------------------------
 void FlattenImage::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -40,8 +40,6 @@
 // -----------------------------------------------------------------------------
 AbstractFilterParametersReader::AbstractFilterParametersReader()
 {
-  // TODO Auto-generated constructor stub
-
 }
 
 // -----------------------------------------------------------------------------
@@ -49,6 +47,5 @@ AbstractFilterParametersReader::AbstractFilterParametersReader()
 // -----------------------------------------------------------------------------
 AbstractFilterParametersReader::~AbstractFilterParametersReader()
 {
-  // TODO Auto-generated destructor stub
 }
 

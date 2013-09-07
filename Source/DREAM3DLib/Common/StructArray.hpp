@@ -75,7 +75,7 @@ class StructArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
@@ -257,7 +257,7 @@ class StructArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -276,7 +276,7 @@ class StructArray : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] > this->MaxId) { return -100; }
       }
@@ -320,9 +320,9 @@ class StructArray : public IDataArray
         return 0;
       }
 
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
+      QVector<size_t> srcIdx(idxs.size() + 1);
+      QVector<size_t> destIdx(idxs.size() + 1);
+      QVector<size_t> copyElements(idxs.size() + 1);
       srcIdx[0] = 0;
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0);
@@ -514,7 +514,7 @@ class StructArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -530,7 +530,7 @@ class StructArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(QDataStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -557,7 +557,7 @@ class StructArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                     const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";

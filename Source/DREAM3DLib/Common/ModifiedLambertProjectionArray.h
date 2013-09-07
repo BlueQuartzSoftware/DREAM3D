@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
     virtual QString getTypeAsString() { return "ModifiedLambertProjectionArray"; }
 
     DREAM3D_INSTANCE_PROPERTY(int, Phase)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ModifiedLambertProjection::Pointer>, ModifiedLambertProjectionArray)
 
     IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
@@ -216,7 +216,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs);
+    virtual int EraseTuples(QVector<size_t> &idxs);
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -252,8 +252,8 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples);
 
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',');
-    virtual void printComponent(QDataStream &out, size_t i, int j);
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',');
+    virtual void printComponent(QTextStream &out, size_t i, int j);
 
     /**
      *
@@ -271,7 +271,7 @@ class DREAM3DLib_EXPORT ModifiedLambertProjectionArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
             const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";

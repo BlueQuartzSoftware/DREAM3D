@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2009, Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2009, Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 
 // C Includes
 
@@ -42,58 +42,125 @@
 #include <QtCore/QtDebug>
 #include <fstream>
 
-// EbsdLib Includes
-#include "EbsdLib/EbsdConstants.h"
 
 // DREAM3D Includes
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainer::VoxelDataContainer() :
+SurfaceDataContainer::SurfaceDataContainer() :
+Observable(),
 m_NumVertexTuples(0),
-m_NumEdgeTuples(0),
 m_NumFaceTuples(0),
-m_NumCellTuples(0),
-m_NumFieldTuples(0),
-m_NumEnsembleTuples(0)
+m_NumEdgeTuples(0)
+
 {
-  m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
-  m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
-  m_Origin[0] = 0.0f; m_Origin[1] = 0.0f; m_Origin[2] = 0.0f;
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+SurfaceDataContainer::~SurfaceDataContainer()
+{
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, VertexData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EdgeData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FaceData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, FieldData)
+DOES_DATASET_EXIST_DEFN(SurfaceDataContainer, EnsembleData)
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainer::buildMeshLinks()
+{
+  m_MeshLinks = MeshLinks::New();
+  m_MeshLinks->generateMeshLinksFaces(m_Vertices, m_Faces);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainer::~VoxelDataContainer()
+void SurfaceDataContainer::removeMeshLinks()
 {
-
+  m_MeshLinks = MeshLinks::NullPointer();
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainer::buildMeshFaceNeighborLists()
+{
+  bool deleteMeshLinks = false;
+  if (m_MeshLinks.get() == NULL)
+  {
+    buildMeshLinks();
+    deleteMeshLinks = true;
+  }
+  m_FaceNeighbors = MeshFaceNeighbors::New();
+  m_FaceNeighbors->generateNeighborLists(m_Vertices, m_Faces, m_MeshLinks);
+  if (deleteMeshLinks == true)
+  {
+    m_MeshLinks = MeshLinks::NullPointer();
+  }
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EdgeData)
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, FaceData)
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, CellData)
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, FieldData)
-DOES_DATASET_EXIST_DEFN(VoxelDataContainer, EnsembleData)
+void SurfaceDataContainer::removeMeshFaceNeighborLists()
+{
+  m_FaceNeighbors = MeshFaceNeighbors::NullPointer();
+}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
+void SurfaceDataContainer::setMeshLinks(MeshLinks::Pointer vertLinks)
+{
+  m_MeshLinks = vertLinks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MeshLinks::Pointer SurfaceDataContainer::getMeshLinks()
+{
+  return m_MeshLinks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MeshFaceNeighbors::Pointer SurfaceDataContainer::getMeshFaceNeighborLists()
+{
+  return m_FaceNeighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainer::setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer neighbors)
+{
+  m_FaceNeighbors = neighbors;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Vertex array with different array name than key name" ;
+    qDebug() << "SurfaceDataContainer::Adding Cell array with different array name than key name" ;
     qDebug() << "Key name: " << name ;
     qDebug() << "Array Name:" << data->GetName() ;
     data->SetName(name);
@@ -102,10 +169,24 @@ void VoxelDataContainer::addVertexData(const QString &name, IDataArray::Pointer 
   m_NumVertexTuples = data->GetNumberOfTuples();
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getVertexData(const QString &name)
+QList<QString> SurfaceDataContainer::getVertexArrayNameList()
+{
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
+  {
+    keys.push_back( iter.key());
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceDataContainer::getVertexData(const QString &name)
 {
   if ( m_VertexData.contains(name) == false )
   {
@@ -114,10 +195,11 @@ IDataArray::Pointer VoxelDataContainer::getVertexData(const QString &name)
   return m_VertexData[name];
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeVertexData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::removeVertexData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -133,25 +215,7 @@ IDataArray::Pointer VoxelDataContainer::removeVertexData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameVertexData(const QString &oldname, const QString &newname)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(oldname);
-  if ( it == m_VertexData.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->SetName(newname);
-  removeVertexData(oldname);
-  addVertexData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::clearVertexData()
+void SurfaceDataContainer::clearVertexData()
 {
   m_VertexData.clear();
 }
@@ -159,7 +223,7 @@ void VoxelDataContainer::clearVertexData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getVertexArrayNameList()
+QList<QString> SurfaceDataContainer::getPointArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
@@ -172,124 +236,18 @@ QList<QString> VoxelDataContainer::getVertexArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumVertexArrays()
+int SurfaceDataContainer::getNumVertexArrays()
 {
   return static_cast<int>(m_VertexData.size());
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    qDebug() << "Adding Edge array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
-    data->SetName(name);
-  }
-  m_EdgeData[name] = data;
-  m_NumEdgeTuples = data->GetNumberOfTuples();
-}
+
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getEdgeData(const QString &name)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(name);
-  if ( it == m_EdgeData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  return it.value();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeEdgeData(const QString &name)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(name);
-  if ( it == m_EdgeData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  IDataArray::Pointer p = it.value();
-  m_EdgeData.erase(it);
-  return p;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameEdgeData(const QString &oldname, const QString &newname)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(oldname);
-  if ( it == m_EdgeData.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->SetName(newname);
-  removeEdgeData(oldname);
-  addEdgeData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::clearEdgeData()
-{
-  m_EdgeData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getEdgeArrayNameList()
-{
-  QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
-  {
-    keys.push_back( iter.key());
-  }
-  return keys;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumEdgeArrays()
-{
-  return static_cast<int>(m_EdgeData.size());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    qDebug() << "Adding Face array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
-    data->SetName(name);
-  }
-  m_FaceData[name] = data;
-  m_NumFaceTuples = data->GetNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getFaceData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::getFaceData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -303,7 +261,23 @@ IDataArray::Pointer VoxelDataContainer::getFaceData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeFaceData(const QString &name)
+void SurfaceDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    qDebug() << "Adding Field array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
+    data->SetName(name);
+  }
+  m_FaceData[name] = data;
+  m_NumFaceTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceDataContainer::removeFaceData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -319,25 +293,7 @@ IDataArray::Pointer VoxelDataContainer::removeFaceData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameFaceData(const QString &oldname, const QString &newname)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(oldname);
-  if ( it == m_FaceData.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->SetName(newname);
-  removeFaceData(oldname);
-  addFaceData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::clearFaceData()
+void SurfaceDataContainer::clearFaceData()
 {
   m_FaceData.clear();
 }
@@ -345,7 +301,7 @@ void VoxelDataContainer::clearFaceData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getFaceArrayNameList()
+QList<QString> SurfaceDataContainer::getFaceArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
@@ -355,10 +311,11 @@ QList<QString> VoxelDataContainer::getFaceArrayNameList()
   return keys;
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumFaceArrays()
+int SurfaceDataContainer::getNumFaceArrays()
 {
   return static_cast<int>(m_FaceData.size());
 }
@@ -366,27 +323,26 @@ int VoxelDataContainer::getNumFaceArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addCellData(const QString &name, IDataArray::Pointer data)
+void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 {
-  if (data->GetName().compare(name) != 0)
+ // int success = 0;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    qDebug() << "Adding Cell array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
-    data->SetName(name);
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
+    d->Resize(size);
   }
-  m_CellData[name] = data;
-  m_NumCellTuples = data->GetNumberOfTuples();
+  m_NumFaceTuples = size;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getCellData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::getEdgeData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellData.find(name);
-  if ( it == m_CellData.end() )
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -396,52 +352,52 @@ IDataArray::Pointer VoxelDataContainer::getCellData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeCellData(const QString &name)
+void SurfaceDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    qDebug() << "Adding Edge array with different array name than key name" ;
+    qDebug() << "Key name: " << name ;
+    qDebug() << "Array Name:" << data->GetName() ;
+    data->SetName(name);
+  }
+  m_EdgeData[name] = data;
+  m_NumEdgeTuples = data->GetNumberOfTuples();
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer SurfaceDataContainer::removeEdgeData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellData.find(name);
-  if ( it == m_CellData.end() )
+  it =  m_EdgeData.find(name);
+  if ( it == m_EdgeData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = it.value();
-  m_CellData.erase(it);
+  m_EdgeData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameCellData(const QString &oldname, const QString &newname)
+void SurfaceDataContainer::clearEdgeData()
 {
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_CellData.find(oldname);
-  if ( it == m_CellData.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->SetName(newname);
-  removeCellData(oldname);
-  addCellData(newname, p);
-  return true;
+  m_EdgeData.clear();
+  m_NumEdgeTuples = 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::clearCellData()
-{
-  m_CellData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getCellArrayNameList()
+QList<QString> SurfaceDataContainer::getEdgeArrayNameList()
 {
   QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
     keys.push_back( iter.key());
   }
@@ -451,17 +407,15 @@ QList<QString> VoxelDataContainer::getCellArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumCellArrays()
+int SurfaceDataContainer::getNumEdgeArrays()
 {
-  return static_cast<int>(m_CellData.size());
+  return static_cast<int>(m_EdgeData.size());
 }
-
-
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getFieldData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::getFieldData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -475,7 +429,7 @@ IDataArray::Pointer VoxelDataContainer::getFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addFieldData(const QString &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFieldData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -491,7 +445,7 @@ void VoxelDataContainer::addFieldData(const QString &name, IDataArray::Pointer d
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeFieldData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::removeFieldData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -507,25 +461,7 @@ IDataArray::Pointer VoxelDataContainer::removeFieldData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VoxelDataContainer::renameFieldData(const QString &oldname, const QString &newname)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(oldname);
-  if ( it == m_FieldData.end() )
-  {
-    return false;
-  }
-  IDataArray::Pointer p = it.value();
-  p->SetName(newname);
-  removeFieldData(oldname);
-  addFieldData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VoxelDataContainer::clearFieldData()
+void SurfaceDataContainer::clearFieldData()
 {
   m_FieldData.clear();
 }
@@ -533,7 +469,7 @@ void VoxelDataContainer::clearFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getFieldArrayNameList()
+QList<QString> SurfaceDataContainer::getFieldArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
@@ -546,7 +482,7 @@ QList<QString> VoxelDataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumFieldArrays()
+int SurfaceDataContainer::getNumFieldArrays()
 {
   return static_cast<int>(m_FieldData.size());
 }
@@ -554,7 +490,7 @@ int VoxelDataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::resizeFieldDataArrays(size_t size)
+void SurfaceDataContainer::resizeFieldDataArrays(size_t size)
 {
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
@@ -569,7 +505,7 @@ void VoxelDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::getEnsembleData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::getEnsembleData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -583,7 +519,7 @@ IDataArray::Pointer VoxelDataContainer::getEnsembleData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::addEnsembleData(const QString &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addEnsembleData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -596,11 +532,10 @@ void VoxelDataContainer::addEnsembleData(const QString &name, IDataArray::Pointe
   m_NumEnsembleTuples = data->GetNumberOfTuples();
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VoxelDataContainer::removeEnsembleData(const QString &name)
+IDataArray::Pointer SurfaceDataContainer::removeEnsembleData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -616,16 +551,15 @@ IDataArray::Pointer VoxelDataContainer::removeEnsembleData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainer::clearEnsembleData()
+void SurfaceDataContainer::clearEnsembleData()
 {
   m_EnsembleData.clear();
-  m_NumEnsembleTuples = 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> VoxelDataContainer::getEnsembleArrayNameList()
+QList<QString> SurfaceDataContainer::getEnsembleArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
@@ -638,9 +572,23 @@ QList<QString> VoxelDataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainer::getNumEnsembleArrays()
+int SurfaceDataContainer::getNumEnsembleArrays()
 {
   return static_cast<int>(m_EnsembleData.size());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainer::resizeEnsembleDataArrays(size_t size)
+{
+ // int success = 0;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
+    IDataArray::Pointer d = iter.value();
+    d->Resize(size);
+  }
+  m_NumEnsembleTuples = size;
+}
 

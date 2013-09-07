@@ -37,14 +37,12 @@
 
 #include <boost/shared_array.hpp>
 
-
-
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +66,7 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Nodes File");
@@ -142,14 +140,15 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+
+  QFileInfo fi(m_TrianglesFile);
 
   if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
-  else if (QDir::exists(m_TrianglesFile) == false)
+  else if (fi.exists() == false)
   {
 
     if (preflight == true)
@@ -160,12 +159,13 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
+  QFileInfo fii(m_NodesFile);
   if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (QDir::exists(m_NodesFile)== false)
+  else if (fii.exists() == false)
   {
 
     if (preflight == true)
@@ -201,9 +201,9 @@ void NodesTrianglesToStl::preflight()
 void NodesTrianglesToStl::execute()
 {
   int err = 0;
-  QString ss;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -220,10 +220,11 @@ void NodesTrianglesToStl::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!QDir::mkdir(getOutputStlDirectory(), true))
+  QDir stlDir(getOutputStlDirectory());
+  if(!stlDir.mkpath("."))
   {
-      QString ss;
-      ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
+
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -231,13 +232,13 @@ void NodesTrianglesToStl::execute()
 
 
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_NodesFile.c_str(), "rb+");
+  FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if(nodesFile == NULL)
   {
-    ss.str("");
-    ss << "Error opening nodes file '" << m_NodesFile << "'";
+
+    QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss.str(), -666);
+    PipelineMessage em(getHumanLabel(), ss, -666);
     addErrorMessage(em);
     return;
   }
@@ -245,18 +246,18 @@ void NodesTrianglesToStl::execute()
   //  how many nodes are in the file
   int nNodes = 0;
   fscanf(nodesFile, "%d", &nNodes);
-  ss.str("");
-  ss << "Node Count from " << getNodesFile() << " File: " << nNodes;
-  notifyStatusMessage(ss.str());
-
+  {
+  QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
+  notifyStatusMessage(ss);
+  }
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
+  FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if(triFile == NULL)
   {
-    ss.str("");
-    ss << ": Error opening Triangles file '" << triFile << "'";
+
+    QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss.str(), -666);
+    PipelineMessage em(getHumanLabel(), ss, -666);
     addErrorMessage(em);
     return;
   }
@@ -264,10 +265,11 @@ void NodesTrianglesToStl::execute()
   // how many triangles are in the file
   int nTriangles = 0;
   fscanf(triFile, "%d", &nTriangles);
-  ss.str("");
 
-  ss << "Triangle Count from " << getTrianglesFile() << " File: " << nTriangles;
-  notifyStatusMessage(ss.str());
+  {
+  QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
+  notifyStatusMessage(ss);
+  }
 
   int nodeId = 0;
   int nodeKind = 0;
@@ -276,8 +278,8 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 //  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
@@ -302,8 +304,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglePtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglePtr->GetPointer(0);
+  DREAM3D::Mesh::FaceListPointer_t trianglePtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::Face_t* triangles = trianglePtr->GetPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
@@ -343,21 +345,22 @@ void NodesTrianglesToStl::execute()
   for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
-    ss.str("");
+
     // Generate the output file name
-    ss << getOutputStlDirectory() << QDir::Separator << getOutputStlPrefix() << spin << ".stl";
-    QString filename = ss.str();
-    FILE* f = fopen(filename.c_str(), "wb");
+
+    QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
+    FILE* f = fopen(filename.toLatin1().data(), "wb");
     ScopedFileMonitor fPtr(f);
 
-    ss.str("");
-    ss << "Writing STL for Grain Id " << spin;
-    notifyStatusMessage(ss.str());
+    {
+      QString ss = QObject::tr("Writing STL for Grain Id %1").arg(spin);
+      notifyStatusMessage(ss);
+    }
 
-
-    ss.str("");
-    ss << "DREAM3D Generated For Grain ID " << spin;
-    err = writeHeader(f, ss.str(), 0);
+    {
+    QString ss = "DREAM3D Generated For Grain ID " + QString::number(spin);
+    err = writeHeader(f, ss, 0);
+    }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
@@ -420,8 +423,8 @@ void NodesTrianglesToStl::execute()
       totalWritten = fwrite(data, 1, 50, f);
       if (totalWritten != 50)
       {
-        ss.str("");
-        ss << "Error Writing STL File. Not enough elements written for grain id " << spin << " Wrote " << totalWritten << " of 50.";
+
+        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for grain id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
         notifyErrorMessage(ss, -1201);
       }
       triCount++;
@@ -464,7 +467,7 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString &filename, int tr
   // We need to update the number of triangles in the file
   int err =0;
 
-  FILE* out = fopen(filename.c_str(), "r+b");
+  FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite( (char*)(&triCount), 1, 4, out);
   fclose(out);

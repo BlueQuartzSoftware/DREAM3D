@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
 
@@ -76,14 +76,13 @@ class NodeFunctions
 /**
  * @brief
  */
- #if 0
 template<typename Node, typename T>
 class EdgeFunctions
 {
     public:
     virtual ~EdgeFunctions(){}
 
-    static T Length(typename DREAM3D::SurfaceMesh::VertListPointer_t nodes, DREAM3D::SurfaceMesh::Edge_t* e)
+    static T Length(typename DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::Edge_t* e)
     {
       int nid0 = e->verts[0];
       int nid1 = e->verts[1];
@@ -97,7 +96,6 @@ class EdgeFunctions
     EdgeFunctions(const EdgeFunctions&); // Copy Constructor Not Implemented
     void operator=(const EdgeFunctions&); // Operator '=' Not Implemented
 };
-#endif
 
 
 /**
@@ -152,7 +150,7 @@ class TriangleFunctions
         a[1] *= rnorm;
         a[2] *= rnorm;
       }
-      //  qDebug() << "MinDIhedral, a: " << a[0] <<" " << a[1] <<" " << a[2]  ;
+      //  qDebug() << "MinDIhedral, a: " << a[0] <<" " << a[1] <<" " << a[2] ;
       b[0] = n2.pos[0] - n0.pos[0];
       b[1] = n2.pos[1] - n0.pos[1];
       b[2] = n2.pos[2] - n0.pos[2];
@@ -164,7 +162,7 @@ class TriangleFunctions
         b[1] *= rnorm;
         b[2] *= rnorm;
       }
-      //  qDebug() << "MinDIhedral, b: " << b[0] <<" " << b[1] <<" " << b[2]  ;
+      //  qDebug() << "MinDIhedral, b: " << b[0] <<" " << b[1] <<" " << b[2] ;
       c[0] = n2.pos[0] - n1.pos[0];
       c[1] = n2.pos[1] - n1.pos[1];
       c[2] = n2.pos[2] - n1.pos[2];
@@ -176,7 +174,7 @@ class TriangleFunctions
         c[1] *= rnorm;
         c[2] *= rnorm;
       }
-      //  qDebug() << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2]  ;
+      //  qDebug() << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2] ;
       w1 = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
       if(w1 < -1.) w1 = -1.;
       if(w1 > 1.) w1 = 1.;
@@ -186,12 +184,12 @@ class TriangleFunctions
       w3 = c[0] * b[0] + c[1] * b[1] + c[2] * b[2];
       if(w3 < -1.) w3 = -1.;
       if(w3 > 1.) w3 = 1.;
-      //  qDebug() << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3  ;
+      //  qDebug() << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3 ;
       T d1 = acos(w1);
       T d2 = acos(w2);
       T d3 = acos(w3);
       // debug
-      //  qDebug() << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI  ;
+      //  qDebug() << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI ;
       min = d1;
       if(d2 < min) min = d2;
       if(d3 < min) min = d3;

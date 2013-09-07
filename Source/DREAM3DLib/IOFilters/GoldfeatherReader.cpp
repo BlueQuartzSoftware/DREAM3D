@@ -84,7 +84,7 @@ GoldfeatherReader::~GoldfeatherReader()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /*   For an input file use this code*/
    {
     FilterParameter::Pointer parameter = FilterParameter::New();
@@ -129,24 +129,25 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
-  DREAM3D::SurfaceMesh::VertListPointer_t vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::VertListPointer_t vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
@@ -201,7 +202,7 @@ void GoldfeatherReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -212,7 +213,7 @@ void GoldfeatherReader::execute()
 
 
 
-  FILE* f = fopen(m_InputFile.c_str(), "r");
+  FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if (NULL == f)
   {
     setErrorCondition(-999);
@@ -227,9 +228,9 @@ void GoldfeatherReader::execute()
   dataCheck(false, nNodes, 1, 1);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
-  DREAM3D::SurfaceMesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::VertexData::SurfaceMeshNodeNormals);
@@ -290,9 +291,9 @@ void GoldfeatherReader::execute()
     return;
   }
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
   trianglesPtr->initializeWithZeros();
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   faceLabelPtr->initializeWithZeros();

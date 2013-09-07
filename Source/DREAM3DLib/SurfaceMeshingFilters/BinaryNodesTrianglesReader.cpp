@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -67,8 +67,8 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
-    {
+  QVector<FilterParameter::Pointer> parameters;
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");
     option->setPropertyName("BinaryNodesFile");
@@ -76,7 +76,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-    {
+  {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Triangles Input File");
     option->setPropertyName("BinaryTrianglesFile");
@@ -96,7 +96,7 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -108,8 +108,8 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
- writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
- writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
+  writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
+  writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -120,29 +120,26 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
   if (getBinaryNodesFile().isEmpty() == true)
   {
-    QString ss;
-    ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
+    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if (getBinaryNodesFile().isEmpty() == true)
   {
-    QString ss;
-    ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
+    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 }
@@ -186,17 +183,15 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceMeshDataContainer *sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer *sm = getSurfaceDataContainer();
   int err = 0;
   setErrorCondition(err);
 
-  QString s;
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_BinaryNodesFile.c_str(), "rb+");
+  FILE* nodesFile = fopen(m_BinaryNodesFile.toLatin1().data(), "rb+");
   if(nodesFile == NULL)
   {
-    s.str("");
-    s << "Error opening nodes file '" << m_BinaryNodesFile << "'";
+    QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_BinaryNodesFile);
     setErrorCondition(786);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
@@ -213,24 +208,22 @@ int BinaryNodesTrianglesReader::read()
   fLength = ftell(nodesFile);
   if(0 != fLength)
   {
-    s.str("");
-    s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_BinaryNodesFile << "'";
+    QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
     setErrorCondition(787);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
     //    notifyMessage(em);
     return getErrorCondition();
   }
-  s.str("");
-  s << "Calc Node Count from Nodes.bin File: " << nNodes;
-  notifyStatusMessage(s.str());
-
+  {
+    QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
+    notifyStatusMessage(ss);
+  }
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_BinaryTrianglesFile.c_str(), "rb+");
+  FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
   if(triFile == NULL)
   {
-    s.str("");
-    s << getNameOfClass() << ": Error opening Triangles file '" << m_BinaryTrianglesFile << "'";
+    QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(788);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
@@ -247,20 +240,21 @@ int BinaryNodesTrianglesReader::read()
   fLength = ftell(triFile);
   if(0 != fLength)
   {
-    s.str("");
-    s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_BinaryTrianglesFile << "'";
+
+    QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
     setErrorCondition(789);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
     //    notifyMessage(em);
     return getErrorCondition();
   }
-  s.str("");
-  s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
-  notifyStatusMessage(s.str());
 
+  {
+    QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: ").arg(nTriangles);
+    notifyStatusMessage(ss);
+  }
   // Allocate all the nodes
-  typedef DREAM3D::SurfaceMesh::Vert_t Vert_t;
+  typedef DREAM3D::Mesh::Vert_t Vert_t;
   StructArray<Vert_t>::Pointer m_NodeListPtr = StructArray<Vert_t>::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   Vert_t* m_NodeList = m_NodeListPtr->GetPointer(0);
 
@@ -268,9 +262,10 @@ int BinaryNodesTrianglesReader::read()
   nodeTypePtr->initializeWithZeros();
   int8_t* nodeType = nodeTypePtr->GetPointer(0);
 
-  s.str("");
-  s << "Reading Nodes file into Memory";
-  notifyStatusMessage(s.str());
+  {
+    QString ss  = QObject::tr("Reading Nodes file into Memory");
+    notifyStatusMessage(ss);
+  }
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
 
@@ -282,19 +277,20 @@ int BinaryNodesTrianglesReader::read()
     {
       break;
     }
-    DREAM3D::SurfaceMesh::Vert_t& node = m_NodeList[nRecord.nodeId];
+    DREAM3D::Mesh::Vert_t& node = m_NodeList[nRecord.nodeId];
     node.pos[0] = nRecord.x;
     node.pos[1] = nRecord.y;
     node.pos[2] = nRecord.z;
     nodeType[nRecord.nodeId] = nRecord.nodeKind;
   }
 
-  s.str("");
-  s << "Reading Triangles file into Memory";
-  notifyStatusMessage(s.str());
+  {
+    QString ss = QObject::tr("Reading Triangles file into Memory");
+    notifyStatusMessage(ss);
+  }
 
   // Allocate all the Triangle Objects
-  typedef DREAM3D::SurfaceMesh::Face_t Face_t;
+  typedef DREAM3D::Mesh::Face_t Face_t;
   StructArray<Face_t>::Pointer m_TriangleListPtr = StructArray<Face_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
   Face_t* m_TriangleList = m_TriangleListPtr->GetPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(Face_t) * nTriangles);
@@ -314,7 +310,7 @@ int BinaryNodesTrianglesReader::read()
       break;
     }
 
-    DREAM3D::SurfaceMesh::Face_t& triangle = m_TriangleList[tRecord.triId];
+    DREAM3D::Mesh::Face_t& triangle = m_TriangleList[tRecord.triId];
 
     triangle.verts[0] = tRecord.nodeId_0;
     triangle.verts[1] = tRecord.nodeId_1;
@@ -327,10 +323,6 @@ int BinaryNodesTrianglesReader::read()
   sm->setFaces(m_TriangleListPtr);
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
-
-
-
-
 
   // The ScopedFileMonitor classes will take care of closing the files
 

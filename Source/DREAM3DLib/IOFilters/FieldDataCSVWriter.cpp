@@ -47,10 +47,6 @@
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 
-
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -73,7 +69,7 @@ FieldDataCSVWriter::~FieldDataCSVWriter()
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -127,24 +123,22 @@ int FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void FieldDataCSVWriter::preflight()
 {
   setErrorCondition(0);
-  QString ss;
 
   if (getFieldDataFile().isEmpty() == true)
   {
-    ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
-  QString parentPath = QFileInfo::parentPath(getFieldDataFile());
-  if (QDir::exists(parentPath) == false)
+  QFileInfo fi(getFieldDataFile());
+  QDir parentPath(fi.path());
+  if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
-
-  if (MXAFileInfo::extension(getFieldDataFile()).compare("") == 0)
+  if (fi.suffix().compare("") == 0)
   {
     setFieldDataFile(getFieldDataFile().append(".dx"));
   }
@@ -158,7 +152,7 @@ void FieldDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -168,23 +162,28 @@ void FieldDataCSVWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(m_FieldDataFile);
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo fi(getFieldDataFile());
+  QDir parentPath(fi.path());
+  if(!parentPath.mkpath("."))
   {
-    QString ss;
-    ss << "Error creating parent path '" << parentPath << "'";
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
 
 
+  QFile file(getFieldDataFile());
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  {
+    QString ss = QObject::tr("Field Data CSV Output file could not be opened: %1").arg(getFieldDataFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(ss, getErrorCondition());
+    return;
+  }
 
-  QString filename = getFieldDataFile();
+  QTextStream outFile(&file);
 
-  std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
   outFile << m->getNumFieldTuples()-1 ;
@@ -219,7 +218,7 @@ void FieldDataCSVWriter::execute()
       data.push_back(p);
     }
   }
-  outFile ;
+  outFile << "\n";
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
@@ -230,9 +229,9 @@ void FieldDataCSVWriter::execute()
   for(size_t i = 1; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold) {
-      ss.str("");
-      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notifyStatusMessage(ss.str());
+
+      QString ss = QObject::tr("Writing Field Data - %1% Complete").arg(((float)i / numTuples) * 100);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -247,7 +246,7 @@ void FieldDataCSVWriter::execute()
       outFile << space;
       (*p)->printTuple(outFile, i, space);
     }
-    outFile ;
+    outFile << "\n";
   }
 
   if(m_WriteNeighborListData == true)
@@ -272,12 +271,12 @@ void FieldDataCSVWriter::execute()
           // Print a row of data
           outFile << space;
           p->printTuple(outFile, i, space);
-          outFile ;
+          outFile << "\n";
         }
       }
     }
   }
-  outFile.close();
+  file.close();
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("FieldDataCSVWriter Completed");

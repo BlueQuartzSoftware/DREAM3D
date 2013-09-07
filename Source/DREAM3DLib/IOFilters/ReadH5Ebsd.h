@@ -52,7 +52,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
 
@@ -86,20 +86,28 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEnsembleArrays)
 
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEnsembleArrays)
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexEnsembleArrays)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
@@ -108,9 +116,9 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, UseTransformations)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::Manufacturer, Manufacturer)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
 
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
@@ -122,7 +130,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -135,22 +143,30 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
-                                            QSet<QString> selectedFieldArrays,
-                                            QSet<QString> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+
+    virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                             QSet<QString> selectedEdgeArrays,
+                                                             QSet<QString> selectedFaceArrays,
+                                                             QSet<QString> selectedCellArrays,
+                                                             QSet<QString> selectedFieldArrays,
+                                                             QSet<QString> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                  QSet<QString> selectedEdgeArrays,
                                                   QSet<QString> selectedFaceArrays,
+                                                  QSet<QString> selectedFieldArrays,
+                                                  QSet<QString> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                   QSet<QString> selectedEdgeArrays,
                                                   QSet<QString> selectedFieldArrays,
                                                   QSet<QString> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                QSet<QString> selectedFaceArrays,
-                                                QSet<QString> selectedEdgeArrays);
+    virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                QSet<QString> selectedFieldArrays,
+                                                QSet<QString> selectedEnsembleArrays);
   protected:
     ReadH5Ebsd();
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int initDataContainerDimsRes(int64_t dims[3], VoxelDataContainer* m);
+    int initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m);
 
     H5EbsdVolumeReader::Pointer initTSLEbsdVolumeReader();
     H5EbsdVolumeReader::Pointer initHKLEbsdVolumeReader();
@@ -176,7 +192,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       reader->setSliceStart(m_ZStartIndex);
       reader->setSliceEnd(m_ZEndIndex);
 
-      std::vector<typename EbsdPhase::Pointer> phases = reader->getPhases();
+      QVector<typename EbsdPhase::Pointer> phases = reader->getPhases();
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
@@ -204,7 +220,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
         materialNames->SetValue(phaseID, phases[i]->getMaterialName());
-        std::vector<float> lc = phases[i]->getLatticeConstants();
+        QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->SetComponent(phaseID, 0, lc[0]);
         latticeConstants->SetComponent(phaseID, 1, lc[1]);
@@ -214,10 +230,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getVolumeDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 

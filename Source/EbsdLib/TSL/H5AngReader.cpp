@@ -36,8 +36,11 @@
 
 #include "H5AngReader.h"
 
+#include <vector>
+
 #include <QtCore/QtDebug>
 #include <QtCore/QStringList>
+#include <QtCore/QVector>
 
 #include "AngConstants.h"
 
@@ -202,7 +205,7 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5AngReader", pid, uint32_t, int, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, QVector<float>, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, float, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA("H5AngReader", pid, int, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
     if (m_CurrentPhase->getNumberFamilies() > 0)
@@ -218,7 +221,7 @@ int H5AngReader::readHeader(hid_t parId)
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if (QH5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
     {
-      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, QVector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, int, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
     }
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);

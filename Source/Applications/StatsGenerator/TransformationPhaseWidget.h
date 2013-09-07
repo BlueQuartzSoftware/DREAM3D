@@ -40,7 +40,7 @@
 #include "ui_TransformationPhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 #if QWT_VERSION >= 0x060000
@@ -78,7 +78,7 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
      DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
 
-     void extractStatsData(VoxelDataContainer::Pointer m, int index);
+     void extractStatsData(VolumeDataContainer::Pointer m, int index);
 
      void setCrystalStructure(unsigned int xtal);
      unsigned int getCrystalStructure();
@@ -103,7 +103,7 @@ class TransformationPhaseWidget : public SGWidget, private Ui::TransformationPha
      int calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize);
      int gatherSizeDistributionFromGui(float &mu, float &sigma, float &minCutOff, float &maxCutOff, float &stepSize);
 
-     int gatherStatsData(VoxelDataContainer::Pointer m);
+     int gatherStatsData(VolumeDataContainer::Pointer m);
 
   // public slots:
      void on_m_GenerateDefaultData_clicked();

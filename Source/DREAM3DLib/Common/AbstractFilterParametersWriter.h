@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int closeFilterGroup() = 0;
 
     virtual int writeValue(const QString name, const QString value) = 0;
-    virtual int writeValue(const QString name, const std::vector<QString> value) = 0;
+    virtual int writeValue(const QString name, const QVector<QString> value) = 0;
 
     virtual int writeValue(const QString name, int8_t value) = 0;
     virtual int writeValue(const QString name, int16_t value) = 0;
@@ -82,23 +82,23 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const QString name, float value) = 0;
     virtual int writeValue(const QString name, double value) = 0;
 
-    virtual int writeValue(const QString name, std::vector<int8_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<int16_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<int32_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<int64_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<uint8_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<uint16_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<uint32_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<uint64_t> value) = 0;
-    virtual int writeValue(const QString name, std::vector<float> value) = 0;
-    virtual int writeValue(const QString name, std::vector<double> value) = 0;
+    virtual int writeValue(const QString name, QVector<int8_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<int16_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<int32_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<int64_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<uint8_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<uint16_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<uint32_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<uint64_t> value) = 0;
+    virtual int writeValue(const QString name, QVector<float> value) = 0;
+    virtual int writeValue(const QString name, QVector<double> value) = 0;
 
     virtual int writeValue(const QString name, IntVec3Widget_t v) = 0;
     virtual int writeValue(const QString name, FloatVec3Widget_t v) = 0;
     virtual int writeValue(const QString name, ComparisonInput_t v, int vectorPos) = 0;
-    virtual int writeValue(const QString name, std::vector<ComparisonInput_t> v) = 0;
+    virtual int writeValue(const QString name, QVector<ComparisonInput_t> v) = 0;
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
-    virtual int writeValue(const QString name, std::vector<AxisAngleInput_t> v) = 0;
+    virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
     virtual int writeValue(const QString name, QSet<QString> v) = 0;
 
 

@@ -38,6 +38,10 @@
 
 #include <stdlib.h>
 
+// Include this FIRST because there is a needed define for some compiles
+// to expose some of the constants needed below
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 /**
  * @brief This class performs calculations on a Quaternion or pair of Quaternions. The class is templated on the type

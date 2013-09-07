@@ -131,7 +131,7 @@
 
 #define READ_PHASE_HEADER_ARRAY(cname, pid, m_msgType, fqKey, key, phase)\
 {\
-  m_msgType t;\
+  std::vector<m_msgType> t;\
   err = QH5Lite::readVectorDataset(pid, fqKey, t);\
   if (err < 0) {\
     QString ss = QObject::tr("%1: The header value for '%2' was not found in the H5EBSD file. Was this header originally found in the files that were imported into this H5EBSD File?")\
@@ -141,7 +141,7 @@
     err = H5Gclose(pid);H5Gclose(phasesGid);H5Gclose(gid);\
     return -1; }\
   else {\
-    phase->set##key(t);\
+    phase->set##key(QVector<m_msgType>::fromStdVector(t));\
   }\
 }
 

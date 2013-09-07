@@ -72,7 +72,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 /**
@@ -160,8 +160,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param cVertexNodeTypePtr
      */
-    void initialize_nodes(int NSP, int zID, int *wrappedDims, DREAM3D::SurfaceMesh::Float_t* res,
-                          DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+    void initialize_nodes(int NSP, int zID, int *wrappedDims, DREAM3D::Mesh::Float_t* res,
+                          DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                           DataArray<int8_t>::Pointer cVertexNodeTypePtr );
@@ -226,9 +226,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param neighborsPtr
      */
-    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, DREAM3D::SurfaceMesh::Float_t *res,
+    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, DREAM3D::Mesh::Float_t *res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                            DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+                            DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
                             StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
@@ -238,7 +238,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param xRes
      * @return
      */
-    DREAM3D::SurfaceMesh::Float_t find_xcoord(int index, int xDim, DREAM3D::SurfaceMesh::Float_t xRes);
+    DREAM3D::Mesh::Float_t find_xcoord(int index, int xDim, DREAM3D::Mesh::Float_t xRes);
 
     /**
      * @brief find_ycoord
@@ -248,7 +248,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param yRes
      * @return
      */
-    DREAM3D::SurfaceMesh::Float_t find_ycoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t yRes);
+    DREAM3D::Mesh::Float_t find_ycoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t yRes);
 
     /**
      * @brief find_zcoord
@@ -257,7 +257,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param zRes
      * @return
      */
-    DREAM3D::SurfaceMesh::Float_t find_zcoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t zRes);
+    DREAM3D::Mesh::Float_t find_zcoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t zRes);
 
     /**
      * @brief treat_anomaly
@@ -357,7 +357,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
                         const QString &nodesFile,
-                        DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+                        DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                         DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                         DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 

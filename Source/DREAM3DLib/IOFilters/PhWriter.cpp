@@ -40,7 +40,7 @@
 #include <fstream>
 #include <QtCore/QString>
 #include <iomanip>
-#include <QMap>
+#include <QtCore/QMap>
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
@@ -70,7 +70,7 @@ PhWriter::~PhWriter()
 // -----------------------------------------------------------------------------
 void PhWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -111,19 +111,19 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
 
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr(" needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -147,13 +147,13 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int PhWriter::writeFile()
 {
-//   QString OutputName;
-  VoxelDataContainer* m = getVoxelDataContainer();
+
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QString ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -2);
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return -1;
   }
@@ -197,19 +197,19 @@ int PhWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if(!parentPath.mkpath("."))
   {
-      QString ss;
-      ss << "Error creating parent path '" << parentPath << "'";
+
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return -1;
   }
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().c_str(), std::ios_base::binary);
+  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
   if(!outfile)
   {
     qDebug() << "Failed to open: " << getOutputFile() ;
@@ -228,7 +228,7 @@ int PhWriter::writeFile()
   typedef QMap<int, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
-    if((*i).second == true)
+    if(i.value() == true)
     {
       grains++;
     }

@@ -1,4 +1,4 @@
- /* ============================================================================
+/* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
@@ -38,6 +38,8 @@
 
 #include <sstream>
 
+#include <QtCore/QVector>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
@@ -45,13 +47,13 @@
 //
 // -----------------------------------------------------------------------------
 RenumberGrains::RenumberGrains() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_GrainIds(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_GrainIds(NULL),
+  m_Active(NULL)
 {
-//  setupFilterParameters();
+  //  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,7 +68,7 @@ RenumberGrains::~RenumberGrains()
 // -----------------------------------------------------------------------------
 void RenumberGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Grains");
@@ -85,7 +87,7 @@ void RenumberGrains::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -106,12 +108,12 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, -306, bool, BoolArrayType, fields, 1)
 }
 
 
@@ -123,7 +125,7 @@ void RenumberGrains::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -133,9 +135,9 @@ void RenumberGrains::preflight()
   QList<QString> headers = m->getFieldArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-      IDataArray::Pointer p = m->getFieldData(*iter);
-	  QString type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
+    IDataArray::Pointer p = m->getFieldData(*iter);
+    QString type = p->getTypeAsString();
+    if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
   }
 }
 
@@ -145,7 +147,7 @@ void RenumberGrains::preflight()
 void RenumberGrains::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -167,10 +169,10 @@ void RenumberGrains::execute()
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);
 
-  ss.str("");
-  ss << " - Generating Active Grain List";
-  notifyStatusMessage(ss.str());
-  std::vector<size_t> RemoveList;
+
+  ss = QObject::tr(" - Generating Active Grain List");
+  notifyStatusMessage(ss);
+  QVector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
     if(m_Active[i] == false)
@@ -192,14 +194,17 @@ void RenumberGrains::execute()
     for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       IDataArray::Pointer p = m->getFieldData(*iter);
-      ss.str("");
-      //ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-      //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      ss << "Updating Field Array '" << *iter << "'";
-      notifyStatusMessage(ss.str());
-	  QString type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
-      else {p->EraseTuples(RemoveList);}
+
+      ss = QObject::tr("Updating Field Array '%1'").arg(*iter);
+      notifyStatusMessage(ss);
+      QString type = p->getTypeAsString();
+      if(type.compare("NeighborList<T>") == 0)
+      {
+        m->removeFieldData(*iter);
+      }
+      else {
+        p->EraseTuples(RemoveList);
+      }
       //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
     m->setNumFieldTuples(m->getNumFieldTuples() - RemoveList.size());
@@ -207,9 +212,8 @@ void RenumberGrains::execute()
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     // Loop over all the points and correct all the grain names
-    ss.str("");
-    ss << "Renumbering Cell Region Ids";
-    notifyStatusMessage(ss.str());
+    ss = QObject::tr("Renumbering Cell Region Ids");
+    notifyStatusMessage(ss);
     for (int i = 0; i < totalPoints; i++)
     {
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);

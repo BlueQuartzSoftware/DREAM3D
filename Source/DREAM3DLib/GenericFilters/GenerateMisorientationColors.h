@@ -1,6 +1,5 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2013 William Lenthe (University of California Santa Barbara)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -29,14 +28,10 @@
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  *
- *  This code was written under United States Air Force Contract number
- *                           FA8650-07-D-5800
- *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshDataContainerWriter_H_
-#define _SurfaceMeshDataContainerWriter_H_
+#ifndef _GenerateMisorientationColors_H_
+#define _GenerateMisorientationColors_H_
 
-#include <sstream>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -46,28 +41,34 @@
 
 
 /**
- * @class SurfaceMeshDataContainerWriter SurfaceMeshDataContainerWriter.h DREAm3DLib/IOFilters/SurfaceMeshDataContainerWriter.h
- * @brief
- * @author
- * @date
+ * @class GenerateMisorientationColors GenerateMisorientationColors.h DREAM3DLib/GenericFilters/GenerateMisorientationColors.h
+ * @brief This filter generates colors for each voxel based on the C. Schuh and S. Patala method
+ * @author William Lenthe (University of California Santa Barbara)
+ * @date Aug 30, 2013
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT GenerateMisorientationColors : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(GenerateMisorientationColors);
+    DREAM3D_STATIC_NEW_MACRO(GenerateMisorientationColors);
+    DREAM3D_TYPE_MACRO_SUPER(GenerateMisorientationColors, AbstractFilter);
 
-    virtual ~SurfaceMeshDataContainerWriter();
+    virtual ~GenerateMisorientationColors();
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+
+    DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(MisorientationColorArrayName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
-
-    typedef QList<QString> NameListType;
-
-    void setXdmfOStream(QDataStream* xdmf);
+    DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ReferenceAxis)
+    DREAM3D_INSTANCE_PROPERTY(float, ReferenceAngle)
 
 
     /**
@@ -75,14 +76,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Generate Misorientation Colors"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -95,7 +96,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -114,7 +115,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    SurfaceMeshDataContainerWriter();
+    GenerateMisorientationColors();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -126,29 +127,14 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
-
-    int writeVertices(hid_t dcGid);
-    int writeFaces(hid_t dcGid);
-    int writeEdges(hid_t dcGid);
-    int writeMeshVertLinks(hid_t dcGid);
-    int writeMeshFaceNeighborLists(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
-    int writeFaceAttributeData(hid_t dcGid);
-    int writeEdgeAttributeData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
-
-    void writeXdmfGridHeader();
-    void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
-    QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
-
   private:
-    QDataStream* m_XdmfPtr;
+    int32_t* m_CellPhases;
+    float* m_Quats;
+    unsigned int* m_CrystalStructures;
+    uint8_t* m_MisorientationColor;
 
-    SurfaceMeshDataContainerWriter(const SurfaceMeshDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshDataContainerWriter&); // Operator '=' Not Implemented
+    GenerateMisorientationColors(const GenerateMisorientationColors&); // Copy Constructor Not Implemented
+    void operator=(const GenerateMisorientationColors&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshDataContainerWriter_H_ */
+#endif /* _GenerateMisorientationColors_H_ */

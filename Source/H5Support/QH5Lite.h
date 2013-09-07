@@ -42,6 +42,8 @@
 #include <hdf5.h>
 #include <H5Tpublic.h>
 
+#include <vector>
+
 #include "H5Support/H5Support.h"
 #include "H5Support/H5SupportDLLExport.h"
 #include "H5Support/H5Lite.h"
@@ -184,8 +186,12 @@ static H5Support_EXPORT bool datasetExists( hid_t loc_id, const QString& name );
  * </code>
  *
  * Also when passing data BE SURE that the type of data and the data type match.
- * For example if I create some data in a QVector<UInt8Type> I would need to
+ * For example if I create some data in a QVector<UInt8Type> you would need to
  * pass H5T_NATIVE_UINT8 as the dataType.
+ *
+ * Also note that QVector is 32 bit limited in that the most data that it can hold is 2^31 elements. If you
+ * are trying to write a data set that has more than 2^31 elements then use the H5Lite::writeVectorDataset()
+ * instead which takes a std::vector() and is probably more suited for large data.
  */
 template <typename T>
 static herr_t writeVectorDataset (hid_t loc_id,
@@ -444,7 +450,7 @@ static herr_t readPointerDataset(hid_t loc_id,
 template <typename T>
 static herr_t readVectorDataset(hid_t loc_id,
                           const QString& dsetName,
-                          QVector<T> &data)
+                          std::vector<T> &data)
 {
   hid_t   did;
   herr_t  err = 0;
@@ -616,7 +622,7 @@ template <typename T>
 static herr_t readVectorAttribute(hid_t loc_id,
                             const QString& objName,
                             const QString& attrName,
-                            QVector<T> &data)
+                            std::vector<T> &data)
 {
   /* identifiers */
   hid_t      obj_id;

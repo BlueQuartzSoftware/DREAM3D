@@ -34,14 +34,17 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CubicOps.h"
+
+
+#include <QtCore/QtEndian>
+
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
+#include "DREAM3DLib/Utilities/ColorUtilities.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
@@ -1100,9 +1103,6 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
-#endif
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -1150,6 +1150,44 @@ void _TripletSort(T a, T b, T c, T* sorted)
   else
   { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
 }
+
+
+/**
+ * @brief Sorts the 3 values from low to high
+ * @param a Input
+ * @param b Input
+ * @param c Input
+ * @param x Output
+ * @param y Output
+ * @param z Output
+ */
+template<typename T>
+void _TripletSort(T a, T b, T c, T &x, T &y, T&z)
+{
+  if ( a > b && a > c)
+  {
+    z = a;
+    if (b > c) { y = b; x = c; }
+    else { y = c; x = b; }
+  }
+  else if ( b > a && b > c)
+  {
+    z = b;
+    if (a > c) { y = a; x = c; }
+    else { y = c; x = a; }
+  }
+  else if ( a > b )
+  {
+    y = a; x = b; z = c;
+  }
+  else if (a >= c && b >=c)
+  {
+    x = c; y = a; z = b;
+  }
+  else
+  { x = a; y = b; z = c;}
+}
+
 
 // -----------------------------------------------------------------------------
 //
@@ -1265,9 +1303,9 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
+  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("<001>");
   QString label1("<011>");
   QString label2("<111>");
@@ -1383,7 +1421,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   }
 
 
-
+#if 0
   size_t dims[3] = {config.imageDim, config.imageDim, 1};
   float res[3] = {1.0, 1.0, 1.0};
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->GetName() + ".vtk",
@@ -1392,7 +1430,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
                                                  intensity011.get(), dims, res, "double", true );
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->GetName() + ".vtk",
                                                  intensity111.get(), dims, res, "double", true );
-
+#endif
   return poleFigures;
 }
 
@@ -1403,124 +1441,100 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 {
 
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High IPF Triangle Legend");
-  //uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
+
+  float indexConst1 = 0.414 / imageDim;
+  float indexConst2 = 0.207 / imageDim;
+  float temp = 0.0f;
+  float red1 = 0.0f;
+  float green1 = 0.0f;
+  float blue1 = 0.0f;
+  float red2 = 0.0f;
+  float green2 = 0.0f;
+  float blue2 = 0.0f;
+  float x = 0.0f;
+  float y = 0.0f;
+  float z = 0.0f;
+  float a = 0.0f;
+  float b = 0.0f;
+  float c = 0.0f;
+  float check1 = 0.0f;
+  float check2 = 0.0f;
+  float val = 0.0f;
+  float x1 = 0.0f;
+  float y1 = 0.0f;
+  float z1 = 0.0f;
+  float denom = 0.0f;
+  float phi = 0.0f;
+  float x1alt = 0.0f;
+  float theta = 0.0f;
+  float k_RootOfHalf = sqrt(0.5);
+  float cd[3];
 
 
-  //float indexConst1 = 0.414 / imageDim;
-  //float indexConst2 = 0.207 / imageDim;
-  ////float tslConst1 = (90.0f * M_PI) / 180.0f;
-  //float temp = 0.0f;
-  //float red1 = 0.0f;
-  //float green1 = 0.0f;
-  //float blue1 = 0.0f;
-  //float red2 = 0.0f;
-  //float green2 = 0.0f;
-  //float blue2 = 0.0f;
-  //float x = 0.0f;
-  //float y = 0.0f;
-  //float z = 0.0f;
-  //float a = 0.0f;
-  //float b = 0.0f;
-  //float c = 0.0f;
-  //float check1 = 0.0f;
-  //float check2 = 0.0f;
-  //float val = 0.0f;
-  //float x1 = 0.0f;
-  //float y1 = 0.0f;
-  //float z1 = 0.0f;
-  //float denom = 0.0f;
-  //float phi = 0.0f;
-  //float x1alt = 0.0f;
-  //float theta = 0.0f;
-  //float k_RootOfHalf = sqrt(0.5);
-  //uint8_t rgb[3];
+  DREAM3D::Rgb color;
+  size_t idx = 0;
+  size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
+  // Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
+  // there.
+  for (size_t yIndex = 0; yIndex < imageDim; ++yIndex)
+  {
+    yScanLineIndex--;
+    for (size_t xIndex = 0; xIndex < imageDim; ++xIndex)
+    {
+      idx = (imageDim * yScanLineIndex) + xIndex;
+      temp = 0;
+      red1 = 0;
+      green1 = 0;
+      blue1 = 0;
+      red2 = 0;
+      green2 = 0;
+      blue2 = 0;
+      x = xIndex * indexConst1 + indexConst2;
+      y = yIndex * indexConst1 + indexConst2;
+      z = -1.0;
+      a = (x * x + y * y + 1);
+      b = (2 * x * x + 2 * y * y);
+      c = (x * x + y * y - 1);
+      check1 = b * b;
+      check2 = 4 * a * c;
+      val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
+      x1 = (1 + val) * x;
+      y1 = (1 + val) * y;
+      z1 = val;
+      denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
+      denom = sqrtf(denom);
+      x1 = x1 / denom;
+      y1 = y1 / denom;
+      z1 = z1 / denom;
 
-  //float redDir[3] = {0, -DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
-  //float cd[3];
-  //float d[3];
-  //float fRgb[3] = { 0.0f, 0.0f, 0.0f };
-  //float theta1 = 0.0f;
-  //float theta2 = 90.0f;
+      red1 = x1 * (-k_RootOfHalf) + z1 * k_RootOfHalf;
+      phi = acos(red1);
+      x1alt = x1 / k_RootOfHalf;
+      x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
+      theta = acos(x1alt);
 
-  //DREAM3D::Rgb color;
-  //size_t idx = 0;
-  //size_t yScanLineIndex = imageDim; // We use this to control where teh data is drawn. Otherwise the image will come out flipped vertically
-  //// Loop over every pixel in the image and project up to the sphere to get the angle and then figure out the RGB from
-  //// there.
-  //for (size_t yIndex = 0; yIndex < imageDim; ++yIndex)
-  //{
-  //  yScanLineIndex--;
-  //  for (size_t xIndex = 0; xIndex < imageDim; ++xIndex)
-  //  {
-  //    idx = (imageDim * yScanLineIndex) + xIndex;
-  //    temp = 0;
-  //    red1 = 0;
-  //    green1 = 0;
-  //    blue1 = 0;
-  //    red2 = 0;
-  //    green2 = 0;
-  //    blue2 = 0;
-  //    x = xIndex * indexConst1 + indexConst2;
-  //    y = yIndex * indexConst1 + indexConst2;
-  //    z = -1.0;
-  //    a = (x * x + y * y + 1);
-  //    b = (2 * x * x + 2 * y * y);
-  //    c = (x * x + y * y - 1);
-  //    check1 = b * b;
-  //    check2 = 4 * a * c;
-  //    val = (-b + sqrtf(b * b - 4.0 * a * c)) / (2.0 * a);
-  //    x1 = (1 + val) * x;
-  //    y1 = (1 + val) * y;
-  //    z1 = val;
-  //    denom = (x1 * x1) + (y1 * y1) + (z1 * z1);
-  //    denom = sqrtf(denom);
-  //    x1 = x1 / denom;
-  //    y1 = y1 / denom;
-  //    z1 = z1 / denom;
+      if (phi < (45 * DREAM3D::Constants::k_PiOver180) ||
+          phi > (90 * DREAM3D::Constants::k_PiOver180) ||
+          theta > (35.26 * DREAM3D::Constants::k_PiOver180))
+      {
+        color = 0xFFFFFFFF;
+      }
+      else
+      {
+        //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
+        cd[0] = fabs(x1);
+        cd[1] = fabs(y1);
+        cd[2] = fabs(z1);
 
-  //    red1 = x1 * (-k_RootOfHalf) + z1 * k_RootOfHalf;
-  //    phi = acos(red1);
-  //    x1alt = x1 / k_RootOfHalf;
-  //    x1alt = x1alt / sqrt((x1alt * x1alt) + (y1 * y1));
-  //    //theta = acos(x1alt / cos((tslConst1) - phi));
-  //    theta = acos(x1alt);
+        // Sort the cd array from smallest to largest
+        _TripletSort(cd[0], cd[1], cd[2], cd);
 
-  //    if (phi < (45 * DREAM3D::Constants::k_PiOver180) ||
-  //        phi > (90 * DREAM3D::Constants::k_PiOver180) ||
-  //        theta > (35.26 * DREAM3D::Constants::k_PiOver180))
-  //    {
-  //      color = 0xFFFFFFFF;
-  //    }
-  //    else
-  //    {
-  //      //3) move that direction to a single standard triangle - using the 001-011-111 triangle)
-  //      cd[0] = fabs(x1);
-  //      cd[1] = fabs(y1);
-  //      cd[2] = fabs(z1);
-
-  //      // Sort the cd array from smallest to largest
-  //      _TripletSort(cd[0], cd[1], cd[2], cd);
-
-  //      d[0] = (cd[1] * 1) - (cd[2] * 0);
-  //      d[1] = (cd[2] * 0) - (cd[0] * 1);
-  //      d[2] = (cd[0] * 0) - (cd[1] * 0);
-  //      d[0] = -(d[1] + d[2]) / d[0];
-  //      d[1] = 1;
-  //      d[2] = 1;
-
-  //     // float redDir[3] = {0,-DREAM3D::Constants::k_HalfSqrt2, DREAM3D::Constants::k_HalfSqrt2};
-  //      theta1 = (cd[0] * redDir[0]) + (cd[1] * redDir[1]) + (cd[2] * redDir[2]);
-  //      theta1 = (DREAM3D::Constants::k_RadToDeg) * acos(theta1);
-
-  //      fRgb[0] = (theta2 - theta1) / (theta2 * 0.5f);
-
-  //      _calculateIPFColor(d, fRgb, rgb);
-
-  //      color = ColorTable::makeRgba(rgb[0], rgb[1], rgb[2], 255);
-  //    }
-  //    pixelPtr[idx] = color;
-  //  }
-  //}
+        color = generateIPFColor(0.0, 0.0, 0.0, cd[0], cd[1], cd[2], false);
+      }
+      pixelPtr[idx] = color;
+    }
+  }
   return image;
 }
 
@@ -1530,9 +1544,185 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
-  DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+  //DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+
+  float n1, n2, n3, w;
+  float x, x1, x2, x3, x4, x5, x6, x7;
+  float y, y1, y2, y3, y4, y5, y6, y7;
+  float z, z1, z2, z3, z4, z5, z6, z7;
+  float k, h, s, v;
+
+  QuatF q1, q2;
+  QuaternionMathF::Copy(q, q1);
+  QuaternionMathF::Copy(refFrame, q2);
+
+  //get disorientation
+  w=getMisoQuat(q1, q2, n1, n2, n3);
+  n1=fabs(n1);
+  n2=fabs(n2);
+  n3=fabs(n3);
 
 
+  //_TripletSort(n1, n2, n3, x, y, z);
+
+  if(n1>=n2 && n1>=n3)//n1 largest
+  {
+      x=n1;
+      if(n2>=n3)
+      {
+          y=n2;
+          z=n3;
+      }
+      else
+      {
+          y=n3;
+          z=n2;
+      }
+  }
+  else if(n2>=n1 && n2>=n3)//n2 largest
+  {
+      x=n2;
+      if(n1>=n3)
+      {
+          y=n1;
+          z=n3;
+      }
+      else
+      {
+          y=n3;
+          z=n1;
+      }
+  }
+  else//n3 largest
+  {
+      x=n3;
+      if(n1>=n2)
+      {
+          y=n1;
+          z=n2;
+      }
+      else
+      {
+          y=n2;
+          z=n1;
+      }
+  }
+
+  //eq c9.1
+  k=tan(w/2.0f);
+  x=x*k;
+  y=y*k;
+  z=z*k;
+
+  //eq c9.2
+  x1=x;
+  y1=y;
+  z1=z;
+  if(x>=(1.0f/3.0f) && atan2(z, y)>=((1.0f-2.0f*x)/x))
+  {
+      y1=(x*(y+z))/(1.0f-x);
+      z1=(x*z*(y+z))/(y*(1.0f-x));
+  }
+
+  //eq c9.3
+  x2=x1-DREAM3D::Constants::k_Tan_OneEigthPi;
+  y2=y1*cos((3.0f*M_PI)/8.0f)-z1*sin((3.0f*M_PI)/8.0f);
+  z2=y1*sin((3.0f*M_PI)/8.0f)+z1*cos((3.0f*M_PI)/8.0f);
+
+  //eq c9.4
+  x3=x2;
+  y3=y2*(1+(y2/z2)*tan(M_PI/8.0f));
+  z3=z2+y2*tan(M_PI/8.0f);
+
+  //eq c9.5
+  x4=x3;
+  y4=(y3*cos(M_PI/8.0f))/tan(M_PI/8.0f);
+  z4=z3-x3/cos(M_PI/8.0f);
+
+  //eq c9.6
+  k=atan2(-x4, y4);
+  x5=x4*(sin(k)+fabs(cos(k)));
+  y5=y4*(sin(k)+fabs(cos(k)));
+  z5=z4;
+
+  //eq c9.7
+  k=atan2(-x5, y5);
+  x6=-sqrt(x5*x5+y5*y5)*sin(2.0f*k);
+  y6=sqrt(x5*x5+y5*y5)*cos(2.0f*k);
+  z6=z5;
+
+  //eq c9.8 these hsv are from 0 to 1 in cartesian coordinates
+  //x7=(x6-y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
+  x7=(x6*sqrt(3.0f)-y6)/(2.0f*tan(M_PI/8.0f));
+  y7=(x6+y6*sqrt(3.0f))/(2.0f*tan(M_PI/8.0f));
+  z7=z6*(cos(M_PI/8.0f)/tan(M_PI/8.0f));
+
+  //convert to traditional hsv (0-1)
+  h=fmod(atan2f(y7, x7)+2.0f*M_PI, 2.0f*M_PI)/(2.0f*M_PI);
+  s=sqrt(x7*x7+y7*y7);
+  v=z7;
+  if(v>0)
+  {
+      s=s/v;
+  }
+
+  return ColorUtilities::convertHSVtoRgb(h,s,v);
+  #if 0
+  //hsv to rgb (from wikipedia hsv/hsl page)
+  c = v*s;
+  k=c*(1-fabs(fmod(h*6,2)-1));//x in wiki article
+  h=h*6;
+  r=0;
+  g=0;
+  b=0;
+
+  if(h>=0)
+  {
+      if(h<1)
+      {
+          r=c;
+          g=k;
+      }
+      else if(h<2)
+      {
+          r=k;
+          g=c;
+      }
+      else if(h<3)
+      {
+          g=c;
+          b=k;
+      }
+      else if(h<4)
+      {
+          g=k;
+          b=c;
+      }
+      else if (h<5)
+      {
+          r=k;
+          b=c;
+      }
+      else if(h<6)
+      {
+          r=c;
+          b=k;
+      }
+  }
+
+  //adjust lumosity and invert
+  r=(r+(v-c));
+  g=(g+(v-c));
+  b=(b+(v-c));
+
+  //now standard 0-1 rgb, needs rotation
+  k=r;
+  r=1-g;
+  g=b;
+  b=k;
+
+  rgb=RgbColor::dRgb(r*255, g*255, b*255, 0);
   return rgb;
+  #endif
 }
 

@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CylinderOps.h"
 
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
 

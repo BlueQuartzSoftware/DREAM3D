@@ -43,8 +43,8 @@ set(_PublicFilters
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
   RawBinaryReader
-  VtkGrainIdReader
-  SolidMeshToVtk
+#  VtkGrainIdReader
+#  SolidMeshToVtk
   SPParksWriter
   VisualizeGBCD
   ReadOrientationData
@@ -69,16 +69,18 @@ endforeach()
 set(_PrivateFilters
   GoldfeatherReader
 
-  VoxelDataContainerWriter
-  VoxelDataContainerReader
+  VolumeDataContainerWriter
+  VolumeDataContainerReader
 
-  SurfaceMeshDataContainerWriter
-  SurfaceMeshDataContainerReader
+  SurfaceDataContainerWriter
+  SurfaceDataContainerReader
 
-  SolidMeshDataContainerWriter
-  SolidMeshDataContainerReader
+  VertexDataContainerWriter
+  VertexDataContainerReader
   GBCDTriangleDumper
 
+  EdgeDataContainerWriter
+  EdgeDataContainerReader
 )
 
 #-----------------

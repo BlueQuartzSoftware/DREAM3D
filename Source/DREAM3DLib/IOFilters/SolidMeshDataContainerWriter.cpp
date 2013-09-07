@@ -62,7 +62,7 @@ SolidMeshDataContainerWriter::~SolidMeshDataContainerWriter()
 // -----------------------------------------------------------------------------
 void SolidMeshDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }

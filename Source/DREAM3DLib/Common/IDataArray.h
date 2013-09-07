@@ -131,7 +131,7 @@ class DREAM3DLib_EXPORT IDataArray
      * @param idxs The indices to erase
      * @return
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
+    virtual int EraseTuples(QVector<size_t> &idxs) = 0;
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -169,8 +169,8 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int32_t Resize(size_t numTuples) = 0;
 
 
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',') = 0;
-    virtual void printComponent(QDataStream &out, size_t i, int j) = 0;
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',') = 0;
+    virtual void printComponent(QTextStream &out, size_t i, int j) = 0;
 
 
     /**
@@ -181,7 +181,7 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
 //    {
 //      qDebug() << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." ;
 //      return -1;

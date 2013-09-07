@@ -38,11 +38,11 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
-#include "DREAM3DLib/Common/IDataArray.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -54,8 +54,9 @@ m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NeighborhoodsArrayName(DREAM3D::FieldData::Neighborhoods),
-m_MultiplesOfAverage(1),
 m_NeighborhoodListArrayName(DREAM3D::FieldData::NeighborhoodList),
+m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+m_MultiplesOfAverage(1),
 m_FieldPhases(NULL),
 m_Centroids(NULL),
 m_EquivalentDiameters(NULL),
@@ -76,7 +77,7 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MultiplesOfAverage");
@@ -117,8 +118,8 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
 
   // Field Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
@@ -134,7 +135,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
-      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" ;
+      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -152,13 +153,13 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -174,7 +175,7 @@ void FindNeighborhoods::preflight()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -190,7 +191,7 @@ void FindNeighborhoods::execute()
   }
 
   find_neighborhoods();
- notifyStatusMessage("FindNeighborhoods Completed");
+  notifyStatusMessage("FindNeighborhoods Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -198,14 +199,12 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
 
   float x, y, z;
   float xn, yn, zn;
   float dx, dy, dz;
-
-
 
   std::vector<std::vector<int> > neighborhoodlist;
 
@@ -248,7 +247,7 @@ void FindNeighborhoods::find_neighborhoods()
   float sizeZ = float(zP)*zRes;
   int numXBins = int(sizeX/criticalDistance);
   int numYBins = int(sizeY/criticalDistance);
-  int numZBins = int(sizeZ/criticalDistance);
+//  int numZBins = int(sizeZ/criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
   std::vector<size_t> bins(totalFields, 0);
@@ -265,43 +264,43 @@ void FindNeighborhoods::find_neighborhoods()
   }
   for (size_t i = 1; i < totalFields; i++)
   {
-      if (i%1000 == 0)
+    if (i%1000 == 0)
+    {
+
+      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      notifyStatusMessage(ss);
+    }
+    x = m_Centroids[3*i];
+    y = m_Centroids[3*i+1];
+    z = m_Centroids[3*i+2];
+    bin1 = bins[i];
+    for (size_t j = i+1; j < totalFields; j++)
+    {
+      bin2 = bins[j];
+      if(bin1 == bin2)
       {
-        ss.str("");
-        ss << "Working On Grain " << i << " of " << totalFields;
-        notifyStatusMessage(ss.str());
+          m_Neighborhoods[i]++;
+          neighborhoodlist[i].push_back(j);
+          m_Neighborhoods[j]++;
+          neighborhoodlist[j].push_back(i);
       }
-      x = m_Centroids[3*i];
-      y = m_Centroids[3*i+1];
-      z = m_Centroids[3*i+2];
-      bin1 = bins[i];
-      for (size_t j = i+1; j < totalFields; j++)
+      else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
       {
-        bin2 = bins[j];
-        if(bin1 == bin2)
+        xn = m_Centroids[3*j];
+        yn = m_Centroids[3*j+1];
+        zn = m_Centroids[3*j+2];
+        dx = fabs(x - xn);
+        dy = fabs(y - yn);
+        dz = fabs(z - zn);
+        if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
         {
-            m_Neighborhoods[i]++;
-            neighborhoodlist[i].push_back(j);
-            m_Neighborhoods[j]++;
-            neighborhoodlist[j].push_back(i);
-        }
-        else if(abs(bin1-bin2) == 1 || abs(bin1-bin2) == numXBins || abs(bin1-bin2) == (numXBins*numYBins))
-        {
-          xn = m_Centroids[3*j];
-          yn = m_Centroids[3*j+1];
-          zn = m_Centroids[3*j+2];
-          dx = fabs(x - xn);
-          dy = fabs(y - yn);
-          dz = fabs(z - zn);
-          if (dx < criticalDistance && dy < criticalDistance && dz < criticalDistance)
-          {
-              m_Neighborhoods[i]++;
-              neighborhoodlist[i].push_back(j);
-              m_Neighborhoods[j]++;
-              neighborhoodlist[j].push_back(i);
-          }
+          m_Neighborhoods[i]++;
+          neighborhoodlist[i].push_back(j);
+          m_Neighborhoods[j]++;
+          neighborhoodlist[j].push_back(i);
         }
       }
+    }
   }
   for (size_t i = 1; i < totalFields; i++)
   {

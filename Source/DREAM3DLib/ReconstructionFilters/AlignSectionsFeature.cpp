@@ -114,17 +114,17 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -141,7 +141,7 @@ void AlignSectionsFeature::preflight()
 void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -168,14 +168,14 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().c_str());
+    outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -210,9 +210,9 @@ void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<in
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss;
-    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notifyStatusMessage(ss.str());
+
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
+  //  notifyStatusMessage(ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;

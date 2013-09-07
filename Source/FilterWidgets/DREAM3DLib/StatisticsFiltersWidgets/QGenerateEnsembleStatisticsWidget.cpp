@@ -129,7 +129,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaul
   filter->setCalculateAxisODF(calcAODF->isChecked());
   filter->setSizeCorrelationResolution(m_SizeCorrRes->value());
 
-  // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
+  // Add the PhaseTypes Array into the VolumeDataContainer if the user has set them up.
   if (m_DefinePhaseTypes->isChecked() == true)
   {
 
@@ -278,12 +278,13 @@ QString QGenerateEnsembleStatisticsWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc,
-                                                                SurfaceMeshDataContainer::Pointer smdc,
-                                                                SolidMeshDataContainer::Pointer sdc)
+void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc,
+                                                                SurfaceDataContainer::Pointer sdc,
+                                                                EdgeDataContainer::Pointer edc,
+                                                                VertexDataContainer::Pointer vdc)
 {
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  // Add the PhaseTypes Array into the VoxelDataContainer if the user has set them up.
+  // Add the PhaseTypes Array into the VolumeDataContainer if the user has set them up.
   if (m_DefinePhaseTypes->isChecked() == true)
   {
     int count = phaseTypeTableWidget->rowCount();
@@ -306,9 +307,10 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VoxelDataContain
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VoxelDataContainer::Pointer vdc,
-                                                               SurfaceMeshDataContainer::Pointer smdc,
-                                                               SolidMeshDataContainer::Pointer sdc)
+void QGenerateEnsembleStatisticsWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc,
+                                                                SurfaceDataContainer::Pointer sdc,
+                                                                EdgeDataContainer::Pointer edc,
+                                                                VertexDataContainer::Pointer vdc)
 {
 
 }

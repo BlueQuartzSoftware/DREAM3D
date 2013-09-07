@@ -33,26 +33,26 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+
+#include "DREAM3DLib/Common/EdgeDataContainer.h"
 
 // C Includes
 
 // C++ Includes
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 
 
 // DREAM3D Includes
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainer::SolidMeshDataContainer() :
+EdgeDataContainer::EdgeDataContainer() :
 Observable(),
 m_NumVertexTuples(0),
-m_NumFaceTuples(0),
 m_NumEdgeTuples(0)
 {
 
@@ -61,7 +61,7 @@ m_NumEdgeTuples(0)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainer::~SolidMeshDataContainer()
+EdgeDataContainer::~EdgeDataContainer()
 {
 
 }
@@ -69,21 +69,54 @@ SolidMeshDataContainer::~SolidMeshDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, FaceData)
-DOES_DATASET_EXIST_DEFN(SolidMeshDataContainer, EdgeData)
-
+DOES_DATASET_EXIST_DEFN(EdgeDataContainer, VertexData)
+DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeData)
+DOES_DATASET_EXIST_DEFN(EdgeDataContainer, FieldData)
+DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EnsembleData)
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::buildMeshLinks()
+{
+  m_MeshLinks = MeshLinks::New();
+  m_MeshLinks->generateMeshLinksEdges(m_Vertices, m_Edges);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::removeMeshLinks()
+{
+  m_MeshLinks = MeshLinks::NullPointer();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::setMeshLinks(MeshLinks::Pointer vertLinks)
+{
+  m_MeshLinks = vertLinks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+MeshLinks::Pointer EdgeDataContainer::getMeshLinks()
+{
+  return m_MeshLinks;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::addVertexData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "SolidMeshDataContainer::Adding Cell array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
+    qDebug() << "EdgeDataContainer::Adding Cell array with different array name than key name";
+    qDebug() << "Key name: " << name;
+    qDebug() << "Array Name:" << data->GetName();
     data->SetName(name);
   }
   m_VertexData[name] = data;
@@ -93,20 +126,22 @@ void SolidMeshDataContainer::addVertexData(const QString &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getVertexData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getVertexData(const QString &name)
 {
-  if ( m_VertexData.contains(name) == false )
+  QMap<QString, IDataArray::Pointer>::iterator it;
+  it =  m_VertexData.find(name);
+  if ( it == m_VertexData.end() )
   {
     return IDataArray::NullPointer();
   }
-  return m_VertexData[name];
+  return it.value();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeVertexData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeVertexData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -122,7 +157,7 @@ IDataArray::Pointer SolidMeshDataContainer::removeVertexData(const QString &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearVertexData()
+void EdgeDataContainer::clearVertexData()
 {
   m_VertexData.clear();
 }
@@ -130,7 +165,7 @@ void SolidMeshDataContainer::clearVertexData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SolidMeshDataContainer::getPointArrayNameList()
+QList<QString> EdgeDataContainer::getVertexArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
@@ -143,108 +178,15 @@ QList<QString> SolidMeshDataContainer::getPointArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumPointArrays()
+int EdgeDataContainer::getNumVertexArrays()
 {
   return static_cast<int>(m_VertexData.size());
 }
 
-
-
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getFaceData(const QString &name)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(name);
-  if ( it == m_FaceData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  return it.value();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addFaceData(const QString &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    qDebug() << "Adding Field array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
-    data->SetName(name);
-  }
-  m_FaceData[name] = data;
-  m_NumFaceTuples = data->GetNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeFaceData(const QString &name)
-{
-  QMap<QString, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(name);
-  if ( it == m_FaceData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  IDataArray::Pointer p = it.value();
-  m_FaceData.erase(it);
-  return p;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearFaceData()
-{
-  m_FaceData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-QList<QString> SolidMeshDataContainer::getFaceArrayNameList()
-{
-  QList<QString> keys;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
-  {
-    keys.push_back( iter.key());
-  }
-  return keys;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumFaceArrays()
-{
-  return static_cast<int>(m_FaceData.size());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SolidMeshDataContainer::resizeFaceDataArrays(size_t size)
-{
- // int success = 0;
-  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
-  {
-    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success ;
-    IDataArray::Pointer d = iter.value();
-    d->Resize(size);
-  }
-  m_NumFaceTuples = size;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::getEdgeData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::getEdgeData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -258,13 +200,13 @@ IDataArray::Pointer SolidMeshDataContainer::getEdgeData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
+void EdgeDataContainer::addEdgeData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
-    qDebug() << "Adding Edge array with different array name than key name" ;
-    qDebug() << "Key name: " << name ;
-    qDebug() << "Array Name:" << data->GetName() ;
+    qDebug() << "Adding Edge array with different array name than key name";
+    qDebug() << "Key name: " << name;
+    qDebug() << "Array Name:" << data->GetName();
     data->SetName(name);
   }
   m_EdgeData[name] = data;
@@ -275,7 +217,7 @@ void SolidMeshDataContainer::addEdgeData(const QString &name, IDataArray::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SolidMeshDataContainer::removeEdgeData(const QString &name)
+IDataArray::Pointer EdgeDataContainer::removeEdgeData(const QString &name)
 {
   QMap<QString, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -291,7 +233,7 @@ IDataArray::Pointer SolidMeshDataContainer::removeEdgeData(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainer::clearEdgeData()
+void EdgeDataContainer::clearEdgeData()
 {
   m_EdgeData.clear();
   m_NumEdgeTuples = 0;
@@ -300,7 +242,7 @@ void SolidMeshDataContainer::clearEdgeData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QList<QString> SolidMeshDataContainer::getEdgeArrayNameList()
+QList<QString> EdgeDataContainer::getEdgeArrayNameList()
 {
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
@@ -313,9 +255,188 @@ QList<QString> SolidMeshDataContainer::getEdgeArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainer::getNumEdgeArrays()
+int EdgeDataContainer::getNumEdgeArrays()
 {
   return static_cast<int>(m_EdgeData.size());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer EdgeDataContainer::getFieldData(const QString &name)
+{
+  QMap<QString, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return it.value();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::addFieldData(const QString &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    qDebug() << "Adding Field array with different array name than key name";
+    qDebug() << "Key name: " << name;
+    qDebug() << "Array Name:" << data->GetName();
+    data->SetName(name);
+  }
+  m_FieldData[name] = data;
+  m_NumFieldTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer EdgeDataContainer::removeFieldData(const QString &name)
+{
+  QMap<QString, IDataArray::Pointer>::iterator it;
+  it =  m_FieldData.find(name);
+  if ( it == m_FieldData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = it.value();
+  m_FieldData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::clearFieldData()
+{
+  m_FieldData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> EdgeDataContainer::getFieldArrayNameList()
+{
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  {
+    keys.push_back( iter.key());
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int EdgeDataContainer::getNumFieldArrays()
+{
+  return static_cast<int>(m_FieldData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::resizeFieldDataArrays(size_t size)
+{
+ // int success = 0;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  {
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success;
+    IDataArray::Pointer d = iter.value();
+    d->Resize(size);
+  }
+  m_NumFieldTuples = size;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer EdgeDataContainer::getEnsembleData(const QString &name)
+{
+  QMap<QString, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  return it.value();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::addEnsembleData(const QString &name, IDataArray::Pointer data)
+{
+  if (data->GetName().compare(name) != 0)
+  {
+    qDebug() << "Adding Ensemble array with different array name than key name";
+    qDebug() << "Key name: " << name;
+    qDebug() << "Array Name:" << data->GetName();
+    data->SetName(name);
+  }
+  m_EnsembleData[name] = data;
+  m_NumEnsembleTuples = data->GetNumberOfTuples();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+IDataArray::Pointer EdgeDataContainer::removeEnsembleData(const QString &name)
+{
+  QMap<QString, IDataArray::Pointer>::iterator it;
+  it =  m_EnsembleData.find(name);
+  if ( it == m_EnsembleData.end() )
+  {
+    return IDataArray::NullPointer();
+  }
+  IDataArray::Pointer p = it.value();
+  m_EnsembleData.erase(it);
+  return p;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::clearEnsembleData()
+{
+  m_EnsembleData.clear();
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QList<QString> EdgeDataContainer::getEnsembleArrayNameList()
+{
+  QList<QString> keys;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    keys.push_back( iter.key());
+  }
+  return keys;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int EdgeDataContainer::getNumEnsembleArrays()
+{
+  return static_cast<int>(m_EnsembleData.size());
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainer::resizeEnsembleDataArrays(size_t size)
+{
+ // int success = 0;
+  for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  {
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success;
+    IDataArray::Pointer d = iter.value();
+    d->Resize(size);
+  }
+  m_NumEnsembleTuples = size;
+}
 

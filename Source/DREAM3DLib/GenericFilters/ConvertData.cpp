@@ -38,10 +38,6 @@
 #include <stdio.h>
 
 
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
-
 namespace Detail
 {
   enum NumType {
@@ -65,7 +61,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VoxelDataContainer* m, int32_t scalarType, const QString &name)
+  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString &name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->GetNumberOfTuples();
@@ -199,15 +195,15 @@ ConvertData::~ConvertData()
 // -----------------------------------------------------------------------------
 void ConvertData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
     FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Voxel Cell Array Name");
+    option->setHumanLabel("Volume Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -218,7 +214,7 @@ void ConvertData::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<QString> choices;
+    QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -280,22 +276,20 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
-    ss.str("");
-    ss << "The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
+    ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_OutputArrayName.isEmpty() == true)
   {
-    ss.str("");
-    ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
+    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
@@ -371,13 +365,13 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-  QString ss;
+  QTextStream ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);

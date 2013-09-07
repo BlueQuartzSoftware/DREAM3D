@@ -68,7 +68,7 @@
 
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
 // C Includes
@@ -78,25 +78,18 @@
 
 //-- C++ STL
 #include <vector>
-#include <QMap>
 #include <sstream>
 #include <queue>
-#include <vector>
-#include <QMap>
 
-
-
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include <QtCore/QMap>
 #include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
 
 
-
-#include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
+#include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 
 
 #define WRITE_BINARY_TEMP_FILES 1
@@ -174,7 +167,9 @@ class SMTempFile
     virtual ~SMTempFile()
     {
       if (m_AutoDelete == true) {
-        QFile::remove(m_FilePath); }
+        QFile fi(m_FilePath);
+        fi.remove();
+      }
     }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FilePath)
@@ -228,7 +223,7 @@ class GrainChecker
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, DREAM3D::SurfaceMesh::Vert_t* cVertex)
+    void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, DREAM3D::Mesh::Vert_t* cVertex)
     {
 #if 0
       int n1, n2, n3;
@@ -308,7 +303,7 @@ class GrainChecker
         vCount = m.size();
         if (tCount + 4 != vCount * 2)
         {
-          qDebug() << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount ;
+          qDebug() << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount;
         }
       }
     }
@@ -351,7 +346,7 @@ M3CSliceBySlice::~M3CSliceBySlice()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Delete Temp Files");
@@ -371,9 +366,9 @@ void M3CSliceBySlice::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setDeleteTempFiles( reader->readValue("DeleteTempFiles", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -395,25 +390,25 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else {
-    DREAM3D::SurfaceMesh::VertList_t::Pointer vertices = DREAM3D::SurfaceMesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    DREAM3D::SurfaceMesh::FaceListPointer_t triangles = DREAM3D::SurfaceMesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+    DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
 
     int8_t* m_SurfaceMeshNodeType;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
 
-    DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+        DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
     sm->addFaceData(labels->GetName(), labels);
     sm->setVertices(vertices);
     sm->setFaces(triangles);
@@ -435,7 +430,7 @@ void M3CSliceBySlice::preflight()
 void M3CSliceBySlice::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -451,7 +446,6 @@ void M3CSliceBySlice::execute()
   }
 
   int err = 0;
-  QString ss;
 
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
@@ -467,8 +461,8 @@ void M3CSliceBySlice::execute()
 
   if (m_DeleteTempFiles == false)
   {
-    qDebug() << nodesFile ;
-    qDebug() << trianglesFile ;
+    qDebug() << nodesFile;
+    qDebug() << trianglesFile;
   }
 
 
@@ -483,8 +477,8 @@ void M3CSliceBySlice::execute()
   //  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
   size_t dims[3];
-  DREAM3D::SurfaceMesh::Float_t res[3];
-  DREAM3D::SurfaceMesh::Float_t origin[3];
+  DREAM3D::Mesh::Float_t res[3];
+  DREAM3D::Mesh::Float_t origin[3];
 
   m->getDimensions(dims);
   m->getResolution(res);
@@ -521,7 +515,7 @@ void M3CSliceBySlice::execute()
   StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::CreateArray(3*2*NSP, "M3CSliceBySlice_SurfaceMesh::M3C::Face_Array");
   cSquarePtr->initializeWithZeros();
 
-  DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr = DREAM3D::SurfaceMesh::VertList_t::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
+  DREAM3D::Mesh::VertList_t::Pointer cVertexPtr = DREAM3D::Mesh::VertList_t::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
   cVertexPtr->initializeWithZeros();
 
   DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
@@ -557,16 +551,16 @@ void M3CSliceBySlice::execute()
   }
   for (size_t i = 0; i < sliceCount; i++)
   {
-    ss.str("");
-    ss << " Layers " << i << " and " << i + 1 << " of " << sliceCount;
+
+    QString ss = QObject::tr(" Layers %1 and %2 of %3").arg(i).arg(i + 1).arg(sliceCount);
     // notifyProgressValue((i * 90 / sliceCount));
-    notifyStatusMessage(ss.str());
+    notifyStatusMessage(ss);
 
     if (getCancel() == true)
     {
-      ss.str("");
-      ss << "Cancelling filter";
-      notifyWarningMessage(ss.str(), -1);
+
+      QString ss = QObject::tr("Cancelling filter");
+      notifyWarningMessage(ss, -1);
       setErrorCondition(-1);
       break;
     }
@@ -611,13 +605,13 @@ void M3CSliceBySlice::execute()
 
     // find triangles and arrange the spins across each triangle...
     nTriangle = get_triangles(NSP, wrappedDims, cSquarePtr, voxelsPtr, cVertexNodeTypePtr, cEdgePtr, cTrianglePtr);
-/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+    /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
     // THERE IS A SUBTLE BUG IN THIS NEXT FUNCTION WHERE SOMETIMES THE LABELS ARE NOT ARRANGED CORRECTLY. FOR NOW THE
     // WORK AROUND IS TO JUST PUT THEM BACK TO THEIR ORIGINAL VALUES INSTEAD OF LEAVING THE -1 VALUE THAT IS PLACED
     // IN THERE DURING THE EXECUTION OF THE ALGORITHM. AT SOME POINT THIS REALLY NEEDS TO BE FIXED PROPERLY BY
     // SOME ONE WHO UNDERSTANDS THE CODE. THE SMALL_IN100 DATA SET CAN USUALLY TRIGGER THIS BUG.
     arrange_grainnames(nTriangle, i, NSP, wrappedDims, res, cTrianglePtr, cVertexPtr, voxelsPtr, neighborsPtr);
-/* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
+    /* $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$ */
 
     // assign new, cumulative Node id...
     nNodes = assign_nodeID(cNodeID, NSP, cVertexNodeIdPtr, cVertexNodeTypePtr);
@@ -627,8 +621,8 @@ void M3CSliceBySlice::execute()
     err = writeNodesFile(i, cNodeID, NSP, nodesFile, cVertexPtr, cVertexNodeIdPtr, cVertexNodeTypePtr);
     if (err < 0)
     {
-      ss.str("");
-      ss << "Error writing Nodes file '" << nodesFile << "'";
+
+      QString ss = QObject::tr("Error writing Nodes file '%1'").arg(nodesFile);
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -637,8 +631,8 @@ void M3CSliceBySlice::execute()
     err = writeTrianglesFile(i, cTriID, trianglesFile, nTriangle, cTrianglePtr, cVertexNodeIdPtr, renumberGrainValue);
     if (err < 0)
     {
-      ss.str("");
-      ss << "Error writing triangles file '" << trianglesFile << "'";
+
+      QString ss = QObject::tr("Error writing triangles file '%1'").arg(trianglesFile);
       notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -657,7 +651,7 @@ void M3CSliceBySlice::execute()
   neighborsPtr = StructArray<SurfaceMesh::M3C::Neighbor>::NullPointer();
   neighCSiteIdPtr = DataArray<int32_t>::NullPointer();
   cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::NullPointer();
-  cVertexPtr = DREAM3D::SurfaceMesh::VertList_t::NullPointer();
+  cVertexPtr = DREAM3D::Mesh::VertList_t::NullPointer();
   cVertexNodeIdPtr = DataArray<int32_t>::NullPointer();
   cVertexNodeTypePtr = DataArray<int8_t>::NullPointer();
   cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::NullPointer();
@@ -668,13 +662,13 @@ void M3CSliceBySlice::execute()
   BinaryNodesTrianglesReader::Pointer binaryReader = BinaryNodesTrianglesReader::New();
   binaryReader->setBinaryNodesFile(nodesFile);
   binaryReader->setBinaryTrianglesFile(trianglesFile);
-  ss.str("");
-  ss << getMessagePrefix() << " |--> " << binaryReader->getNameOfClass();
-  binaryReader->setMessagePrefix(ss.str());
+
+  QString ss = QObject::tr("%1 |--> %2").arg( getMessagePrefix()).arg(binaryReader->getNameOfClass());
+  binaryReader->setMessagePrefix(ss);
   binaryReader->setObservers(getObservers());
-  binaryReader->setVoxelDataContainer(getVoxelDataContainer());
-  binaryReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-  binaryReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
+  binaryReader->setVolumeDataContainer(getVolumeDataContainer());
+  binaryReader->setSurfaceDataContainer(getSurfaceDataContainer());
+  binaryReader->setVertexDataContainer(getVertexDataContainer());
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
@@ -701,7 +695,7 @@ void M3CSliceBySlice::execute()
 bool M3CSliceBySlice::volumeHasGhostLayer()
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
   size_t index = 0;
   int32_t* p = m_GrainIds;
   bool p_value = false;
@@ -732,9 +726,9 @@ bool M3CSliceBySlice::volumeHasGhostLayer()
 int32_t M3CSliceBySlice::volumeHasGrainValuesOfZero()
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
 
-  IDataArray::Pointer grainIdsPtr = getVoxelDataContainer()->getCellData(getGrainIdsArrayName());
+  IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
   int32_t count = grainIdsPtr->GetNumberOfTuples();
 
   bool renumber = false;
@@ -771,9 +765,9 @@ int32_t M3CSliceBySlice::volumeHasGrainValuesOfZero()
 void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
 {
   size_t fileDim[3];
-  getVoxelDataContainer()->getDimensions(fileDim);
+  getVolumeDataContainer()->getDimensions(fileDim);
 
-  IDataArray::Pointer grainIdsPtr = getVoxelDataContainer()->getCellData(getGrainIdsArrayName());
+  IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
   int32_t count = grainIdsPtr->GetNumberOfTuples();
 
   for (int i = 0; i < count; ++i) {
@@ -789,7 +783,7 @@ void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
 void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
                                                     size_t* dims, int32_t* voxels)
 {
-  QString ss;
+  QTextStream ss;
   int NSP = wrappedDims[0] * wrappedDims[1];
   size_t offset = 0;
 
@@ -892,30 +886,30 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, DREAM3D::SurfaceMesh::Float_t xRes)
+DREAM3D::Mesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, DREAM3D::Mesh::Float_t xRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t x = xRes * float(index % xDim) + m_OriginX - (xRes/2.0);
+  DREAM3D::Mesh::Float_t x = xRes * float(index % xDim) + m_OriginX - (xRes/2.0);
   return x;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t yRes)
+DREAM3D::Mesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t yRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t y = yRes * float((index / xDim) % yDim) + m_OriginY - (yRes/2.0);
+  DREAM3D::Mesh::Float_t y = yRes * float((index / xDim) % yDim) + m_OriginY - (yRes/2.0);
   return y;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, DREAM3D::SurfaceMesh::Float_t zRes)
+DREAM3D::Mesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t zRes)
 {
   index = index - 1;
-  DREAM3D::SurfaceMesh::Float_t z = zRes * float(index / (xDim * yDim)) + m_OriginZ - (zRes/2.0);
+  DREAM3D::Mesh::Float_t z = zRes * float(index / (xDim * yDim)) + m_OriginZ - (zRes/2.0);
   return z;
 }
 
@@ -924,7 +918,7 @@ DREAM3D::SurfaceMesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, 
 //
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float* res,
-                                       DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+                                       DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                                        DataArray<int32_t>::Pointer voxelsPtr,
                                        DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                                        DataArray<int8_t>::Pointer cVertexNodeTypePtr  )
@@ -934,7 +928,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   int i, j;
   int id, oid;
   int tsite, locale;
-  DREAM3D::SurfaceMesh::Float_t x, y, z;
+  DREAM3D::Mesh::Float_t x, y, z;
   int start = NSP + 1;
   if (zID == 0)
   {
@@ -942,11 +936,11 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
     numgrains = 0;
   }
 
-  DREAM3D::SurfaceMesh::Float_t xRes = res[0];
-  DREAM3D::SurfaceMesh::Float_t yRes = res[1];
-  DREAM3D::SurfaceMesh::Float_t zRes = res[2];
+  DREAM3D::Mesh::Float_t xRes = res[0];
+  DREAM3D::Mesh::Float_t yRes = res[1];
+  DREAM3D::Mesh::Float_t zRes = res[2];
 
-  DREAM3D::SurfaceMesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
   int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
@@ -1165,7 +1159,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   }
                   cEdgePtr->Resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
                   currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
-                  //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" ;
+                  //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")";
                 }
 
                 SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
@@ -1656,33 +1650,33 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
     }
   }
 
-  //  qDebug() << "cTrianglePtr->Resize(" << tidIn << ")" ;
+  //  qDebug() << "cTrianglePtr->Resize(" << tidIn << ")";
   cTrianglePtr->Resize(tidIn);
 
-  //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array" ;
+  //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array";
   cEdgePtr->Resize(0);
 
   return cTrianglePtr->GetNumberOfTuples();
 }
 
 #define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
-  {\
-    size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
-    if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
-      Detail::triangleResizeCount++; \
-      if (Detail::triangleResizeCount == 10) { \
-        Detail::triangleResizeCount = 0;\
-        Detail::triangleResize *= 10;\
-      }\
-      cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
+{\
+  size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
+  if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
+  Detail::triangleResizeCount++; \
+  if (Detail::triangleResizeCount == 10) { \
+  Detail::triangleResizeCount = 0;\
+  Detail::triangleResize *= 10;\
+  }\
+  cTrianglePtr->Resize(current_##cTrianglePtr##_size + Detail::triangleResize);\
   /*    StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
-      for(size_t xx_xx = current_##cTrianglePtr##_size; xx_xx < current_##cTrianglePtr##_size + Detail::triangleResize; ++xx_xx){\
-        cTriangle[xx_xx].node_id[0] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB;\
-        cTriangle[xx_xx].e_id[0] = 0xABABABAB; cTriangle[xx_xx].e_id[1] = 0xABABABAB; cTriangle[xx_xx].e_id[2] = 0xABABABAB;\
-        cTriangle[xx_xx].nSpin[0] = 0xABABABAB; cTriangle[xx_xx].nSpin[2] = 0xABABABAB;\
-        cTriangle[xx_xx].edgePlace[0] = 0xABABABAB;cTriangle[xx_xx].edgePlace[1] = 0xABABABAB; cTriangle[xx_xx].edgePlace[2] = 0xABABABAB;\
-      }*/\
-    }\
+  for(size_t xx_xx = current_##cTrianglePtr##_size; xx_xx < current_##cTrianglePtr##_size + Detail::triangleResize; ++xx_xx){\
+  cTriangle[xx_xx].node_id[0] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB; cTriangle[xx_xx].node_id[1] = 0xABABABAB;\
+  cTriangle[xx_xx].e_id[0] = 0xABABABAB; cTriangle[xx_xx].e_id[1] = 0xABABABAB; cTriangle[xx_xx].e_id[2] = 0xABABABAB;\
+  cTriangle[xx_xx].nSpin[0] = 0xABABABAB; cTriangle[xx_xx].nSpin[2] = 0xABABABAB;\
+  cTriangle[xx_xx].edgePlace[0] = 0xABABABAB;cTriangle[xx_xx].edgePlace[1] = 0xABABABAB; cTriangle[xx_xx].edgePlace[2] = 0xABABABAB;\
+  }*/\
+  }\
   }\
   StructArray<SurfaceMesh::M3C::Triangle>& cTriangle = *(cTrianglePtr.get());\
   cTriangle[ctid].node_id[0] = n0;\
@@ -1690,7 +1684,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   cTriangle[ctid].node_id[2] = n2;\
   cTriangle[ctid].nSpin[0] = label0;\
   cTriangle[ctid].nSpin[1] = label1;\
-  if (ctid == 3112052) { qDebug() << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1] ;}
+  if (ctid == 3112052) { qDebug() << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1];}
 
 
 // -----------------------------------------------------------------------------
@@ -2492,7 +2486,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims,float* res,
                                          StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                                         DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+                                         DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                                          DataArray<int32_t>::Pointer voxelsPtr,
                                          StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
@@ -2503,18 +2497,18 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
   int tsite2[3] = { -1, -1, -1};
   //  int nSpin1, nSpin2;
   int tgrainname1[3], tgrainname2[3];
-  DREAM3D::SurfaceMesh::Float_t cx, cy, cz;
-  DREAM3D::SurfaceMesh::Float_t xSum, ySum, zSum;
-  DREAM3D::SurfaceMesh::Float_t vcoord[3][3];
-  DREAM3D::SurfaceMesh::Float_t u[3], w[3];
-  DREAM3D::SurfaceMesh::Float_t x, y, z;
-  DREAM3D::SurfaceMesh::Float_t a, b, c, d, length;
-  DREAM3D::SurfaceMesh::Float_t sidecheck;
+  DREAM3D::Mesh::Float_t cx, cy, cz;
+  DREAM3D::Mesh::Float_t xSum, ySum, zSum;
+  DREAM3D::Mesh::Float_t vcoord[3][3];
+  DREAM3D::Mesh::Float_t u[3], w[3];
+  DREAM3D::Mesh::Float_t x, y, z;
+  DREAM3D::Mesh::Float_t a, b, c, d, length;
+  DREAM3D::Mesh::Float_t sidecheck;
   int shift = (zID * NSP);
   int locale;
 
   SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->GetPointer(0);
-  DREAM3D::SurfaceMesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
   SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
 
@@ -2525,8 +2519,8 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
     xSum = 0.0;
     ySum = 0.0;
     zSum = 0.0;
-      nSpin1 = cTriangle[i].nSpin[0];
-      nSpin2 = cTriangle[i].nSpin[1];
+    nSpin1 = cTriangle[i].nSpin[0];
+    nSpin2 = cTriangle[i].nSpin[1];
     cTriangle[i].nSpin[0] = -1;
     cTriangle[i].nSpin[1] = -1;
     for (int j = 0; j < 3; j++)
@@ -2758,7 +2752,7 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
 // -----------------------------------------------------------------------------
 int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
                                     const QString &nodesFile,
-                                    DREAM3D::SurfaceMesh::VertList_t::Pointer cVertexPtr,
+                                    DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                                     DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                                     DataArray<int8_t>::Pointer cVertexNodeTypePtr )
 {
@@ -2776,12 +2770,12 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   size_t totalWritten = 0;
   FILE* f = NULL;
 
-  // qDebug() << "M3CSliceBySlice writing Nodes file " << cNodeID ;
+  // qDebug() << "M3CSliceBySlice writing Nodes file " << cNodeID;
 
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(nodesFile.c_str(), "wb");
+    f = fopen(nodesFile.toLatin1().data(), "wb");
     if (NULL == f)
     {
       return -1;
@@ -2790,7 +2784,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(nodesFile.c_str(), "ab");
+    f = fopen(nodesFile.toLatin1().data(), "ab");
     if (NULL == f)
     {
       return -1;
@@ -2799,7 +2793,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   int total = (7 * 2 * NSP);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
-  DREAM3D::SurfaceMesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
 
   for (int k = 0; k < total; k++)
   {
@@ -2816,12 +2810,12 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
       totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
       if (totalWritten != 1)
       {
-        qDebug() << "Not enough data written to the Nodes file." ;
+        qDebug() << "Not enough data written to the Nodes file.";
         return -1;
       }
       //      if (nodeKind[k] < 0)
       //      {
-      //        qDebug() <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k] ;
+      //        std::cout <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k];
       //      }
     }
   }
@@ -2847,7 +2841,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   const size_t BYTE_COUNT = SurfaceMesh::TrianglesFile::ByteCount;
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t record;
   record.triId = ctid;
-  //  qDebug() << "Writing Triangles Starting at " << record.triId ;
+  //  qDebug() << "Writing Triangles Starting at " << record.triId;
   // int tag;
   int end = nt;
   int n1, n2, n3;
@@ -2862,7 +2856,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(trianglesFile.c_str(), "wb");
+    f = fopen(trianglesFile.toLatin1().data(), "wb");
     if (NULL == f)
     {
       return -1;
@@ -2874,7 +2868,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(trianglesFile.c_str(), "ab");
+    f = fopen(trianglesFile.toLatin1().data(), "ab");
     if (NULL == f)
     {
       return -1;
@@ -2902,7 +2896,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
     totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
     if (totalWritten != 1)
     {
-      qDebug() << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." ;
+      qDebug() << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6.";
       return -1;
     }
     record.triId = record.triId + 1;
@@ -2920,12 +2914,12 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::analyzeWinding()
 {
-  //  qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" ;
-  //  qDebug() << " Edge Count: " << eMap.size() ;
-  //  qDebug() << " Triangle Count: " << cTriangle.size() ;
-  //  qDebug() << "labelTriangleMap.size(): " << labelTriangleMap.size() ;
+  //  qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++";
+  //  qDebug() << " Edge Count: " << eMap.size();
+  //  qDebug() << " Triangle Count: " << cTriangle.size();
+  //  qDebug() << "labelTriangleMap.size(): " << labelTriangleMap.size();
 
-  DREAM3D::SurfaceMesh::Float_t total = (float)(labelTriangleMap.size());
+  DREAM3D::Mesh::Float_t total = (float)(labelTriangleMap.size());
   // Keeps a list of all the triangles that have been visited.
   std::vector<bool> masterVisited(cTriangle.size(), false);
 
@@ -2935,7 +2929,7 @@ void M3CSliceBySlice::analyzeWinding()
   // Get the first 2 labels to visit from the first triangle. We use these 2 labels
   // because this triangle shares these 2 labels and guarantees these 2 labels are
   // connected to each other.
-  DREAM3D::SurfaceMesh::Float_t curPercent = 0.0;
+  DREAM3D::Mesh::Float_t curPercent = 0.0;
   int progressIndex = 0;
   for (LabelTriangleMapType::iterator cLabel = labelTriangleMap.begin(); cLabel != labelTriangleMap.end(); ++cLabel )
   {
@@ -2947,16 +2941,16 @@ void M3CSliceBySlice::analyzeWinding()
 
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
-      //   qDebug() << "Verifying Winding: " << curPercent << "% Complete" ;
+      //   qDebug() << "Verifying Winding: " << curPercent << "% Complete";
       curPercent += 5.0f;
     }
     ++progressIndex;
-    //  qDebug() << "Current Label: " << currentLabel ;
+    //  qDebug() << "Current Label: " << currentLabel;
     //  int seedTriIndex = masterTriangleIndex;
 
     if (NULL == t.get() )
     {
-      qDebug() << "Could not find a triangle with the winding set. This should NOT happen" ;
+      qDebug() << "Could not find a triangle with the winding set. This should NOT happen";
       BOOST_ASSERT(1 == 0);
     }
 
@@ -2964,18 +2958,18 @@ void M3CSliceBySlice::analyzeWinding()
     std::deque<int> triangleDeque;
     triangleDeque.push_back(t->tIndex);
 
-    while (triangleDeque.isEmpty() == false)
+    while (triangleDeque.empty() == false)
     {
       SurfaceMesh::M3C::Patch::Pointer currentTri = cTriangle[triangleDeque.front()];
-      //    qDebug() << "tIndex = " << t->tIndex ;
+      //    qDebug() << "tIndex = " << t->tIndex;
       localVisited.insert(currentTri->tIndex);
       std::vector<int> adjTris = findAdjacentTriangles(currentTri, currentLabel);
       for ( std::vector<int>::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri )
       {
-        //  qDebug() << "  ^ AdjTri index: " << (*adjTri)->tIndex ;
+        //  qDebug() << "  ^ AdjTri index: " << (*adjTri)->tIndex;
         if (masterVisited[*adjTri] == false)
         {
-          //   qDebug() << "   * Checking Winding: " << (*adjTri)->tIndex ;
+          //   qDebug() << "   * Checking Winding: " << (*adjTri)->tIndex;
           SurfaceMesh::M3C::Patch::Pointer triToVerify = cTriangle[*adjTri];
           currentTri->verifyWinding( triToVerify.get(), currentLabel);
         }
@@ -2983,7 +2977,7 @@ void M3CSliceBySlice::analyzeWinding()
         if (localVisited.find(*adjTri) == localVisited.end()
             && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
         {
-          // qDebug() << "   # Adding to Deque: " << (*adjTri)->tIndex ;
+          // qDebug() << "   # Adding to Deque: " << (*adjTri)->tIndex;
           triangleDeque.push_back(*adjTri);
           localVisited.insert(*adjTri);
           masterVisited[*adjTri] = true;
@@ -2995,7 +2989,7 @@ void M3CSliceBySlice::analyzeWinding()
 
   }
 
-  // qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" ;
+  // qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++";
 }
 
 
@@ -3023,7 +3017,7 @@ std::vector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triang
       if ( (t->nSpin[0] == label || t->nSpin[1] == label)
            && (t->tIndex != triangle->tIndex) )
       {
-        //   qDebug() << "    Found Adjacent Triangle: " << t->tIndex ;
+        //   qDebug() << "    Found Adjacent Triangle: " << t->tIndex;
         adjacentTris.push_back(t->tIndex);
       }
     }

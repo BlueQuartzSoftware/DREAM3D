@@ -75,7 +75,7 @@ AdjustVolume::~AdjustVolume()
 
 void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
@@ -115,9 +115,9 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -210,8 +210,8 @@ void AdjustVolume::execute()
   while(iterations < m_MaxIterations)
   {
     QString ss;
-	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notifyStatusMessage(ss.str());
+	QString ss = QObject::tr("Adjusting Grain Boundaries - %1Percent Complete").arg(((float)iterations/m_MaxIterations)*100);
+	notifyStatusMessage(ss);
     iterations++;
     good = 0;
     while (good == 0)

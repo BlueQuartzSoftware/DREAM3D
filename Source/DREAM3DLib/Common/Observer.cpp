@@ -119,9 +119,9 @@ void Observer::sendPipelineMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::sendPipelineMessages(std::vector<PipelineMessage> msgs)
+void Observer::sendPipelineMessages(QVector<PipelineMessage> msgs)
 {
-  for (std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
+  for (QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
   {
     sendPipelineMessage(*iter);
   }

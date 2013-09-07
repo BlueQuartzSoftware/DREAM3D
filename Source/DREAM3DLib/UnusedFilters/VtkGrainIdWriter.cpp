@@ -61,7 +61,7 @@ VtkGrainIdWriter::~VtkGrainIdWriter()
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -102,7 +102,7 @@ void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t fields, s
   VoxelDataContainer* m = getVoxelDataContainer();
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
   setErrorMessage(ss.str());
 }
 
@@ -133,7 +133,7 @@ int VtkGrainIdWriter::writeFile()
   if (NULL == getVoxelDataContainer())
   {
     QString ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1("<<__LINE__<<")").arg(__FILE__);
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;
@@ -142,7 +142,7 @@ int VtkGrainIdWriter::writeFile()
   if (NULL == m)
   {
     QString ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1("<<__LINE__<<")").arg(__FILE__);
     setErrorMessage(ss.str());
     setErrorCondition(-1);
     return -1;

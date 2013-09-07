@@ -63,12 +63,12 @@ SingleThresholdFields::~SingleThresholdFields()
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Field Array Name");
     option->setPropertyName("SelectedFieldArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -79,7 +79,7 @@ void SingleThresholdFields::setupFilterParameters()
     option->setPropertyName("ComparisonOperator");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<QString> choices;
+    QVector<QString> choices;
     choices.push_back(DREAM3D::Comparison::Strings::LessThan);
     choices.push_back(DREAM3D::Comparison::Strings::GreaterThan);
     choices.push_back(DREAM3D::Comparison::Strings::Equal);
@@ -101,7 +101,7 @@ void SingleThresholdFields::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    std::vector<QString> choices;
+    QVector<QString> choices;
     choices.push_back(DREAM3D::FieldData::GoodFields);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -145,9 +145,9 @@ int SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter*
 void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  VolumeDataContainer* m = getVolumeDataContainer();
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, bool, BoolArrayType, true, fields, 1)
 
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
@@ -169,7 +169,7 @@ void SingleThresholdFields::preflight()
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -188,8 +188,8 @@ void SingleThresholdFields::execute()
   IDataArray::Pointer inputData = m->getFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedFieldArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+    
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFieldArrayName);
     setErrorCondition(-11001);
     notifyErrorMessage(ss, getErrorCondition());
     return;

@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
 
 
@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          MXA::Endian::FromSystemToBig::convert<T>(d);
+          d = qToBigEndian(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
@@ -205,7 +205,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     {
       int err = 0;
       FILE* f = NULL;
-      f = fopen(filename.c_str(), "wb");
+      f = fopen(filename.toLatin1().data(), "wb");
       if(NULL == f)
       {
         qDebug() << "Could not open file for writing" ;
@@ -232,7 +232,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int numComp = data->GetNumberOfComponents();
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
-      fprintf(f, "SCALARS %s %s %d\n", data->GetName().c_str(), dataType.c_str(),numComp);
+      fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(),numComp);
       fprintf(f, "LOOKUP_TABLE default\n");
 #ifdef MXA_LITTLE_ENDIAN
       data->byteSwapElements();
@@ -283,9 +283,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const QString &file, VoxelDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
-
+    int write(const QString &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
 };
 

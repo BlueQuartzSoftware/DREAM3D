@@ -34,10 +34,11 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _VoxelDataContainerWriter_H_
-#define _VoxelDataContainerWriter_H_
+#ifndef _VolumeDataContainerWriter_H_
+#define _VolumeDataContainerWriter_H_
 
 #include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include <hdf5.h>
 
@@ -50,20 +51,20 @@
 
 
 /**
- * @class VoxelDataContainerWriter VoxelDataContainerWriter.h /IOFiltersFilters/VoxelDataContainerWriter.h
+ * @class VolumeDataContainerWriter VolumeDataContainerWriter.h /IOFiltersFilters/VolumeDataContainerWriter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(VoxelDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(VoxelDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VoxelDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerWriter, AbstractFilter)
 
-    virtual ~VoxelDataContainerWriter();
+    virtual ~VolumeDataContainerWriter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
@@ -71,7 +72,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
 
     typedef QList<QString> NameListType;
 
-    void setXdmfOStream(QDataStream* xdmf);
+    void setXdmfOStream(QTextStream *xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -79,7 +80,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -117,7 +118,7 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    VoxelDataContainerWriter();
+    VolumeDataContainerWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -176,8 +177,8 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
         if(err < 0)
         {
           setErrorCondition(err);
-          QString ss;
-          ss << "Error writing Ensemble data set '" << label << "'";
+          QString ss = QObject::tr("Error writing Ensemble data set '%1'").arg(label);
+          notifyErrorMessage(ss, getErrorCondition());
         }
       }
 
@@ -185,10 +186,10 @@ class DREAM3DLib_EXPORT VoxelDataContainerWriter : public AbstractFilter
     }
 
   private:
-    QDataStream* m_XdmfPtr;
+    QTextStream* m_XdmfPtr;
 
-    VoxelDataContainerWriter(const VoxelDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const VoxelDataContainerWriter&); // Operator '=' Not Implemented
+    VolumeDataContainerWriter(const VolumeDataContainerWriter&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _VoxelDataContainerWriter_H_ */
+#endif /* _VolumeDataContainerWriter_H_ */

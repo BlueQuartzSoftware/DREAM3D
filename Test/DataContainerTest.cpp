@@ -48,7 +48,7 @@
 
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -85,7 +85,11 @@ dataContainer->addCellData(name, m_msgType##Ptr);
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
+<<<<<<< HEAD
   QFile::remove(UnitTest::DataContainerIOTest::TestFile);
+=======
+//  MXADir::remove(UnitTest::DataContainerIOTest::TestFile);
+>>>>>>> develop
 }
 
 
@@ -95,7 +99,7 @@ void RemoveTestFiles()
 void TestDataContainerWriter()
 {
 
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   size_t nx = UnitTest::DataContainerIOTest::XSize;
   size_t ny = UnitTest::DataContainerIOTest::YSize;
   size_t nz = UnitTest::DataContainerIOTest::ZSize;
@@ -139,6 +143,7 @@ void TestDataContainerWriter()
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
+  neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors);
   m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
 
   for(int i = 0; i < 4; ++i)
@@ -150,7 +155,7 @@ void TestDataContainerWriter()
   }
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setVoxelDataContainer(m.get());
+  writer->setVolumeDataContainer(m.get());
   writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile);
   writer->execute();
   int err = writer->getErrorCondition();
@@ -167,14 +172,15 @@ void TestDataContainerReader()
   size_t ny = 0;
   size_t nz = 0;
 
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
-  reader->setVoxelDataContainer(m.get());
-  reader->setReadVoxelData(true);
-  reader->setReadSurfaceMeshData(false);
-  reader->setReadSolidMeshData(false);
+  reader->setVolumeDataContainer(m.get());
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadVertexData(false);
+  reader->setReadEdgeData(false);
   reader->setReadAllArrays(true);
   reader->execute();
   int err = reader->getErrorCondition();
@@ -210,7 +216,7 @@ void TestDataContainerReader()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile2);
-  writer->setVoxelDataContainer(m.get());
+  writer->setVolumeDataContainer(m.get());
   writer->execute();
   err = writer->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
@@ -220,7 +226,7 @@ void TestDataContainerReader()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void insertDeleteArray(VoxelDataContainer::Pointer m)
+void insertDeleteArray(VolumeDataContainer::Pointer m)
 {
 
   IDataArray::Pointer p = T::CreateArray(5, "Test");
@@ -254,7 +260,7 @@ void insertDeleteArray(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 void TestInsertDelete()
 {
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   std::list<std::string> nameList;
 
   insertDeleteArray<Int8ArrayType> (m);
@@ -280,7 +286,7 @@ void TestInsertDelete()
 
 
 template<typename T, typename K>
-void _arrayCreation(VoxelDataContainer::Pointer m)
+void _arrayCreation(VolumeDataContainer::Pointer m)
 {
   AbstractFilter::Pointer absFilt = AbstractFilter::New();
 
@@ -401,7 +407,7 @@ void _arrayCreation(VoxelDataContainer::Pointer m)
 // -----------------------------------------------------------------------------
 void TestArrayCreation()
 {
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   std::list<std::string> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
@@ -461,7 +467,7 @@ void TestDataContainer()
   std::cout << "Number of Entries for Grain Id[5]: " << neighborList->getListSize(5) << std::endl;
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
-  VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
   dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );

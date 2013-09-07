@@ -88,57 +88,56 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 /**
  *
  */
-	int readVoxelData(int* grain_indicies,
-	                  int* phases,
-	                  float* eulerangles,
-	                  std::vector<unsigned int> &crystruct,
-	                  std::vector<unsigned int> &phaseType,
-	                  int64_t totalpoints);
+  int readVoxelData(int* grain_indicies,
+                    int* phases,
+                    float* eulerangles,
+                    std::vector<unsigned int> &crystruct,
+                    std::vector<unsigned int> &phaseType,
+                    int64_t totalpoints);
 
 
-	/**
-	 *
-	 */
-	template<typename T>
-	int readScalarData(const QString &dsetName, T* data )
-	{
-	  int err = 0;
-	  if (m_FileId < 0)
-	  {
-	    if(m_FileName.isEmpty() == true)
-	      {
-	      addErrorMessage(getHumanLabel(), "H5VoxelReader Error; Filename was empty", -1);
-	        return -1;
-	      }
-	    OPEN_HDF5_FILE(fileId, m_FileName);
-	    m_FileId = fileId;
-	  }
-	  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
-	  OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
+  /**
+   *
+   */
+  template<typename T>
+  int readScalarData(const QString &dsetName, T* data )
+  {
+    int err = 0;
+    if (m_FileId < 0)
+    {
+      if(m_FileName.isEmpty() == true)
+        {
+        addErrorMessage(getHumanLabel(), "H5VoxelReader Error; Filename was empty", -1);
+          return -1;
+        }
+      OPEN_HDF5_FILE(fileId, m_FileName);
+      m_FileId = fileId;
+    }
+    OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
+    OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_SCALAR_DATA_GROUP_NAME, reconGid);
 
-	// Read in the Grain ID data
-	  err = QH5Lite::readPointerDataset(scalarGid, dsetName, data);
- 	  if(err < 0)
-	  {
-	    QString ss;
-	    ss << " Error Reading the " << dsetName;
-	    addErrorMessage(getHumanLabel(), ss.str(), err);
-	    err = H5Gclose(scalarGid);
-	    err = H5Gclose(reconGid);
-	    return err;
-	  }
+  // Read in the Grain ID data
+    err = QH5Lite::readPointerDataset(scalarGid, dsetName, data);
+    if(err < 0)
+    {
+      QString ss = QObject::tr(" Error Reading the ").arg(dsetName);
+      addErrorMessage(getHumanLabel(), ss, err);
+      err = H5Gclose(scalarGid);
+      err = H5Gclose(reconGid);
+      return err;
+    }
 
     err |= H5Gclose(scalarGid);
     err |= H5Gclose(reconGid);
-	  return err;
-	}
+    return err;
+  }
 
-	/**
-	 *
-	 */
-	template<typename CastTo, typename NativeType>
-	int readFieldData(const QString &dsetName, std::vector<CastTo> &data)
-	{
+  /**
+   *
+   */
+  template<typename CastTo, typename NativeType>
+  int readFieldData(const QString &dsetName, std::vector<CastTo> &data)
+  {
     int err = 0;
     if (m_FileId < 0)
     {
@@ -150,16 +149,15 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
       OPEN_HDF5_FILE(fileId, m_FileName);
       m_FileId = fileId;
     }
-    OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
+    OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), m_FileId);
     OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
     std::vector<NativeType> nativeData;
     err = QH5Lite::readVectorDataset(fieldGid, dsetName, nativeData);
     if(err < 0)
     {
-      QString ss;
-      ss <<  ": Error Reading the " << dsetName;
-      addErrorMessage(getHumanLabel(), ss.str(), err);
+      QString ss = QObject::tr(" Error Reading the ").arg(dsetName);
+      addErrorMessage(getHumanLabel(), ss, err);
       err |= H5Gclose(fieldGid);
       err |= H5Gclose(reconGid);
       return err;
@@ -173,7 +171,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     err |= H5Gclose(reconGid);
 
     return err;
-	}
+  }
 
 
   protected:

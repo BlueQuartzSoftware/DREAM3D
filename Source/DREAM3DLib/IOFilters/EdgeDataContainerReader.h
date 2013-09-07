@@ -33,8 +33,8 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceMeshDataContainerReader_H_
-#define _SurfaceMeshDataContainerReader_H_
+#ifndef _EdgeDataContainerReader_H_
+#define _EdgeDataContainerReader_H_
 
 #include <QtCore/QString>
 
@@ -45,35 +45,31 @@
 
 
 /**
- * @class SurfaceMeshDataContainerReader SurfaceMeshDataContainerReader.h DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h
+ * @class EdgeDataContainerReader EdgeDataContainerReader.h DREAM3DLib/IOFilters/EdgeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceMeshDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceMeshDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshDataContainerReader, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(EdgeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(EdgeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerReader, AbstractFilter)
 
-    virtual ~SurfaceMeshDataContainerReader();
+    virtual ~EdgeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
@@ -125,7 +121,7 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
 
   protected:
-    SurfaceMeshDataContainerReader();
+    EdgeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -139,30 +135,26 @@ class DREAM3DLib_EXPORT SurfaceMeshDataContainerReader : public AbstractFilter
 
     int gatherData(bool preflight);
     int gatherVertexData(hid_t dcGid, bool preflight);
-    int gatherFaceData(hid_t dcGid, bool preflight);
     int gatherEdgeData(hid_t dcGid, bool preflight);
     int gatherFieldData(hid_t dcGid, bool preflight);
     int gatherEnsembleData(hid_t dcGid, bool preflight);
     int readVertices(hid_t dcGid);
-    int readFaces(hid_t dcGid);
     int readEdges(hid_t dcGid);
-    int readMeshVertLinks(hid_t dcGid, bool preflight);
-    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
+    int readMeshLinks(hid_t dcGid, bool preflight);
     int readVertexAttributeData(hid_t dcGid);
-    int readFaceAttributeData(hid_t dcGid);
 //    int readFieldData(hid_t dcGid);
 //    int readEnsembleData(hid_t dcGid);
 
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                std::vector<QString> &namesRead,
+                                                QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead);
 
 
   private:
 
-    SurfaceMeshDataContainerReader(const SurfaceMeshDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceMeshDataContainerReader&); // Operator '=' Not Implemented
+    EdgeDataContainerReader(const EdgeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const EdgeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceMeshDataContainerReader_H_ */
+#endif /* _EdgeDataContainerReader_H_ */

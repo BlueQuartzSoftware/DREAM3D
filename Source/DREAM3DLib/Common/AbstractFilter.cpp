@@ -34,9 +34,9 @@
 //
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
-m_VoxelDataContainer(NULL),
-m_SurfaceMeshDataContainer(NULL),
-m_SolidMeshDataContainer(NULL),
+m_VolumeDataContainer(NULL),
+m_SurfaceDataContainer(NULL),
+m_VertexDataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
@@ -166,8 +166,8 @@ void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessages(std::vector<PipelineMessage> msgVector) {
-  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector) {
+  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -196,8 +196,8 @@ void AbstractFilter::addWarningMessage(const QString &filterName, const QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessages(std::vector<PipelineMessage> msgVector) {
-  for (std::vector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
+void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector) {
+  for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
     m_PipelineMessages.push_back(msgVector[i]);
   }
 }
@@ -207,7 +207,7 @@ void AbstractFilter::addWarningMessages(std::vector<PipelineMessage> msgVector) 
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
     if (*iter == msg) {
       m_PipelineMessages.erase(iter);
       return;
@@ -221,7 +221,7 @@ void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
 void AbstractFilter::removeErrorMessage(int index) {
   int count = 0;
 
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
     if (count == index) {
       m_PipelineMessages.erase(iter);
       return;
@@ -236,7 +236,7 @@ void AbstractFilter::removeErrorMessage(int index) {
 void AbstractFilter::removeErrorMessages(int start, int end) {
   int count = 0;
 
-  for (std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
+  for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
     if (count == start) {
       while (count <= end) {
         iter = m_PipelineMessages.erase(iter);
@@ -252,7 +252,7 @@ void AbstractFilter::removeErrorMessages(int start, int end) {
 //
 // -----------------------------------------------------------------------------
 void AbstractFilter::clearErrorMessages() {
-  std::vector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
+  QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
 
   while ( iter != m_PipelineMessages.end() ) {
     iter = m_PipelineMessages.erase(iter);

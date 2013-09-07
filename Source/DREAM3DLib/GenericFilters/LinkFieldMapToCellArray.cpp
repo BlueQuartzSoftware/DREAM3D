@@ -59,12 +59,12 @@ LinkFieldMapToCellArray::~LinkFieldMapToCellArray()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
     option->setPropertyName("SelectedCellDataArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -103,16 +103,20 @@ int LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWrite
 void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    return;
+  }
 
   IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
   if (NULL == data.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedCellDataArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    addErrorMessage(getHumanLabel(),ss, getErrorCondition());
     return;
   }
 
@@ -125,10 +129,9 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
   }
   else
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedCellDataArrayName << "' is not an Integer array. Is this the array you want to use?";
+    QString ss = QObject::tr("Selected array '%1' is not an Integer array. Is this the array you want to use?").arg(m_SelectedCellDataArrayName);
     setErrorCondition(-11001);
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -156,7 +159,7 @@ void LinkFieldMapToCellArray::preflight()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

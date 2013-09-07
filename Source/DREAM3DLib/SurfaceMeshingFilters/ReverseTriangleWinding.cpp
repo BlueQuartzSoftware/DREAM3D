@@ -49,10 +49,10 @@
  */
 class ReverseWindingImpl
 {
-    DREAM3D::SurfaceMesh::FaceListPointer_t m_Triangles;
+    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
 
   public:
-    ReverseWindingImpl(DREAM3D::SurfaceMesh::FaceListPointer_t triangles) :
+    ReverseWindingImpl(DREAM3D::Mesh::FaceListPointer_t triangles) :
       m_Triangles(triangles)
     {}
     virtual ~ReverseWindingImpl(){}
@@ -64,7 +64,7 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      DREAM3D::SurfaceMesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
 
       for (size_t i = start; i < end; i++)
       {
@@ -115,7 +115,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
   /* {
@@ -179,7 +179,7 @@ void ReverseTriangleWinding::setupFilterParameters()
     parameter->setPropertyName("ConversionType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<QString> choices;
+    QVector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     parameter->setChoices(choices);
@@ -221,12 +221,12 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  QTextStream ss;
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -264,9 +264,9 @@ void ReverseTriangleWinding::preflight()
 void ReverseTriangleWinding::execute()
 {
   int err = 0;
-  QString ss;
+  QTextStream ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -280,7 +280,7 @@ void ReverseTriangleWinding::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

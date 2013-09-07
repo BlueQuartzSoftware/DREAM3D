@@ -1,6 +1,6 @@
 #!/bin/bash
 
-cd Source
+cd ../Source/
 
 files=`find . -type f -name "*.cpp"`
 

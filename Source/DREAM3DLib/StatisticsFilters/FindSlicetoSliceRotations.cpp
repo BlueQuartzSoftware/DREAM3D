@@ -38,7 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
 
@@ -73,7 +74,7 @@ FindSlicetoSliceRotations::~FindSlicetoSliceRotations()
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Slice to Slice Rotations File");
@@ -111,16 +112,16 @@ int FindSlicetoSliceRotations::writeFilterParameters(AbstractFilterParametersWri
 void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -300, bool, BoolArrayType,  voxels, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -139,7 +140,7 @@ void FindSlicetoSliceRotations::execute()
 {
   setErrorCondition(0);
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -193,7 +194,7 @@ void FindSlicetoSliceRotations::execute()
   int inPlaneCount, outPlaneCount;
 
   std::ofstream outFile;
-  outFile.open(m_SlicetoSliceRotationsFile.c_str(), std::ios_base::binary);
+  outFile.open(m_SlicetoSliceRotationsFile.toLatin1().data(), std::ios_base::binary);
 
   for (DimType plane = 0; plane < zPoints; plane++)
   {

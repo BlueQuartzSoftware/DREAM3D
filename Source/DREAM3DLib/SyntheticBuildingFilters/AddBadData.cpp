@@ -36,11 +36,11 @@
 
 #include "AddBadData.h"
 
-#include <QMap>
+#include <QtCore/QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
@@ -71,7 +71,7 @@ AddBadData::~AddBadData()
 // -----------------------------------------------------------------------------
 void AddBadData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Random Noise");
@@ -143,10 +143,10 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ void AddBadData::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
   {
@@ -197,7 +197,7 @@ void  AddBadData::add_noise()
  notifyStatusMessage("Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   QList<QString> voxelArrayNames = m->getCellArrayNameList();
 

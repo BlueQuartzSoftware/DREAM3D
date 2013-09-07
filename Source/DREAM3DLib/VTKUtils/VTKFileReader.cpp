@@ -44,7 +44,8 @@
 #include <boost/shared_ptr.hpp>
 
 
-
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -145,7 +146,7 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  if (NULL == getVoxelDataContainer())
+  if (NULL == getVolumeDataContainer())
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
@@ -153,55 +154,55 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  std::ifstream instream;
-  instream.open(getInputFile().c_str(), std::ios_base::binary);
-  if (!instream.is_open())
+  QFile in(getInputFile());
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    qDebug() << logTime() << " vtk file could not be opened: " << getInputFile() ;
-    return -1;
+    QString msg = QObject::tr("VTF file could not be opened: %1").arg(getInputFile());
+    addErrorMessage(getHumanLabel(), msg, getErrorCondition());
+    return -100;
   }
-  char buf[kBufferSize];
-  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
-  setComment(QString(buf));
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
+
+  QByteArray buf;
+  buf = in.readLine(); // Read Line 1 - VTK Version Info
+
+  buf = in.readLine(); // Read Line 2 - User Comment
+  setComment(QString(buf.trimmed()));
+
+  buf = in.readLine(); // Read Line 3 - BINARY or ASCII
   QString fileType(buf);
-  if (fileType.find("BINARY", 0) == 0)
+  if (fileType.startsWith("BINARY") == true)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.find("ASCII", 0) == 0)
+  else if (fileType.startsWith("ASCII") == true)
   {
     setFileIsBinary(false);
   }
   else
   {
     err = -1;
-    qDebug() << logTime()
+    qDebug()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
         ;
     return err;
   }
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
+
+
+  QList<QByteArray> tokens;
+  buf = in.readLine(); // Read Line 4 - Type of Dataset
   {
-    char text[256];
-    int n = sscanf(buf, "%s %s", text, &(text[16]) );
-    if (n < 2)
-    {
-      qDebug() << "Error Reading the type of data set. Was expecting 2 fields but got " << n ;
-      return -1;
-    }
-    QString dataset(&(text[16]));
-    setDatasetType(dataset);
+    tokens = buf.split(' ');
+    setDatasetType(QString(tokens[1]));
   }
 
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
+
+  buf = in.readLine(); // Read Line 5 which is the Dimension values
+  bool ok = false;
   int64_t dims[3];
-  err = parse64_3V(buf, dims, 0);
+  tokens = buf.split(' ');
+  dims[0] = tokens[1].toLongLong(&ok, 10);
+  dims[1] = tokens[2].toLongLong(&ok, 10);
+  dims[2] = tokens[3].toLongLong(&ok, 10);
 #if   (CMP_SIZEOF_SSIZE_T==4)
     int64_t max = std::numeric_limits<size_t>::max();
 #else
@@ -210,44 +211,45 @@ int VTKFileReader::readHeader()
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    QString s;
-    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
-                << "' is greater than this program can hold. Try the 64 bit version.";
+    QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), err);
+    addErrorMessage(getHumanLabel(), s, err);
     return err;
   }
 
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    QString s;
-    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    QString s = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
+    .arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), -1);
+    addErrorMessage(getHumanLabel(), s, -1);
     return err;
   }
 
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
-  getVoxelDataContainer()->setDimensions(dcDims);
+  getVolumeDataContainer()->setDimensions(dcDims);
 
 
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
+
+  buf = in.readLine(); // Read Line 6 which is the Origin values
   float origin[3];
-  err = parseFloat3V(buf, origin, 0.0f);
-  getVoxelDataContainer()->setOrigin(origin);
+  tokens = buf.split(' ');
+  origin[0] = tokens[1].toFloat(&ok);
+  origin[1] = tokens[2].toFloat(&ok);
+  origin[2] = tokens[3].toFloat(&ok);
+  getVolumeDataContainer()->setOrigin(origin);
 
-  ::memset(buf, 0, kBufferSize);
-  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
+
+  buf = in.readLine(); // Read Line 7 which is the Scaling values
   float resolution[3];
-  err = parseFloat3V(buf, resolution, 1.0f);
-  getVoxelDataContainer()->setResolution(resolution);
+  tokens = buf.split(' ');
+  resolution[0] = tokens[1].toFloat(&ok);
+  resolution[1] = tokens[2].toFloat(&ok);
+  resolution[2] = tokens[3].toFloat(&ok);
+  getVolumeDataContainer()->setResolution(resolution);
 
-  ::memset(buf, 0, kBufferSize);
 
-  instream.close();
   return err;
 
 }

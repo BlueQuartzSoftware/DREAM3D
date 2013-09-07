@@ -37,8 +37,7 @@
 #define _VisualizeGBCD_H_
 
 #include <QtCore/QString>
-
-
+#include <QtCore/QtEndian>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -75,7 +74,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, MisorientationRotations)
+    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -134,7 +133,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned int* m_CrystalStructures;
     double* m_GBCD;
@@ -161,7 +160,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          MXA::Endian::FromSystemToBig::convert<float>(d);
+          d = qToBigEndian(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);

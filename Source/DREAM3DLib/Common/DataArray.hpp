@@ -87,7 +87,7 @@ class DataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(DataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
 
-    typedef std::vector<Pointer>   ContainterType;
+    typedef QVector<Pointer>   ContainterType;
 
   enum NumType {
     Int8 = 0,
@@ -207,13 +207,13 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromStdVector(std::vector<T> &vec, const QString &name)
+    static Pointer FromStdVector(QVector<T> &vec, const QString &name)
     {
       Pointer p = CreateArray(vec.size(), name);
       ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
@@ -235,7 +235,7 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
@@ -385,7 +385,7 @@ class DataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -404,7 +404,7 @@ class DataArray : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] * this->NumberOfComponents > this->MaxId) { return -100; }
       }
@@ -447,9 +447,9 @@ class DataArray : public IDataArray
         return 0;
       }
 
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
+      QVector<size_t> srcIdx(idxs.size() + 1);
+      QVector<size_t> destIdx(idxs.size() + 1);
+      QVector<size_t> copyElements(idxs.size() + 1);
       srcIdx[0] = 0;
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
@@ -669,7 +669,7 @@ class DataArray : public IDataArray
       return RawResize(numTuples * this->NumberOfComponents);
     }
 
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       for(int j = 0; j < NumberOfComponents; ++j)
       {
@@ -678,7 +678,7 @@ class DataArray : public IDataArray
       }
     }
 
-    virtual void printComponent(QDataStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       out << Array[i*NumberOfComponents + j];
     }
@@ -780,7 +780,7 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                                     const QString &groupPath, const QString &label)
     {
       if (Array == NULL) { return -85648; }

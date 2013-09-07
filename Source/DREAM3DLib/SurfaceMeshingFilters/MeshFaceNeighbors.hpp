@@ -44,8 +44,8 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshVertLinks.hpp"
+#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 /**
  * @brief The MeshFaceNeighbors class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -117,9 +117,9 @@ class MeshFaceNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void generateNeighborLists(DREAM3D::SurfaceMesh::VertListPointer_t nodes,
-                               DREAM3D::SurfaceMesh::FaceListPointer_t faces,
-                               MeshVertLinks::Pointer cellLinks)
+    void generateNeighborLists(DREAM3D::Mesh::VertListPointer_t nodes,
+                               DREAM3D::Mesh::FaceListPointer_t faces,
+                               MeshLinks::Pointer cellLinks)
     {
 
       size_t nFaces = faces->GetNumberOfTuples();
@@ -137,11 +137,11 @@ class MeshFaceNeighbors
       // Build up the Face Adjacency list now that we have the cell links
       for(size_t t = 0; t < nFaces; ++t)
       {
-        //   qDebug() << "Analyzing Face " << t ;
-        DREAM3D::SurfaceMesh::Face_t& seedFace = *(faces->GetPointer(t));
+        //   qDebug() << "Analyzing Face " << t;
+        DREAM3D::Mesh::Face_t& seedFace = *(faces->GetPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
-          //   qDebug() << " vert " << v ;
+          //   qDebug() << " vert " << v;
           int nTris = cellLinks->getNumberOfFaces(seedFace.verts[v]);
           int* vertIdxs = cellLinks->getFaceListPointer(seedFace.verts[v]);
 
@@ -149,8 +149,8 @@ class MeshFaceNeighbors
           {
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
-            //      qDebug() << "   Comparing Face " << vertIdxs[vt] ;
-            DREAM3D::SurfaceMesh::Face_t& vertTri = *(faces->GetPointer(vertIdxs[vt]));
+            //      qDebug() << "   Comparing Face " << vertIdxs[vt];
+            DREAM3D::Mesh::Face_t& vertTri = *(faces->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
@@ -182,7 +182,7 @@ class MeshFaceNeighbors
             // into the list of Face Indices as neighbors for the source triangle.
             if (vCount == 2)
             {
-              //qDebug() << "       Neighbor: " << vertIdxs[vt] ;
+              //qDebug() << "       Neighbor: " << vertIdxs[vt];
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
               loop_neighbors[this->Array[t].ncells] = vertIdxs[vt];

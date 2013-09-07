@@ -36,7 +36,7 @@
 
 #include "RegularizeZSpacing.h"
 
-#include <QMap>
+#include <QtCore/QMap>
 #include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
@@ -72,7 +72,7 @@ RegularizeZSpacing::~RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");
@@ -126,10 +126,10 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
   for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
@@ -151,7 +151,7 @@ void RegularizeZSpacing::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -170,7 +170,7 @@ void RegularizeZSpacing::execute()
   m->getDimensions(dims);
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
   std::vector<float> zboundvalues;

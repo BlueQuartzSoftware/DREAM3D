@@ -77,7 +77,7 @@ class GenerateGrainIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
-      VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
       if(NULL == m)
       {
         setErrorCondition(-1);
@@ -122,7 +122,7 @@ class GenerateGrainIds : public AbstractFilter
     {
       setErrorCondition(0);
       std::stringstream ss;
-      VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
@@ -183,10 +183,10 @@ int TestPhWriter()
 // -----------------------------------------------------------------------------
 int TestPhReader()
 {
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   PhReader::Pointer reader = PhReader::New();
   reader->setInputFile(UnitTest::PhIOTest::TestFile);
-  reader->setVoxelDataContainer(m.get());
+  reader->setVolumeDataContainer(m.get());
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
@@ -200,7 +200,7 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
-  IDataArray::Pointer mdata = reader->getVoxelDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
+  IDataArray::Pointer mdata = reader->getVolumeDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
 
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());

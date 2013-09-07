@@ -139,7 +139,7 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 
 
 # Add in our Filter classes
-#include(${DREAM3DLib_SOURCE_DIR}/CustomFilters/SourceList.cmake)
+
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
@@ -173,7 +173,7 @@ include_directories( ${DREAM3DLib_BINARY_DIR} )
 
 #-- Add a library for the DREAM3DLib Code
 add_library(${PROJECT_NAME} ${LIB_TYPE} ${Project_SRCS} )
-target_link_libraries(${PROJECT_NAME} ${QT_QTCORE_LIBRARY} EbsdLib ${TBB_LIBRARIES})
+target_link_libraries(${PROJECT_NAME} EbsdLib ${TBB_LIBRARIES})
 LibraryProperties( ${PROJECT_NAME} ${EXE_DEBUG_EXTENSION} )
 
 set(install_dir "tools")

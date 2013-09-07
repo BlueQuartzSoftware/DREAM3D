@@ -83,7 +83,7 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
@@ -133,13 +133,13 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+
 
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 
 
@@ -160,12 +160,12 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
-    ss << " DataContainer was NULL";
+
+    QString ss = QObject::tr(" DataContainer was NULL");
     notifyErrorMessage(ss, -1);
     return;
   }
@@ -198,10 +198,8 @@ void AlignSections::execute()
   DimType currentPosition;
   //  unsigned int  phase2;
 
-  std::vector<int> xshifts;
-  std::vector<int> yshifts;
-  xshifts.resize(dims[2],0);
-  yshifts.resize(dims[2],0);
+  QVector<int> xshifts(dims[2], 0);
+  QVector<int> yshifts(dims[2],0);
 
   find_shifts(xshifts, yshifts);
 
@@ -209,16 +207,16 @@ void AlignSections::execute()
   DimType progIncrement = dims[2]/100;
   DimType prog = 1;
   int progressInt = 0;
-  QString ss;
+
 
   for (DimType i = 1; i < dims[2]; i++)
   {
     if (i > prog)
     {
-      ss.str("");
+
       progressInt = ((float)i/dims[2])*100.0;
-      ss << "Transferring Cell Data - " << progressInt << "% Complete";
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Transferring Cell Data - %1% Complete").arg(progressInt);
+      notifyStatusMessage(ss);
       prog = prog + progIncrement;
     }
     if (getCancel() == true)
@@ -267,7 +265,7 @@ void AlignSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSections::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
 
 }

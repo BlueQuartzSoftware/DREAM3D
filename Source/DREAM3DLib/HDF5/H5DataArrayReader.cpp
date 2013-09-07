@@ -38,6 +38,9 @@
 
 #include <vector>
 
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
@@ -66,7 +69,7 @@ namespace Detail
   template<typename T>
   IDataArray::Pointer readH5Dataset(hid_t locId,
                                     const QString &datasetPath,
-                                    const std::vector<hsize_t> &dims)
+                                    const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -104,7 +107,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
   size_t attr_size;
   QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //qDebug() << "Reading Attribute " << *iter ;
   typeId = QH5Lite::getDatasetType(gid, name);
@@ -191,7 +194,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
   size_t attr_size;
   QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //qDebug() << "Reading Attribute " << *iter ;
   typeId = QH5Lite::getDatasetType(gid, name);
@@ -329,7 +332,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
   size_t attr_size;
   QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
   //qDebug() << "Reading Attribute " << *iter ;
   typeId = QH5Lite::getDatasetType(gid, name);

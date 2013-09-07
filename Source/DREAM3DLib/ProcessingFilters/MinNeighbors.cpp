@@ -81,7 +81,7 @@ MinNeighbors::~MinNeighbors()
 // -----------------------------------------------------------------------------
 void MinNeighbors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Number Neighbors");
@@ -121,13 +121,13 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, -304, int32_t, Int32ArrayType, fields, 1)
 
 
 }
@@ -140,7 +140,7 @@ void MinNeighbors::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -150,7 +150,7 @@ void MinNeighbors::preflight()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setVolumeDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->preflight();
   int err = renumber_grains->getErrorCondition();
@@ -169,7 +169,7 @@ void MinNeighbors::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -199,7 +199,7 @@ void MinNeighbors::execute()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setVolumeDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   int err = renumber_grains->getErrorCondition();
@@ -219,7 +219,7 @@ void MinNeighbors::execute()
 // -----------------------------------------------------------------------------
 void MinNeighbors::assign_badpoints()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -352,7 +352,7 @@ void MinNeighbors::merge_containedgrains()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   bool good = false;
 

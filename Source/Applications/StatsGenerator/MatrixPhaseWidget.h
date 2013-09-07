@@ -12,7 +12,7 @@
 #include "ui_MatrixPhaseWidget.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "StatsGenerator/Presets/AbstractMicrostructurePreset.h"
 
 class QwtPlotZoomer;
@@ -44,7 +44,7 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
      DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
  //    DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
-     void extractStatsData(VoxelDataContainer::Pointer m, int index);
+     void extractStatsData(VolumeDataContainer::Pointer m, int index);
 
      void setCrystalStructure(unsigned int xtal);
      unsigned int getCrystalStructure();
@@ -52,7 +52,7 @@ class MatrixPhaseWidget : public SGWidget, private Ui::MatrixPhaseWidget
      QString getComboString();
      QString getTabTitle();
 
-     int gatherStatsData(VoxelDataContainer::Pointer m);
+     int gatherStatsData(VolumeDataContainer::Pointer m);
 
   // public slots:
   //s   void on_m_GenerateDefaultData_clicked();

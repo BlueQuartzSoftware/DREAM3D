@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
@@ -77,8 +77,9 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const QString getHumanLabel() { return "Find Field Neighborhoods"; }
+
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -90,7 +91,7 @@ class DREAM3DLib_EXPORT FindNeighborhoods : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -112,7 +113,7 @@ private:
     int32_t* m_Neighborhoods;
     NeighborList<int>* m_NeighborhoodList;
 
-	void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+  void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     FindNeighborhoods(const FindNeighborhoods&); // Copy Constructor Not Implemented
     void operator=(const FindNeighborhoods&); // Operator '=' Not Implemented

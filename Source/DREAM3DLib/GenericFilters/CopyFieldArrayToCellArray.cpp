@@ -61,12 +61,12 @@ CopyFieldArrayToCellArray::~CopyFieldArrayToCellArray()
 // -----------------------------------------------------------------------------
 void CopyFieldArrayToCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Field Array Name");
     option->setPropertyName("SelectedFieldArrayName");
-    option->setWidgetType(FilterParameter::VoxelFieldArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeFieldArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -106,9 +106,9 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
@@ -175,7 +175,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
 // -----------------------------------------------------------------------------
 void CopyFieldArrayToCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -196,8 +196,7 @@ void CopyFieldArrayToCellArray::execute()
   IDataArray::Pointer inputData = m->getFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedFieldArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+    ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedFieldArrayName);
     setErrorCondition(-11001);
     notifyErrorMessage(ss, getErrorCondition());
     return;

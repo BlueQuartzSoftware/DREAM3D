@@ -85,7 +85,7 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 void PhReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -151,29 +151,29 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
 // We need to read the header of the input file to get the dimensions
-  m_InStream = fopen(getInputFile().c_str(), "r");
+  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)
   {
     setErrorCondition(-48802);
@@ -188,9 +188,8 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   if (error < 0)
   {
     setErrorCondition(error);
-    ss.clear();
-    ss << "Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?";
-    addErrorMessage(getHumanLabel(), ss.str(), -48010);
+    QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
+    addErrorMessage(getHumanLabel(), ss, -48010);
   }
 }
 
@@ -210,19 +209,19 @@ void PhReader::execute()
   /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
    * The array will get allocated down in the 'readFile()' method.
    */
-  if (NULL == getVoxelDataContainer())
+  if (NULL == getVolumeDataContainer())
   {
-    QString ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
     setErrorCondition(-48020);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
-  QString ss;
+
   int err = 0;
 
-  m_InStream = fopen(getInputFile().c_str(), "r");
+  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)
   {
     setErrorCondition(-48030);
@@ -253,7 +252,7 @@ void PhReader::execute()
 // -----------------------------------------------------------------------------
 int PhReader::readHeader()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   int nx = 0;
   int ny = 0;
@@ -280,7 +279,7 @@ int PhReader::readHeader()
 int  PhReader::readFile()
 {
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
@@ -299,7 +298,7 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getVoxelDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
+  getVolumeDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

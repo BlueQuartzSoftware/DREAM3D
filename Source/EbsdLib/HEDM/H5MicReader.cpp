@@ -199,7 +199,7 @@ int H5MicReader::readHeader(hid_t parId)
     MicPhase::Pointer m_CurrentPhase = MicPhase::New();
 
     READ_PHASE_HEADER_DATA("H5MicReader", pid, int, Ebsd::Mic::Phase, PhaseIndex, m_CurrentPhase)
-        READ_PHASE_HEADER_ARRAY("H5MicReader", pid, QVector<float>, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
+        READ_PHASE_HEADER_ARRAY("H5MicReader", pid, float, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
         READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
         READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::Symmetry, Symmetry, m_CurrentPhase)
 

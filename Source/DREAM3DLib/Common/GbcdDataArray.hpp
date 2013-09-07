@@ -68,7 +68,7 @@ class GbcdDataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(GbcdDataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(GbcdDataArray<T>, IDataArray)
 
-    typedef std::vector<Pointer>   ContainterType;
+    typedef QVector<Pointer>   ContainterType;
 
   enum NumType {
     Int8 = 0,
@@ -130,7 +130,7 @@ class GbcdDataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
@@ -370,7 +370,7 @@ class GbcdDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
       int err = -1;
       return err;
@@ -493,12 +493,12 @@ class GbcdDataArray : public IDataArray
       return RawResize(numElements);
     }
 
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
     }
 
-    virtual void printComponent(QDataStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -600,7 +600,7 @@ class GbcdDataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
     const QString &label)
     {
       int err = -1;

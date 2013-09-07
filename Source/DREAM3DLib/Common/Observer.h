@@ -31,7 +31,8 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
-#include <vector>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -88,7 +89,7 @@ class DREAM3DLib_EXPORT Observer
       * @param msgs The messages to be printed
       */
      virtual void sendPipelineMessage(PipelineMessage &msg);
-     virtual void sendPipelineMessages(std::vector<PipelineMessage> msgs);
+     virtual void sendPipelineMessages(QVector<PipelineMessage> msgs);
 
 
   private:

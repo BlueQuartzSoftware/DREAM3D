@@ -104,7 +104,7 @@ CropVolumePipeline::~CropVolumePipeline()
 void CropVolumePipeline::setupFilterParameters()
 {
     // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -150,9 +150,9 @@ void CropVolumePipeline::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   if(true == m_InputFile.isEmpty())
   {
-    ss << "The Input file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 }
 
@@ -215,7 +215,7 @@ void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, st
   //int64_t totalPoints = m->totalPoints();
   int numinlist;
   std::ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -255,7 +255,7 @@ unsigned int getNumLinesinFile(QString filename)
 
   int num_lines;
   std::ifstream inFile;
-  inFile.open(filename.c_str());
+  inFile.open(filename.toLatin1().data());
   inFile >> num_lines;
   inFile.close();
 

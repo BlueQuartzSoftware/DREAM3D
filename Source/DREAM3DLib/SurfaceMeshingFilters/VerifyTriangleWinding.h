@@ -68,8 +68,8 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
-    typedef QMap<int, QSet<int> >                      LabelFaceMap_t;
-    typedef std::vector<int32_t>                               FaceList_t;
+    typedef QMap<int, QSet<int> >   LabelFaceMap_t;
+    typedef std::vector<int32_t>    FaceList_t;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

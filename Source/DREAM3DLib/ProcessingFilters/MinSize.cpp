@@ -76,7 +76,7 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 void MinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -120,12 +120,12 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -135,7 +135,7 @@ void MinSize::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -145,7 +145,7 @@ void MinSize::preflight()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setVolumeDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->preflight();
   int err = renumber_grains->getErrorCondition();
@@ -164,7 +164,7 @@ void MinSize::execute()
 {
   setErrorCondition(0);
   // int err = 0;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -186,7 +186,7 @@ void MinSize::execute()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setVolumeDataContainer(m);
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   int err = renumber_grains->getErrorCondition();
@@ -206,7 +206,7 @@ void MinSize::execute()
 // -----------------------------------------------------------------------------
 void MinSize::assign_badpoints()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -343,7 +343,7 @@ void MinSize::assign_badpoints()
 // -----------------------------------------------------------------------------
 void MinSize::remove_smallgrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;

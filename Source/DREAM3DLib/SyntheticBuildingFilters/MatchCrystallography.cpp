@@ -105,7 +105,7 @@ MatchCrystallography::~MatchCrystallography()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Maximum Number of Iterations (Swaps)");
@@ -147,32 +147,32 @@ int MatchCrystallography::writeFilterParameters(AbstractFilterParametersWriter* 
 void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  VolumeDataContainer* m = getVolumeDataContainer();
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
   //int err = 0;
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
 
       // Field Data
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, float, FloatArrayType, 0, fields, 4)
 
 
 
       // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
       if (NULL == m->getFieldData(m_NeighborListArrayName).get())
   {
-    ss.str("");
-    ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." ;
+
+    ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -181,10 +181,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   if(NULL == m->getFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
-    ss.str("");
-    ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." ;
+
+    ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-306);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -193,10 +193,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 
   if(NULL == m->getEnsembleData(m_StatsDataArrayName).get())
   {
-    ss.str("");
-    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." ;
+
+    ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-310);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -205,9 +205,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -307, unsigned int, XTalStructArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, -308, int32_t, Int32ArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -225,7 +225,7 @@ void MatchCrystallography::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -244,40 +244,40 @@ void MatchCrystallography::execute()
 
 
   QString ss;
-  ss << "Determining Volumes";
-  notifyStatusMessage(ss.str());
+  ss = QObject::tr("Determining Volumes");
+  notifyStatusMessage(ss);
   determine_volumes();
-  ss.str("");
 
-  ss << "Determining Boundary Areas";
-  notifyStatusMessage(ss.str());
+
+  ss = QObject::tr("Determining Boundary Areas");
+  notifyStatusMessage(ss);
   determine_boundary_areas();
-  ss.str("");
+
 
   size_t size = m->getNumEnsembleTuples();
   for (size_t i = 1; i < size; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
     {
-      ss << "Initializing Arrays of Phase " << i;
+      ss = QObject::tr("Initializing Arrays of Phase ").arg(i);
       notifyStatusMessage("Initializing Arrays");
       initializeArrays(i);
-      ss.str("");
 
-      ss << "Assigning Eulers to Phase " << i;
-      notifyStatusMessage(ss.str());
+
+      ss = QObject::tr("Assigning Eulers to Phase ").arg(i);
+      notifyStatusMessage(ss);
       assign_eulers(i);
-      ss.str("");
 
-      ss << "Measuring Misorientations of Phase " << i;
-      notifyStatusMessage(ss.str());
+
+      ss = QObject::tr("Measuring Misorientations of Phase ").arg(i);
+      notifyStatusMessage(ss);
       measure_misorientations(i);
-      ss.str("");
 
-      ss << "Matching Crystallography of Phase " << i;
-      notifyStatusMessage(ss.str());
+
+      ss = QObject::tr("Matching Crystallography of Phase ").arg(i);
+      notifyStatusMessage(ss);
       matchCrystallography(i);
-      ss.str("");
+
     }
   }
 
@@ -290,7 +290,7 @@ void MatchCrystallography::execute()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::initializeArrays(int ensem)
 {
-  // VoxelDataContainer* m = getVoxelDataContainer();
+  // VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -312,8 +312,8 @@ void MatchCrystallography::initializeArrays(int ensem)
   {
     setErrorCondition(-55000);
     QString ss;
-    ss << "Improper PhaseType for MatchCrystallography";
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    ss = QObject::tr("Improper PhaseType for MatchCrystallography");
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 
@@ -334,7 +334,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_volumes()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumFieldTuples();
@@ -365,7 +365,7 @@ void MatchCrystallography::determine_volumes()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::determine_boundary_areas()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
@@ -404,7 +404,7 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-      VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
   int numbins = 0;
   float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -514,7 +514,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neigh
 // -----------------------------------------------------------------------------
 void MatchCrystallography::matchCrystallography(int ensem)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -554,9 +554,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   if( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructures[ensem]) { numbins = 36 * 36 * 12; }
   while (badtrycount < (m_MaxIterations/10) && iterations < m_MaxIterations)
   {
-    QString ss;
-    ss << "Matching Crystallography - Swapping/Switching Orientations - " << ((float)iterations/float(1000*totalFields))*100 << "% Complete";
-    //      notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Matching Crystallography - Swapping/Switching Orientations - %1% Complete").arg(((float)iterations/float(1000*totalFields))*100);
+    //      notifyStatusMessage(ss);
     currentodferror = 0;
     currentmdferror = 0;
     for (int i = 0; i < numbins; i++)
@@ -835,7 +834,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
 // -----------------------------------------------------------------------------
 void MatchCrystallography::measure_misorientations(int ensem)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"

@@ -41,9 +41,10 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/SurfaceMeshDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/SolidMeshDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VertexDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/EdgeDataContainerReader.h"
 #include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
@@ -55,9 +56,10 @@
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
   m_InputFile(""),
-  m_ReadVoxelData(true),
-  m_ReadSurfaceMeshData(false),
-  m_ReadSolidMeshData(false),
+  m_ReadVolumeData(true),
+  m_ReadSurfaceData(false),
+  m_ReadVertexData(false),
+  m_ReadEdgeData(false),
   m_ReadAllArrays(true)
 {
   m_PipelineFromFile = FilterPipeline::New();
@@ -76,7 +78,7 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -88,21 +90,29 @@ void DataContainerReader::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   setInputFile( reader->readValue("InputFile", getInputFile() ) );
-  setReadVoxelData( reader->readValue("ReadVoxelData", getReadVoxelData() ) );
-  setReadSurfaceMeshData( reader->readValue("ReadSurfaceMeshData", getReadSurfaceMeshData() ) );
-  setReadSolidMeshData( reader->readValue("ReadSolidMeshData", getReadSolidMeshData() ) );
+  setReadVolumeData( reader->readValue("ReadVolumeData", getReadVolumeData() ) );
+  setReadSurfaceData( reader->readValue("ReadSurfaceData", getReadSurfaceData() ) );
+  setReadEdgeData( reader->readValue("ReadEdgeData", getReadEdgeData() ) );
+  setReadVertexData( reader->readValue("ReadVertexData", getReadVertexData() ) );
 
-  setSelectedVoxelCellArrays( reader->readValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() ) );
-  setSelectedVoxelFieldArrays( reader->readValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() ) );
-  setSelectedVoxelEnsembleArrays( reader->readValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() ) );
-  setSelectedSurfaceMeshVertexArrays( reader->readValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() ) );
-  setSelectedSurfaceMeshFaceArrays( reader->readValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() ) );
-  setSelectedSurfaceMeshEdgeArrays( reader->readValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() ) );
-  setSelectedSurfaceMeshFieldArrays( reader->readValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() ) );
-  setSelectedSurfaceMeshEnsembleArrays( reader->readValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() ) );
-  setSelectedSolidMeshVertexArrays( reader->readValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() ) );
-  setSelectedSolidMeshFaceArrays( reader->readValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() ) );
-  setSelectedSolidMeshEdgeArrays( reader->readValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() ) );
+  setSelectedVolumeVertexArrays( reader->readValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() ) );
+  setSelectedVolumeFaceArrays( reader->readValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() ) );
+  setSelectedVolumeEdgeArrays( reader->readValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() ) );
+  setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
+  setSelectedVolumeFieldArrays( reader->readValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() ) );
+  setSelectedVolumeEnsembleArrays( reader->readValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() ) );
+  setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
+  setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
+  setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
+  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
+  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+  setSelectedEdgeVertexArrays( reader->readValue("SelectedEdgeVertexArrays", getSelectedEdgeVertexArrays() ) );
+  setSelectedEdgeEdgeArrays( reader->readValue("SelectedEdgeEdgeArrays", getSelectedEdgeEdgeArrays() ) );
+  setSelectedEdgeFieldArrays( reader->readValue("SelectedEdgeFieldArrays", getSelectedEdgeFieldArrays() ) );
+  setSelectedEdgeEnsembleArrays( reader->readValue("SelectedEdgeEnsembleArrays", getSelectedEdgeEnsembleArrays() ) );
+  setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
+  setSelectedVertexFieldArrays( reader->readValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() ) );
+  setSelectedVertexEnsembleArrays( reader->readValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -115,21 +125,29 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 
   writer->openFilterGroup(this, index);
   writer->writeValue("InputFile", getInputFile() );
-  writer->writeValue("ReadVoxelData", getReadVoxelData() );
-  writer->writeValue("ReadSurfaceMeshData", getReadSurfaceMeshData() );
-  writer->writeValue("ReadSolidMeshData", getReadSolidMeshData() );
+  writer->writeValue("ReadVolumeData", getReadVolumeData() );
+  writer->writeValue("ReadSurfaceData", getReadSurfaceData() );
+  writer->writeValue("ReadEdgeData", getReadEdgeData() );
+  writer->writeValue("ReadVertexData", getReadVertexData() );
 
-  writer->writeValue("SelectedVoxelCellArrays", getSelectedVoxelCellArrays() );
-  writer->writeValue("SelectedVoxelFieldArrays", getSelectedVoxelFieldArrays() );
-  writer->writeValue("SelectedVoxelEnsembleArrays", getSelectedVoxelEnsembleArrays() );
-  writer->writeValue("SelectedSurfaceMeshVertexArrays", getSelectedSurfaceMeshVertexArrays() );
-  writer->writeValue("SelectedSurfaceMeshFaceArrays", getSelectedSurfaceMeshFaceArrays() );
-  writer->writeValue("SelectedSurfaceMeshEdgeArrays", getSelectedSurfaceMeshEdgeArrays() );
-  writer->writeValue("SelectedSurfaceMeshFieldArrays", getSelectedSurfaceMeshFieldArrays() );
-  writer->writeValue("SelectedSurfaceMeshEnsembleArrays", getSelectedSurfaceMeshEnsembleArrays() );
-  writer->writeValue("SelectedSolidMeshVertexArrays", getSelectedSolidMeshVertexArrays() );
-  writer->writeValue("SelectedSolidMeshFaceArrays", getSelectedSolidMeshFaceArrays() );
-  writer->writeValue("SelectedSolidMeshEdgeArrays", getSelectedSolidMeshEdgeArrays() );
+  writer->writeValue("SelectedVolumeVertexArrays", getSelectedVolumeVertexArrays() );
+  writer->writeValue("SelectedVolumeFaceArrays", getSelectedVolumeFaceArrays() );
+  writer->writeValue("SelectedVolumeEdgeArrays", getSelectedVolumeEdgeArrays() );
+  writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
+  writer->writeValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() );
+  writer->writeValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
+  writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
+  writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
+  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+  writer->writeValue("SelectedEdgeVertexArrays", getSelectedEdgeVertexArrays() );
+  writer->writeValue("SelectedEdgeEdgeArrays", getSelectedEdgeEdgeArrays() );
+  writer->writeValue("SelectedEdgeFieldArrays", getSelectedEdgeFieldArrays() );
+  writer->writeValue("SelectedEdgeEnsembleArrays", getSelectedEdgeEnsembleArrays() );
+  writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
+  writer->writeValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() );
+  writer->writeValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() );
   writer->closeFilterGroup();
   return ++index; // we want to return the index after the one we just wrote to
 }
@@ -137,23 +155,23 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   QString ss;
   int32_t err = 0;
-
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -161,10 +179,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
     if(fileId < 0)
     {
-      ss.str("");
-      ss << ": Error opening input file '" << m_InputFile << "'";
+      ss = QObject::tr(": Error opening input file '%1'").arg(ClassName());
       setErrorCondition(-150);
-      addErrorMessage(getHumanLabel(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
 
@@ -172,57 +189,72 @@ void DataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
     /* READ THE VOXEL DATA TO THE HDF5 FILE */
-    if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
+    if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
     {
-      VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
-      voxelReader->setHdfFileId(fileId);
-      voxelReader->setVoxelDataContainer(getVoxelDataContainer());
-      voxelReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Voxel Data ";
-      voxelReader->setMessagePrefix(ss.str());
-      voxelReader->preflight();
-      if (voxelReader->getErrorCondition() < 0)
+      VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+      volumeReader->setHdfFileId(fileId);
+      volumeReader->setVolumeDataContainer(getVolumeDataContainer());
+      volumeReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Volume Data ";
+      volumeReader->setMessagePrefix(ss);
+      volumeReader->preflight();
+      if (volumeReader->getErrorCondition() < 0)
       {
-        setReadVoxelData(false);
-        setErrorCondition(voxelReader->getErrorCondition());
-        addErrorMessage(getHumanLabel(), "The voxel data was not available in the data file.", getErrorCondition());
+        setReadVolumeData(false);
+        setErrorCondition(volumeReader->getErrorCondition());
+        addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
       }
     }
 
-    /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
-    if (NULL != getSurfaceMeshDataContainer() && m_ReadSurfaceMeshData == true)
+    /* READ THE Surface DATA TO THE HDF5 FILE */
+    if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
     {
-      SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
+      SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-      smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+      smReader->setSurfaceDataContainer(getSurfaceDataContainer());
       smReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
-      smReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      smReader->setMessagePrefix(ss);
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
-        setReadSurfaceMeshData(false);
+        setReadSurfaceData(false);
         setErrorCondition(smReader->getErrorCondition());
         addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
       }
     }
 
-    /* READ THE SolidMesh DATA TO THE HDF5 FILE */
-    if (NULL != getSolidMeshDataContainer() && m_ReadSolidMeshData == true)
+    /* READ THE Edge DATA TO THE HDF5 FILE */
+    if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
     {
-      SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
+      EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+      eReader->setHdfFileId(fileId);
+      eReader->setEdgeDataContainer(getEdgeDataContainer());
+      eReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      eReader->setMessagePrefix(ss);
+      eReader->preflight();
+      if (eReader->getErrorCondition() < 0)
+      {
+        setReadEdgeData(false);
+        setErrorCondition(eReader->getErrorCondition());
+        addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
+      }
+    }
+
+    /* READ THE Vertex DATA TO THE HDF5 FILE */
+    if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
+    {
+      VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-      smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
+      smReader->setVertexDataContainer(getVertexDataContainer());
       smReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
-      smReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+      smReader->setMessagePrefix(ss);
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
-        setReadSolidMeshData(false);
+        setReadVertexData(false);
         setErrorCondition(smReader->getErrorCondition());
         addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
       }
@@ -250,10 +282,9 @@ void DataContainerReader::execute()
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
+    ss =QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
 
@@ -268,65 +299,88 @@ void DataContainerReader::execute()
   err = readExistingPipelineFromFile(fileId);
 
   /* READ THE VOXEL DATA TO THE HDF5 FILE */
-  if (getVoxelDataContainer() != NULL && m_ReadVoxelData == true)
+  if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
   {
-    VoxelDataContainerReader::Pointer voxelReader = VoxelDataContainerReader::New();
-    voxelReader->setHdfFileId(fileId);
-    voxelReader->setCellArraysToRead(m_SelectedVoxelCellArrays);
-    voxelReader->setFieldArraysToRead(m_SelectedVoxelFieldArrays);
-    voxelReader->setEnsembleArraysToRead(m_SelectedVoxelEnsembleArrays);
-    voxelReader->setReadAllArrays(m_ReadAllArrays);
-    voxelReader->setVoxelDataContainer(getVoxelDataContainer());
-    voxelReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Voxel Data ";
-    voxelReader->setMessagePrefix(ss.str());
-    voxelReader->execute();
-    if (voxelReader->getErrorCondition() < 0)
+    VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+    volumeReader->setHdfFileId(fileId);
+    volumeReader->setVertexArraysToRead(m_SelectedVolumeVertexArrays);
+    volumeReader->setFaceArraysToRead(m_SelectedVolumeFaceArrays);
+    volumeReader->setEdgeArraysToRead(m_SelectedVolumeEdgeArrays);
+    volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
+    volumeReader->setFieldArraysToRead(m_SelectedVolumeFieldArrays);
+    volumeReader->setEnsembleArraysToRead(m_SelectedVolumeEnsembleArrays);
+    volumeReader->setReadAllArrays(m_ReadAllArrays);
+    volumeReader->setVolumeDataContainer(getVolumeDataContainer());
+    volumeReader->setObservers(getObservers());
+    ss = getMessagePrefix() + " |--> Reading Volume Data ";
+    volumeReader->setMessagePrefix(ss);
+    volumeReader->execute();
+    if (volumeReader->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Reading the Voxel Data", -803);
+      notifyErrorMessage("Error Reading the Volume Data", -803);
       return;
     }
   }
 
-  /* READ THE SurfaceMesh DATA TO THE HDF5 FILE */
-  if (NULL != getSurfaceMeshDataContainer() && m_ReadSurfaceMeshData == true)
+  /* READ THE Surface DATA TO THE HDF5 FILE */
+  if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
   {
-    SurfaceMeshDataContainerReader::Pointer smReader = SurfaceMeshDataContainerReader::New();
+    SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
     smReader->setHdfFileId(fileId);
-    smReader->setVertexArraysToRead(m_SelectedSurfaceMeshVertexArrays);
-    smReader->setFaceArraysToRead(m_SelectedSurfaceMeshFaceArrays);
-    smReader->setEdgeArraysToRead(m_SelectedSurfaceMeshEdgeArrays);
-    smReader->setFieldArraysToRead(m_SelectedSurfaceMeshFieldArrays);
-    smReader->setEnsembleArraysToRead(m_SelectedSurfaceMeshEnsembleArrays);
+    smReader->setVertexArraysToRead(m_SelectedSurfaceVertexArrays);
+    smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
+    smReader->setEdgeArraysToRead(m_SelectedSurfaceEdgeArrays);
+    smReader->setFieldArraysToRead(m_SelectedSurfaceFieldArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedSurfaceEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+    smReader->setSurfaceDataContainer(getSurfaceDataContainer());
     smReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading SurfaceMesh Data ";
-    smReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Surface Data ";
+    smReader->setMessagePrefix(ss);
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Reading the SurfaceMesh Data", smReader->getErrorCondition());
+      notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
       return;
     }
   }
 
-  /* READ THE SolidMesh DATA TO THE HDF5 FILE */
-  if (NULL != getSolidMeshDataContainer() && m_ReadSolidMeshData == true)
+
+  /* READ THE Surface DATA TO THE HDF5 FILE */
+  if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
   {
-    SolidMeshDataContainerReader::Pointer smReader = SolidMeshDataContainerReader::New();
+    EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+    eReader->setHdfFileId(fileId);
+    eReader->setVertexArraysToRead(m_SelectedEdgeVertexArrays);
+    eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
+    eReader->setFieldArraysToRead(m_SelectedEdgeFieldArrays);
+    eReader->setEnsembleArraysToRead(m_SelectedEdgeEnsembleArrays);
+    eReader->setReadAllArrays(m_ReadAllArrays);
+    eReader->setEdgeDataContainer(getEdgeDataContainer());
+    eReader->setObservers(getObservers());
+    ss = getMessagePrefix() + " |--> Reading Surface Data ";
+    eReader->setMessagePrefix(ss);
+    eReader->preflight();
+    if (eReader->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
+      return;
+    }
+  }
+
+  /* READ THE Vertex DATA TO THE HDF5 FILE */
+  if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
+  {
+    VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
     smReader->setHdfFileId(fileId);
-    smReader->setCellArraysToRead(m_SelectedSolidMeshVertexArrays);
-    smReader->setFieldArraysToRead(m_SelectedSolidMeshFaceArrays);
-    smReader->setEnsembleArraysToRead(m_SelectedSolidMeshEdgeArrays);
+    smReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
+    smReader->setFieldArraysToRead(m_SelectedVertexFieldArrays);
+    smReader->setEnsembleArraysToRead(m_SelectedVertexEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    smReader->setVertexDataContainer(getVertexDataContainer());
     smReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
-    smReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+    smReader->setMessagePrefix(ss);
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
@@ -349,20 +403,20 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
   // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;
-  err = QH5Utilities::getGroupObjects(pipelineGroupId, QH5Utilities::H5Support_GROUP, groupList);
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QString ss;
-    ss << i;
-    err = QH5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    QString ss = QString::number(i, 10);
+
+    err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
 #if (__APPLE__)
 #warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
 #endif
@@ -403,43 +457,64 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
-                                                     QSet<QString> selectedFieldArrays,
-                                                     QSet<QString> selectedEnsembleArrays)
+void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                           QSet<QString> selectedFaceArrays,
+                                                           QSet<QString> selectedEdgeArrays,
+                                                           QSet<QString> selectedCellArrays,
+                                                           QSet<QString> selectedFieldArrays,
+                                                           QSet<QString> selectedEnsembleArrays)
 {
-  m_SelectedVoxelCellArrays = selectedCellArrays;
-  m_SelectedVoxelFieldArrays = selectedFieldArrays;
-  m_SelectedVoxelEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedVolumeVertexArrays = selectedVertexArrays;
+  m_SelectedVolumeFaceArrays = selectedFaceArrays;
+  m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
+  m_SelectedVolumeCellArrays = selectedCellArrays;
+  m_SelectedVolumeFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                           QSet<QString> selectedEdgeArrays,
                                                            QSet<QString> selectedFaceArrays,
+                                                           QSet<QString> selectedFieldArrays,
+                                                           QSet<QString> selectedEnsembleArrays)
+{
+  m_SelectedSurfaceVertexArrays = selectedVertexArrays;
+  m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
+  m_SelectedSurfaceFaceArrays = selectedFaceArrays;
+  m_SelectedSurfaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
+  m_ReadAllArrays = false;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                            QSet<QString> selectedEdgeArrays,
                                                            QSet<QString> selectedFieldArrays,
                                                            QSet<QString> selectedEnsembleArrays)
 {
-  m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceMeshEdgeArrays = selectedEdgeArrays;
-  m_SelectedSurfaceMeshFieldArrays = selectedFieldArrays;
-  m_SelectedSurfaceMeshEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedEdgeVertexArrays = selectedVertexArrays;
+  m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
+  m_SelectedEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                         QSet<QString> selectedFaceArrays,
-                                                         QSet<QString> selectedEdgeArrays)
+void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                         QSet<QString> selectedFieldArrays,
+                                                         QSet<QString> selectedEnsembleArrays)
 {
-  m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
-  m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
-  m_SelectedSolidMeshEdgeArrays = selectedEdgeArrays;
+  m_SelectedVertexVertexArrays = selectedVertexArrays;
+  m_SelectedVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
 

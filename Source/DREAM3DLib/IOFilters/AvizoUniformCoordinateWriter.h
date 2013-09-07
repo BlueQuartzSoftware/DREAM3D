@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
@@ -77,7 +77,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -96,14 +96,14 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	 /**
+   /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -131,14 +131,14 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    QString generateHeader();
+    void generateHeader(QDataStream &ss);
 
     /**
      * @brief Writes the data to the Avizo file
      * @param writer The MXAFileWriter object
      * @return Error code
      */
-    int writeData(MXAFileWriter64 &writer);
+    int writeData(QDataStream &out);
 
   private:
     int32_t* m_GrainIds;

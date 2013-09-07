@@ -98,7 +98,7 @@ FindDeformationStatistics::~FindDeformationStatistics()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Deformation Statistics File");
@@ -144,32 +144,32 @@ int FindDeformationStatistics::writeFilterParameters(AbstractFilterParametersWri
 void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  VolumeDataContainer* m = getVolumeDataContainer();
 
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
+
+
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, -306, int32_t, Int32ArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, -306, float, FloatArrayType, fields, 1)
+
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, -307, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, -308, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, -309, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, -310, float, FloatArrayType, voxels, 1)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -185,7 +185,7 @@ void FindDeformationStatistics::preflight()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -203,7 +203,7 @@ void FindDeformationStatistics::execute()
 
   //  QString filename = m_OutputFile1;
   std::ofstream outFile;
-  outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
+  outFile.open(m_DeformationStatisticsFile.toLatin1().data(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
   float kam, gbdist, tjdist, qpdist, sf, grm, mprime, F1, F1spt, F7;
@@ -476,8 +476,8 @@ void FindDeformationStatistics::execute()
                            << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
                            << kmvdis[i][0] << "	" << kmvdis[i][1] ;
   }
-  outFile ;
-  outFile ;
+  outFile << "\n";
+  outFile << "\n";
   outFile << "Grain Average Misorientation Data" ;
   outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" ;
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
@@ -502,8 +502,8 @@ void FindDeformationStatistics::execute()
                             << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
                             << gamvdis[i][0] << "	" << gamvdis[i][1] ;
   }
-  outFile ;
-  outFile ;
+  outFile << "\n";
+  outFile << "\n";
   outFile << "KAM DIST		GAM DIST" ;
   for (int i = 0; i < 20; i++)
   {
@@ -513,7 +513,7 @@ void FindDeformationStatistics::execute()
 
   // QString filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
-  vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
+  vtkFile = fopen(m_VtkOutputFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     qDebug() << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" ;

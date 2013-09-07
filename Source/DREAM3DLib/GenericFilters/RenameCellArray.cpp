@@ -60,12 +60,12 @@ RenameCellArray::~RenameCellArray()
 // -----------------------------------------------------------------------------
 void RenameCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Cell Array Name");
     option->setPropertyName("SelectedCellArrayName");
-    option->setWidgetType(FilterParameter::VoxelCellArrayNameSelectionWidget);
+    option->setWidgetType(FilterParameter::VolumeCellArrayNameSelectionWidget);
     option->setValueType("string");
     option->setUnits("");
     parameters.push_back(option);
@@ -89,10 +89,10 @@ void RenameCellArray::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setNewCellArrayName( reader->readValue( "NewCellArrayName", getNewCellArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -113,7 +113,7 @@ int RenameCellArray::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -126,16 +126,16 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    ss << "An array from the Voxel Data Container must be selected.";
-    addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+    QString ss = QObject::tr("An array from the Voxel Data Container must be selected.");
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
     bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
     if(check == false)
     {
-      ss << "Array to be renamed could not be found in DataContainer";
-      addErrorMessage(getHumanLabel(),ss.str(),getErrorCondition());
+      QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     }
   }
 }
@@ -157,7 +157,7 @@ void RenameCellArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameCellArray::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -171,9 +171,9 @@ void RenameCellArray::execute()
 
   if(check == false)
   {
-  ss << "Array to be renamed could not be found in DataContainer";
-  setErrorCondition(-11000);
-  notifyErrorMessage(ss, getErrorCondition());
+    QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
+    setErrorCondition(-11000);
+    notifyErrorMessage(ss, getErrorCondition());
   }
 
   notifyStatusMessage("Complete");

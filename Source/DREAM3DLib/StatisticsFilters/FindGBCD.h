@@ -37,16 +37,14 @@
 #define _FindGBCD_H_
 
 #include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/OrientationOps/CubicOps.h"
-#include "DREAM3DLib/OrientationOps/HexagonalOps.h"
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
-#include "DREAM3DLib/Common/ModifiedLambertProjection.h"
+
+
 
 /**
  * @class FindGBCD FindGBCD.h DREAM3DLib/SurfaceMeshFilters/FindGBCD.h
@@ -74,7 +72,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, GBCDArrayNames)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 

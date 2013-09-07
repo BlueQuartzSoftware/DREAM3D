@@ -206,7 +206,7 @@ class StringDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -225,19 +225,19 @@ class StringDataArray : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] >= m_Array.size()) { return -100; }
       }
 
 
       // Create a new Array to copy into
-      std::vector<QString> newArray;
-      std::vector<size_t>::size_type start = 0;
-      for(std::vector<QString>::size_type i = 0; i < m_Array.size(); ++i)
+      QVector<QString> newArray;
+      QVector<size_t>::size_type start = 0;
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
-        for(std::vector<size_t>::size_type j = start; j < idxs.size(); ++j)
+        for(QVector<size_t>::size_type j = start; j < idxs.size(); ++j)
         {
           if (i == idxs[j]) { keep = false; break;}
         }
@@ -278,7 +278,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      m_Array.assign(m_Array.size(), QString(""));
+      m_Array.fill(QString(""), m_Array.size());
     }
 
     /**
@@ -309,7 +309,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(QDataStream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       out << m_Array[i];
     }
@@ -320,7 +320,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(QDataStream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       out << m_Array[i];
     }
@@ -352,7 +352,7 @@ class StringDataArray : public IDataArray
 
       for(size_t i = 0; i < m_Array.size(); ++i)
       {
-        ::memcpy(str, m_Array[i].c_str(), m_Array[i].size());
+        ::memcpy(str, m_Array[i].toLatin1().data(), m_Array[i].size());
         str = str + m_Array[i].size() + 1;
       }
 
@@ -367,7 +367,7 @@ class StringDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(QDataStream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                     const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
@@ -404,7 +404,7 @@ class StringDataArray : public IDataArray
      */
     void SetValue(size_t i, const QString &value)
     {
-      m_Array.at(i) = value;
+      m_Array[i] = value;
     }
 
     /**
@@ -432,7 +432,7 @@ class StringDataArray : public IDataArray
 
   private:
       //  unsigned long long int MUD_FLAP_0;
-    std::vector<QString> m_Array;
+    QVector<QString> m_Array;
   //  unsigned long long int MUD_FLAP_1;
     //size_t Size;
   //  unsigned long long int MUD_FLAP_4;

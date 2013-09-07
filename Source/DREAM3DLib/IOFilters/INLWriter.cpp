@@ -60,15 +60,15 @@
 //
 // -----------------------------------------------------------------------------
 INLWriter::INLWriter() :
-FileWriter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_CellEulerAngles(NULL)
+  FileWriter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_CellEulerAngles(NULL)
 
 {
   setupFilterParameters();
@@ -87,7 +87,7 @@ INLWriter::~INLWriter()
 // -----------------------------------------------------------------------------
 void INLWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -108,9 +108,9 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -131,37 +131,37 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
 
-  typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+      typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
+      IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {
-    ss.str("");
-    ss << ClassName() << " requires the " << DREAM3D::EnsembleData::MaterialName << " Ensemble array to be present in the Data Container.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1111);
+
+    QString ss = QObject::tr("%1 requires the %2 Ensemble array to be present in the Data Container.").arg(ClassName()).arg(DREAM3D::EnsembleData::MaterialName);
+    addErrorMessage(getHumanLabel(), ss, -1111);
     setErrorCondition(-1111);
   }
-//  else
-//  {
-//    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
-//  }
+  //  else
+  //  {
+  //    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  //  }
 
 
 }
@@ -187,16 +187,16 @@ int INLWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int INLWriter::writeFile()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QString ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
-  QString ss;
+
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
@@ -219,30 +219,30 @@ int INLWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo fi(getOutputFile());
+  QDir dir(fi.path());
+  if(!dir.mkpath("."))
   {
-    ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(fi.path());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  FILE* f = fopen(getOutputFile().c_str(), "wb");
+  FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if(NULL == f)
   {
-    ss.str("");
-    ss << "Error Opening File for writing '" << getOutputFile() << "'";
+
+    QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
 
   // Write the header, Each line starts with a "#" symbol
-  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
-  fprintf(f, "# DateTime: %s\r\n", tifDateTime().c_str());
+  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "# DateTime: %s\r\n", QDateTime::currentDateTime().toString().toLatin1().data());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);
   fprintf(f, "# Z_STEP: %f\r\n", res[2]);
@@ -260,14 +260,14 @@ int INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
- // IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  // IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {
-  fclose(f);
-    ss.str("");
-    ss << "The MaterialNames Ensemble Array was not in the Data Container";
+    fclose(f);
+
+    QString ss = QObject::tr("The MaterialNames Ensemble Array was not in the Data Container");
     notifyErrorMessage(ss, -1111);
     setErrorCondition(-1111);
     return -1;
@@ -276,14 +276,14 @@ int INLWriter::writeFile()
   for(size_t i = 1; i < materialNamePtr->GetNumberOfTuples(); ++i)
   {
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
+    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
     }
     else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
     {
-     symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
+      symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
     }
     else
     {
@@ -298,13 +298,13 @@ int INLWriter::writeFile()
   {
     uniqueGrainIds.insert(m_GrainIds[i]);
   }
-  fprintf(f, "# Num_Grains: %zu \r\n", uniqueGrainIds.size());
+  fprintf(f, "# Num_Grains: %d \r\n", uniqueGrainIds.size());
   fprintf(f, "#\r\n");
 
-//  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
-//  fprintf(f, "# Column 4-6: x, y, z (coordinates of point in microns)\r\n");
-//  fprintf(f, "# Column 7: Grain ID\r\n");
-//  fprintf(f, "# Column 8: Phase ID\r\n");
+  //  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
+  //  fprintf(f, "# Column 4-6: x, y, z (coordinates of point in microns)\r\n");
+  //  fprintf(f, "# Column 7: Grain ID\r\n");
+  //  fprintf(f, "# Column 8: Phase ID\r\n");
 
 
   fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
@@ -314,7 +314,7 @@ int INLWriter::writeFile()
   int32_t grainId;
   int32_t phaseId;
 
- // unsigned char rgba[4] = {0,0,0,255};
+  // unsigned char rgba[4] = {0,0,0,255};
   //float refDir[3] = {0.0f, 0.0f, 1.0f};
 
 
@@ -334,7 +334,7 @@ int INLWriter::writeFile()
         zPos = origin[2] + (z * res[2]);
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
-       // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
+        // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {

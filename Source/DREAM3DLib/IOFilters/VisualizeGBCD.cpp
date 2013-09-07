@@ -45,7 +45,7 @@
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
 
@@ -84,7 +84,7 @@ VisualizeGBCD::~VisualizeGBCD()
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Axis Angles");
@@ -161,20 +161,21 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
+
 
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
   if(NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-383);
   }
   else
@@ -204,9 +205,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       }
       else
       {
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }
@@ -230,14 +231,14 @@ void VisualizeGBCD::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
     return;
   }
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -247,9 +248,9 @@ void VisualizeGBCD::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = sm->getVertices();
+  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
@@ -493,12 +494,13 @@ void VisualizeGBCD::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+
+  if(!parentPath.mkpath("."))
   {
-    ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     setErrorCondition(-998);
     notifyErrorMessage(ss, getErrorCondition());
     return;
@@ -506,12 +508,11 @@ void VisualizeGBCD::execute()
 
   {
     FILE* f = NULL;
-    f = fopen(m_OutputFile.c_str(), "wb");
+    f = fopen(m_OutputFile.toLatin1().data(), "wb");
     if(NULL == f)
     {
 
-      ss.str("");
-      ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
+      QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
       notifyErrorMessage(ss, getErrorCondition());
       return;
     }
@@ -544,7 +545,7 @@ void VisualizeGBCD::execute()
         for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
-          MXA::Endian::FromSystemToBig::convert<float>(t);
+          t = qToBigEndian(t);
           gn[count] = t;
           count++;
         }

@@ -39,7 +39,7 @@
 #include <QtCore/QSet>
 
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 #define WRITE_LAMBERT_SQUARE_COORD_VTK 0
@@ -84,11 +84,11 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   QString filename("/tmp/");
   filename.append("ModifiedLambert_Square_Coords_").append(coords->GetName()).append(".vtk");
   FILE* f = NULL;
-  f = fopen(filename.c_str(), "wb");
+  f = fopen(filename.toLatin1().data(), "wb");
   if(NULL == f)
   {
     ss.str("");
-    ss << "Could not open vtk viz file " << filename << " for writing. Please check access permissions and the path to the output location exists";
+    QString ss = QObject::tr("Could not open vtk viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(filename);
     return squareProj;
   }
 

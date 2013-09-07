@@ -15,6 +15,7 @@
 
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/InvalidParameterException.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 namespace PlaneDetail {
 
@@ -44,7 +45,7 @@ Plane::Plane(VectorType& normal, VectorType& x)
   ensure_invariant();
 }
 
-Plane::Plane(VectorType& normal, DREAM3D::SurfaceMesh::Vert_t& x) :
+Plane::Plane(VectorType& normal, DREAM3D::Mesh::Vert_t& x) :
 m_normal(normal),
 m_center(x),
 m_d(normal.dot(x))

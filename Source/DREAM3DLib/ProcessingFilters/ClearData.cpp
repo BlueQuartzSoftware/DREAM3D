@@ -36,7 +36,7 @@
 
 #include "ClearData.h"
 
-#include <QMap>
+#include <QtCore/QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -70,7 +70,7 @@ ClearData::~ClearData()
 // -----------------------------------------------------------------------------
 void ClearData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");
@@ -132,14 +132,14 @@ void ClearData::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
   setXMax( reader->readValue("XMax", getXMax()) );
   setYMax( reader->readValue("YMax", getYMax()) );
   setZMax( reader->readValue("ZMax", getZMax()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -167,69 +167,69 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   QString ss;
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getXMax() < getXMin())
   {
-    ss.str("");
-    ss << "X Max (" << getXMax() << ") less than X Min (" << getXMin() << ")";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("X Max (%1) less than X Min (%2)").arg(getXMax()).arg(getXMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMax() < getYMin())
   {
-    ss.str("");
-    ss << "Y Max (" << getYMax() << ") less than Y Min (" << getYMin() << ")";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("Y Max (%1) less than Y Min (%2)").arg(getYMax()).arg(getYMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getZMax() < getZMin())
   {
-    ss.str("");
-    ss << "Z Max (" << getZMax() << ") less than Z Min (" << getZMin() << ")";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("Z Max (%1) less than Z Min (%2)").arg(getZMax()).arg(getZMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getXMin() < 0)
   {
-    ss.str("");
-    ss << "X Min (" << getXMin() << ") less than 0";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("X Min (%1) less than 0").arg(getXMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMin() < 0)
   {
-    ss.str("");
-    ss << "Y Min (" << getYMin() << ") less than 0";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("Y Min (%1) less than 0").arg(getYMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getZMin() < 0)
   {
-    ss.str("");
-    ss <<"Z Min (" << getZMin() << ") less than 0";
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("Z Min (%1) less than 0").arg(getZMin());
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
-  }  
+  }
   if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
   {
-    ss.str("");
-	ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("The X Max you entered of %1 is greater than your Max X Point of %2").arg(getXMax()).arg(static_cast<int64_t>(m->getXPoints())-1);
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5555);
   }
   if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
   {
-    ss.str("");
-    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints())-1;
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("The Y Max you entered of %1 is greater than your Max Y Point of %2").arg(getYMax()).arg(static_cast<int64_t>(m->getYPoints())-1);
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5556);
   }
   if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
   {
-    ss.str("");
-    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints())-1;
-    addErrorMessage(getHumanLabel(), ss.str(), -5555);
+
+    QString ss = QObject::tr("The Z Max you entered of %1) greater than your Max Z Point of %2").arg(getZMax()).arg(static_cast<int64_t>(m->getZPoints())-1);
+    addErrorMessage(getHumanLabel(), ss, -5555);
     setErrorCondition(-5557);
   }
 }
@@ -250,7 +250,7 @@ void ClearData::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);

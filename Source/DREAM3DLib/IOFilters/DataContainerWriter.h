@@ -45,7 +45,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 
 
@@ -67,16 +67,17 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WritePipeline)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteVoxelData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceMeshData)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteSolidMeshData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVolumeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteSurfaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
 
     virtual void preflight();
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
     virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
 
     virtual void setupFilterParameters();
@@ -85,7 +86,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -118,8 +119,8 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     int writePipeline();
 
-    void writeXdmfHeader(QDataStream &out);
-    void writeXdmfFooter(QDataStream &out);
+    void writeXdmfHeader(QTextStream &out);
+    void writeXdmfFooter(QTextStream &out);
 
   private:
     hid_t m_FileId;

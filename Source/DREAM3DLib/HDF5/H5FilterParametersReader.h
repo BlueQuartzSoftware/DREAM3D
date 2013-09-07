@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int closeFilterGroup();
 
     virtual QString readValue(const QString name, QString value);
-    virtual std::vector<QString> readValue(const QString name, std::vector<QString> value);
+    virtual QVector<QString> readValue(const QString name, QVector<QString> value);
 
     virtual int8_t readValue(const QString name, int8_t value);
     virtual int16_t readValue(const QString name, int16_t value);
@@ -78,24 +78,24 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual float readValue(const QString name, float value);
     virtual double readValue(const QString name, double value);
 
-    virtual std::vector<int8_t> readValue(const QString name, std::vector<int8_t> value);
-    virtual std::vector<int16_t> readValue(const QString name, std::vector<int16_t> value);
-    virtual std::vector<int32_t> readValue(const QString name, std::vector<int32_t> value);
-    virtual std::vector<int64_t> readValue(const QString name, std::vector<int64_t> value);
-    virtual std::vector<uint8_t> readValue(const QString name, std::vector<uint8_t> value);
-    virtual std::vector<uint16_t> readValue(const QString name, std::vector<uint16_t> value);
-    virtual std::vector<uint32_t> readValue(const QString name, std::vector<uint32_t> value);
-    virtual std::vector<uint64_t> readValue(const QString name, std::vector<uint64_t> value);
-    virtual std::vector<float> readValue(const QString name, std::vector<float> value);
-    virtual std::vector<double> readValue(const QString name, std::vector<double> value);
+    virtual QVector<int8_t> readValue(const QString name, QVector<int8_t> value);
+    virtual QVector<int16_t> readValue(const QString name, QVector<int16_t> value);
+    virtual QVector<int32_t> readValue(const QString name, QVector<int32_t> value);
+    virtual QVector<int64_t> readValue(const QString name, QVector<int64_t> value);
+    virtual QVector<uint8_t> readValue(const QString name, QVector<uint8_t> value);
+    virtual QVector<uint16_t> readValue(const QString name, QVector<uint16_t> value);
+    virtual QVector<uint32_t> readValue(const QString name, QVector<uint32_t> value);
+    virtual QVector<uint64_t> readValue(const QString name, QVector<uint64_t> value);
+    virtual QVector<float> readValue(const QString name, QVector<float> value);
+    virtual QVector<double> readValue(const QString name, QVector<double> value);
 
 
     virtual IntVec3Widget_t readValue(const QString name, IntVec3Widget_t v);
     virtual FloatVec3Widget_t readValue(const QString name, FloatVec3Widget_t v);
     virtual ComparisonInput_t readValue(const QString name, ComparisonInput_t v, int vectorPos);
-    virtual std::vector<ComparisonInput_t> readValue(const QString name, std::vector<ComparisonInput_t> v);
+    virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos);
-    virtual std::vector<AxisAngleInput_t> readValue(const QString name, std::vector<AxisAngleInput_t> v);
+    virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v);
     virtual QSet<QString> readValue(const QString name, QSet<QString> v);
 
   protected:
@@ -103,8 +103,6 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 
   private:
     hid_t m_CurrentGroupId;
-
-    std::vector<QString> tokenize(const char* buf, char delimiter);
 
     H5FilterParametersReader(const H5FilterParametersReader&); // Copy Constructor Not Implemented
     void operator=(const H5FilterParametersReader&); // Operator '=' Not Implemented

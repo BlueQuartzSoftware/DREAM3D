@@ -65,7 +65,7 @@ GenerateSurfaceMeshConnectivity::~GenerateSurfaceMeshConnectivity()
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/
@@ -134,11 +134,12 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
+
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -177,11 +178,11 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);
@@ -195,25 +196,25 @@ void GenerateSurfaceMeshConnectivity::execute()
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Vertex Triangle List");
-    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+    getSurfaceDataContainer()->buildMeshLinks();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Face Neighbors List");
-    getSurfaceMeshDataContainer()->buildMeshFaceNeighborLists();
+    getSurfaceDataContainer()->buildMeshFaceNeighborLists();
   }
 
   if (m_GenerateEdgeIdList == true)
   {
     // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    ss.str("");
-    ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
-    conn->setMessagePrefix(ss.str());
+
+    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
+    conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
-    conn->setVoxelDataContainer(getVoxelDataContainer());
-    conn->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
-    conn->setSolidMeshDataContainer(getSolidMeshDataContainer());
+    conn->setVolumeDataContainer(getVolumeDataContainer());
+    conn->setSurfaceDataContainer(getSurfaceDataContainer());
+    conn->setVertexDataContainer(getVertexDataContainer());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {

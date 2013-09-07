@@ -366,11 +366,11 @@ herr_t testReadVectorAttribute(hid_t file_id, QString dsetName )
   int32_t numElements = DIM0;
   QVector<hsize_t> dims (1, DIM0);
 
-  QVector<T> data (DIM0, 0);
+  std::vector<T> data (DIM0, 0);
   for (int i = 0; i < numElements; ++i) {
     data[i] = (T)(i);
   }
-  QVector<T> rData(numElements, 0); //allocate and zero out the memory
+  std::vector<T> rData(numElements, 0); //allocate and zero out the memory
   err = QH5Lite::readVectorAttribute(file_id, dsetName, attributeKey, rData);
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE( data == rData );
@@ -518,7 +518,7 @@ herr_t testWriteVectorDataset(hid_t file_id)
   QString dsetName = QH5Lite::HDFTypeForPrimitiveAsStr(value);
   dsetName = "VectorDataset<" + dsetName + ">";
   qDebug() << "Running " << dsetName << " ... ";
-  err = QH5Lite::writeVectorDataset( file_id, dsetName, dims, data );
+  err = QH5Lite::writeVectorDataset<T>( file_id, dsetName, dims, data );
   DREAM3D_REQUIRE(err >= 0);
 
   qDebug() << " Passed" << "\n";
@@ -534,8 +534,8 @@ herr_t testReadVectorDataset(hid_t file_id)
   T value = 0x0;
   herr_t err = 1;
 
-  QVector<hsize_t> dims(RANK_1D, DIM0);
-  QVector<T> referenceData(DIM0, 0);
+  std::vector<hsize_t> dims(RANK_1D, DIM0);
+  std::vector<T> referenceData(DIM0, 0);
   for (int32_t i = 0; i < DIM0; ++i) {
     referenceData[i] = static_cast<T>( i * 5);
   }
@@ -544,7 +544,7 @@ herr_t testReadVectorDataset(hid_t file_id)
   qDebug() << "Running testReadVectorDataset <" + dsetName + "> ... ";
   dsetName = "VectorDataset<" + dsetName + ">";
 
-  QVector<T> data;
+  std::vector<T> data;
   err = QH5Lite::readVectorDataset( file_id, dsetName, data );
   DREAM3D_REQUIRE(err >= 0);
   DREAM3D_REQUIRE(data == referenceData);

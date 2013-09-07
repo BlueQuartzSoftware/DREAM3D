@@ -68,7 +68,7 @@ namespace Detail
   template<typename T>
   IDataArray::Pointer readGbcdDataset(hid_t locId,
                                     const QString &datasetPath,
-                                    const std::vector<hsize_t> &dims)
+                                    const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -101,7 +101,7 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &
   size_t attr_size;
   QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //qDebug() << "Reading Attribute " << *iter ;
   typeId = QH5Lite::getDatasetType(gid, name);

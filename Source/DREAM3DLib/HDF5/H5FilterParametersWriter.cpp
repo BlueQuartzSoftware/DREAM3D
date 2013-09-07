@@ -98,15 +98,14 @@ int H5FilterParametersWriter::writeValue(const QString name, const QString value
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, const std::vector<QString> value)
+int H5FilterParametersWriter::writeValue(const QString name, const QVector<QString> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, value[i]);
     ss.clear();
   }
 
@@ -216,16 +215,15 @@ int H5FilterParametersWriter::writeValue(const QString name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<int8_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int8_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
   QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -234,16 +232,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<int8_t>
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<int16_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int16_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -252,16 +248,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<int16_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<int32_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int32_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -270,16 +264,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<int32_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<int64_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int64_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -288,16 +280,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<int64_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint8_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint8_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -306,16 +296,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint8_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint16_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint16_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -324,16 +312,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint16_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint32_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint32_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -342,16 +328,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint32_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint64_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint64_t> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -360,16 +344,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<uint64_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<float> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<float> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -378,16 +360,14 @@ int H5FilterParametersWriter::writeValue(const QString name, std::vector<float> 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<double> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<double> value)
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
   for (int i=0; i<vectorSize; i++)
   {
-    ss << i;
-    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss.str(), value[i]);
-    ss.clear();
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::writeScalarAttribute(m_CurrentGroupId, name, ss, value[i]);
   }
 
   return err;
@@ -424,21 +404,17 @@ int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v
 {
   int err = 0;
 
-  QString ss;
-  ss << vectorPos <<  H5FilterParameter::ComparisonInput;
+  QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
 
-  QString data;
-  data << v.arrayName << "\n";
-  data << v.compOperator << "\n";
-  data << v.compValue << "\n";
-  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss.str(), data.str());
+  QString data = v.arrayName + "\n" + QString::number(v.compOperator, 10) + "\n" + QString(v.compValue, 10) + "\n";
+  err = QH5Lite::writeStringAttribute(m_CurrentGroupId, name, ss, data);
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<ComparisonInput_t> v)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);
@@ -458,10 +434,9 @@ int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v,
   int32_t rank = 1;
   hsize_t dims[1] = { 4 };
 
-  QString ss;
-  ss << vectorPos <<  H5FilterParameter::AxisAngleInput;
+  QString ss = QString::number(vectorPos) + H5FilterParameter::AxisAngleInput;
 
-  err = QH5Lite::writePointerAttribute<float>(m_CurrentGroupId, name, ss.str(), rank, dims, reinterpret_cast<float*>(&v) );
+  err = QH5Lite::writePointerAttribute<float>(m_CurrentGroupId, name, ss, rank, dims, reinterpret_cast<float*>(&v) );
   return err;
 }
 
@@ -469,7 +444,7 @@ int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const QString name, std::vector<AxisAngleInput_t> v)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);

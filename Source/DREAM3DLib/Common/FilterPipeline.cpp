@@ -245,9 +245,9 @@ void FilterPipeline::updatePrevNextFilters()
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
+  VertexDataContainer::Pointer solid = VertexDataContainer::New();
 
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
@@ -258,20 +258,20 @@ int FilterPipeline::preflightPipeline()
   // Start looping through the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
-    (*filter)->setVoxelDataContainer(m.get());
-    (*filter)->setSurfaceMeshDataContainer(sm.get());
-    (*filter)->setSolidMeshDataContainer(solid.get());
+    (*filter)->setVolumeDataContainer(m.get());
+    (*filter)->setSurfaceDataContainer(sm.get());
+    (*filter)->setVertexDataContainer(solid.get());
     setCurrentFilter(*filter);
     (*filter)->preflight();
-    (*filter)->setVoxelDataContainer(NULL);
-    (*filter)->setSurfaceMeshDataContainer(NULL);
-    (*filter)->setSolidMeshDataContainer(NULL);
-    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
+    (*filter)->setVolumeDataContainer(NULL);
+    (*filter)->setSurfaceDataContainer(NULL);
+    (*filter)->setVertexDataContainer(NULL);
+    QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
     // warning messages we are going to let the preflight pass. Hopefully if the warning
     // turns into an error the filter will handle it correctly and gracefully fail with
     // a nice message to the user.
-    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+    for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
     {
        if ( (*iter).getMessageType() == PipelineMessage::Error)
         {
@@ -323,13 +323,13 @@ void FilterPipeline::execute()
 //    m_DataContainer = DataContainer::New();
 //  }
 
-  VoxelDataContainer::Pointer dataContainer = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
   dataContainer->addObserver(static_cast<Observer*>(this));
 
-  SurfaceMeshDataContainer::Pointer sm = SurfaceMeshDataContainer::New();
+  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
   sm->addObserver(static_cast<Observer*>(this));
 
-  SolidMeshDataContainer::Pointer solid = SolidMeshDataContainer::New();
+  VertexDataContainer::Pointer solid = VertexDataContainer::New();
   solid->addObserver(static_cast<Observer*>(this));
 
   // Start looping through the Pipeline
@@ -354,15 +354,15 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss);
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setVoxelDataContainer(dataContainer.get());
-    (*iter)->setSurfaceMeshDataContainer(sm.get());
-    (*iter)->setSolidMeshDataContainer(solid.get());
+    (*iter)->setVolumeDataContainer(dataContainer.get());
+    (*iter)->setSurfaceDataContainer(sm.get());
+    (*iter)->setVertexDataContainer(solid.get());
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setVoxelDataContainer(NULL);
-    (*iter)->setSurfaceMeshDataContainer(NULL);
-    (*iter)->setSolidMeshDataContainer(NULL);
+    (*iter)->setVolumeDataContainer(NULL);
+    (*iter)->setSurfaceDataContainer(NULL);
+    (*iter)->setVertexDataContainer(NULL);
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {

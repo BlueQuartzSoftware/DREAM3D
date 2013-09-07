@@ -96,14 +96,14 @@ int FindSurfaceVoxelFractions::writeFilterParameters(AbstractFilterParametersWri
 void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
   //int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceVoxelFractions, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceVoxelFractions, float, FloatArrayType, 0, fields, 1)
 
 }
 
@@ -120,7 +120,7 @@ void FindSurfaceVoxelFractions::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceVoxelFractions::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -145,7 +145,7 @@ void FindSurfaceVoxelFractions::execute()
 // -----------------------------------------------------------------------------
 void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   size_t numgrains = m->getNumFieldTuples();

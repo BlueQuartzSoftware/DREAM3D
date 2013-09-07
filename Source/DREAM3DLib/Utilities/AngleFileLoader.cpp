@@ -40,13 +40,13 @@
 #include <string.h>
 
 #include <QtCore/QFileInfo>
-
-
+#include <QtCore/QFile>
+#include <QtCore/QTextStream>
+#include <QtCore/QByteArray>
 
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
-#define kBufferSize 1024
 
 
 // -----------------------------------------------------------------------------
@@ -59,7 +59,8 @@ AngleFileLoader::AngleFileLoader():
   m_InputFile(""),
   m_FileAnglesInDegrees(false),
   m_OutputAnglesInDegrees(false),
-  m_AngleRepresentation(AngleFileLoader::EulerAngles)
+  m_AngleRepresentation(AngleFileLoader::EulerAngles),
+  m_IgnoreMultipleDelimiters(true)
 {
 
 }
@@ -71,29 +72,6 @@ AngleFileLoader::~AngleFileLoader()
 {
 
 }
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::vector<QString> AngleFileLoader::tokenize(char* buf, const char* delimiter)
-{
-  std::vector<QString> output;
-  QString values(buf);
-  QString::size_type start = 0;
-  QString::size_type pos = 0;
-  //  qDebug() << "-----------------------------" ;
-  while(pos != QString::npos && pos != values.size() - 1)
-  {
-    pos = values.find(delimiter, start);
-    output.push_back(values.substr(start, pos-start));
-    //   qDebug() << "Adding: " << output.back() ;
-    if (pos != QString::npos)
-    {
-      start = pos + 1;
-    }
-  }
-  return output;
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -110,8 +88,10 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     return angles;
   }
 
+  QFileInfo fi(getInputFile());
+
   // Make sure the file exists on disk
-  if (MXAFileInfo::exists(m_InputFile) == false)
+  if (fi.exists() == false)
   {
     setErrorMessage("Input File does not exist at path");
     setErrorCode(-2);
@@ -133,14 +113,21 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   // number of angles in the file. This is followed by a single angle on each line
 
   int numOrients = 0;
-  char buf[kBufferSize];
+  QByteArray buf;
 
   // Open the file and read the first line
-  std::ifstream reader(getInputFile().c_str());
-  ::memset(buf, 0, kBufferSize);
-  reader.getline(buf, kBufferSize);
-  QString s(buf);
-  StringUtils::stringToNum<int>(numOrients, s);
+   QFile reader(getInputFile());
+  if (!reader.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QString msg = QObject::tr("Angle file could not be opened: %1").arg(getInputFile());
+    setErrorCode(-100);
+    setErrorMessage(msg);
+    return angles;
+  }
+
+  bool ok = false;
+  buf = reader.readLine();
+  numOrients = buf.toInt(&ok, 10);
 
   // Allocate enough for the angles
   angles = FloatArrayType::CreateArray(numOrients, 3, "EulerAngles_From_File");
@@ -148,37 +135,41 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   float e1, e2, e3;
   float r1, r2, r3;
   QuaternionMathF::Quaternion quat;
+  QList<QByteArray> tokens;
 
-
-  for(size_t i = 0; i < numOrients; i++)
+  for(int i = 0; i < numOrients; i++)
   {
+    buf = reader.readLine();
 
-    ::memset(buf, 0, kBufferSize);
-    reader.getline(buf, kBufferSize);
-    std::vector<QString> tokens;
-    tokens = tokenize(buf, getDelimiter().data());
+    buf = buf.trimmed();
+
+    // Remove multiple Delimiters if wanted by the user.
+    if (m_IgnoreMultipleDelimiters == true)
+    {
+      buf = buf.simplified();
+    }
+    tokens = buf.split( *(getDelimiter().toAscii().data()));
 
 
     if (m_AngleRepresentation == EulerAngles)
     {
-      StringUtils::stringToNum<float>(e1, tokens[0]);
-      StringUtils::stringToNum<float>(e2, tokens[1]);
-      StringUtils::stringToNum<float>(e3, tokens[2]);
+      e1 = tokens[0].toFloat(&ok);
+      e2 = tokens[1].toFloat(&ok);
+      e3 = tokens[2].toFloat(&ok);
     }
     else if (m_AngleRepresentation == QuaternionAngles)
     {
-      StringUtils::stringToNum<float>(quat.x, tokens[0]);
-      StringUtils::stringToNum<float>(quat.y, tokens[1]);
-      StringUtils::stringToNum<float>(quat.z, tokens[2]);
-      StringUtils::stringToNum<float>(quat.w, tokens[3]);
-
+      quat.x = tokens[0].toFloat(&ok);
+      quat.y = tokens[1].toFloat(&ok);
+      quat.z = tokens[2].toFloat(&ok);
+      quat.w = tokens[3].toFloat(&ok);
       OrientationMath::QuattoEuler(quat, e1, e2, e3);
     }
     else if (m_AngleRepresentation == RodriguezAngles)
     {
-      StringUtils::stringToNum<float>(r1, tokens[0]);
-      StringUtils::stringToNum<float>(r2, tokens[1]);
-      StringUtils::stringToNum<float>(r3, tokens[2]);
+      r1 = tokens[0].toFloat(&ok);
+      r2 = tokens[1].toFloat(&ok);
+      r3 = tokens[2].toFloat(&ok);
       OrientationMath::RodtoEuler(r1, r2, r3, e1, e2, e3);
     }
 

@@ -90,11 +90,11 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, float, FloatArrayType, 0, fields, 3)
 
 }
 
@@ -114,7 +114,7 @@ void FindGrainCentroids::preflight()
 void FindGrainCentroids::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -143,7 +143,7 @@ void FindGrainCentroids::execute()
 // -----------------------------------------------------------------------------
 void FindGrainCentroids::find_centroids()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   float x, y, z;
   size_t numgrains = m->getNumFieldTuples();
   if (numgrains == 0) { return; }

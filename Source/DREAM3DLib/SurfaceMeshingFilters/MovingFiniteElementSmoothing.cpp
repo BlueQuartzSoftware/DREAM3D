@@ -54,8 +54,8 @@
 #include <iomanip>
 #include <limits>
 
-
-#include "DREAM3DLib/Common/SurfaceMeshStructs.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
@@ -78,8 +78,8 @@ typedef struct
     int triplenn2;
 } TripleNN;
 
-
-void tokenize(const QString& str, std::vector<QString>& tokens, const QString& delimiters = " ")
+#if 0
+void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ")
 {
   // Skip delimiters at beginning.
   QString::size_type lastPos = str.find_first_not_of(delimiters, 0);
@@ -99,6 +99,8 @@ void tokenize(const QString& str, std::vector<QString>& tokens, const QString& d
     pos = str.find_first_of(delimiters, lastPos);
   }
 }
+#endif
+
 
 // -----------------------------------------------------------------------------
 //
@@ -172,7 +174,7 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
@@ -254,13 +256,13 @@ int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParameters
 void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  QTextStream ss;
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -282,7 +284,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     {
       // Check for Node Type Array
       int size = sm->getVertices()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, 1)
     }
 
 
@@ -315,7 +317,7 @@ void MovingFiniteElementSmoothing::preflight()
 void MovingFiniteElementSmoothing::execute()
 {
   int err = 0;
-  QString ss;
+  QTextStream ss;
   setErrorCondition(err);
 
   // This needs to get run so that our private pointers are set correctly.
@@ -326,14 +328,14 @@ void MovingFiniteElementSmoothing::execute()
   }
 
 
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  DREAM3D::SurfaceMesh::VertListPointer_t floatNodesPtr = m->getVertices();
+  DREAM3D::Mesh::VertListPointer_t floatNodesPtr = m->getVertices();
   if(NULL == floatNodesPtr.get())
   {
     setErrorCondition(-555);
@@ -341,7 +343,7 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = m->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = m->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -351,18 +353,18 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  DREAM3D::SurfaceMesh::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  DREAM3D::Mesh::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  DREAM3D::SurfaceMesh::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->GetNumberOfTuples();
   int ntri = trianglesPtr->GetNumberOfTuples();
 
 
-  StructArray<DREAM3D::SurfaceMesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::SurfaceMesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<DREAM3D::Mesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::Mesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  DREAM3D::SurfaceMesh::VertD_t* nodes = nodesDPtr->GetPointer(0);
+  DREAM3D::Mesh::VertD_t* nodes = nodesDPtr->GetPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -379,20 +381,20 @@ void MovingFiniteElementSmoothing::execute()
   triplennPtr->initializeWithZeros();
   TripleNN* triplenn = triplennPtr->GetPointer(0);
 
-//  std::vector<QString> data;
+//  QVector<QString> data;
 #if 0
   // read in nodes/triangles
-  std::ifstream input1(nodesFile.c_str());
-  std::ifstream input2(triangleFile.c_str());
+  std::ifstream input1(nodesFile.toLatin1().data());
+  std::ifstream input2(triangleFile.toLatin1().data());
   std::ofstream velocities;
 #endif
   QString outputNodesFile("/tmp/outputNodesFile.txt");
 
   if(isVerbose)
   {
-    qDebug() << "Number of nodes: " << numberNodes ;
-    qDebug() << "Number of triangles: " << ntri ;
-    qDebug() ;
+    qDebug() << "Number of nodes: " << numberNodes;
+    qDebug() << "Number of triangles: " << ntri;
+    qDebug();
   }
 
 
@@ -402,7 +404,7 @@ void MovingFiniteElementSmoothing::execute()
   //Read the nodes
 #if 0
   int nodeType;
-  if (isVerbose) qDebug() << "reading nodes " ;
+  if (isVerbose) qDebug() << "reading nodes ";
   for (int i = 0; i < nnod; i++)
   {
     input1 >> id(nodes[i]) >> nodeType >> nodes[i][0] >> nodes[i][1] >> nodes[i][2];
@@ -411,7 +413,7 @@ void MovingFiniteElementSmoothing::execute()
     triplenn2(nodes[i]) = 0;
     type(nodes[i]) = nodeType;// duplicating info for now
   }
-  if (isVerbose) qDebug() << "end reading nodes" ;
+  if (isVerbose) qDebug() << "end reading nodes";
   input1.close();
 #endif
 
@@ -443,21 +445,21 @@ void MovingFiniteElementSmoothing::execute()
       return;
     }
 
-    StructArray<DREAM3D::SurfaceMesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::SurfaceMesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
-    DREAM3D::SurfaceMesh::Edge_t* edges = edgesStructArray->GetPointer(0);
+    StructArray<DREAM3D::Mesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
+    DREAM3D::Mesh::Edge_t* edges = edgesStructArray->GetPointer(0);
 
-    StructArray<DREAM3D::SurfaceMesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::SurfaceMesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
-    DREAM3D::SurfaceMesh::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
+    StructArray<DREAM3D::Mesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
+    DREAM3D::Mesh::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
-    if (isVerbose) qDebug() << "reading edges " ;
-    std::ifstream input3(edgesFile.c_str());
+    if (isVerbose) qDebug() << "reading edges ";
+    std::ifstream input3(edgesFile.toLatin1().data());
     if (input3.is_open() == false)
     {
       if (isVerbose)
       {
-        qDebug() << "You have asked to Smooth Triple Lines but have not provided an Edges file." ;
+        qDebug() << "You have asked to Smooth Triple Lines but have not provided an Edges file.";
       }
       return -1;
     }
@@ -467,7 +469,7 @@ void MovingFiniteElementSmoothing::execute()
     int nedges = edgeCount + iEdgeCount;
     //  input3 >> nedges;
     //  don't actually need the structure. just the information
-    if(isVerbose) qDebug() << "Number of edges = " << nedges ;
+    if(isVerbose) qDebug() << "Number of edges = " << nedges;
 
     int tedges = 0; // triple line edge count
 
@@ -491,7 +493,7 @@ void MovingFiniteElementSmoothing::execute()
       //input3 >> junk >> nid[0] >> nid[1] >> ekind >> spin1 >> spin2 >> spin3 >> spin4;
       if(ekind == 3)
       {
-        // qDebug()  << "edge#  ID1  ID2  " << i << " " << nid[0] << " " << nid[1]  ;
+        // qDebug() << "edge#  ID1  ID2  " << i << " " << nid[0] << " " << nid[1] ;
         tedges++;
         //  now to assign NN nodes at any node on a TJ, but not quads
         if(m_SurfaceMeshNodeType[nid[0]] == 3 || m_SurfaceMeshNodeType[nid[0]] == 13)
@@ -506,7 +508,7 @@ void MovingFiniteElementSmoothing::execute()
             {
               if(isVerbose)
               {
-                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" ;
+                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad";
                 setErrorCondition(-666);
                 notifyErrorMessage("triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
@@ -531,7 +533,7 @@ void MovingFiniteElementSmoothing::execute()
             {
               if(isVerbose)
               {
-                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad" ;
+                qDebug() << "triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad";
                 setErrorCondition(-666);
                 notifyErrorMessage("triplenn[nid[1]].triplenn2 != 0 was TRUE. This is bad", -666);
               }
@@ -545,7 +547,7 @@ void MovingFiniteElementSmoothing::execute()
         }
       }
     }
-    if(isVerbose) qDebug() << "... completed 1st reading edges" ;
+    if(isVerbose) qDebug() << "... completed 1st reading edges";
     //  destroy(edges) ;
     //input3.close();
     //  now let's check the entries
@@ -553,7 +555,7 @@ void MovingFiniteElementSmoothing::execute()
      for ( int i = 0 ; i < nnod ; i++ ) {
      if ( type(nodes[i]) == 3 ||  type(nodes[i]) == 13 ) {
      qDebug() << "node ID, NN1, NN2: " << id(nodes[i]) << " " << triplenn1(nodes[i])
-     << " " << triplenn2(nodes[i])  ;
+     << " " << triplenn2(nodes[i]) ;
      }
      }  */
   }
@@ -570,33 +572,33 @@ void MovingFiniteElementSmoothing::execute()
 
 #if ENABLE_MFE_SMOOTHING_RESTART_FILE
   int nnodRe, nnTriRe, stepsRe;
-  if(restartFile.isEmpty() == false)
+  if(restartFile.empty() == false)
   {
     //  we have a requested re-start - node positions will be read from the INP file
-    std::ifstream restartInput(restartFile.c_str());
+    std::ifstream restartInput(restartFile.toLatin1().data());
 
     restartInput >> nnodRe >> nnTriRe;
-    if (isVerbose) qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe ;
+    if (isVerbose) qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe;
     if(nnodRe != nnod)
     {
-      if (isVerbose) qDebug() << "Discrepancy in the number of nodes, must stop! " ;
+      if (isVerbose) qDebug() << "Discrepancy in the number of nodes, must stop! ";
       return -1;
     }
     else
     { // we are OK to read in
-      if (isVerbose) qDebug() << "reading nodes from restart INP " ;
+      if (isVerbose) qDebug() << "reading nodes from restart INP ";
       for (int i = 0; i < nnod; i++)
       {
         input1 >> id(nodes[i]) >> nodes[i][0] >> nodes[i][1] >> nodes[i][2];
       }
-      if (isVerbose) qDebug() << "end reading nodes from restart INP " ;
+      if (isVerbose) qDebug() << "end reading nodes from restart INP ";
     }
     restartInput.close();
-    if (isVerbose) qDebug() << "What step are we re-starting at? " ;
+    if (isVerbose) qDebug() << "What step are we re-starting at? ";
     std::cin >> stepsRe;
     if(stepsRe >= final)
     {
-      if (isVerbose) qDebug() << "Final time less than re-start time, must stop! " ;
+      if (isVerbose) qDebug() << "Final time less than re-start time, must stop! ";
       return -1;
     }
     else
@@ -613,7 +615,7 @@ void MovingFiniteElementSmoothing::execute()
 
 #if 0
   //Read the triangles
-  if (isVerbose) qDebug() << "reading triangles: " ;
+  if (isVerbose) qDebug() << "reading triangles: ";
   for (int i = 0; i < ntri; i++)
   {
     //  char type[3];
@@ -635,7 +637,7 @@ void MovingFiniteElementSmoothing::execute()
     // 	  if (ok[0] && ok[1] && ok[2]) break;
     // 	}
   }
-  if (isVerbose) qDebug() << "end reading triangles" ;
+  if (isVerbose) qDebug() << "end reading triangles";
   input2.close();
 
   if (getCancel() == true)
@@ -667,12 +669,12 @@ void MovingFiniteElementSmoothing::execute()
   }
   if(isVerbose)
   {
-    qDebug() << "Model Dimensions as Min, Max: " ;
+    qDebug() << "Model Dimensions as Min, Max: ";
 
     //  for(int i=0; i<3; i++)
-    qDebug() << "X (0): " << min[0] << " " << max[0] ;
-    qDebug() << "Y (1): " << min[1] << " " << max[1] ;
-    qDebug() << "Z (2): " << min[2] << " " << max[2] ;
+    qDebug() << "X (0): " << min[0] << " " << max[0];
+    qDebug() << "Y (1): " << min[1] << " " << max[1];
+    qDebug() << "Z (2): " << min[2] << " " << max[2];
   }
   //Allocate vectors and matricies
   int n_size = 3 * numberNodes;
@@ -723,12 +725,12 @@ void MovingFiniteElementSmoothing::execute()
       {
         if(isVerbose)
         {
-          qDebug() << "ID " << r << " Coords: " << nodes[r].pos[0] << " " << nodes[r].pos[1] << " " << nodes[r].pos[2] ;
-          qDebug() << " Coord. Diffs. for X: " << fabs(nodes[r].pos[0] - max[0]) << " " << fabs(nodes[r].pos[0] - min[0]) ;
-          qDebug() << " Coord. Diffs. for Y: " << fabs(nodes[r].pos[1] - max[1]) << " " << fabs(nodes[r].pos[1] - min[1]) ;
-          qDebug() << " Coord. Diffs. for Z: " << fabs(nodes[r].pos[2] - max[2]) << " " << fabs(nodes[r].pos[2] - min[2]) ;
-          qDebug() << "Type, Constraint: " << m_SurfaceMeshNodeType[r] << " " << nodeConstraint[r] ;
-          qDebug() << "Check whether there is a problem with applying constraints ... " ;
+          qDebug() << "ID " << r << " Coords: " << nodes[r].pos[0] << " " << nodes[r].pos[1] << " " << nodes[r].pos[2];
+          qDebug() << " Coord. Diffs. for X: " << fabs(nodes[r].pos[0] - max[0]) << " " << fabs(nodes[r].pos[0] - min[0]);
+          qDebug() << " Coord. Diffs. for Y: " << fabs(nodes[r].pos[1] - max[1]) << " " << fabs(nodes[r].pos[1] - min[1]);
+          qDebug() << " Coord. Diffs. for Z: " << fabs(nodes[r].pos[2] - max[2]) << " " << fabs(nodes[r].pos[2] - min[2]);
+          qDebug() << "Type, Constraint: " << m_SurfaceMeshNodeType[r] << " " << nodeConstraint[r];
+          qDebug() << "Check whether there is a problem with applying constraints ... ";
         }
       }
       //  constraint for surface nodes
@@ -751,11 +753,11 @@ void MovingFiniteElementSmoothing::execute()
     // changed arg index
     if(isVerbose)
     {
-      qDebug() << "Update loop: " << updates ;
+      qDebug() << "Update loop: " << updates;
     }
-    ss.str("");
-    ss << "Iteration: " << updates;
-    notifyStatusMessage(ss.str());
+
+    QString ss = QObject::tr("Iteration: %1").arg(updates);
+    notifyStatusMessage(ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;
@@ -778,12 +780,12 @@ void MovingFiniteElementSmoothing::execute()
     Dihedral_max = -1.; //  added may 10, ADR
     double LDistance, deltaLDistance;
 
-    typedef NodeFunctions<DREAM3D::SurfaceMesh::VertD_t, double> NodeFunctionsType;
-    typedef TriangleFunctions<DREAM3D::SurfaceMesh::VertD_t, double> TriangleFunctionsType;
+    typedef NodeFunctions<DREAM3D::Mesh::VertD_t, double> NodeFunctionsType;
+    typedef TriangleFunctions<DREAM3D::Mesh::VertD_t, double> TriangleFunctionsType;
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
-      DREAM3D::SurfaceMesh::Face_t& rtri = triangles[t];
+      DREAM3D::Mesh::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
       n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
@@ -791,7 +793,7 @@ void MovingFiniteElementSmoothing::execute()
       if(Q > 100.) {
         if(isVerbose)
         {
-          qDebug() << "Warning, tri no. " << t << " has Q= " << Q ;
+          qDebug() << "Warning, tri no. " << t << " has Q= " << Q;
         }
       }
       Q_sum += Q;
@@ -799,7 +801,7 @@ void MovingFiniteElementSmoothing::execute()
 
       Dihedral = TriangleFunctionsType::MinDihedral(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       // debug
-      //      qDebug() << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI ;
+      //      qDebug() << "triangle, min dihedral: " << t << ", " << Dihedral*180/PI;
       Dihedral_sum += Dihedral;
       if(Dihedral < Dihedral_min) Dihedral_min = Dihedral;
       if(Dihedral > Dihedral_max) Dihedral_max = Dihedral;
@@ -807,7 +809,7 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
-        DREAM3D::SurfaceMesh::VertD_t& node_i = nodes[i];
+        DREAM3D::Mesh::VertD_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))
@@ -876,7 +878,7 @@ void MovingFiniteElementSmoothing::execute()
 
     // solve for node velocities
     int iterations = MFE::CR(K, x, F, 4000, 1.0e-5);
-    if(isVerbose) qDebug() << iterations << " iterations ... " ;
+    if(isVerbose) qDebug() << iterations << " iterations ... ";
 
     //Update the quality information
     if(updates - 1 < Q_max_hist.size())
@@ -889,7 +891,7 @@ void MovingFiniteElementSmoothing::execute()
       //Update the history of Q_max
       for (size_t i = 0; i < Q_max_hist.size() - 1; i++)
       {
-        //		qDebug() << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1] ;
+        //		qDebug() << i << " "<< Q_max_hist[i] << " " << Q_max_hist[i+1];
         Q_max_hist[i] = Q_max_hist[i + 1];
       }
 
@@ -906,21 +908,21 @@ void MovingFiniteElementSmoothing::execute()
     Q_ave = Q_sum / ntri;
 
     // 	for(int i=0; i<Q_max_hist.size(); i++)
-    // 	  qDebug()<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
+    // 	  std::cout<<"Q_Max history ... "<<Q_max_hist[i]<<std::endl;
     if(isVerbose)
     {
-      qDebug() << "Maximum circularity quality ... " << Q_max << "   - high is bad, low is good" ;
-      qDebug() << "Rolling Average circularity quality ... " << Q_max_ave ;
-      qDebug() << "Average circularity quality ... " << Q_ave ;
+      qDebug() << "Maximum circularity quality ... " << Q_max << "   - high is bad, low is good";
+      qDebug() << "Rolling Average circularity quality ... " << Q_max_ave;
+      qDebug() << "Average circularity quality ... " << Q_ave;
     }
     Dihedral_ave = Dihedral_sum / (float)ntri;
     if(isVerbose)
     {
-      qDebug() << "Smallest min. dihedral angle ... " << Dihedral_min * 180. / M_PI << "   - low is bad, high is good" ;
-      qDebug() << "Average min. dihedral angle ... " << Dihedral_ave * 180. / M_PI ;
-      qDebug() << "Largest min. dihedral angle ... " << Dihedral_max * 180. / M_PI ;
+      qDebug() << "Smallest min. dihedral angle ... " << Dihedral_min * 180. / M_PI << "   - low is bad, high is good";
+      qDebug() << "Average min. dihedral angle ... " << Dihedral_ave * 180. / M_PI;
+      qDebug() << "Largest min. dihedral angle ... " << Dihedral_max * 180. / M_PI;
 
-      qDebug() ;
+      qDebug();
     }
 #if 0
     //Output velocities for examination
@@ -933,15 +935,15 @@ void MovingFiniteElementSmoothing::execute()
 
     // extract the basename from the provided filename
     QString infile = outputNodesFile;
-    std::vector<QString> tokens;
+    QVector<QString> tokens;
     QString delimiters = "."; // Only a period
     QString basename;
     tokenize(infile, tokens, delimiters);
 
     if(tokens.size() > 2)
     {
-      if(isVerbose) qDebug() << "WARNING: multiple \".\" in file name: " << infile ;
-      if(isVerbose) qDebug() << "\t Using: ." << tokens.front() << "As basename" ;
+      if(isVerbose) qDebug() << "WARNING: multiple \".\" in file name: " << infile;
+      if(isVerbose) qDebug() << "\t Using: ." << tokens.front() << "As basename";
       basename = tokens.front();
     }
     else if(tokens.size() <= 2)
@@ -991,7 +993,7 @@ void MovingFiniteElementSmoothing::execute()
         //		velocityfile  << std::scientific << QSetw(4)
         //			  << QSetprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
       }
-      //	  velocityfile ;
+      //	  velocityfile;
     }
     //	velocityfile.close();
 
@@ -1000,18 +1002,18 @@ void MovingFiniteElementSmoothing::execute()
     {
       // Open the outputfile
       std::ofstream inpfile;
-      inpfile.open(iterFileName.c_str());
+      inpfile.open(iterFileName.toLatin1().data());
       if(!inpfile)
       {
-        if(isVerbose) qDebug() << "Failed to open: " << iterFileName ;
+        if(isVerbose) qDebug() << "Failed to open: " << iterFileName;
         return;
       }
 
-      //      inpfile << nnod <<" "<< ntri <<" 0 2 0" ;
-      inpfile << nnod << " " << ntri << " 2 2 0" ; //  now that we have NODE properties
+      //      inpfile << nnod <<" "<< ntri <<" 0 2 0"<< std::endl ;
+      inpfile << nnod << " " << ntri << " 2 2 0"; //  now that we have NODE properties
       for (int i = 0; i < nnod; i++)
       {
-        inpfile << i << " " << nodes[i].pos[0] << " " << nodes[i].pos[1] << " " << nodes[i].pos[2] ;
+        inpfile << i << " " << nodes[i].pos[0] << " " << nodes[i].pos[1] << " " << nodes[i].pos[2];
       }
 
       for (int i = 0; i < ntri; i++)
@@ -1020,27 +1022,27 @@ void MovingFiniteElementSmoothing::execute()
         inpfile << i << " 0 tri ";
         inpfile << triangles[i].verts[0] << " ";
         inpfile << triangles[i].verts[1] << " ";
-        inpfile << triangles[i].verts[2] ;
+        inpfile << triangles[i].verts[2];
         //inpfile<<triangles[i].region1<<" ";
         //inpfile<<triangles[i].region2<<std::endl;
       }
 
       //  information on nodes
-      inpfile << "2 1 1" ;
-      inpfile << "Node_Type, none" ;
-      inpfile << "Node_Constraint, none" ;
+      inpfile << "2 1 1";
+      inpfile << "Node_Type, none";
+      inpfile << "Node_Constraint, none";
       for (int i = 0; i < nnod; i++)
       {
-        inpfile << i << " " << nodes[i].nodeKind << " " << nodeConstraint[i] ;
+        inpfile << i << " " << nodes[i].nodeKind << " " << nodeConstraint[i];
       }
 
       //  information on elements (triangles)
-      inpfile << "2 1 1" ;
-      inpfile << "minID, none" ;
-      inpfile << "maxID, none" ;
+      inpfile << "2 1 1";
+      inpfile << "minID, none";
+      inpfile << "maxID, none";
       for (int i = 0; i < ntri; i++) // ADR  25 jun 09
       {
-        inpfile << i << " " << triangles[i].nSpin[0] << " " << triangles[i].nSpin[1] ;
+        inpfile << i << " " << triangles[i].nSpin[0] << " " << triangles[i].nSpin[1];
       }
       inpfile.close();
     }
@@ -1049,28 +1051,28 @@ void MovingFiniteElementSmoothing::execute()
 
 #if 0
   std::ofstream inpfile;
-  inpfile.open(outputNodesFile.c_str());
+  inpfile.open(outputNodesFile.toLatin1().data());
   if(!inpfile)
   {
-    if(isVerbose) qDebug() << "Failed to open nodes output: " << outputNodesFile ;
+    if(isVerbose) qDebug() << "Failed to open nodes output: " << outputNodesFile;
     return;
   }
 
   //   std::ofstream output(argv[2]);
-  inpfile << nnod ;
+  inpfile << nnod;
   for (int i = 0; i < nnod; i++)
   {
     inpfile << QSetw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].pos[0] << "\t" << nodes[i].pos[1] << "\t"
-        << nodes[i].pos[2] ;
+        << nodes[i].pos[2];
   }
   inpfile.close();
 #endif
 
   if(isVerbose)
   {
-    qDebug() << "Finished the smoothing " ;
-    qDebug() << "You can combine the nodes and triangles to do further analysis or smoothing" ;
-    // qDebug() << "Look for " << outputNodesFile ;
+    qDebug() << "Finished the smoothing ";
+    qDebug() << "You can combine the nodes and triangles to do further analysis or smoothing";
+    // qDebug() << "Look for " << outputNodesFile;
   }
 
   // Copy the nodes from the 64 bit floating point to the 32 bit floating point

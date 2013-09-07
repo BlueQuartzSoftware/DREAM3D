@@ -46,7 +46,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -174,7 +174,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     {
 
 
-      std::vector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
+      QVector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
@@ -202,7 +202,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
         materialNames->SetValue(phaseID, phases[i]->getMaterialName());
-        std::vector<float> lc = phases[i]->getLatticeConstants();
+        QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->SetComponent(phaseID, 0, lc[0]);
         latticeConstants->SetComponent(phaseID, 1, lc[1]);
@@ -212,12 +212,12 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       m_CrystalStructures = crystalStructures->GetPointer(0);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstants = latticeConstants->GetPointer(0);
-      getVoxelDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->setNumEnsembleTuples(crystalStructures->GetNumberOfTuples());
       return 0;
     }
 

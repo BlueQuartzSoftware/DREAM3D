@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "VoxelDataContainerReader.h"
+#include "VolumeDataContainerReader.h"
 
 
 
@@ -48,7 +48,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerReader::VoxelDataContainerReader() :
+VolumeDataContainerReader::VolumeDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_ReadVertexData(true),
@@ -65,16 +65,16 @@ VoxelDataContainerReader::VoxelDataContainerReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-VoxelDataContainerReader::~VoxelDataContainerReader()
+VolumeDataContainerReader::~VolumeDataContainerReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::setupFilterParameters()
+void VolumeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -82,7 +82,7 @@ void VoxelDataContainerReader::setupFilterParameters()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VolumeDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -93,7 +93,7 @@ void VoxelDataContainerReader::readFilterParameters(AbstractFilterParametersRead
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -106,11 +106,11 @@ int VoxelDataContainerReader::writeFilterParameters(AbstractFilterParametersWrit
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
   {
@@ -138,7 +138,7 @@ void VoxelDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::preflight()
+void VolumeDataContainerReader::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -148,15 +148,14 @@ void VoxelDataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VoxelDataContainerReader::execute()
+void VolumeDataContainerReader::execute()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
-    ss <<" DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
   setErrorCondition(0);
@@ -199,23 +198,23 @@ void VoxelDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
   QString ss;
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
   }
   if(dcGid < 0)
   {
     err = QH5Utilities::closeFile(fileId);
-    ss.str("");
-    ss <<": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'";
+
+    QString ss = QObject::tr(": Error opening group '%1'").arg(DREAM3D::HDF5::VolumeDataContainerName);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), -150);
+    addErrorMessage(getHumanLabel(), ss, -150);
     return -1;
   }
 
@@ -229,7 +228,7 @@ int VoxelDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volD
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
@@ -263,7 +262,7 @@ int VoxelDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], fl
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::gatherData(bool preflight)
+int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
   QString ss;
@@ -273,27 +272,27 @@ int VoxelDataContainerReader::gatherData(bool preflight)
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_HdfFileId < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file";
+
+    QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VoxelDataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
   }
   if(dcGid < 0)
   {
-    ss.str("");
-    ss << ": Error opening group '" << DREAM3D::HDF5::VoxelDataContainerName << "'. Is the .dream3d file a version 4 data file?";
+
+    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::VolumeDataContainerName);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return -1;
   }
 
@@ -313,7 +312,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadVertexData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
     if(err < 0)
     {
@@ -325,7 +324,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEdgeData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
     if(err < 0)
     {
@@ -337,7 +336,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFaceData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
     if(err < 0)
     {
@@ -349,7 +348,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
@@ -361,7 +360,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFieldData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -373,7 +372,7 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEnsembleData == true)
   {
-    std::vector<QString> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -392,25 +391,24 @@ int VoxelDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                std::vector<QString> &namesRead,
+int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  QString ss;
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening HDF5 Group " << groupName ;
+
+    QString ss = QObject::tr("Error opening HDF5 Group %1").arg(groupName);
     setErrorCondition(-154);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return -154;
   }
 
   NameListType names;
-  QH5Utilities::getGroupObjects(gid, QH5Utilities::H5Support_DATASET | QH5Utilities::H5Support_ANY, names);
+  QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
   //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() ;
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
@@ -423,7 +421,7 @@ int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNa
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType ;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.find("DataArray") == 0)
+    if(classType.startsWith("DataArray") == 0)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }
@@ -451,15 +449,15 @@ int VoxelDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNa
     {
       if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
       {
-        getVoxelDataContainer()->addCellData(dPtr->GetName(), dPtr);
+        getVolumeDataContainer()->addCellData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getVoxelDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getVolumeDataContainer()->addFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getVoxelDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getVolumeDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

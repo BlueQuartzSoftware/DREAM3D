@@ -37,6 +37,7 @@
 #include "AlignSectionsMisorientation.h"
 
 #include <QtCore/QtDebug>
+#include <vector>
 #include <fstream>
 #include <sstream>
 
@@ -68,7 +69,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  Seed = MXA::getMilliSeconds();
+  Seed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -92,7 +93,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
   //AlignSections::setupFilterParameters();
   // Now append our options
 
-  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
 
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -157,25 +158,25 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
+
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
 
@@ -194,7 +195,7 @@ void AlignSectionsMisorientation::preflight()
 void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -224,14 +225,14 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().c_str());
+    outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
 
   size_t udims[3] = {0,0,0};
@@ -275,10 +276,9 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss;
     progInt = ((float)iter/dims[2])*100.0f;
-    ss << "Determining Shifts - " << progInt << "% Complete";
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
+    notifyStatusMessage(ss);
     if (getCancel() == true)
     {
       return;

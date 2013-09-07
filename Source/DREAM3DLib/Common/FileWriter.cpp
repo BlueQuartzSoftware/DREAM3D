@@ -88,7 +88,7 @@ int FileWriter::writeFile()
 // -----------------------------------------------------------------------------
 void FileWriter::execute()
 {
-  if (getVoxelDataContainer() == NULL)
+  if (getVolumeDataContainer() == NULL)
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "The DataContainer Object was NOT set correctly.", -1);

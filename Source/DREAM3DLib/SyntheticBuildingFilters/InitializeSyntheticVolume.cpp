@@ -40,11 +40,11 @@
 #include "H5Support/QH5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VoxelDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond);}
+  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); addErrorMessage(getHumanLabel(), ss, errCond);}
 
 
 
@@ -84,7 +84,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -128,18 +128,18 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType, true, voxels, 1)
 
   if(m_InputFile.isEmpty() == true)
   {
-    ss << "The intput file must be set before executing this filter.\n";
+    QString ss = QObject::tr("The intput file must be set before executing this filter.\n");
     setErrorCondition(-800);
-    addErrorMessage(getHumanLabel(), ss.str(), -800);
+    addErrorMessage(getHumanLabel(), ss, -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -151,9 +151,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if (m_ShapeTypes.size() ==  0)
   {
-    ss << "No ShapeTypes have been set and a shape type for each phase.\n";
+    QString ss = QObject::tr("No ShapeTypes have been set and a shape type for each phase.\n");
     setErrorCondition(-801);
-    addErrorMessage(getHumanLabel(), ss.str(), -801);
+    addErrorMessage(getHumanLabel(), ss, -801);
   }
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -166,30 +166,30 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  QString ss;
+  QTextStream ss;
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getVoxelDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
+
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
-  read_data->setVoxelDataContainer(getVoxelDataContainer());
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -202,9 +202,9 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  QString ss;
+  QTextStream ss;
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -215,22 +215,22 @@ void InitializeSyntheticVolume::execute()
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
+
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  VoxelDataContainerReader::Pointer read_data = VoxelDataContainerReader::New();
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
   read_data->setReadAllArrays(true);
-  read_data->setVoxelDataContainer(getVoxelDataContainer());
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);

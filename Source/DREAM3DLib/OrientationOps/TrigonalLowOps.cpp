@@ -36,7 +36,7 @@
 #include "TrigonalLowOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
@@ -589,9 +589,9 @@ DREAM3D::Rgb TrigonalLowOps::generateRodriguesColor(float r1, float r2, float r3
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
+  QVector<UInt8ArrayType::Pointer> poleFigures;
   QString label0("Trigonal Low <0001>");
   QString label1("Trigonal Low <-1-120>");
   QString label2("Trigonal Low <2-1-10>");
@@ -715,6 +715,8 @@ std::vector<UInt8ArrayType::Pointer> TrigonalLowOps::generatePoleFigure(PoleFigu
 DREAM3D::Rgb TrigonalLowOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
   DREAM3D::Rgb rgb = RgbColor::dRgb(0,0,0,0);
+
+  BOOST_ASSERT(false);
 
   return rgb;
 }

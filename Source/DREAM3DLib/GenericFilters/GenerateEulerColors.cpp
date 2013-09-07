@@ -37,6 +37,7 @@
 
 #include <limits>
 
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
 
@@ -70,7 +71,7 @@ GenerateEulerColors::~GenerateEulerColors()
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -81,7 +82,7 @@ void GenerateEulerColors::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -104,24 +105,22 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VoxelDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
-}
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, uint8_t, UInt8ArrayType, 0, voxels, 3)
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -142,11 +141,11 @@ void GenerateEulerColors::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -172,24 +171,24 @@ void GenerateEulerColors::execute()
     phase = m_CellPhases[i];
     index = i * 3;
 
-  if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
-  }
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
+    }
+    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
+    }
+    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
+    }
 
 
 

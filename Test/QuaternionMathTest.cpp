@@ -59,19 +59,20 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 void TestCubicOps()
 {
-   float e0[3] = {0.0f, 0.0f, 0.0f};
-   float e1[3] = {0.0f, 0.0f, 30.0f * M_PI/180.f};
+  float e0[3] = {0.0f, 0.0f, 0.0f};
+  float e1[3] = {0.0f, 0.0f, 30.0f * M_PI/180.f};
 
-   QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
-   QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  QuaternionMathF::Quaternion q0 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
+  QuaternionMathF::Quaternion q1 = QuaternionMathF::New(0.0f, 0.0f, 0.0f, 0.0f);
 
-   OrientationMath::EulertoQuat(q0, e0[0], e0[1], e0[2]);
-   OrientationMath::EulertoQuat(q1, e1[0], e1[1], e1[2]);
+  OrientationMath::EulertoQuat(q0, e0[0], e0[1], e0[2]);
+  OrientationMath::EulertoQuat(q1, e1[0], e1[1], e1[2]);
 
-   CubicOps co;
+  CubicOps co;
 
-    float n[3] = {0.0, 0.0, 1.0f};
-    float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
+  float n[3] = {0.0, 0.0, 1.0f};
+  float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
+  DREAM3D_REQUIRE(w == 0.0)
 }
 
 

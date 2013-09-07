@@ -37,8 +37,8 @@
 #define _PhaseType_h_
 
 #include <QtCore/QString>
-#include <vector>
-#include <QMap>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT PhaseType
     }
 
 
-    static void getPhaseTypeStrings(std::vector<QString> &strings)
+    static void getPhaseTypeStrings(QVector<QString> &strings)
     {
       strings.clear();
       strings.push_back(PrimaryStr());

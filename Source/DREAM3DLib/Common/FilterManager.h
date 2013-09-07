@@ -38,7 +38,7 @@
 
 
 #include <QtCore/QString>
-#include <QMap>
+#include <QtCore/QMap>
 #include <QtCore/QSet>
 
 

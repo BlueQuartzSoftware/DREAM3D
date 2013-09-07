@@ -78,7 +78,7 @@ PerPhaseMinSize::~PerPhaseMinSize()
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -130,7 +130,7 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::remove_smallgrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;

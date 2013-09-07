@@ -33,7 +33,7 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#include "SolidMeshDataContainerReader.h"
+#include "VertexDataContainerReader.h"
 
 
 #include "H5Support/QH5Utilities.h"
@@ -42,7 +42,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainerReader::SolidMeshDataContainerReader() :
+VertexDataContainerReader::VertexDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_ReadAllArrays(false)
@@ -53,23 +53,23 @@ SolidMeshDataContainerReader::SolidMeshDataContainerReader() :
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-SolidMeshDataContainerReader::~SolidMeshDataContainerReader()
+VertexDataContainerReader::~VertexDataContainerReader()
 {
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerReader::setupFilterParameters()
+void VertexDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
+void VertexDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
@@ -80,7 +80,7 @@ void SolidMeshDataContainerReader::readFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SolidMeshDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
+int VertexDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
@@ -93,16 +93,16 @@ int SolidMeshDataContainerReader::writeFilterParameters(AbstractFilterParameters
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  SolidMeshDataContainer* m = getSolidMeshDataContainer();
+
+  VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SolidMesh DataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "Vertex DataContainer is missing", getErrorCondition());
   }
   if(m_HdfFileId < 0)
   {
@@ -116,7 +116,7 @@ void SolidMeshDataContainerReader::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerReader::preflight()
+void VertexDataContainerReader::preflight()
 {
   /* Place code here that sanity checks input arrays and input values. Look at some
   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
@@ -126,16 +126,16 @@ void SolidMeshDataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SolidMeshDataContainerReader::execute()
+void VertexDataContainerReader::execute()
 {
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
-  if(NULL == m)
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);

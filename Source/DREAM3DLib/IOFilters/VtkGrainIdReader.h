@@ -32,8 +32,9 @@
 #define VTKRECTILINEARGRIDREADER_H_
 
 #include <string.h> // needed for the ::memcpy function below
-#include <QtCore/QString>
 
+#include <QtCore/QString>
+#include <QtCore/QtEndian>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -72,7 +73,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -142,8 +143,8 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
            T t = buffer[totalSize-1];
            T t1 = buffer[totalSize-2];
            // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
-           MXA::Endian::FromBigToSystem::convert<T>(t);
-           MXA::Endian::FromBigToSystem::convert<T>(t1);
+           t = qFromBigEndian(t);
+           t1 = qFromBigEndian(t1);
            diff =t-t1;
          }
          else

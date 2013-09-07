@@ -51,7 +51,7 @@
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/DistributionAnalysisOps/DistributionAnalysisOps.h"
 
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateODF)
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateMDF)
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateAxisODF)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<unsigned int>, PhaseTypeArray)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, PhaseTypeArray)
 
     /**
     * @brief This method will write the options to a file
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     void gatherAxisODFStats();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

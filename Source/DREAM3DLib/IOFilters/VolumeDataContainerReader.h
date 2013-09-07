@@ -33,10 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SolidMeshDataContainerWriter_H_
-#define _SolidMeshDataContainerWriter_H_
+#ifndef _VolumeDataContainerReader_H_
+#define _VolumeDataContainerReader_H_
 
 #include <QtCore/QString>
+
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -45,26 +47,40 @@
 
 
 /**
- * @class SolidMeshDataContainerWriter SolidMeshDataContainerWriter.h /IOFilters/SolidMeshDataContainerWriter.h
+ * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(SolidMeshDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SolidMeshDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SolidMeshDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, AbstractFilter)
 
-    virtual ~SolidMeshDataContainerWriter();
+    virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
-    void setXdmfOStream(QDataStream* xdmf);
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
+    typedef QList<QString> NameListType;
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -72,13 +88,13 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "SolidMesh DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Voxel DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -109,8 +125,10 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     */
     virtual void preflight();
 
+    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
+
   protected:
-    SolidMeshDataContainerWriter();
+    VolumeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -122,11 +140,16 @@ class DREAM3DLib_EXPORT SolidMeshDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-  private:
-    QDataStream* m_XdmfPtr;
+    int gatherData(bool preflight);
+    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                       QVector<QString> &namesRead,
+                       QSet<QString> &namesToRead);
+    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
-    SolidMeshDataContainerWriter(const SolidMeshDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SolidMeshDataContainerWriter&); // Operator '=' Not Implemented
+  private:
+
+    VolumeDataContainerReader(const VolumeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SolidMeshDataContainerWriter_H_ */
+#endif /* _VolumeDataContainerReader_H_ */

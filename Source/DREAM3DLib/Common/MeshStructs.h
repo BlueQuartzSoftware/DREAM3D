@@ -29,13 +29,13 @@
 * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 *
 * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SURFACE_MESH_STRUCTS_H_
-#define _SURFACE_MESH_STRUCTS_H_
+#ifndef MESHSTRUCTS_H_
+#define MESHSTRUCTS_H_
 
 #include <vector>
 #include <QtCore/QString>
 #include <QtCore/QSet>
-#include <QMap>
+#include <QtCore/QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
@@ -47,7 +47,7 @@
  */
 namespace DREAM3D
 {
-  namespace SurfaceMesh
+  namespace Mesh
   {
     typedef float Float_t;
     typedef double Double_t;
@@ -62,6 +62,10 @@ namespace DREAM3D
       Double_t pos[3];
     } VertD_t;
 
+    typedef struct
+    {
+        int verts[2];
+    } Edge_t;
 
     const int32_t k_VertexNumElements = 3;
 
@@ -70,14 +74,23 @@ namespace DREAM3D
         int verts[3];
     } Face_t;
 
+    typedef struct
+    {
+        std::vector<int64_t> verts;
+    } Cell_t;
+
     // This constant values needs to be the number of total integers that are encoded into the Face Structure
     const int32_t k_FaceNumElements = 3;
 
     typedef StructArray<Vert_t> VertList_t;
+    typedef StructArray<Edge_t> EdgeList_t;
     typedef StructArray<Face_t> FaceList_t;
+    typedef StructArray<Cell_t> CellList_t;
 
     typedef VertList_t::Pointer VertListPointer_t;
+    typedef EdgeList_t::Pointer EdgeListPointer_t;
     typedef FaceList_t::Pointer FaceListPointer_t;
+    typedef CellList_t::Pointer CellListPointer_t;
 
     typedef QSet<int32_t> UniqueFaceIds_t;
     typedef QMap<int32_t, UniqueFaceIds_t > VertexFaceMap_t;
@@ -94,7 +107,7 @@ namespace DREAM3D
     namespace M3C
     {
       typedef struct {
-          DREAM3D::SurfaceMesh::Float_t coord[3];
+          DREAM3D::Mesh::Float_t coord[3];
       } VoxelCoord;
 
       typedef struct {
@@ -146,9 +159,9 @@ namespace DREAM3D
       {
           int nodeId;
           int nodeKind;
-          DREAM3D::SurfaceMesh::Float_t x;
-          DREAM3D::SurfaceMesh::Float_t y;
-          DREAM3D::SurfaceMesh::Float_t z;
+          DREAM3D::Mesh::Float_t x;
+          DREAM3D::Mesh::Float_t y;
+          DREAM3D::Mesh::Float_t z;
       } NodesFileRecord_t;
       const int ByteCount = sizeof(NodesFileRecord_t);
     }
@@ -168,4 +181,4 @@ namespace DREAM3D
     }
   }
 
-#endif /* _SURFACE_MESH_STRUCTS_H_ */
+#endif /* MESHSTRUCTS_H_ */

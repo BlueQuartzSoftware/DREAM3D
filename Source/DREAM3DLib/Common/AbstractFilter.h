@@ -43,9 +43,10 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceMeshDataContainer.h"
-#include "DREAM3DLib/Common/SolidMeshDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/VertexDataContainer.h"
+#include "DREAM3DLib/Common/EdgeDataContainer.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/AbstractFilterParametersReader.h"
@@ -81,19 +82,20 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
-    DREAM3D_INSTANCE_PROPERTY(VoxelDataContainer*, VoxelDataContainer)
-    DREAM3D_INSTANCE_PROPERTY(SurfaceMeshDataContainer*, SurfaceMeshDataContainer)
-    DREAM3D_INSTANCE_PROPERTY(SolidMeshDataContainer*, SolidMeshDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(VolumeDataContainer*, VolumeDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(VertexDataContainer*, VertexDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(EdgeDataContainer*, EdgeDataContainer)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages)
+    DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 
     void addErrorMessage(PipelineMessage &msg);
     void addErrorMessage(const QString &filterName, const QString &errorDescription, int errorCode);
-    void addErrorMessages(std::vector<PipelineMessage> msgVector);
+    void addErrorMessages(QVector<PipelineMessage> msgVector);
 
     void addWarningMessage(PipelineMessage &msg);
     void addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode);
-    void addWarningMessages(std::vector<PipelineMessage> msgVector);
+    void addWarningMessages(QVector<PipelineMessage> msgVector);
 
     void removeErrorMessage(PipelineMessage msg);
     void removeErrorMessage(int index);
@@ -120,9 +122,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
 
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<FilterParameter::Pointer>, FilterParameters)
+    DREAM3D_INSTANCE_PROPERTY(QVector<FilterParameter::Pointer>, FilterParameters)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
+    DREAM3D_INSTANCE_PROPERTY(QVector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
     void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
 
     virtual void printValues(QDataStream &out){}

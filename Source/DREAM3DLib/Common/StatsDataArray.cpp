@@ -151,7 +151,7 @@ size_t StatsDataArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
+int StatsDataArray::EraseTuples(QVector<size_t> &idxs)
 {
   int err = 0;
 
@@ -169,13 +169,13 @@ int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
 
   // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
   // off the end of the array and return an error code.
-  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
     if (idxs[i] >= m_StatsDataArray.size()) { return -100; }
   }
 
 
-  std::vector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
+  QVector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
   for(size_t dIdx = 0; dIdx < m_StatsDataArray.size(); ++dIdx)
@@ -245,14 +245,14 @@ int32_t StatsDataArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printTuple(QDataStream &out, size_t i, char delimiter)
+void StatsDataArray::printTuple(QTextStream &out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printComponent(QDataStream &out, size_t i, int j)
+void StatsDataArray::printComponent(QTextStream &out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }

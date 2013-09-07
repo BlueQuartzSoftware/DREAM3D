@@ -73,7 +73,7 @@ M3CEntireVolume::~M3CEntireVolume()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
    {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Add Surface Layer");
@@ -117,7 +117,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
   QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
 
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
@@ -132,7 +132,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);
@@ -168,7 +168,7 @@ void M3CEntireVolume::execute()
   {
     setErrorCondition(-1);
     QString ss;
-    ss << " VoxelDataContainer was NULL";
+    QString ss = QObject::tr(" VoxelDataContainer was NULL");
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
     return;
@@ -179,7 +179,7 @@ void M3CEntireVolume::execute()
   {
     setErrorCondition(-1);
     QString ss;
-    ss << " SurfaceMeshDataContainer was NULL";
+    QString ss = QObject::tr(" SurfaceMeshDataContainer was NULL");
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
     return;
@@ -200,7 +200,7 @@ void M3CEntireVolume::execute()
   {
     setErrorCondition(-1);
     QString ss;
-    ss << "Error Creating the Surface Mesh";
+    QString ss = QObject::tr("Error Creating the Surface Mesh");
     PipelineMessage em(getNameOfClass(), ss.str(), -1);
     addErrorMessage(em);
     return;
@@ -345,8 +345,8 @@ int M3CEntireVolume::createMesh()
 
   notifyStatusMessage("\nCounting number of total edges turned on...\n");
   nFEdge = get_number_fEdges(square, point, neigh, edgeTable_2d, NS);
-  ss.str(""); ss << "total number of face edges = " << nFEdge;
-  notifyStatusMessage(ss.str());
+   QString ss = QObject::tr("total number of face edges = %1").arg(nFEdge);
+  notifyStatusMessage(ss);
 
   // memory allocation for face edges...
 //  fedge = (segment *)malloc(nFEdge * sizeof(segment));
@@ -359,9 +359,9 @@ int M3CEntireVolume::createMesh()
 
   notifyStatusMessage("\nCounting number of triangles...");
   nTriangle = get_number_triangles(point, square, vertex, fedge, NS, NSP, fileDim[0]);
-  ss.str("");
-  ss << "\ttotal number of triangles = " << nTriangle;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("\ttotal number of triangles = %1").arg(nTriangle);
+  notifyStatusMessage(ss);
 
 
   // memory allocation for triangle...
@@ -403,9 +403,9 @@ int M3CEntireVolume::createMesh()
   new_ids_for_nodes->initializeWithValues(-1);
 
   nNodes = assign_new_nodeID(vertex, new_ids_for_nodes, NS);
-  ss.str("");
-  ss << "number of nodes used = " << nNodes;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("number of nodes used = %1").arg(nNodes);
+  notifyStatusMessage(ss);
 
   // Create new shortend arrays for the Triangles and the Nodes and NodeKind
   StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodes = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(nNodes, DREAM3D::CellData::SurfaceMeshNodes);
@@ -1177,8 +1177,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
   }
 
   QString ss;
-  ss << "total number of identified face edges = " <<  eid;
-  notifyStatusMessage(ss.str());
+  QString ss = QObject::tr("total number of identified face edges = %1").arg( eid);
+  notifyStatusMessage(ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -1681,8 +1681,8 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
 
       if(nburnt != 8)
       {
-        ss.str("");
-        ss << "corners are wrongfully burnt in this marching cube: cube id =" << i << " number burnt = " << nburnt;
+        
+        QString ss = QObject::tr("corners are wrongfully burnt in this marching cube: cube id =%1 number burnt = %2").arg(i).arg(nburnt);
         notifyErrorMessage(ss, -1001);
       }
       // update nodeKind of body center node in the current marching cube...
@@ -1775,9 +1775,9 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
     }
   }
 
-  ss.str("");
-  ss << "number of triangles for case 0, case 1 and case 2 = " << nTri0 << " " << nTri2 << " " << nTriM;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("number of triangles for case 0, case 1 and case 2 = " << nTri0 << " %1 %2").arg(nTri2).arg(nTriM);
+  notifyStatusMessage(ss);
   // sum up triangle numbers...
   nTri = nTri0 + nTri2 + nTriM;
 
@@ -1964,8 +1964,8 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
     else
     {
       // do nothing...
-      ss.str("");
-      ss << "something wrong in counting # case 0 triangles... " << numN << " " << nfedge;
+      
+      QString ss = QObject::tr("something wrong in counting # case 0 triangles... %1 %2").arg(numN).arg(nfedge);
       notifyErrorMessage(ss, -1000);
     }
   }
@@ -2839,8 +2839,8 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
       }
       else
       {
-        ss.str("");
-        ss << "Somthing's wrong in counting face centers turned on..." << nFC << "  " <<  i;
+        
+        QString ss = QObject::tr("Somthing's wrong in counting face centers turned on...%1  %2").arg(nFC).arg( i);
         notifyErrorMessage(ss, -1001);
       }
 
@@ -2848,9 +2848,9 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
     }
   }
 
-  ss.str("");
-  ss << "number of triangles found = " << tidIn;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("number of triangles found = %1").arg(tidIn);
+  notifyStatusMessage(ss);
   return 0;
 }
 
@@ -4708,12 +4708,12 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, in
 
   }
   while (i < numT);
-  ss.str("");
-  ss << "total number of inner edges including duplicates = " <<  nIED;
-  notifyStatusMessage(ss.str());
-  ss.str("");
-  ss << "total number of unique inner edges = " << nIE;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("total number of inner edges including duplicates = %1").arg( nIED);
+  notifyStatusMessage(ss);
+  
+  QString ss = QObject::tr("total number of unique inner edges = %1").arg(nIE);
+  notifyStatusMessage(ss);
 
   return nIE;
 }
@@ -4917,8 +4917,8 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
           ie[IEindex].edgeKind = tedgeKind;
           if(tedgeKind > 4)
           {
-            ss.str("");
-            ss << "something's wrong in counting inner edge kind!!! " << tedgeKind;
+            
+            QString ss = QObject::tr("something's wrong in counting inner edge kind!!! %1").arg(tedgeKind);
             notifyErrorMessage(ss, -1001);
           }
           IEindex++;
@@ -4933,9 +4933,9 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
   }
   while (i < numT);
 
-  ss.str("");
-  ss << "total number of unique inner edges updated = " << IEindex;
-  notifyStatusMessage(ss.str());
+  
+  QString ss = QObject::tr("total number of unique inner edges updated = %1").arg(IEindex);
+  notifyStatusMessage(ss);
 }
 
 // -----------------------------------------------------------------------------
@@ -5260,21 +5260,21 @@ void M3CEntireVolume::get_output(node *v, segment *fe, isegment *ie, patch *t, i
 
   // Open the streams for 3 output files...
 
-  if((f1 = fopen(mp->nodes_file.c_str(), "w")) == NULL)
+  if((f1 = fopen(mp->nodes_file.toLatin1().data(), "w")) == NULL)
   {
-    printf("\nCannot create the output nodes file! '%s'\n", mp->nodes_file.c_str());
+    printf("\nCannot create the output nodes file! '%s'\n", mp->nodes_file.toLatin1().data());
     return;
   }
 
-  if((f2 = fopen(mp->edges_file.c_str(), "w")) == NULL)
+  if((f2 = fopen(mp->edges_file.toLatin1().data(), "w")) == NULL)
   {
-    printf("\nCannot create the output edges file! '%s'\n", mp->edges_file.c_str());
+    printf("\nCannot create the output edges file! '%s'\n", mp->edges_file.toLatin1().data());
     return;
   }
 
-  if((f3 = fopen(mp->triangles_file.c_str(), "w")) == NULL)
+  if((f3 = fopen(mp->triangles_file.toLatin1().data(), "w")) == NULL)
   {
-    printf("\nCannot create the output file! '%s'\n", mp->triangles_file.c_str());
+    printf("\nCannot create the output file! '%s'\n", mp->triangles_file.toLatin1().data());
     return;
   }
 

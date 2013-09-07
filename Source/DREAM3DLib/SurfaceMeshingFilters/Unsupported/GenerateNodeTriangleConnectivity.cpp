@@ -63,7 +63,7 @@ GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -125,7 +125,7 @@ void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, 
     {
       // This depends on the triangles array already being created
       int size = sm->getFaces()->GetNumberOfTuples();
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, ss, int32_t, Int32ArrayType, 0, size, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshTriangleEdges, int32_t, Int32ArrayType, 0, size, 3)
     }
 
     // We do not know the size of the array so we can not use the macro so we just manually call
@@ -234,17 +234,17 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   {
     if ( progIndex/total * 100.0f > (curPercent) )
     {
-      ss.str("");
+      
       ss << (progIndex/total * 100.0f) << "% Complete";
-      notifyStatusMessage(ss.str());
+      notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
     progIndex++;
     if (getCancel() == true) { return; }
 
-    int nodeId = (*iter).first;
+    int nodeId = iter.key();
     ManagedPointerArray<int>::Data_t& entry = *(nodeTriangleArray->GetPointer(nodeId));
-    UniqueTriangleIds_t& triangles = (*iter).second;
+    UniqueTriangleIds_t& triangles = iter.value();
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();
     if (entry.count > 0)

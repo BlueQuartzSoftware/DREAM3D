@@ -67,7 +67,7 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Nodes File");
@@ -150,10 +150,10 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
     setErrorCondition(-382);
   }
 
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
     setErrorCondition(-384);
   }
   else {
@@ -202,7 +202,7 @@ void SurfaceMeshToNodesTrianglesEdges::preflight()
 void SurfaceMeshToNodesTrianglesEdges::execute()
 {
   int err = 0;
-  QString ss;
+
   setErrorCondition(err);
 
 
@@ -211,11 +211,11 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   {
     return;
   }
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
 
 
-  DREAM3D::SurfaceMesh::VertListPointer_t nodes = sm->getVertices();
-  DREAM3D::SurfaceMesh::FaceListPointer_t triangles = sm->getFaces();
+  DREAM3D::Mesh::VertListPointer_t nodes = sm->getVertices();
+  DREAM3D::Mesh::FaceListPointer_t triangles = sm->getFaces();
   IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
@@ -230,18 +230,19 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   notifyStatusMessage("Writing Nodes Text File");
-  QString parentPath = QFileInfo::parentPath(getOutputNodesFile());
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo fi(getOutputNodesFile());
+  QDir parentPath = fi.path();
+
+  if(!parentPath.mkpath("."))
   {
-    QString ss;
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
   FILE* nodesFile = NULL;
-  nodesFile = fopen(getOutputNodesFile().c_str(), "wb");
+  nodesFile = fopen(getOutputNodesFile().toLatin1().data(), "wb");
   if (NULL == nodesFile)
   {
     setErrorCondition(-100);
@@ -251,7 +252,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  DREAM3D::SurfaceMesh::Vert_t* v = nodes->GetPointer(0);
+  DREAM3D::Mesh::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
@@ -266,13 +267,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     QDir dir;
   if(!dir.mkpath(parentPath))
   {
-    QString ss;
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
-  FILE* eFile = fopen(getOutputEdgesFile().c_str(), "wb");
+  FILE* eFile = fopen(getOutputEdgesFile().toLatin1().data(), "wb");
   if (NULL == eFile)
   {
     setErrorCondition(-100);
@@ -314,17 +315,17 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Triangles Text File");
-  parentPath = QFileInfo::parentPath(getOutputTrianglesFile());
-    QDir dir;
-  if(!dir.mkpath(parentPath))
+  QFileInfo triFI(getOutputTrianglesFile());
+  parentPath = triFI.path();
+  if(!parentPath.mkpath("."))
   {
-    QString ss;
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
-  FILE* triFile = fopen(getOutputTrianglesFile().c_str(), "wb");
+  FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");
   if (NULL == triFile)
   {
     setErrorCondition(-100);
@@ -334,11 +335,11 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->GetNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<DREAM3D::SurfaceMesh::Face_t>* ts = DREAM3D::SurfaceMesh::FaceList_t::SafePointerDownCast(triangles.get());
-  DREAM3D::SurfaceMesh::Face_t* t = ts->GetPointer(0);
+  StructArray<DREAM3D::Mesh::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
+  DREAM3D::Mesh::Face_t* t = ts->GetPointer(0);
 
 
-  IDataArray::Pointer flPtr = getSurfaceMeshDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 

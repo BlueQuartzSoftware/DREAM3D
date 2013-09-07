@@ -37,12 +37,16 @@
 #ifndef SHAPEOPS_H_
 #define SHAPEOPS_H_
 
-#include <QMap>
+#include <QtCore/QMap>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
+/**
+ * @brief The ShapeOps class
+ */
 class DREAM3DLib_EXPORT ShapeOps
 {
   public:

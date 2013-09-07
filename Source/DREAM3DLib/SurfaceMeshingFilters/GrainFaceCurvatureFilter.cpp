@@ -88,7 +88,7 @@ GrainFaceCurvatureFilter::~GrainFaceCurvatureFilter()
 // -----------------------------------------------------------------------------
 void GrainFaceCurvatureFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Neighborhood Ring Count");
@@ -175,11 +175,12 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* sm = getSurfaceDataContainer();
+
   if(NULL == sm)
   {
     setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else
   {
@@ -251,7 +252,7 @@ void GrainFaceCurvatureFilter::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
+  SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -268,7 +269,7 @@ void GrainFaceCurvatureFilter::execute()
   }
 
   // Get our Reference counted Array of Face Structures
-  DREAM3D::SurfaceMesh::FaceListPointer_t trianglesPtr = getSurfaceMeshDataContainer()->getFaces();
+  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -281,7 +282,7 @@ void GrainFaceCurvatureFilter::execute()
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
   centroidFilter->setSurfaceMeshTriangleCentroidsArrayName(getSurfaceMeshTriangleCentroidsArrayName());
-  centroidFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  centroidFilter->setSurfaceDataContainer(getSurfaceDataContainer());
   centroidFilter->setObservers(getObservers());
   centroidFilter->setMessagePrefix(getMessagePrefix());
   centroidFilter->execute();
@@ -293,13 +294,13 @@ void GrainFaceCurvatureFilter::execute()
 
   // Calculate/update the Face Normals
   bool clearFaceNormals = false;
-  if (getSurfaceMeshDataContainer()->getFaceData(m_SurfaceMeshTriangleNormalsArrayName).get() == NULL)
+  if (getSurfaceDataContainer()->getFaceData(m_SurfaceMeshTriangleNormalsArrayName).get() == NULL)
   {
     clearFaceNormals = true;
   }
   TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
   normalsFilter->setSurfaceMeshTriangleNormalsArrayName(getSurfaceMeshTriangleNormalsArrayName());
-  normalsFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  normalsFilter->setSurfaceDataContainer(getSurfaceDataContainer());
   normalsFilter->setObservers(getObservers());
   normalsFilter->setMessagePrefix(getMessagePrefix());
   normalsFilter->execute();
@@ -311,19 +312,19 @@ void GrainFaceCurvatureFilter::execute()
 
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  bool clearMeshVertLinks = false;
-  MeshVertLinks::Pointer vertLinks = getSurfaceMeshDataContainer()->getMeshVertLinks();
+  bool clearMeshLinks = false;
+  MeshLinks::Pointer vertLinks = getSurfaceDataContainer()->getMeshLinks();
   if (NULL == vertLinks.get())
   {
-    clearMeshVertLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceMeshDataContainer()->buildMeshVertLinks();
+    clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
+    getSurfaceDataContainer()->buildMeshLinks();
   }
 
   // Group the Faces by common neighboring grain face. This means that each group of triangles
   // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
   SharedGrainFaceFilter::Pointer sharedGrainFacesFilter = SharedGrainFaceFilter::New();
   sharedGrainFacesFilter->setSurfaceMeshGrainFaceIdArrayName(getSurfaceMeshGrainFaceIdArrayName());
-  sharedGrainFacesFilter->setSurfaceMeshDataContainer(getSurfaceMeshDataContainer());
+  sharedGrainFacesFilter->setSurfaceDataContainer(getSurfaceDataContainer());
   sharedGrainFacesFilter->setObservers(getObservers());
   sharedGrainFacesFilter->setMessagePrefix(getMessagePrefix());
   sharedGrainFacesFilter->execute();
@@ -394,7 +395,7 @@ void GrainFaceCurvatureFilter::execute()
 
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
-    SharedGrainFaceFilter::FaceIds_t& triangleIds = (*iter).second;
+    SharedGrainFaceFilter::FaceIds_t& triangleIds = iter.value();
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -402,7 +403,7 @@ void GrainFaceCurvatureFilter::execute()
                                               principalCurvature1, principalCurvature2,
                                               principalDirection1, principalDirection2,
                                               gaussianCurvature, meanCurvature,
-                                              getSurfaceMeshDataContainer(), this ) );
+                                              getSurfaceDataContainer(), this ) );
     }
     else
 #endif
@@ -411,7 +412,7 @@ void GrainFaceCurvatureFilter::execute()
                                                  principalCurvature1, principalCurvature2,
                                                  principalDirection1, principalDirection2,
                                                  gaussianCurvature, meanCurvature,
-                                                 getSurfaceMeshDataContainer(), this );
+                                                 getSurfaceDataContainer(), this );
       curvature();
       index++;
     }
@@ -423,33 +424,33 @@ void GrainFaceCurvatureFilter::execute()
   delete g;
 #endif
 
-  getSurfaceMeshDataContainer()->addFaceData(principalCurvature1->GetName(), principalCurvature1);
-  getSurfaceMeshDataContainer()->addFaceData(principalCurvature2->GetName(), principalCurvature2);
+  getSurfaceDataContainer()->addFaceData(principalCurvature1->GetName(), principalCurvature1);
+  getSurfaceDataContainer()->addFaceData(principalCurvature2->GetName(), principalCurvature2);
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    getSurfaceMeshDataContainer()->addFaceData(principalDirection1->GetName(), principalDirection1);
-    getSurfaceMeshDataContainer()->addFaceData(principalDirection2->GetName(), principalDirection2);
+    getSurfaceDataContainer()->addFaceData(principalDirection1->GetName(), principalDirection1);
+    getSurfaceDataContainer()->addFaceData(principalDirection2->GetName(), principalDirection2);
   }
 
   if (m_ComputeGaussianCurvature == true)
   {
-    getSurfaceMeshDataContainer()->addFaceData(gaussianCurvature->GetName(), gaussianCurvature);
+    getSurfaceDataContainer()->addFaceData(gaussianCurvature->GetName(), gaussianCurvature);
   }
   if (m_ComputeMeanCurvature == true)
   {
-    getSurfaceMeshDataContainer()->addFaceData(meanCurvature->GetName(), meanCurvature);
+    getSurfaceDataContainer()->addFaceData(meanCurvature->GetName(), meanCurvature);
   }
 
   // Now clear up some temp arrays that were created for this filter
   if (clearFaceNormals == true)
   {
-    getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
+    getSurfaceDataContainer()->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
   }
-  getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
-  getSurfaceMeshDataContainer()->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
-  if (clearMeshVertLinks == true)
+  getSurfaceDataContainer()->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
+  getSurfaceDataContainer()->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
+  if (clearMeshLinks == true)
   {
-    getSurfaceMeshDataContainer()->removeMeshVertLinks();
+    getSurfaceDataContainer()->removeMeshLinks();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -462,9 +463,8 @@ void GrainFaceCurvatureFilter::execute()
 void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
-  QString ss;
-  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" ;
-  notifyStatusMessage(ss.str());
+  QString ss = QObject::tr("%1/%2 COmplete").arg(m_CompletedGrainFaces).arg(m_TotalGrainFaces);
+  notifyStatusMessage(ss);
 }
 
 #endif

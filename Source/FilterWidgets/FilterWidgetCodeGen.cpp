@@ -111,12 +111,14 @@ void copyFile(const std::string &src, const std::string &dest)
 // -----------------------------------------------------------------------------
 void extractHelpIndexEntries(AbstractFilter* filter)
 {
-  VoxelDataContainer::Pointer vdc = VoxelDataContainer::New();
-  SurfaceMeshDataContainer::Pointer surf = SurfaceMeshDataContainer::New();
-  SolidMeshDataContainer::Pointer sol = SolidMeshDataContainer::New();
-  filter->setVoxelDataContainer(vdc.get());
-  filter->setSurfaceMeshDataContainer(surf.get());
-  filter->setSolidMeshDataContainer(sol.get());
+  VolumeDataContainer::Pointer vol = VolumeDataContainer::New();
+  SurfaceDataContainer::Pointer surf = SurfaceDataContainer::New();
+  EdgeDataContainer::Pointer edg = EdgeDataContainer::New();
+  VertexDataContainer::Pointer vert = VertexDataContainer::New();
+  filter->setVolumeDataContainer(vol.get());
+  filter->setSurfaceDataContainer(surf.get());
+  filter->setEdgeDataContainer(edg.get());
+  filter->setVertexDataContainer(vert.get());
   filter->preflight();
   CreatedArrayHelpIndexEntry::VectorType entries = filter->getCreatedArrayHelpIndexEntries();
 
@@ -274,7 +276,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -303,7 +305,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     {
       fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, %s)\n\n", prop.c_str());
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -313,8 +315,8 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
       fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
     }
 
-    if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-        && opt->getWidgetType() <= FilterParameter::SurfaceMeshEdgeArrayNameSelectionWidget )
+    if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
+        && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     { implementArrayNameComboBoxUpdated = true; }
   }
 
@@ -686,8 +688,8 @@ void createSourceFile( const std::string &group,
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
-    else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-      && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget)
+    else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
+      && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.c_str());
@@ -843,8 +845,8 @@ else
     {
       fprintf(f, "  prefs.setValue(\"%s\", QDir::toNativeSeparators(get%s()) );\n", prop.c_str(), prop.c_str());
     }
-    else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget )
+    else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     {
       implementArrayNameComboBoxUpdated = true;
       fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
@@ -1006,8 +1008,8 @@ else
       }
       fprintf(f, "   }\n");
     }
-    else if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget )
+    else if (opt->getWidgetType() >= FilterParameter::VolumeVertexArrayNameSelectionWidget
+             && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     {
       implementArrayNameComboBoxUpdated = true;
       fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
@@ -1123,8 +1125,8 @@ else
       std::string prop = opt->getPropertyName();
       std::string typ = opt->getValueType();
       std::string hl = opt->getHumanLabel();
-      if (opt->getWidgetType() >= FilterParameter::VoxelCellArrayNameSelectionWidget
-          && opt->getWidgetType() <= FilterParameter::SolidMeshEdgeArrayNameSelectionWidget ) {
+      if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
+          && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget ) {
         fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.c_str());
         fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.c_str());
       }
@@ -1136,7 +1138,7 @@ else
   {
 
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VoxelDataContainer::Pointer vdc, SurfaceMeshDataContainer::Pointer smdc, SolidMeshDataContainer::Pointer sdc)\n{\n", filter.c_str());
+    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)\n{\n", filter.c_str());
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];
@@ -1146,14 +1148,14 @@ else
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
         fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vdc, smdc, sdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
     }
     fprintf(f, "}\n");

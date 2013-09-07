@@ -31,8 +31,9 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationOps.h"
 
-
-
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -274,9 +275,9 @@ int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
+QVector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
 {
-  std::vector<OrientationOps::Pointer> m_OrientationOps;
+  QVector<OrientationOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
 
   m_OrientationOps.push_back(CubicOps::New());

@@ -151,7 +151,7 @@ size_t ModifiedLambertProjectionArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::EraseTuples(std::vector<size_t> &idxs)
+int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t> &idxs)
 {
   int err = 0;
 
@@ -169,13 +169,13 @@ int ModifiedLambertProjectionArray::EraseTuples(std::vector<size_t> &idxs)
 
   // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
   // off the end of the array and return an error code.
-  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
     if (idxs[i] >= m_ModifiedLambertProjectionArray.size()) { return -100; }
   }
 
 
-  std::vector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
+  QVector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
   for(size_t dIdx = 0; dIdx < m_ModifiedLambertProjectionArray.size(); ++dIdx)
@@ -245,14 +245,14 @@ int32_t ModifiedLambertProjectionArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printTuple(QDataStream &out, size_t i, char delimiter)
+void ModifiedLambertProjectionArray::printTuple(QTextStream &out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::printComponent(QDataStream &out, size_t i, int j)
+void ModifiedLambertProjectionArray::printComponent(QTextStream &out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }
@@ -270,7 +270,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   herr_t status;
   /*  printf("CPU [%d,%d] Expanding '%s' array with additional Row \n", home->myDomain, home->cycle, dsetName);
       fflush(stdout); */
-  dataset = H5Dopen2(gid, dsetName.c_str(), H5P_DEFAULT);
+  dataset = H5Dopen2(gid, dsetName.toLatin1().data(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   rank = H5Sget_simple_extent_ndims(filespace);
   status = H5Sget_simple_extent_dims(filespace, currentDims, NULL);
@@ -280,7 +280,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   newDims[0] = currentDims[0] + 1;
   newDims[1] = currentDims[1]; // Number of columns
 
-//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.c_str(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
+//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.toLatin1().data(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
   status = H5Dset_extent(dataset, newDims);
   if (status < 0)
   {
@@ -368,7 +368,7 @@ void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSi
 
   /* Create a new dataset within the file using cparms creation properties.*/
 //  dataset = H5Dcreate(gid, dsetName, H5T_NATIVE_DOUBLE, dataspace, cparms, H5P_DEFAULT, H5P_DEFAULT);
-  dataset = H5Dcreate2(gid, dsetName.c_str(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
+  dataset = H5Dcreate2(gid, dsetName.toLatin1().data(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
   /*  Extend the dataset. This call assures that dataset is at least 1 */
   size[0] = 1; // Single Row
   size[1] = chunk_dim; // N Columns - What ever the user asked for
@@ -460,6 +460,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
 // -----------------------------------------------------------------------------
 int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 {
+  bool ok = false;
   int err = 0;
   QString statsType;
   hid_t gid = QH5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
@@ -469,7 +470,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
   }
 
   QList<QString> names;
-  err = QH5Utilities::getGroupObjects(gid, QH5Utilities::H5Support_GROUP, names);
+  err = QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
   if(err < 0)
   {
     err |= QH5Utilities::closeHDF5Object(gid);
@@ -480,7 +481,7 @@ int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
   {
     int index = 0;
     statsType = "";
-    StringUtils::stringToNum(index, *iter);
+    index = QString( *iter ).toInt(&ok, 10);
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::StatsType, statsType);
     hid_t statId = QH5Utilities::openHDF5Object(gid, *iter);
     if(statId < 0)

@@ -118,13 +118,14 @@ void SegmentGrains::preflight()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
-  VoxelDataContainer* m = getVoxelDataContainer();
   QString ss;
+  VolumeDataContainer* m = getVolumeDataContainer();
+
   if(NULL == m)
   {
     setErrorCondition(-1);
-    ss << " DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();
@@ -197,9 +198,9 @@ void SegmentGrains::execute()
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
       gnum++;
-      ss.str("");
-      ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notifyStatusMessage(ss.str());
+      
+      QString ss = QObject::tr("Total Grains: %1").arg(gnum);
+      if(gnum%100 == 0) notifyStatusMessage(ss);
     }
   }
 

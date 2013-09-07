@@ -36,7 +36,7 @@
 
 #include "FindSurfaceGrains.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -83,13 +83,13 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -106,21 +106,19 @@ void FindSurfaceGrains::preflight()
 void FindSurfaceGrains::execute()
 {
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    setErrorCondition(-1);
-    QString ss;
-    ss << " DataContainer was NULL";
-    notifyErrorMessage(ss, -1);
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
-  notifyStatusMessage(ss.str());
+  ss = QObject::tr("FSG Points - %1, Fields - %2").arg(totalPoints).arg(totalFields);
+  notifyStatusMessage(ss);
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {
@@ -139,7 +137,7 @@ void FindSurfaceGrains::execute()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::find_surfacegrains()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 //  int64_t totalPoints = m->getTotalPoints();
 
   size_t xPoints = m->getXPoints();
@@ -180,7 +178,7 @@ void FindSurfaceGrains::find_surfacegrains()
 }
 void FindSurfaceGrains::find_surfacegrains2D()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->getTotalPoints();
 
   //size_t dims[3] = {0,0,0};

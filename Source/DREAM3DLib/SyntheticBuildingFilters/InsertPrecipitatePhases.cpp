@@ -36,15 +36,15 @@
 
 #include "InsertPrecipitatePhases.h"
 
-#include <QMap>
-
+#include <QtCore/QMap>
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
-#include <QtCore/QFile>
+
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 
@@ -130,7 +130,7 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 
 void InsertPrecipitatePhases::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
@@ -152,8 +152,8 @@ void InsertPrecipitatePhases::setupFilterParameters()
     option->setHumanLabel("Goal Attribute CSV File");
     option->setPropertyName("CsvOutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-  option->setFileExtension("*.csv");
-  option->setFileType("Comma Separated Data");
+    option->setFileExtension("*.csv");
+    option->setFileType("Comma Separated Data");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -164,11 +164,11 @@ void InsertPrecipitatePhases::readFilterParameters(AbstractFilterParametersReade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setPeriodicBoundaries( reader->readValue("PeriodicBoundaries", false) );
   setWriteGoalAttributes( reader->readValue("WriteGoalAttributes", false) );
   setCsvOutputFile( reader->readValue( "CsvOutputFile", getCsvOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -190,39 +190,39 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   QString ss;
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels, 1)
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
 
-  // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+      // Field Data
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, false, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
 
-  //Ensemble Data
-  typedef DataArray<unsigned int> PhaseTypeArrayType;
+      //Ensemble Data
+      typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, 1)
+      m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning Correctly" ;
+    QString ss = QObject::tr("Stats Array Not Initialized At Beginning Correctly");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss.str(), -308);
+    addErrorMessage(getHumanLabel(), ss, -308);
   }
 }
 
@@ -235,9 +235,8 @@ void InsertPrecipitatePhases::preflight()
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
-    QString ss;
-    ss << ClassName() << " needs the Csv Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 }
@@ -250,7 +249,7 @@ void InsertPrecipitatePhases::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-      VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
   {
@@ -276,11 +275,11 @@ void InsertPrecipitatePhases::execute()
   totalvol = sizex * sizey * sizez;
 
   notifyStatusMessage("Packing Precipitates - Generating and Placing Precipitates");
-// this initializes the arrays to hold the details of the locations of all of the grains during packing
+  // this initializes the arrays to hold the details of the locations of all of the grains during packing
   Int32ArrayType::Pointer grainOwnersPtr = initialize_packinggrid();
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
-//  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
-//  size_t grainOwnersIdx = 0;
+  //  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+  //  size_t grainOwnersIdx = 0;
 
 
   place_precipitates(grainOwnersPtr);
@@ -291,7 +290,7 @@ void InsertPrecipitatePhases::execute()
   notifyStatusMessage("Packing Precipitates - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
   renumber_grains1->setObservers(this->getObservers());
-  renumber_grains1->setVoxelDataContainer(m);
+  renumber_grains1->setVolumeDataContainer(m);
   renumber_grains1->execute();
   err = renumber_grains1->getErrorCondition();
   if (err < 0)
@@ -312,7 +311,7 @@ void InsertPrecipitatePhases::execute()
   notifyStatusMessage("Packing Precipitates - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains2 = RenumberGrains::New();
   renumber_grains2->setObservers(this->getObservers());
-  renumber_grains2->setVoxelDataContainer(m);
+  renumber_grains2->setVolumeDataContainer(m);
   renumber_grains2->execute();
   err = renumber_grains2->getErrorCondition();
   if (err < 0)
@@ -348,7 +347,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   notifyStatusMessage("Placing Precipitates");
   DREAM3D_RANDOMNG_NEW()
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+      VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -458,9 +457,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
-        QString ss;
-        ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
-        notifyStatusMessage(ss.str());
+        QString ss = QObject::tr("Packing Precipitates - Generating Grain #%1").arg(currentnumgrains);
+        notifyStatusMessage(ss);
 
         m->resizeFieldDataArrays(currentnumgrains + 1);
         dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
@@ -533,9 +531,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   fillingerror = 1;
   for (size_t i = firstPrecipitateField; i < numgrains; i++)
   {
-    QString ss;
-    ss << "Packing Grains - Placing Grain #" << i;
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Packing Grains - Placing Grain #%1").arg(i);
+    notifyStatusMessage(ss);
 
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[i]].get());
     precipboundaryfraction = pp->getPrecipBoundaryFraction();
@@ -615,8 +612,8 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
     QString ss;
-    ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
-    if(iteration % 100 == 0) notifyStatusMessage(ss.str());
+    ss = QObject::tr("Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
+    if(iteration % 100 == 0) notifyStatusMessage(ss);
 
     //    change1 = 0;
     //    change2 = 0;
@@ -733,7 +730,7 @@ void InsertPrecipitatePhases::generate_precipitate(int phase, int Seed, Precip* 
 {
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed)
 
-  StatsDataArray& statsDataArray = *m_StatsDataArray;
+      StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   float r1 = 1;
   float a2 = 0, a3 = 0;
@@ -860,7 +857,7 @@ void InsertPrecipitatePhases::move_precipitate(size_t gnum, float xc, float yc, 
 
 void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -898,7 +895,7 @@ void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1049,7 +1046,7 @@ void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<st
 // -----------------------------------------------------------------------------
 float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1212,7 +1209,7 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
 void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
 {
   DREAM3D_RANDOMNG_NEW()
-      //   DataContainer* m = getVoxelDataContainer();
+      //   DataContainer* m = getVolumeDataContainer();
       //  float dist;
       float inside = -1;
   int column, row, plane;
@@ -1231,7 +1228,7 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   // init any values for each of the Shape Ops
   for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
-    (*ops).second->init();
+    ops.value()->init();
   }
   // Create our Argument Map
   QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -1303,7 +1300,7 @@ void InsertPrecipitatePhases::assign_voxels()
 {
   notifyStatusMessage("Assigning Voxels");
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int index;
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1362,7 +1359,7 @@ void InsertPrecipitatePhases::assign_voxels()
     // init any values for each of the Shape Ops
     for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
-      (*ops).second->init();
+      ops.value()->init();
     }
     // Create our Argument Map
     QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -1433,32 +1430,32 @@ void InsertPrecipitatePhases::assign_voxels()
           if (iter2 > dims[1] - 1) coords[1] = coords[1] + sizey;
           if (iter3 < 0) coords[2] = coords[2] - sizez;
           if (iter3 > dims[2] - 1) coords[2] = coords[2] + sizez;
-//          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
-//          dist = sqrtf(dist);
-//          if (dist < radcur1)
-//          {
-            coords[0] = coords[0] - xc;
-            coords[1] = coords[1] - yc;
-            coords[2] = coords[2] - zc;
-            MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
-            float axis1comp = coordsRotated[0] / radcur1;
-            float axis2comp = coordsRotated[1] / radcur2;
-            float axis3comp = coordsRotated[2] / radcur3;
-            inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
-            if (inside >= 0)
+          //          dist = ((coords[0] - xc) * (coords[0] - xc)) + ((coords[1] - yc) * (coords[1] - yc)) + ((coords[2] - zc) * (coords[2] - zc));
+          //          dist = sqrtf(dist);
+          //          if (dist < radcur1)
+          //          {
+          coords[0] = coords[0] - xc;
+          coords[1] = coords[1] - yc;
+          coords[2] = coords[2] - zc;
+          MatrixMath::Multiply3x3with3x1(ga, coords, coordsRotated);
+          float axis1comp = coordsRotated[0] / radcur1;
+          float axis2comp = coordsRotated[1] / radcur2;
+          float axis3comp = coordsRotated[2] / radcur3;
+          inside = m_ShapeOps[shapeclass]->inside(axis1comp, axis2comp, axis3comp);
+          if (inside >= 0)
+          {
+            int currentpoint = index;
+            if (m_GrainIds[currentpoint] > firstPrecipitateField)
             {
-              int currentpoint = index;
-              if (m_GrainIds[currentpoint] > firstPrecipitateField)
-              {
-                oldname = m_GrainIds[currentpoint];
-                m_GrainIds[currentpoint] = -2;
-              }
-              if (m_GrainIds[currentpoint] < firstPrecipitateField && m_GrainIds[currentpoint] != -2)
-              {
-                m_GrainIds[currentpoint] = static_cast<int32_t>(i);
-              }
+              oldname = m_GrainIds[currentpoint];
+              m_GrainIds[currentpoint] = -2;
             }
-//          }
+            if (m_GrainIds[currentpoint] < firstPrecipitateField && m_GrainIds[currentpoint] != -2)
+            {
+              m_GrainIds[currentpoint] = static_cast<int32_t>(i);
+            }
+          }
+          //          }
         }
       }
     }
@@ -1479,7 +1476,7 @@ void InsertPrecipitatePhases::assign_gaps()
 {
   notifyStatusMessage("Assigning Gaps");
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
   size_t udims[3] = {0,0,0};
@@ -1540,7 +1537,7 @@ void InsertPrecipitatePhases::assign_gaps()
       // init any values for each of the Shape Ops
       for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
       {
-        (*ops).second->init();
+        ops.value()->init();
       }
       // Create our Argument Map
       QMap<ShapeOps::ArgName, float> shapeArgMap;
@@ -1656,7 +1653,7 @@ void InsertPrecipitatePhases::cleanup_grains()
 {
   notifyStatusMessage("Cleaning Up Grains");
 
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1815,7 +1812,7 @@ void InsertPrecipitatePhases::cleanup_grains()
 // -----------------------------------------------------------------------------
 Int32ArrayType::Pointer  InsertPrecipitatePhases::initialize_packinggrid()
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   m_PackingRes[0] = m->getXRes() * 2.0f;
   m_PackingRes[1] = m->getYRes() * 2.0f;
@@ -1844,19 +1841,19 @@ Int32ArrayType::Pointer  InsertPrecipitatePhases::initialize_packinggrid()
 
 float InsertPrecipitatePhases::find_xcoord(long long int index)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   float x = m->getXRes()*float(index%m->getXPoints());
   return x;
 }
 float InsertPrecipitatePhases::find_ycoord(long long int index)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   float y = m->getYRes()*float((index/m->getXPoints())%m->getYPoints());
   return y;
 }
 float InsertPrecipitatePhases::find_zcoord(long long int index)
 {
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   float z = m->getZRes()*float(index/(m->getXPoints()*m->getYPoints()));
   return z;
 }
@@ -1864,7 +1861,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 {
   int err = 0;
   setErrorCondition(err);
-  VoxelDataContainer* m = getVoxelDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -1874,69 +1871,77 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(m_CsvOutputFile);
-    QDir dir;
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  QFileInfo fi(m_CsvOutputFile);
+  QString parentPath = fi.path();
+  QDir dir;
   if(!dir.mkpath(parentPath))
   {
-      QString ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss, -1);
-      setErrorCondition(-1);
-      return;
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    notifyErrorMessage(ss, -1);
+    setErrorCondition(-1);
+    return;
   }
 
-  QString filename = getCsvOutputFile();
 
-  std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
+  QFile outFile(getCsvOutputFile());
+  if (!outFile.open(QIODevice::WriteOnly))
+  {
+    QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
+    setErrorCondition(-200);
+    notifyErrorMessage(msg, getErrorCondition());
+    return;
+  }
+
+  QTextStream dStream(&outFile);
+
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-firstPrecipitateField ;
+  dStream << static_cast<qint32>(m->getNumFieldTuples() - firstPrecipitateField);
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getFieldArrayNameList();
 
-  std::vector<IDataArray::Pointer> data;
+  QVector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
 
   // Print the GrainIds Header before the rest of the headers
-  outFile << DREAM3D::GrainData::GrainID;
+  dStream << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
   for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
-  if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
-  {
+    if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
+    {
       if (p->GetNumberOfComponents() == 1) {
-        outFile << space << (*iter);
+        dStream << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
         for(int k = 0; k < p->GetNumberOfComponents(); ++k)
         {
-          outFile << space << (*iter) << "_" << k;
+          dStream << space << (*iter) << "_" << k;
         }
       }
       // Get the IDataArray from the DataContainer
       data.push_back(p);
     }
   }
-  outFile ;
+  dStream << "\n";
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  QString ss;
   float threshold = 0.0f;
 
   // Skip the first grain
-  for(size_t i = firstPrecipitateField; i < numTuples; ++i)
+  for(qint32 i = firstPrecipitateField; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold) {
-      ss.str("");
-      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Writing Field Data - %1% Complete").arg(((float)i / numTuples) * 100);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -1944,13 +1949,13 @@ void InsertPrecipitatePhases::write_goal_attributes()
     }
 
     // Print the grain id
-    outFile << i;
+    dStream << i;
     // Print a row of data
-    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for(qint32 p = 0; p < data.size(); ++p)
     {
-      outFile << space;
-      (*p)->printTuple(outFile, i, space);
+      dStream << space;
+      data[p]->printTuple(dStream, i, space);
     }
-    outFile ;
+    dStream << "\n";
   }
 }

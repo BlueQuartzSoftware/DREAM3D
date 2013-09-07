@@ -229,7 +229,7 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
 //
 // -----------------------------------------------------------------------------
 void FileReader::tokenize(const QString& str,
-                          std::vector<QString>& tokens,
+                          QVector<QString>& tokens,
                           const QString& delimiters)
 {
   // Skip delimiters at beginning.

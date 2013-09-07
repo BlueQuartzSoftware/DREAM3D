@@ -259,11 +259,11 @@ int testCase1_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
   // Create the data container
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
@@ -356,11 +356,11 @@ void testCase2_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
   // Create the data container
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get error condition, and check that the "file is too small" error is returned
   filt->preflight();
@@ -450,11 +450,11 @@ void testCase3_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
   // Create the data container
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
@@ -554,11 +554,11 @@ void testCase4_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
   // Create the data container
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
@@ -585,11 +585,11 @@ void testCase4_Execute(const std::string &name, int scalarType)
    */
 
   // Create another data container
-  VoxelDataContainer::Pointer m2 = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m2 = VolumeDataContainer::New();
 
   // Create another filter, passing in the skipHeaderBytes + 1
   RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes+1);
-  filt2->setVoxelDataContainer(m2.get());
+  filt2->setVolumeDataContainer(m2.get());
 
   // Preflight, get error condition, and check that there are errors
   filt2->preflight();
@@ -679,11 +679,11 @@ void testCase5_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
     // Create the data container
-    VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+    VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
@@ -783,11 +783,11 @@ void testCase6_Execute(const std::string &name, int scalarType)
   DREAM3D_REQUIRED(result, ==, true)
 
   // Create the data container
-  VoxelDataContainer::Pointer m = VoxelDataContainer::New();
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVoxelDataContainer(m.get());
+  filt->setVolumeDataContainer(m.get());
 
   // Preflight, get error condition, and check that the "file too small" error has occurred
   filt->preflight();
