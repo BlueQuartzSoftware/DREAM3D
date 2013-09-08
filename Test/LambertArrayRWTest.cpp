@@ -54,7 +54,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DxIOTest::TestFile);
+  QFile::remove(UnitTest::LambertRWTest::TestFile);
 #endif
 }
 
