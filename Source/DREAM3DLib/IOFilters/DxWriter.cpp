@@ -241,15 +241,15 @@ int DxWriter::writeFile()
   }
   totalPoints = fileXDim * fileYDim * fileZDim;
   //Write the header
-  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim ;
-  out << "origin 0 0 0" ;
-  out << "delta  1 0 0" ;
-  out << "delta  0 1 0" ;
-  out << "delta  0 0 1" ;
+  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
+  out << "origin 0 0 0" << "\n";
+  out << "delta  1 0 0" << "\n";
+  out << "delta  0 1 0" << "\n";
+  out << "delta  0 0 1" << "\n";
   out << "\n";
-  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim ;
+  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
   out << "\n";
-  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" ;
+  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << "\n";
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;
@@ -333,14 +333,14 @@ int DxWriter::writeFile()
     }
   }
   out << "\n";
-  out << "attribute \"dep\" string \"connections\"" ;
+  out << "attribute \"dep\" string \"connections\"" << "\n";
   out << "\n";
-  out << "object \"DREAM3D Generated\" class field" ;
-  out << "component  \"positions\"    value 1" ;
-  out << "component  \"connections\"  value 2" ;
-  out << "component  \"data\"         value 3" ;
-  out << "" ;
-  out << "end" ;
+  out << "object \"DREAM3D Generated\" class field" << "\n";
+  out << "component  \"positions\"    value 1" << "\n";
+  out << "component  \"connections\"  value 2" << "\n";
+  out << "component  \"data\"         value 3" << "\n";
+  out << "" << "\n";
+  out << "end" << "\n";
 
   file.close();
 #if 0

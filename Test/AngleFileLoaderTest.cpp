@@ -66,12 +66,12 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void makeTestFile(const std::string delim, const std::string &outputFile)
+void makeTestFile(const QString delim, const QString &outputFile)
 {
   int count = 1000;
   float e0, e1, e2;
 
-  FILE* f = fopen(outputFile.c_str(), "wb");
+  FILE* f = fopen(outputFile.toAscii().data(), "wb");
 
   fprintf(f, "%d\n", count);
 
@@ -80,7 +80,7 @@ void makeTestFile(const std::string delim, const std::string &outputFile)
     e0 = static_cast<float>(i) * 0.1;
     e1 = static_cast<float>(i) * 0.25;
     e2 = static_cast<float>(i) * 0.58;
-    fprintf(f, "%0.6f%s%0.6f%s%0.6f\n", e0, delim.c_str(), e1, delim.c_str(), e2);
+    fprintf(f, "%0.6f%s%0.6f%s%0.6f\n", e0, delim.toAscii().data(), e1, delim.toAscii().data(), e2);
   }
   fclose(f);
 }
@@ -167,8 +167,9 @@ int main(int argc, char *argv[])
 {
 
   int err = EXIT_SUCCESS;
+  QDir dir(UnitTest::AngleFileLoaderTest::TestDir);
+  dir.mkpath(".");
 
-  MXADir::mkdir(UnitTest::AngleFileLoaderTest::TestDir, true);
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )

@@ -489,7 +489,7 @@ int VtkGrainIdReader::readFile()
         for (size_t i = 0; i < totalVoxels; ++i)
         {
           t = grainIds->GetValue(i);
-          t = qToBigEndian<int>(t);
+          DREAM3D::Endian::FromSystemToBig::convert(t);
           grainIds->SetValue(i, t);
         }
       }

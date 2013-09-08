@@ -32,14 +32,12 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include <iostream>
-#include <string>
-#include <vector>
-
-#include "MXA/Common/LogTime.h"
+#include <QtCore/QString>
+#include <QtCore/QVector>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
+
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
@@ -141,7 +139,7 @@ bool createAndWriteToFile(T* dataArray, size_t dataSize, T* junkArray, size_t ju
   }
 
   // Create the output file to dump some data into
-  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.c_str(), "wb");
+  FILE* f = fopen(UnitTest::RawBinaryReaderTest::OutputFile.toAscii().data(), "wb");
 
   // If junkPlacement is set to START or BOTH, write junk to file
   size_t numWritten = 0;
@@ -230,13 +228,13 @@ RawBinaryReader::Pointer createRawBinaryReaderFilter(int scalarType, size_t N, i
 // -----------------------------------------------------------------------------
 // testCase1: This tests when the file size is equal to the allocated size, and checks to see if the data read is the same as the data written.
 template<typename T, size_t N>
-int testCase1_Execute(const std::string &name, int scalarType)
+int testCase1_Execute(const QString &name, int scalarType)
 {
   int err = 0;
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 0;
   int skipHeaderBytes = 0;
-  std::cout << "Testing case 1: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 1: " << name << " with num comps " << N;
 
 
   // Allocate an array, and get the dataArray from that array
@@ -290,7 +288,7 @@ int testCase1_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase1_TestPrimitives(const std::string &name, int scalarType)
+void testCase1_TestPrimitives(const QString &name, int scalarType)
 {
   testCase1_Execute<T, 1>(name, scalarType);
   testCase1_Execute<T, 2>(name, scalarType);
@@ -304,9 +302,10 @@ void testCase1()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
 
@@ -328,13 +327,13 @@ void testCase1()
 // -----------------------------------------------------------------------------
 // testCase2: This tests when the file size is smaller than the allocated size. (Reading past the end of the file)
 template<typename T, size_t N>
-void testCase2_Execute(const std::string &name, int scalarType)
+void testCase2_Execute(const QString &name, int scalarType)
 {
   int err = 0;
   int dataArraySize = ARRAY_SIZE * N / 2;		// We don't care what is written...we just need the data array size to be less than the file size
   int junkArraySize = 0;
   int skipHeaderBytes = junkArraySize * sizeof(T);
-  std::cout << "Testing case 2: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 2: " << name << " with num comps " << N;
 
   // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
@@ -377,7 +376,7 @@ void testCase2_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase2_TestPrimitives(const std::string &name, int scalarType)
+void testCase2_TestPrimitives(const QString &name, int scalarType)
 {
   testCase2_Execute<T, 1>(name, scalarType);
   testCase2_Execute<T, 2>(name, scalarType);
@@ -391,11 +390,13 @@ void testCase2()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
+
 
 
   testCase2_TestPrimitives<int8_t>("int8_t", Detail::Int8);
@@ -416,13 +417,13 @@ void testCase2()
 // -----------------------------------------------------------------------------
 // testCase3: This tests when the file size is larger than the allocated size and there is junk at the end of the file.
 template<typename T, size_t N>
-void testCase3_Execute(const std::string &name, int scalarType)
+void testCase3_Execute(const QString &name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 10;
   int skipHeaderBytes = 0;
   int err = 0;
-  std::cout << "Testing case 3: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 3: " << name << " with num comps " << N;
 
   // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
@@ -481,7 +482,7 @@ void testCase3_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase3_TestPrimitives(const std::string &name, int scalarType)
+void testCase3_TestPrimitives(const QString &name, int scalarType)
 {
   testCase3_Execute<T, 1>(name, scalarType);
   testCase3_Execute<T, 2>(name, scalarType);
@@ -495,9 +496,10 @@ void testCase3()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
 
@@ -519,13 +521,13 @@ void testCase3()
 // -----------------------------------------------------------------------------
 // testCase4: This tests when the file size is larger than the allocated size and there is junk at the beginning of the file.
 template<typename T, size_t N>
-void testCase4_Execute(const std::string &name, int scalarType)
+void testCase4_Execute(const QString &name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 5;
   int skipHeaderBytes = junkArraySize * sizeof(T);
   int err = 0;
-  std::cout << "Testing case 4: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 4: " << name << " with num comps " << N;
 
   // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
@@ -606,7 +608,7 @@ void testCase4_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase4_TestPrimitives(const std::string &name, int scalarType)
+void testCase4_TestPrimitives(const QString &name, int scalarType)
 {
   testCase4_Execute<T, 1>(name, scalarType);
   testCase4_Execute<T, 2>(name, scalarType);
@@ -620,9 +622,10 @@ void testCase4()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
 
@@ -644,13 +647,13 @@ void testCase4()
 // -----------------------------------------------------------------------------
 // testCase5: This tests when the file size is larger than the allocated size and there is junk both at the beginning and end of the file.
 template<typename T, size_t N>
-void testCase5_Execute(const std::string &name, int scalarType)
+void testCase5_Execute(const QString &name, int scalarType)
 {
   int dataArraySize = ARRAY_SIZE * N;
   int junkArraySize = 10;
   int skipHeaderBytes = junkArraySize * sizeof(T);
   int err = 0;
-  std::cout << "Testing case 5: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 5: " << name << " with num comps " << N;
 
   // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
@@ -710,7 +713,7 @@ void testCase5_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase5_TestPrimitives(const std::string &name, int scalarType)
+void testCase5_TestPrimitives(const QString &name, int scalarType)
 {
   testCase5_Execute<T, 1>(name, scalarType);
   testCase5_Execute<T, 2>(name, scalarType);
@@ -724,9 +727,10 @@ void testCase5()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
 
@@ -748,13 +752,13 @@ void testCase5()
 // -----------------------------------------------------------------------------
 // testCase6: This tests when skipHeaderBytes equals the file size
 template<typename T, size_t N>
-void testCase6_Execute(const std::string &name, int scalarType)
+void testCase6_Execute(const QString &name, int scalarType)
 {
   int dataArraySize = 0;
   int junkArraySize = ARRAY_SIZE * N;
   int skipHeaderBytes = junkArraySize * sizeof(T);
   int err = 0;
-  std::cout << "Testing case 6: " << name << " with num comps " << N << std::endl;
+  qDebug() << "Testing case 6: " << name << " with num comps " << N;
 
   // Allocate an array, and get the dataArray from that array
   boost::shared_array<T> array(new T[dataArraySize]); // This makes sure our allocated array is deleted when we leave
@@ -804,7 +808,7 @@ void testCase6_Execute(const std::string &name, int scalarType)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void testCase6_TestPrimitives(const std::string &name, int scalarType)
+void testCase6_TestPrimitives(const QString &name, int scalarType)
 {
   testCase6_Execute<T, 1>(name, scalarType);
   testCase6_Execute<T, 2>(name, scalarType);
@@ -818,9 +822,10 @@ void testCase6()
 {
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(UnitTest::RawBinaryReaderTest::TestDir, true))
+  QDir dir(UnitTest::RawBinaryReaderTest::TestDir);
+  if(!dir.mkpath("."))
   {
-    std::cout << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
+    qDebug() << "Error creating parent path '" << UnitTest::RawBinaryReaderTest::TestDir << "'";
     return;
   }
 

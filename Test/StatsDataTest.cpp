@@ -444,7 +444,8 @@ void TestStatsData()
 void TestWriteData()
 {
   // Make sure the output directory is created
-  MXADir::mkdir(UnitTest::StatsDataTest::TestDir, true);
+  QDir dir(UnitTest::StatsDataTest::TestDir);
+dir.mkpath(".");
 
   // Create some test data for a 2 phase material
   StatsDataArray::Pointer statsArray = createStatsDataArray();

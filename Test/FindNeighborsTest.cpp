@@ -95,14 +95,14 @@ void RemoveTestFiles()
 }
 
 
-void updateProgressAndMessage(const std::string &msg, int prog)
+void updateProgressAndMessage(const QString &msg, int prog)
 {
   std::cout << prog << "% - " << msg << std::endl;
 }
 
-std::string getH5EbsdFile()
+QString getH5EbsdFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "AdjTi6246MicroTensile.h5ebsd";
+  QString s = UnitTest::DataDir + MXADir::Separator + "AdjTi6246MicroTensile.h5ebsd";
   return s;
 }
 
@@ -164,7 +164,7 @@ void pipelineProgress(int value)
   std::cout << value << "%" << std::endl;
 }
 
-void pipelineProgressMessage(const std::string &msg)
+void pipelineProgressMessage(const QString &msg)
 {
   std::cout << msg << std::endl;
 }
@@ -202,8 +202,9 @@ void TestFindNeighbors()
   xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   xtal->SetValue(1, Ebsd::CrystalStructure::Cubic);
 
-  std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
-  MXADir::mkdir(m_OutputDirectory, true);
+  QString m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
+  QDir dir(m_OutputDirectory);
+dir.mkpath(".");
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();

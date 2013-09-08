@@ -238,13 +238,13 @@ void FindNeighborhoods::find_neighborhoods()
 
   size_t xP = dims[0];
   size_t yP = dims[1];
-  size_t zP = dims[2];
+  //size_t zP = dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  float zRes = m->getZRes();
+ // float zRes = m->getZRes();
   float sizeX = float(xP)*xRes;
   float sizeY = float(yP)*yRes;
-  float sizeZ = float(zP)*zRes;
+  //float sizeZ = float(zP)*zRes;
   int numXBins = int(sizeX/criticalDistance);
   int numYBins = int(sizeY/criticalDistance);
 //  int numZBins = int(sizeZ/criticalDistance);

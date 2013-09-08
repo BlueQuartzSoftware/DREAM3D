@@ -545,7 +545,7 @@ void VisualizeGBCD::execute()
         for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
-          t = qToBigEndian(t);
+          DREAM3D::Endian::FromSystemToBig::convert(t);
           gn[count] = t;
           count++;
         }

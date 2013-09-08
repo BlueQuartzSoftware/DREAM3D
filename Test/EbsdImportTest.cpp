@@ -69,7 +69,7 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RunTslImporter(const std::string file, bool rotateSlice, bool reorderArray, bool alignEulers)
+void RunTslImporter(const QString file, bool rotateSlice, bool reorderArray, bool alignEulers)
 {
   EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
   m_EbsdImport->setOutputFile(file);
@@ -83,7 +83,7 @@ void RunTslImporter(const std::string file, bool rotateSlice, bool reorderArray,
   m_EbsdImport->setAlignEulers(alignEulers);
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  std::vector<std::string> fileList;
+  std::vector<QString> fileList;
   fileList.push_back(EbsdImportTest::FileDir + EbsdImportTest::TestFile1);
   fileList.push_back(EbsdImportTest::FileDir + EbsdImportTest::TestFile2);
   fileList.push_back(EbsdImportTest::FileDir + EbsdImportTest::TestFile3);
@@ -127,7 +127,7 @@ void TSLImport()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RunHklImporter(const std::string outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
+void RunHklImporter(const QString outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
 {
   EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
   m_EbsdImport->setOutputFile(outfile);
@@ -141,7 +141,7 @@ void RunHklImporter(const std::string outfile, bool rotateSlice, bool reorderArr
   m_EbsdImport->setAlignEulers(alignEulers);
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  std::vector<std::string> fileList;
+  std::vector<QString> fileList;
   fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::USInputFile1);
   fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::USInputFile2);
 
@@ -153,7 +153,7 @@ void RunHklImporter(const std::string outfile, bool rotateSlice, bool reorderArr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RunHklEuropeanImporter(const std::string outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
+void RunHklEuropeanImporter(const QString outfile, bool rotateSlice, bool reorderArray, bool alignEulers)
 {
   EbsdImport::Pointer m_EbsdImport = EbsdImport::New();
   m_EbsdImport->setOutputFile(outfile);
@@ -167,7 +167,7 @@ void RunHklEuropeanImporter(const std::string outfile, bool rotateSlice, bool re
   m_EbsdImport->setAlignEulers(alignEulers);
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  std::vector<std::string> fileList;
+  std::vector<QString> fileList;
   fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile1);
   fileList.push_back(UnitTest::CtfReaderTest::FileDir + UnitTest::CtfReaderTest::EuropeanInputFile2);
 

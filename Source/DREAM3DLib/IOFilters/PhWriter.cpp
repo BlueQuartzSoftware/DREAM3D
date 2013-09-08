@@ -245,7 +245,7 @@ int PhWriter::writeFile()
 
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << m_GrainIds[k] ;
+    outfile << m_GrainIds[k] << '\n';
   }
   outfile.close();
 

@@ -347,7 +347,7 @@ void FilterPipeline::execute()
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     sendPipelineMessage(progValue);
 
-    ss = QObject::tr("[%1/%2]%3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
+    ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
 
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss);

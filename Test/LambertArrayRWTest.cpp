@@ -39,7 +39,7 @@
 #include <QtCore/QFile>
 
 #include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjectionArray.h"
@@ -68,9 +68,9 @@ void TestLambertWrite()
   float sphereRadius = 1.0;
   size_t gbcdDims[3] = { 40, 20, 40};
   // Allocate a typical GBCD Data Array
-  std::vector<ModifiedLambertProjection::Pointer> lamberts(gbcdDims[0] * gbcdDims[1] * gbcdDims[2]);
-  size_t count = lamberts.size();
-  for(size_t i = 0; i < count; ++i)
+  QVector<ModifiedLambertProjection::Pointer> lamberts(gbcdDims[0] * gbcdDims[1] * gbcdDims[2]);
+  qint32 count = lamberts.size();
+  for(qint32 i = 0; i < count; ++i)
   {
     lamberts[i] = ModifiedLambertProjection::CreateProjectionFromXYZCoords(xyzCoords.get(), lambertDim, sphereRadius);
     lamberts[i]->getNorthSquare()->initializeWithZeros();
@@ -83,13 +83,13 @@ void TestLambertWrite()
 
 
   // Now open an HDF5 File for writing
-  hid_t fid = H5Utilities::createFile(UnitTest::LambertRWTest::TestFile);
+  hid_t fid = QH5Utilities::createFile(UnitTest::LambertRWTest::TestFile);
   DREAM3D_REQUIRE(fid > 0)
 
   int err = gbcdData->writeH5Data(fid);
   DREAM3D_REQUIRE(err >= 0)
 
-  H5Utilities::closeFile(fid);
+  QH5Utilities::closeFile(fid);
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ int main(int argc, char **argv)
   DREAM3D_REGISTER_TEST( TestLambertRead() )
 
 #if REMOVE_TEST_FILES
-//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
   PRINT_TEST_SUMMARY();

@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 
@@ -224,9 +225,9 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
       pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
-        pos[0] = qToBigEndian(pos[0]);
-        pos[1] = qToBigEndian(pos[1]);
-        pos[2] = qToBigEndian(pos[2]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -261,10 +262,10 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      tData[0] = qToBigEndian(tData[0]);
-      tData[1] = qToBigEndian(tData[1]);
-      tData[2] = qToBigEndian(tData[2]);
-      tData[3] = qToBigEndian(tData[3]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[3]);
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -272,7 +273,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        tData[0] = qToBigEndian(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }

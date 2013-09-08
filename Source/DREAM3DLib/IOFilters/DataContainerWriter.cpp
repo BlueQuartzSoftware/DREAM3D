@@ -295,7 +295,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr(" |--> Writing Voxel Data ").arg(getMessagePrefix());
+    ss = QObject::tr("%1 |--> Writing Voxel Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -315,7 +315,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr(" |--> Writing Surface Mesh Data ").arg(getMessagePrefix());
+    ss = QObject::tr("%1 |--> Writing Surface Mesh Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -334,7 +334,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr(" |--> Writing Vertex Data ").arg(getMessagePrefix());
+    ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -353,7 +353,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr(" |--> Writing Edge Data ").arg(getMessagePrefix());
+    ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)

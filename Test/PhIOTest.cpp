@@ -62,15 +62,15 @@ class GenerateGrainIds : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(GenerateGrainIds)
     DREAM3D_TYPE_MACRO_SUPER(GenerateGrainIds, AbstractFilter)
 
-  //------ Created Cell Data
-  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){}
-    virtual const std::string getGroupName()
+    virtual const QString getGroupName()
     {
       return "UnitTest";
     }
-    virtual const std::string getHumanLabel()
+    virtual const QString getHumanLabel()
     {
       return "Generate Grain Ids";
     }
@@ -81,9 +81,9 @@ class GenerateGrainIds : public AbstractFilter
       if(NULL == m)
       {
         setErrorCondition(-1);
-        std::stringstream ss;
+        QTextStream ss;
         ss << " DataContainer was NULL";
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
+        addErrorMessage(getHumanLabel(), *(ss.string()), -1);
         return;
       }
       int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
@@ -109,9 +109,9 @@ class GenerateGrainIds : public AbstractFilter
 
   protected:
     GenerateGrainIds() :
-           AbstractFilter(),
-             m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-             m_GrainIds(NULL)
+      AbstractFilter(),
+      m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+      m_GrainIds(NULL)
     {
     }
 
@@ -121,9 +121,8 @@ class GenerateGrainIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
     {
       setErrorCondition(0);
-      std::stringstream ss;
       VolumeDataContainer* m = getVolumeDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented
@@ -234,18 +233,18 @@ int TestCasting()
 }
 
 template<typename T>
-void test(T x, T y, T z, const std::string &type)
+void test(T x, T y, T z, const QString &type)
 {
   T totalPoints = x * y * z;
-  std::cout << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints << std::endl;
+  qDebug() << "sizeof(" << type << "): " << sizeof(T) << " totalPoints: " << totalPoints;
 
   if (totalPoints > std::numeric_limits<int32_t>::max() )
   {
-    std::cout << "  " << type << " would over flow 32 bit signed int" << std::endl;
+    qDebug() << "  " << type << " would over flow 32 bit signed int";
   }
   if (totalPoints > std::numeric_limits<uint32_t>::max() )
   {
-    std::cout << "  " << type << " would over flow 32 bit unsigned int" << std::endl;
+    qDebug() << "  " << type << " would over flow 32 bit unsigned int";
   }
 }
 
@@ -258,11 +257,11 @@ int main(int argc, char **argv)
   int err = EXIT_SUCCESS;
 
   DREAM3D_REGISTER_TEST( TestPhWriter() )
-  DREAM3D_REGISTER_TEST( TestPhReader() )
-  DREAM3D_REGISTER_TEST( TestCasting() )
+      DREAM3D_REGISTER_TEST( TestPhReader() )
+      DREAM3D_REGISTER_TEST( TestCasting() )
 
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
-  PRINT_TEST_SUMMARY();
+      DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+      PRINT_TEST_SUMMARY();
   return err;
 }
 

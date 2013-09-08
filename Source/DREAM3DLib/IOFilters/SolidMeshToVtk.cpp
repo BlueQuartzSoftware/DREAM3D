@@ -42,6 +42,8 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -249,9 +251,9 @@ void SolidMeshToVtk::execute()
     pos[2] = static_cast<float>(n.pos[2]);
     if (m_WriteBinaryFile == true)
     {
-        pos[0] = qToBigEndian(pos[0]);
-        pos[1] = qToBigEndian(pos[1]);
-        pos[2] = qToBigEndian(pos[2]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -283,10 +285,10 @@ void SolidMeshToVtk::execute()
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 4; // Push on the total number of entries for this entry
-      tData[0] = qToBigEndian(tData[0]);
-      tData[1] = qToBigEndian(tData[1]); // Index of Vertex 0
-      tData[2] = qToBigEndian(tData[2]); // Index of Vertex 1
-      tData[3] = qToBigEndian(tData[3]); // Index of Vertex 2
+      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+      DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+      DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
       MXA::Endian::FromSystemToBig::convert<int>(tData[4]); // Index of Vertex 3
       fwrite(tData, sizeof(int), 5, vtkFile);
     }
@@ -391,9 +393,9 @@ void SolidMeshToVtk::execute()
 //    pos[2] = static_cast<float>(n.pos[2]);
 //    if (m_WriteBinaryFile == true)
 //    {
-//        pos[0] = qToBigEndian(pos[0]);
-//        pos[1] = qToBigEndian(pos[1]);
-//        pos[2] = qToBigEndian(pos[2]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
 //        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
 //        if (totalWritten != sizeof(float) * 3)
 //        {
@@ -425,10 +427,10 @@ void SolidMeshToVtk::execute()
 //    if (m_WriteBinaryFile == true)
 //    {
 //      tData[0] = 4; // Push on the total number of entries for this entry
-//      tData[0] = qToBigEndian(tData[0]);
-//      tData[1] = qToBigEndian(tData[1]); // Index of Vertex 0
-//      tData[2] = qToBigEndian(tData[2]); // Index of Vertex 1
-//      tData[3] = qToBigEndian(tData[3]); // Index of Vertex 2
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
 //      MXA::Endian::FromSystemToBig::convert<int>(tData[4]); // Index of Vertex 3
 //      fwrite(tData, sizeof(int), 5, vtkFile);
 //    }
@@ -539,7 +541,7 @@ int SolidMeshToVtk::writeCellData(FILE* vtkFile)
     if(m_WriteBinaryFile == true)
     {
       swapped = t.nSpin;
-      swapped = qToBigEndian(swapped);
+      DREAM3D::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
     }
     else

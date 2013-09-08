@@ -245,19 +245,21 @@ int DxReader::readHeader()
   int nx = 0;
   int ny = 0;
   int nz = 0;
-
-  while (true)
+  bool done = false;
+  while (m_InStream.atEnd() == false && done == false)
   {
     buf = m_InStream.readLine();
+    buf = buf.trimmed();
     tokens = buf.split(' ');
     // continue until we find the keyword
     for (qint32 i = 0; i < tokens.size(); i++)
     {
       if(tokens[i] == "counts")
       {
-        nx = tokens[i+1].toInt(&ok, 10) - 1;
+        nz = tokens[i+1].toInt(&ok, 10) - 1;
         ny = tokens[i+2].toInt(&ok, 10) - 1;
-        nz = tokens[i+3].toInt(&ok, 10) - 1;
+        nx = tokens[i+3].toInt(&ok, 10) - 1;
+        done = true;
         break;
       }
     }
@@ -279,7 +281,7 @@ int DxReader::readHeader()
   //  equivalent to list-direcvted input in Fortran, actually !!
 
   qint32 pos1 = 0;
-  while (pos1 == 0)
+  while (pos1 == 0 && m_InStream.atEnd() == false)
   { // continue until we find the keyword
     buf = m_InStream.readLine();
     buf = buf.simplified();
@@ -362,7 +364,7 @@ int DxReader::readFile()
   bool ok = false;
   QByteArray buf = m_InStream.readLine();
 
-  while (buf.size() > 0)
+  while (buf.size() > 0 && m_InStream.atEnd() == false)
   {
 
     // Get the remaining lines of the header and ignore
@@ -379,12 +381,15 @@ int DxReader::readFile()
     // Allocate the DataArray at this point:
     if(finished_header && !finished_data)
     {
-      for (int32_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+      qint32 size = tokens.size();
+      for (int32_t in_spins = 0; in_spins < size; in_spins++)
       {
         m_GrainIds[index] = tokens[in_spins].toInt(&ok, 10);
         ++index;
       }
+
     }
+    buf = m_InStream.readLine();
   }
 
   if(index != static_cast<size_t>(m->getTotalPoints()))

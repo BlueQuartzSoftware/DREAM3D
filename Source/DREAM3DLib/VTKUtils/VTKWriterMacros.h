@@ -106,7 +106,7 @@
   int t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
-    t = qToBigEndian<int>(t);\
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
@@ -135,7 +135,7 @@
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[i];\
-    t = qToBigEndian<int>(t);\
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
@@ -182,7 +182,7 @@
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[grain_indicies[i]];\
-    t = qToBigEndian<m_msgType>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t); \
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\

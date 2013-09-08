@@ -51,6 +51,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
@@ -277,7 +278,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
             for(size_t ii = 0; ii < dims[0]; ++ii)
             {
               tmp = buffer[ii];
-              tmp = qToBigEndian(tmp);
+              DREAM3D::Endian::FromSystemToBig::convert(tmp);
               buffer[ii] = tmp;
             }
             size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
@@ -356,7 +357,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          d = qToBigEndian(d);
+          DREAM3D::Endian::FromSystemToBig::convert(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);

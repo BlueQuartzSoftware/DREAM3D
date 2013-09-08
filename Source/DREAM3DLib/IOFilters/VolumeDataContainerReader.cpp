@@ -161,7 +161,6 @@ void VolumeDataContainerReader::execute()
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
-  QString ss;
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -421,7 +420,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType ;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.startsWith("DataArray") == 0)
+    if(classType.startsWith("DataArray") == true)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }
@@ -433,7 +432,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     {
 
     }
-    else if(classType.compare("NeighborList<T>") == 0)
+    else if(classType.startsWith("NeighborList<T>") == true)
     {
       dPtr = H5DataArrayReader::readNeighborListData(gid, *iter, preflight);
     }

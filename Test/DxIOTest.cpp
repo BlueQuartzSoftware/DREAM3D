@@ -63,11 +63,11 @@ class GenerateGrainIds : public AbstractFilter
 
     virtual ~GenerateGrainIds(){}
 
-    virtual const std::string getGroupName()
+    virtual const QString getGroupName()
     {
       return "UnitTest";
     }
-    virtual const std::string getHumanLabel()
+    virtual const QString getHumanLabel()
     {
       return "Generate Grain Ids";
     }
@@ -78,9 +78,9 @@ class GenerateGrainIds : public AbstractFilter
       if(NULL == m)
       {
         setErrorCondition(-1);
-        std::stringstream ss;
+        QTextStream ss;
         ss << " DataContainer was NULL";
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
+        addErrorMessage(getHumanLabel(), *(ss.string()), -1);
         return;
       }
       int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;
@@ -118,9 +118,8 @@ class GenerateGrainIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
     {
       setErrorCondition(0);
-      std::stringstream ss;
       VolumeDataContainer* m = getVolumeDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented

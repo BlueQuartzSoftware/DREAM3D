@@ -77,8 +77,8 @@
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   else { \
-  QString _s(#Name); \
-  /* addRequired##DType(_s);*/\
+  /* QString _s(#Name); \
+  addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named 'm_%2' for this filter."\
@@ -112,8 +112,8 @@
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   else { \
-  QString _s(#Name); \
-  /* addRequired##DType(_s);*/\
+  /* QString _s(#Name); \
+  addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
@@ -131,7 +131,7 @@
     QString ss = QObject::tr("The name of the array for the "  #NameSpace  #DType  #Name " was empty. Please provide a name for this array.");\
     addErrorMessage(getHumanLabel(), ss, -10000);\
   }\
-  QString _s(#Name);\
+  /* QString _s(#Name);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
@@ -219,8 +219,8 @@ if (numComp != iDataArray->GetNumberOfComponents()) {\
   gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == gi) {\
     typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
-    QString s = QObject::tr(" - The filter requested an array named '%1' with type %2 from the "\
-      "An Array with name '%3' is stored in the %4 but is of type %5")\
+    QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"\
+      "An Array with name '%4' is stored in the %5 but is of type %6\n")\
     .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());\
     if (NULL != obv) {obv->setErrorCondition(-502);\
     obv->addErrorMessage(obv->getHumanLabel(), s, -502);}\
@@ -329,8 +329,8 @@ virtual bool does##DType##Exist(const QString &name);
 
 #define DOES_DATASET_EXIST_DEFN(Class, DType)\
 bool Class::does##DType##Exist(const QString &name) {\
-  QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
-  return ( iter != m_##DType.end());\
+  /*QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);*/\
+  return  m_##DType.contains(name);\
 }
 
 #endif /* _DATACONTAINERMACROS_H_ */

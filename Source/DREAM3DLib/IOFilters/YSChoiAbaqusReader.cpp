@@ -156,7 +156,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
   else
   {
     bool ok = false;
-    const unsigned int size(1024);
+    //const unsigned int size(1024);
     // Read header from data file to figure out how many points there are
     QFile in(getInputFile());
     if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -215,10 +215,10 @@ void YSChoiAbaqusReader::execute()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  int xpoints, ypoints, zpoints, totalpoints;
+  int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;
   float ***mat;
-  const unsigned int size(1024);
+  //const unsigned int size(1024);
   // Read header from data file to figure out how many points there are
   QFile in(getInputFile());
   if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -245,6 +245,7 @@ void YSChoiAbaqusReader::execute()
       size_t dims[3] = {xpoints, ypoints, zpoints};
       m->setDimensions(dims);
       m->setOrigin(0,0,0);
+
     }
     if (buf.startsWith(RES))
     {
@@ -279,6 +280,7 @@ void YSChoiAbaqusReader::execute()
   buf = in2.readLine();
   QList<QByteArray> tokens = buf.split(' ');
 //  in2 >> word >> word >> word >> word >> word >> word;
+  totalpoints = m->getNumCellTuples();
   dataCheck(false, totalpoints, numgrains+1, 2);
   //Read data file
   int gnum = 0;
@@ -326,7 +328,7 @@ void YSChoiAbaqusReader::execute()
   }
   //Read grain info
   int numpoints;
-  float q0, q1, q2, q3;
+  //float q0, q1, q2, q3;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   avgQuats[0].x = 0.0;
   avgQuats[0].y = 0.0;

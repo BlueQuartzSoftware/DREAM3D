@@ -113,8 +113,6 @@ set_target_properties(HedmReaderTest PROPERTIES FOLDER Test)
 add_test(HedmReaderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/HedmReaderTest)
 
 
-if(0)
-
 
 # --------------------------------------------------------------------------
 # EBSD Tests
@@ -132,18 +130,6 @@ add_executable(AngleFileLoaderTest ${DREAM3DTest_SOURCE_DIR}/AngleFileLoaderTest
 target_link_libraries(AngleFileLoaderTest DREAM3DLib)
 set_target_properties(AngleFileLoaderTest PROPERTIES FOLDER Test)
 
-
-# --------------------------------------------------------------------------
-# Pole Figure Test
-# --------------------------------------------------------------------------
-set(PFTest_SRCS
-    PFTest.cpp
-)
-# and finally this will run moc:
-add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
-target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
-set_target_properties(PFTest PROPERTIES FOLDER Test)
-add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
 
 
 # --------------------------------------------------------------------------
@@ -197,15 +183,6 @@ set_target_properties(DataContainerTest PROPERTIES FOLDER Test)
 add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
 
 
-if(0)
-# THis is just a quick test to make sure that the latest HDF5 can actually write data
-# sets that are larger than 4GB in size
-add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
-target_link_libraries(BigHDF5DatasetTest H5Support ${QT_QTCORE_LIBRARY})
-set_target_properties(BigHDF5DatasetTest PROPERTIES FOLDER Test)
-add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
-endif()
-
 # --------------------------------------------------------------------------
 # DataArray Testing
 # --------------------------------------------------------------------------
@@ -227,40 +204,6 @@ target_link_libraries(DxIOTest DREAM3DLib)
 set_target_properties(DxIOTest PROPERTIES FOLDER Test)
 add_test(DxIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DxIOTest)
 
-if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
-    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
-    message(STATUS "  Please make sure the proper files are available in that directory")
-
-    # --------------------------------------------------------------------------
-    # FindNeighbors Testing
-    # --------------------------------------------------------------------------
-    add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
-    target_link_libraries(FindNeighborsTest DREAM3DLib)
-  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
-    add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
-
-    # --------------------------------------------------------------------------
-    # SyntheticBuilder Test
-    # --------------------------------------------------------------------------
-    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
-    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
-    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
-    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
-endif()
-
-# --------------------------------------------------------------------------
-# Preflight Test
-# --------------------------------------------------------------------------
-#add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
-#target_link_libraries(PreFlightTest DREAM3DLib)
-#add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
-
-
-# --------
-add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
-                                ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
-set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
-
 # --------
 add_executable(ODFTest ${DREAM3DTest_SOURCE_DIR}/ODFTest.cpp)
 target_link_libraries(ODFTest DREAM3DLib)
@@ -274,14 +217,6 @@ set_target_properties(VoxelTest PROPERTIES FOLDER Test)
 add_executable(TextureTest ${DREAM3DTest_SOURCE_DIR}/TextureTest.cpp)
 target_link_libraries(TextureTest DREAM3DLib)
 set_target_properties(TextureTest PROPERTIES FOLDER Test)
-
-# --------
-#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
-#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
-#target_link_libraries(DxTest DREAM3DLib)
 
 
 # --------
@@ -335,6 +270,78 @@ add_test(SyntheticTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticTest)
 # --------------------------------------------------------------------------
 add_executable(UMich ${DREAM3DTest_SOURCE_DIR}/UMich.cpp)
 set_target_properties(UMich PROPERTIES FOLDER Test)
+
+
+if(0)
+# THis is just a quick test to make sure that the latest HDF5 can actually write data
+# sets that are larger than 4GB in size
+add_executable(BigHDF5DatasetTest ${DREAM3DTest_SOURCE_DIR}/BigHDF5DatasetTest.cpp)
+target_link_libraries(BigHDF5DatasetTest H5Support ${QT_QTCORE_LIBRARY})
+set_target_properties(BigHDF5DatasetTest PROPERTIES FOLDER Test)
+add_test(BigHDF5DatasetTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/BigHDF5DatasetTest)
+endif()
+
+
+
+
+if(0)
+
+
+# --------
+add_executable(GrainDataReaderTest ${DREAM3DTest_SOURCE_DIR}/GrainDataReaderTest.cpp
+                                ${DREAM3DTest_SOURCE_DIR}/CSVGrainDataReader.cpp )
+set_target_properties(GrainDataReaderTest PROPERTIES FOLDER Test)
+
+
+# --------------------------------------------------------------------------
+# Pole Figure Test
+# --------------------------------------------------------------------------
+set(PFTest_SRCS
+    PFTest.cpp
+)
+# and finally this will run moc:
+add_executable(PFTest ${PFTest_SRCS} ${PFTest_Generated_MOC_SRCS})
+target_link_libraries(PFTest EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
+set_target_properties(PFTest PROPERTIES FOLDER Test)
+add_test(PFTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PFTest)
+
+if(NOT ${DREAM3D_DATA_DIR} STREQUAL "")
+    message(STATUS "Synthetic Builder Test using ${DREAM3D_DATA_DIR} as data directory.")
+    message(STATUS "  Please make sure the proper files are available in that directory")
+
+    # --------------------------------------------------------------------------
+    # FindNeighbors Testing
+    # --------------------------------------------------------------------------
+    add_executable(FindNeighborsTest ${DREAM3DTest_SOURCE_DIR}/FindNeighborsTest.cpp)
+    target_link_libraries(FindNeighborsTest DREAM3DLib)
+  set_target_properties(FindNeighborsTest PROPERTIES FOLDER Test)
+    add_test(FindNeighborsTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FindNeighborsTest)
+
+    # --------------------------------------------------------------------------
+    # SyntheticBuilder Test
+    # --------------------------------------------------------------------------
+    add_executable(SyntheticBuilderTest ${DREAM3DTest_SOURCE_DIR}/SyntheticBuilderTest.cpp)
+    target_link_libraries(SyntheticBuilderTest DREAM3DLib)
+    set_target_properties(SyntheticBuilderTest PROPERTIES FOLDER Test)
+    add_test(SyntheticBuilderTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/SyntheticBuilderTest)
+endif()
+
+# --------------------------------------------------------------------------
+# Preflight Test
+# --------------------------------------------------------------------------
+#add_executable(PreFlightTest ${DREAM3DTest_SOURCE_DIR}/PreFlightTest.cpp)
+#target_link_libraries(PreFlightTest DREAM3DLib)
+#add_test(PreFlightTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/PreFlightTest)
+
+
+# --------
+#add_executable(DxTest ${DREAM3DTest_SOURCE_DIR}/DxTest.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/GrainGeneratorFunc.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackGrainsGen3.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/Algorithms/PackPrimaryPhases.cpp
+#                        ${DREAM3DProj_SOURCE_DIR}/Source/Plugins/GrainGenerator/StructureReaders/DXStructureReader.cpp  )
+#target_link_libraries(DxTest DREAM3DLib)
+
 
 
 endif()

@@ -45,15 +45,16 @@
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QFile>
+#include <QtCore/QDir>
+
 #include "EbsdLib/TSL/AngReader.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/Common/LogTime.h"
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #define kBufferSize 1024
 
@@ -68,13 +69,13 @@ class AngResFixer
     virtual~AngResFixer() {}
 
     virtual int fixFile();
-    std::string headerWord(char* buf, size_t length);
-    int fixHeaderValues(std::iostream &in,
-                       std::vector<std::string> &headerLines);
+    QString headerWord(QByteArray buf);
+    int fixHeaderValues(QString in,
+                       QVector<QString> &headerLines);
 
     /** @brief Sets the file name of the ebsd file to be read */
-    MXA_INSTANCE_STRING_PROPERTY(FileName)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFileName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FileName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFileName)
     DREAM3D_INSTANCE_PROPERTY(float, XStepFix)
     DREAM3D_INSTANCE_PROPERTY(float, YStepFix)
   private:
@@ -94,62 +95,30 @@ AngResFixer::AngResFixer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AngResFixer::headerWord(char* buf, size_t length)
+int AngResFixer::fixHeaderValues(QString str,
+                                QVector<QString> &headerLines)
 {
-  if (buf[0] != '#')
-  {
-    return std::string("");
-  }
-  // Start at the first character and walk until you find another non-space character
-  size_t i = 1;
-  while(buf[i] == ' ')
-  {
-    ++i;
-  }
-  size_t wordStart = i;
-  while(1)
-  {
-    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
-    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
-    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
-    else { break;}
-  }
-  size_t wordEnd = i;
-
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
-  return word;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AngResFixer::fixHeaderValues(std::iostream &in,
-                                std::vector<std::string> &headerLines)
-{
+  QTextStream in(&str);
   int err = 0;
-  char buf[kBufferSize];
-  ::memset(buf, 0, kBufferSize);
-  in.getline(buf, kBufferSize);
-  while (!in.eof() )
+  QString buf = in.readLine();
+  while (!in.atEnd() )
   {
-    int i = 0;
-    while (buf[i] != 0) { ++i; }
-    buf[i] = 10; //Add back in the \n character
 
-    std::string word = headerWord(buf, kBufferSize);
-    if (word.size() > 0 && word.compare(Ebsd::Ang::XStep) == 0)
+    QStringList tokens = buf.split(' ');
+    QString word(tokens[1]);
+
+    if (word.size() > 0 && word.startsWith(Ebsd::Ang::XStep) == 0)
     {
-      ::memset(buf, 0, kBufferSize);
-      snprintf(buf, kBufferSize, "# XSTEP: %06f\r\n", m_XStepFix);
+      QString fix = QString("# XSTEP: %1\r\n").arg(m_XStepFix);
+      headerLines.push_back(fix);
     }
-    else if (word.size() > 0 && word.compare(Ebsd::Ang::YStep) == 0)
+    else if (word.size() > 0 && word.startsWith(Ebsd::Ang::YStep) == 0)
     {
-      ::memset(buf, 0, kBufferSize);
-      snprintf(buf, kBufferSize, "# YSTEP: %06f\r\n", m_YStepFix);
+      QString fix = QString("# YSTEP: %1\r\n").arg(m_YStepFix);
+      headerLines.push_back(fix);
     }
-    headerLines.push_back(std::string(buf));
-    ::memset(buf, 0, kBufferSize);
-    in.getline(buf, kBufferSize);
+
+    buf = in.readLine();
   }
   return err;
 }
@@ -173,17 +142,17 @@ int AngResFixer::fixFile()
     return err;
   }
 
-  std::vector<std::string> headerLines;
-  std::stringstream in(reader.getOriginalHeader());
+  QVector<QString> headerLines;
+  QString in(reader.getOriginalHeader());
   err = fixHeaderValues(in, headerLines);
 
 
-  FILE* out = fopen(m_OutputFileName.c_str(), "wb");
+  FILE* out = fopen(m_OutputFileName.toAscii().data(), "wb");
 
   // Write out the header
-  for (std::vector<std::string>::iterator hline = headerLines.begin(); hline != headerLines.end(); ++hline )
+  for (QVector<QString>::iterator hline = headerLines.begin(); hline != headerLines.end(); ++hline )
   {
-    fprintf(out, "%s", (*hline).c_str());
+    fprintf(out, "%s", (*hline).toAscii().data());
   }
 
   float* p1 = reader.getPhi1Pointer();
@@ -214,7 +183,9 @@ int AngResFixer::fixFile()
 
 }
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
   std::cout << "Starting Resolution Fixer" << std::endl;
@@ -222,7 +193,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete());
+    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete().toStdString());
 
     TCLAP::ValueArg<float> xres( "x", "xres", "New X Resolution", true, 0.0f, "New X Resolution");
     cmd.add(xres);
@@ -251,23 +222,25 @@ int main(int argc, char **argv)
     std::cout << "New X Step: " << xres.getValue() << std::endl;
     std::cout << "New Y Step: " << yres.getValue() << std::endl;
 
-
-    if (MXADir::exists(outputDir.getValue()) == false)
+    QDir dir(QString::fromStdString(outputDir.getValue()));
+    if (dir.exists() == false)
     {
-      MXADir::mkdir(outputDir.getValue(), true);
+      dir.mkpath(".");
     }
 
-    std::vector<std::string> entryList = MXADir::entryList(inputDir.getValue());
-    for (std::vector<std::string>::iterator file = entryList.begin(); file != entryList.end(); ++file )
+    QDir inputD( QString::fromStdString(inputDir.getValue()));
+    QStringList entryList = inputD.entryList();
+    foreach(QString file, entryList)
     {
-      if (MXAFileInfo::extension(*file).compare("ang") == 0 )
+      QFileInfo fi(file);
+      if (fi.suffix().compare("ang") == 0 )
       {
-        std::cout << "Fixing file " << *file << std::endl;
+        std::cout << "Fixing file " << file.toStdString() << std::endl;
         AngResFixer fixer;
-        fixer.setFileName(inputDir.getValue() + MXADir::Separator + *file);
+        fixer.setFileName( QString::fromStdString(inputDir.getValue()) + "/" + fi.fileName() );
         fixer.setXStepFix(xres.getValue());
         fixer.setYStepFix(yres.getValue());
-        std::string outFile = outputDir.getValue() + MXADir::Separator + MXAFileInfo::filename(*file);
+        QString outFile = QString::fromStdString(outputDir.getValue()) + "/" + fi.fileName();
         fixer.setOutputFileName(outFile);
         fixer.fixFile();
         std::cout << "   + Complete" << std::endl;
@@ -277,7 +250,7 @@ int main(int argc, char **argv)
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
-    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
+    std::cerr  << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
   return EXIT_SUCCESS;

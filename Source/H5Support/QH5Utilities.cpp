@@ -109,13 +109,17 @@ herr_t QH5Utilities::closeHDF5Object(hid_t obj_id)
 //--------------------------------------------------------------------//
 herr_t QH5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<QString> &names)
 {
+
   std::list<std::string> sNames;
-  foreach(QString name, names)
+  herr_t err = H5Utilities::getGroupObjects(loc_id, typeFilter, sNames);
+
+  names.clear();
+  for(std::list<std::string>::iterator name = sNames.begin(); name != sNames.end(); ++name)
   {
-    sNames.push_back(name.toStdString());
+    names.push_back( QString::fromStdString(*name));
   }
 
-  return H5Utilities::getGroupObjects(loc_id, typeFilter, sNames);
+  return err;
 }
 
 

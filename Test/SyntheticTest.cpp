@@ -37,10 +37,10 @@
 
 #include <string>
 
-#include "MXA/Common/LogTime.h"
+#include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"

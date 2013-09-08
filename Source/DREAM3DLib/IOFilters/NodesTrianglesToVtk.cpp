@@ -41,6 +41,8 @@
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -291,9 +293,9 @@ void NodesTrianglesToVtk::execute()
       break;
     }
     if (m_WriteBinaryFile == true) {
-      pos[0] = qToBigEndian(pos[0]);
-      pos[1] = qToBigEndian(pos[1]);
-      pos[2] = qToBigEndian(pos[2]);
+      DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
+      DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
       totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
       if (totalWritten != sizeof(float) * 3)
       {
@@ -326,10 +328,10 @@ void NodesTrianglesToVtk::execute()
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      tData[0] = qToBigEndian(tData[0]);
-      tData[1] = qToBigEndian(tData[1]);
-      tData[2] = qToBigEndian(tData[2]);
-      tData[3] = qToBigEndian(tData[3]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[3]);
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -337,7 +339,7 @@ void NodesTrianglesToVtk::execute()
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        tData[0] = qToBigEndian(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }
@@ -424,7 +426,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vt
       break;
     }
     swapped = nodeKind;
-    swapped = qToBigEndian(swapped);
+    DREAM3D::Endian::FromSystemToBig::convert(swapped);
 
     data[i] = swapped;
   }
@@ -510,13 +512,13 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE*
     if (nread != 9) {
       return -1;
     }
-    tData[0] = qToBigEndian(tData[0]);
+    DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
     tri_ids[i*offset] = tData[0];
-    tData[7] = qToBigEndian(tData[7]);
+    DREAM3D::Endian::FromSystemToBig::convert(tData[7]);
     cell_data[i*offset] = tData[7];
     if (false == conformalMesh)
     {
-      tData[8] = qToBigEndian(tData[8]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[8]);
       cell_data[i*offset + 1] = tData[8];
       tri_ids[i*offset + 1] = tData[0];
     }

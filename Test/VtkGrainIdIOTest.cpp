@@ -61,11 +61,11 @@ class GenerateGrainIds : public AbstractFilter
 	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){};
-    virtual const std::string getGroupName()
+    virtual const QString getGroupName()
     {
       return "UnitTest";
     }
-    virtual const std::string getHumanLabel()
+    virtual const QString getHumanLabel()
     {
       return "Generate Grain Ids";
     }
@@ -76,7 +76,7 @@ class GenerateGrainIds : public AbstractFilter
       if(NULL == m)
       {
         setErrorCondition(-1);
-        std::stringstream ss;
+        QStringstream ss;
         ss << " DataContainer was NULL";
         setErrorMessage(ss.str());
         return;
@@ -118,7 +118,7 @@ class GenerateGrainIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
     {
       setErrorCondition(0);
-      std::stringstream ss;
+      QStringstream ss;
       VoxelDataContainer* m = getVoxelDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
