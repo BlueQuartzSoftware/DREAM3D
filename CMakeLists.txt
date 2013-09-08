@@ -259,20 +259,20 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
-
-
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
-
-
-#--------------------- START MASSIVE COMMENT OUT
-if(0)
-
 
 # Build the static QtSupport library - which MUST be a static library or the linking
 # will not work due to signals/slots mechanism.
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
+
+
+
+
+#--------------------- START MASSIVE COMMENT OUT
+if(0)
+
 
 # --------------------------------------------------------------------
 # Build the FilterWidgets Static Library which is ONLY needed by this plugin

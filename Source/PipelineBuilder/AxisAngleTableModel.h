@@ -158,7 +158,7 @@ class AxisAngleTableModel : public QAbstractTableModel
 
     virtual void setColumnData(int col, QVector<float> &data);
 
-    virtual void setRowData(int row, float angle, std::string axis);
+    virtual void setRowData(int row, float angle, QString axis);
 
     virtual void setInitialValues();
 

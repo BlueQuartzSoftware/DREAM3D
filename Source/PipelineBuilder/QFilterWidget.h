@@ -145,7 +145,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     /**
      * @brief This method updates a combo box that is holding a list of Array Names from the data container
      */
-    virtual void updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName);
+    virtual void updateArrayNameComboBox(const QList<QString> &arrayNames, QString propertyName);
 
     /**
      * @brief updateArraySelectionWidget This method allows the ArraySelectionWidget to update it's lists of arrays
@@ -231,8 +231,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     virtual void mousePressEvent( QMouseEvent* event );
     virtual void mouseReleaseEvent( QMouseEvent* event );
     virtual void mouseMoveEvent( QMouseEvent* event );
-    virtual QString getFileExtension(std::string propName);
-    virtual QString getFileType(std::string propName);
+    virtual QString getFileExtension(QString propName);
+    virtual QString getFileType(QString propName);
 
     void setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);
     void setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int optIndex, FilterParameter *option, QLabel *label);

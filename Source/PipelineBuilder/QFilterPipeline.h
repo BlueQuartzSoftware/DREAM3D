@@ -63,7 +63,7 @@ class QFilterPipeline : public QObject, public FilterPipeline
      * @brief Sends a Vector of PipelineMessage to the observers
      * @param messages The messages to send.
      */
-    virtual void sendPipelineMessages(std::vector<PipelineMessage> messages);
+    virtual void sendPipelineMessages(QVector<PipelineMessage> messages);
 
     /**
      * @brief This method is called from the run() method just before exiting and

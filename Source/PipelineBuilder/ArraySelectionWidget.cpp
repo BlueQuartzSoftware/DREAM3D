@@ -131,22 +131,22 @@ void ArraySelectionWidget::populateArrayNames(VolumeDataContainer::Pointer vldc,
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer vldc)
 {
-  std::list<std::string> vertexNames = vldc->getVertexArrayNameList();
+  QList<QString> vertexNames = vldc->getVertexArrayNameList();
   populateArrayList(volumeVertexArrayList, vertexNames, volumeVertexCB);
 
-  std::list<std::string> edgeNames = vldc->getEdgeArrayNameList();
+  QList<QString> edgeNames = vldc->getEdgeArrayNameList();
   populateArrayList(volumeEdgeArrayList, edgeNames, volumeEdgeCB);
 
-  std::list<std::string> faceNames = vldc->getFaceArrayNameList();
+  QList<QString> faceNames = vldc->getFaceArrayNameList();
   populateArrayList(volumeFaceArrayList, faceNames, volumeFaceCB);
 
-  std::list<std::string> cellNames = vldc->getCellArrayNameList();
+  QList<QString> cellNames = vldc->getCellArrayNameList();
   populateArrayList(volumeCellArrayList, cellNames, volumeCellCB);
 
-  std::list<std::string> fieldNames = vldc->getFieldArrayNameList();
+  QList<QString> fieldNames = vldc->getFieldArrayNameList();
   populateArrayList(volumeFieldArrayList, fieldNames, volumeFieldCB);
 
-  std::list<std::string> ensembleNames = vldc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = vldc->getEnsembleArrayNameList();
   populateArrayList(volumeEnsembleArrayList, ensembleNames, volumeEnsembleCB);
 }
 
@@ -155,19 +155,19 @@ void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc)
 {
-  std::list<std::string> vertexNames = sdc->getVertexArrayNameList();
+  QList<QString> vertexNames = sdc->getVertexArrayNameList();
   populateArrayList(surfaceVertexArrayList, vertexNames, surfaceVertexArraysCB);
 
-  std::list<std::string> edgeNames = sdc->getEdgeArrayNameList();
+  QList<QString> edgeNames = sdc->getEdgeArrayNameList();
   populateArrayList(surfaceEdgeArrayList, edgeNames, surfaceEdgeArraysCB);
 
-  std::list<std::string> faceNames = sdc->getFaceArrayNameList();
+  QList<QString> faceNames = sdc->getFaceArrayNameList();
   populateArrayList(surfaceFaceArrayList, faceNames, surfaceFaceArraysCB);
 
-  std::list<std::string> fieldNames = sdc->getFieldArrayNameList();
+  QList<QString> fieldNames = sdc->getFieldArrayNameList();
   populateArrayList(surfaceFieldArrayList, fieldNames, surfaceFieldArraysCB);
 
-  std::list<std::string> ensembleNames = sdc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = sdc->getEnsembleArrayNameList();
   populateArrayList(surfaceEnsembleArrayList, ensembleNames, surfaceEnsembleArraysCB);
 }
 
@@ -176,16 +176,16 @@ void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Point
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc)
 {
-  std::list<std::string> vertexNames = edc->getVertexArrayNameList();
+  QList<QString> vertexNames = edc->getVertexArrayNameList();
   populateArrayList(edgeVertexArrayList, vertexNames, edgeVertexCB);
 
-  std::list<std::string> edgeNames = edc->getEdgeArrayNameList();
+  QList<QString> edgeNames = edc->getEdgeArrayNameList();
   populateArrayList(edgeEdgeArrayList, edgeNames, edgeEdgeCB);
 
-  std::list<std::string> fieldNames = edc->getFieldArrayNameList();
+  QList<QString> fieldNames = edc->getFieldArrayNameList();
   populateArrayList(edgeFieldArrayList, fieldNames, edgeFieldCB);
 
-  std::list<std::string> ensembleNames = edc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = edc->getEnsembleArrayNameList();
   populateArrayList(edgeEnsembleArrayList, ensembleNames, edgeEnsembleCB);
 }
 
@@ -194,13 +194,13 @@ void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer vdc)
 {
-  std::list<std::string> vertexNames = vdc->getVertexArrayNameList();
+  QList<QString> vertexNames = vdc->getVertexArrayNameList();
   populateArrayList(vertexVertexArrayList, vertexNames, NULL);
 
-  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
+  QList<QString> fieldNames = vdc->getFieldArrayNameList();
   populateArrayList(vertexFieldArrayList, fieldNames, NULL);
 
-  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = vdc->getEnsembleArrayNameList();
   populateArrayList(vertexEnsembleArrayList, ensembleNames, NULL);
 }
 
@@ -208,13 +208,13 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<std::string> &arrayNames, QCheckBox* cb)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QString> &arrayNames, QCheckBox* cb)
 {
   // Convert from STL container to Qt Container then pass through to the next method.
   QStringList qArrayNames;
-  for(std::list<std::string>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-    qArrayNames << QString::fromStdString(*iter);
+    qArrayNames << (*iter);
   }
   populateArrayList(listWidget, qArrayNames, cb);
 }
@@ -260,7 +260,7 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
   }
 
 
-//  std::cout << "List Widget: " << listWidget->objectName().toStdString() << " Count: " << listWidget->count() << std::endl;
+//  qDebug() << "List Widget: " << listWidget->objectName() << " Count: " << listWidget->count() << "\n";
   listWidget->blockSignals(false);
 
 }
@@ -520,8 +520,8 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
 
 
 #define REMOVE_ARRAYS_HELPER(dtype, dataContainer, grouping, op)\
-{std::set<std::string> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
-  for(std::set<std::string>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
+{QSet<QString> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
+  for(QSet<QString>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
   dataContainer->remove##grouping##Data(*iter);\
   }}
 
@@ -592,14 +592,14 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VolumeDataConta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
+QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
 {
-  std::set<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
   {
     if (listWidget->item(i)->checkState() == Qt::Checked)
     {
-      selectedArrays.insert(listWidget->item(i)->text().toStdString());
+      selectedArrays.insert(listWidget->item(i)->text());
     }
   }
   return selectedArrays;
@@ -608,18 +608,18 @@ std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::setSelectedArrays(std::set<std::string> names, QListWidget*listWidget)
+void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*listWidget)
 {
   if (names.empty() == true)
   {
     return;
   }
-  std::set<std::string>::iterator iter = names.begin();
+  QSet<QString>::iterator iter = names.begin();
   for (; iter != names.end(); iter++)
   {
     for(qint32 i = 0; i < listWidget->count(); ++i)
     {
-      if (listWidget->item(i)->text().toStdString() == *iter)
+      if (listWidget->item(i)->text() == *iter)
       {
         listWidget->item(i)->setCheckState(Qt::Checked);
       }
@@ -630,14 +630,14 @@ void ArraySelectionWidget::setSelectedArrays(std::set<std::string> names, QListW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
+QSet<QString> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
 {
-  std::set<std::string> non_selectedArrays;
+  QSet<QString> non_selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
   {
     if (listWidget->item(i)->checkState() == Qt::Unchecked)
     {
-      non_selectedArrays.insert(listWidget->item(i)->text().toStdString());
+      non_selectedArrays.insert(listWidget->item(i)->text());
     }
   }
   return non_selectedArrays;
@@ -734,14 +734,14 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
 void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
 {
 
-  std::set<std::string> selections = getSelectedArrays(widget);
+  QSet<QString> selections = getSelectedArrays(widget);
   int count = selections.size();
   prefs.beginWriteArray(name + "_" + prefix, count);
   count = 0;
-  for(std::set<std::string>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
+  for(QSet<QString>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
   {
     prefs.setArrayIndex(count++);
-    prefs.setValue(prefix, QString::fromStdString(*iter));
+    prefs.setValue(prefix, (*iter));
   }
   prefs.endArray();
 }
