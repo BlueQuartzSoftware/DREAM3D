@@ -303,11 +303,11 @@ void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Po
   }
   else if (m_ArrayListType == FieldListType)
   {
-    cellNames = vdc->getFieldArrayNameList();
+    cellNames = vdc->getVertexFieldArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
-    cellNames = vdc->getEnsembleArrayNameList();
+    cellNames = vdc->getVertexEnsembleArrayNameList();
   }
   m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }

@@ -70,7 +70,6 @@ public:
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainerWriter::EdgeDataContainerWriter() :
-  AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
   m_XdmfPtr(NULL)
@@ -231,14 +230,14 @@ void EdgeDataContainerWriter::execute()
   }
 
 
-  err = writeFieldData(dcGid);
+  err = writeEdgeFieldData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEnsembleData(dcGid);
+  err = writeEdgeEnsembleData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -475,32 +474,6 @@ int EdgeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPat
   return err;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeVertices(hid_t dcGid)
-{
-  EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
-
-  int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
-
-  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
-
-  herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
-  }
-  return err;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -553,61 +526,6 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
     return err;
   }
 
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
-{
-  std::stringstream ss;
-  int err = 0;
-  EdgeDataContainer* sm = getEdgeDataContainer();
-
-  // Write the Vertex Data
-  err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_VERTEX_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = sm->getVertexArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
-    notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = sm->getVertexData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-    writeXdmfAttributeData(H5_VERTEX_DATA_GROUP_NAME, array, "Node");
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
   return err;
 }
 
@@ -675,7 +593,7 @@ int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
@@ -723,10 +641,10 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
   typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getFieldArrayNameList();
+  NameListType names = m->getEdgeFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getFieldData(names.front());
+    IDataArray::Pointer array = m->getEdgeFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -740,7 +658,7 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getFieldData(*iter);
+    IDataArray::Pointer array = m->getEdgeFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -828,7 +746,7 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
@@ -857,10 +775,10 @@ int EdgeDataContainerWriter::writeEnsembleData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getEnsembleArrayNameList();
+  NameListType names = m->getEdgeEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getEnsembleData(*iter);
+    IDataArray::Pointer array = m->getEdgeEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {

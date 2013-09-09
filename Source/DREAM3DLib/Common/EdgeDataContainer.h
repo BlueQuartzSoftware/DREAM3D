@@ -59,6 +59,9 @@
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+
+#include "DREAM3DLib/Common/VertexDataContainer.h"
+
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
@@ -70,7 +73,7 @@
  * @date Sep 28, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
+class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
 {
   public:
     DREAM3D_SHARED_POINTERS (EdgeDataContainer)
@@ -79,23 +82,19 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
 
     virtual ~EdgeDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
-
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (EdgeEnsemble)
+    
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
     DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::EdgeListPointer_t, Edges)
 
-    DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(EdgeData)
-    DOES_DATASET_EXIST_DECL(FieldData)
-    DOES_DATASET_EXIST_DECL(EnsembleData)
+    DOES_DATASET_EXIST_DECL(EdgeFieldData)
+    DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
     /**
      * @brief buildMeshLinks Creates the list of Faces for each vertex that the vertex is a part of
@@ -118,53 +117,6 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param vertLinks
      */
     void setMeshLinks(MeshLinks::Pointer vertLinks);
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getVertexData(const std::string &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method.
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeVertexData(const std::string &name);
-
-    /**
-     * @brief Removes all the Point Arrays
-     */
-    void clearVertexData();
-
-    /**
-     * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Point group
-     * @return
-     */
-    std::list<std::string> getVertexArrayNameList();
-
-    /**
-     * @brief Returns the total number of arrays that are stored in the Point group
-     * @return
-     */
-    int getNumVertexArrays();
-
-    /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
-     * in during a set of filtering operations then the a value of '32' would be returned.
-     * @return
-     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -204,14 +156,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeFieldData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getEdgeFieldData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -219,52 +171,52 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeEdgeFieldData(const std::string &name);
 
     /**
      * @brief Removes all the Field Arrays
      */
-    void clearFieldData();
+    void clearEdgeFieldData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFieldArrayNameList();
+    std::list<std::string> getEdgeFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
      * @return
      */
-    int getNumFieldArrays();
+    int getNumEdgeFieldArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeFieldTuples)
 
     /**
      * @brief Resizes all of the Field Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFieldDataArrays(size_t size);
+    void resizeEdgeFieldDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeEnsembleData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getEdgeEnsembleData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -272,38 +224,38 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeEdgeEnsembleData(const std::string &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
      */
-    void clearEnsembleData();
+    void clearEdgeEnsembleData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getEnsembleArrayNameList();
+    std::list<std::string> getEdgeEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group
      * @return
      */
-    int getNumEnsembleArrays();
+    int getNumEdgeEnsembleArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeEnsembleTuples)
 
     /**
      * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeEnsembleDataArrays(size_t size);
+    void resizeEdgeEnsembleDataArrays(size_t size);
 
 
 
@@ -312,10 +264,9 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+     std::map<std::string, IDataArray::Pointer> m_EdgeFieldData;
+     std::map<std::string, IDataArray::Pointer> m_EdgeEnsembleData;
 
      MeshLinks::Pointer m_MeshLinks;
 

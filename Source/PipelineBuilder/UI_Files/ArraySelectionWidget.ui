@@ -6,7 +6,7 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>661</width>
+    <width>701</width>
     <height>300</height>
    </rect>
   </property>
@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="currentIndex">
-   <number>3</number>
+   <number>1</number>
   </property>
   <widget class="QWidget" name="vertex_data">
    <attribute name="title">
@@ -40,10 +40,10 @@
      <widget class="QListWidget" name="vertexVertexArrayList"/>
     </item>
     <item row="1" column="1">
-     <widget class="QListWidget" name="vertexFieldArrayList"/>
+     <widget class="QListWidget" name="vertexVertexFieldArrayList"/>
     </item>
     <item row="1" column="2">
-     <widget class="QListWidget" name="vertexEnsembleArrayList"/>
+     <widget class="QListWidget" name="vertexVertexEnsembleArrayList"/>
     </item>
     <item row="0" column="0">
      <widget class="QCheckBox" name="vertexVertexCB">
@@ -59,7 +59,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="1">
-     <widget class="QCheckBox" name="vertexFieldCB">
+     <widget class="QCheckBox" name="vertexVertexFieldCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -72,7 +72,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="vertexEnsembleCB">
+     <widget class="QCheckBox" name="vertexVertexEnsembleCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -101,7 +101,7 @@ font-size: 11pt;
      <number>0</number>
     </property>
     <item row="1" column="2">
-     <widget class="QListWidget" name="edgeFieldArrayList"/>
+     <widget class="QListWidget" name="edgeEdgeFieldArrayList"/>
     </item>
     <item row="1" column="1">
      <widget class="QListWidget" name="edgeEdgeArrayList"/>
@@ -110,7 +110,7 @@ font-size: 11pt;
      <widget class="QListWidget" name="edgeVertexArrayList"/>
     </item>
     <item row="1" column="3">
-     <widget class="QListWidget" name="edgeEnsembleArrayList"/>
+     <widget class="QListWidget" name="edgeEdgeEnsembleArrayList"/>
     </item>
     <item row="0" column="1">
      <widget class="QCheckBox" name="edgeEdgeCB">
@@ -139,7 +139,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="2">
-     <widget class="QCheckBox" name="edgeFieldCB">
+     <widget class="QCheckBox" name="edgeEdgeFieldCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -152,7 +152,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="3">
-     <widget class="QCheckBox" name="edgeEnsembleCB">
+     <widget class="QCheckBox" name="edgeEdgeEnsembleCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {

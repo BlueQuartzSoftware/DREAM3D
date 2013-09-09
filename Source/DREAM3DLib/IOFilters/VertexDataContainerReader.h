@@ -63,10 +63,11 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
+    typedef std::list<std::string> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -123,6 +124,17 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
+    int gatherData(bool preflight);
+    int gatherVertexData(hid_t dcGid, bool preflight);
+    int gatherVertexFieldData(hid_t dcGid, bool preflight);
+    int gatherVertexEnsembleData(hid_t dcGid, bool preflight);
+    int readVertices(hid_t dcGid);
+
+
+    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead);
 
   private:
 

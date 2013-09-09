@@ -50,12 +50,10 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainerReader::EdgeDataContainerReader() :
-  AbstractFilter(),
   m_HdfFileId(-1),
-  m_ReadVertexData(true),
   m_ReadEdgeData(true),
-  m_ReadFieldData(true),
-  m_ReadEnsembleData(true),
+  m_ReadEdgeFieldData(true),
+  m_ReadEdgeEnsembleData(true),
   m_ReadAllArrays(false)
 {
   setupFilterParameters();
@@ -195,10 +193,10 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   err = gatherEdgeData(dcGid, preflight);
 
 
-  err = gatherFieldData(dcGid, preflight);
+  err = gatherEdgeFieldData(dcGid, preflight);
 
 
-  err = gatherEnsembleData(dcGid, preflight);
+  err = gatherEdgeEnsembleData(dcGid, preflight);
 
   // Now finally close the group
   H5Gclose(dcGid); // Close the Data Container Group
@@ -211,10 +209,10 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
+int EdgeDataContainerReader::gatherEdgeFieldData(hid_t dcGid, bool preflight)
 {
     std::vector<std::string> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
+    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_EdgeFieldArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -227,10 +225,10 @@ int EdgeDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
+int EdgeDataContainerReader::gatherEdgeEnsembleData(hid_t dcGid, bool preflight)
 {
     std::vector<std::string> readNames;
-    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
+    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EdgeEnsembleArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -238,49 +236,6 @@ int EdgeDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
       return -1;
     }
     return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
-{
-  int err = 0;
-  std::vector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-
-  if (true == preflight)
-  {
-    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
-    if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
-    {
-      DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-      getEdgeDataContainer()->setVertices(vertices);
-    }
-  }
-  else
-  {
-    err = readVertices(dcGid);
-    if (err < 0)
-    {
-    }
-  }
-  // This will conditionally read all the MeshLinks data if preflight is true
-  err = readMeshLinks(dcGid, preflight);
-  if (err < 0)
-  {
-  }
-
-  // Read all the Vertex Attribute data
-  std::vector<std::string> readNames;
-  err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
-  if(err == -154) // The group was not in the file so just ignore that error
-  {
-    err = 0;
-  }
-
-  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -314,36 +269,6 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
   {
     err = 0;
   }
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readVertices(hid_t dcGid)
-{
-  EdgeDataContainer* sm = getEdgeDataContainer();
-  herr_t err = 0;
-  std::vector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    notifyErrorMessage("No Vertices Data in Data file", getErrorCondition());
-    return err;
-  }
-  // Allocate the data
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
-  // Read the data
-  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
-  err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
-  }
-  sm->setVertices(verticesPtr);
   return err;
 }
 
@@ -390,16 +315,6 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
     MeshLinks->deserializeLinks(buffer, nVerts);
     sm->setMeshLinks(MeshLinks);
   }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readVertexAttributeData(hid_t dcGid)
-{
-  int err = -1;
 
   return err;
 }
@@ -480,11 +395,11 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &grou
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getEdgeDataContainer()->addEdgeFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getEdgeDataContainer()->addEdgeEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

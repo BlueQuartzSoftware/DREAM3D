@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/IOFilters/VertexDataContainerWriter.h"
 
 /**
  * @class EdgeDataContainerWriter EdgeDataContainerWriter.h DREAm3DLib/IOFilters/EdgeDataContainerWriter.h
@@ -52,7 +52,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(EdgeDataContainerWriter)
@@ -128,14 +128,12 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
 
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
-    int writeVertices(hid_t dcGid);
     int writeEdges(hid_t dcGid);
     int writeMeshLinks(hid_t dcGid);
     int writeMeshFaceNeighborLists(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
     int writeEdgeAttributeData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
+    int writeEdgeFieldData(hid_t dcGid);
+    int writeEdgeEnsembleData(hid_t dcGid);
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();

@@ -38,6 +38,9 @@
 
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/HDF5/H5DataArrayReader.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -109,7 +112,14 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
   }
+  else if (preflight == true)
+  {
+    int err = gatherData(preflight);
+    if (err < 0)
+    {
 
+    }
+  }
 }
 
 
@@ -131,17 +141,230 @@ void VertexDataContainerReader::execute()
   int err = 0;
   std::stringstream ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
-  setErrorCondition(0);
 
-  /* Place all your code to execute your filter here. */
+  dataCheck(false, 1, 1, 1);
+
+  err = gatherData(false);
+  setErrorCondition(err);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::gatherData(bool preflight)
+{
+  std::stringstream ss;
+
+  if(m_HdfFileId < 0)
+  {
+    ss.str("");
+    ss << ": Error opening input file";
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return -1;
+  }
+
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.c_str(), H5P_DEFAULT );
+  if (dcGid < 0)
+  {
+    ss.str("");
+    ss << "Error opening Group " << DREAM3D::HDF5::VertexDataContainerName << std::endl;
+    setErrorCondition(-61);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
+  }
+
+  HDF_ERROR_HANDLER_OFF
+  int err = 0;
+
+  err = gatherVertexData(dcGid, preflight);
+
+  err = gatherVertexFieldData(dcGid, preflight);
+
+  err = gatherVertexEnsembleData(dcGid, preflight);
+
+  // Now finally close the group
+  H5Gclose(dcGid); // Close the Data Container Group
+
+  HDF_ERROR_HANDLER_ON
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
+{
+  int err = 0;
+  std::vector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
+
+  if (true == preflight)
+  {
+    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
+    {
+      DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+      getVertexDataContainer()->setVertices(vertices);
+    }
+  }
+  else
+  {
+    err = readVertices(dcGid);
+    if (err < 0)
+    {
+    }
+  }
+
+  // Read all the Vertex Attribute data
+  std::vector<std::string> readNames;
+  err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
+  if(err == -154) // The group was not in the file so just ignore that error
+  {
+    err = 0;
+  }
+
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::gatherVertexFieldData(hid_t dcGid, bool preflight)
+{
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, m_VertexFieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::gatherVertexEnsembleData(hid_t dcGid, bool preflight)
+{
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_VertexEnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::readVertices(hid_t dcGid)
+{
+  VertexDataContainer* vdc = getVertexDataContainer();
+  herr_t err = 0;
+  std::vector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+  if (err < 0)
+  {
+    setErrorCondition(err);
+    notifyErrorMessage("No Vertices Data in Data file", getErrorCondition());
+    return err;
+  }
+  // Allocate the data
+  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
+  // Read the data
+  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
+  err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
+  if (err < 0) {
+    setErrorCondition(err);
+    notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
+  }
+  vdc->setVertices(verticesPtr);
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int VertexDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead)
+{
+  std::stringstream ss;
+  int err = 0;
+  //Read the Cell Data
+  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  if(gid < 0)
+  {
+    return -154;
+  }
+
+  NameListType names;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::string classType;
+  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
+  {
+    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    namesRead.push_back(*iter);
+    classType.clear();
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    IDataArray::Pointer dPtr = IDataArray::NullPointer();
+
+    if(classType.find("DataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("StringDataArray") == 0)
+    {
+      dPtr = H5DataArrayReader::readStringDataArray(gid, *iter, preflight);
+    }
+    else if(classType.compare("vector") == 0)
+    {
+
+    }
+    else if(classType.compare("NeighborList<T>") == 0)
+    {
+      dPtr = H5DataArrayReader::readNeighborListData(gid, *iter, preflight);
+    }
+    else if ( (*iter).compare(DREAM3D::EnsembleData::Statistics) == 0)
+    {
+      StatsDataArray::Pointer statsData = StatsDataArray::New();
+      statsData->SetName(DREAM3D::EnsembleData::Statistics);
+      statsData->readH5Data(gid);
+      dPtr = statsData;
+    }
+
+    if (NULL != dPtr.get())
+    {
+      if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
+      {
+        getVertexDataContainer()->addVertexData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      {
+        getVertexDataContainer()->addVertexFieldData(dPtr->GetName(), dPtr);
+      }
+      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      {
+        getVertexDataContainer()->addVertexEnsembleData(dPtr->GetName(), dPtr);
+      }
+    }
+
+  }
+  H5Gclose(gid); // Close the Cell Group
+  return err;
 }

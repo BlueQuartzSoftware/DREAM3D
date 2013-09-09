@@ -391,8 +391,8 @@ void DataContainerReader::execute()
     eReader->setHdfFileId(fileId);
     eReader->setVertexArraysToRead(m_SelectedEdgeVertexArrays);
     eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
-    eReader->setFieldArraysToRead(m_SelectedEdgeFieldArrays);
-    eReader->setEnsembleArraysToRead(m_SelectedEdgeEnsembleArrays);
+    eReader->setEdgeFieldArraysToRead(m_SelectedEdgeFieldArrays);
+    eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEnsembleArrays);
     eReader->setReadAllArrays(m_ReadAllArrays);
     eReader->setEdgeDataContainer(getEdgeDataContainer());
     eReader->setObservers(getObservers());
@@ -410,21 +410,21 @@ void DataContainerReader::execute()
   /* READ THE Vertex DATA TO THE HDF5 FILE */
   if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
   {
-    VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
-    smReader->setHdfFileId(fileId);
-    smReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-    smReader->setFieldArraysToRead(m_SelectedVertexFieldArrays);
-    smReader->setEnsembleArraysToRead(m_SelectedVertexEnsembleArrays);
-    smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setVertexDataContainer(getVertexDataContainer());
-    smReader->setObservers(getObservers());
+    VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
+    vReader->setHdfFileId(fileId);
+    vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
+    vReader->setVertexFieldArraysToRead(m_SelectedVertexFieldArrays);
+    vReader->setVertexEnsembleArraysToRead(m_SelectedVertexEnsembleArrays);
+    vReader->setReadAllArrays(m_ReadAllArrays);
+    vReader->setVertexDataContainer(getVertexDataContainer());
+    vReader->setObservers(getObservers());
     ss.str("");
     ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
-    smReader->setMessagePrefix(ss.str());
-    smReader->execute();
-    if (smReader->getErrorCondition() < 0)
+    vReader->setMessagePrefix(ss.str());
+    vReader->execute();
+    if (vReader->getErrorCondition() < 0)
     {
-      notifyErrorMessage("Error Reading the Solid Mesh Data", smReader->getErrorCondition());
+      notifyErrorMessage("Error Reading the Solid Mesh Data", vReader->getErrorCondition());
       return;
     }
   }

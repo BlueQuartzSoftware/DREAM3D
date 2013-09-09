@@ -124,8 +124,8 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
                                                 getSelectedArrays(edgeFieldArrayList),
                                                 getSelectedArrays(edgeEnsembleArrayList));
       filter->setVertexSelectedArrayNames( getSelectedArrays(vertexVertexArrayList),
-                                                getSelectedArrays(vertexFieldArrayList),
-                                                getSelectedArrays(vertexEnsembleArrayList));
+                                                getSelectedArrays(vertexVertexFieldArrayList),
+                                                getSelectedArrays(vertexVertexEnsembleArrayList));
     }
 
     template<typename Filter>
@@ -147,8 +147,8 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       setSelectedArrays( filter->getSelectedEdgeFieldArrays(), edgeFieldArrayList );
       setSelectedArrays( filter->getSelectedEdgeEnsembleArrays(), edgeEnsembleArrayList );
       setSelectedArrays( filter->getSelectedVertexVertexArrays(), vertexVertexArrayList );
-      setSelectedArrays( filter->getSelectedVertexFieldArrays(), vertexFieldArrayList );
-      setSelectedArrays( filter->getSelectedVertexEnsembleArrays(), vertexEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedVertexFieldArrays(), vertexVertexFieldArrayList );
+      setSelectedArrays( filter->getSelectedVertexEnsembleArrays(), vertexVertexEnsembleArrayList );
     }
 
     /**
@@ -236,8 +236,8 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     void on_edgeEnsembleCB_stateChanged(int state);
 
     void on_vertexVertexCB_stateChanged(int state);
-    void on_vertexFieldCB_stateChanged(int state);
-    void on_vertexEnsembleCB_stateChanged(int state);
+    void on_vertexVertexFieldCB_stateChanged(int state);
+    void on_vertexVertexEnsembleCB_stateChanged(int state);
 
   protected:
 
