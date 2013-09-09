@@ -352,7 +352,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
           }
         }
       }
-      float intensities[parentcount] = (float)microtexturelist.size()/(float)totalCheckList.size();
+      float fraction = (float)microtexturelist.size()/(float)totalCheckList.size();
+      intensities[parentcount] = fraction;
       int checkedSize = totalCheckList.size();
       for (size_t j = 0 ; j < checkedSize ; j++)
       {
