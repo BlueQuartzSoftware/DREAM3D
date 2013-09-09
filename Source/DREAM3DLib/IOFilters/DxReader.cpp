@@ -162,25 +162,28 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   {
     m_InStream.close();
   }
-  // We need to read the header of the input file to get the dimensions
-  m_InStream.setFileName(getInputFile());
-  if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
-  {
-    QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
-    return;
-  }
 
-  int error = readHeader();
-  m_InStream.close();
-  if (error < 0)
+  if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-    setErrorCondition(error);
-    ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
-    addErrorMessage(getHumanLabel(), ss, -11000);
-  }
+    // We need to read the header of the input file to get the dimensions
+    m_InStream.setFileName(getInputFile());
+    if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
+      setErrorCondition(-100);
+      notifyErrorMessage(ss, getErrorCondition());
+      return;
+    }
 
+    int error = readHeader();
+    m_InStream.close();
+    if (error < 0)
+    {
+      setErrorCondition(error);
+      ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      addErrorMessage(getHumanLabel(), ss, -11000);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------

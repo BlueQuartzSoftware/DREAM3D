@@ -51,7 +51,7 @@ if(MSVC)
 endif()
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
-target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
+target_link_libraries(FilterWidgetCodeGen ${QT_QTCORE_LIBRARY} EbsdLib DREAM3DLib)
 
 
 # Now run the code to generate the header files which will over write the place
@@ -185,12 +185,11 @@ endif()
 
 add_library(FilterWidgetsLib STATIC ${Project_SRCS})
 target_link_libraries(FilterWidgetsLib
-                    MXA
+                    ${QT_QTCORE_LIBRARY}
+                    ${QT_QTGUI_LIBRARY}
                     H5Support
                     EbsdLib
                     DREAM3DLib
-                    ${QT_QTCORE_LIBRARY}
-                    ${QT_QTGUI_LIBRARY}
                     QtSupport
                     PipelineBuilderLib
                     )

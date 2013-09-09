@@ -117,7 +117,7 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   if(getOutputFile().isEmpty() == true)
   {
 
-    QString ss = QObject::tr(" needs the Output File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }

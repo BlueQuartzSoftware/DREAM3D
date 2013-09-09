@@ -172,24 +172,25 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-// We need to read the header of the input file to get the dimensions
-  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-  if(m_InStream == NULL)
+  if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-    setErrorCondition(-48802);
-    notifyErrorMessage("Error opening input file", getErrorCondition());
-    return;
-  }
-
-
-  int error = readHeader();
-  fclose(m_InStream);
-  m_InStream = NULL;
-  if (error < 0)
-  {
-    setErrorCondition(error);
-    QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
-    addErrorMessage(getHumanLabel(), ss, -48010);
+    // We need to read the header of the input file to get the dimensions
+    m_InStream = fopen(getInputFile().toLatin1().data(), "r");
+    if(m_InStream == NULL)
+    {
+      setErrorCondition(-48802);
+      notifyErrorMessage("Error opening input file", getErrorCondition());
+      return;
+    }
+    int error = readHeader();
+    fclose(m_InStream);
+    m_InStream = NULL;
+    if (error < 0)
+    {
+      setErrorCondition(error);
+      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
+      addErrorMessage(getHumanLabel(), ss, -48010);
+    }
   }
 }
 

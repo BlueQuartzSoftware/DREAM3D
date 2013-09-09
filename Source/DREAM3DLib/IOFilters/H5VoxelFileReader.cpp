@@ -117,7 +117,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    QString ss = QObject::tr(" needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

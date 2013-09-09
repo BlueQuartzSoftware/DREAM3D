@@ -267,16 +267,16 @@ add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR
 
 add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
+# --------------------------------------------------------------------
+# Build the FilterWidgets Static Library which is ONLY needed by this plugin
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+
+
 
 
 
 #--------------------- START MASSIVE COMMENT OUT
 if(0)
-
-
-# --------------------------------------------------------------------
-# Build the FilterWidgets Static Library which is ONLY needed by this plugin
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
 
 # --------------------------------------------------------------------
