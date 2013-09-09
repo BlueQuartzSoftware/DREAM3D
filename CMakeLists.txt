@@ -272,13 +272,6 @@ add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINA
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
 
-
-
-
-#--------------------- START MASSIVE COMMENT OUT
-if(0)
-
-
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
 # This function will add in an Option "DREAM3D_BUILD_PLUGIN_${NAME} which
@@ -303,7 +296,7 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-    ImageImportPlugin
+    ExamplePlugin;ImageImportPlugin;OrientationAnalysis
 )
 
 # Clear this file out before we go any further
@@ -410,6 +403,11 @@ option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applicati
 if( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
 endif()
+
+
+
+#--------------------- START MASSIVE COMMENT OUT
+if(0)
 
 
 #-------------------------------------------------------------------------------

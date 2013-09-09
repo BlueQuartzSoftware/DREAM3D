@@ -191,7 +191,7 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
   {
     err = -1;
     QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[3]);
+    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), ss, err);
     return err;

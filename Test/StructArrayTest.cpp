@@ -125,18 +125,18 @@ Vec3IntListPointer_t initializeStructArray()
     node->pos[2] = i+20;
   }
 
-  std::string name = "foo";
-  nodes->SetName(QString::fromStdString(name));
-  std::string retName = nodes->GetName().toStdString();
+  QString name = "foo";
+  nodes->SetName(name);
+  QString retName = nodes->GetName();
 
   DREAM3D_REQUIRE_EQUAL(name, retName);
 
-  std::string tStr = nodes->getTypeAsString().toStdString();
-  std::string tStrComp("struct");
+  QString tStr = nodes->getTypeAsString();
+  QString tStrComp("struct");
   DREAM3D_REQUIRE_EQUAL(tStr, tStrComp)
 
-  std::string fn = nodes->getFullNameOfClass().toStdString();
-  std::string fnComp("StructArray<struct>");
+  QString fn = nodes->getFullNameOfClass();
+  QString fnComp("StructArray<struct>");
   DREAM3D_REQUIRE_EQUAL(fn, fnComp)
 
 

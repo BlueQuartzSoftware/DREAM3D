@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT ShapeType
       strings.push_back(UnknownShapeTypeStr());
     }
 
-    static void getShapeTypeEnums(std::vector<unsigned int> &types)
+    static void getShapeTypeEnums(QVector<unsigned int> &types)
     {
       types.clear();
       types.push_back(DREAM3D::ShapeType::EllipsoidShape);

@@ -117,7 +117,7 @@
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
     ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
-     "The preflight failed for one or more reasons. Check additional error messages for more details.".arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
+     "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
     setErrorCondition(err##002);\
     addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
   }}}

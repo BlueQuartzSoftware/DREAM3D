@@ -40,7 +40,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -58,8 +58,9 @@
 class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(RolledPreset)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
+    DREAM3D_SHARED_POINTERS(RolledPreset)
+    DREAM3D_STATIC_NEW_MACRO(RolledPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
     virtual ~RolledPreset();
 
     void displayUserInputDialog();

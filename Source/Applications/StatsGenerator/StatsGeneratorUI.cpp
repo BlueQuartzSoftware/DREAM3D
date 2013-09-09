@@ -49,8 +49,8 @@
 #include <QtGui/QDesktopServices>
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
@@ -80,7 +80,7 @@ class HDF5ScopedFileSentinel
     virtual ~HDF5ScopedFileSentinel()
     {
       if (m_FileId > 0) {
-        H5Utilities::closeFile(m_FileId);
+        QH5Utilities::closeFile(m_FileId);
       }
     }
     DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
@@ -568,7 +568,7 @@ void StatsGeneratorUI::openRecentFile()
   QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
-    //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
+    //std::cout << "Opening Recent file: " << action->data().toString() << std::endl;
     QString file = action->data().toString();
     openFile(file);
   }
@@ -715,7 +715,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
 
-  hid_t fileId = H5Utilities::createFile (m_FilePath.toStdString());
+  hid_t fileId = QH5Utilities::createFile (m_FilePath);
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(fileId);
 
@@ -815,7 +815,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
-  std::string path;
+  QString path;
 
 
   // Delete any existing phases from the GUI
@@ -825,12 +825,10 @@ void StatsGeneratorUI::openFile(QString h5file)
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   {
     // We are going to scope this next section so that we make sure the HDF5 file gets closed after the reading is complete
-    std::stringstream ss;
-    hid_t fileId = H5Utilities::openFile(m_FilePath.toStdString(), true); // Open the file Read Only
+    hid_t fileId = QH5Utilities::openFile(m_FilePath, true); // Open the file Read Only
     if(fileId < 0)
     {
-      ss.str("");
-      ss << ": Error opening input file '" << m_FilePath.toStdString() << "'";
+      QString ss = QObject::tr(": Error opening input file '%1'").arg(m_FilePath);
       return;
     }
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -946,7 +944,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete().c_str());
+  msg.append(DREAM3DLib::Version::Complete());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -963,7 +961,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().c_str());
+  version.append(DREAM3DLib::Version::PackageComplete());
   about.setApplicationInfo(an, version);
   about.exec();
 }
@@ -1052,8 +1050,8 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
    bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
-       displayDialogBox(QString::fromStdString("Error Opening Help File"),
+   //  std::cout << "Could not open URL: " << url.path() << std::endl;
+       displayDialogBox(("Error Opening Help File"),
          QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
          QMessageBox::Critical);
    }

@@ -917,7 +917,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
  return retErr;
 }
 
-#ifdef H5LITE_USE_MXA_CONSTRUCTS
+#ifdef H5LITE_USE_DREAM3D_CONSTRUCTS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

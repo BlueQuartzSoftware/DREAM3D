@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT PhaseType
       strings.push_back(UnknownPhaseTypeStr());
     }
 
-    static void getPhaseTypeEnums(std::vector<unsigned int> &types)
+    static void getPhaseTypeEnums(QVector<unsigned int> &types)
     {
       types.clear();
       types.push_back(DREAM3D::PhaseType::PrimaryPhase);

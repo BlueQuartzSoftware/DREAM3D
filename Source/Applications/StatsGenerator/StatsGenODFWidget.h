@@ -53,7 +53,7 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"

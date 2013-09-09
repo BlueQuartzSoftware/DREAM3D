@@ -234,7 +234,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
       fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(),numComp);
       fprintf(f, "LOOKUP_TABLE default\n");
-#ifdef MXA_LITTLE_ENDIAN
+#ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
 #endif
       int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
@@ -244,7 +244,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         qDebug() << "  FileName: " << filename ;
         qDebug() << "  Dataset Name: " << data->GetName() ;
       }
-#ifdef MXA_LITTLE_ENDIAN
+#ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
 #endif
       // Close the file

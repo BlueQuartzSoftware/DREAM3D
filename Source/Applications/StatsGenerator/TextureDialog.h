@@ -43,7 +43,7 @@
 
 #include "ui_TextureDialog.h"
 
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/TexturePreset.h"
@@ -79,7 +79,7 @@ class TextureDialog : public QDialog , private Ui::TextureDialog
 
 
   private:
-    std::vector<TexturePreset::Pointer> m_Presets;
+    QVector<TexturePreset::Pointer> m_Presets;
 
     TextureDialog(const TextureDialog&); // Copy Constructor Not Implemented
     void operator=(const TextureDialog&); // Operator '=' Not Implemented

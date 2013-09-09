@@ -73,11 +73,11 @@ QReadH5EbsdWidget::QReadH5EbsdWidget(QWidget* parent) :
   }
   setupUi(this);
   ReadH5Ebsd::Pointer filter = ReadH5Ebsd::New();
-  setInputFile( QString::fromStdString(filter->getInputFile() ) );
-  m_FilterGroup = QString::fromStdString(filter->getGroupName());
+  setInputFile( (filter->getInputFile() ) );
+  m_FilterGroup = (filter->getGroupName());
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -103,11 +103,11 @@ void QReadH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   ReadH5Ebsd* filter = ReadH5Ebsd::SafeObjectDownCast<AbstractFilter*, ReadH5Ebsd*>(filt);
 
-  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_InputFile->setText( ( filter->getInputFile() ) );
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
   m_UseTransformations->setChecked( filter->getUseTransformations() );
-  m_RefFrameZDir->setText( QString::fromStdString( Ebsd::StackingOrder::Utils::getStringForEnum( filter->getRefFrameZDir() ) ) );
+  m_RefFrameZDir->setText( ( Ebsd::StackingOrder::Utils::getStringForEnum( filter->getRefFrameZDir() ) ) );
 
   arraySelectionWidget->setArraySelections(filter);
 }
@@ -120,12 +120,12 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter(bool defaultValues)
   ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setInputFile(m_InputFile->text().toStdString());
+  filter->setInputFile(m_InputFile->text());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setUseTransformations(m_UseTransformations->isChecked());
 
-  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text().toStdString()));
+  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text()));
 
   arraySelectionWidget->getArraySelections(filter.get());
 
@@ -247,8 +247,8 @@ void QReadH5EbsdWidget::on_m_InputFileBtn_clicked()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName.toStdString());
-  QString ext = getFileExtension(propName.toStdString());
+  QString Ftype = getFileType(propName);
+  QString ext = getFileExtension(propName);
   QString s = Ftype + QString("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)");
   QString defaultName = getOpenDialogLastDirectory();
   QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
@@ -286,7 +286,7 @@ void QReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  //  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -333,7 +333,7 @@ void QReadH5EbsdWidget::updateFileInfoWidgets()
     {
       // Read the Phase information from the .h5ang file
       H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-      h5Reader->setFileName(m_InputFile->text().toStdString());
+      h5Reader->setFileName(m_InputFile->text());
 
       float xres = 0.0f;
       float yres = 0.0f;
@@ -376,12 +376,12 @@ void QReadH5EbsdWidget::updateFileInfoWidgets()
 
       // Compare the Manufactureres of the current file versus the one we have cached
       // If they are different then we need to remove all the quality filters
-      QString fileManufact = QString::fromStdString(h5Reader->getManufacturer());
+      QString fileManufact = (h5Reader->getManufacturer());
 
       // Cache the Manufacturer from the File
       m_EbsdManufacturer->setText(fileManufact);
 
-      m_RefFrameZDir->setText(QString::fromStdString(Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
+      m_RefFrameZDir->setText((Ebsd::StackingOrder::Utils::getStringForEnum(h5Reader->getStackingOrder())));
 
       if (h5Reader->getFileVersion() == 4 && m_Version4Warning == false)
       {

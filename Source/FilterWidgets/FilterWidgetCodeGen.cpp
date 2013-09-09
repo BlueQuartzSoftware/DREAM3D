@@ -556,11 +556,11 @@ void createSourceFile( const QString &group,
   fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "{\n");
   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.toLatin1().data(), filter.toLatin1().data());
-  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
-  fprintf(f, "     m_FilterSubGroup = QString::fromStdString(filter->getSubGroupName());\n");
+  fprintf(f, "     m_FilterGroup = filter->getGroupName();\n");
+  fprintf(f, "     m_FilterSubGroup = filter->getSubGroupName();\n");
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     getGuiParametersFromFilter( filter.get() );\n");
-  fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
+  fprintf(f, "     setTitle(filter->getHumanLabel());\n");
   fprintf(f, "}\n\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
@@ -585,10 +585,10 @@ void createSourceFile( const QString &group,
        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
-      fprintf(f, "     {\n");
+      fprintf(f, "     { \n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           w->setText( QString::fromStdString(filter->get%s()) );\n", prop.toLatin1().data());
+      fprintf(f, "           w->setText( filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -597,9 +597,9 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           QTextStream ss;\n");
-      fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
-      fprintf(f, "           w->setText( QString::fromStdString(ss.str()) );\n");
+    //  fprintf(f, "           QTextStream ss;\n");
+    //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
+      fprintf(f, "           w->setText( QString::number(filter->get%s()) );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -621,15 +621,15 @@ void createSourceFile( const QString &group,
       fprintf(f, "        if (w) {\n");
       if (opt->getValueType().compare("string") == 0)
       {
-        fprintf(f, "           int index = w->findText( QString::fromStdString(filter->get%s()) );\n", prop.toLatin1().data());
+        fprintf(f, "           int index = w->findText( filter->get%s() );\n", prop.toLatin1().data());
         fprintf(f, "           if (index >= 0)\n");
         fprintf(f, "           {\n");
         fprintf(f, "              w->setCurrentIndex(index);\n");
         fprintf(f, "           }\n");
         fprintf(f, "           else if (%d) {\n", (int)(ptr->getEditable()) );
         fprintf(f, "             w->setEditable(true);\n");
-        fprintf(f, "             w->addItem( QString::fromStdString( filter->get%s() ) );\n", prop.toLatin1().data());
-        fprintf(f, "             w->setCurrentIndex( w->findText( QString::fromStdString(filter->get%s()) ) );\n", prop.toLatin1().data());
+        fprintf(f, "             w->addItem( filter->get%s() );\n", prop.toLatin1().data());
+        fprintf(f, "             w->setCurrentIndex( w->findText(filter->get%s()) );\n", prop.toLatin1().data());
         fprintf(f, "           }\n");
       }
       else
@@ -641,20 +641,20 @@ void createSourceFile( const QString &group,
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget || opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
+      QString wType = "IntVec3Widget_t";
+      if(opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+      {
+        wType = "FloatVec3Widget_t";
+      }
       fprintf(f, "     {\n");
+      fprintf(f, "        %s value = filter->get%s();\n", wType.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w1 = qFindChild<QLineEdit*>(this, \"0_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w1 && w2 && w3) {\n");
-      fprintf(f, "           QTextStream ss;\n\n");
-      fprintf(f, "           ss << filter->get%s().x;\n", prop.toLatin1().data());
-      fprintf(f, "           w1->setText( QString::fromStdString(ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().y;\n", prop.toLatin1().data());
-      fprintf(f, "           w2->setText( QString::fromStdString(ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().z;\n", prop.toLatin1().data());
-      fprintf(f, "           w3->setText( QString::fromStdString(ss.str()) );\n");
+      fprintf(f, "           w1->setText(QString::number(value.x));\n");
+      fprintf(f, "           w2->setText(QString::number(value.y));\n");
+      fprintf(f, "           w3->setText(QString::number(value.z));\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -678,11 +678,11 @@ void createSourceFile( const QString &group,
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
-      fprintf(f, "              QTextStream ss;\n");
+      fprintf(f, "              QString buf;\n");
+      fprintf(f, "              QTextStream ss(&buf);\n");
       fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
       fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
-      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");
-      fprintf(f, "              ss.str(\"\");\n");
+      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, buf );\n");
       fprintf(f, "           }\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
@@ -693,7 +693,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           int index = w->findText( QString::fromStdString(filter->get%s()) );\n", prop.toLatin1().data());
+      fprintf(f, "           int index = w->findText(filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "           if (index >= 0)\n");
       fprintf(f, "           {\n");
       fprintf(f, "              w->setCurrentIndex(index);\n");
@@ -744,7 +744,7 @@ void createSourceFile( const QString &group,
     QString typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
     {
-      fprintf(f, "  filter->set%s( get%s().toStdString() );\n", prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "  filter->set%s( get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {

@@ -37,7 +37,7 @@
 #ifndef TEXTUREPRESET_H_
 #define TEXTUREPRESET_H_
 
-#include <vector>
+#include <QtCore/QVector>
 #include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
@@ -54,7 +54,7 @@ class DREAM3DLib_EXPORT TexturePreset
 {
   public:
     DREAM3D_SHARED_POINTERS(TexturePreset)
-    typedef std::vector<Pointer> Container;
+    typedef QVector<Pointer> Container;
 
     DREAM3D_STATIC_NEW_MACRO(TexturePreset)
     DREAM3D_TYPE_MACRO(TexturePreset)
