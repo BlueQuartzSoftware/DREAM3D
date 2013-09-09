@@ -42,7 +42,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/IOFilters/VertexDataContainerReader.h"
 
 /**
  * @class EdgeDataContainerReader EdgeDataContainerReader.h DREAM3DLib/IOFilters/EdgeDataContainerReader.h
@@ -51,7 +51,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerReader
 {
   public:
     DREAM3D_SHARED_POINTERS(EdgeDataContainerReader)
@@ -63,15 +63,13 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
@@ -134,16 +132,13 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int gatherVertexData(hid_t dcGid, bool preflight);
     int gatherEdgeData(hid_t dcGid, bool preflight);
-    int gatherFieldData(hid_t dcGid, bool preflight);
-    int gatherEnsembleData(hid_t dcGid, bool preflight);
-    int readVertices(hid_t dcGid);
+    int gatherEdgeFieldData(hid_t dcGid, bool preflight);
+    int gatherEdgeEnsembleData(hid_t dcGid, bool preflight);
     int readEdges(hid_t dcGid);
     int readMeshLinks(hid_t dcGid, bool preflight);
-    int readVertexAttributeData(hid_t dcGid);
-//    int readFieldData(hid_t dcGid);
-//    int readEnsembleData(hid_t dcGid);
+    int readEdgeFieldData(hid_t dcGid);
+    int readEdgeEnsembleData(hid_t dcGid);
 
 
     int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,

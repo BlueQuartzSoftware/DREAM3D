@@ -1792,10 +1792,10 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
         updateArrayNameComboBox(vdc->getVertexArrayNameList(), propertyName);
         break;
       case FilterParameter::VertexFieldArrayNameSelectionWidget:
-        updateArrayNameComboBox(vdc->getFieldArrayNameList(), propertyName);
+        updateArrayNameComboBox(vdc->getVertexFieldArrayNameList(), propertyName);
         break;
       case FilterParameter::VertexEnsembleArrayNameSelectionWidget:
-        updateArrayNameComboBox(vdc->getEnsembleArrayNameList(), propertyName);
+        updateArrayNameComboBox(vdc->getVertexEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::ArraySelectionWidget:
         //     updateArraySelectionWidget(vdc, smdc, sdc, propertyName);

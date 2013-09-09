@@ -60,7 +60,6 @@
 #include "DREAM3DLib/Common/StructArray.hpp"
 #include "DREAM3DLib/Common/MeshStructs.h"
 
-
 /**
  * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/Common/VertexDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
@@ -82,14 +81,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
 
     DOES_DATASET_EXIST_DECL(VertexData)
-    DOES_DATASET_EXIST_DECL(FieldData)
-    DOES_DATASET_EXIST_DECL(EnsembleData)
+    DOES_DATASET_EXIST_DECL(VertexFieldData)
+    DOES_DATASET_EXIST_DECL(VertexEnsembleData)
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -144,14 +143,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addVertexFieldData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getVertexFieldData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -159,52 +158,52 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeVertexFieldData(const std::string &name);
 
     /**
      * @brief Removes all the Field Arrays
      */
-    void clearFieldData();
+    void clearVertexFieldData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFieldArrayNameList();
+    std::list<std::string> getVertexFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
      * @return
      */
-    int getNumFieldArrays();
+    int getNumVertexFieldArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexFieldTuples)
 
     /**
      * @brief Resizes all of the Field Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFieldDataArrays(size_t size);
+    void resizeVertexFieldDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addVertexEnsembleData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getVertexEnsembleData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -212,38 +211,38 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeVertexEnsembleData(const std::string &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
      */
-    void clearEnsembleData();
+    void clearVertexEnsembleData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getEnsembleArrayNameList();
+    std::list<std::string> getVertexEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group
      * @return
      */
-    int getNumEnsembleArrays();
+    int getNumVertexEnsembleArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexEnsembleTuples)
 
     /**
      * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeEnsembleDataArrays(size_t size);
+    void resizeVertexEnsembleDataArrays(size_t size);
 
 
 
@@ -253,8 +252,8 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
    private:
 
      std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+     std::map<std::string, IDataArray::Pointer> m_VertexFieldData;
+     std::map<std::string, IDataArray::Pointer> m_VertexEnsembleData;
 
      VertexDataContainer(const VertexDataContainer&);
      void operator =(const VertexDataContainer&);

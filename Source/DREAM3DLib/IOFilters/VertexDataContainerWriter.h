@@ -128,9 +128,9 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
 
     int writeVertices(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
+    int writeVertexData(hid_t dcGid);
+    int writeVertexFieldData(hid_t dcGid);
+    int writeVertexEnsembleData(hid_t dcGid);
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();

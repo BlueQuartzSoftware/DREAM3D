@@ -95,9 +95,9 @@ void ArraySelectionWidget::setupGui()
 
   connect(vertexVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(vertexFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(vertexVertexFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(vertexEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(vertexVertexEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
 }
@@ -197,11 +197,11 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
   std::list<std::string> vertexNames = vdc->getVertexArrayNameList();
   populateArrayList(vertexVertexArrayList, vertexNames, NULL);
 
-  std::list<std::string> fieldNames = vdc->getFieldArrayNameList();
-  populateArrayList(vertexFieldArrayList, fieldNames, NULL);
+  std::list<std::string> fieldNames = vdc->getVertexFieldArrayNameList();
+  populateArrayList(vertexVertexFieldArrayList, fieldNames, NULL);
 
-  std::list<std::string> ensembleNames = vdc->getEnsembleArrayNameList();
-  populateArrayList(vertexEnsembleArrayList, ensembleNames, NULL);
+  std::list<std::string> ensembleNames = vdc->getVertexEnsembleArrayNameList();
+  populateArrayList(vertexVertexEnsembleArrayList, ensembleNames, NULL);
 }
 
 
@@ -281,25 +281,25 @@ void ArraySelectionWidget::on_vertexVertexCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_vertexFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_vertexVertexFieldCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    vertexFieldCB->setCheckState(Qt::Checked);
+    vertexVertexFieldCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(vertexFieldArrayList, state);
+  toggleListSelections(vertexVertexFieldArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_vertexEnsembleCB_stateChanged(int state)
+void ArraySelectionWidget::on_vertexVertexEnsembleCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    vertexEnsembleCB->setCheckState(Qt::Checked);
+    vertexVertexEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(vertexEnsembleArrayList, state);
+  toggleListSelections(vertexVertexEnsembleArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -552,8 +552,8 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(VolumeDataContaine
   REMOVE_ARRAYS_HELPER(edge, edc, Ensemble, Selected)
 
   REMOVE_ARRAYS_HELPER(vertex, vdc, Vertex, Selected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Field, Selected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Ensemble, Selected)
+  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexField, Selected)
+  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexEnsemble, Selected)
 }
 
 // -----------------------------------------------------------------------------
@@ -583,8 +583,8 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VolumeDataConta
   REMOVE_ARRAYS_HELPER(edge, edc, Ensemble, NonSelected)
 
   REMOVE_ARRAYS_HELPER(vertex, vdc, Vertex, NonSelected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Field, NonSelected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Ensemble, NonSelected)
+  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexField, NonSelected)
+  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexEnsemble, NonSelected)
 }
 
 
@@ -668,8 +668,8 @@ void ArraySelectionWidget::clearArraySelectionLists()
   edgeEnsembleArrayList->clear();
 
   vertexVertexArrayList->clear();
-  vertexFieldArrayList->clear();
-  vertexEnsembleArrayList->clear();
+  vertexVertexFieldArrayList->clear();
+  vertexVertexEnsembleArrayList->clear();
 }
 
 // -----------------------------------------------------------------------------
@@ -696,8 +696,8 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
   readSelections(prefs, name, "EdgeEnsemble", edgeEnsembleArrayList);
 
   readSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
-  readSelections(prefs, name, "VertexField", vertexFieldArrayList);
-  readSelections(prefs, name, "VertexEnsemble", vertexEnsembleArrayList);
+  readSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);
+  readSelections(prefs, name, "VertexEnsemble", vertexVertexEnsembleArrayList);
 }
 // -----------------------------------------------------------------------------
 //
@@ -723,8 +723,8 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "EdgeEnsemble", edgeEnsembleArrayList);
 
   writeSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
-  writeSelections(prefs, name, "VertexField", vertexFieldArrayList);
-  writeSelections(prefs, name, "VertexEnsemble", vertexEnsembleArrayList);
+  writeSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);
+  writeSelections(prefs, name, "VertexEnsemble", vertexVertexEnsembleArrayList);
 }
 
 

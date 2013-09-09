@@ -203,20 +203,20 @@ void VertexDataContainerWriter::execute()
     return;
   }
 
-  err = writeVertexAttributeData(dcGid);
+  err = writeVertexData(dcGid);
   if (err < 0)
   {
     return;
   }
 
-  err = writeFieldData(dcGid);
+  err = writeVertexFieldData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEnsembleData(dcGid);
+  err = writeVertexEnsembleData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -418,11 +418,11 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VertexDataContainer* sm = getVertexDataContainer();
+  VertexDataContainer* vdc = getVertexDataContainer();
 
   // Write the Vertex Data
   err = H5Utilities::createGroupsFromPath(H5_VERTEX_DATA_GROUP_NAME, dcGid);
@@ -445,13 +445,13 @@ int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = sm->getVertexArrayNameList();
+  NameListType names = vdc->getVertexArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
     ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
     notifyStatusMessage(ss.str());
-    IDataArray::Pointer array = sm->getVertexData(*iter);
+    IDataArray::Pointer array = vdc->getVertexData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
@@ -472,11 +472,11 @@ int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VertexDataContainer* m = getVertexDataContainer();
+  VertexDataContainer* vdc = getVertexDataContainer();
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
@@ -493,23 +493,23 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
 
 
   // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  err = H5Utilities::createGroupsFromPath(H5_VERTEX_FIELD_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
-    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    std::cout << "Error creating HDF Group " << H5_VERTEX_FIELD_DATA_GROUP_NAME << std::endl;
     return err;
   }
-  err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  err = H5Lite::writeStringAttribute(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, H5_NAME, H5_VERTEX_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
   }
 
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t fieldGroupId = H5Gopen(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening field Group " << H5_VERTEX_FIELD_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-65);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -520,10 +520,10 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
   typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getFieldArrayNameList();
+  NameListType names = vdc->getVertexFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getFieldData(names.front());
+    IDataArray::Pointer array = vdc->getVertexFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -537,7 +537,7 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getFieldData(*iter);
+    IDataArray::Pointer array = vdc->getVertexFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -625,39 +625,39 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexEnsembleData(hid_t dcGid)
 {
   std::stringstream ss;
   int err = 0;
-  VertexDataContainer* m = getVertexDataContainer();
+  VertexDataContainer* vdc = getVertexDataContainer();
 
   // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = H5Utilities::createGroupsFromPath(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-66);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = H5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = H5Lite::writeStringAttribute(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_VERTEX_ENSEMBLE_DATA_DEFAULT);
 
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t ensembleGid = H5Gopen(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening ensemble Group " << H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME << std::endl;
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getEnsembleArrayNameList();
+  NameListType names = vdc->getVertexEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getEnsembleData(*iter);
+    IDataArray::Pointer array = vdc->getVertexEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {

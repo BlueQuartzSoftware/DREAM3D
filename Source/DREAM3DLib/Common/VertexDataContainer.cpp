@@ -69,8 +69,8 @@ VertexDataContainer::~VertexDataContainer()
 //
 // -----------------------------------------------------------------------------
 DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(VertexDataContainer, FieldData)
-DOES_DATASET_EXIST_DEFN(VertexDataContainer, EnsembleData)
+DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexFieldData)
+DOES_DATASET_EXIST_DEFN(VertexDataContainer, VertexEnsembleData)
 
 // -----------------------------------------------------------------------------
 //
@@ -151,11 +151,11 @@ int VertexDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::getVertexFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_VertexFieldData.find(name);
+  if ( it == m_VertexFieldData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -165,7 +165,7 @@ IDataArray::Pointer VertexDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexFieldData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -174,41 +174,41 @@ void VertexDataContainer::addFieldData(const std::string &name, IDataArray::Poin
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_FieldData[name] = data;
-  m_NumFieldTuples = data->GetNumberOfTuples();
+  m_VertexFieldData[name] = data;
+  m_NumVertexFieldTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::removeVertexFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_VertexFieldData.find(name);
+  if ( it == m_VertexFieldData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_FieldData.erase(it);
+  m_VertexFieldData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::clearFieldData()
+void VertexDataContainer::clearVertexFieldData()
 {
-  m_FieldData.clear();
+  m_VertexFieldData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VertexDataContainer::getFieldArrayNameList()
+std::list<std::string> VertexDataContainer::getVertexFieldArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -218,34 +218,34 @@ std::list<std::string> VertexDataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::getNumFieldArrays()
+int VertexDataContainer::getNumVertexFieldArrays()
 {
-  return static_cast<int>(m_FieldData.size());
+  return static_cast<int>(m_VertexFieldData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::resizeFieldDataArrays(size_t size)
+void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
-  m_NumFieldTuples = size;
+  m_NumVertexFieldTuples = size;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::getVertexEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_VertexEnsembleData.find(name);
+  if ( it == m_VertexEnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -255,7 +255,7 @@ IDataArray::Pointer VertexDataContainer::getEnsembleData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexEnsembleData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -264,41 +264,41 @@ void VertexDataContainer::addEnsembleData(const std::string &name, IDataArray::P
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_EnsembleData[name] = data;
-  m_NumEnsembleTuples = data->GetNumberOfTuples();
+  m_VertexEnsembleData[name] = data;
+  m_NumVertexEnsembleTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::removeVertexEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_VertexEnsembleData.find(name);
+  if ( it == m_VertexEnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_EnsembleData.erase(it);
+  m_VertexEnsembleData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::clearEnsembleData()
+void VertexDataContainer::clearVertexEnsembleData()
 {
-  m_EnsembleData.clear();
+  m_VertexEnsembleData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VertexDataContainer::getEnsembleArrayNameList()
+std::list<std::string> VertexDataContainer::getVertexEnsembleArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -308,23 +308,23 @@ std::list<std::string> VertexDataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainer::getNumEnsembleArrays()
+int VertexDataContainer::getNumVertexEnsembleArrays()
 {
-  return static_cast<int>(m_EnsembleData.size());
+  return static_cast<int>(m_VertexEnsembleData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::resizeEnsembleDataArrays(size_t size)
+void VertexDataContainer::resizeVertexEnsembleDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
-  m_NumEnsembleTuples = size;
+  m_NumVertexEnsembleTuples = size;
 }
 
