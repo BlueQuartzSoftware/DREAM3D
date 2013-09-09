@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellParentIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(MicroTextureIntensityArrayName)
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
@@ -113,6 +114,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     int32_t* m_GrainIds;
     int32_t* m_CellParentIds;
     int32_t* m_FieldParentIds;
+    float* m_MicroTextureIntensity;
     float* m_AvgQuats;
     bool* m_Active;
     int32_t* m_FieldPhases;
@@ -122,6 +124,9 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     unsigned int* m_CrystalStructures;
 
     std::vector<int> parentnumbers;
+    std::vector<bool> beenChecked;
+    std::vector<float> intensities;
+    std::vector<int> grandparenttallynumbers;
 
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
