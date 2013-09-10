@@ -417,17 +417,21 @@ void OrientationMath::EulertoMat(float ea1, float ea2, float ea3, float g[3][3])
 // -----------------------------------------------------------------------------
 void OrientationMath::MattoEuler(float g[3][3], float &ea1, float &ea2, float &ea3)
 {
-  ea2 = acos(g[2][2]);
+  float g22 = g[2][2];
+  DREAM3DMath::boundF(g22,-1,1);
+  ea2 = acos(g22);
   float sin_ea2 = sin(ea2);
   float oneOverSinEa2 = 1.0/sin_ea2;
   float cosine3 = (g[1][2]*oneOverSinEa2);
   float sine3 = (g[0][2]*oneOverSinEa2);
   float cosine1 = (-g[2][1]*oneOverSinEa2);
   float sine1 = (g[2][0]*oneOverSinEa2);
+  DREAM3DMath::boundF(cosine3,-1,1);
+  DREAM3DMath::boundF(cosine1,-1,1);
   ea3 = acos(cosine3);
   ea1 = acos(cosine1);
-  if(sine3 < 0) ea3 = (2.0f * DREAM3D::Constants::k_Pi)-ea3;
-  if(sine1 < 0) ea1 = (2.0f * DREAM3D::Constants::k_Pi)-ea1;
+  if(sine3 < 0) ea3 = (DREAM3D::Constants::k_2Pi)-ea3;
+  if(sine1 < 0) ea1 = (DREAM3D::Constants::k_2Pi)-ea1;
 }
 
 // -----------------------------------------------------------------------------
