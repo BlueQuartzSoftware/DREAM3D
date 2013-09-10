@@ -405,11 +405,6 @@ if( DREAM3D_BUILD_CLI_TOOLS )
 endif()
 
 
-
-#--------------------- START MASSIVE COMMENT OUT
-if(0)
-
-
 #-------------------------------------------------------------------------------
 # Should we build the documentation using DOxygen
 FIND_PACKAGE(Doxygen)
@@ -454,9 +449,6 @@ endif()
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
-
-endif()
-#-------------- END MASSIVE COMMENT OUT
 
 # ------- Enable the CTest testing. Use make test to run all tests ---------------
 if(DREAM3D_BUILD_TESTING)

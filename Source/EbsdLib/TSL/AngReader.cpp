@@ -349,7 +349,7 @@ void AngReader::readData(QFile &in, QByteArray &buf)
   }
 
 
-  size_t counter = 0;
+  size_t counter = 1;
   // The buf variable already has the first line of data in it
   for(size_t i = 0; i < totalDataRows; ++i)
   {

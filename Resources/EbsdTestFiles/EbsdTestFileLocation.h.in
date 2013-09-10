@@ -8,9 +8,9 @@
 
 namespace EbsdImportTest {
   const QString FileDir("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/");
-  const QString TestFile1("Test_1.ang");
-  const QString TestFile2("Test_2.ang");
-  const QString TestFile3("Test_3.ang");
+  const QString TestFile1("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/Test_1.ang");
+  const QString TestFile2("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/Test_2.ang");
+  const QString TestFile3("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/Test_3.ang");
   const QString H5EbsdOutputFile("@DREAM3DTest_BINARY_DIR@/FromAng.h5ebsd");
   const QString MissingHeader1("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/MissingHeader_1.ang");
   const QString GridMissing("@PROJECT_RESOURCES_DIR@/EbsdTestFiles/GridMissing.ang");
