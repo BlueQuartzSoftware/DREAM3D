@@ -145,18 +145,11 @@ void FindAvgCAxes::execute()
     m_AvgCAxes[3*i+1] = 0.0;
     m_AvgCAxes[3*i+2] = 0.0;
   }
-  //  float qr[5];
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0)
     {
       QuaternionMathF::Copy(quats[i], q1);
-//      q1[0] = m_Quats[i*5 + 0];
-//      q1[1] = m_Quats[i*5 + 1];
-//      q1[2] = m_Quats[i*5 + 2];
-//      q1[3] = m_Quats[i*5 + 3];
-//      q1[4] = m_Quats[i*5 + 4];
-
       OrientationMath::QuattoMat(q1, g1);
       //transpose the g matricies so when caxis is multiplied by it
       //it will give the sample direction that the caxis is along
@@ -164,12 +157,19 @@ void FindAvgCAxes::execute()
       MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::Normalize3x1(c1);
-      if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
-
+      if(c1[2] < 0) MatrixMath::Multiply3x1withConstant(c1,-1);
       counter[m_GrainIds[i]]++;
-      m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
-      m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
-      m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
+      m_AvgCAxes[3*m_GrainIds[i]] += c1[0];
+      m_AvgCAxes[3*m_GrainIds[i]+1] += c1[1];
+      m_AvgCAxes[3*m_GrainIds[i]+2] += c1[2];
+      if(i == 2328287)
+{
+float w = q1.w;
+float x = q1.x;
+float y = q1.y;
+float z = q1.z;
+int stop = 0;
+}
     }
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -182,9 +182,9 @@ void FindAvgCAxes::execute()
     }
     else
     {
-      m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
-      m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
-      m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
+      m_AvgCAxes[3*i] /= counter[i];
+      m_AvgCAxes[3*i+1] /= counter[i];
+      m_AvgCAxes[3*i+2] /= counter[i];
     }
   }
 
