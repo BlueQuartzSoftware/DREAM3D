@@ -96,7 +96,7 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
       }
   }
 
-  //adjust lumosity and invert
+  //adjust lumosity
   r=r+(v-c);
   g=g+(v-c);
   b=b+(v-c);
