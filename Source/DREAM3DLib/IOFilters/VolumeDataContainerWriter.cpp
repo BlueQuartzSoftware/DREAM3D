@@ -257,14 +257,14 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
     return;
   }
   QTextStream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" ;
-  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" ;
-  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" ;
-  out << "      <!-- Origin -->" ;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" ;
-  out << "      <!-- DxDyDz (Spacing/Resolution)-->" ;
-  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" ;
-  out << "    </Geometry>" ;
+  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << "\n";
+  out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
+  out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
+  out << "      <!-- Origin -->" << "\n";
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << origin[2] << " " << origin[1] << " " << origin[0] <<  "</DataItem>" << "\n";
+  out << "      <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
+  out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -278,14 +278,14 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
   }
 
   QTextStream& out = *m_XdmfPtr;
-  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" ;
-  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" ;
-  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" ;
-  out << "        <!-- Origin -->" ;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" ;
-  out << "        <!-- DxDyDz (Spacing/Resolution)-->" ;
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" ;
-  out << "      </Geometry>" ;
+  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" << "\n";
+  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" << "\n";
+  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
+  out << "        <!-- Origin -->" << "\n";
+  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" << "\n";
+  out << "        <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
+  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" << "\n";
+  out << "      </Geometry>" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -298,8 +298,8 @@ void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
     return;
   }
   QTextStream& out = *m_XdmfPtr;
-  out << "  </Grid>" ;
-  out << "    <!-- *************** END OF " << label << " *************** -->" ;
+  out << "  </Grid>" << "\n";
+  out << "    <!-- *************** END OF " << label << " *************** -->" << "\n";
   out << "\n";
 }
 
@@ -320,23 +320,23 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
   err = QH5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
   if (err < 0)
   {
-    qDebug() << "Error Writing H5_DIMENSIONS array for " << hdfPath ;
+    qDebug() << "Error Writing H5_DIMENSIONS array for " << hdfPath << "\n";
   }
   err = QH5Lite::writePointerDataset(gid, H5_ORIGIN, rank, dims, origin);
   if (err < 0)
   {
-    qDebug() << "Error Writing H5_ORIGIN array for " << hdfPath ;
+    qDebug() << "Error Writing H5_ORIGIN array for " << hdfPath << "\n";
   }
   err = QH5Lite::writePointerDataset(gid, H5_SPACING, rank, dims, spacing);
   if (err < 0)
   {
-    qDebug() << "Error Writing H5_SPACING array for " << hdfPath ;
+    qDebug() << "Error Writing H5_SPACING array for " << hdfPath << "\n";
   }
   int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
   err = QH5Lite::writeScalarAttribute(m_HdfFileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
   if (err < 0)
   {
-    qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath ;
+    qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << "\n";
   }
 
   err |= H5Gclose(gid);
@@ -523,7 +523,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 
   QString hdfFileName(nameBuffer);
   QFileInfo fi(hdfFileName);
-  hdfFileName = fi.baseName();
+  hdfFileName = fi.fileName();
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
@@ -606,7 +606,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   err = QH5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME ;
+    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
     return err;
   }
   err = QH5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
@@ -792,16 +792,16 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
-  // qDebug() << "   vtkH5DataWriter::WritePoints()" ;
+  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
   herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
   if (err < 0)
   {
-    qDebug() << "Error creating HDF Group " << hdfGroupPath ;
+    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
   }
   err = QH5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
-    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath ;
+    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
   }
   return err;
 }

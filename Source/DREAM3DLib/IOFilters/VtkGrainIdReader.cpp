@@ -259,11 +259,11 @@ int VtkGrainIdReader::readHeader()
   setComment(QString(buf));
   buf = instream.readLine(); // Read Line 3 - BINARY or ASCII
   QString fileType(buf);
-  if (fileType.startsWith("BINARY") == 0)
+  if (fileType.startsWith("BINARY") == true)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.startsWith("ASCII") == 0)
+  else if (fileType.startsWith("ASCII") == true)
   {
     setFileIsBinary(false);
   }
