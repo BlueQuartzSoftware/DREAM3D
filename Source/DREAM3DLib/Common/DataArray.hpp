@@ -790,7 +790,7 @@ class DataArray : public IDataArray
       GetXdmfTypeAndSize(xdmfTypeName, precision);
       if (0 == precision)
       {
-        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" ;
+        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
         return -100;
       }
 
@@ -799,22 +799,22 @@ class DataArray : public IDataArray
       if (numComp == 1)
       {
         out << "AttributeType=\"Scalar\" ";
-        dimStr = QString("%1 %2 %3").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]);
+        dimStr = QString("%1 %2 %3 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]);
       }
       else
       {
         out << "AttributeType=\"Vector\" ";
-        dimStr = QString("%1 %2 %3 %4").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]).arg(numComp);
+        dimStr = QString("%1 %2 %3 %4 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]).arg(numComp);
       }
-      out << "Center=\"Cell\">" ;
+      out << "Center=\"Cell\">\n" ;
       // Open the <DataItem> Tag
       out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
-      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" ;
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >\n" ;
 
 
-      out << "        " << hdfFileName << groupPath << "/" << GetName() ;
-      out << "      </DataItem>" ;
-      out << "    </Attribute>"  ;
+      out << "        " << hdfFileName << groupPath << "/" << GetName() << "\n";
+      out << "      </DataItem>" << "\n";
+      out << "    </Attribute>" << "\n";
       return 1;
     }
 

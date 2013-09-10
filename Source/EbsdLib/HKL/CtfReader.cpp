@@ -394,7 +394,7 @@ int CtfReader::readData(QFile &in)
   }
 
   // Now start reading the data line by line
-  size_t counter = 0;
+  size_t counter = 1;
   for (int slice = zStart; slice < zEnd; ++slice)
   {
     for (size_t row = 0; row < yCells; ++row)

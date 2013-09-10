@@ -355,7 +355,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
 
     QString hdfFileName(nameBuffer);
     QFileInfo fi(hdfFileName);
-    hdfFileName = fi.baseName();
+    hdfFileName = fi.fileName();
 
     out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName();
     out << "      </DataItem>";
@@ -384,7 +384,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     nameSize = H5Fget_name(m_HdfFileId, nameBuffer.data(), nameSize);
     QString hdfFileName(nameBuffer);
     QFileInfo fi(hdfFileName);
-    hdfFileName = fi.baseName();
+    hdfFileName = fi.fileName();
     out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName();
     out << "        </DataItem>";
     out << "      </DataItem>";

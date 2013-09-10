@@ -365,7 +365,6 @@ void DataContainerWriter::execute()
 
   if (m_WriteXdmfFile == true)
   {
-      QTextStream out(&xdmfFile);
       writeXdmfFooter(out);
   }
 
@@ -378,10 +377,10 @@ void DataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeXdmfHeader(QTextStream &xdmf)
 {
-  xdmf << "<?xml version=\"1.0\"?>" ;
-  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" ;
-  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" ;
-  xdmf << " <Domain>" ;
+  xdmf << "<?xml version=\"1.0\"?>" << "\n";
+  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << "\n";
+  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << "\n";
+  xdmf << " <Domain>" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -389,8 +388,8 @@ void DataContainerWriter::writeXdmfHeader(QTextStream &xdmf)
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeXdmfFooter(QTextStream &xdmf)
 {
-  xdmf << " </Domain>" ;
-  xdmf << "</Xdmf>" ;
+  xdmf << " </Domain>" << "\n";
+  xdmf << "</Xdmf>" << "\n";
 }
 
 // -----------------------------------------------------------------------------
