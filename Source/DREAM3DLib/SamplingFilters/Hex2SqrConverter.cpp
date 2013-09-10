@@ -206,7 +206,7 @@ void Hex2SqrConverter::execute()
             setErrorCondition(reader.getErrorCode());
             return;
         }
-        else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == 0)
+        else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
         {
 
             QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);

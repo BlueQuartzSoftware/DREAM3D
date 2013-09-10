@@ -253,6 +253,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
     float* euler1Ptr = reader->getPhi1Pointer();
+    if (NULL == euler1Ptr) { setErrorCode(-99090); setErrorMessage("Euler1 Pointer was NULL from Reader"); return getErrorCode(); }
     float* euler2Ptr = reader->getPhiPointer();
     float* euler3Ptr = reader->getPhi2Pointer();
     float* xPtr = reader->getXPositionPointer();

@@ -444,7 +444,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.startsWith("DataArray") == 0)
+    if(classType.startsWith("DataArray") == true)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }

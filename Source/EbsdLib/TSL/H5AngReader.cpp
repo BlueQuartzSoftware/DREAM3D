@@ -323,7 +323,7 @@ int H5AngReader::readData(hid_t parId)
   {
     return -200;
   }
-  else if (grid.startsWith(Ebsd::Ang::SquareGrid) == 0)
+  else if (grid.startsWith(Ebsd::Ang::SquareGrid) == true)
   {
     // if (nCols > 0) { numElements = nRows * nCols; }
     if (nOddCols > 0)
@@ -339,7 +339,7 @@ int H5AngReader::readData(hid_t parId)
       totalDataRows = 0;
     }
   }
-  else if (grid.startsWith(Ebsd::Ang::HexGrid) == 0)
+  else if (grid.startsWith(Ebsd::Ang::HexGrid) == true)
   {
     setErrorCode(-90400);
     setErrorMessage("Ang Files with Hex Grids Are NOT currently supported. Please convert them to Square Grid files first");
