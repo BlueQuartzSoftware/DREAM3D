@@ -38,6 +38,8 @@
 
 #include <string.h>
 
+#include <limits>
+
 #include <QtCore/QString>
 #include <QtGui/QImage>
 #include <QtGui/QImageReader>
