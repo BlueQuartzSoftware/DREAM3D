@@ -138,7 +138,7 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, XRes, Ebsd::Mic::XRes)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, YRes, Ebsd::Mic::YRes)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<MicPhase::Pointer>, PhaseVector)
+    EBSD_INSTANCE_PROPERTY(QVector<MicPhase::Pointer>, PhaseVector)
 
     EBSD_POINTER_PROPERTY(Euler1, Euler1, float)
     EBSD_POINTER_PROPERTY(Euler2, Euler2, float)
@@ -154,14 +154,14 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const QString &fieldName);
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const QString &fieldName);
 
     /**
     * @brief Reads the complete HEDM .Mic file.
@@ -212,7 +212,7 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
   /** @brief Parses the data from a line of data from the HEDM .Mic file
     * @param line The line of data to parse
     */
-    void parseDataLine(const std::string &line, size_t i);
+    void parseDataLine(const QString &line, size_t i);
 
     MicReader(const MicReader&);    // Copy Constructor Not Implemented
     void operator=(const MicReader&);  // Operator '=' Not Implemented

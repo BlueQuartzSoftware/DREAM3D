@@ -84,9 +84,9 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Merge Twins"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const QString getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterParameters();
   virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -121,11 +121,11 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<int> parentnumbers;
+    QVector<int> parentnumbers;
   int numParents;
 
     unsigned long long int Seed;
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

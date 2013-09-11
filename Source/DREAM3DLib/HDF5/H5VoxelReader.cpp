@@ -172,8 +172,8 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 int H5VoxelReader::readVoxelData(int* grain_indicies,
                   int* phases,
                   float* eulerangles,
-                  std::vector<unsigned int> &crystruct,
-                  std::vector<unsigned int> &phaseType,
+                  QVector<unsigned int> &crystruct,
+                  QVector<unsigned int> &phaseType,
                   int64_t totalpoints)
 {
   int err = 0;

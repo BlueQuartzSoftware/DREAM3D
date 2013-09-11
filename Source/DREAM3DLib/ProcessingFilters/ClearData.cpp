@@ -70,7 +70,7 @@ ClearData::~ClearData()
 // -----------------------------------------------------------------------------
 void ClearData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");
@@ -289,7 +289,7 @@ void ClearData::execute()
         index = (k * dims[0] * dims[1]) + (j * dims[0]) + i;
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          std::string name = *iter;
+          QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
           p->InitializeTuple(index,0);
         }

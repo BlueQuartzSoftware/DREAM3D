@@ -74,7 +74,7 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(GBCDdimensionsArrayName)
     DREAM3D_INSTANCE_PROPERTY(float, GBCDRes)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, GBCDArrayNames)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, GBCDArrayNames)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
 
@@ -84,14 +84,14 @@ class DREAM3DLib_EXPORT FindGBCD : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Find GBCD"; }
+    virtual const QString getHumanLabel() { return "Find GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

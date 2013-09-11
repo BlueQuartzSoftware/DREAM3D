@@ -73,7 +73,7 @@ DxReader::~DxReader()
 // -----------------------------------------------------------------------------
 void DxReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -237,14 +237,14 @@ int DxReader::readHeader()
   std::stringstream ss;
   int error = 0;
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
+  QString line;
+  QString delimeters(", ;\t"); /* delimeters to split the data */
+  QVector<std::string> tokens; /* vector to store the split data */
 
   getline(m_InStream, line, '\n');
   tokenize(line, tokens, delimeters);
 
-  // Process the header information and look for the std::string "counts"
+  // Process the header information and look for the QString "counts"
   // Then read the data size after that
   size_t pos1 = 0;
   while (pos1 == 0)
@@ -364,9 +364,9 @@ int DxReader::readFile()
     return -1;
   }
 
-  std::string line;
-  std::string delimeters(", ;\t"); /* delimeters to split the data */
-  std::vector<std::string> tokens; /* vector to store the split data */
+  QString line;
+  QString delimeters(", ;\t"); /* delimeters to split the data */
+  QVector<std::string> tokens; /* vector to store the split data */
 
   int error, spin; /* dummy variables */
 
@@ -435,12 +435,12 @@ int DxReader::readFile()
 
 
   // Find the unique set of grain ids
-//  std::set<int32_t> grainIdSet;
+//  QSet<int32_t> grainIdSet;
 //  for (int64_t i = 0; i < totalPoints; ++i)
 //  {
 //    grainIdSet.insert(m_GrainIds[i]);
 //  }
-//  for (std::set<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+//  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
 //  {
 //    std::cout << "Grain ID: " << (*iter) << std::endl;
 //  }

@@ -42,12 +42,12 @@ class Constraint
 		/**
 		 * Returns a description of the Constraint.
 		 */
-		virtual std::string description() const =0;
+		virtual QString description() const =0;
 
 		/**
 		 * Returns the short ID for the Constraint.
 		 */
-		virtual std::string shortID() const =0;
+		virtual QString shortID() const =0;
 
 		/**
 		 * The method used to verify that the value parsed from the command

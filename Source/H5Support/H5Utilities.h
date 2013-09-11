@@ -64,9 +64,9 @@ public:
   #endif
 
   // -----------HDF5 File Operations
-  static H5Support_EXPORT hid_t openFile(const std::string &filename, bool readOnly=false);
+  static H5Support_EXPORT hid_t openFile(const QString &filename, bool readOnly=false);
 
-  static H5Support_EXPORT hid_t createFile(const std::string &filename);
+  static H5Support_EXPORT hid_t createFile(const QString &filename);
 
   static H5Support_EXPORT herr_t closeFile(hid_t &fileId);
 
@@ -77,7 +77,7 @@ public:
   * @param trim set to False to trim the path
   * @return  The path to the object relative to the objId
   */
-  static H5Support_EXPORT std::string getObjectPath(hid_t objId, bool trim=false);
+  static H5Support_EXPORT QString getObjectPath(hid_t objId, bool trim=false);
 
   /**
   * @brief Returns the hdf object type
@@ -86,7 +86,7 @@ public:
   * @param objType The type of the object
   * @return  Negative value on error
   */
-  static H5Support_EXPORT herr_t getObjectType(hid_t objId, const std::string &objName, int32_t *objType);
+  static H5Support_EXPORT herr_t getObjectType(hid_t objId, const QString &objName, int32_t *objType);
 
   /**
   * @brief Retrieves the object name for a given index
@@ -95,7 +95,7 @@ public:
   * @param name The variable to store the name
   * @return Negative value is error
   */
-  static H5Support_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name);
+  static H5Support_EXPORT herr_t objectNameAtIndex(hid_t fileId, int32_t idx, QString &name);
 
   /**
   * @brief Returns if a given hdf5 object is a group
@@ -103,7 +103,7 @@ public:
   * @param objName The name of the object to check
   * @return True if the given hdf5 object id is a group
   */
-  static H5Support_EXPORT bool isGroup(hid_t objId, const std::string &objName);
+  static H5Support_EXPORT bool isGroup(hid_t objId, const QString &objName);
 
 
   /**
@@ -112,7 +112,7 @@ public:
   * @param objectPath The path of the object to open
   * @return The hdf5 id of the opened object. Negative value is error.
   */
-  static H5Support_EXPORT hid_t openHDF5Object(hid_t locId, const std::string &objectPath);
+  static H5Support_EXPORT hid_t openHDF5Object(hid_t locId, const QString &objectPath);
 
   /**
   * @brief Closes the object id
@@ -122,7 +122,7 @@ public:
   static H5Support_EXPORT herr_t closeHDF5Object(hid_t locId);
 
 
-  static H5Support_EXPORT std::string HDFClassTypeAsStr(hid_t class_type);
+  static H5Support_EXPORT QString HDFClassTypeAsStr(hid_t class_type);
 
   /**
   * @brief prints the class type of the given class
@@ -148,7 +148,7 @@ public:
    * @param group The name of the group to create. Note that this group name should
    * not be any sort of 'path'. It should be a single group.
    */
-  static H5Support_EXPORT hid_t createGroup(hid_t loc_id, const std::string &group);
+  static H5Support_EXPORT hid_t createGroup(hid_t loc_id, const QString &group);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -157,7 +157,7 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static H5Support_EXPORT herr_t  createGroupsFromPath(const std::string &pathToCheck, hid_t parent);
+  static H5Support_EXPORT herr_t  createGroupsFromPath(const QString &pathToCheck, hid_t parent);
 
   /**
    * @brief Given a path relative to the Parent ID, this method will create all
@@ -166,14 +166,14 @@ public:
    * @param parent The HDF unique id for the parent
    * @return Error Condition: Negative is error. Positive is success.
    */
-  static H5Support_EXPORT herr_t createGroupsForDataset(const std::string &datasetPath, hid_t parent);
+  static H5Support_EXPORT herr_t createGroupsForDataset(const QString &datasetPath, hid_t parent);
 
   /**
   * @brief Extracts the object name from a given path
   * @param path The path which to extract the object name
   * @return The name of the object
   */
-  static H5Support_EXPORT std::string extractObjectName(const std::string &path);
+  static H5Support_EXPORT QString extractObjectName(const QString &path);
 
   // -------------- HDF Attribute Methods ----------------------------
   /**
@@ -184,8 +184,8 @@ public:
   * @return True if the attribute exists.
   */
   static H5Support_EXPORT bool probeForAttribute(hid_t loc_id,
-                                            const std::string &obj_name,
-                                            const std::string &attr_name);
+                                            const QString &obj_name,
+                                            const QString &attr_name);
 
 
   /**
@@ -203,7 +203,7 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negative value is error
   */
-  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const QString &obj_name,
                                                   std::list<std::string> &names);
 
 #if H5LITE_USE_H5Support_CONSTRUCTS
@@ -215,7 +215,7 @@ public:
    * @return Negative value on error
    */
   static H5Support_EXPORT herr_t readAllAttributes(hid_t fileId,
-                                             const std::string &datasetPath,
+                                             const QString &datasetPath,
                                              H5SupportAbstractAttributes &attributes);
 
 
@@ -228,8 +228,8 @@ public:
   */
   template<typename T>
   static IH5SupportArray::Pointer readH5Data( hid_t locId,
-                                         const std::string &datasetPath,
-                                         const std::vector<hsize_t> &dims)
+                                         const QString &datasetPath,
+                                         const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IH5SupportArray::Pointer ptr;
@@ -266,9 +266,9 @@ public:
   */
   template<typename T>
   static IH5SupportArray::Pointer readH5Attribute(  hid_t locId,
-                                               const std::string &datasetPath,
-                                               const std::string &key,
-                                               const std::vector<hsize_t> &dims)
+                                               const QString &datasetPath,
+                                               const QString &key,
+                                               const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IH5SupportArray::Pointer ptr;

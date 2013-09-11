@@ -61,7 +61,7 @@ ThresholdExample::~ThresholdExample()
 // -----------------------------------------------------------------------------
 void ThresholdExample::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
 
   /* To Compare Arrays like a threshold filter */
   {
@@ -69,7 +69,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Voxel Cell Arrays to Threshold");
     parameter->setPropertyName("CellComparisonInputs");
     parameter->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
@@ -78,7 +78,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Voxel Field Arrays to Threshold");
     parameter->setPropertyName("FieldComparisonInputs");
     parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
@@ -87,7 +87,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Voxel Ensemble Arrays to Threshold");
     parameter->setPropertyName("EnsembleComparisonInputs");
     parameter->setWidgetType(FilterParameter::EnsembleArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
@@ -96,7 +96,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Surface Mesh Point Arrays to Threshold");
     parameter->setPropertyName("PointComparisonInputs");
     parameter->setWidgetType(FilterParameter::VertexArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
@@ -105,7 +105,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Surface Mesh Face Arrays to Threshold");
     parameter->setPropertyName("FaceComparisonInputs");
     parameter->setWidgetType(FilterParameter::FaceArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
   /* To Compare Arrays like a threshold filter */
@@ -114,7 +114,7 @@ void ThresholdExample::setupFilterParameters()
     parameter->setHumanLabel("Surface Mesh Edge Arrays to Threshold");
     parameter->setPropertyName("EdgeComparisonInputs");
     parameter->setWidgetType(FilterParameter::EdgeArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     options.push_back(parameter);
   }
 

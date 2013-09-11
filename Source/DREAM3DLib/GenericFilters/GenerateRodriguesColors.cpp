@@ -83,7 +83,7 @@ GenerateRodriguesColors::~GenerateRodriguesColors()
 // -----------------------------------------------------------------------------
 void GenerateRodriguesColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -187,7 +187,7 @@ void GenerateRodriguesColors::execute()
   }
 
   // Create 1 of every type of Ops class. This condenses the code below
-  std::vector<OrientationOps::Pointer> ops;
+  QVector<OrientationOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
   ops.push_back(CubicOps::New());
   ops.push_back(HexagonalLowOps::New());

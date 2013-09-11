@@ -70,14 +70,14 @@
     AbstractMicrostructurePreset::Pointer newMicrostructurePreset() {\
         return m_msgType::New();\
     }\
-    virtual bool canCreateClass(const std::string &name) {\
-        std::string cn = this->className();\
-        std::string dn = this->displayName();\
+    virtual bool canCreateClass(const QString &name) {\
+        QString cn = this->className();\
+        QString dn = this->displayName();\
         if (cn.compare(name) == 0 || dn.compare(name) == 0) {return true;}\
         return false;\
     }\
-    const std::string className() { return std::string(#m_msgType); }\
-    const std::string displayName() { return std::string(display); }\
+    const QString className() { return std::string(#m_msgType); }\
+    const QString displayName() { return std::string(display); }\
     protected:\
     name(){}\
     private:\
@@ -102,7 +102,7 @@ class AbstractMicrostructurePresetFactory
     MXA_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
     MXA_TYPE_MACRO(AbstractMicrostructurePresetFactory)
 
-    typedef std::vector<Pointer>                        Collection;
+    typedef QVector<Pointer>                        Collection;
     virtual ~AbstractMicrostructurePresetFactory(){}
 
     /**
@@ -119,19 +119,19 @@ class AbstractMicrostructurePresetFactory
      * @param name The name of the class to check which can also be the 'displayName'
      * @return
      */
-    virtual bool canCreateClass(const std::string &name) = 0;
+    virtual bool canCreateClass(const QString &name) = 0;
 
     /**
      * @brief Returns the ClassName of the delegate that this factory will create.
      */
-    virtual const std::string className() = 0;
+    virtual const QString className() = 0;
 
     /**
      * @brief returns a string value that is appropriate to display to a user through
      * some sort of human interface into the program.
      * @return
      */
-    virtual const std::string displayName() = 0;
+    virtual const QString displayName() = 0;
 
 
   protected:

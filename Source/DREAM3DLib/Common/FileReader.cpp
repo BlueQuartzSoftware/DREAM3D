@@ -228,7 +228,7 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
 //
 // -----------------------------------------------------------------------------
 void FileReader::tokenize(const std::string& str,
-                          std::vector<std::string>& tokens,
+                          QVector<std::string>& tokens,
                           const std::string& delimiters)
 {
   // Skip delimiters at beginning.

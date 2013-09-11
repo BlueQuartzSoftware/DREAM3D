@@ -54,7 +54,7 @@
 //
 // -----------------------------------------------------------------------------
 CalculateTriangleGroupCurvatures::CalculateTriangleGroupCurvatures(int nring,
-                                                                   std::vector<int> triangleIds,
+                                                                   QVector<int> triangleIds,
                                                                    bool useNormalsForCurveFitting,
                                                                    DoubleArrayType::Pointer principleCurvature1,
                                                                    DoubleArrayType::Pointer principleCurvature2,
@@ -159,9 +159,9 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
   std::stringstream ss;
-  std::vector<int>::size_type tCount = m_TriangleIds.size();
+  QVector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
-  for(std::vector<int>::size_type i = 0; i < tCount; ++i)
+  for(QVector<int>::size_type i = 0; i < tCount; ++i)
   {
     if (m_ParentFilter->getCancel() == true) { return; }
     int triId = m_TriangleIds[i];
@@ -316,7 +316,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
 // -----------------------------------------------------------------------------
 DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, DREAM3D::Mesh::UniqueFaceIds_t &triPatch,
                                                                               double* data,
-                                                                              const std::string &name) const
+                                                                              const QString &name) const
 {
   DataArray<double>::Pointer extractedData = DataArray<double>::CreateArray(triPatch.size() * 3, name);
   extractedData->SetNumberOfComponents(3);
@@ -329,7 +329,7 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   ++i;
   triPatch.erase(triId);
 
-  for(std::set<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
+  for(QSet<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {
     int32_t t = *iter;
     extractedData->SetComponent(i, 0, data[t*3]);

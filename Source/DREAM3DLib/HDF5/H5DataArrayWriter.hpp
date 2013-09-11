@@ -58,7 +58,7 @@ class H5DataArrayWriter
   public:
   virtual ~H5DataArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t numTuples, int numComp, T* data, const std::string &className)
+  static int writeArray(hid_t gid, const QString &name, size_t numTuples, int numComp, T* data, const QString &className)
   {
       int32_t rank = 0;
       if(numComp == 1)
@@ -119,7 +119,7 @@ class H5GBCDArrayWriter
   public:
   virtual ~H5GBCDArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t* gbcdDims, T* data, const std::string &className)
+  static int writeArray(hid_t gid, const QString &name, size_t* gbcdDims, T* data, const QString &className)
   {
       int32_t rank = 5;
       hsize_t dims[5] = {gbcdDims[0],gbcdDims[1],gbcdDims[2],gbcdDims[3],gbcdDims[4],};

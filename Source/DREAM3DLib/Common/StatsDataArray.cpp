@@ -61,14 +61,14 @@ StatsDataArray::~StatsDataArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::SetName(const std::string &name)
+void StatsDataArray::SetName(const QString &name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string StatsDataArray::GetName()
+QString StatsDataArray::GetName()
 {
   return m_Name;
 }
@@ -151,7 +151,7 @@ size_t StatsDataArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
+int StatsDataArray::EraseTuples(QVector<size_t> &idxs)
 {
   int err = 0;
 
@@ -169,13 +169,13 @@ int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
 
   // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
   // off the end of the array and return an error code.
-  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
     if (idxs[i] >= m_StatsDataArray.size()) { return -100; }
   }
 
 
-  std::vector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
+  QVector<StatsData::Pointer> replacement(m_StatsDataArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
   for(size_t dIdx = 0; dIdx < m_StatsDataArray.size(); ++dIdx)
@@ -272,7 +272,7 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
     if (m_StatsDataArray[i].get() != NULL) {
-    std::string indexString = StringUtils::numToString(i);
+    QString indexString = StringUtils::numToString(i);
     hid_t tupleId = H5Utilities::createGroup(gid, indexString);
     err |= H5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
     err |= H5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
@@ -289,7 +289,7 @@ int StatsDataArray::writeH5Data(hid_t parentId)
 int StatsDataArray::readH5Data(hid_t parentId)
 {
   int err = 0;
-  std::string statsType;
+  QString statsType;
   hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
   if(gid < 0)
   {

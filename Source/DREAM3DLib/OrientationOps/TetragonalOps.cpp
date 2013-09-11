@@ -599,12 +599,12 @@ DREAM3D::Rgb TetragonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Tetragonal <001>");
-  std::string label1("Tetragonal <100>");
-  std::string label2("Tetragonal <110>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("Tetragonal <001>");
+  QString label1("Tetragonal <100>");
+  QString label2("Tetragonal <110>");
 
 
   int numOrientations = config.eulers->GetNumberOfTuples();

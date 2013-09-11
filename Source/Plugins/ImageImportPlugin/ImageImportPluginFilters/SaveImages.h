@@ -79,19 +79,19 @@ class DREAM3DLib_EXPORT SaveImages : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write XY Slice Images"; }
+    virtual const QString getHumanLabel() { return "Write XY Slice Images"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

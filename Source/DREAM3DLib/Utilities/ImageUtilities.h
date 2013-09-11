@@ -53,7 +53,7 @@ public:
   ImageUtilities();
   virtual ~ImageUtilities();
 
-  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const std::string &name, double min, double max);
+  static UInt8ArrayType::Pointer CreateColorImage(DoubleArrayType *data, int width, int height, int nColors, const QString &name, double min, double max);
 
   static void CreateColorImage(DoubleArrayType *data, PoleFigureConfiguration_t &config, UInt8ArrayType* image);
 

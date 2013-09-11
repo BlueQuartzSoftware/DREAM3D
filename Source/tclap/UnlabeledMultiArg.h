@@ -156,19 +156,19 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param i - Pointer the the current argument in the list.
 		 * \param args - Mutable list of strings. Passed from main().
 		 */
-		virtual bool processArg(int* i, std::vector<std::string>& args); 
+		virtual bool processArg(int* i, QVector<std::string>& args); 
 
 		/**
 		 * Returns the a short id string.  Used in the usage.
 		 * \param val - value to be used.
 		 */
-		virtual std::string shortID(const std::string& val="val") const;
+		virtual QString shortID(const std::string& val="val") const;
 
 		/**
 		 * Returns the a long id string.  Used in the usage.
 		 * \param val - value to be used.
 		 */
-		virtual std::string longID(const std::string& val="val") const;
+		virtual QString longID(const std::string& val="val") const;
 
 		/**
 		 * Opertor ==.
@@ -242,7 +242,7 @@ UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name,
 
 
 template<class T>
-bool UnlabeledMultiArg<T>::processArg(int *i, std::vector<std::string>& args) 
+bool UnlabeledMultiArg<T>::processArg(int *i, QVector<std::string>& args) 
 {
 
 	if ( _hasBlanks( args[*i] ) )
@@ -268,14 +268,14 @@ bool UnlabeledMultiArg<T>::processArg(int *i, std::vector<std::string>& args)
 }
 
 template<class T>
-std::string UnlabeledMultiArg<T>::shortID(const std::string& val) const
+QString UnlabeledMultiArg<T>::shortID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return std::string("<") + _typeDesc + "> ...";
 }
 
 template<class T>
-std::string UnlabeledMultiArg<T>::longID(const std::string& val) const
+QString UnlabeledMultiArg<T>::longID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return std::string("<") + _typeDesc + ">  (accepted multiple times)";

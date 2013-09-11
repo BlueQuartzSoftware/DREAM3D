@@ -81,7 +81,7 @@ BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck()
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
@@ -215,7 +215,7 @@ void BadDataNeighborOrientationCheck::execute()
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
-  std::vector<int> neighborCount(totalPoints,0);
+  QVector<int> neighborCount(totalPoints,0);
 
   for (int64_t i = 0; i < totalPoints; i++)
   {

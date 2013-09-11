@@ -52,7 +52,7 @@
 
 namespace Ang {
   namespace DirectoryPatterns {
-    const std::string Dot (".");
+    const QString Dot (".");
   }
 }
 
@@ -78,8 +78,8 @@ class EbsdLib_EXPORT AngDirectoryPatterns
      * @param width The maximum number of digits that make up the index value on each
      * of the data files.
      */
-    static Pointer New(const std::string &parentDirectory,
-                       const std::string &fileprefix,
+    static Pointer New(const QString &parentDirectory,
+                       const QString &fileprefix,
                        int32_t width);
 
     virtual ~AngDirectoryPatterns();
@@ -113,13 +113,13 @@ class EbsdLib_EXPORT AngDirectoryPatterns
      * @brief Creates an absolution path to a specific data file indicated by its index
      * @param slice The index to return a path for
      */
-    std::string generateFullPathAngFileName(int slice);
+    QString generateFullPathAngFileName(int slice);
 
     /**
      * @brief Creates a file name based on a slice index
      * @param slice The slice to generate a file name for.
      */
-    std::string generateAngFileName(int slice);
+    QString generateAngFileName(int slice);
 
     /**
      * @brief Prints out debugging info about this class

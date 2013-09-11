@@ -112,14 +112,14 @@ FlattenImage::~FlattenImage()
 // -----------------------------------------------------------------------------
 void FlattenImage::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Flattening Method");
     option->setPropertyName("FlattenMethod");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("Lightness");
     choices.push_back("Average");
     choices.push_back("Luminosity");

@@ -44,7 +44,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-uint64_t MXA_FILESYSTEM_BASE_CLASS::fileSize(const std::string &path)
+uint64_t MXA_FILESYSTEM_BASE_CLASS::fileSize(const QString &path)
 {
   int error;
   MXA_STATBUF st;
@@ -59,7 +59,7 @@ uint64_t MXA_FILESYSTEM_BASE_CLASS::fileSize(const std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::extension(const std::string &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::extension(const QString &fsPath)
 {
   std::string::size_type pos = fsPath.find_last_of('.');
   // No '.' characters appeared in the path at all
@@ -92,7 +92,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::extension(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::filename(const std::string &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::filename(const QString &fsPath)
 {
 
   std::string::size_type slashPos = fsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::Separator);
@@ -101,7 +101,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::filename(const std::string &fsPath)
     return MXA_FILESYSTEM_BASE_CLASS::filename(fsPath.substr(0, fsPath.size() - 1) );
   }
 
-  std::string fn = fsPath.substr(slashPos + 1, fsPath.size() - slashPos);
+  QString fn = fsPath.substr(slashPos + 1, fsPath.size() - slashPos);
   if (fn.at(fn.size()-1) == '.')
   {
     return fn.substr(0, fn.size() - 1);
@@ -112,17 +112,17 @@ std::string MXA_FILESYSTEM_BASE_CLASS::filename(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::fileNameWithOutExtension(const std::string &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::fileNameWithOutExtension(const QString &fsPath)
 {
-  std::string fname = MXA_FILESYSTEM_BASE_CLASS::filename(fsPath);
-  std::string ext = MXA_FILESYSTEM_BASE_CLASS::extension(fsPath);
+  QString fname = MXA_FILESYSTEM_BASE_CLASS::filename(fsPath);
+  QString ext = MXA_FILESYSTEM_BASE_CLASS::extension(fsPath);
   std::string::size_type pos = fname.find_last_of(ext);
   if (pos != std::string::npos)
   {
     fname = fname.substr(0, fname.size() - ext.size() - 1);
   }
 
-//  std::string parentPath = MXA_FILESYSTEM_BASE_CLASS::parentPath(fsPath);
+//  QString parentPath = MXA_FILESYSTEM_BASE_CLASS::parentPath(fsPath);
 //  if (parentPath.size() > 0)
 //  {
 //    return parentPath + MXA_FILESYSTEM_BASE_CLASS::getSeparator() + fname;

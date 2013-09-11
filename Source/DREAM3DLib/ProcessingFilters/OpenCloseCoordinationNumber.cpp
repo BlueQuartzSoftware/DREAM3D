@@ -75,7 +75,7 @@ OpenCloseCoordinationNumber::~OpenCloseCoordinationNumber()
 // -----------------------------------------------------------------------------
 void OpenCloseCoordinationNumber::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Coordination Number to Consider");
@@ -205,7 +205,7 @@ void OpenCloseCoordinationNumber::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
- // std::vector<int> currentvlist;
+ // QVector<int> currentvlist;
 
   size_t point = 0;
   int kstride, jstride;
@@ -216,9 +216,9 @@ void OpenCloseCoordinationNumber::execute()
 
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
 
-  std::vector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1,0);
 
-  std::vector<int > coordinationNumber(totalPoints,0);
+  QVector<int > coordinationNumber(totalPoints,0);
   bool keepgoing = true;
   int counter = 1;
   while (counter > 0 && keepgoing == true)
@@ -271,7 +271,7 @@ void OpenCloseCoordinationNumber::execute()
         {
             for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
             {
-              std::string name = *iter;
+              QString name = *iter;
               IDataArray::Pointer p = m->getCellData(*iter);
               p->CopyTuple(neighbor, point);
             }

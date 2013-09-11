@@ -101,7 +101,7 @@ class SwitchArg : public Arg
 		 * \param args - Mutable list of strings. Passed
 		 * in from main().
 		 */
-		virtual bool processArg(int* i, std::vector<std::string>& args); 
+		virtual bool processArg(int* i, QVector<std::string>& args); 
 
 		/**
 		 * Checks a string to see if any of the chars in the string
@@ -182,7 +182,7 @@ inline bool SwitchArg::combinedSwitchesMatch(std::string& combinedSwitches )
 }
 
 
-inline bool SwitchArg::processArg(int *i, std::vector<std::string>& args)
+inline bool SwitchArg::processArg(int *i, QVector<std::string>& args)
 {
 	if ( _ignoreable && Arg::ignoreRest() )
 		return false;

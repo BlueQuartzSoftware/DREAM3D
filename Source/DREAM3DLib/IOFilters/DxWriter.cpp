@@ -64,7 +64,7 @@ DxWriter::~DxWriter()
 // -----------------------------------------------------------------------------
 void DxWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -128,7 +128,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -199,7 +199,7 @@ int DxWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;

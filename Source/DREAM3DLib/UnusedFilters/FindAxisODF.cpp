@@ -169,8 +169,8 @@ void FindAxisODF::execute()
 
   float r1, r2, r3;
   int bin;
-  std::vector<FloatArrayType::Pointer> axisodf;
-  std::vector<float> totalaxes;
+  QVector<FloatArrayType::Pointer> axisodf;
+  QVector<float> totalaxes;
   size_t numXTals = crystruct->GetNumberOfTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);

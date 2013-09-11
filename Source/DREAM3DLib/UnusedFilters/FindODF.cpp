@@ -183,8 +183,8 @@ void FindODF::execute()
   size_t bin;
   size_t numgrains = m->getNumFieldTuples();
   int phase;
-  std::vector<float> totalvol;
-  std::vector<FloatArrayType::Pointer> eulerodf;
+  QVector<float> totalvol;
+  QVector<FloatArrayType::Pointer> eulerodf;
 
   size_t numensembles = m->getNumEnsembleTuples();
 

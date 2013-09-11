@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
-typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
+typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
 
 /**
  * @class StatsData StatsData.h DREAM3DLib/Common/StatsData.h
@@ -52,9 +52,9 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
  * There are several statistics that are held by this class in a varying number of
  * storage types. Some types have specific ordering of the sub arrays with in them. Those
  * are enumerated here:@n
- * For the distributions a std::vector holds objects of the DataArray<float>::Pointer which is
+ * For the distributions a QVector holds objects of the DataArray<float>::Pointer which is
  * typedef'ed to FloatArrayType @see DataArray.hpp. The order of the FloatArrayType
- * objects in the std::vector is as follows:
+ * objects in the QVector is as follows:
  *   <b>Beta Distribution</b>@n
  *    @li Alpha
  *    @li Beta
@@ -93,7 +93,7 @@ class DREAM3DLib_EXPORT StatsData
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -116,7 +116,7 @@ class DREAM3DLib_EXPORT StatsData
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
 
-    virtual std::string getStatsType();
+    virtual QString getStatsType();
     virtual unsigned int getPhaseType();
 
   protected:

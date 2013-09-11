@@ -61,10 +61,10 @@ CtfPhase::~CtfPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
+void CtfPhase::parsePhase(const QVector<std::string> &tokens)
 {
   m_LatticeConstants = tokenize<float>(tokens[0], ';');
-  std::vector<float> angles = tokenize<float>(tokens[1], ';');
+  QVector<float> angles = tokenize<float>(tokens[1], ';');
   m_LatticeConstants.push_back(angles[0]);
   m_LatticeConstants.push_back(angles[1]);
   m_LatticeConstants.push_back(angles[2]);
@@ -143,7 +143,7 @@ unsigned int CtfPhase::determineCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string CtfPhase::getMaterialName()
+QString CtfPhase::getMaterialName()
 {
   return m_PhaseName;
 }

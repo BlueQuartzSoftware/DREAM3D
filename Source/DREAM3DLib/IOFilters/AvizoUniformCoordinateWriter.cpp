@@ -62,7 +62,7 @@ AvizoUniformCoordinateWriter::~AvizoUniformCoordinateWriter()
 // -----------------------------------------------------------------------------
 void AvizoUniformCoordinateWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -157,7 +157,7 @@ void AvizoUniformCoordinateWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;
@@ -183,7 +183,7 @@ void AvizoUniformCoordinateWriter::execute()
     return;
   }
 
-  std::string header = generateHeader();
+  QString header = generateHeader();
   writer.writeString(header);
 
   err = writeData(writer);
@@ -195,7 +195,7 @@ void AvizoUniformCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AvizoUniformCoordinateWriter::generateHeader()
+QString AvizoUniformCoordinateWriter::generateHeader()
 {
   std::stringstream ss;
   if(m_WriteBinaryFile == true)
@@ -250,7 +250,7 @@ std::string AvizoUniformCoordinateWriter::generateHeader()
 // -----------------------------------------------------------------------------
 int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
 {
-  std::string start("@1\n");
+  QString start("@1\n");
   writer.writeString(start);
   if(true == m_WriteBinaryFile)
   {

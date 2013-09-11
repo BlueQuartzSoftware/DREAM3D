@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * index into the vector is the value of the constant at EBSD::CrystalStructure::***
      * @return Vector of OrientationOps subclasses.
      */
-    static std::vector<OrientationOps::Pointer> getOrientationOpsVector();
+    static QVector<OrientationOps::Pointer> getOrientationOpsVector();
 
     /**
      * @brief getODFSize Returns the number of elements in the ODF array
@@ -177,10 +177,10 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param eulers The Euler Angles to generate the pole figure from.
      * @param imageSize The size in Pixels of the final RGB Image.
      * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
-     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
 
   protected:
     OrientationOps();

@@ -89,9 +89,9 @@ class DREAM3DLib_EXPORT FindNeighbors : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Neighbors"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Neighbors"; }
 
 
   protected:

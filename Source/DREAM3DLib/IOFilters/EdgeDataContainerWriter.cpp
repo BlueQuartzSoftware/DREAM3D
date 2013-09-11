@@ -89,7 +89,7 @@ EdgeDataContainerWriter::~EdgeDataContainerWriter()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -289,9 +289,9 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
   //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
   //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
   //ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  //std::vector<char> nameBuffer(nameSize, 0);
+  //QVector<char> nameBuffer(nameSize, 0);
   //nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-  //std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  //QString hdfFileName(&(nameBuffer.front()), nameSize);
   //hdfFileName = MXAFileInfo::filename(hdfFileName);
   //out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << std::endl;
   //out << "      </DataItem>" << std::endl;
@@ -329,11 +329,11 @@ void EdgeDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
-                                                                              const std::string &groupName,
+QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString &attrType,
+                                                                              const QString &groupName,
                                                                               IDataArray::Pointer array,
-                                                                              const std::string &centering,
-                                                                              int precision, const std::string &xdmfTypeName)
+                                                                              const QString &centering,
+                                                                              int precision, const QString &xdmfTypeName)
 {
   std::stringstream out;
   std::stringstream dimStr;
@@ -353,10 +353,10 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
 
     ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-    std::vector<char> nameBuffer(nameSize, 0);
+    QVector<char> nameBuffer(nameSize, 0);
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-    std::string hdfFileName(&(nameBuffer.front()), nameSize);
+    QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
 
     out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
@@ -381,9 +381,9 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
     out << std::endl;
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr1.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
     ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-    std::vector<char> nameBuffer(nameSize, 0);
+    QVector<char> nameBuffer(nameSize, 0);
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-    std::string hdfFileName(&(nameBuffer.front()), nameSize);
+    QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
     out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
     out << "        </DataItem>" << std::endl;
@@ -406,9 +406,9 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
     out << std::endl;
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr2.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
     ssize_t nameSize2 = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-    std::vector<char> nameBuffer2(nameSize2, 0);
+    QVector<char> nameBuffer2(nameSize2, 0);
     nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
-    std::string hdfFileName2(&(nameBuffer2.front()), nameSize2);
+    QString hdfFileName2(&(nameBuffer2.front()), nameSize2);
     hdfFileName2 = MXAFileInfo::filename(hdfFileName2);
     out << "        " << hdfFileName2 << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << std::endl;
     out << "        </DataItem>" << std::endl;
@@ -421,7 +421,7 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering)
 {
 #if 0
       <Attribute Name="Node Type" Center="Node">
@@ -438,7 +438,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupNam
   std::ostream& out = *m_XdmfPtr;
   std::stringstream dimStr;
   int precision = 0;
-  std::string xdmfTypeName;
+  QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
   if (0 == precision)
   {
@@ -446,10 +446,10 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupNam
     return;
   }
   int numComp = array->GetNumberOfComponents();
-  std::string attrType = "Scalar";
+  QString attrType = "Scalar";
   if(numComp > 2) attrType = "Vector";
 
-  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
 
   out << block << std::endl;
 }
@@ -458,7 +458,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupNam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int EdgeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
@@ -502,7 +502,7 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
   size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
 
   // Allocate a flat array to copy the data into
-  std::vector<uint8_t> buffer(totalBytes, 0);
+  QVector<uint8_t> buffer(totalBytes, 0);
   uint8_t* bufPtr = &(buffer.front());
   size_t offset = 0;
 
@@ -602,12 +602,12 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -638,7 +638,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
   }
 
   size_t total = 0;
-  typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
+  typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
   NameListType names = m->getEdgeFieldArrayNameList();
@@ -693,7 +693,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
   // Write the NeighborLists onto their own grid
   // We need to determine how many total elements we are going to end up with and group the arrays by
   // those totals so we can minimize the number of grids
-  typedef std::map<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
+  typedef QMap<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
   SizeToIDataArrays_t sizeToDataArrays;
 
   for(VectorOfIDataArrays_t::iterator iter = neighborListArrays.begin(); iter < neighborListArrays.end(); ++iter)

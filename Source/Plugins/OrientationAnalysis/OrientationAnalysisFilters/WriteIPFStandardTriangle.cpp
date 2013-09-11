@@ -97,7 +97,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -113,7 +113,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");

@@ -168,7 +168,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(CubicOps::k_MdfSize);
+    QVector<float> mdf(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
@@ -184,7 +184,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(HexagonalOps::k_MdfSize);
+    QVector<float> mdf(HexagonalOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
@@ -308,14 +308,14 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   else
   {
     size_t numMisorients = 0;
-    std::string filename = file.toStdString();
+    QString filename = file.toStdString();
     std::ifstream inFile;
     inFile.open(filename.c_str());
 
     inFile >> numMisorients;
 
     float angle, weight;
-    std::string axis, n1, n2, n3;
+    QString axis, n1, n2, n3;
     for(size_t i = 0; i < numMisorients; i++)
     {
       inFile >> angle >> n1 >> n2 >> n3 >> weight;

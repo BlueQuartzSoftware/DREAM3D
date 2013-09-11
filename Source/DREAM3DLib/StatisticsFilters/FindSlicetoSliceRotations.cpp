@@ -73,7 +73,7 @@ FindSlicetoSliceRotations::~FindSlicetoSliceRotations()
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Slice to Slice Rotations File");

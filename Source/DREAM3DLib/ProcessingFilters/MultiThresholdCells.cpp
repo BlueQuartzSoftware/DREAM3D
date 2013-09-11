@@ -65,7 +65,7 @@ MultiThresholdCells::~MultiThresholdCells()
 // -----------------------------------------------------------------------------
 void MultiThresholdCells::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
@@ -73,7 +73,7 @@ void MultiThresholdCells::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back(DREAM3D::CellData::GoodVoxels);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -84,7 +84,7 @@ void MultiThresholdCells::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
     parameter->setWidgetType(FilterParameter::CellArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     parameter->setShowOperators(true);
     parameters.push_back(parameter);
   }

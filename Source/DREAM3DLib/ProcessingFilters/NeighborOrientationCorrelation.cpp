@@ -81,7 +81,7 @@ NeighborOrientationCorrelation::~NeighborOrientationCorrelation()
 // -----------------------------------------------------------------------------
 void NeighborOrientationCorrelation::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
@@ -229,9 +229,9 @@ void NeighborOrientationCorrelation::execute()
   float n1, n2, n3;
   unsigned int phase1, phase2;
 
-  std::vector<int> neighborDiffCount(totalPoints,0);
-  std::vector<int> neighborSimCount(6,0);
-  std::vector<int> bestNeighbor(totalPoints,-1);
+  QVector<int> neighborDiffCount(totalPoints,0);
+  QVector<int> neighborSimCount(6,0);
+  QVector<int> bestNeighbor(totalPoints,-1);
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
   while(currentLevel > m_Level)
@@ -343,7 +343,7 @@ void NeighborOrientationCorrelation::execute()
     {
       for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
       {
-        std::string name = *iter;
+        QString name = *iter;
         IDataArray::Pointer p = m->getCellData(*iter);
         p->CopyTuple(neighbor, j);
       }

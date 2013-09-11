@@ -71,7 +71,7 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 void ChangeResolution::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -176,7 +176,7 @@ void ChangeResolution::execute()
   int col, row, plane;
   int index;
   int index_old;
-  std::vector<size_t> newindicies;
+  QVector<size_t> newindicies;
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
@@ -203,7 +203,7 @@ void ChangeResolution::execute()
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    std::string name = *iter;
+    QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

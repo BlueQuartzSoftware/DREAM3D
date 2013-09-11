@@ -173,7 +173,7 @@ struct ArgTraits<std::string> {
 };
 
 template<typename T>
-void SetString(T &dst, const std::string &src)
+void SetString(T &dst, const QString &src)
 {
     dst = src;
 }

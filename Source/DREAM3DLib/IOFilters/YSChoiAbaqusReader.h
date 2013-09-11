@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
     //------ Created Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read YS Choi Abaqus Vtk Output File"; }
 
 	virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

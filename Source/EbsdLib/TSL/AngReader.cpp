@@ -159,7 +159,7 @@ void AngReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* AngReader::getPointerByName(const std::string &fieldName)
+void* AngReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
@@ -177,7 +177,7 @@ void* AngReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType AngReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType AngReader::getPointerType(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
@@ -206,7 +206,7 @@ int AngReader::readHeaderOnly()
     std::cout << "Ang file could not be opened: " << getFileName() << std::endl;
     return -100;
   }
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
@@ -247,7 +247,7 @@ int AngReader::readFile()
     return -100;
   }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
@@ -298,7 +298,7 @@ void AngReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   // Initialize new pointers
   size_t totalDataRows = 0;
 
-  std::string grid = getGrid();
+  QString grid = getGrid();
 
   int nOddCols = getNumOddCols();
   int nEvexCells = getNumEvenCols();
@@ -410,7 +410,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
   }
   wordEnd = i;
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  QString word( &(buf[wordStart]), wordEnd - wordStart);
 
   if (word.size() == 0)
   {
@@ -469,10 +469,10 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
       /*
       std::cout << "---------------------------" << std::endl;
       std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
-      std::string upper(word);
+      QString upper(word);
       std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
       std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
-      std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
+      std::cout << "const QString " << word << "(ANG_" << upper << ");" << std::endl;
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
       std::cout << "m_HeaderMap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
@@ -499,7 +499,7 @@ void AngReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void AngReader::parseDataLine(const std::string &line, size_t i)
+void AngReader::parseDataLine(const QString &line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:

@@ -61,7 +61,7 @@ VtkGrainIdWriter::~VtkGrainIdWriter()
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -156,7 +156,7 @@ int VtkGrainIdWriter::writeFile()
   }
 
   VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelGrainIdScalarWriter<VoxelDataContainer>(m));
-  std::vector<VtkScalarWriter*> scalarsToWrite;
+  QVector<VtkScalarWriter*> scalarsToWrite;
   w0->m_WriteBinaryFiles = m_WriteBinaryFiles;
   scalarsToWrite.push_back(w0);
   VTKRectilinearGridFileWriter writer;

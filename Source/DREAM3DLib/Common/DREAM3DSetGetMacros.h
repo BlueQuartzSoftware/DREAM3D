@@ -82,11 +82,11 @@
 #define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
   if (NULL != sharedPtr.get())\
 {\
-  sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
+  sharedPtr = VType(static_cast<QVector<m_msgType>*>(NULL));\
   }\
   if (NULL != obj->sharedPtr.get())\
 {\
-  sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
+  sharedPtr = VType(new QVector<m_msgType>(*(obj->sharedPtr.get())));\
   }
 
 
@@ -202,7 +202,7 @@ static Pointer New args \
  * information. */
 #define DREAM3D_TYPE_MACRO(thisClass) \
   public: \
-  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+  virtual const QString getNameOfClass() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -226,8 +226,8 @@ static Pointer New args \
 
 #define DREAM3D_TYPE_MACRO_SUPER(thisClass,superclass) \
   public: \
-  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
-  static std::string ClassName() {return std::string(#thisClass);}\
+  virtual const QString getNameOfClass() {return std::string(#thisClass);}\
+  static QString ClassName() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -256,11 +256,11 @@ static Pointer New args \
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
-* @brief Creates a std::string constant for the Property so that the property
+* @brief Creates a QString constant for the Property so that the property
 * can be retrieved by name.
 */
 #define DREAM3D_PROPERTY_CONSTANT(prpty) \
-  const std::string prpty ( #prpty );
+  const QString prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -345,20 +345,20 @@ static Pointer New args \
 * @brief Creates a "setter" method to set the property.
 */
 #define DREAM3D_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const std::string &value) { this->varname = value; }
+  void set##prpty(const QString &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define DREAM3D_GET_STRING_PROPERTY( prpty, varname) \
-  std::string get##prpty() { return varname; }
+  QString get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
 #define DREAM3D_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
   DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -366,7 +366,7 @@ static Pointer New args \
 
 #define DREAM3D_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
     virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
     virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -433,11 +433,11 @@ void set##name##Pointer(type* f)\
 //
 // -----------------------------------------------------------------------------
 #define CREATE_INPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    QString f = m_InputDirectory + MXADir::Separator + n;\
     f = MXADir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    QString f = m_InputDirectory + MXADir::Separator + n;\
     f = MXADir::toNativeSeparators(f);
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
@@ -451,7 +451,7 @@ void set##name##Pointer(type* f)\
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      std::string msg = std::string(Message);\
+      QString msg = std::string(Message);\
       pipelineErrorMessage(msg.c_str());\
       updatePipelineProgress(0);\
       pipelineFinished();\
@@ -459,7 +459,7 @@ void set##name##Pointer(type* f)\
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+    QString outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
 // -----------------------------------------------------------------------------
@@ -485,7 +485,7 @@ namespace DREAM3D
   };
 
   template<typename T>
-  T lexical_cast(const std::string &s)
+  T lexical_cast(const QString &s)
   {
     std::istringstream i(s);
     T x;

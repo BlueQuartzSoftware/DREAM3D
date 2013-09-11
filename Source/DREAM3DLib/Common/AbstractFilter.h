@@ -76,26 +76,26 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual ~AbstractFilter();
 
     // These should be implemented by the subclass
-    virtual const std::string getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-    virtual const std::string getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
-    virtual const std::string getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+    virtual const QString getGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+    virtual const QString getSubGroupName() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
+    virtual const QString getHumanLabel() { return "YOUR CLASS SHOULD IMPLEMENT THIS";}
 
-    virtual const std::string getFilterVersion() { return DREAM3DLib::Version::Complete(); }
+    virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
     DREAM3D_INSTANCE_PROPERTY(VolumeDataContainer*, VolumeDataContainer)
     DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
     DREAM3D_INSTANCE_PROPERTY(VertexDataContainer*, VertexDataContainer)
     DREAM3D_INSTANCE_PROPERTY(EdgeDataContainer*, EdgeDataContainer)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages)
+    DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 
     void addErrorMessage(PipelineMessage &msg);
-    void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
-    void addErrorMessages(std::vector<PipelineMessage> msgVector);
+    void addErrorMessage(const QString &filterName, const QString &errorDescription, int errorCode);
+    void addErrorMessages(QVector<PipelineMessage> msgVector);
 
     void addWarningMessage(PipelineMessage &msg);
-    void addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode);
-    void addWarningMessages(std::vector<PipelineMessage> msgVector);
+    void addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode);
+    void addWarningMessages(QVector<PipelineMessage> msgVector);
 
     void removeErrorMessage(PipelineMessage msg);
     void removeErrorMessage(int index);
@@ -122,9 +122,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
 
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<FilterParameter::Pointer>, FilterParameters)
+    DREAM3D_INSTANCE_PROPERTY(QVector<FilterParameter::Pointer>, FilterParameters)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
+    DREAM3D_INSTANCE_PROPERTY(QVector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
     void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
 
     virtual void printValues(std::ostream &out){}
@@ -152,8 +152,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual void execute();
     virtual void preflight();
 
-    virtual bool doesPipelineContainFilterBeforeThis(const std::string &name);
-    virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
+    virtual bool doesPipelineContainFilterBeforeThis(const QString &name);
+    virtual bool doesPipelineContainFilterAfterThis(const QString &name);
 
 
 

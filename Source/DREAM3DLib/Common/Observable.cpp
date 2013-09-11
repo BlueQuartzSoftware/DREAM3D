@@ -58,7 +58,7 @@ void Observable::addObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 void Observable::removeObserver(Observer* observer)
 {
-  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
+  for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
   {
     if ((*iter) == observer)
     {
@@ -71,7 +71,7 @@ void Observable::removeObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setMessagePrefix(const std::string &str)
+void Observable::setMessagePrefix(const QString &str)
 {
   m_Prefix = str;
 }
@@ -79,7 +79,7 @@ void Observable::setMessagePrefix(const std::string &str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string Observable::getMessagePrefix()
+QString Observable::getMessagePrefix()
 {
   return m_Prefix;
 }
@@ -96,7 +96,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
     {
        msg.setMessagePrefix(m_Prefix);
     }
-    for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+    for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
     {
         (*iter)->sendPipelineMessage(msg);
     }
@@ -105,7 +105,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
+void Observable::notifyErrorMessage(QString errDesc, int errCode) {
 		PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
 		notifyMessage(errorMsg);
 }
@@ -113,7 +113,7 @@ void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
+void Observable::notifyWarningMessage(QString warnDesc, int warnCode) {
   PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
   notifyMessage(warningMsg);
 }
@@ -121,7 +121,7 @@ void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusMessage(std::string statusDesc) {
+void Observable::notifyStatusMessage(QString statusDesc) {
   PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
   notifyMessage(statusMsg);
 }
@@ -137,7 +137,7 @@ void Observable::notifyProgressValue(int statusVal) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
+void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal) {
   PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
   notifyMessage(statusUpdate);
 }
@@ -146,9 +146,9 @@ void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//void Observable::notifyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
+//void Observable::notifyMessage(QVector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
 //{
-//  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+//  for (QVector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
 //  {
 //    notifyMessage(*iter, progress, a);
 //  }
@@ -158,12 +158,12 @@ void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<Observer*> Observable::getObservers()
+QVector<Observer*> Observable::getObservers()
 {
   return this->m_Observers;
 }
 #if 0
-void Observable::getObservers(std::vector<Observer*> &observers)
+void Observable::getObservers(QVector<Observer*> &observers)
 {
   observers.resize(m_Observers.size());
   for(size_t i = 0; i < m_Observers.size(); ++i)
@@ -176,7 +176,7 @@ void Observable::getObservers(std::vector<Observer*> &observers)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setObservers(std::vector<Observer*> obs)
+void Observable::setObservers(QVector<Observer*> obs)
 {
   this->m_Observers = obs;
 }

@@ -89,7 +89,7 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -162,14 +162,14 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     char buf[size];
     // Read header from data file to figure out how many points there are
     std::ifstream in(getInputFile().c_str());
-    std::string word;
+    QString word;
     bool headerdone = false;
     int xpoints, ypoints, zpoints;
     float resx, resy, resz;
     while (headerdone == false)
     {
       in.getline(buf, size);
-      std::string line = buf;
+      QString line = buf;
       in >> word;
       if (DIMS == word)
       {
@@ -213,12 +213,12 @@ void YSChoiAbaqusReader::execute()
   char buf[size];
   // Read header from data file to figure out how many points there are
   std::ifstream in(getInputFile().c_str());
-  std::string word;
+  QString word;
   bool headerdone = false;
   while (headerdone == false)
   {
     in.getline(buf, size);
-    std::string line = buf;
+    QString line = buf;
     in >> word;
     if (DIMS == word)
     {
@@ -246,7 +246,7 @@ void YSChoiAbaqusReader::execute()
   int numgrains;
   in2 >> numgrains;
   in2.getline(buf, size);
-  std::string line = buf;
+  QString line = buf;
   in2 >> word >> word >> word >> word >> word >> word;
   dataCheck(false, totalpoints, numgrains+1, 2);
   //Read data file
@@ -278,7 +278,7 @@ void YSChoiAbaqusReader::execute()
       while (headerdone == false)
       {
         in.getline(buf, size);
-        std::string line = buf;
+        QString line = buf;
         in >> word;
         if (LOOKUP == word)
         {

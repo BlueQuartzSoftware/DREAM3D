@@ -67,7 +67,7 @@ WriteAbaqusSurfaceMesh::~WriteAbaqusSurfaceMesh()
 // -----------------------------------------------------------------------------
 void WriteAbaqusSurfaceMesh::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -172,7 +172,7 @@ void WriteAbaqusSurfaceMesh::execute()
 
    // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -191,7 +191,7 @@ void WriteAbaqusSurfaceMesh::execute()
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < trianglePtr->GetNumberOfTuples(); i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -299,7 +299,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -309,7 +309,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int spin = 0;
 
   //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     if(spin < 0) { continue; }

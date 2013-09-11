@@ -118,7 +118,7 @@ static Pointer New args \
  * information. */
 #define MXA_TYPE_MACRO(thisClass) \
 public: \
-virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+virtual const QString getNameOfClass() {return std::string(#thisClass);}\
 static int IsTypeOf(const char *m_msgType) \
 { \
 if ( !strcmp(#thisClass,m_msgType) ) \
@@ -142,8 +142,8 @@ return static_cast<Target>(x);\
 
 #define MXA_TYPE_MACRO_SUPER(thisClass,superclass) \
 public: \
-virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
-static std::string ClassName() {return std::string(#thisClass);}\
+virtual const QString getNameOfClass() {return std::string(#thisClass);}\
+static QString ClassName() {return std::string(#thisClass);}\
 static int IsTypeOf(const char *m_msgType) \
 { \
 if ( !strcmp(#thisClass,m_msgType) ) \
@@ -173,11 +173,11 @@ return SafeObjectDownCast<superclass*, thisClass*>(s);\
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
-* @brief Creates a std::string constant for the Property so that the property
+* @brief Creates a QString constant for the Property so that the property
 * can be retrieved by name.
 */
 #define MXA_PROPERTY_CONSTANT(prpty) \
-  const std::string prpty ( #prpty );
+  const QString prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -264,20 +264,20 @@ return SafeObjectDownCast<superclass*, thisClass*>(s);\
 * @brief Creates a "setter" method to set the property.
 */
 #define MXA_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const std::string &value) { this->varname = value; }
+  void set##prpty(const QString &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define MXA_GET_STRING_PROPERTY( prpty, varname) \
-  std::string get##prpty() { return varname; }
+  QString get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
 #define MXA_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
   MXA_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   MXA_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -301,7 +301,7 @@ namespace MXA
   };
 
   template<typename T>
-  T lexical_cast(const std::string &s)
+  T lexical_cast(const QString &s)
   {
     std::istringstream i(s);
     T x;

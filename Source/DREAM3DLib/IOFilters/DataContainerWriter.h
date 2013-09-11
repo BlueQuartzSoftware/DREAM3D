@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write DREAM3D Data File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
 
     virtual void setupFilterParameters();
     /**

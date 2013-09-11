@@ -58,7 +58,7 @@ ColorTable::~ColorTable()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ColorTable::GetColorTable(int numColors, std::vector<float> &colors)
+void ColorTable::GetColorTable(int numColors, QVector<float> &colors)
 { 
   static const int numColorNodes = 8;
   float color[numColorNodes][3] =

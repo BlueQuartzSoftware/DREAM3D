@@ -75,7 +75,7 @@ FillBadData::~FillBadData()
 // -----------------------------------------------------------------------------
 void FillBadData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Defect Size");
@@ -176,8 +176,8 @@ void FillBadData::execute()
     static_cast<DimType>(udims[2]),
   };
 
-  std::vector<int > neighs;
-  std::vector<int > remove;
+  QVector<int > neighs;
+  QVector<int > remove;
   size_t count = 1;
   int good = 1;
   int neighbor;
@@ -194,7 +194,7 @@ void FillBadData::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  std::vector<int> currentvlist;
+  QVector<int> currentvlist;
 
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
@@ -253,7 +253,7 @@ void FillBadData::execute()
   int current = 0;
   int most = 0;
 
-  std::vector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1,0);
   while (count != 0)
   {
     count = 0;
@@ -320,7 +320,7 @@ void FillBadData::execute()
       {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }

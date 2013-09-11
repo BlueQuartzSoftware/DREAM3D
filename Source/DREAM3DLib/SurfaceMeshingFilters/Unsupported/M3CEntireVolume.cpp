@@ -72,7 +72,7 @@ M3CEntireVolume::~M3CEntireVolume()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
    {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Add Surface Layer");
@@ -605,7 +605,7 @@ int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3]
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-voxel* M3CEntireVolume::initialize_micro_from_dx_file(int &xDim, int &yDim, int &zDim, double dx, double dy, double dz, const std::string ifn)
+voxel* M3CEntireVolume::initialize_micro_from_dx_file(int &xDim, int &yDim, int &zDim, double dx, double dy, double dz, const QString ifn)
 {
   int i, j, k;
   int id;

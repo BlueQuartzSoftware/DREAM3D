@@ -79,7 +79,7 @@ typedef struct
 } TripleNN;
 
 
-void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ")
+void tokenize(const std::string& str, QVector<std::string>& tokens, const std::string& delimiters = " ")
 {
   // Skip delimiters at beginning.
   std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
@@ -172,7 +172,7 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
@@ -379,14 +379,14 @@ void MovingFiniteElementSmoothing::execute()
   triplennPtr->initializeWithZeros();
   TripleNN* triplenn = triplennPtr->GetPointer(0);
 
-//  std::vector<std::string> data;
+//  QVector<std::string> data;
 #if 0
   // read in nodes/triangles
   std::ifstream input1(nodesFile.c_str());
   std::ifstream input2(triangleFile.c_str());
   std::ofstream velocities;
 #endif
-  std::string outputNodesFile("/tmp/outputNodesFile.txt");
+  QString outputNodesFile("/tmp/outputNodesFile.txt");
 
   if(isVerbose)
   {
@@ -396,8 +396,8 @@ void MovingFiniteElementSmoothing::execute()
   }
 
 
-  std::vector<int> tid(ntri);
-  std::vector<int> nodeConstraint(numberNodes); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
+  QVector<int> tid(ntri);
+  QVector<int> nodeConstraint(numberNodes); //  0=unconstrained, 1=constrained in X, 2= in Y, 4= in Z
 
   //Read the nodes
 #if 0
@@ -701,7 +701,7 @@ void MovingFiniteElementSmoothing::execute()
   double A, Q;
   int hist_count = 10;
 
-  std::vector<double> Q_max_hist(hist_count);
+  QVector<double> Q_max_hist(hist_count);
 
   Q_ave = 2.9;
   Q_max_ave = 10;
@@ -925,17 +925,17 @@ void MovingFiniteElementSmoothing::execute()
 #if 0
     //Output velocities for examination
     std::ostringstream iter_stream;
-    std::string iter_string;
+    QString iter_string;
 
     // write the iteration to a string
     iter_stream << updates;
     iter_string = iter_stream.str();
 
     // extract the basename from the provided filename
-    std::string infile = outputNodesFile;
-    std::vector<std::string> tokens;
-    std::string delimiters = "."; // Only a period
-    std::string basename;
+    QString infile = outputNodesFile;
+    QVector<std::string> tokens;
+    QString delimiters = "."; // Only a period
+    QString basename;
     tokenize(infile, tokens, delimiters);
 
     if(tokens.size() > 2)
@@ -950,7 +950,7 @@ void MovingFiniteElementSmoothing::execute()
     }
 
     // put it all back together
-    std::string iterFileName;
+    QString iterFileName;
     if(updates < 9)
     {
       iterFileName = basename + "_0" + iter_string + ".inp";
@@ -988,8 +988,8 @@ void MovingFiniteElementSmoothing::execute()
         {
           nodes[r].pos[s] += bc_dt * x[3 * r + s];
         }
-        //		velocityfile  << std::scientific << std::setw(4)
-        //			  << std::setprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
+        //		velocityfile  << std::scientific << QSetw(4)
+        //			  << QSetprecision(4) << F[3*r+s] << "\t"<< x[3*r+s] <<"\t";
       }
       //	  velocityfile << std::endl;
     }
@@ -1060,7 +1060,7 @@ void MovingFiniteElementSmoothing::execute()
   inpfile << nnod << std::endl;
   for (int i = 0; i < nnod; i++)
   {
-    inpfile << std::setw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].pos[0] << "\t" << nodes[i].pos[1] << "\t"
+    inpfile << QSetw(6) << std::fixed << "\t" << i << "\t" << nodes[i].nodeKind << "\t" << nodes[i].pos[0] << "\t" << nodes[i].pos[1] << "\t"
         << nodes[i].pos[2] << std::endl;
   }
   inpfile.close();

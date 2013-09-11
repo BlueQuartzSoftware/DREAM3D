@@ -93,14 +93,14 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+   virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SmoothingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Laplacian Smoothing"; }
+    virtual const QString getHumanLabel() { return "Laplacian Smoothing"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -166,7 +166,7 @@ class DREAM3DLib_EXPORT LaplacianSmoothing : public SurfaceMeshFilter
     bool m_DoConnectivityFilter;
 
 #if OUTPUT_DEBUG_VTK_FILES
-    void writeVTKFile(const std::string &outputVtkFile);
+    void writeVTKFile(const QString &outputVtkFile);
 #endif
 
 

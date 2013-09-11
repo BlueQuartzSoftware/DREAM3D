@@ -97,9 +97,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const std::string getHumanLabel() {return "Match Crystallography";}
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
     /**
@@ -159,8 +159,8 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float mdfchange;
     float odfchange;
 
-    std::vector<float> unbiasedvol;
-    std::vector<float> totalSurfaceArea;
+    QVector<float> unbiasedvol;
+    QVector<float> totalSurfaceArea;
 
 
     FloatArrayType::Pointer actualodf;
@@ -169,9 +169,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     FloatArrayType::Pointer simmdf;
 
 
-    std::vector<std::vector<float> > misorientationlists;
+    QVector<QVector<float> > misorientationlists;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

@@ -59,7 +59,7 @@ LinkFieldMapToCellArray::~LinkFieldMapToCellArray()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
@@ -116,7 +116,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     return;
   }
 
-  std::string dType = data->getTypeAsString();
+  QString dType = data->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int32_t") == 0)
   {
@@ -177,7 +177,7 @@ void LinkFieldMapToCellArray::execute()
   m->clearCellFieldData();
 
   int maxIndex = 0;
-  std::vector<bool> active;
+  QVector<bool> active;
   for(int64_t i=0;i<voxels;i++)
   {
     int index = m_SelectedCellData[i];

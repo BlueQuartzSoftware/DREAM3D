@@ -68,7 +68,7 @@ int H5FilterParametersWriter::openFilterGroup(AbstractFilter* filter, int index)
   {
     return -1;
   }
-  std::string name = StringUtils::numToString(index);
+  QString name = StringUtils::numToString(index);
   m_CurrentGroupId = H5Utilities::createGroup(m_GroupId, name);
   err = H5Lite::writeStringAttribute(m_GroupId, name, "ClassName", filter->getNameOfClass());
   err = H5Lite::writeStringAttribute(m_GroupId, name, "HumanLabel", filter->getHumanLabel());
@@ -88,7 +88,7 @@ int H5FilterParametersWriter::closeFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, const std::string value)
+int H5FilterParametersWriter::writeValue(const QString name, const QString value)
 {
   int err = 0;
   err = H5Lite::writeStringDataset(m_CurrentGroupId, name, value);
@@ -98,7 +98,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, const std::stri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, const std::vector<std::string> value)
+int H5FilterParametersWriter::writeValue(const QString name, const QVector<std::string> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -116,7 +116,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, const std::vect
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, int8_t value)
+int H5FilterParametersWriter::writeValue(const QString name, int8_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -126,7 +126,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, int8_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, int16_t value)
+int H5FilterParametersWriter::writeValue(const QString name, int16_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -136,7 +136,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, int16_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, int32_t value)
+int H5FilterParametersWriter::writeValue(const QString name, int32_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -146,7 +146,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, int32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, int64_t value)
+int H5FilterParametersWriter::writeValue(const QString name, int64_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -156,7 +156,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, int64_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, uint8_t value)
+int H5FilterParametersWriter::writeValue(const QString name, uint8_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -166,7 +166,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, uint8_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, uint16_t value)
+int H5FilterParametersWriter::writeValue(const QString name, uint16_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -176,7 +176,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, uint16_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, uint32_t value)
+int H5FilterParametersWriter::writeValue(const QString name, uint32_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -186,7 +186,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, uint32_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, uint64_t value)
+int H5FilterParametersWriter::writeValue(const QString name, uint64_t value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -196,7 +196,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, uint64_t value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, float value)
+int H5FilterParametersWriter::writeValue(const QString name, float value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -206,7 +206,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, float value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, double value)
+int H5FilterParametersWriter::writeValue(const QString name, double value)
 {
   int err = 0;
   err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, value);
@@ -216,7 +216,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, double value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int8_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int8_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -234,7 +234,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int16_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int16_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -252,7 +252,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int32_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int32_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -270,7 +270,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int64_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<int64_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -288,7 +288,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<int
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint8_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint8_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -306,7 +306,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint16_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint16_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -324,7 +324,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint32_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint32_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -342,7 +342,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uint64_t> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<uint64_t> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -360,7 +360,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<uin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<float> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<float> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -378,7 +378,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<flo
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<double> value)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<double> value)
 {
   int vectorSize = value.size();
   int err = H5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
@@ -396,7 +396,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<dou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t v)
+int H5FilterParametersWriter::writeValue(const QString name, IntVec3Widget_t v)
 {
   int err = 0;
   int32_t rank = 1;
@@ -408,7 +408,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, IntVec3Widget_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, FloatVec3Widget_t v)
+int H5FilterParametersWriter::writeValue(const QString name, FloatVec3Widget_t v)
 {
   int err = 0;
   int32_t rank = 1;
@@ -420,7 +420,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, FloatVec3Widget
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput_t v, int vectorPos)
+int H5FilterParametersWriter::writeValue(const QString name, ComparisonInput_t v, int vectorPos)
 {
   int err = 0;
 
@@ -438,7 +438,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, ComparisonInput
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<ComparisonInput_t> v)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);
@@ -452,7 +452,7 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Com
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_t v, int vectorPos)
+int H5FilterParametersWriter::writeValue(const QString name, AxisAngleInput_t v, int vectorPos)
 {
   int err = 0;
   int32_t rank = 1;
@@ -469,12 +469,12 @@ int H5FilterParametersWriter::writeValue(const std::string name, AxisAngleInput_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::vector<AxisAngleInput_t> v)
+int H5FilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInput_t> v)
 {
   int numQFilters = static_cast<int>( v.size() );
   int err = writeValue(name,  numQFilters);
   if (err < 0) { return err; }
-  std::string parseOrder = "Angle, H, K, L";
+  QString parseOrder = "Angle, H, K, L";
   err = H5Lite::writeStringAttribute(m_CurrentGroupId, name, "Data Order", parseOrder);
   if (err < 0) { return err; }
   for(int i = 0; i < numQFilters; i++)
@@ -488,14 +488,14 @@ int H5FilterParametersWriter::writeValue(const std::string name, std::vector<Axi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5FilterParametersWriter::writeValue(const std::string name, std::set<std::string> v)
+int H5FilterParametersWriter::writeValue(const QString name, QSet<std::string> v)
 {
   size_t size = v.size();
   herr_t err = 0;
   if (size > 0)
   {
-    std::string setStr = "";
-    std::set<std::string>::iterator iter = v.begin();
+    QString setStr = "";
+    QSet<std::string>::iterator iter = v.begin();
     for (; iter != v.end(); iter++)
     {
       setStr.append(*iter).append("\n");

@@ -75,7 +75,7 @@ class CmdLineInterface
 		 * add does not need to be called.
 		 * \param xors - List of Args to be added and xor'd. 
 		 */
-		virtual void xorAdd( std::vector<Arg*>& xors )=0;
+		virtual void xorAdd( QVector<Arg*>& xors )=0;
 
 		/**
 		 * Parses the command line.
@@ -89,7 +89,7 @@ class CmdLineInterface
          * \param args - A vector of strings representing the args. 
          * args[0] is still the program name.
          */
-        void parse(std::vector<std::string>& args);
+        void parse(QVector<std::string>& args);
 
 		/**
 		 * Returns the CmdLineOutput object.

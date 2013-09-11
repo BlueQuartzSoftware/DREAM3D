@@ -79,7 +79,7 @@ Hex2SqrConverter::~Hex2SqrConverter()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -147,7 +147,7 @@ void Hex2SqrConverter::execute()
   std::stringstream ss;
   herr_t err = 0;
 
-  std::vector<int> indices;
+  QVector<int> indices;
   // Loop on Each EBSD File
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
@@ -176,22 +176,22 @@ void Hex2SqrConverter::execute()
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
  // int totalSlicesImported = 0;
-  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
+    QString ebsdFName = *filepath;
 
     progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
-    std::string msg = "Converting File: " + ebsdFName;
+    QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
     notifyStatusMessage(msg.c_str());
 
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
-    std::string ext = MXAFileInfo::extension(ebsdFName);
-    std::string base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
-    std::string path = MXAFileInfo::parentPath(ebsdFName);
+    QString ext = MXAFileInfo::extension(ebsdFName);
+    QString base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
+    QString path = MXAFileInfo::parentPath(ebsdFName);
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
         AngReader reader;
@@ -214,7 +214,7 @@ void Hex2SqrConverter::execute()
         }
         else
         {
-            std::string origHeader = reader.getOriginalHeader();
+            QString origHeader = reader.getOriginalHeader();
             if (origHeader.empty() == true)
             {
               ss.str();
@@ -225,7 +225,7 @@ void Hex2SqrConverter::execute()
             char buf[kBufferSize];
             std::stringstream in(origHeader);
 
-            std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
+            QString newEbsdFName = path + "/Sqr_" + base + "." + ext;
             std::ofstream outFile;
             outFile.open(newEbsdFName.c_str());
 
@@ -252,7 +252,7 @@ void Hex2SqrConverter::execute()
             int* phase = reader.getPhaseDataPointer();
             while (!in.eof())
             {
-                std::string line;
+                QString line;
                 ::memset(buf, 0, kBufferSize);
                 in.getline(buf, kBufferSize);
                 line = modifyAngHeaderLine(buf, kBufferSize);
@@ -317,9 +317,9 @@ void Hex2SqrConverter::execute()
 // -----------------------------------------------------------------------------
 //  Modify the Header line of the ANG file if necessary
 // -----------------------------------------------------------------------------
-std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
+QString Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
 {
-  std::string line = "";
+  QString line = "";
   if (buf[0] != '#')
   {
     line = buf;
@@ -343,7 +343,7 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   }
   wordEnd = i;
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  QString word( &(buf[wordStart]), wordEnd - wordStart);
 
   if (word.size() == 0)
   {
@@ -381,14 +381,14 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   return line;
 }
 
-std::string Hex2SqrConverter::int_to_string(int value)
+QString Hex2SqrConverter::int_to_string(int value)
 {
     std::stringstream oss;
     oss << value;
     return oss.str();
 }
 
-std::string Hex2SqrConverter::float_to_string(float value)
+QString Hex2SqrConverter::float_to_string(float value)
 {
     std::stringstream oss;
     oss << value;

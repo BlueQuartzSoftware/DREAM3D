@@ -130,7 +130,7 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");

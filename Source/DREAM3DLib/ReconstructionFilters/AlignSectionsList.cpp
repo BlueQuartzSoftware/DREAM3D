@@ -82,7 +82,7 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -178,7 +178,7 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();

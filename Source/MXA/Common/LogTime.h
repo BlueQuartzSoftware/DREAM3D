@@ -81,7 +81,7 @@ inline void CMP_gettimeofday(struct timeval* p, void* tz /* IGNORED */)
 * purpose.
 * @return A std:string of the current date/time
 */
-inline std::string logTime() {
+inline QString logTime() {
   TimeType long_time = 0;
   TimeFunc(&long_time);
   tm *t = 0x0;
@@ -101,12 +101,12 @@ inline std::string logTime() {
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
-  ss  << "[" << std::setw(4) << t->tm_year + 1900 << ":"
-      << std::setw(2) << t->tm_mon + 1 << ":"
-      << std::setw(2) << t->tm_mday << " "
-      << std::setw(2) << t->tm_hour << ":"
-      << std::setw(2) << t->tm_min << ":"
-      << std::setw(2) << t->tm_sec << "] ";
+  ss  << "[" << QSetw(4) << t->tm_year + 1900 << ":"
+      << QSetw(2) << t->tm_mon + 1 << ":"
+      << QSetw(2) << t->tm_mday << " "
+      << QSetw(2) << t->tm_hour << ":"
+      << QSetw(2) << t->tm_min << ":"
+      << QSetw(2) << t->tm_sec << "] ";
   return ss.str();
 }
 
@@ -114,7 +114,7 @@ inline std::string logTime() {
  * Returns a date/time string suitable for tiff tags.
  * @return
  */
-inline std::string tifDateTime() {
+inline QString tifDateTime() {
   TimeType long_time = 0;
   TimeFunc(&long_time);
   tm *t = 0x0;
@@ -134,12 +134,12 @@ inline std::string tifDateTime() {
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
-  ss   << std::setw(4) << t->tm_year + 1900 << ":"
-       << std::setw(2) << t->tm_mon + 1 << ":"
-       << std::setw(2) << t->tm_mday << " "
-       << std::setw(2) << t->tm_hour << ":"
-       << std::setw(2) << t->tm_min << ":"
-       << std::setw(2) << t->tm_sec;
+  ss   << QSetw(4) << t->tm_year + 1900 << ":"
+       << QSetw(2) << t->tm_mon + 1 << ":"
+       << QSetw(2) << t->tm_mday << " "
+       << QSetw(2) << t->tm_hour << ":"
+       << QSetw(2) << t->tm_min << ":"
+       << QSetw(2) << t->tm_sec;
   return ss.str();
 }
 
@@ -148,7 +148,7 @@ inline std::string tifDateTime() {
  * applications.
  * @return
  */
-inline std::string MXAVersionString()
+inline QString MXAVersionString()
 {
   TimeType long_time = 0;
   TimeFunc(&long_time);
@@ -169,9 +169,9 @@ inline std::string MXAVersionString()
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
-  ss << std::setw(4) << t->tm_year + 1900 << "."
-     << std::setw(2) << t->tm_mon + 1 << "."
-     << std::setw(2) << t->tm_mday << " ";;
+  ss << QSetw(4) << t->tm_year + 1900 << "."
+     << QSetw(2) << t->tm_mon + 1 << "."
+     << QSetw(2) << t->tm_mday << " ";;
   return ss.str();
 }
 
@@ -195,7 +195,7 @@ namespace MXA {
 #endif
   }
 
-  inline std::string convertMillisToHrsMinSecs(unsigned long long int millis)
+  inline QString convertMillisToHrsMinSecs(unsigned long long int millis)
   {
     unsigned long long int Hours = millis / (1000*60*60);
     unsigned long long intMinutes = (millis % (1000*60*60)) / (1000*60);
@@ -203,9 +203,9 @@ namespace MXA {
     std::stringstream ss;
     ss.setf(std::ios::fixed);
     ss.fill('0');
-    ss << std::setw(2) << Hours << ":"
-       << std::setw(2) << intMinutes << ":"
-       << std::setw(2) << intSeconds;
+    ss << QSetw(2) << Hours << ":"
+       << QSetw(2) << intMinutes << ":"
+       << QSetw(2) << intSeconds;
     return ss.str();
   }
 

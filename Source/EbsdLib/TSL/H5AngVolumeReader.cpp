@@ -94,7 +94,7 @@ void H5AngVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  std::set<std::string> arrayNames = getArraysToRead();
+  QSet<std::string> arrayNames = getArraysToRead();
 
   H5ANGREADER_ALLOCATE_ARRAY(Phi1, float)
   H5ANGREADER_ALLOCATE_ARRAY(Phi, float)
@@ -128,7 +128,7 @@ void H5AngVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5AngVolumeReader::getPointerByName(const std::string &fieldName)
+void* H5AngVolumeReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
@@ -146,7 +146,7 @@ void* H5AngVolumeReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
@@ -165,12 +165,12 @@ Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
+QVector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 {
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  std::string index = StringUtils::numToString(getZStart());
+  QString index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
   hid_t fileId = H5Utilities::openFile(getFileName(), true);

@@ -174,7 +174,7 @@ void FindNRingNeighbors::generate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
+void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -250,7 +250,7 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (std::set<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
+  for (QSet<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
   {
     int32_t tid = *iter;
     tData[1] = triangles[tid].verts[0];

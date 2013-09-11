@@ -208,10 +208,10 @@ void FindSlipTransmissionMetrics::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  std::vector<std::vector<float> > F1lists;
-  std::vector<std::vector<float> > F1sptlists;
-  std::vector<std::vector<float> > F7lists;
-  std::vector<std::vector<float> > mPrimelists;
+  QVector<QVector<float> > F1lists;
+  QVector<QVector<float> > F1sptlists;
+  QVector<QVector<float> > F7lists;
+  QVector<QVector<float> > mPrimelists;
 
   float mprime, F1, F1spt, F7;
   int nname;
@@ -273,22 +273,22 @@ void FindSlipTransmissionMetrics::execute()
   for (int64_t i = 1; i < totalFields; i++)
   {
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f1L(new std::vector<float>);
+    NeighborList<float>::SharedVectorType f1L(new QVector<float>);
     f1L->assign(F1lists[i].begin(), F1lists[i].end());
     m_F1->setList(static_cast<int>(i), f1L);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f1sptL(new std::vector<float>);
+    NeighborList<float>::SharedVectorType f1sptL(new QVector<float>);
     f1sptL->assign(F1sptlists[i].begin(), F1sptlists[i].end());
     m_F1spt->setList(static_cast<int>(i), f1sptL);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f7L(new std::vector<float>);
+    NeighborList<float>::SharedVectorType f7L(new QVector<float>);
     f7L->assign(F7lists[i].begin(), F7lists[i].end());
     m_F7->setList(static_cast<int>(i), f7L);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType mPrimeL(new std::vector<float>);
+    NeighborList<float>::SharedVectorType mPrimeL(new QVector<float>);
     mPrimeL->assign(mPrimelists[i].begin(), mPrimelists[i].end());
     m_mPrime->setList(static_cast<int>(i), mPrimeL);
   }

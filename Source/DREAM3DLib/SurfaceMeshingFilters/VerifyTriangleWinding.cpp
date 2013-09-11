@@ -97,7 +97,7 @@ class LabelVisitorInfo
   public:
     //   typedef Mesh<int32_t>::Pointer                MeshPtrType;
     typedef DREAM3D::Mesh::Face_t                   FaceType;
-    typedef std::vector<int32_t>      FaceListType;
+    typedef QVector<int32_t>      FaceListType;
 
     DREAM3D_SHARED_POINTERS(LabelVisitorInfo)
     static Pointer New(int32_t label, size_t tIndex)
@@ -125,8 +125,8 @@ class LabelVisitorInfo
     DREAM3D_INSTANCE_PROPERTY(int32_t, NewLabel)
     DREAM3D_INSTANCE_PROPERTY(bool, Relabeled)
 
-    std::set<int32_t>  m_Faces;
-    std::set<int32_t>  m_OriginalFaceList;
+    QSet<int32_t>  m_Faces;
+    QSet<int32_t>  m_OriginalFaceList;
 
     /**
  *
@@ -136,7 +136,7 @@ class LabelVisitorInfo
  */
     Pointer relabelFaces(Mesh::Pointer mesh,
                              DataArray<int32_t>* masterFaceListPtr,
-                             const std::vector<bool> &masterVisited)
+                             const QVector<bool> &masterVisited)
     {
       size_t triangleIndex = *(m_Faces.begin());
       int32_t newLabel = mesh->getMaxLabel() + 1;
@@ -150,7 +150,7 @@ class LabelVisitorInfo
       p->m_Faces = m_Faces; // This will make a copy of the current set of triangles
       p->m_OriginalFaceList = m_Faces; // Make a copy that does NOT get updated
       bool seedIsSet = false;
-      for (std::set<int32_t>::iterator triIter = p->m_Faces.begin(); triIter != p->m_Faces.end(); ++triIter )
+      for (QSet<int32_t>::iterator triIter = p->m_Faces.begin(); triIter != p->m_Faces.end(); ++triIter )
       {
         if (masterFaceList[ (*triIter) * 2] == m_Label) { masterFaceList[ (*triIter) * 2] = newLabel; }
         if (masterFaceList[ (*triIter) * 2 + 1] == m_Label) { masterFaceList[ (*triIter) * 2 + 1] = newLabel; }
@@ -174,7 +174,7 @@ class LabelVisitorInfo
       if (m_Relabeled == true)
       {
         //  std::cout << "    Reverting Label " << m_NewLabel << " To " << m_Label << std::endl;
-        for (std::set<int32_t>::iterator triIter = m_OriginalFaceList.begin(); triIter != m_OriginalFaceList.end(); ++triIter )
+        for (QSet<int32_t>::iterator triIter = m_OriginalFaceList.begin(); triIter != m_OriginalFaceList.end(); ++triIter )
         {
           if (masterFaceList[(*triIter) * 2] == m_NewLabel) { masterFaceList[(*triIter) * 2] = m_Label; }
           if (masterFaceList[(*triIter) * 2 + 1] == m_NewLabel) { masterFaceList[(*triIter) * 2 + 1] = m_Label; }
@@ -230,7 +230,7 @@ VerifyTriangleWinding::~VerifyTriangleWinding()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -432,7 +432,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices)
+int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &triangleIndices)
 {
 
   DREAM3D::Mesh::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
@@ -446,7 +446,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, std::set<int32_t> 
   float avgX = 0.0f;
   int32_t seedFaceIdx = 0;
 
-  for (std::set<int32_t>::iterator iter = triangleIndices.begin(); iter != triangleIndices.end(); ++iter)
+  for (QSet<int32_t>::iterator iter = triangleIndices.begin(); iter != triangleIndices.end(); ++iter)
   {
     int32_t i = *iter;
     avgX  = (verts[triangles[i].verts[0]].pos[0] + verts[triangles[i].verts[1]].pos[0] + verts[triangles[i].verts[2]].pos[0])/3.0;
@@ -590,7 +590,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   std::deque<LabelVisitorInfo::Pointer> labelObjectsToVisit;
 
   // Keeps a list of all the triangles that have been visited.
-  std::vector<bool> masterVisited(masterFaceList->GetNumberOfTuples(), false);
+  QVector<bool> masterVisited(masterFaceList->GetNumberOfTuples(), false);
 
   STDEXT::hash_set<int32_t> labelsVisitedSet;
   STDEXT::hash_set<int32_t> labelsToVisitSet;
@@ -633,7 +633,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     }
     ++progressIndex;
 
-    std::map<int32_t, int32_t> neighborlabels;
+    QMap<int32_t, int32_t> neighborlabels;
 
     curLdo = labelObjectsToVisit.front();
     labelObjectsToVisit.pop_front();
@@ -661,7 +661,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       triIndex = curLdo->getStartIndex();
     }
     // Get the number of triangles remaining to be visited for the current label
-    std::set<int32_t>::size_type nLabelTriStart = curLdo->m_Faces.size();
+    QSet<int32_t>::size_type nLabelTriStart = curLdo->m_Faces.size();
 
 
     STDEXT::hash_set<int> localVisited;
@@ -677,7 +677,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
       //   std::cout << " $ tIndex: " << triangleIndex << std::endl;
 
-      std::vector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceDataContainer(), triangleIndex, currentLabel);
+      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceDataContainer(), triangleIndex, currentLabel);
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
         // std::cout << "  ^ AdjTri index: " << *adjTri << std::endl;
@@ -718,7 +718,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
     // Find the Next label to push onto the end of the labels List, but ONLY if it is NOT
     // currently on the list and NOT currently on the label visited list.
-    for (std::map<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
+    for (QMap<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
     {
       int32_t triangleIndex = (*neigh).second;
       int32_t* triangleLabel = faceLabels + triangleIndex*2;
@@ -744,7 +744,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
     }
 
-    std::set<int32_t>::size_type nLabelTriEnd = curLdo->m_Faces.size();
+    QSet<int32_t>::size_type nLabelTriEnd = curLdo->m_Faces.size();
     if (nLabelTriStart == nLabelTriEnd )
     {
       // std::cout << "    !--!++! No new triangles visited for int32_t " << currentLabel << std::endl;
@@ -786,14 +786,14 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   //std::cout << "labelsVisited.size() :" << labelsVisitedSet.size() << std::endl;
 
 
-  std::set<int32_t> thelabels = TriangleOps::generateUniqueLabels(faceLabelsPtr);
+  QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(faceLabelsPtr);
   for (STDEXT::hash_set<int32_t>::iterator iter = labelsVisitedSet.begin(); iter != labelsVisitedSet.end(); ++iter )
   {
     thelabels.erase(*iter);
   }
 
   //std::cout << "labels NOT visited:" << std::endl;
-  for (std::set<int32_t>::iterator iter = thelabels.begin(); iter != thelabels.end(); ++iter )
+  for (QSet<int32_t>::iterator iter = thelabels.begin(); iter != thelabels.end(); ++iter )
   {
     //std::cout << "  int32_t: " << *iter << std::endl;
   }

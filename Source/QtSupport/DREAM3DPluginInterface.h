@@ -75,9 +75,9 @@ namespace DREAM3D\
 {\
   namespace UIPlugins\
   {\
-   const std::string libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
-   const std::string libName##DisplayName(DREAM3D_PLUGIN_3(human));\
-   const std::string libName##BaseName(#libName);\
+   const QString libName##File(DREAM3D_PLUGIN_2(libName##Plugin));\
+   const QString libName##DisplayName(DREAM3D_PLUGIN_3(human));\
+   const QString libName##BaseName(#libName);\
   }\
 }
 

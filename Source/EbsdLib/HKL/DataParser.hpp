@@ -42,7 +42,7 @@ class DataParser
 
     virtual ~DataParser() {}
 
-    virtual void parse(const std::string &token, size_t offset)=0;
+    virtual void parse(const QString &token, size_t offset)=0;
   protected:
     DataParser(){}
 
@@ -59,7 +59,7 @@ class Int32Parser : public DataParser
   public:
     EBSD_SHARED_POINTERS(Int32Parser)
     EBSD_TYPE_MACRO(Int32Parser)
-    static Pointer New(int32_t* ptr, size_t size, const std::string &name)
+    static Pointer New(int32_t* ptr, size_t size, const QString &name)
     {
       Pointer sharedPtr (new Int32Parser(ptr, size, name));
       return sharedPtr;
@@ -71,14 +71,14 @@ class Int32Parser : public DataParser
     EBSD_INSTANCE_PROPERTY(size_t, Size)
     EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
-    virtual void parse(const std::string &token, size_t offset)
+    virtual void parse(const QString &token, size_t offset)
     {
       int value;
       sscanf( token.c_str(), "%d", &value);
       m_Ptr[offset] = value;
     }
   protected:
-    Int32Parser(int32_t* ptr, size_t size, const std::string &name) :
+    Int32Parser(int32_t* ptr, size_t size, const QString &name) :
       m_Ptr(ptr),
       m_Size(size),
       m_ColumnName(name)
@@ -101,7 +101,7 @@ class FloatParser : public DataParser
   public:
     EBSD_SHARED_POINTERS(FloatParser)
     EBSD_TYPE_MACRO(FloatParser)
-    static Pointer New(float* ptr, size_t size, const std::string &name)
+    static Pointer New(float* ptr, size_t size, const QString &name)
     {
       Pointer sharedPtr (new FloatParser(ptr, size, name));
       return sharedPtr;
@@ -113,7 +113,7 @@ class FloatParser : public DataParser
     EBSD_INSTANCE_PROPERTY(size_t, Size)
     EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
-    virtual void parse(const std::string &token, size_t offset)
+    virtual void parse(const QString &token, size_t offset)
     {
       float value;
       sscanf( token.c_str(), "%f", &value);
@@ -121,7 +121,7 @@ class FloatParser : public DataParser
       //printf("%s: %f\n", m_ColumnName.c_str(), value);
     }
   protected:
-    FloatParser(float* ptr, size_t size, const std::string &name) :
+    FloatParser(float* ptr, size_t size, const QString &name) :
       m_Ptr(ptr),
       m_Size(size),
       m_ColumnName(name)

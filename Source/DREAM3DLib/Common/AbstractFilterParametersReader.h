@@ -65,38 +65,38 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int openFilterGroup(AbstractFilter* filter, int index) = 0;
     virtual int closeFilterGroup() = 0;
 
-    virtual std::string readValue(const std::string name, std::string value) = 0;
-    virtual std::vector<std::string> readValue(const std::string name, std::vector<std::string> value) = 0;
+    virtual QString readValue(const QString name, QString value) = 0;
+    virtual QVector<std::string> readValue(const QString name, QVector<std::string> value) = 0;
 
-    virtual int8_t readValue(const std::string name, int8_t value) = 0;
-    virtual int16_t readValue(const std::string name, int16_t value) = 0;
-    virtual int32_t readValue(const std::string name, int32_t value) = 0;
-    virtual int64_t readValue(const std::string name, int64_t value) = 0;
-    virtual uint8_t readValue(const std::string name, uint8_t value) = 0;
-    virtual uint16_t readValue(const std::string name, uint16_t value) = 0;
-    virtual uint32_t readValue(const std::string name, uint32_t value) = 0;
-    virtual uint64_t readValue(const std::string name, uint64_t value) = 0;
-    virtual float readValue(const std::string name, float value) = 0;
-    virtual double readValue(const std::string name, double value) = 0;
+    virtual int8_t readValue(const QString name, int8_t value) = 0;
+    virtual int16_t readValue(const QString name, int16_t value) = 0;
+    virtual int32_t readValue(const QString name, int32_t value) = 0;
+    virtual int64_t readValue(const QString name, int64_t value) = 0;
+    virtual uint8_t readValue(const QString name, uint8_t value) = 0;
+    virtual uint16_t readValue(const QString name, uint16_t value) = 0;
+    virtual uint32_t readValue(const QString name, uint32_t value) = 0;
+    virtual uint64_t readValue(const QString name, uint64_t value) = 0;
+    virtual float readValue(const QString name, float value) = 0;
+    virtual double readValue(const QString name, double value) = 0;
 
-    virtual std::vector<int8_t> readValue(const std::string name, std::vector<int8_t> value) = 0;
-    virtual std::vector<int16_t> readValue(const std::string name, std::vector<int16_t> value) = 0;
-    virtual std::vector<int32_t> readValue(const std::string name, std::vector<int32_t> value) = 0;
-    virtual std::vector<int64_t> readValue(const std::string name, std::vector<int64_t> value) = 0;
-    virtual std::vector<uint8_t> readValue(const std::string name, std::vector<uint8_t> value) = 0;
-    virtual std::vector<uint16_t> readValue(const std::string name, std::vector<uint16_t> value) = 0;
-    virtual std::vector<uint32_t> readValue(const std::string name, std::vector<uint32_t> value) = 0;
-    virtual std::vector<uint64_t> readValue(const std::string name, std::vector<uint64_t> value) = 0;
-    virtual std::vector<float> readValue(const std::string name, std::vector<float> value) = 0;
-    virtual std::vector<double> readValue(const std::string name, std::vector<double> value) = 0;
+    virtual QVector<int8_t> readValue(const QString name, QVector<int8_t> value) = 0;
+    virtual QVector<int16_t> readValue(const QString name, QVector<int16_t> value) = 0;
+    virtual QVector<int32_t> readValue(const QString name, QVector<int32_t> value) = 0;
+    virtual QVector<int64_t> readValue(const QString name, QVector<int64_t> value) = 0;
+    virtual QVector<uint8_t> readValue(const QString name, QVector<uint8_t> value) = 0;
+    virtual QVector<uint16_t> readValue(const QString name, QVector<uint16_t> value) = 0;
+    virtual QVector<uint32_t> readValue(const QString name, QVector<uint32_t> value) = 0;
+    virtual QVector<uint64_t> readValue(const QString name, QVector<uint64_t> value) = 0;
+    virtual QVector<float> readValue(const QString name, QVector<float> value) = 0;
+    virtual QVector<double> readValue(const QString name, QVector<double> value) = 0;
 
-    virtual IntVec3Widget_t readValue(const std::string name, IntVec3Widget_t v) = 0;
-    virtual FloatVec3Widget_t readValue(const std::string name, FloatVec3Widget_t v) = 0;
-    virtual ComparisonInput_t readValue(const std::string name, ComparisonInput_t v, int vectorPos) = 0;
-  virtual std::vector<ComparisonInput_t> readValue(const std::string name, std::vector<ComparisonInput_t> v) = 0;
-  virtual AxisAngleInput_t readValue(const std::string name, AxisAngleInput_t v, int vectorPos) = 0;
-  virtual std::vector<AxisAngleInput_t> readValue(const std::string name, std::vector<AxisAngleInput_t> v) = 0;
-  virtual std::set<std::string> readValue(const std::string name, std::set<std::string> v) = 0;
+    virtual IntVec3Widget_t readValue(const QString name, IntVec3Widget_t v) = 0;
+    virtual FloatVec3Widget_t readValue(const QString name, FloatVec3Widget_t v) = 0;
+    virtual ComparisonInput_t readValue(const QString name, ComparisonInput_t v, int vectorPos) = 0;
+  virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v) = 0;
+  virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
+  virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
+  virtual QSet<std::string> readValue(const QString name, QSet<std::string> v) = 0;
 
   protected:
     AbstractFilterParametersReader();

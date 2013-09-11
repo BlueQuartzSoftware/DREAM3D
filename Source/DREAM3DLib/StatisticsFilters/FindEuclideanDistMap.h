@@ -71,9 +71,9 @@ class DREAM3DLib_EXPORT FindEuclideanDistMap : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(QPEuclideanDistancesArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(NearestNeighborsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Euclidean Distance Map"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Euclidean Distance Map"; }
 
     virtual void setupFilterParameters();
     /**

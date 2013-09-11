@@ -87,20 +87,20 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Read Orientation Data"; }
+    virtual const QString getHumanLabel() { return "Read Orientation Data"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -174,7 +174,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     {
 
 
-      std::vector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
+      QVector<typename EbsdPhase::Pointer> phases = reader->getPhaseVector();
       if (phases.size() == 0)
       {
         setErrorCondition(reader->getErrorCode());
@@ -202,7 +202,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         int phaseID = phases[i]->getPhaseIndex();
         crystalStructures->SetValue(phaseID, phases[i]->determineCrystalStructure() );
         materialNames->SetValue(phaseID, phases[i]->getMaterialName());
-        std::vector<float> lc = phases[i]->getLatticeConstants();
+        QVector<float> lc = phases[i]->getLatticeConstants();
 
         latticeConstants->SetComponent(phaseID, 0, lc[0]);
         latticeConstants->SetComponent(phaseID, 1, lc[1]);

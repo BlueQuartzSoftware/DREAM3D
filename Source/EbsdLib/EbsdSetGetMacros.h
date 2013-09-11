@@ -201,11 +201,11 @@ static Pointer New args \
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
-* @brief Creates a std::string constant for the Property so that the property
+* @brief Creates a QString constant for the Property so that the property
 * can be retrieved by name.
 */
 #define EBSD_PROPERTY_CONSTANT(prpty) \
-  const std::string prpty ( #prpty );
+  const QString prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -262,20 +262,20 @@ static Pointer New args \
 * @brief Creates a "setter" method to set the property.
 */
 #define EBSD_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const std::string &value) { this->varname = value; }
+  void set##prpty(const QString &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define EBSD_GET_STRING_PROPERTY( prpty, varname) \
-  std::string get##prpty() { return varname; }
+  QString get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
 #define EBSD_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
   EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -283,7 +283,7 @@ static Pointer New args \
 
 #define EBSD_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  std::string      m_##prpty;\
+  QString      m_##prpty;\
   public:\
     virtual EBSD_SET_STRING_PROPERTY(prpty,  m_##prpty)\
     virtual EBSD_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -364,7 +364,7 @@ namespace Ebsd
   };
 
   template<typename T>
-  T lexical_cast(const std::string &s)
+  T lexical_cast(const QString &s)
   {
     std::istringstream i(s);
     T x;

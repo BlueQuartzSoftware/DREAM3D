@@ -115,9 +115,9 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-   virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
-    virtual const std::string getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+   virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::GenerationFilters; }
+    virtual const QString getHumanLabel() { return "M3C Surface Meshing (Slice at a time)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -312,7 +312,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
                              StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr);
 
     void get_case_triangles_helper(int nedge, int* burnt, int* burnt_list, int &loopID, int *ae,
-                                  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, std::vector<int> &countVec);
+                                  StructArray<SurfaceMesh::M3C::Segment>::Pointer cEdgePtr, QVector<int> &countVec);
 
     void get_case_triangles_helper_2(int* burnt_loop, int* burnt_list,
                                                 int from, int to, int numN, int &ctid,
@@ -356,7 +356,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
-                        const std::string &nodesFile,
+                        const QString &nodesFile,
                         DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                         DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                         DataArray<int8_t>::Pointer cVertexNodeTypePtr);
@@ -372,7 +372,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @return
      */
     int writeTrianglesFile(int zID, int ctid,
-                           const std::string &trianglesFile, int nt,
+                           const QString &trianglesFile, int nt,
                            StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                            DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                            int32_t grainIdZeroMappingValue);
@@ -395,7 +395,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
 
     // The next two methods are for analyzing the winding
     // void analyzeWinding();
-    // std::vector<int> findAdjacentTriangles(Triangle *triangle, int label);
+    // QVector<int> findAdjacentTriangles(Triangle *triangle, int label);
 
   private:
     int32_t* m_GrainIds;

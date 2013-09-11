@@ -16,11 +16,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> MXA_FILESYSTEM_BASE_CLASS::entryList(const std::string &path)
+QVector<std::string> MXA_FILESYSTEM_BASE_CLASS::entryList(const QString &path)
 {
   DIR* dir = NULL;
   struct dirent* de = NULL;
-  std::vector<std::string> list;
+  QVector<std::string> list;
   dir = opendir( path.c_str() );
 
   if (NULL != dir)
@@ -39,10 +39,10 @@ std::vector<std::string> MXA_FILESYSTEM_BASE_CLASS::entryList(const std::string 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const std::string &name, bool createParentDirectories)
+bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const QString &name, bool createParentDirectories)
 {
 #if defined (WIN32)
-  std::string dirName = name;
+  QString dirName = name;
   if (createParentDirectories) {
       dirName = MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName));
       // We specifically search for / so \ would break it..
@@ -70,7 +70,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const std::string &name, bool createParent
               slash = dirName.length();
           }
           if (slash != std::string::npos) {
-            std::string chunk = dirName.substr(0, slash);
+            QString chunk = dirName.substr(0, slash);
             bool existed = false;
             if (!isDirPath(chunk, &existed) && !existed)
             {
@@ -83,7 +83,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const std::string &name, bool createParent
   return (!::CreateDirectoryA(dirName.c_str(), 0)  == 0);
 #else
 
-  std::string dirName = name;
+  QString dirName = name;
   if (createParentDirectories)
   {
     dirName = MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName);
@@ -98,7 +98,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const std::string &name, bool createParent
       }
       if (slash != std::string::npos)
       {
-        std::string chunk = dirName.substr(0, slash);
+        QString chunk = dirName.substr(0, slash);
         if (exists(chunk) == false)
         {
           MXA_STATBUF st;
@@ -129,16 +129,16 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const std::string &name, bool createParent
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::rmdir(const std::string &name, bool recurseParentDirectories)
+bool MXA_FILESYSTEM_BASE_CLASS::rmdir(const QString &name, bool recurseParentDirectories)
 {
 #if defined (WIN32)
-  std::string dirName = name;
+  QString dirName = name;
   if (recurseParentDirectories)
   {
       dirName = MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName));
       for (std::string::size_type oldslash = 0, slash=dirName.length(); slash > 0; oldslash = slash)
       {
-          std::string chunk = dirName.substr(0, slash);
+          QString chunk = dirName.substr(0, slash);
           if (chunk.length() == 2 && isalpha(chunk[0]) && chunk[1] == ':')
               break;
           if (!isDirPath(chunk, 0))
@@ -151,11 +151,11 @@ bool MXA_FILESYSTEM_BASE_CLASS::rmdir(const std::string &name, bool recurseParen
   }
   return (bool)(_rmdir(name.c_str()) == 0 );
 #else
-  std::string dirName = name;
+  QString dirName = name;
     if (recurseParentDirectories) {
         dirName = MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName);
         for(int oldslash = 0, slash=dirName.length(); slash > 0; oldslash = slash) {
-            std::string chunk = dirName.substr(0, slash);
+            QString chunk = dirName.substr(0, slash);
             MXA_STATBUF st;
             if (MXA_STAT(chunk.c_str(), &st) != -1) {
                 if ((st.st_mode & S_IFMT) != S_IFDIR)
@@ -176,7 +176,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::rmdir(const std::string &name, bool recurseParen
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::remove(const std::string &fsPath)
+bool MXA_FILESYSTEM_BASE_CLASS::remove(const QString &fsPath)
 {
   return UNLINK(MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(fsPath).c_str()) == 0;
 }
@@ -184,9 +184,9 @@ bool MXA_FILESYSTEM_BASE_CLASS::remove(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::tempPath()
+QString MXA_FILESYSTEM_BASE_CLASS::tempPath()
 {
-  std::string ret;
+  QString ret;
 #if (WIN32)
   TCHAR path[MAX_PATH];
 

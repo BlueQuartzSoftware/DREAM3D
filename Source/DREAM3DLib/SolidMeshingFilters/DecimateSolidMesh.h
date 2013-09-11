@@ -61,8 +61,8 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, GoalElementNumber)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Decimate Solid Mesh"; }
+		virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+     virtual const QString getHumanLabel() { return "Decimate Solid Mesh"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -80,10 +80,10 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
      DecimateSolidMesh();
 
    private:
-	std::vector<int> newNodeIds;
-	std::vector<bool> tetDone;
-	std::vector<int> nodeGrainIds;
-	std::vector<int> nodeEuclideanDistances;
+	QVector<int> newNodeIds;
+	QVector<bool> tetDone;
+	QVector<int> nodeGrainIds;
+	QVector<int> nodeEuclideanDistances;
 
 	int updateNodesandTets(int currentTet, int killedNode, int newNode);
 

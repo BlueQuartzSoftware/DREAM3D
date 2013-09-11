@@ -58,8 +58,8 @@ class DREAM3DLib_EXPORT LogNormalOps : public DistributionAnalysisOps
     virtual ~LogNormalOps();
 
 
-	int calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs);
-    int calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs);
+	int calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs);
+    int calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs);
 
   protected:
     LogNormalOps();

@@ -53,7 +53,7 @@ class MXA_EXPORT MXAMemory
     static long long int            DARWIN_getAvailableMemory();
   #endif
     // Return a formatted string.
-    static std::string               formatPhysical();
+    static QString               formatPhysical();
 
   protected:
     MXAMemory();

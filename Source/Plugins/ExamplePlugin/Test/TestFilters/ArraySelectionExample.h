@@ -71,46 +71,46 @@ class ArraySelectionExample : public AbstractFilter
 
     // -----------------------------------------------------------------------------
     /* These methods are needed if you use the ArraySelectionWidget as an input */
-    typedef std::set<std::string> ArrayList_t;
+    typedef QSet<std::string> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                            std::set<std::string> selectedFieldArrays,
-                                            std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFaceArrays,
-                                                std::set<std::string> selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(QSet<std::string> selectedCellArrays,
+                                            QSet<std::string> selectedFieldArrays,
+                                            QSet<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                QSet<std::string> selectedFaceArrays,
+                                                QSet<std::string> selectedEdgeArrays);
 
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelCellArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshEdgeArrays)
 
   public:
 
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of these types of widgets */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FieldComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EnsembleComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, CellComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FieldComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EnsembleComparisonInputs)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, PointComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FaceComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, PointComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FaceComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EdgeComparisonInputs)
 
     /* And if you have one of those Widgets then you need this to support that widget */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
     // -----------------------------------------------------------------------------
 
 
@@ -124,19 +124,19 @@ class ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ExamplePlugin"; }
+    virtual const QString getGroupName() { return "ExamplePlugin"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "ArraySelectionExample"; }
+    virtual const QString getHumanLabel() { return "ArraySelectionExample"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const std::string getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

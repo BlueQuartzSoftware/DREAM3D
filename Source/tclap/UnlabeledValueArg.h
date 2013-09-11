@@ -181,17 +181,17 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param i - Pointer the the current argument in the list.
 		 * \param args - Mutable list of strings. 
 		 */
-		virtual bool processArg(int* i, std::vector<std::string>& args); 
+		virtual bool processArg(int* i, QVector<std::string>& args); 
 
 		/**
 		 * Overrides shortID for specific behavior.
 		 */
-		virtual std::string shortID(const std::string& val="val") const;
+		virtual QString shortID(const std::string& val="val") const;
 
 		/**
 		 * Overrides longID for specific behavior.
 		 */
-		virtual std::string longID(const std::string& val="val") const;
+		virtual QString longID(const std::string& val="val") const;
 
 		/**
 		 * Overrides operator== for specific behavior.
@@ -278,7 +278,7 @@ UnlabeledValueArg<T>::UnlabeledValueArg(const std::string& name,
  * Implementation of processArg().
  */
 template<class T>
-bool UnlabeledValueArg<T>::processArg(int *i, std::vector<std::string>& args) 
+bool UnlabeledValueArg<T>::processArg(int *i, QVector<std::string>& args) 
 {
 	
 	if ( _alreadySet )
@@ -298,7 +298,7 @@ bool UnlabeledValueArg<T>::processArg(int *i, std::vector<std::string>& args)
  * Overriding shortID for specific output.
  */
 template<class T>
-std::string UnlabeledValueArg<T>::shortID(const std::string& val) const
+QString UnlabeledValueArg<T>::shortID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return std::string("<") + _typeDesc + ">";
@@ -308,7 +308,7 @@ std::string UnlabeledValueArg<T>::shortID(const std::string& val) const
  * Overriding longID for specific output.
  */
 template<class T>
-std::string UnlabeledValueArg<T>::longID(const std::string& val) const
+QString UnlabeledValueArg<T>::longID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 

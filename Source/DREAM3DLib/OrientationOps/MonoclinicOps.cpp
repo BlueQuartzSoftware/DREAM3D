@@ -554,12 +554,12 @@ DREAM3D::Rgb MonoclinicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> MonoclinicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Monoclinic <001>");
-  std::string label1("Monoclinic <100>");
-  std::string label2("Monoclinic <010>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("Monoclinic <001>");
+  QString label1("Monoclinic <100>");
+  QString label2("Monoclinic <010>");
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 

@@ -110,7 +110,7 @@ void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter
   m_YResolution->setValue( filter->getYRes() );
   m_ZResolution->setValue( filter->getZRes() );
 
-  std::vector<uint32_t> shapeTypes = filter->getShapeTypes();
+  QVector<uint32_t> shapeTypes = filter->getShapeTypes();
   int count = shapeTypes.size();
   for (int i=0; i < count; ++i)
   {
@@ -138,7 +138,7 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  std::vector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
+  QVector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
@@ -269,7 +269,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
 
       m_DataContainer = VolumeDataContainer::New();
 
-      std::set<std::string> selectedArrays;
+      QSet<std::string> selectedArrays;
       selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
       selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
       selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -303,9 +303,9 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
       int size = static_cast<int>(phases->GetNumberOfTuples());
-      std::vector<std::string> shapeTypeStrings;
+      QVector<std::string> shapeTypeStrings;
       ShapeType::getShapeTypeStrings(shapeTypeStrings);
-      std::vector<unsigned int> shapeTypeEnums;
+      QVector<unsigned int> shapeTypeEnums;
       ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
       // Remove all the items from the GUI and from the internal tracking Lists
@@ -427,16 +427,16 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 
   float totalvol;
   int phase;
-//  std::vector<int> phases;
-//  std::vector<unsigned int> structures;
-//  std::vector<unsigned int> phaseType;
-//  std::vector<float> phasefraction;
-//  std::vector<float> double_data;
-//  std::vector<float> avgdiam;
-//  std::vector<float> sddiam;
-//  std::vector<float> grainDiamInfo;
-//  std::vector<float> maxdiameter;
-//  std::vector<float> mindiameter;
+//  QVector<int> phases;
+//  QVector<unsigned int> structures;
+//  QVector<unsigned int> phaseType;
+//  QVector<float> phasefraction;
+//  QVector<float> double_data;
+//  QVector<float> avgdiam;
+//  QVector<float> sddiam;
+//  QVector<float> grainDiamInfo;
+//  QVector<float> maxdiameter;
+//  QVector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
   if (totalvol == 0.0)
@@ -470,8 +470,8 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 #if 1
   DREAM3D_RANDOMNG_NEW()
 
-  std::vector<int> primaryphases;
-  std::vector<double> primaryphasefractions;
+  QVector<int> primaryphases;
+  QVector<double> primaryphasefractions;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases

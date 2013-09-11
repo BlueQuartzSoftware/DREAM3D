@@ -22,7 +22,7 @@ int WriteGrayScaleTiff(unsigned char* raster, char* filename,
 {
   int err;
   TIFF *out;
-  std::string dateTime;
+  QString dateTime;
   char software[1024];
   tsize_t area;
 

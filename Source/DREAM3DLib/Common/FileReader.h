@@ -116,7 +116,7 @@
       * @param tokens
       * @param delimiters
       */
-     void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
+     void tokenize(const std::string& str, QVector<std::string>& tokens, const std::string& delimiters = " ");
 
     protected:
      FileReader();

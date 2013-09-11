@@ -196,7 +196,7 @@ int H5CtfReader::readHeader(hid_t parId)
     hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
-    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, QVector<float>, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
@@ -214,7 +214,7 @@ int H5CtfReader::readHeader(hid_t parId)
   }
   err = H5Gclose(phasesGid);
 
-  std::string completeHeader;
+  QString completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
 
@@ -289,7 +289,7 @@ int H5CtfReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfReader::setArraysToRead(std::set<std::string> names)
+void H5CtfReader::setArraysToRead(QSet<std::string> names)
 {
   m_ArrayNames = names;
 }

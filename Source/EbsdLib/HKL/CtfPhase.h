@@ -69,7 +69,7 @@ class EbsdLib_EXPORT CtfPhase
 
     EBSD_INSTANCE_PROPERTY(int, PhaseIndex)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants) // 1x6 array
+    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants) // 1x6 array
     EBSD_INSTANCE_STRING_PROPERTY(PhaseName)
     EBSD_INSTANCE_PROPERTY(Ebsd::Ctf::LaueGroupTable, LaueGroup) // <== Laue Group
 
@@ -82,7 +82,7 @@ class EbsdLib_EXPORT CtfPhase
     /**
      * @brief Parses a header line into a CtfPhase class
      */
-    void parsePhase(const std::vector<std::string> &tokens);
+    void parsePhase(const QVector<std::string> &tokens);
 
     /**
      * @brief Prints some debugging info about this class
@@ -94,16 +94,16 @@ class EbsdLib_EXPORT CtfPhase
      */
     unsigned int determineCrystalStructure();
 
-    std::string getMaterialName();
+    QString getMaterialName();
 
     /**
      * @brief Converts a string to a number
      */
     template<typename T>
-    bool stringToNum(T &t, const std::string &s)
+    bool stringToNum(T &t, const QString &s)
     {
       // Filter the line to convert European comma style decimals to US/UK style points
-      std::vector<char> cLine(s.size()+1);
+      QVector<char> cLine(s.size()+1);
       ::memcpy( &(cLine.front()), s.c_str(), s.size() + 1);
       for (size_t c = 0; c < cLine.size(); ++c)
       {
@@ -117,9 +117,9 @@ class EbsdLib_EXPORT CtfPhase
      * @brief Parses a header line into string "tokens"
      */
     template<typename T>
-    std::vector<T> tokenize(const std::string &values, char delimiter)
+    QVector<T> tokenize(const QString &values, char delimiter)
     {
-      std::vector<T> output;
+      QVector<T> output;
       std::string::size_type start = 0;
       std::string::size_type pos = 0;
       while(pos != std::string::npos && pos != values.size() - 1)

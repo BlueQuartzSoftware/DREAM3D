@@ -65,7 +65,7 @@ MultiThresholdFields::~MultiThresholdFields()
 // -----------------------------------------------------------------------------
 void MultiThresholdFields::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
@@ -73,7 +73,7 @@ void MultiThresholdFields::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back(DREAM3D::FieldData::GoodFields);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -83,7 +83,7 @@ void MultiThresholdFields::setupFilterParameters()
     parameter->setHumanLabel("Select Arrays to Threshold");
     parameter->setPropertyName("ComparisonInputs");
     parameter->setWidgetType(FilterParameter::FieldArrayComparisonSelectionWidget);
-    parameter->setValueType("std::vector<ComparisonInput_t>");
+    parameter->setValueType("QVector<ComparisonInput_t>");
     parameters.push_back(parameter);
   }
 

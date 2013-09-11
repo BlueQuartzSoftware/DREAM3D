@@ -176,7 +176,7 @@ void FindMisorientations::execute()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  std::vector<std::vector<float> > misorientationlists;
+  QVector<QVector<float> > misorientationlists;
 
   float n1 = 0.0f, n2 = 0.0f, n3= 0.0f;
   //float r1= 0.0f, r2 = 0.0f, r3 = 0.0f;
@@ -224,7 +224,7 @@ void FindMisorientations::execute()
   for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
+    NeighborList<float>::SharedVectorType misoL(new QVector<float>);
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }

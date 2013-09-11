@@ -61,7 +61,7 @@ ShapeOps::~ShapeOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float ShapeOps::radcur1(std::map<ArgName, float> args)
+float ShapeOps::radcur1(QMap<ArgName, float> args)
 {
   return cube_root_of_one;
 }

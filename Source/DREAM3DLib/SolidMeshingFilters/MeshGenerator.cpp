@@ -63,12 +63,12 @@ float *grainvol;
 float ****zbuffer;
 int ***voxels;
 int *graincheck;
-std::vector< std::vector<int > > nodesvector;
-std::vector< std::vector<int > > trianglesvector;
-std::vector< std::vector<int > > gvector;
-std::vector< std::vector<int > > tvector;
-std::vector< std::vector<int > > nnvector;
-std::vector< std::vector<int > > elvector;
+QVector< QVector<int > > nodesvector;
+QVector< QVector<int > > trianglesvector;
+QVector< QVector<int > > gvector;
+QVector< QVector<int > > tvector;
+QVector< QVector<int > > nnvector;
+QVector< QVector<int > > elvector;
 int dihedralanglesurf[180];
 int dihedralanglebulk[180];
 int volumesurf[25];
@@ -110,9 +110,9 @@ DREAM3DRandom rg;
 using namespace VolMesh;
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const std::string &readname1, const std::string &readname2,
-                    const std::string &writename1, const std::string &writename1a,
-                    const std::string &writename2, const std::string &writename3,
+int MeshGenerator_Main(const QString &readname1, const QString &readname2,
+                    const QString &writename1, const QString &writename1a,
+                    const QString &writename2, const QString &writename3,
                     float xDim, float yDim, float zDim,
                     float xRes, float yRes, float zRes,
                     int numGrains)
@@ -1735,7 +1735,7 @@ void make_nodes(int iter)
 //  strcat(fileout, fileoutext);
   std::stringstream ss;
   ss << "pointcheck" << iter << ".vtk";
-  std::string fileout = ss.str();
+  QString fileout = ss.str();
 
   //  ofstream outFile;
   //  outFile.open(fileout, std::ios_base::binary);

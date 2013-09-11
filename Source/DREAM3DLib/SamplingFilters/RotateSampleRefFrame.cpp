@@ -178,7 +178,7 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");
@@ -481,7 +481,7 @@ void RotateSampleRefFrame::execute()
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    //std::string name = *iter;
+    //QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

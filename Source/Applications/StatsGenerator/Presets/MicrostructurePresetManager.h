@@ -92,7 +92,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    static AbstractMicrostructurePreset::Pointer createNewPreset (const std::string &className);
+    static AbstractMicrostructurePreset::Pointer createNewPreset (const QString &className);
 
     // -----------------------------------------------------------------------------
     //  Public Methods
@@ -106,7 +106,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    virtual AbstractMicrostructurePreset::Pointer createPreset (const std::string &className);
+    virtual AbstractMicrostructurePreset::Pointer createPreset (const QString &className);
 
     /**
     * @brief Registers a Specific DataImportFactory. Usually you would use the
@@ -120,7 +120,7 @@ class MicrostructurePresetManager
     * @brief Attempts to return the ImportDelegateFactory for a given class name.
     * @param classname The name of the class to find the factory for OR the display name of the class
     */
-    virtual AbstractMicrostructurePresetFactory::Pointer getFactory(const std::string &classname);
+    virtual AbstractMicrostructurePresetFactory::Pointer getFactory(const QString &classname);
 
     virtual AbstractMicrostructurePresetFactory::Collection getFactories() { return _factories; }
 

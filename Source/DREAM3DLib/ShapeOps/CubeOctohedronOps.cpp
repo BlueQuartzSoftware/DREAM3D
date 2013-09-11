@@ -99,7 +99,7 @@ CubeOctohedronOps::~CubeOctohedronOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubeOctohedronOps::radcur1(std::map<ArgName, float> args)
+float CubeOctohedronOps::radcur1(QMap<ArgName, float> args)
 {
   float radcur1 = 0.0f;
   float Gvaluedist = 0.0f;

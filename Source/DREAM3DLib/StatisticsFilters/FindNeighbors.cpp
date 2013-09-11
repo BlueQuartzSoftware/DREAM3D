@@ -232,8 +232,8 @@ void FindNeighbors::execute()
 
   //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
 
-    std::vector<std::vector<int> > neighborlist;
-    std::vector<std::vector<float> > neighborsurfacearealist;
+    QVector<QVector<int> > neighborlist;
+    QVector<QVector<float> > neighborsurfacearealist;
 
   int nListSize = 100;
   neighborlist.resize(totalFields);
@@ -303,7 +303,7 @@ void FindNeighbors::execute()
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
 
-    std::map<int, int> neighToCount;
+    QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
 
     // this increments the voxel counts for each grain
@@ -318,7 +318,7 @@ void FindNeighbors::execute()
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
-    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
+    for (QMap<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
       int neigh = iter->first; // get the neighbor grain
       int number = iter->second; // get the number of voxels
@@ -331,11 +331,11 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = int32_t( neighborlist[i].size() );
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
+    NeighborList<int>::SharedVectorType sharedNeiLst(new QVector<int>);
     sharedNeiLst->assign(neighborlist[i].begin(), neighborlist[i].end());
     m_NeighborList->setList(static_cast<int>(i), sharedNeiLst);
 
-    NeighborList<float>::SharedVectorType sharedSAL(new std::vector<float>);
+    NeighborList<float>::SharedVectorType sharedSAL(new QVector<float>);
     sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
     m_SharedSurfaceAreaList->setList(static_cast<int>(i), sharedSAL);
   }

@@ -96,7 +96,7 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename, int skipHeaderBytes)
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, int skipHeaderBytes)
 {
   int err = 0;
   uint64_t fileSize = MXAFileInfo::fileSize(filename);
@@ -189,7 +189,7 @@ RawBinaryReader::~RawBinaryReader()
 // -----------------------------------------------------------------------------
 void RawBinaryReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   {
@@ -207,7 +207,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -243,7 +243,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("Little");
     choices.push_back("Big");
     parameter->setChoices(choices);

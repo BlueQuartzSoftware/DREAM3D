@@ -61,9 +61,9 @@ ComparisonSelectionWidget::~ComparisonSelectionWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
+QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
 {
-  std::vector<ComparisonInput_t> comps;
+  QVector<ComparisonInput_t> comps;
   if (m_ComparisonSelectionTableModel == NULL) { return comps; }
 
   int filterCount = m_ComparisonSelectionTableModel->rowCount();
@@ -186,7 +186,7 @@ void ComparisonSelectionWidget::populateArrayNames(VolumeDataContainer::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> comparisons)
+void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)
 {
   qint32 count = comparisons.size();
 

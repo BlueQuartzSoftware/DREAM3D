@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
 {
   public:
     CalculateTriangleGroupCurvatures(int nring,
-                                     std::vector<int> triangleIds, bool useNormalsForCurveFitting,
+                                     QVector<int> triangleIds, bool useNormalsForCurveFitting,
                                      DoubleArrayType::Pointer principleCurvature1,
                                      DoubleArrayType::Pointer principleCurvature2,
                                      DoubleArrayType::Pointer principleDirection1,
@@ -86,10 +86,10 @@ class DREAM3DLib_EXPORT CalculateTriangleGroupCurvatures
      */
     DataArray<double>::Pointer extractPatchData(int triId, DREAM3D::Mesh::UniqueFaceIds_t &triPatch,
                                                 double* data,
-                                                const std::string &name) const;
+                                                const QString &name) const;
   private:
     int m_NRing;
-    std::vector<int> m_TriangleIds;
+    QVector<int> m_TriangleIds;
     bool m_UseNormalsForCurveFitting;
     DoubleArrayType::Pointer m_PrincipleCurvature1;
     DoubleArrayType::Pointer m_PrincipleCurvature2;

@@ -127,7 +127,7 @@ MXA_FILESYSTEM_BASE_CLASS::~MXA_FILESYSTEM_BASE_CLASS()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::getSeparator()
+QString MXA_FILESYSTEM_BASE_CLASS::getSeparator()
 {
 #if defined (WIN32)
       return "\\";
@@ -140,7 +140,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::getSeparator()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::isDirectory(const std::string &fsPath)
+bool MXA_FILESYSTEM_BASE_CLASS::isDirectory(const QString &fsPath)
 {
 #if defined (WIN32)
   bool existed = false;
@@ -160,7 +160,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::isDirectory(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::isFile(const std::string &fsPath)
+bool MXA_FILESYSTEM_BASE_CLASS::isFile(const QString &fsPath)
 {
   int error;
   MXA_STATBUF st;
@@ -175,7 +175,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::isFile(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::isRelativePath(const std::string &path)
+bool MXA_FILESYSTEM_BASE_CLASS::isRelativePath(const QString &path)
 {
 #if defined (WIN32)
   if (path.length() > 2 && isalpha(path[0]) == false && path[1] != ':' && path[2] != '\\') {return true;}
@@ -188,7 +188,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::isRelativePath(const std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(const std::string &path)
+bool MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(const QString &path)
 {
 #if defined (WIN32)
   if (path.length() > 2 && isalpha(path[0]) != 0 && path[1] == ':' && path[2] == '\\') {return true;}
@@ -202,9 +202,9 @@ bool MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(const std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::currentPath()
+QString MXA_FILESYSTEM_BASE_CLASS::currentPath()
 {
-  std::string currentPath;
+  QString currentPath;
   MXA_STATBUF st;
   if (0 == MXA_STAT(".", &st) )
   {
@@ -236,9 +236,9 @@ std::string MXA_FILESYSTEM_BASE_CLASS::currentPath()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::absolutePath(const std::string &path)
+QString MXA_FILESYSTEM_BASE_CLASS::absolutePath(const QString &path)
 {
-  std::string abspath;
+  QString abspath;
   if ( true == MXA_FILESYSTEM_BASE_CLASS::isAbsolutePath(path))
   { return path; }
 
@@ -255,9 +255,9 @@ std::string MXA_FILESYSTEM_BASE_CLASS::absolutePath(const std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::parentPath(const std::string &path)
+QString MXA_FILESYSTEM_BASE_CLASS::parentPath(const QString &path)
 {
-  std::string curAbsPath = MXA_FILESYSTEM_BASE_CLASS::absolutePath(path);
+  QString curAbsPath = MXA_FILESYSTEM_BASE_CLASS::absolutePath(path);
   curAbsPath = MXA_FILESYSTEM_BASE_CLASS::fromNativeSeparators(curAbsPath);
   std::string::size_type nextToLastSlashPos = 0;
   std::string::size_type lastSlashPos = curAbsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::UnixSeparator);
@@ -293,10 +293,10 @@ std::string MXA_FILESYSTEM_BASE_CLASS::parentPath(const std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::exists(const std::string &fsPath)
+bool MXA_FILESYSTEM_BASE_CLASS::exists(const QString &fsPath)
 {
   int error;
-  std::string dirName(fsPath);
+  QString dirName(fsPath);
   // Both windows and OS X both don't like trailing slashes so just get rid of them
   // for all Operating Systems.
   if (dirName[dirName.length() - 1] == MXA_FILESYSTEM_BASE_CLASS::Separator) {
@@ -314,9 +314,9 @@ bool MXA_FILESYSTEM_BASE_CLASS::exists(const std::string &fsPath)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXA_FILESYSTEM_BASE_CLASS::isDirPath(const std::string &folderPath, bool *existed)
+bool MXA_FILESYSTEM_BASE_CLASS::isDirPath(const QString &folderPath, bool *existed)
 {
-    std::string fsPath = folderPath;
+    QString fsPath = folderPath;
     if (fsPath.length() == 2 &&fsPath.at(1) == ':')
         fsPath += MXA_FILESYSTEM_BASE_CLASS::Separator;
 
@@ -337,9 +337,9 @@ bool MXA_FILESYSTEM_BASE_CLASS::isDirPath(const std::string &folderPath, bool *e
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::fromNativeSeparators(const std::string  &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::fromNativeSeparators(const QString  &fsPath)
 {
-  std::string path(fsPath);
+  QString path(fsPath);
 #if defined (WIN32)
   for (int i=0; i<(int)path.length(); i++) {
       if (path[i] ==  MXA_FILESYSTEM_BASE_CLASS::Separator )
@@ -352,9 +352,9 @@ std::string MXA_FILESYSTEM_BASE_CLASS::fromNativeSeparators(const std::string  &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(const std::string &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(const QString &fsPath)
 {
-    std::string path(fsPath);
+    QString path(fsPath);
 #if defined (WIN32)
     for (int i=0; i<(int)path.length(); i++) {
         if (path[i] ==  MXA_FILESYSTEM_BASE_CLASS::UnixSeparator )
@@ -368,11 +368,11 @@ std::string MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(const std::string &fsP
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MXA_FILESYSTEM_BASE_CLASS::cleanPath(const std::string &fsPath)
+QString MXA_FILESYSTEM_BASE_CLASS::cleanPath(const QString &fsPath)
 {
     if (fsPath.length() == 0)
         return fsPath;
-      std::string path(fsPath);
+      QString path(fsPath);
      char slash = '/';
      char dot = '.';
      if (MXA_FILESYSTEM_BASE_CLASS::Separator != MXA_FILESYSTEM_BASE_CLASS::UnixSeparator)
@@ -386,7 +386,7 @@ std::string MXA_FILESYSTEM_BASE_CLASS::cleanPath(const std::string &fsPath)
        path = path.substr(0, path.length() -1);
      }
 
-     std::vector<std::string> stk;
+     QVector<std::string> stk;
      std::string::size_type pos = 0;
      std::string::size_type pos1 = 0;
 
@@ -432,8 +432,8 @@ std::string MXA_FILESYSTEM_BASE_CLASS::cleanPath(const std::string &fsPath)
          stk.push_back(path.substr(pos, path.length() - pos));
        }
      }
-     std::string ret;
-     for (std::vector<std::string>::iterator iter = stk.begin(); iter != stk.end(); ++iter ) {
+     QString ret;
+     for (QVector<std::string>::iterator iter = stk.begin(); iter != stk.end(); ++iter ) {
        ret.append(*iter);
      }
      ret = toNativeSeparators(ret);

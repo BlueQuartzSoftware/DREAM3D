@@ -255,9 +255,9 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     /**
      * @brief Returns the list of selected Array Names
      */
-    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
-    virtual void setSelectedArrays(std::set<std::string> names, QListWidget* listWidget);
-    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
+    virtual QSet<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual void setSelectedArrays(QSet<std::string> names, QListWidget* listWidget);
+    virtual QSet<std::string> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
 
     void writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);

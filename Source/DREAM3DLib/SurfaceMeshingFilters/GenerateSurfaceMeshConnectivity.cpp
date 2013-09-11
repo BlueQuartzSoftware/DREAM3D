@@ -65,7 +65,7 @@ GenerateSurfaceMeshConnectivity::~GenerateSurfaceMeshConnectivity()
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/

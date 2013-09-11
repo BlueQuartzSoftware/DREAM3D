@@ -799,7 +799,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
-  std::string path;
+  QString path;
 
 
   // Delete any existing phases from the GUI
@@ -807,7 +807,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
 
-  std::set<std::string> selectedArrays;
+  QSet<std::string> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);

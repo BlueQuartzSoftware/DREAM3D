@@ -53,12 +53,12 @@ class DREAM3DLib_EXPORT TexturePreset
 {
   public:
     MXA_SHARED_POINTERS(TexturePreset)
-    typedef std::vector<Pointer> Container;
+    typedef QVector<Pointer> Container;
 
     MXA_STATIC_NEW_MACRO(TexturePreset)
     MXA_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
-                       const std::string &name,
+                       const QString &name,
                        double e1, double e2, double e3)
     {
       Pointer p (new TexturePreset);

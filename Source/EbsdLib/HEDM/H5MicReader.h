@@ -137,13 +137,13 @@ class EbsdLib_EXPORT H5MicReader : public MicReader
      * @brief Returns a vector of MicPhase objects corresponding to the phases
      * present in the file
      */
-    std::vector<MicPhase::Pointer> getPhases() { return m_Phases; }
+    QVector<MicPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(std::set<std::string> names);
+    virtual void setArraysToRead(QSet<std::string> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -164,8 +164,8 @@ class EbsdLib_EXPORT H5MicReader : public MicReader
     int readData(hid_t parId);
 
   private:
-    std::vector<MicPhase::Pointer> m_Phases;
-    std::set<std::string> m_ArrayNames;
+    QVector<MicPhase::Pointer> m_Phases;
+    QSet<std::string> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5MicReader(const H5MicReader&); // Copy Constructor Not Implemented

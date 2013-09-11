@@ -29,7 +29,7 @@
 #if defined (MXA_USE_SHARED_STRINGS)
 typedef boost::shared_ptr<std::string>    MXAString;
 #else
-typedef std::string MXAString;
+typedef QString MXAString;
 #endif
 
 typedef boost::shared_ptr<std::string>   MXASharedString;
@@ -76,7 +76,7 @@ namespace H5Lite
  * @return
  */
 template<typename T>
- MXA_EXPORT std::string HDFTypeForPrimitiveAsStr(T value)
+ MXA_EXPORT QString HDFTypeForPrimitiveAsStr(T value)
 {
   if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
   if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
@@ -127,7 +127,7 @@ template<typename T>
   return -1;
 }
 
-static int32_t HDFTypeFromString(const std::string &value)
+static int32_t HDFTypeFromString(const QString &value)
 {
   if (value.compare("H5T_NATIVE_INT8") == 0) return H5T_NATIVE_INT8;
   if (value.compare("H5T_NATIVE_UINT8") == 0) return H5T_NATIVE_UINT8;

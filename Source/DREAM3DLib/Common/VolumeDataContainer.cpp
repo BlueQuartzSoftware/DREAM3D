@@ -83,7 +83,7 @@ DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -99,9 +99,9 @@ void VolumeDataContainer::addCellData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
   if ( it == m_CellData.end() )
   {
@@ -113,9 +113,9 @@ IDataArray::Pointer VolumeDataContainer::getCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
   if ( it == m_CellData.end() )
   {
@@ -129,9 +129,9 @@ IDataArray::Pointer VolumeDataContainer::removeCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameCellData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(oldname);
   if ( it == m_CellData.end() )
   {
@@ -158,7 +158,7 @@ void VolumeDataContainer::clearCellData()
 std::list<std::string> VolumeDataContainer::getCellArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
+  for(QMap<std::string, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -178,9 +178,9 @@ int VolumeDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(name);
   if ( it == m_CellFieldData.end() )
   {
@@ -192,7 +192,7 @@ IDataArray::Pointer VolumeDataContainer::getCellFieldData(const std::string &nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellFieldData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -208,9 +208,9 @@ void VolumeDataContainer::addCellFieldData(const std::string &name, IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(name);
   if ( it == m_CellFieldData.end() )
   {
@@ -224,9 +224,9 @@ IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const std::string &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellFieldData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameCellFieldData(const QString &oldname, const QString &newname)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellFieldData.find(oldname);
   if ( it == m_CellFieldData.end() )
   {
@@ -253,7 +253,7 @@ void VolumeDataContainer::clearCellFieldData()
 std::list<std::string> VolumeDataContainer::getCellFieldArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
+  for(QMap<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -274,7 +274,7 @@ int VolumeDataContainer::getNumCellFieldArrays()
 void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
+  for(QMap<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = (*iter).second;
@@ -286,9 +286,9 @@ void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellEnsembleData.find(name);
   if ( it == m_CellEnsembleData.end() )
   {
@@ -300,7 +300,7 @@ IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const std::string &
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellEnsembleData(const QString &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -317,9 +317,9 @@ void VolumeDataContainer::addCellEnsembleData(const std::string &name, IDataArra
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const QString &name)
 {
-  std::map<std::string, IDataArray::Pointer>::iterator it;
+  QMap<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellEnsembleData.find(name);
   if ( it == m_CellEnsembleData.end() )
   {
@@ -345,7 +345,7 @@ void VolumeDataContainer::clearCellEnsembleData()
 std::list<std::string> VolumeDataContainer::getCellEnsembleArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellEnsembleData.begin(); iter != m_CellEnsembleData.end(); ++iter)
+  for(QMap<std::string, IDataArray::Pointer>::iterator iter = m_CellEnsembleData.begin(); iter != m_CellEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }

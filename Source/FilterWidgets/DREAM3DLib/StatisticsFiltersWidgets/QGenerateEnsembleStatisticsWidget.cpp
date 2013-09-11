@@ -89,7 +89,7 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
   calcAODF->setChecked(filter->getCalculateAxisODF());
   m_SizeCorrRes->setValue( filter->getSizeCorrelationResolution() );
 
-  std::vector<unsigned int> phaseTypes = filter->getPhaseTypeArray();
+  QVector<unsigned int> phaseTypes = filter->getPhaseTypeArray();
   if (phaseTypes.empty() == true)
   {
     m_DefinePhaseTypes->setChecked(false);
@@ -134,7 +134,7 @@ AbstractFilter::Pointer QGenerateEnsembleStatisticsWidget::getFilter(bool defaul
   {
 
     int count = phaseTypeTableWidget->rowCount();
-    std::vector<unsigned int> phaseTypes;
+    QVector<unsigned int> phaseTypes;
   phaseTypes.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     for(int r = 0; r < count; ++r)
     {
@@ -337,9 +337,9 @@ void QGenerateEnsembleStatisticsWidget::inputChanged()
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
 {
-  std::vector<std::string> phaseTypeStrings;
+  QVector<std::string> phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
-  std::vector<unsigned int> phaseTypeEnums;
+  QVector<unsigned int> phaseTypeEnums;
   PhaseType::getPhaseTypeEnums(phaseTypeEnums);
 
   phaseTypeTableWidget->insertRow(phaseTypeTableWidget->rowCount());

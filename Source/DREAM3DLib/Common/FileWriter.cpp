@@ -99,7 +99,7 @@ void FileWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;

@@ -185,7 +185,7 @@ int H5MicReader::readHeader(hid_t parId)
     MicPhase::Pointer m_CurrentPhase = MicPhase::New();
 
     READ_PHASE_HEADER_DATA("H5MicReader", pid, int, Ebsd::Mic::Phase, PhaseIndex, m_CurrentPhase)
-    READ_PHASE_HEADER_ARRAY("H5MicReader", pid, std::vector<float>, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY("H5MicReader", pid, QVector<float>, Ebsd::Mic::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::BasisAtoms, BasisAtoms, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5MicReader", pid, Ebsd::Mic::Symmetry, Symmetry, m_CurrentPhase)
 
@@ -193,7 +193,7 @@ int H5MicReader::readHeader(hid_t parId)
     err = H5Gclose(pid);
   }
 
-  std::string completeHeader;
+  QString completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
   err = H5Gclose(phasesGid);
@@ -262,7 +262,7 @@ int H5MicReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5MicReader::setArraysToRead(std::set<std::string> names)
+void H5MicReader::setArraysToRead(QSet<std::string> names)
 {
   m_ArrayNames = names;
 }

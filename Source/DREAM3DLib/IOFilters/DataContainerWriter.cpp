@@ -85,7 +85,7 @@ DataContainerWriter::~DataContainerWriter()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -190,7 +190,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -235,7 +235,7 @@ void DataContainerWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;
@@ -264,7 +264,7 @@ void DataContainerWriter::execute()
   std::ofstream xdmf;
   if (m_WriteXdmfFile == true)
   {
-    std::string name = MXAFileInfo::fileNameWithOutExtension(m_OutputFile);
+    QString name = MXAFileInfo::fileNameWithOutExtension(m_OutputFile);
     if(parentPath.empty() == true)
     {
       name = name + ".xdmf";

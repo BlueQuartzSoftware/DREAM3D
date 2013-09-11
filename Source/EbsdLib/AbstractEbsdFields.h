@@ -57,7 +57,7 @@ class EbsdLib_EXPORT AbstractEbsdFields
 
     virtual ~AbstractEbsdFields();
 
-    virtual std::vector<std::string> getFieldNames() = 0;
+    virtual QVector<std::string> getFieldNames() = 0;
 
 
 };

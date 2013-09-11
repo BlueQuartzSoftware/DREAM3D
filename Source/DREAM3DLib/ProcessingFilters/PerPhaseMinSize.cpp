@@ -78,7 +78,7 @@ PerPhaseMinSize::~PerPhaseMinSize()
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -139,7 +139,7 @@ void PerPhaseMinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  std::vector<int> voxcounts;
+  QVector<int> voxcounts;
   voxcounts.resize(numgrains,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {

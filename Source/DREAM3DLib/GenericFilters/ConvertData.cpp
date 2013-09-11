@@ -65,7 +65,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const std::string &name)
+  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString &name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->GetNumberOfTuples();
@@ -199,7 +199,7 @@ ConvertData::~ConvertData()
 // -----------------------------------------------------------------------------
 void ConvertData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
@@ -218,7 +218,7 @@ void ConvertData::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");

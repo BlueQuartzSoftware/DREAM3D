@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT ColorTable
     * @param max
     * @param min
     */
-    static void GetColorTable(int numColors, std::vector<float> &colors);
+    static void GetColorTable(int numColors, QVector<float> &colors);
 
   private:
     ColorTable(const ColorTable&); // Copy Constructor Not Implemented

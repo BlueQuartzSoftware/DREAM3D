@@ -63,18 +63,18 @@ class  MXAFileInfo
     static EbsdLib_EXPORT const char Dot = '.';
 
 
-    static EbsdLib_EXPORT std::string getSeparator();
+    static EbsdLib_EXPORT QString getSeparator();
     /**
      * @brief Is the path specified a directory on the filesystem
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT bool isDirectory(const std::string &path);
+    static EbsdLib_EXPORT bool isDirectory(const QString &path);
 
     /**
      * @brief Does the path designate a file on the file system
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT bool isFile(const std::string &path);
+    static EbsdLib_EXPORT bool isFile(const QString &path);
 
     /**
      * @brief Returns true if the path is a relative path but does not determine
@@ -82,7 +82,7 @@ class  MXAFileInfo
      * @@param path The path to check
      * @return True if the path is relative
      */
-    static EbsdLib_EXPORT bool isRelativePath(const std::string &path);
+    static EbsdLib_EXPORT bool isRelativePath(const QString &path);
 
     /**
      * @brief Returns true if the path is an absolute path. On Unix this means the
@@ -90,20 +90,20 @@ class  MXAFileInfo
      * @@param path The path to check
      * @return True if the path is absolute
      */
-    static EbsdLib_EXPORT bool isAbsolutePath(const std::string &path);
+    static EbsdLib_EXPORT bool isAbsolutePath(const QString &path);
 
     /**
      * @brief Returns the current path
      * @return The current working directory as reported by the operating system
      */
-    static EbsdLib_EXPORT std::string currentPath();
+    static EbsdLib_EXPORT QString currentPath();
 
     /**
      * @brief Returns the path to the parent directory
      * @param path The path to return the parent path
      * @return The Parent path
      */
-    static EbsdLib_EXPORT std::string parentPath(const std::string &path);
+    static EbsdLib_EXPORT QString parentPath(const QString &path);
 
 
     /**
@@ -114,37 +114,37 @@ class  MXAFileInfo
      * @param path The path to check/convert
      * @return The absolute path.
      */
-    static EbsdLib_EXPORT std::string absolutePath(const std::string &path);
+    static EbsdLib_EXPORT QString absolutePath(const QString &path);
 
     /**
      * @brief Does the path actually exist on the file system
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT bool exists(const std::string &path);
+    static EbsdLib_EXPORT bool exists(const QString &path);
 
     /**
      * @brief Cleans a file system path of extra './', '//' and '/../' elements
      * @param path Path to clean
      * @return A new string containing the cleaned path.
      */
-    static EbsdLib_EXPORT std::string cleanPath(const std::string &path);
+    static EbsdLib_EXPORT QString cleanPath(const QString &path);
 
     /**
      * @brief Converts from native directory separators to unix separators
      * @param path The path to conver
      * @return Newly converted path
      */
-    static EbsdLib_EXPORT std::string fromNativeSeparators(const std::string  &path);
+    static EbsdLib_EXPORT QString fromNativeSeparators(const QString  &path);
 
     /**
      * @brief Converts a path to use native directory separators
      * @param path The path to convert
      * @return The newly converted path
      */
-    static EbsdLib_EXPORT std::string toNativeSeparators(const std::string &path);
+    static EbsdLib_EXPORT QString toNativeSeparators(const QString &path);
 
 #if defined (WIN32)
-    static EbsdLib_EXPORT bool isDirPath(const std::string &path, bool *existed);
+    static EbsdLib_EXPORT bool isDirPath(const QString &path, bool *existed);
 #endif
 
 
@@ -154,25 +154,25 @@ class  MXAFileInfo
     /**
      * @brief Get the size of the file in bytes
      */
-    static EbsdLib_EXPORT uint64_t fileSize(const std::string &path);
+    static EbsdLib_EXPORT uint64_t fileSize(const QString &path);
 
     /**
      * @brief Get any file extension on the filepath
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT std::string extension(const std::string &path);
+    static EbsdLib_EXPORT QString extension(const QString &path);
 
     /**
      * @brief Return the filename WITH the extension
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT std::string filename(const std::string &path);
+    static EbsdLib_EXPORT QString filename(const QString &path);
 
     /**
      * @brief Returns the filename without the extension
      * @param path Path to examine
      */
-    static EbsdLib_EXPORT std::string fileNameWithOutExtension(const std::string &path);
+    static EbsdLib_EXPORT QString fileNameWithOutExtension(const QString &path);
 
 
 protected:

@@ -103,7 +103,7 @@ CropVolumePipeline::~CropVolumePipeline()
 void CropVolumePipeline::setupFilterParameters()
 {
     // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -169,7 +169,7 @@ void CropVolumePipeline::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string convertIntToString(int number)
+QString convertIntToString(int number)
 {
    std::stringstream ss;//create a stringstream
    ss << number;//add number to the stream
@@ -180,27 +180,27 @@ std::string convertIntToString(int number)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getH5EbsdFile()
+QString getH5EbsdFile()
 {
-  std::string s = "D:/IN100_run1/DREAM3D_files/slice_11_173_transformed.h5ebsd";
+  QString s = "D:/IN100_run1/DREAM3D_files/slice_11_173_transformed.h5ebsd";
   return s;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getZ_spacingfile()
+QString getZ_spacingfile()
 {
-  std::string s = "D:/IN100_run1/DREAM3D_files/Rectilinear_Grid_Data.txt";
+  QString s = "D:/IN100_run1/DREAM3D_files/Rectilinear_Grid_Data.txt";
   return s;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getFieldDataFile()
+QString getFieldDataFile()
 {
-  std::string s =  "D:/IN100_run1/DREAM3D_files/test.csv";
+  QString s =  "D:/IN100_run1/DREAM3D_files/test.csv";
   return s;
 }
 
@@ -208,7 +208,7 @@ std::string getFieldDataFile()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, std::vector<int> &ymax, std::vector<int> &zmax, std::vector<int> &xmin, std::vector<int> &ymin, std::vector<int> &zmin)
+void CropVolumePipeline::get_max_and_min_xyz_for_crop(QVector<int> &xmax, QVector<int> &ymax, QVector<int> &zmax, QVector<int> &xmin, QVector<int> &ymin, QVector<int> &zmin)
 {
   //VoxelDataContainer* m = getVoxelDataContainer();
   //int64_t totalPoints = m->totalPoints();
@@ -247,7 +247,7 @@ void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, st
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int getNumLinesinFile(std::string filename)
+unsigned int getNumLinesinFile(QString filename)
 {
 
   //DataContainer* m = getDataContainer();
@@ -287,9 +287,9 @@ DataArray<unsigned int>::Pointer getPhaseTypes()
   return phaseTypes;
 }
 
-std::vector<QualityMetricFilter::Pointer> getQualityMetricFilters()
+QVector<QualityMetricFilter::Pointer> getQualityMetricFilters()
 {
-  std::vector<QualityMetricFilter::Pointer> filters;
+  QVector<QualityMetricFilter::Pointer> filters;
   {
     QualityMetricFilter::Pointer filter = QualityMetricFilter::New();
     filter->setFieldName(Ebsd::Ctf::Error);
@@ -333,12 +333,12 @@ void CropVolumePipeline::execute()
   int m_NumIterations_Erode = 3;
   int NUM_OF_CROPS = getNumLinesinFile(m_InputFile);
 
-  std::vector<int> m_Xmin(NUM_OF_CROPS+1, 0);
-  std::vector<int> m_Ymin(NUM_OF_CROPS+1, 0);
-  std::vector<int> m_Zmin(NUM_OF_CROPS+1, 0);
-  std::vector<int> m_Xmax(NUM_OF_CROPS+1, 0);
-  std::vector<int> m_Ymax(NUM_OF_CROPS+1, 0);
-  std::vector<int> m_Zmax(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Xmin(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Ymin(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Zmin(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Xmax(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Ymax(NUM_OF_CROPS+1, 0);
+  QVector<int> m_Zmax(NUM_OF_CROPS+1, 0);
 
   get_max_and_min_xyz_for_crop(m_Xmax, m_Ymax, m_Zmax, m_Xmin, m_Ymin, m_Zmin);
 
@@ -452,7 +452,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
 
       FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New();
-      std::string field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
+      QString field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
       field_data_write_csv->setFieldDataFile(field_csv);
       field_data_write_csv->setVoxelDataContainer(m);
       field_data_write_csv->execute();
@@ -473,7 +473,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
       if(m_WriteVtkFile)
       {
-        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
+        QString vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
         vtkWriter->setOutputFile(vtk_file);
         vtkWriter->setWriteGrainIds(m_WriteGrainID);
         vtkWriter->setWritePhaseIds(m_WritePhaseId);
@@ -488,7 +488,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
       }
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
+      QString dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
       writer->setOutputFile(dream_3d_file);
       writer->setVoxelDataContainer(m);
       pipeline->pushBack(writer);

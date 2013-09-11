@@ -55,7 +55,7 @@ LogNormalOps::LogNormalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+int LogNormalOps::calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float avg = 0;
@@ -91,7 +91,7 @@ int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int LogNormalOps::calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;

@@ -62,17 +62,17 @@ class FilterFactory : public IFilterFactory
       return w;
     }
 
-    std::string getFilterGroup()
+    QString getFilterGroup()
     {
       return m_GroupName;
     }
 
-    std::string getFilterSubGroup()
+    QString getFilterSubGroup()
     {
       return m_SubGroupName;
     }
 
-    std::string getFilterHumanLabel()
+    QString getFilterHumanLabel()
     {
       return m_HumanName;
     }
@@ -88,9 +88,9 @@ class FilterFactory : public IFilterFactory
     }
 
   private:
-    std::string m_GroupName;
-    std::string m_SubGroupName;
-    std::string m_HumanName;
+    QString m_GroupName;
+    QString m_SubGroupName;
+    QString m_HumanName;
 
     FilterFactory(const FilterFactory&); // Copy Constructor Not Implemented
     void operator=(const FilterFactory&); // Operator '=' Not Implemented

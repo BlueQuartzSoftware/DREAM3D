@@ -104,9 +104,9 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(DeformationStatisticsFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
-    virtual const std::string getHumanLabel() { return "Find Deformation Statistics"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getHumanLabel() { return "Find Deformation Statistics"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -128,7 +128,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     FindDeformationStatistics();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

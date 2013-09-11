@@ -105,9 +105,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, PeriodicBoundaries)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteGoalAttributes)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Insert Precipitate Phases"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Insert Precipitate Phases"; }
 
     virtual void setupFilterParameters();
     /**
@@ -156,13 +156,13 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float find_ycoord(long long int index);
     float find_zcoord(long long int index);
 
-    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
+    void compare_1Ddistributions(QVector<float>, QVector<float>, float &sqrerror);
+    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float &sqrerror);
 
-    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
+    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float &sqrerror);
 
-    std::vector<int> precipitatephases;
-    std::vector<float> precipitatephasefractions;
+    QVector<int> precipitatephases;
+    QVector<float> precipitatephasefractions;
 
   private:
 
@@ -173,7 +173,7 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     float sizez;
     float totalvol;
 
-    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -202,9 +202,9 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int> > columnlist;
-    std::vector<std::vector<int> > rowlist;
-    std::vector<std::vector<int> > planelist;
+    QVector<QVector<int> > columnlist;
+    QVector<QVector<int> > rowlist;
+    QVector<QVector<int> > planelist;
 
     float m_HalfPackingRes[3];
     float m_OneOverHalfPackingRes[3];
@@ -213,17 +213,17 @@ class DREAM3DLib_EXPORT InsertPrecipitatePhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
+    QVector<QVector<float> > grainsizedist;
+    QVector<QVector<float> > simgrainsizedist;
+    QVector<QVector<QVector<float> > > neighbordist;
+    QVector<QVector<QVector<float> > > simneighbordist;
 
-    std::vector<float> grainsizediststep;
-    std::vector<float> neighbordiststep;
+    QVector<float> grainsizediststep;
+    QVector<float> neighbordiststep;
 
-    std::vector<int> newnames;
-    std::vector<int> packqualities;
-    std::vector<int> gsizes;
+    QVector<int> newnames;
+    QVector<int> packqualities;
+    QVector<int> gsizes;
 
     float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;

@@ -63,7 +63,7 @@ SolidMeshToVtk::~SolidMeshToVtk()
 // -----------------------------------------------------------------------------
 void SolidMeshToVtk::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
 {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Output Vtk File");
@@ -198,7 +198,7 @@ void SolidMeshToVtk::execute()
 //
 //  // Make sure any directory path is also available as the user may have just typed
 //  // in a path without actually creating the full path
-//  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+//  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
 //  if(!MXADir::mkdir(parentPath, true))
 //  {
 //      ss.str("");

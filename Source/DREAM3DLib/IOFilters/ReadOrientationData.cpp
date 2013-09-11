@@ -87,7 +87,7 @@ ReadOrientationData::~ReadOrientationData()
 // -----------------------------------------------------------------------------
 void ReadOrientationData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   /*   For an input file use this code*/
   {
@@ -161,8 +161,8 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
   {
     int64_t dims[3];
 
-    std::string ext = MXAFileInfo::extension(m_InputFile);
-    std::vector<std::string> names;
+    QString ext = MXAFileInfo::extension(m_InputFile);
+    QVector<std::string> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       AngReader reader;
@@ -175,7 +175,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       AngFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<QVector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -208,7 +208,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<QVector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -235,7 +235,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields fields;
-      names = fields.getFilterFields<std::vector<std::string> > ();
+      names = fields.getFilterFields<QVector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -302,7 +302,7 @@ void ReadOrientationData::execute()
   }
   setErrorCondition(0);
 
-  std::string ext = MXAFileInfo::extension(m_InputFile);
+  QString ext = MXAFileInfo::extension(m_InputFile);
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     readAngFile();

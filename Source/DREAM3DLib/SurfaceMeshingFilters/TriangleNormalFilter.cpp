@@ -125,7 +125,7 @@ TriangleNormalFilter::~TriangleNormalFilter()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 

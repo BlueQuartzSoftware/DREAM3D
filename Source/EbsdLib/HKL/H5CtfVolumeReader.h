@@ -97,7 +97,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @brief
      * @return
      */
-    std::vector<CtfPhase::Pointer> getPhases();
+    QVector<CtfPhase::Pointer> getPhases();
 
 
 
@@ -105,14 +105,14 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const QString &fieldName);
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const QString &fieldName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
@@ -127,7 +127,7 @@ class EbsdLib_EXPORT H5CtfVolumeReader : public H5EbsdVolumeReader
     H5CtfVolumeReader();
 
   private:
-    std::vector<CtfPhase::Pointer> m_Phases;
+    QVector<CtfPhase::Pointer> m_Phases;
 
     H5CtfVolumeReader(const H5CtfVolumeReader&); // Copy Constructor Not Implemented
     void operator=(const H5CtfVolumeReader&); // Operator '=' Not Implemented

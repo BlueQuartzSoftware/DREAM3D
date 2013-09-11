@@ -82,7 +82,7 @@ FindRadialDist::~FindRadialDist()
 // -----------------------------------------------------------------------------
 void FindRadialDist::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -140,7 +140,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -185,7 +185,7 @@ void FindRadialDist::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -243,7 +243,7 @@ void FindRadialDist::find_radialdist()
   float totalvolume = 0;
   float largestESD = 0;
   float largestDistToSurface = 0;
-  std::vector<float> distToSurface(numgrains,-1);
+  QVector<float> distToSurface(numgrains,-1);
   for (size_t i = 1; i < numgrains; i++)
   {
 
@@ -266,8 +266,8 @@ void FindRadialDist::find_radialdist()
   float binSize = largestDistToSurface/float(numbins);
   float avgDensity = float(number)/totalvolume;
   int sizebins = (largestESD/ESDStepSize)+1;
-  std::vector<std::vector<float> > count(sizebins);
-  std::vector<std::vector<float> > volume(sizebins);
+  QVector<QVector<float> > count(sizebins);
+  QVector<QVector<float> > volume(sizebins);
   for (size_t i = 0; i < count.size(); i++)
   {
     count[i].resize(numbins,0);

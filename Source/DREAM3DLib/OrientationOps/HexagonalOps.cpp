@@ -1175,12 +1175,12 @@ DREAM3D::Rgb HexagonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Hex <0001>");
-  std::string label1("Hex <1010>");
-  std::string label2("Hex <1120>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("Hex <0001>");
+  QString label1("Hex <1010>");
+  QString label2("Hex <1120>");
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 

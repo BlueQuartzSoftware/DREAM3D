@@ -68,14 +68,14 @@ FindLargestCrossSections::~FindLargestCrossSections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Plane of Interest");
     option->setPropertyName("Plane");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");

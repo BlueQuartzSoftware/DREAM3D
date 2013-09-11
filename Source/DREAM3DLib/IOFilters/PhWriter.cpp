@@ -69,7 +69,7 @@ PhWriter::~PhWriter()
 // -----------------------------------------------------------------------------
 void PhWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -146,7 +146,7 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int PhWriter::writeFile()
 {
-//   std::string OutputName;
+//   QString OutputName;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -196,7 +196,7 @@ int PhWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -216,14 +216,14 @@ int PhWriter::writeFile()
 
 
   // Find the unique number of grains
-  std::map<int, bool> used;
+  QMap<int, bool> used;
   for (int i = 0; i < totalpoints; ++i)
   {
     used[m_GrainIds[i]] = true;
   }
 
   int grains = 0;
-  typedef std::map<int, bool>::iterator iterator;
+  typedef QMap<int, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
     if((*i).second == true)

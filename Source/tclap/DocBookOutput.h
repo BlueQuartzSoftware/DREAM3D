@@ -95,11 +95,11 @@ inline void DocBookOutput::version(CmdLineInterface& _cmd)
 inline void DocBookOutput::usage(CmdLineInterface& _cmd ) 
 {
 	std::list<Arg*> argList = _cmd.getArgList();
-	std::string progName = _cmd.getProgramName();
-	std::string version = _cmd.getVersion();
+	QString progName = _cmd.getProgramName();
+	QString version = _cmd.getVersion();
 	theDelimiter = _cmd.getDelimiter();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
+	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
 	basename(progName);
 
 	std::cout << "<?xml version='1.0'?>" << std::endl;
@@ -211,16 +211,16 @@ inline void DocBookOutput::basename( std::string& s )
 
 inline void DocBookOutput::printShortArg(Arg* a)
 {
-	std::string lt = "&lt;"; 
-	std::string gt = "&gt;"; 
+	QString lt = "&lt;"; 
+	QString gt = "&gt;"; 
 
-	std::string id = a->shortID();
+	QString id = a->shortID();
 	substituteSpecialChars(id,'<',lt);
 	substituteSpecialChars(id,'>',gt);
 	removeChar(id,'[');
 	removeChar(id,']');
 	
-	std::string choice = "opt";
+	QString choice = "opt";
 	if ( a->isRequired() )
 		choice = "plain";
 
@@ -236,7 +236,7 @@ inline void DocBookOutput::printShortArg(Arg* a)
 		std::cout << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
-		std::string arg = a->shortID();
+		QString arg = a->shortID();
 		removeChar(arg,'[');
 		removeChar(arg,']');
 		removeChar(arg,'<');
@@ -251,10 +251,10 @@ inline void DocBookOutput::printShortArg(Arg* a)
 
 inline void DocBookOutput::printLongArg(Arg* a)
 {
-	std::string lt = "&lt;"; 
-	std::string gt = "&gt;"; 
+	QString lt = "&lt;"; 
+	QString gt = "&gt;"; 
 
-	std::string desc = a->getDescription();
+	QString desc = a->getDescription();
 	substituteSpecialChars(desc,'<',lt);
 	substituteSpecialChars(desc,'>',gt);
 
@@ -274,7 +274,7 @@ inline void DocBookOutput::printLongArg(Arg* a)
 	std::cout << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
-		std::string arg = a->shortID();
+		QString arg = a->shortID();
 		removeChar(arg,'[');
 		removeChar(arg,']');
 		removeChar(arg,'<');

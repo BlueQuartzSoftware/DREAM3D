@@ -86,7 +86,7 @@ class Arg
 		 * override appropriate functions to get correct handling. Note
 		 * that the _flag does NOT include the dash as part of the flag.
 		 */
-		std::string _flag;
+		QString _flag;
 
 		/**
 		 * A single work namd indentifying the argument.
@@ -95,12 +95,12 @@ class Arg
 		 * _name does NOT include the two dashes as part of the _name. The
 		 * _name cannot be blank.
 		 */
-		std::string _name;
+		QString _name;
 
 		/**
 		 * Description of the argument.
 		 */
-		std::string _description;
+		QString _description;
 
 		/**
 		 * Indicating whether the argument is required.
@@ -111,7 +111,7 @@ class Arg
 		 * Label to be used in usage description.  Normally set to
 		 * "required", but can be changed when necessary.
 		 */
-		std::string _requireLabel;
+		QString _requireLabel;
 
 		/**
 		 * Indicates whether a value is required for the argument.
@@ -216,18 +216,18 @@ class Arg
 		 * The sting that indicates the beginning of a flag.  Currently "-".
 		 * Should be identical to flagStartChar.
 		 */
-		static const std::string flagStartString() { return "-"; }
+		static const QString flagStartString() { return "-"; }
 
 		/**
 		 * The sting that indicates the beginning of a name.  Currently "--".
 		 * Should be flagStartChar twice.
 		 */
-		static const std::string nameStartString() { return "--"; }
+		static const QString nameStartString() { return "--"; }
 
 		/**
 		 * The name used to identify the ignore rest argument.
 		 */
-		static const std::string ignoreNameString() { return "ignore_rest"; }
+		static const QString ignoreNameString() { return "ignore_rest"; }
 
 		/**
 		 * Sets the delimiter for all arguments.
@@ -242,7 +242,7 @@ class Arg
 		 * \param args - Mutable list of strings. What is
 		 * passed in from main.
 		 */
-		virtual bool processArg(int *i, std::vector<std::string>& args) = 0;
+		virtual bool processArg(int *i, QVector<std::string>& args) = 0;
 
 		/**
 		 * Operator ==.
@@ -264,7 +264,7 @@ class Arg
 		/**
 		 * Returns the argument description.
 		 */
-		std::string getDescription() const;
+		QString getDescription() const;
 
 		/**
 		 * Indicates whether the argument is required.
@@ -313,19 +313,19 @@ class Arg
 		 * Returns a simple string representation of the argument.
 		 * Primarily for debugging.
 		 */
-		virtual std::string toString() const;
+		virtual QString toString() const;
 
 		/**
 		 * Returns a short ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual std::string shortID( const std::string& valueId = "val" ) const;
+		virtual QString shortID( const std::string& valueId = "val" ) const;
 
 		/**
 		 * Returns a long ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual std::string longID( const std::string& valueId = "val" ) const;
+		virtual QString longID( const std::string& valueId = "val" ) const;
 
 		/**
 		 * Trims a value off of the flag.
@@ -378,7 +378,7 @@ typedef std::list<Arg*>::iterator ArgListIterator;
 /**
  * Typedef of an Arg vector iterator.
  */
-typedef std::vector<Arg*>::iterator ArgVectorIterator;
+typedef QVector<Arg*>::iterator ArgVectorIterator;
 
 /**
  * Typedef of a Visitor list iterator.
@@ -401,7 +401,7 @@ ExtractValue(T &destVal, const std::string& strVal, ValueLike vl)
     while ( is.good() ) {
 	if ( is.peek() != EOF )
 #ifdef TCLAP_SETBASE_ZERO
-	    is >> std::setbase(0) >> destVal;
+	    is >> QSetbase(0) >> destVal;
 #else
 	    is >> destVal;
 #endif
@@ -482,9 +482,9 @@ inline Arg::Arg(const std::string& flag,
 
 inline Arg::~Arg() { }
 
-inline std::string Arg::shortID( const std::string& valueId ) const
+inline QString Arg::shortID( const std::string& valueId ) const
 {
-	std::string id = "";
+	QString id = "";
 
 	if ( _flag != "" )
 		id = Arg::flagStartString() + _flag;
@@ -500,9 +500,9 @@ inline std::string Arg::shortID( const std::string& valueId ) const
 	return id;
 }
 
-inline std::string Arg::longID( const std::string& valueId ) const
+inline QString Arg::longID( const std::string& valueId ) const
 {
-	std::string id = "";
+	QString id = "";
 
 	if ( _flag != "" )
 	{
@@ -531,9 +531,9 @@ inline bool Arg::operator==(const Arg& a) const
 		return false;
 }
 
-inline std::string Arg::getDescription() const
+inline QString Arg::getDescription() const
 {
-	std::string desc = "";
+	QString desc = "";
 	if ( _required )
 		desc = "(" + _requireLabel + ")  ";
 
@@ -576,9 +576,9 @@ inline bool Arg::argMatches( const std::string& argFlag ) const
 		return false;
 }
 
-inline std::string Arg::toString() const
+inline QString Arg::toString() const
 {
-	std::string s = "";
+	QString s = "";
 
 	if ( _flag != "" )
 		s += Arg::flagStartString() + _flag + " ";

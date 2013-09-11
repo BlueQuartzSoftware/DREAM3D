@@ -72,9 +72,9 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Adjust Volume"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Adjust Volume"; }
 
 
     virtual void setupFilterParameters();
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
   private:
     int32_t* m_GrainIds;
     float*   m_EquivalentDiameters;
-    std::vector<int> gsizes;
+    QVector<int> gsizes;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

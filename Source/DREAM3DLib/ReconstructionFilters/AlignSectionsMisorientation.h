@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const std::string getHumanLabel() { return "Align Sections (Misorientation)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const QString getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 	virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+	virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   protected:
     AlignSectionsMisorientation();
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

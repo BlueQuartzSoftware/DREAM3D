@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter (Per Phase)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Minimum Size Filter (Per Phase)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -109,8 +109,8 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     int32_t* m_FieldPhases;
     bool* m_Active;
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    QVector<QVector<int> > voxellists;
+    QVector<int> nuclei;
 
 
     PerPhaseMinSize(const PerPhaseMinSize&); // Copy Constructor Not Implemented

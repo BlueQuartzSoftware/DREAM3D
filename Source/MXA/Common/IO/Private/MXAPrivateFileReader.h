@@ -34,7 +34,7 @@
 class MXA_EXPORT MXAFILEREADER_CLASS_NAME
 {
   public:
-    explicit MXAFILEREADER_CLASS_NAME(const std::string &filename);
+    explicit MXAFILEREADER_CLASS_NAME(const QString &filename);
     virtual ~MXAFILEREADER_CLASS_NAME();
     /**
        * @brief Initializes our stream object and opens the file
@@ -146,9 +146,9 @@ class MXA_EXPORT MXAFILEREADER_CLASS_NAME
 
 
     private:
-      std::string _filename;
+      QString _filename;
       READER64_INPUT_STREAM _instream;
-      std::vector<char> _buffer;
+      QVector<char> _buffer;
 
       MXAFILEREADER_CLASS_NAME(const MXAFILEREADER_CLASS_NAME&);    //Not Implemented
       void operator=(const MXAFILEREADER_CLASS_NAME&); //Not Implemented

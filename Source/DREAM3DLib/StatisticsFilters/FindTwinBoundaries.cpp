@@ -65,7 +65,7 @@ class CalculateTwinBoundaryImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundaryIncoherence;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundaryImpl(float angtol, float axistol, int32_t* Labels, double* Normals, float* Quats, int32_t* Phases, unsigned int* CrystalStructures, bool* TwinBoundary, float* TwinBoundaryIncoherence) :
@@ -209,7 +209,7 @@ FindTwinBoundaries::~FindTwinBoundaries()
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");

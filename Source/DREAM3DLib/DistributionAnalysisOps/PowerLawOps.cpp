@@ -57,7 +57,7 @@ PowerLawOps::PowerLawOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+int PowerLawOps::calculateParameters(QVector<float> &data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float alpha = 0;
@@ -87,7 +87,7 @@ int PowerLawOps::calculateParameters(std::vector<float> &data, FloatArrayType::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int PowerLawOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int PowerLawOps::calculateCorrelatedParameters(QVector<QVector<float> > &data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float alpha = 0;

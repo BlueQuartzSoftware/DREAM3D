@@ -86,7 +86,7 @@ void AlignSectionsFeatureCentroid::setupFilterParameters()
 {
   // Run the superclass first.
   //AlignSections::setupFilterParameters();
-  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Use Reference Slice");
@@ -213,7 +213,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
@@ -243,8 +243,8 @@ void AlignSectionsFeatureCentroid::find_shifts(std::vector<int> &xshifts, std::v
   //  int xspot, yspot;
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  std::vector<float> xCentroid(dims[2],0.0);
-  std::vector<float> yCentroid(dims[2],0.0);
+  QVector<float> xCentroid(dims[2],0.0);
+  QVector<float> yCentroid(dims[2],0.0);
 
   for (DimType iter = 0; iter < dims[2]; iter++)
   {

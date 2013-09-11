@@ -21,7 +21,7 @@ class Exception
 {
 	//#################### PRIVATE VARIABLES ####################
 private:
-	std::string m_cause;
+	QString m_cause;
 
 	//#################### CONSTRUCTORS ####################
 public:

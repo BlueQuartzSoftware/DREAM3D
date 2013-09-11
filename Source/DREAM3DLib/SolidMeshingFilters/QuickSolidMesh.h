@@ -62,8 +62,8 @@ class DREAM3DLib_EXPORT QuickSolidMesh : public AbstractFilter
 	 //------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Quick Solid Mesh"; }
+		virtual const QString getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+     virtual const QString getHumanLabel() { return "Quick Solid Mesh"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

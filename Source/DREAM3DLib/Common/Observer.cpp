@@ -56,7 +56,7 @@ void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const std::string &msg, int progress)
+void Observer::updatePipelineProgressAndMessage(const QString &msg, int progress)
 {
   std::cout << progress << "% " << msg << std::endl;
 }
@@ -73,7 +73,7 @@ void Observer::updatePipelineProgress(int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const std::string &msg)
+void Observer::updatePipelineMessage(const QString &msg)
 {
   std::cout << msg << std::endl;
 }
@@ -119,9 +119,9 @@ void Observer::sendPipelineMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::sendPipelineMessages(std::vector<PipelineMessage> msgs)
+void Observer::sendPipelineMessages(QVector<PipelineMessage> msgs)
 {
-  for (std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
+  for (QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
   {
     sendPipelineMessage(*iter);
   }

@@ -115,7 +115,7 @@ TriangleAreaFilter::~TriangleAreaFilter()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 

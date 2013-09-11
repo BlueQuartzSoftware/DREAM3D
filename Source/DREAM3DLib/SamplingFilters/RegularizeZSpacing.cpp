@@ -72,7 +72,7 @@ RegularizeZSpacing::~RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");
@@ -173,7 +173,7 @@ void RegularizeZSpacing::execute()
   inFile.open(m_InputFile.c_str());
 
   float zval;
-  std::vector<float> zboundvalues;
+  QVector<float> zboundvalues;
   zboundvalues.resize(dims[2] + 1, 0.0);
   for (size_t iter = 0; iter < dims[2] + 1; iter++)
   {
@@ -193,7 +193,7 @@ void RegularizeZSpacing::execute()
 
   int index, oldindex;
   int plane;
-  std::vector<size_t> newindicies;
+  QVector<size_t> newindicies;
   newindicies.resize(totalPoints);
   for (size_t i = 0; i < m_ZP; i++)
   {
@@ -216,7 +216,7 @@ void RegularizeZSpacing::execute()
   std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    std::string name = *iter;
+    QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

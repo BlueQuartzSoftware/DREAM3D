@@ -65,7 +65,7 @@ SingleThresholdCells::~SingleThresholdCells()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -81,7 +81,7 @@ void SingleThresholdCells::setupFilterParameters()
     option->setPropertyName("ComparisonOperator");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back(DREAM3D::Comparison::Strings::LessThan);
     choices.push_back(DREAM3D::Comparison::Strings::GreaterThan);
     choices.push_back(DREAM3D::Comparison::Strings::Equal);
@@ -103,7 +103,7 @@ void SingleThresholdCells::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back(DREAM3D::CellData::GoodVoxels);
     parameter->setChoices(choices);
     parameters.push_back(parameter);

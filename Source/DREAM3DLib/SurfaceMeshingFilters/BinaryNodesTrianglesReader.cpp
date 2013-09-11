@@ -67,7 +67,7 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
     {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");

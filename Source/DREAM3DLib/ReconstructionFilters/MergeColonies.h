@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
@@ -124,10 +124,10 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<int> parentnumbers;
+    QVector<int> parentnumbers;
     int numParents;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

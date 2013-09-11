@@ -93,9 +93,9 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Loading)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Grain Boundary Strength Metrics"; }
 
     virtual void setupFilterParameters();
     /**
@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT FindBoundaryStrengths : public AbstractFilter
     FindBoundaryStrengths();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

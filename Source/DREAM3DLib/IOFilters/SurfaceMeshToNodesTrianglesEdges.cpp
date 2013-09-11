@@ -66,7 +66,7 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Nodes File");
@@ -229,7 +229,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   notifyStatusMessage("Writing Nodes Text File");
-  std::string parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;

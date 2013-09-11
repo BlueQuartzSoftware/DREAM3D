@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, ComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, ComparisonInputs)
 
 
     /**
@@ -70,14 +70,14 @@ class DREAM3DLib_EXPORT MultiThresholdCells : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Multi Threshold (Cell Data)"; }
+    virtual const QString getHumanLabel() { return "Multi Threshold (Cell Data)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

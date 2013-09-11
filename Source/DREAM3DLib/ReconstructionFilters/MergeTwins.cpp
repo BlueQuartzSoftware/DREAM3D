@@ -101,7 +101,7 @@ MergeTwins::~MergeTwins()
 // -----------------------------------------------------------------------------
 void MergeTwins::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
@@ -239,7 +239,7 @@ void MergeTwins::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);
     pid[0] = 0;
-    std::set<int32_t> parentIdSet;
+    QSet<int32_t> parentIdSet;
     parentIdSet.insert(0);
     for(int i = 1; i < numParents; ++i)
     {
@@ -286,7 +286,7 @@ void MergeTwins::merge_twins()
   // us to use the same syntax as the "vector of vectors"
   NeighborList<int>& neighborlist = *m_NeighborList;
 
-  std::vector<int> twinlist;
+  QVector<int> twinlist;
   float w;
   float n1, n2, n3;
   float angtol = m_AngleTolerance;

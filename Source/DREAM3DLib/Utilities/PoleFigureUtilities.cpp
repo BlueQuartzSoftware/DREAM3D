@@ -67,7 +67,7 @@ PoleFigureUtilities::~PoleFigureUtilities()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeVtkFile(FloatArrayType* xyz, const std::string &filename)
+void writeVtkFile(FloatArrayType* xyz, const QString &filename)
 {
   std::stringstream ss;
   FILE* f = NULL;

@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT H5VoxelFileReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read Legacy DREAM.3D H5Voxel File"; }
 
     virtual void setupFilterParameters();
     /**

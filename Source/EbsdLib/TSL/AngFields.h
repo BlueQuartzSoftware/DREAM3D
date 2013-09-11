@@ -60,7 +60,7 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
     AngFields();
     virtual ~AngFields();
 
-    virtual std::vector<std::string> getFieldNames();
+    virtual QVector<std::string> getFieldNames();
 
     template<typename T>
     T getFilterFields()

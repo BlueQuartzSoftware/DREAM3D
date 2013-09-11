@@ -44,7 +44,7 @@ class MXA_EXPORT MXAFILEREADER_CLASS_NAME
 
 
 public:
-  MXAFILEREADER_CLASS_NAME(const std::string &filename);
+  MXAFILEREADER_CLASS_NAME(const QString &filename);
 
   virtual ~MXAFILEREADER_CLASS_NAME();
 
@@ -184,9 +184,9 @@ public:
 
 private:
 
-  std::string _filename;
+  QString _filename;
   READER64_INPUT_STREAM _instream;
-  std::vector<char> _buffer;
+  QVector<char> _buffer;
 
 };
 

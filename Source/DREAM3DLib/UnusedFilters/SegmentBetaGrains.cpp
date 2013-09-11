@@ -159,7 +159,7 @@ SegmentBetaGrains::~SegmentBetaGrains()
 // -----------------------------------------------------------------------------
 void SegmentBetaGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");
@@ -322,7 +322,7 @@ void SegmentBetaGrains::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
-    std::set<int32_t> grainIdSet;
+    QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
     for(size_t i = 1; i < totalFields; ++i)
     {

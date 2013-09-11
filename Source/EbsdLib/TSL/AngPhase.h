@@ -160,10 +160,10 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
     EBSD_INSTANCE_STRING_PROPERTY(Info)
     EBSD_INSTANCE_PROPERTY(uint32_t, Symmetry)
-    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
+    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants)
     EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
-    EBSD_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
-    EBSD_INSTANCE_PROPERTY(std::vector<int>, Categories)
+    EBSD_INSTANCE_PROPERTY(QVector<HKLFamily::Pointer>, HKLFamilies)
+    EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
 
 
     void parsePhase(char* value, size_t start, size_t length);

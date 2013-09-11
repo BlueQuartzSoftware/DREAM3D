@@ -78,9 +78,9 @@ class DREAM3DLib_EXPORT FindShapes : public AbstractFilter
     DREAM3D_DECLARE_ARRAY(double, grainmoments, GrainMoments) // N x 6 Array
     DREAM3D_DECLARE_ARRAY(double, graineigenvals, GrainEigenVals) // N x 3 Array
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Shapes"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Shapes"; }
 
 
     /**

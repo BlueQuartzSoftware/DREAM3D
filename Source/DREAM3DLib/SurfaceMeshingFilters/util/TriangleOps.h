@@ -58,15 +58,15 @@ class TriangleOps
 
     static int getLabelIndex(int32_t* t, int label);
 
-    std::vector<int> getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label);
+    QVector<int> getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label);
 
     static void flipWinding(DREAM3D::Mesh::Face_t& triangle);
 
     static VectorType computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::Vert_t& n1, DREAM3D::Mesh::Vert_t& n2);
 
-    static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
+    static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
-    static std::vector<int32_t> findAdjacentTriangles(SurfaceDataContainer* sm,
+    static QVector<int32_t> findAdjacentTriangles(SurfaceDataContainer* sm,
                                                         int32_t triangleIndex,
                                                         int32_t label);
 

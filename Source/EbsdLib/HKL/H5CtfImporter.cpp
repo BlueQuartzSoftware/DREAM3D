@@ -152,7 +152,7 @@ int H5CtfImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFile)
+int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString &ctfFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -200,7 +200,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const std::string &ctfFil
 
   // Write the fileversion attribute if it does not exist
   {
-    std::vector<hsize_t> dims;
+    QVector<hsize_t> dims;
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
@@ -319,7 +319,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
   // Close this group
   err = H5Gclose(phasesGid);
 
-  std::string ctfCompleteHeader = reader.getOriginalHeader();
+  QString ctfCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, ctfCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, reader.getFileName());
 
@@ -345,7 +345,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
   { reader.getXCells() * reader.getYCells() };
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
-  std::vector<std::string> columnNames = reader.getColumnNames();
+  QVector<std::string> columnNames = reader.getColumnNames();
   for (size_t i = 0; i < columnNames.size(); ++i)
   {
     numType = reader.getPointerType(columnNames[i]);
@@ -417,7 +417,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<m_msgType> tempVar = reader->get##prpty();\
+  QVector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
   m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
@@ -443,9 +443,9 @@ int H5CtfImporter::writePhaseData(CtfReader &reader, hid_t phasesGid)
  // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
-  std::vector<CtfPhase::Pointer> phases = reader.getPhaseVector();
+  QVector<CtfPhase::Pointer> phases = reader.getPhaseVector();
   Ebsd::Ctf::LaueGroupStrings laueGroupStrings;
-  for (std::vector<CtfPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  for (QVector<CtfPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     CtfPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));

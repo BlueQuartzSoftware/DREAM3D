@@ -74,9 +74,9 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     DREAM3D_INSTANCE_PROPERTY(bool, CreateCellLevelArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, RenumberGrains)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read Field Info File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read Field Info File"; }
 
     virtual void setupFilterParameters();
     /**

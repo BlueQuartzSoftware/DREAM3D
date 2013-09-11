@@ -65,8 +65,8 @@ namespace Detail
   // -----------------------------------------------------------------------------
   template<typename T>
   IDataArray::Pointer readH5Dataset(hid_t locId,
-                                    const std::string &datasetPath,
-                                    const std::vector<hsize_t> &dims)
+                                    const QString &datasetPath,
+                                    const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -95,16 +95,16 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std::string &name, bool preflightOnly)
+IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QString &name, bool preflightOnly)
 {
   herr_t err = -1;
   herr_t retErr = 1;
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
@@ -119,7 +119,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std:
   }
   else
   {
-    std::string classType;
+    QString classType;
     err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {
@@ -158,7 +158,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std:
           {
             if(buf[i] == 0)
             {
-              std::string str( &(buf[start]) );
+              QString str( &(buf[start]) );
               strArray->SetValue(index, str);
               ++index;
               start = i + 1;
@@ -181,7 +181,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const std:
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const std::string &name, bool preflightOnly)
+IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -189,9 +189,9 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const std::stri
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
@@ -206,7 +206,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const std::stri
   }
   else
   {
-    std::string classType;
+    QString classType;
     err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {
@@ -320,20 +320,20 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const std::stri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const std::string &name, bool preflightOnly)
+IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QString &name, bool preflightOnly)
 {
 
   herr_t err = -1;
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
-  std::string keyname;
+  QString keyname;
   err = H5Lite::readStringAttribute(gid, name, "Linked NumNeighbors Dataset", keyname);
   err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)

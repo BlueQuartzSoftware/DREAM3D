@@ -24,7 +24,7 @@ namespace MXA
 {
   namespace Bmp
   {
-    const std::string FileExtension("bmp");
+    const QString FileExtension("bmp");
   }
 }
 

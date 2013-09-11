@@ -71,7 +71,7 @@ void BoundaryStatsData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string BoundaryStatsData::getStatsType()
+QString BoundaryStatsData::getStatsType()
 {
   return DREAM3D::HDF5::BoundaryStatsData;
 }

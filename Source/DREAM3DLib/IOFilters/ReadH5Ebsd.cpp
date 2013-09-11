@@ -245,7 +245,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
       return;
     }
 
-    std::string manufacturer = reader->getManufacturer();
+    QString manufacturer = reader->getManufacturer();
     if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)
     {
       m_Manufacturer = Ebsd::TSL;
@@ -307,25 +307,25 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
 
   H5EbsdVolumeReader::Pointer reader;
-  std::vector<std::string> names;
+  QVector<std::string> names;
 
   if (m_Manufacturer == Ebsd::TSL)
   {
     AngFields fields;
     reader = H5AngVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<QVector<std::string> > ();
   }
   else if (m_Manufacturer == Ebsd::HKL)
   {
     CtfFields fields;
     reader = H5CtfVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<QVector<std::string> > ();
   }
   else if (m_Manufacturer == Ebsd::HEDM)
   {
     MicFields fields;
     reader = H5MicVolumeReader::New();
-    names = fields.getFilterFields<std::vector<std::string> > ();
+    names = fields.getFilterFields<QVector<std::string> > ();
   }
   else
   {
@@ -387,7 +387,7 @@ void ReadH5Ebsd::execute()
   }
   int err = 0;
   setErrorCondition(err);
-  std::string manufacturer;
+  QString manufacturer;
   // Get the Size and Resolution of the Volume
   {
     H5EbsdVolumeInfo::Pointer volumeInfoReader = H5EbsdVolumeInfo::New();
@@ -458,7 +458,7 @@ void ReadH5Ebsd::execute()
   else
   {
     setErrorCondition(-1);
-    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    QString msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(", ").append(Ebsd::Ang::Manufacturer).append(" and ").append(Ebsd::Mic::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -1);
@@ -513,7 +513,7 @@ void ReadH5Ebsd::execute()
   }
   else
   {
-    std::string msg("Could not determine or match a supported manufacturer from the data file.");
+    QString msg("Could not determine or match a supported manufacturer from the data file.");
     msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
     msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -10001);
@@ -563,12 +563,12 @@ void ReadH5Ebsd::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedCellArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setVolumeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                             QSet<std::string> selectedEdgeArrays,
+                                                             QSet<std::string> selectedFaceArrays,
+                                                             QSet<std::string> selectedCellArrays,
+                                                             QSet<std::string> selectedFieldArrays,
+                                                             QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
@@ -581,11 +581,11 @@ void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedVerte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setSurfaceSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedEdgeArrays,
+                                                           QSet<std::string> selectedFaceArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Surface data in an H5Ebsd file
 }
@@ -593,10 +593,10 @@ void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVert
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setEdgeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedEdgeArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Edge data in an H5Ebsd file
 }
@@ -604,9 +604,9 @@ void ReadH5Ebsd::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexA
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ReadH5Ebsd::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFieldArrays,
-                                                std::set<std::string> selectedEnsembleArrays)
+void ReadH5Ebsd::setVertexSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                QSet<std::string> selectedFieldArrays,
+                                                QSet<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Vertex data in an H5Ebsd file
 }

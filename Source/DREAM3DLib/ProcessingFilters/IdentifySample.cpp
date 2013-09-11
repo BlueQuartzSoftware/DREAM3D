@@ -162,12 +162,12 @@ void IdentifySample::execute()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  std::vector<int> currentvlist;
-  std::vector<bool> checked;
+  QVector<int> currentvlist;
+  QVector<bool> checked;
   checked.resize(totalPoints,false);
-  std::vector<bool> Sample;
+  QVector<bool> Sample;
   Sample.resize(totalPoints,false);
-  std::vector<bool> notSample;
+  QVector<bool> notSample;
   notSample.resize(totalPoints,false);
   int biggestBlock = 0;
   size_t count;
@@ -284,7 +284,7 @@ void IdentifySample::execute()
   Sample.clear();
   checked.clear();
 
-  /*  std::vector<bool> change;
+  /*  QVector<bool> change;
   change.resize(totalPoints,false);
   for (int i = 0; i < totalPoints; i++)
   {

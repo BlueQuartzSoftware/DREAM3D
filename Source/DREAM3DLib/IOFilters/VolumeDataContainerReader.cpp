@@ -74,7 +74,7 @@ VolumeDataContainerReader::~VolumeDataContainerReader()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -313,7 +313,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadVertexData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
     if(err < 0)
     {
@@ -325,7 +325,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEdgeData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
     if(err < 0)
     {
@@ -337,7 +337,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFaceData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
     if(err < 0)
     {
@@ -349,7 +349,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
@@ -361,7 +361,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFieldData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -373,7 +373,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEnsembleData == true)
   {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -392,9 +392,9 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead)
+int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<std::string> &namesRead,
+                                                QSet<std::string> &namesToRead)
 {
   std::stringstream ss;
   int err = 0;
@@ -412,10 +412,10 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &gr
   NameListType names;
   H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
   //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
-  std::string classType;
+  QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<std::string>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();

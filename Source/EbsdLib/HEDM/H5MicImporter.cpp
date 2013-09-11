@@ -151,7 +151,7 @@ int H5MicImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFile)
+int H5MicImporter::importFile(hid_t fileId, int64_t z, const QString &MicFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -176,7 +176,7 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 
   // Write the fileversion attribute if it does not exist
   {
-    std::vector<hsize_t> dims;
+    QVector<hsize_t> dims;
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
@@ -298,7 +298,7 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
       WRITE_Mic_HEADER_DATA(reader, float, XRes, Ebsd::Mic::XRes)
       WRITE_Mic_HEADER_DATA(reader, float, YRes, Ebsd::Mic::YRes)
 
-      std::string micCompleteHeader = reader.getOriginalHeader();
+      QString micCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, micCompleteHeader);
 
   // Close the "Header" group
@@ -366,7 +366,7 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<m_msgType> tempVar = reader->get##prpty();\
+  QVector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
   m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
@@ -391,8 +391,8 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
   // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
-  std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
-  for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  QVector<MicPhase::Pointer> phases = reader.getPhaseVector();
+  for (QVector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
@@ -426,10 +426,10 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 int H5MicImporter::writeZandCoordinates(MicPhase* p, hid_t ZandCGid)
 {
   int err = 0;
-  std::vector<std::string> ZandCs = p->getZandCoordinates();
-  std::string ZandC;
+  QVector<std::string> ZandCs = p->getZandCoordinates();
+  QString ZandC;
   int count = 0;
-  for (std::vector<std::string>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
+  for (QVector<std::string>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
   {
     err = H5Lite::writeStringDataset(ZandCGid, StringUtils::numToString(count), *f);
     count++;

@@ -72,14 +72,14 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Change Scaling of Volume"; }
+    virtual const QString getHumanLabel() { return "Change Scaling of Volume"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

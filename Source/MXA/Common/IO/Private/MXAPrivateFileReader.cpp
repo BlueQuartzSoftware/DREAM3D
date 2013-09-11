@@ -14,7 +14,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MXAFILEREADER_CLASS_NAME::MXAFILEREADER_CLASS_NAME(const std::string &filename) :
+MXAFILEREADER_CLASS_NAME::MXAFILEREADER_CLASS_NAME(const QString &filename) :
   _filename(filename)
 {
 

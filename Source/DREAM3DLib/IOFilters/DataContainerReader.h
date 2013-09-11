@@ -68,33 +68,33 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexEnsembleArrays)
 
 
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read DREAM3D Data File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read DREAM3D Data File"; }
 
     FilterPipeline::Pointer getPipelinePointer() { return m_PipelineFromFile; }
 
@@ -117,24 +117,24 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedCellArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setVolumeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedCellArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setVertexSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
     /**
      * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it
      * in the class instance for later writing to another dream3d data file

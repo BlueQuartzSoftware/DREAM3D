@@ -78,32 +78,32 @@ class DREAM3DLib_EXPORT Observable
 
     virtual void notifyMessage(PipelineMessage &msg);
 
-    void notifyErrorMessage(std::string errDesc, int errCode);
+    void notifyErrorMessage(QString errDesc, int errCode);
 
-    void notifyWarningMessage(std::string warnDesc, int warnCode);
+    void notifyWarningMessage(QString warnDesc, int warnCode);
 
-    void notifyStatusMessage(std::string statusDesc);
+    void notifyStatusMessage(QString statusDesc);
 
     void notifyProgressValue(int status);
 
-    void notifyStatusAndProgress(std::string statusDesc, int statusVal);
+    void notifyStatusAndProgress(QString statusDesc, int statusVal);
 
-    virtual std::vector<Observer*> getObservers();
+    virtual QVector<Observer*> getObservers();
 
-    virtual void setObservers(std::vector<Observer*> obs);
+    virtual void setObservers(QVector<Observer*> obs);
 
-    virtual void setMessagePrefix(const std::string &str);
-    virtual std::string getMessagePrefix();
+    virtual void setMessagePrefix(const QString &str);
+    virtual QString getMessagePrefix();
 
   private:
-    std::vector<Observer*> m_Observers;
-    std::string m_Prefix;
+    QVector<Observer*> m_Observers;
+    QString m_Prefix;
 
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented
 };
 
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
+//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT QVector<Observer*>;
 
 
 #endif /* OBSERVABLE_H_ */

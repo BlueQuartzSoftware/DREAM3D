@@ -86,7 +86,7 @@ INLWriter::~INLWriter()
 // -----------------------------------------------------------------------------
 void INLWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -218,7 +218,7 @@ int INLWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     ss.str("");
@@ -291,7 +291,7 @@ int INLWriter::writeFile()
     fprintf(f, "#\r\n");
   }
 
-  std::set<int32_t> uniqueGrainIds;
+  QSet<int32_t> uniqueGrainIds;
   for(int64_t i = 0; i < totalPoints; ++i)
   {
     uniqueGrainIds.insert(m_GrainIds[i]);

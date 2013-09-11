@@ -65,7 +65,7 @@ class  CrystalStructure
      * @param xtal
      * @return
      */
-    static std::string getCrystalStructureString(unsigned int xtal)
+    static QString getCrystalStructureString(unsigned int xtal)
     {
       switch(xtal)
       {

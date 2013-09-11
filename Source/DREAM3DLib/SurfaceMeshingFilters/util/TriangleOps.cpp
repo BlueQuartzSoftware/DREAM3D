@@ -56,11 +56,11 @@ TriangleOps::~TriangleOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
+QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
                                                         int32_t triangleIndex,
                                                         int32_t label)
 {
-  std::vector<int32_t> adjacentTris;
+  QVector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
   DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
 //  DREAM3D::Mesh::Face_t* faces = facesPtr->GetPointer(0);
@@ -191,9 +191,9 @@ int TriangleOps::getLabelIndex(int32_t *t, int label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label)
+QVector<int> TriangleOps::getNodeIndices(DREAM3D::Mesh::Face_t &t, int32_t* faceLabel, int label)
 {
-  std::vector<int > tNodes(3);
+  QVector<int > tNodes(3);
   int idx = TriangleOps::getLabelIndex(faceLabel, label);
   if (idx == 1)
   {
@@ -263,9 +263,9 @@ VectorType TriangleOps::computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
+QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
 {
-  std::set<int32_t> uniqueLabels;
+  QSet<int32_t> uniqueLabels;
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   size_t count = faceLabelsPtr->GetNumberOfTuples();
