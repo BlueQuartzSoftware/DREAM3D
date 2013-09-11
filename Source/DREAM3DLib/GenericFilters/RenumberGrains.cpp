@@ -135,7 +135,7 @@ void RenumberGrains::preflight()
   {
       IDataArray::Pointer p = m->getCellFieldData(*iter);
 	  std::string type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
+      if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
   }
 }
 
@@ -198,7 +198,7 @@ void RenumberGrains::execute()
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
 	  std::string type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
+      if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
     }

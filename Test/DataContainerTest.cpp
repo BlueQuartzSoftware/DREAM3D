@@ -73,7 +73,7 @@ dataContainer->addCellData(name, m_msgType##Ptr);
   m->add##DCType(#Type, t_##Type);\
   IDataArray::Pointer t = m->get##DCType(#Type);\
   DREAM3D_REQUIRE_NE(t.get(), NULL);\
-  t = m->removeFieldData(#Type);\
+  t = m->removeCellFieldData(#Type);\
   DREAM3D_REQUIRE_NE(t.get(), NULL);\
   t = m->get##DCType(#Type);\
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
@@ -236,7 +236,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   m->addCellFieldData("Test", p);
   t = m->getCellFieldData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeFieldData( "Test" );
+  t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->getCellFieldData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
@@ -244,7 +244,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   m->addCellEnsembleData("Test", p);
   t = m->getCellEnsembleData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeEnsembleData( "Test" );
+  t = m->removeCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->getCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
@@ -353,7 +353,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
-  t = m->removeFieldData( "Test" );
+  t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
 
@@ -391,7 +391,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
 
-  t = m->removeEnsembleData( "Test" );
+  t = m->removeCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 }
 

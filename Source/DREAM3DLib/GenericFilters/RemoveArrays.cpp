@@ -130,11 +130,11 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
     for(NameList_t::iterator iter = m_SelectedVolumeFieldArrays.begin(); iter != m_SelectedVolumeFieldArrays.end(); ++iter)
     {
-      m->removeFieldData(*iter);
+      m->removeCellFieldData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedVolumeEnsembleArrays.begin(); iter != m_SelectedVolumeEnsembleArrays.end(); ++iter)
     {
-      m->removeEnsembleData(*iter);
+      m->removeCellEnsembleData(*iter);
     }
   }
 
@@ -157,11 +157,11 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceFieldArrays.begin(); iter != m_SelectedSurfaceFieldArrays.end(); ++iter)
     {
-      sm->removeFieldData(*iter);
+      sm->removeCellFieldData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceEnsembleArrays.begin(); iter != m_SelectedSurfaceEnsembleArrays.end(); ++iter)
     {
-      sm->removeEnsembleData(*iter);
+      sm->removeCellEnsembleData(*iter);
     }
   }
 

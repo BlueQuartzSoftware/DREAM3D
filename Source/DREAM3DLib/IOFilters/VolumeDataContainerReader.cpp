@@ -186,8 +186,8 @@ void VolumeDataContainerReader::execute()
   if(m_ReadEdgeData == true) m->clearEdgeData();
   if(m_ReadFaceData == true) m->clearFaceData();
   if(m_ReadCellData == true) m->clearCellData();
-  if(m_ReadFieldData == true) m->clearFieldData();
-  if(m_ReadEnsembleData == true) m->clearEnsembleData();
+  if(m_ReadFieldData == true) m->clearCellFieldData();
+  if(m_ReadEnsembleData == true) m->clearCellEnsembleData();
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);
