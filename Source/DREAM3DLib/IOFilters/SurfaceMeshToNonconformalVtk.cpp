@@ -119,7 +119,7 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -182,7 +182,7 @@ class ScopedFileMonitor
 void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -426,7 +426,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -611,7 +611,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
 {
   int32_t totalCellsWritten = 0;
@@ -755,7 +755,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
   int triangleCount = triangles.GetNumberOfTuples();
 
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));

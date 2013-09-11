@@ -119,7 +119,7 @@ int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer
 void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -184,7 +184,7 @@ void SolidMeshToVtk::execute()
 {
 <<<<<<< HEAD
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)

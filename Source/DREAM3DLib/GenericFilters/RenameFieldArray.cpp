@@ -114,7 +114,7 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
@@ -148,7 +148,7 @@ void RenameFieldArray::execute()
     return;
   }
   setErrorCondition(0);
-  QString ss;
+  
 
   bool check = m->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 

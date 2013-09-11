@@ -114,7 +114,7 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
 void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if(getOutputFile().isEmpty() == true)
   {
@@ -195,7 +195,7 @@ void GBCDTriangleDumper::preflight()
 void GBCDTriangleDumper::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)

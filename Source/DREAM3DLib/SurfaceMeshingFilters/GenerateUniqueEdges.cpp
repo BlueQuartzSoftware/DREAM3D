@@ -108,7 +108,7 @@ int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   if(NULL == sm)
@@ -156,7 +156,7 @@ void GenerateUniqueEdges::preflight()
 void GenerateUniqueEdges::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -284,7 +284,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   typedef QMap<int64_t, int>::iterator EdgesIdMapIterator_t;
 
   float curPercent = 0.0;
-  QString ss;
+  
 
   for(int i = 0; i < ntri; ++i)
   {

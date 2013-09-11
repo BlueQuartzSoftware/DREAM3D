@@ -157,7 +157,7 @@ void SurfaceDataContainerWriter::preflight()
 void SurfaceDataContainerWriter::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -573,7 +573,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
-  QString ss;
+  
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -774,7 +774,7 @@ int SurfaceDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
-  QString ss;
+  
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -825,7 +825,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  QString ss;
+  
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
@@ -978,7 +978,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  QString ss;
+  
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 

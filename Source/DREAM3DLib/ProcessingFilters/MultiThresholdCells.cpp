@@ -157,7 +157,7 @@ void MultiThresholdCells::preflight()
 void MultiThresholdCells::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)

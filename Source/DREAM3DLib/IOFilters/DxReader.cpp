@@ -138,7 +138,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
-  QString ss;
+  
   QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
@@ -199,7 +199,7 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  QString ss;
+  
   int err = 0;
 
   m_InStream.setFileName(getInputFile());
@@ -232,7 +232,7 @@ void DxReader::execute()
 // -----------------------------------------------------------------------------
 int DxReader::readHeader()
 {
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   int error = 0;
@@ -327,7 +327,7 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  QString ss;
+  
   if (NULL == m)
   {
     ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);

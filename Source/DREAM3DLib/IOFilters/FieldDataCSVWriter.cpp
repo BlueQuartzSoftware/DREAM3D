@@ -222,7 +222,7 @@ void FieldDataCSVWriter::execute()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  QString ss;
+  
   float threshold = 0.0f;
 
   // Skip the first grain

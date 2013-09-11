@@ -164,7 +164,7 @@ void RenumberGrains::execute()
     return;
   }
 
-  QString ss;
+  
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);

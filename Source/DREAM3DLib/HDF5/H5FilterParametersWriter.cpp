@@ -219,7 +219,7 @@ int H5FilterParametersWriter::writeValue(const QString name, QVector<int8_t> val
 {
   int vectorSize = value.size();
   int err = QH5Lite::writeScalarDataset(m_CurrentGroupId, name, vectorSize);
-  QString ss;
+  
   for (int i=0; i<vectorSize; i++)
   {
     QString ss = QString::number(i, 10);

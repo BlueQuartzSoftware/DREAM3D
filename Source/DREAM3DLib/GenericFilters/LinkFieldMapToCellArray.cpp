@@ -175,7 +175,7 @@ void LinkFieldMapToCellArray::execute()
     return;
   }
   //int err = 0;
-  QString ss;
+  
 
   m->clearFieldData();
 

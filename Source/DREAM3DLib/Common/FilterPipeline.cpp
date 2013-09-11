@@ -252,7 +252,7 @@ int FilterPipeline::preflightPipeline()
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-  QString ss;
+  
   int err = 0;
 
   // Start looping through the Pipeline and preflight everything
@@ -334,7 +334,7 @@ void FilterPipeline::execute()
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-  QString ss;
+  
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   DEFINE_CLOCK;

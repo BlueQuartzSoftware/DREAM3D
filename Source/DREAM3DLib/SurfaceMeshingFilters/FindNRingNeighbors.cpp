@@ -166,7 +166,7 @@ void FindNRingNeighbors::generate()
 
   //  if (m_TriangleId == 1000)
   //  {
-  //    QString ss;
+  //    
   //    QString ss = QObject::tr("/tmp/%1_RingNeighborhood.vtk").arg(m_Ring);
   //    writeVTKFile(ss.str());
   //  }
@@ -186,7 +186,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
-  QString ss;
+  
 
 
   FILE* vtkFile = NULL;

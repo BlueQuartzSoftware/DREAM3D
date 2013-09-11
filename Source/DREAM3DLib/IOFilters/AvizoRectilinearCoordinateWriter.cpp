@@ -273,7 +273,7 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
     int count = 0;
-    QString ss;
+    
     for (int64_t i = 0; i < totalPoints; ++i)
     {
       out << m_GrainIds[i];

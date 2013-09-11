@@ -121,7 +121,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QString ss;
+  
   if (getOutputFile().isEmpty() == true)
   {
     ss = QObject::tr( ": The output file must be set before executing this filter.");
@@ -168,7 +168,7 @@ int DxWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QString ss;
+    
     ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
@@ -204,7 +204,7 @@ int DxWriter::writeFile()
   QDir dir(fi.path());
   if(!dir.mkpath("."))
   {
-    QString ss;
+    
     ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);

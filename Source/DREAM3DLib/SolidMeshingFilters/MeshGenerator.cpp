@@ -1733,7 +1733,7 @@ void make_nodes(int iter)
 //  itoa(iter, num, 10);
 //  strcat(fileout, num);
 //  strcat(fileout, fileoutext);
-  QString ss;
+  
   QString ss = QObject::tr("pointcheck%1.vtk").arg(iter);
   QString fileout = ss.str();
 

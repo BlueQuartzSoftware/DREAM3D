@@ -145,7 +145,7 @@ void CropVolumePipeline::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  QString ss;
+  
 
 
   if(true == m_InputFile.isEmpty())
@@ -172,7 +172,7 @@ void CropVolumePipeline::preflight()
 // -----------------------------------------------------------------------------
 QString convertIntToString(int number)
 {
-   QString ss;//create a stringstream
+   //create a stringstream
    ss << number;//add number to the stream
    return ss.str();//return a string with the contents of the stream
 }

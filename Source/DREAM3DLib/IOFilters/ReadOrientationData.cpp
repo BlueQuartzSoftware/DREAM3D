@@ -288,7 +288,7 @@ void ReadOrientationData::preflight()
 void ReadOrientationData::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)

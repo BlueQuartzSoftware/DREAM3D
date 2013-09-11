@@ -281,7 +281,7 @@ void GenerateEnsembleStatistics::execute()
     return;
   }
   setErrorCondition(0);
-  QString ss;
+  
 
   //  int totalPoints = m->getTotalPoints();
   //  int totalFields = m->getNumFieldTuples();

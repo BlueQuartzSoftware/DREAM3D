@@ -148,7 +148,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
-  QString ss;
+  
   //int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -243,7 +243,7 @@ void MatchCrystallography::execute()
   }
 
 
-  QString ss;
+  
   ss = QObject::tr("Determining Volumes");
   notifyStatusMessage(ss);
   determine_volumes();
@@ -311,7 +311,7 @@ void MatchCrystallography::initializeArrays(int ensem)
   else
   {
     setErrorCondition(-55000);
-    QString ss;
+    
     ss = QObject::tr("Improper PhaseType for MatchCrystallography");
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
@@ -415,7 +415,7 @@ void MatchCrystallography::assign_eulers(int ensem)
 
   int totalFields = m->getNumFieldTuples();
 
-  QString ss;
+  
   for (int i = 1; i < totalFields; i++)
   {
     phase = m_FieldPhases[i];
@@ -854,7 +854,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
   //float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);
-  QString ss;
+  
   for (size_t i = 1; i < totalFields; i++)
   {
     if(m_FieldPhases[i] == ensem)

@@ -158,7 +158,7 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   int32_t err = 0;
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -276,7 +276,7 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   int32_t err = 0;
-  QString ss;
+  
   // dataCheck(false, 1, 1, 1);
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only

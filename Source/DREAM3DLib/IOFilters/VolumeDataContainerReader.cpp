@@ -109,7 +109,7 @@ int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
@@ -200,7 +200,7 @@ void VolumeDataContainerReader::execute()
 int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
-  QString ss;
+  
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
@@ -264,7 +264,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
 int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
-  QString ss;
+  
   int64_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =

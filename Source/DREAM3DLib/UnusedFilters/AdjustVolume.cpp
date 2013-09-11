@@ -112,7 +112,7 @@ int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VoxelDataContainer* m = getVoxelDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -209,7 +209,7 @@ void AdjustVolume::execute()
 //  oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
-    QString ss;
+    
 	QString ss = QObject::tr("Adjusting Grain Boundaries - %1Percent Complete").arg(((float)iterations/m_MaxIterations)*100);
 	notifyStatusMessage(ss);
     iterations++;

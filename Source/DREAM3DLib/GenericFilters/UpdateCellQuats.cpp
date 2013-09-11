@@ -121,7 +121,7 @@ void UpdateCellQuats::execute()
     return;
   }
   setErrorCondition(0);
-  QString ss;
+  
 
   int64_t totalPoints = m->getTotalPoints();
 

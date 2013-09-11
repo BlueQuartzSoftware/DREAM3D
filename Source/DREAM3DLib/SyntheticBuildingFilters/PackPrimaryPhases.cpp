@@ -470,7 +470,7 @@ void PackPrimaryPhases::execute()
   totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
-  QString ss;
+  
 
   // float change1, change2;
   float change = 0.0f;
@@ -1797,7 +1797,7 @@ void PackPrimaryPhases::assign_voxels()
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
-  QString ss;
+  
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1988,7 +1988,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage("Assigning Gaps");
 
-  QString ss;
+  
 
   VolumeDataContainer* m = getVolumeDataContainer();
 

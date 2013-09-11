@@ -216,7 +216,7 @@ void CropVolume::preflight()
 
   VolumeDataContainer* m = getVolumeDataContainer();
   setErrorCondition(0);
-  QString ss;
+  
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -410,7 +410,7 @@ void CropVolume::execute()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
-    QString ss;
+    
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

@@ -65,7 +65,7 @@
  * @param NumComp The number of components of the DataArray
  */
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, size, NumComp)\
-  { QString ss; \
+  {  \
   if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
     ss = QObject::tr("The name of the array for the %1::%2::%3 was empty. Please provide a name for this array").arg(#NameSpace).arg(#DType).arg(#Name);\
@@ -100,7 +100,7 @@
  * @param NumComp The number of components of the DataArray
  */
 #define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, size, NumComp)\
-  {QString ss;\
+  {\
   if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
     ss = QObject::tr("The name of the array for the %1 was empty. Please provide a name for this array").arg(#Name);\
@@ -138,7 +138,7 @@
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) \
     {\
-      QString ss;\
+      \
       if (m_##Name##ArrayName.isEmpty() == true) \
       {\
         ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());\

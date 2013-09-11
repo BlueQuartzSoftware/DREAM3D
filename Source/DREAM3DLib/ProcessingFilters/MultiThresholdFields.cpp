@@ -157,7 +157,7 @@ void MultiThresholdFields::preflight()
 void MultiThresholdFields::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)

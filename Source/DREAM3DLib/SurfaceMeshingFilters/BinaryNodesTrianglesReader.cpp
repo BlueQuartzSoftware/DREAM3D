@@ -161,7 +161,7 @@ void BinaryNodesTrianglesReader::preflight()
 void BinaryNodesTrianglesReader::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
 
   /* Make sure everything is in place */

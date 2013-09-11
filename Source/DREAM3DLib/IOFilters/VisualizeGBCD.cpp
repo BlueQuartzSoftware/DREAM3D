@@ -229,7 +229,7 @@ void VisualizeGBCD::preflight()
 void VisualizeGBCD::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)

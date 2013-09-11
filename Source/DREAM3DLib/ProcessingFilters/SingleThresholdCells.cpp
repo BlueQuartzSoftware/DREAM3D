@@ -186,7 +186,7 @@ void SingleThresholdCells::execute()
     return;
   }
   //int err = 0;
-  QString ss;
+  
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())

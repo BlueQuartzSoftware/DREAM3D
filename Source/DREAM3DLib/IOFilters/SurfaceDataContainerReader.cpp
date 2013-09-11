@@ -149,7 +149,7 @@ void SurfaceDataContainerReader::preflight()
 void SurfaceDataContainerReader::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -166,7 +166,7 @@ void SurfaceDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherData(bool preflight)
 {
-  QString ss;
+  
 
   if(m_HdfFileId < 0)
   {
@@ -566,7 +566,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
                                                                   QVector<QString> &namesRead,
                                                                   QSet<QString> &namesToRead)
 {
-  QString ss;
+  
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);

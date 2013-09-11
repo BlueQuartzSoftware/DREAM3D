@@ -182,7 +182,7 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_OutputFile.isEmpty() == true)
   {
@@ -222,7 +222,7 @@ void DataContainerWriter::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss = QObject::tr("DataContainer was NULL");
     notifyErrorMessage(ss, -10);
     return;
@@ -230,7 +230,7 @@ void DataContainerWriter::execute()
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-  QString ss;
+  
   int err = 0;
 
   // Make sure any directory path is also available as the user may have just typed

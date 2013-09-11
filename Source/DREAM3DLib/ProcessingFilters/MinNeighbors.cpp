@@ -277,7 +277,7 @@ void MinNeighbors::assign_badpoints()
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
-			  QString ss;
+			  
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -371,7 +371,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	QString ss;
+	
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

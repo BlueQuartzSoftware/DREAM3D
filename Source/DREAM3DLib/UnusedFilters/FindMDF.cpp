@@ -103,7 +103,7 @@ int FindMDF::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)

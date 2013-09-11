@@ -237,7 +237,7 @@ int GenerateFaceMisorientationColoring::writeFilterParameters(AbstractFilterPara
 void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   if(NULL == sm)
@@ -307,7 +307,7 @@ void GenerateFaceMisorientationColoring::preflight()
 void GenerateFaceMisorientationColoring::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   VolumeDataContainer* m = getVolumeDataContainer();

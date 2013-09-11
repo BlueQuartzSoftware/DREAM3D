@@ -189,7 +189,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -611,7 +611,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   int totalAdjustments = static_cast<int>(10 * ((numgrains-firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    QString ss;
+    
     ss = QObject::tr("Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
     if(iteration % 100 == 0) notifyStatusMessage(ss);
 

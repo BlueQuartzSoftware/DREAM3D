@@ -256,7 +256,7 @@ void OpenCloseBadData::execute()
         for (int i = 0; i < dims[0]; i++)
         {
           count = kstride+jstride+i;
-          QString ss;
+          
           grainname = m_GrainIds[count];
           if (grainname == 0)
           {

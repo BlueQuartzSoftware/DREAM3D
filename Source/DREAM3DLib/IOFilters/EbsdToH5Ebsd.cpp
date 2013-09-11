@@ -141,7 +141,7 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -207,7 +207,7 @@ void EbsdToH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
-  QString ss;
+  
   herr_t err = 0;
   hid_t fileId = -1;
 
@@ -226,7 +226,7 @@ void EbsdToH5Ebsd::execute()
   QDir dir;
   if(!dir.mkpath(parentPath))
   {
-    QString ss;
+    
     PipelineMessage em (getHumanLabel(), ss, -1);
     addErrorMessage(em);
     setErrorCondition(-1);

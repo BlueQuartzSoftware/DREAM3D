@@ -138,7 +138,7 @@ int FindBoundaryStrengths::writeFilterParameters(AbstractFilterParametersWriter*
 void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   if(NULL == sm)
@@ -203,7 +203,7 @@ void FindBoundaryStrengths::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::execute()
 {
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 

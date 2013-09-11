@@ -258,7 +258,7 @@ int GenerateFaceIPFColoring::writeFilterParameters(AbstractFilterParametersWrite
 void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   if(NULL == sm)
@@ -329,7 +329,7 @@ void GenerateFaceIPFColoring::preflight()
 void GenerateFaceIPFColoring::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   VolumeDataContainer* m = getVolumeDataContainer();
