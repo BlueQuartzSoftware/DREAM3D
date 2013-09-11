@@ -292,7 +292,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         return;
       }
 
-      IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+      IDataArray::Pointer iPtr = m_DataContainer->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
       if (NULL == iPtr.get())
       {
         m_DataContainer = VolumeDataContainer::NullPointer();
@@ -453,11 +453,11 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
     }
   }
 
-  IDataArray::Pointer iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer iPtr = m_DataContainer->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
   DataArray<uint32_t>* phaseType = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
-  iPtr = m_DataContainer->getEnsembleData(DREAM3D::EnsembleData::Statistics);
+  iPtr = m_DataContainer->getCellEnsembleData(DREAM3D::EnsembleData::Statistics);
   StatsDataArray* statsDataArrayPtr = StatsDataArray::SafePointerDownCast(iPtr.get());
   if(NULL == statsDataArrayPtr)
   {

@@ -115,10 +115,10 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
       CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
 }
 
 // -----------------------------------------------------------------------------
@@ -145,8 +145,8 @@ void JumbleOrientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
-  int numEnsembleTuples = m->getNumEnsembleTuples();
+  int totalFields = m->getNumCellFieldTuples();
+  int numEnsembleTuples = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, numEnsembleTuples);
   if (getErrorCondition() < 0)
   {

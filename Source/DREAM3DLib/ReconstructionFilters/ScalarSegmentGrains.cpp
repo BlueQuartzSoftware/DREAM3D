@@ -230,7 +230,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
 }
 
@@ -259,7 +259,7 @@ void ScalarSegmentGrains::execute()
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFieldDataArrays(1);
   // This runs a subfilter
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -340,7 +340,7 @@ void ScalarSegmentGrains::execute()
   if (true == m_RandomizeGrainIds)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumFieldTuples();
+    size_t totalFields = m->getNumCellFieldTuples();
 
     // Generate all the numbers up front
     const int rangeMin = 1;
@@ -429,7 +429,7 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
   {
     m_GrainIds[seed] = gnum;
     m->resizeFieldDataArrays(gnum+1);
-    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   }
   return seed;
 }

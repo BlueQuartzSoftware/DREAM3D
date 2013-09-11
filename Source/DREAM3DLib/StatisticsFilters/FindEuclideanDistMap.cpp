@@ -303,7 +303,7 @@ void FindEuclideanDistMap::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(),  m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(),  m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

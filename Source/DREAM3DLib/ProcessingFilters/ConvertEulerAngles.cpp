@@ -176,8 +176,8 @@ void ConvertEulerAngles::execute()
   }
   setErrorCondition(0);
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, numgrains, numensembles);
   if (getErrorCondition() < 0)
   {

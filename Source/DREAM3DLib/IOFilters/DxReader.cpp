@@ -382,7 +382,7 @@ int DxReader::readFile()
   // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
   m->removeCellData(m_GrainIdsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-//  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+//  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, totalPoints, 1)
 
 

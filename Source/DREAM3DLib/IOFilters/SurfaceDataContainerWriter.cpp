@@ -883,7 +883,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   NameListType names = m->getFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getFieldData(names.front());
+    IDataArray::Pointer array = m->getCellFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -897,7 +897,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getFieldData(*iter);
+    IDataArray::Pointer array = m->getCellFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());

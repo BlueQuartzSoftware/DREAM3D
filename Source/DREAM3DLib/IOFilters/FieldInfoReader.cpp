@@ -169,9 +169,9 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
     CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -224,7 +224,7 @@ int  FieldInfoReader::readFile()
 
   // Now that we know how many unique grains are in the file initialize the Field Map to the proper size:
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, numgrains + 1, totalEnsembles);
 
   // Create and initialize the Field Active Array with a default value of true
@@ -254,9 +254,9 @@ int  FieldInfoReader::readFile()
     fieldPhaseData->SetValue(gnum, phase);
     if(phase > maxphase) maxphase = phase;
   }
-  m->addFieldData(DREAM3D::FieldData::EulerAngles, fieldEulerData);
-  m->addFieldData(DREAM3D::FieldData::Phases, fieldPhaseData);
-  m->addFieldData(DREAM3D::FieldData::Active, fieldActive);
+  m->addCellFieldData(DREAM3D::FieldData::EulerAngles, fieldEulerData);
+  m->addCellFieldData(DREAM3D::FieldData::Phases, fieldPhaseData);
+  m->addCellFieldData(DREAM3D::FieldData::Active, fieldActive);
 
   if (m_CreateCellLevelArrays == true)
   {
@@ -279,14 +279,14 @@ int  FieldInfoReader::readFile()
   if (m_RenumberGrains == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumFieldTuples();
+    size_t totalFields = m->getNumCellFieldTuples();
     if (0 == totalFields)
     {
       notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
       notifyStatusMessage("Completed");
       return -999;
     }
-    dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
     std::stringstream ss;
 

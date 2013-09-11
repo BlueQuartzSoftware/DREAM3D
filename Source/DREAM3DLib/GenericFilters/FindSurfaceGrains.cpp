@@ -89,7 +89,7 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -118,7 +118,7 @@ void FindSurfaceGrains::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
   ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
   notifyStatusMessage(ss.str());
   dataCheck(false, totalPoints, totalFields, 1);

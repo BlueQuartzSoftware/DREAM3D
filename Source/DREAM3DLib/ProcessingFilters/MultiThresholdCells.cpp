@@ -168,7 +168,7 @@ void MultiThresholdCells::execute()
   }
   setErrorCondition(0);
   int64_t nPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

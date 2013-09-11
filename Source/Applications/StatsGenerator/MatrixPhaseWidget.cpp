@@ -194,16 +194,16 @@ int MatrixPhaseWidget::gatherStatsData(VolumeDataContainer::Pointer m)
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  size_t ensembles = m->getNumEnsembleTuples();
+  size_t ensembles = m->getNumCellEnsembleTuples();
 
   // Get pointers
-  unsigned int* crystalStructures = m->getEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
+  unsigned int* crystalStructures = m->getCellEnsembleDataSizeCheck<unsigned int, XTalStructArrayType, AbstractFilter>(DREAM3D::EnsembleData::CrystalStructures, ensembles, 1, NULL);
+  unsigned int* phaseTypes = m->getCellEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
 
   crystalStructures[m_PhaseIndex] = m_CrystalStructure;
   phaseTypes[m_PhaseIndex] = m_PhaseType;
 
-  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
     if (NULL != statsDataArray)
     {
       StatsData::Pointer statsData = statsDataArray->getStatsData(m_PhaseIndex);
@@ -230,15 +230,15 @@ void MatrixPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
 
   IDataArray* iDataPtr = NULL;
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
+  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures).get();
   UInt32ArrayType* data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_CrystalStructure = data->GetValue(index);
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
+  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes).get();
   data = UInt32ArrayType::SafeObjectDownCast<IDataArray*, UInt32ArrayType*>(iDataPtr);
   m_PhaseType = data->GetValue(index);
 
-  iDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get();
+  iDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get();
   StatsDataArray* statsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(iDataPtr);
   if (statsDataArray == NULL)
   {

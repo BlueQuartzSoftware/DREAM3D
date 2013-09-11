@@ -175,9 +175,9 @@ void AddBadData::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
 
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

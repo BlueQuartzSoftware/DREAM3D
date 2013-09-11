@@ -185,7 +185,7 @@ void FieldDataCSVWriter::execute()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-1 << std::endl;
+  outFile << m->getNumCellFieldTuples()-1 << std::endl;
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
@@ -200,7 +200,7 @@ void FieldDataCSVWriter::execute()
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getFieldData(*iter);
+    IDataArray::Pointer p = m->getCellFieldData(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1) {
@@ -255,7 +255,7 @@ void FieldDataCSVWriter::execute()
     for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
-      IDataArray::Pointer p = m->getFieldData(*iter);
+      IDataArray::Pointer p = m->getCellFieldData(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;

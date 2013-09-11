@@ -171,10 +171,10 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-  //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+  //      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
  //       typedef DataArray<unsigned int> XTalStructArrayType;
- //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+ //   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -220,10 +220,10 @@ void GBCDTriangleDumper::execute()
 
   // Run the data check to allocate the memory for the centroid array
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
-  dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumEnsembleTuples());
+  dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
   FILE* f = fopen(getOutputFile().c_str(), "wb");
   if (NULL == f)

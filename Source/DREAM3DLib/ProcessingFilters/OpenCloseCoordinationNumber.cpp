@@ -158,7 +158,7 @@ void OpenCloseCoordinationNumber::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -189,7 +189,7 @@ void OpenCloseCoordinationNumber::execute()
 //  float x, y, z;
 //  DimType row, plane;
   int neighpoint;
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   if (numgrains == 0)
   {
     setErrorCondition(-90001);

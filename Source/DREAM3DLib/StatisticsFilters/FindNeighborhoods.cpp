@@ -121,24 +121,24 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(m_NeighborhoodListArrayName).get());
+                                          (m->getCellFieldData(m_NeighborhoodListArrayName).get());
   if(m_NeighborhoodList == NULL)
   {
     NeighborList<int>::Pointer neighborhoodlistPtr = NeighborList<int>::New();
     neighborhoodlistPtr->SetName(m_NeighborhoodListArrayName);
     neighborhoodlistPtr->Resize(fields);
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
-    m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+    m->addCellFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
       ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(m_NeighborhoodListArrayName).get());
+                                          (m->getCellFieldData(m_NeighborhoodListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -152,13 +152,13 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -183,7 +183,7 @@ void FindNeighborhoods::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -207,7 +207,7 @@ void FindNeighborhoods::find_neighborhoods()
 
   std::vector<std::vector<int> > neighborhoodlist;
 
-  int totalFields = int(m->getNumFieldTuples());
+  int totalFields = int(m->getNumCellFieldTuples());
 
   neighborhoodlist.resize(totalFields);
 

@@ -147,7 +147,7 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
 
   if(m_SelectedFieldArrayName.empty() == true)
   {
@@ -177,7 +177,7 @@ void SingleThresholdFields::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -185,7 +185,7 @@ void SingleThresholdFields::execute()
   //int err = 0;
   std::stringstream ss;
 
-  IDataArray::Pointer inputData = m->getFieldData(m_SelectedFieldArrayName);
+  IDataArray::Pointer inputData = m->getCellFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())
   {
     ss.str("");
@@ -195,7 +195,7 @@ void SingleThresholdFields::execute()
     return;
   }
 
-  IDataArray::Pointer goodFieldsPtr = m->getFieldData(m_OutputArrayName);
+  IDataArray::Pointer goodFieldsPtr = m->getCellFieldData(m_OutputArrayName);
   BoolArrayType* goodFields = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(goodFieldsPtr.get());
   if (NULL == goodFields)
   {
@@ -210,7 +210,7 @@ void SingleThresholdFields::execute()
   filter.execute(inputData.get(), goodFieldsPtr.get());
 
 
-  m->addFieldData(goodFieldsPtr->GetName(), goodFieldsPtr);
+  m->addCellFieldData(goodFieldsPtr->GetName(), goodFieldsPtr);
   notifyStatusMessage("Complete");
 }
 

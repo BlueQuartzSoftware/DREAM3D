@@ -135,7 +135,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
   m->clearFieldData();
   BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
   // bool* mActive = m_Active->GetPointer(0);
-  m->addFieldData(DREAM3D::FieldData::Active, active);
+  m->addCellFieldData(DREAM3D::FieldData::Active, active);
 
 }
 
@@ -165,8 +165,8 @@ void LinkFieldMapToCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t fields = m->getNumFieldTuples();
-  dataCheck(false, voxels, fields, m->getNumEnsembleTuples());
+  int64_t fields = m->getNumCellFieldTuples();
+  dataCheck(false, voxels, fields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -174,7 +174,7 @@ void LinkFieldMapToCellArray::execute()
   //int err = 0;
   std::stringstream ss;
 
-  m->clearFieldData();
+  m->clearCellFieldData();
 
   int maxIndex = 0;
   std::vector<bool> active;
@@ -195,7 +195,7 @@ void LinkFieldMapToCellArray::execute()
   {
     mActive[i] = active[i];
   }
-  m->addFieldData(DREAM3D::FieldData::Active, m_Active);
+  m->addCellFieldData(DREAM3D::FieldData::Active, m_Active);
 
   notifyStatusMessage("Complete");
 }

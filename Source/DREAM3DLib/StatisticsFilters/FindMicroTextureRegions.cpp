@@ -69,8 +69,8 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 
   // Field Data
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, MicroTextureRegionNumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, MicroTextureRegionFractionOccupied, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionNumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionFractionOccupied, ss, float, FloatArrayType, 0, fields, 1)
 
 }
 
@@ -96,7 +96,7 @@ void FindMicroTextureRegions::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -114,7 +114,7 @@ void FindMicroTextureRegions::find_microtextureregions()
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
 
-  size_t nummicrotextureregions = m->getNumFieldTuples();
+  size_t nummicrotextureregions = m->getNumCellFieldTuples();
 
   DataArray<double>::Pointer m_MicroTextureRegionCounts = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
   DataArray<double>::Pointer m_MicroTextureRegionXMaxs = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");

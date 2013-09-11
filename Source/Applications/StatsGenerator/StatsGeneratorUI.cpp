@@ -646,15 +646,15 @@ void StatsGeneratorUI::on_actionSave_triggered()
   int nPhases = phaseTabs->count();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
-  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
   UInt32ArrayType::Pointer crystalStructures = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::CrystalStructures);
   crystalStructures->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
 
   UInt32ArrayType::Pointer phaseTypes = UInt32ArrayType::CreateArray(nPhases + 1, DREAM3D::EnsembleData::PhaseTypes);
   phaseTypes->SetValue(0, DREAM3D::PhaseType::UnknownPhaseType);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 
   // Loop on all the phases
 
@@ -832,10 +832,10 @@ void StatsGeneratorUI::openFile(QString h5file)
   }
 
   // Get the number of Phases
-  size_t ensembles = m->getNumEnsembleTuples();
+  size_t ensembles = m->getNumCellEnsembleTuples();
 
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  unsigned int* phaseTypes = m->getEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
+  unsigned int* phaseTypes = m->getCellEnsembleDataSizeCheck<unsigned int, PhaseTypeArrayType, AbstractFilter>(DREAM3D::EnsembleData::PhaseTypes, ensembles, 1, NULL);
 
   // We should iterate on all the phases here to start setting data and creating
   // all of the StatsGenPhase Objects

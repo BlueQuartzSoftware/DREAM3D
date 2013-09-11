@@ -424,7 +424,7 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   }
   if(m_WriteSchmidFactors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
   }
   if(m_WriteEulerAngles == true)
   {
@@ -433,7 +433,7 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_WriteGrainSizes == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
   }
 }
 
@@ -472,8 +472,8 @@ void VtkRectilinearGridWriter::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembleTuples = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembleTuples = m->getNumCellEnsembleTuples();
 
 
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);

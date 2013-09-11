@@ -119,10 +119,10 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
 
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -150,16 +150,16 @@ void FindGrainReferenceCAxisMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFields = m->getNumFieldTuples();
+  int64_t totalFields = m->getNumCellFieldTuples();
 
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  //  float** avgmiso = new float *[m->getNumFieldTuples()];
-  //  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  //  float** avgmiso = new float *[m->getNumCellFieldTuples()];
+  //  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   //  {
   //    avgmiso[i] = new float[2];
   //    for (int j = 0; j < 2; j++)
@@ -167,7 +167,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   //      avgmiso[i][j] = 0.0;
   //    }
   //  }
-  size_t numFields = m->getNumFieldTuples();
+  size_t numFields = m->getNumCellFieldTuples();
   int avgMisoComps = 2;
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
@@ -266,7 +266,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   }
 
   // Clean up all the heap allocated memory
-  //  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  //  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   //  {
   //    delete[] avgmiso[i];
   //  }

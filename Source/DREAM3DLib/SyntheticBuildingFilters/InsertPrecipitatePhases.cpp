@@ -199,24 +199,24 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, -301, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, ShapeTypes, ss, -304, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     ss << "Stats Array Not Initialized At Beginning Correctly" << std::endl;
@@ -259,10 +259,10 @@ void InsertPrecipitatePhases::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
 
   if(totalFields == 0) totalFields = 1;
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -300,7 +300,7 @@ void InsertPrecipitatePhases::execute()
     return;
   }
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
   notifyStatusMessage("Packing Precipitates - Filling Gaps");
   assign_gaps();
@@ -368,11 +368,11 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   totalvol = sizex * sizey * sizez;
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t currentnumgrains = m->getNumFieldTuples();
+  size_t currentnumgrains = m->getNumCellFieldTuples();
   if(currentnumgrains == 0)
   {
     m->resizeFieldDataArrays(1);
-    dataCheck(false, totalPoints, 1, m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, 1, m->getNumCellEnsembleTuples());
     currentnumgrains = 1;
   }
   firstPrecipitateField = currentnumgrains;
@@ -386,7 +386,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   int acceptedmoves = 0;
   double totalprecipitatefractions = 0.0;
 
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   for (size_t i = 1; i < numensembles; ++i)
   {
@@ -462,7 +462,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
         notifyStatusMessage(ss.str());
 
         m->resizeFieldDataArrays(currentnumgrains + 1);
-        dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumEnsembleTuples());
+        dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumCellEnsembleTuples());
         m_Active[currentnumgrains] = true;
         transfer_attributes(currentnumgrains, &precip);
         oldsizedisterror = currentsizedisterror;
@@ -523,7 +523,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   //  for each grain : select centroid, determine voxels in grain, monitor filling error and decide of the 10 placements which
   // is the most beneficial, then the grain is added and its neighbors are determined
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
 
   columnlist.resize(numgrains);
   rowlist.resize(numgrains);
@@ -870,7 +870,7 @@ void InsertPrecipitatePhases::determine_neighbors(size_t gnum, int add)
   y = m_Centroids[3*gnum+1];
   z = m_Centroids[3*gnum+2];
   dia = m_EquivalentDiameters[gnum];
-  for (size_t n = firstPrecipitateField; n < m->getNumFieldTuples(); n++)
+  for (size_t n = firstPrecipitateField; n < m->getNumCellFieldTuples(); n++)
   {
     xn = m_Centroids[3*n];
     yn = m_Centroids[3*n+1];
@@ -943,7 +943,7 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
     float oneOverBinStepSize = 1.0f/pp->getBinStepSize();
 
 
-    for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+    for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
     {
       nnum = 0;
       index = i;
@@ -1073,7 +1073,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
       curSimGrainSizeDist[i] = 0.0f;
     }
 
-    size_t nFieldTuples = m->getNumFieldTuples();
+    size_t nFieldTuples = m->getNumCellFieldTuples();
     float oneOverCurGrainSizeDistStep = 1.0f/grainsizediststep[iter];
     float halfMinGrainDiameter = pp->getMinGrainDiameter() * 0.5f;
     for (size_t b = firstPrecipitateField; b < nFieldTuples; b++)
@@ -1339,13 +1339,13 @@ void InsertPrecipitatePhases::assign_voxels()
   float coords[3];
   DimType xmin, xmax, ymin, ymax, zmin, zmax;
   // int64_t totpoints = m->totalPoints();
-  gsizes.resize(m->getNumFieldTuples());
+  gsizes.resize(m->getNumCellFieldTuples());
 
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
   {
     gsizes[i] = 0;
   }
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
   {
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -1462,7 +1462,7 @@ void InsertPrecipitatePhases::assign_voxels()
       }
     }
   }
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
   {
     m_Active[i] = false;
   }
@@ -1523,7 +1523,7 @@ void InsertPrecipitatePhases::assign_gaps()
   {
     unassignedcount = 0;
     timestep = timestep + 50;
-    for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+    for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
     {
       float volcur = m_Volumes[i];
       float bovera = m_AxisLengths[3*i+1];
@@ -1685,7 +1685,7 @@ void InsertPrecipitatePhases::cleanup_grains()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   std::vector<std::vector<int> > vlists;
-  vlists.resize(m->getNumFieldTuples());
+  vlists.resize(m->getNumCellFieldTuples());
   std::vector<int> currentvlist;
   std::vector<bool> checked;
   checked.resize(totpoints,false);
@@ -1696,8 +1696,8 @@ void InsertPrecipitatePhases::cleanup_grains()
   DimType column, row, plane;
   int index;
   float minsize = 0;
-  gsizes.resize(m->getNumFieldTuples());
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  gsizes.resize(m->getNumCellFieldTuples());
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     gsizes[i] = 0;
     m_Active[i] = true;
@@ -1799,7 +1799,7 @@ void InsertPrecipitatePhases::cleanup_grains()
   {
     if(m_GrainIds[i] > 0) gsizes[m_GrainIds[i]]++;
   }
-  for (size_t i = firstPrecipitateField; i < m->getNumFieldTuples(); i++)
+  for (size_t i = firstPrecipitateField; i < m->getNumCellFieldTuples(); i++)
   {
     if(gsizes[i] == 0) m_Active[i] = false;
   }
@@ -1889,7 +1889,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumFieldTuples()-firstPrecipitateField << std::endl;
+  outFile << m->getNumCellFieldTuples()-firstPrecipitateField << std::endl;
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
@@ -1904,7 +1904,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
-    IDataArray::Pointer p = m->getFieldData(*iter);
+    IDataArray::Pointer p = m->getCellFieldData(*iter);
   if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
   {
       if (p->GetNumberOfComponents() == 1) {

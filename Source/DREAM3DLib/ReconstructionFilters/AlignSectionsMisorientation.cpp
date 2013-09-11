@@ -175,7 +175,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
 
@@ -203,8 +203,8 @@ void AlignSectionsMisorientation::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, numgrains, numensembles);
   if (getErrorCondition() < 0)
   {

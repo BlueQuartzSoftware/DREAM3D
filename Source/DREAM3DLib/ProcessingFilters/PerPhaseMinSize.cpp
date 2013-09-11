@@ -137,7 +137,7 @@ void PerPhaseMinSize::remove_smallgrains()
 
   int gnum;
 
-  int numgrains = m->getNumFieldTuples();
+  int numgrains = m->getNumCellFieldTuples();
 
   std::vector<int> voxcounts;
   voxcounts.resize(numgrains,0);

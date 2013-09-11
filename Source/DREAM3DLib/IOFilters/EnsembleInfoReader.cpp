@@ -135,8 +135,8 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -198,8 +198,8 @@ int  EnsembleInfoReader::readFile()
       m_XTalStructData->SetValue(pnum, crystruct);
       m_PhaseTypeData->SetValue(pnum, ptype);
   }
-  m->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
-  m->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, m_XTalStructData);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, m_PhaseTypeData);
 
   notifyStatusMessage("Complete");
   return 0;

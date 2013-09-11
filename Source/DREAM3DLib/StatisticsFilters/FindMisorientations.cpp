@@ -99,13 +99,13 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  IDataArray::Pointer neighborListPtr = m->getFieldData(m_NeighborListArrayName);
+  IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
     ss.str("");
@@ -118,13 +118,13 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(neighborListPtr.get());
   }
 
-  IDataArray::Pointer misorientationPtr = m->getFieldData(m_MisorientationListArrayName);
+  IDataArray::Pointer misorientationPtr = m->getCellFieldData(m_MisorientationListArrayName);
   if(NULL == misorientationPtr.get())
   {
     NeighborList<float>::Pointer misorientationListPtr = NeighborList<float>::New();
     misorientationListPtr->SetName(m_MisorientationListArrayName);
     misorientationListPtr->Resize(fields);
-    m->addFieldData(m_MisorientationListArrayName, misorientationListPtr);
+    m->addCellFieldData(m_MisorientationListArrayName, misorientationListPtr);
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
@@ -141,7 +141,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -165,7 +165,7 @@ void FindMisorientations::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -187,7 +187,7 @@ void FindMisorientations::execute()
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
 
   float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
@@ -219,9 +219,9 @@ void FindMisorientations::execute()
   }
 
   // We do this to create new set of MisorientationList objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
     NeighborList<float>::SharedVectorType misoL(new std::vector<float>);

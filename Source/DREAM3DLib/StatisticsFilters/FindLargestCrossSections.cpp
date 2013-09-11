@@ -118,7 +118,7 @@ void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t f
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, LargestCrossSections, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, LargestCrossSections, ss, float, FloatArrayType, 0, fields, 1)
 
 }
 
@@ -144,7 +144,7 @@ void FindLargestCrossSections::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -172,7 +172,7 @@ void FindLargestCrossSections::find_crosssections()
 //  float radcubed;
 //  float diameter;
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
 
   DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
   double* graincounts = m_GrainCounts->GetPointer(0);

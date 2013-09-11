@@ -103,24 +103,24 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1)
 
   // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(m_NeighborListArrayName).get());
+                                          (m->getCellFieldData(m_NeighborListArrayName).get());
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
     neighborlistPtr->SetName(m_NeighborListArrayName);
     neighborlistPtr->Resize(fields);
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addFieldData(m_NeighborListArrayName, neighborlistPtr);
+    m->addCellFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
       ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(m_NeighborListArrayName).get());
+                                          (m->getCellFieldData(m_NeighborListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -136,14 +136,14 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
+                                 (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
     sharedSurfaceAreaListPtr->SetName(m_SharedSurfaceAreaListArrayName);
     sharedSurfaceAreaListPtr->Resize(fields);
     sharedSurfaceAreaListPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
-    m->addFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
+    m->addCellFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
       ss.str("");
@@ -152,7 +152,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
+                                 (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
     e->setFilterHumanLabel(this->getHumanLabel());
@@ -165,8 +165,8 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -195,8 +195,8 @@ void FindNeighbors::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = int(m->getNumFieldTuples());
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  int totalFields = int(m->getNumCellFieldTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -230,7 +230,7 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
 
-  //size_t xtalCount = m->getEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
+  //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
 
     std::vector<std::vector<int> > neighborlist;
     std::vector<std::vector<float> > neighborsurfacearealist;
@@ -295,9 +295,9 @@ void FindNeighbors::execute()
   }
 
   // We do this to create new set of NeighborList objects
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     std::stringstream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";

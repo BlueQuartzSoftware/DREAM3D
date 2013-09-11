@@ -202,7 +202,7 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if (m_RenumberGrains == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   }
 }
 
@@ -306,7 +306,7 @@ void CropVolume::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if(getErrorCondition() < 0)
   {
     return;
@@ -403,14 +403,14 @@ void CropVolume::execute()
   if (m_RenumberGrains == true)
   {
     totalPoints = m->getTotalPoints();
-    size_t totalFields = m->getNumFieldTuples();
+    size_t totalFields = m->getNumCellFieldTuples();
     if (0 == totalFields)
     {
       notifyErrorMessage("The number of grains is Zero and should be greater than Zero", -600);
       notifyStatusMessage("Completed");
       return;
     }
-    dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
     std::stringstream ss;
 

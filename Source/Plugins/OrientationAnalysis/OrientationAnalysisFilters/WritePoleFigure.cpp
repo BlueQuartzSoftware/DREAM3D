@@ -267,7 +267,7 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, si
         GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
         typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 
 }
@@ -314,7 +314,7 @@ void WritePoleFigure::execute()
   size_t dims[3];
   m->getDimensions(dims);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
 
   // Make sure any directory path is also available as the user may have just typed
@@ -346,7 +346,7 @@ void WritePoleFigure::execute()
   }
 
   // Find how many phases we have by getting the number of Crystal Structures
-  IDataArray::Pointer crystalStructures = m->getEnsembleData(m_CrystalStructuresArrayName);
+  IDataArray::Pointer crystalStructures = m->getCellEnsembleData(m_CrystalStructuresArrayName);
   int64_t numPoints = m->getTotalPoints();
   int numPhases = crystalStructures->GetNumberOfTuples();
   size_t count = 0;

@@ -111,12 +111,12 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     ss.str("");
@@ -128,7 +128,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
   f1Ptr->SetName(DREAM3D::FieldData::F1);
   f1Ptr->Resize(fields);
-  m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
+  m->addCellFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
     ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
@@ -139,7 +139,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
   f1sptPtr->SetName(DREAM3D::FieldData::F1spt);
   f1sptPtr->Resize(fields);
-  m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
+  m->addCellFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
     ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
@@ -150,7 +150,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
   f7Ptr->SetName(DREAM3D::FieldData::F7);
   f7Ptr->Resize(fields);
-  m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
+  m->addCellFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
     ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
@@ -161,7 +161,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
   mPrimePtr->SetName(DREAM3D::FieldData::mPrime);
   mPrimePtr->Resize(fields);
-  m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
+  m->addCellFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
     ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
@@ -170,7 +170,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -196,8 +196,8 @@ void FindSlipTransmissionMetrics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFields = m->getNumFieldTuples();
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  int64_t totalFields = m->getNumCellFieldTuples();
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -268,7 +268,7 @@ void FindSlipTransmissionMetrics::execute()
   }
 
   // We do this to create new set of List objects
-  dataCheck(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
   for (int64_t i = 1; i < totalFields; i++)
   {

@@ -627,11 +627,11 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const std::string &g
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addFaceFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getSurfaceDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getSurfaceDataContainer()->addFaceEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

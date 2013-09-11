@@ -195,7 +195,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     }
     else
     {
-      IDataArray::Pointer iDataArray = sm->getEnsembleData(DREAM3D::EnsembleData::GBCD);
+      IDataArray::Pointer iDataArray = sm->getCellEnsembleData(DREAM3D::EnsembleData::GBCD);
       if (NULL == iDataArray.get())
       {
         setErrorCondition(-387);
@@ -203,9 +203,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       }
       else
       {
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
+        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }
@@ -252,7 +252,7 @@ void VisualizeGBCD::execute()
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumEnsembleTuples());
+  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;

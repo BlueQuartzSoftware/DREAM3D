@@ -137,7 +137,7 @@ void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t field
     notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
 }
 
 
@@ -167,15 +167,15 @@ void MultiThresholdFields::execute()
     return;
   }
   setErrorCondition(0);
-  int64_t nFields = m->getNumFieldTuples();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  int64_t nFields = m->getNumCellFieldTuples();
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
   /* Place all your code to execute your filter here. */
 
-  IDataArray::Pointer outputArrayPtr = m->getFieldData(m_OutputArrayName);
+  IDataArray::Pointer outputArrayPtr = m->getCellFieldData(m_OutputArrayName);
   BoolArrayType* outputArray = BoolArrayType::SafeObjectDownCast<IDataArray*, BoolArrayType*>(outputArrayPtr.get());
   if (NULL == outputArray)
   {
@@ -193,7 +193,7 @@ void MultiThresholdFields::execute()
                                  comp_0.compValue,
                                  outputArray);
 
-    err = filter.execute(m->getFieldData(comp_0.arrayName).get(), outputArrayPtr.get());
+    err = filter.execute(m->getCellFieldData(comp_0.arrayName).get(), outputArrayPtr.get());
 
     if (err < 0)
     {
@@ -215,7 +215,7 @@ void MultiThresholdFields::execute()
                                  compRef.compValue,
                                  currentArrayPtr.get());
 
-    err = filter.execute(m->getFieldData(compRef.arrayName).get(), currentArrayPtr.get());
+    err = filter.execute(m->getCellFieldData(compRef.arrayName).get(), currentArrayPtr.get());
     if (err < 0)
     {
       setErrorCondition(-13002);

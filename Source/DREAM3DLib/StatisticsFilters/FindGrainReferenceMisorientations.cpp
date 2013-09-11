@@ -144,17 +144,17 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 
   if(m_ReferenceOrientation == 0)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 4)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 4)
   }
   else if(m_ReferenceOrientation == 1)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -301, float, FloatArrayType, voxels, 1)
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -182,16 +182,16 @@ void FindGrainReferenceMisorientations::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int64_t totalFields = m->getNumFieldTuples();
+  int64_t totalFields = m->getNumCellFieldTuples();
 
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  float** avgmiso = new float *[m->getNumFieldTuples()];
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  float** avgmiso = new float *[m->getNumCellFieldTuples()];
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     avgmiso[i] = new float[2];
     for (int j = 0; j < 2; j++)
@@ -288,7 +288,7 @@ void FindGrainReferenceMisorientations::execute()
     }
   }
 
-  size_t grainsSize = m->getNumFieldTuples();
+  size_t grainsSize = m->getNumCellFieldTuples();
   for (size_t i = 1; i < grainsSize; i++)
   {
     m_GrainAvgMisorientations[i] = avgmiso[i][1] / avgmiso[i][0];
@@ -296,7 +296,7 @@ void FindGrainReferenceMisorientations::execute()
   }
 
   // Clean up all the heap allocated memory
-  for (size_t i = 1; i < m->getNumFieldTuples(); i++)
+  for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     delete[] avgmiso[i];
   }

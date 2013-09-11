@@ -162,7 +162,7 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
       int err = 0;\
       std::string file;\
-      int64_t totalFields = r->getNumFieldTuples();\
+      int64_t totalFields = r->getNumCellFieldTuples();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
       int64_t totalPoints = r->getTotalPoints();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
@@ -344,7 +344,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::Phases, Int32ArrayType, int32_t, totalPoints, phases);
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::EulerAngles, FloatArrayType, float, (3*totalPoints), eulers);
 
-    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumEnsembleTuples()), crystruct);
+    GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Ensemble, DREAM3D::EnsembleData::CrystalStructures, DataArray<unsigned int>, unsigned int, (r->getNumCellEnsembleTuples()), crystruct);
 
     // Write the Rodrigues Coloring Cell Data
     float r1, r2, r3;
