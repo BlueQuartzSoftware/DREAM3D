@@ -41,62 +41,6 @@
 #include "DREAM3DLib/Common/StructArray.hpp"
 
 
-
-/**
- * @brief These are the basic data structures to use for our triangle based surface meshes.
- */
-namespace DREAM3D
-{
-  namespace Mesh
-  {
-    typedef float Float_t;
-    typedef double Double_t;
-
-    typedef struct
-    {
-        Float_t pos[3];
-    } Vert_t;
-
-    typedef struct
-    {
-      Double_t pos[3];
-    } VertD_t;
-
-    typedef struct
-    {
-        int verts[2];
-    } Edge_t;
-
-    const int32_t k_VertexNumElements = 3;
-
-    typedef struct
-    {
-        int verts[3];
-    } Face_t;
-
-    typedef struct
-    {
-        std::vector<int64_t> verts;
-    } Cell_t;
-
-    // This constant values needs to be the number of total integers that are encoded into the Face Structure
-    const int32_t k_FaceNumElements = 3;
-
-    typedef StructArray<Vert_t> VertList_t;
-    typedef StructArray<Edge_t> EdgeList_t;
-    typedef StructArray<Face_t> FaceList_t;
-    typedef StructArray<Cell_t> CellList_t;
-
-    typedef VertList_t::Pointer VertListPointer_t;
-    typedef EdgeList_t::Pointer EdgeListPointer_t;
-    typedef FaceList_t::Pointer FaceListPointer_t;
-    typedef CellList_t::Pointer CellListPointer_t;
-
-    typedef std::set<int32_t> UniqueFaceIds_t;
-    typedef std::map<int32_t, UniqueFaceIds_t > VertexFaceMap_t;
-
-  }
-}
   // -----------------------------------------------------------------------------
   // These structures are specific to the MultiMaterial Marching Cubes "M3C" algorithms
   // -----------------------------------------------------------------------------
@@ -107,7 +51,7 @@ namespace DREAM3D
     namespace M3C
     {
       typedef struct {
-          DREAM3D::Mesh::Float_t coord[3];
+          float coord[3];
       } VoxelCoord;
 
       typedef struct {
@@ -159,9 +103,9 @@ namespace DREAM3D
       {
           int nodeId;
           int nodeKind;
-          DREAM3D::Mesh::Float_t x;
-          DREAM3D::Mesh::Float_t y;
-          DREAM3D::Mesh::Float_t z;
+          float x;
+          float y;
+          float z;
       } NodesFileRecord_t;
       const int ByteCount = sizeof(NodesFileRecord_t);
     }

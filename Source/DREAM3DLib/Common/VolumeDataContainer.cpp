@@ -55,12 +55,9 @@
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainer::VolumeDataContainer() :
-m_NumVertexTuples(0),
-m_NumEdgeTuples(0),
-m_NumFaceTuples(0),
 m_NumCellTuples(0),
-m_NumFieldTuples(0),
-m_NumEnsembleTuples(0)
+m_NumCellFieldTuples(0),
+m_NumCellEnsembleTuples(0)
 {
   m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
   m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
@@ -79,291 +76,9 @@ VolumeDataContainer::~VolumeDataContainer()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, VertexData)
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, EdgeData)
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, FaceData)
 DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellData)
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, FieldData)
-DOES_DATASET_EXIST_DEFN(VolumeDataContainer, EnsembleData)
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    std::cout << "Adding Vertex array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
-    data->SetName(name);
-  }
-  m_VertexData[name] = data;
-  m_NumVertexTuples = data->GetNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getVertexData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(name);
-  if ( it == m_VertexData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  return (*it).second;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeVertexData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(name);
-  if ( it == m_VertexData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  IDataArray::Pointer p = (*it).second;
-  m_VertexData.erase(it);
-  return p;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameVertexData(const std::string &oldname, const std::string &newname)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_VertexData.find(oldname);
-  if ( it == m_VertexData.end() )
-  {
-	  return false;
-  }
-  IDataArray::Pointer p = (*it).second;
-  p->SetName(newname);
-  removeVertexData(oldname);
-  addVertexData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::clearVertexData()
-{
-  m_VertexData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::list<std::string> VolumeDataContainer::getVertexArrayNameList()
-{
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
-  {
-    keys.push_back( (*iter).first);
-  }
-  return keys;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumVertexArrays()
-{
-  return static_cast<int>(m_VertexData.size());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    std::cout << "Adding Edge array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
-    data->SetName(name);
-  }
-  m_EdgeData[name] = data;
-  m_NumEdgeTuples = data->GetNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getEdgeData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(name);
-  if ( it == m_EdgeData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  return (*it).second;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeEdgeData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(name);
-  if ( it == m_EdgeData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  IDataArray::Pointer p = (*it).second;
-  m_EdgeData.erase(it);
-  return p;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameEdgeData(const std::string &oldname, const std::string &newname)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EdgeData.find(oldname);
-  if ( it == m_EdgeData.end() )
-  {
-	  return false;
-  }
-  IDataArray::Pointer p = (*it).second;
-  p->SetName(newname);
-  removeEdgeData(oldname);
-  addEdgeData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::clearEdgeData()
-{
-  m_EdgeData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::list<std::string> VolumeDataContainer::getEdgeArrayNameList()
-{
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
-  {
-    keys.push_back( (*iter).first);
-  }
-  return keys;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumEdgeArrays()
-{
-  return static_cast<int>(m_EdgeData.size());
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
-{
-  if (data->GetName().compare(name) != 0)
-  {
-    std::cout << "Adding Face array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
-    data->SetName(name);
-  }
-  m_FaceData[name] = data;
-  m_NumFaceTuples = data->GetNumberOfTuples();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getFaceData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(name);
-  if ( it == m_FaceData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  return (*it).second;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeFaceData(const std::string &name)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(name);
-  if ( it == m_FaceData.end() )
-  {
-    return IDataArray::NullPointer();
-  }
-  IDataArray::Pointer p = (*it).second;
-  m_FaceData.erase(it);
-  return p;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameFaceData(const std::string &oldname, const std::string &newname)
-{
-  std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FaceData.find(oldname);
-  if ( it == m_FaceData.end() )
-  {
-	  return false;
-  }
-  IDataArray::Pointer p = (*it).second;
-  p->SetName(newname);
-  removeFaceData(oldname);
-  addFaceData(newname, p);
-  return true;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainer::clearFaceData()
-{
-  m_FaceData.clear();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-std::list<std::string> VolumeDataContainer::getFaceArrayNameList()
-{
-  std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
-  {
-    keys.push_back( (*iter).first);
-  }
-  return keys;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumFaceArrays()
-{
-  return static_cast<int>(m_FaceData.size());
-}
+DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellFieldData)
+DOES_DATASET_EXIST_DEFN(VolumeDataContainer, CellEnsembleData)
 
 // -----------------------------------------------------------------------------
 //
@@ -463,11 +178,11 @@ int VolumeDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_CellFieldData.find(name);
+  if ( it == m_CellFieldData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -477,7 +192,7 @@ IDataArray::Pointer VolumeDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellFieldData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -486,59 +201,59 @@ void VolumeDataContainer::addFieldData(const std::string &name, IDataArray::Poin
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_FieldData[name] = data;
-  m_NumFieldTuples = data->GetNumberOfTuples();
+  m_CellFieldData[name] = data;
+  m_NumCellFieldTuples = data->GetNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(name);
-  if ( it == m_FieldData.end() )
+  it =  m_CellFieldData.find(name);
+  if ( it == m_CellFieldData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_FieldData.erase(it);
+  m_CellFieldData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameFieldData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameCellFieldData(const std::string &oldname, const std::string &newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_FieldData.find(oldname);
-  if ( it == m_FieldData.end() )
+  it =  m_CellFieldData.find(oldname);
+  if ( it == m_CellFieldData.end() )
   {
 	  return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
-  removeFieldData(oldname);
-  addFieldData(newname, p);
+  removeCellFieldData(oldname);
+  addCellFieldData(newname, p);
   return true;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::clearFieldData()
+void VolumeDataContainer::clearCellFieldData()
 {
-  m_FieldData.clear();
+  m_CellFieldData.clear();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VolumeDataContainer::getFieldArrayNameList()
+std::list<std::string> VolumeDataContainer::getCellFieldArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -548,34 +263,34 @@ std::list<std::string> VolumeDataContainer::getFieldArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumFieldArrays()
+int VolumeDataContainer::getNumCellFieldArrays()
 {
-  return static_cast<int>(m_FieldData.size());
+  return static_cast<int>(m_CellFieldData.size());
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::resizeFieldDataArrays(size_t size)
+void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
 {
  // int success = 0;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
-  m_NumFieldTuples = size;
+  m_NumCellFieldTuples = size;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_CellEnsembleData.find(name);
+  if ( it == m_CellEnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
@@ -585,7 +300,7 @@ IDataArray::Pointer VolumeDataContainer::getEnsembleData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellEnsembleData(const std::string &name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -594,43 +309,43 @@ void VolumeDataContainer::addEnsembleData(const std::string &name, IDataArray::P
     std::cout << "Array Name:" << data->GetName() << std::endl;
     data->SetName(name);
   }
-  m_EnsembleData[name] = data;
-  m_NumEnsembleTuples = data->GetNumberOfTuples();
+  m_CellEnsembleData[name] = data;
+  m_NumCellEnsembleTuples = data->GetNumberOfTuples();
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
-  it =  m_EnsembleData.find(name);
-  if ( it == m_EnsembleData.end() )
+  it =  m_CellEnsembleData.find(name);
+  if ( it == m_CellEnsembleData.end() )
   {
     return IDataArray::NullPointer();
   }
   IDataArray::Pointer p = (*it).second;
-  m_EnsembleData.erase(it);
+  m_CellEnsembleData.erase(it);
   return p;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::clearEnsembleData()
+void VolumeDataContainer::clearCellEnsembleData()
 {
-  m_EnsembleData.clear();
-  m_NumEnsembleTuples = 0;
+  m_CellEnsembleData.clear();
+  m_NumCellEnsembleTuples = 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<std::string> VolumeDataContainer::getEnsembleArrayNameList()
+std::list<std::string> VolumeDataContainer::getCellEnsembleArrayNameList()
 {
   std::list<std::string> keys;
-  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
+  for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_CellEnsembleData.begin(); iter != m_CellEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
   }
@@ -640,9 +355,9 @@ std::list<std::string> VolumeDataContainer::getEnsembleArrayNameList()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainer::getNumEnsembleArrays()
+int VolumeDataContainer::getNumCellEnsembleArrays()
 {
-  return static_cast<int>(m_EnsembleData.size());
+  return static_cast<int>(m_CellEnsembleData.size());
 }
 
 

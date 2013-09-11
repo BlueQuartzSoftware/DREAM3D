@@ -74,39 +74,6 @@ DOES_DATASET_EXIST_DEFN(EdgeDataContainer, EdgeEnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainer::buildMeshLinks()
-{
-  m_MeshLinks = MeshLinks::New();
-  m_MeshLinks->generateMeshLinksEdges(getVertices(), m_Edges);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainer::removeMeshLinks()
-{
-  m_MeshLinks = MeshLinks::NullPointer();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainer::setMeshLinks(MeshLinks::Pointer vertLinks)
-{
-  m_MeshLinks = vertLinks;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-MeshLinks::Pointer EdgeDataContainer::getMeshLinks()
-{
-  return m_MeshLinks;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 IDataArray::Pointer EdgeDataContainer::getEdgeData(const std::string &name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;

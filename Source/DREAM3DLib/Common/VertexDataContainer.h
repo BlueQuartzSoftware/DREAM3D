@@ -58,7 +58,7 @@
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/Common/VertexArray.hpp"
 
 /**
  * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/Common/VertexDataContainer.h
@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
+    DREAM3D_INSTANCE_PROPERTY(VertexArray::Pointer, Vertices)
 
     DOES_DATASET_EXIST_DECL(VertexData)
     DOES_DATASET_EXIST_DECL(VertexFieldData)

@@ -57,13 +57,11 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
 
 #include "DREAM3DLib/Common/VertexDataContainer.h"
 
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
+#include "DREAM3DLib/Common/EdgeArray.hpp"
 
 
 /**
@@ -90,33 +88,12 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeFieldData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::EdgeListPointer_t, Edges)
+    DREAM3D_INSTANCE_PROPERTY(EdgeArray::Pointer, Edges)
 
     DOES_DATASET_EXIST_DECL(EdgeData)
     DOES_DATASET_EXIST_DECL(EdgeFieldData)
     DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
-    /**
-     * @brief buildMeshLinks Creates the list of Faces for each vertex that the vertex is a part of
-     */
-    void buildMeshLinks();
-
-    /**
-     * @brief removeMeshLinks Removes the VertLinks data structures to reclaim memory
-     */
-    void removeMeshLinks();
-
-    /**
-     * @brief getMeshLinks Returns the vert Links object
-     * @return
-     */
-    MeshLinks::Pointer getMeshLinks();
-
-    /**
-     * @brief setMeshLinks
-     * @param vertLinks
-     */
-    void setMeshLinks(MeshLinks::Pointer vertLinks);
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -267,8 +244,6 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      std::map<std::string, IDataArray::Pointer> m_EdgeData;
      std::map<std::string, IDataArray::Pointer> m_EdgeFieldData;
      std::map<std::string, IDataArray::Pointer> m_EdgeEnsembleData;
-
-     MeshLinks::Pointer m_MeshLinks;
 
      EdgeDataContainer(const EdgeDataContainer&);
      void operator =(const EdgeDataContainer&);

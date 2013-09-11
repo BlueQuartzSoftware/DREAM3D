@@ -119,7 +119,7 @@ class LaplacianSmoothingImpl
         }
         neighbours.erase(v); // Remove the current vertex id from the list as we don't need it
 
-        DREAM3D::Mesh::Float_t konst1 = lambdas[v]/neighbours.size();
+        float konst1 = lambdas[v]/neighbours.size();
 
         // Now that we have our connectivity iterate over the vertices generating a new position
         for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)

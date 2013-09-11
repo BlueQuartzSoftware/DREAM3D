@@ -57,10 +57,8 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
+#include "DREAM3DLib/Common/FaceArray.hpp"
 
 
 /**
@@ -79,121 +77,19 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
 
     virtual ~SurfaceDataContainer();
 
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Vertex)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Edge)
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Face)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Field)
-    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (Ensemble)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (FaceField)
+    METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA (FaceEnsemble)
 
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getVertexData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEdgeData)
     METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA (getEnsembleData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA (getFaceEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::VertListPointer_t, Vertices)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::EdgeListPointer_t, Edges)
-    DREAM3D_INSTANCE_PROPERTY(DREAM3D::Mesh::FaceListPointer_t, Faces)
+    DREAM3D_INSTANCE_PROPERTY(FaceArray::Pointer, Faces)
 
-
-    DOES_DATASET_EXIST_DECL(VertexData)
-    DOES_DATASET_EXIST_DECL(EdgeData)
     DOES_DATASET_EXIST_DECL(FaceData)
-    DOES_DATASET_EXIST_DECL(FieldData)
-    DOES_DATASET_EXIST_DECL(EnsembleData)
-
-    /**
-     * @brief buildMeshLinks Creates the list of Faces for each vertex that the vertex is a part of
-     */
-    void buildMeshLinks();
-
-    /**
-     * @brief removeMeshLinks Removes the VertLinks data structures to reclaim memory
-     */
-    void removeMeshLinks();
-
-    /**
-     * @brief getMeshLinks Returns the vert Links object
-     * @return
-     */
-    MeshLinks::Pointer getMeshLinks();
-
-    /**
-     * @brief setMeshLinks
-     * @param vertLinks
-     */
-    void setMeshLinks(MeshLinks::Pointer vertLinks);
-
-    /**
-     * @brief buildMeshFaceNeighborLists Creates the list of Faces that share a common edge with a Face. Since
-     * we create non-manifold meshes we can have more than 3 neighbors.
-     */
-    void buildMeshFaceNeighborLists();
-
-    /**
-     * @brief removeMeshFaceNeighborLists Remove the Face neighbor lists to reclaim memory.
-     */
-    void removeMeshFaceNeighborLists();
-
-    /**
-     * @brief getMeshFaceNeighborLists Returns the Face Neighbor lists object
-     * @return
-     */
-    MeshFaceNeighbors::Pointer getMeshFaceNeighborLists();
-
-    /**
-     * @brief setMeshFaceNeighborLists
-     * @param neighbors
-     */
-    void setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer neighbors);
-
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getVertexData(const std::string &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method.
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeVertexData(const std::string &name);
-
-    /**
-     * @brief Removes all the Point Arrays
-     */
-    void clearVertexData();
-
-    /**
-     * @brief Returns a list that contains the names of all the arrays currently stored in the
-     * Point group
-     * @return
-     */
-    std::list<std::string> getVertexArrayNameList();
-
-    /**
-     * @brief Returns the total number of arrays that are stored in the Point group
-     * @return
-     */
-    int getNumVertexArrays();
-
-    /**
-     * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
-     * in during a set of filtering operations then the a value of '32' would be returned.
-     * @return
-     */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumVertexTuples)
+    DOES_DATASET_EXIST_DECL(FaceFieldData)
+    DOES_DATASET_EXIST_DECL(FaceEnsembleData)
 
     /**
      * @brief Adds/overwrites the data for a named array
@@ -253,47 +149,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    void addFaceFieldData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const std::string &name);
-
-    /**
-     * @brief Removes the named data array from the Data Container and returns it to the calling
-     * method.
-     * @param name The name of the array
-     * @return
-     */
-    IDataArray::Pointer removeEdgeData(const std::string &name);
-
-    /**
-     * @brief Removes all the ensemble data
-     */
-    void clearEdgeData();
-
-    std::list<std::string> getEdgeArrayNameList();
-
-    int getNumEdgeArrays();
-
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEdgeTuples)
-
-    /**
-     * @brief Adds/overwrites the data for a named array
-     * @param name The name that the array will be known by
-     * @param data The IDataArray::Pointer that will hold the data
-     */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
-
-    /**
-     * @brief Returns the array for a given named array or the equivelant to a
-     * null pointer if the name does not exist.
-     * @param name The name of the data array
-     */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getFaceFieldData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -301,52 +164,52 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeFaceFieldData(const std::string &name);
 
     /**
      * @brief Removes all the Field Arrays
      */
-    void clearFieldData();
+    void clearFaceFieldData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getFieldArrayNameList();
+    std::list<std::string> getFaceFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
      * @return
      */
-    int getNumFieldArrays();
+    int getNumFaceFieldArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumFieldTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceFieldTuples)
 
     /**
      * @brief Resizes all of the Field Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeFieldDataArrays(size_t size);
+    void resizeFaceFieldDataArrays(size_t size);
 
     /**
      * @brief Adds/overwrites the data for a named array
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addFaceEnsembleData(const std::string &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getFaceEnsembleData(const std::string &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -354,38 +217,38 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeFaceEnsembleData(const std::string &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
      */
-    void clearEnsembleData();
+    void clearFaceEnsembleData();
 
     /**
      * @brief Returns a list that contains the names of all the arrays currently stored in the
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getEnsembleArrayNameList();
+    std::list<std::string> getFaceEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group
      * @return
      */
-    int getNumEnsembleArrays();
+    int getNumFaceEnsembleArrays();
 
     /**
      * @brief Returns the number of Tuples that the field data has. For example if there are 32 grains
      * in during a set of filtering operations then the a value of '32' would be returned.
      * @return
      */
-    DREAM3D_INSTANCE_PROPERTY(size_t, NumEnsembleTuples)
+    DREAM3D_INSTANCE_PROPERTY(size_t, NumFaceEnsembleTuples)
 
     /**
      * @brief Resizes all of the Ensemble Arrays to have 'size' tuples
      * @param size The number of tuples that each DataArray should contain.
      */
-    void resizeEnsembleDataArrays(size_t size);
+    void resizeFaceEnsembleDataArrays(size_t size);
 
 
 
@@ -394,14 +257,9 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_EdgeData;
      std::map<std::string, IDataArray::Pointer> m_FaceData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
-
-     MeshLinks::Pointer m_MeshLinks;
-     MeshFaceNeighbors::Pointer m_FaceNeighbors;
+     std::map<std::string, IDataArray::Pointer> m_FaceFieldData;
+     std::map<std::string, IDataArray::Pointer> m_FaceEnsembleData;
 
      SurfaceDataContainer(const SurfaceDataContainer&);
      void operator =(const SurfaceDataContainer&);

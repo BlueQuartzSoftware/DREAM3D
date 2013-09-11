@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param cVertexNodeTypePtr
      */
-    void initialize_nodes(int NSP, int zID, int *wrappedDims, DREAM3D::Mesh::Float_t* res,
+    void initialize_nodes(int NSP, int zID, int *wrappedDims, float* res,
                           DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
@@ -226,7 +226,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeIdPtr
      * @param neighborsPtr
      */
-    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, DREAM3D::Mesh::Float_t *res,
+    void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, float *res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
                             DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
@@ -238,7 +238,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param xRes
      * @return
      */
-    DREAM3D::Mesh::Float_t find_xcoord(int index, int xDim, DREAM3D::Mesh::Float_t xRes);
+    float find_xcoord(int index, int xDim, float xRes);
 
     /**
      * @brief find_ycoord
@@ -248,7 +248,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param yRes
      * @return
      */
-    DREAM3D::Mesh::Float_t find_ycoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t yRes);
+    float find_ycoord(int index, int xDim, int yDim, float yRes);
 
     /**
      * @brief find_zcoord
@@ -257,7 +257,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param zRes
      * @return
      */
-    DREAM3D::Mesh::Float_t find_zcoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t zRes);
+    float find_zcoord(int index, int xDim, int yDim, float zRes);
 
     /**
      * @brief treat_anomaly

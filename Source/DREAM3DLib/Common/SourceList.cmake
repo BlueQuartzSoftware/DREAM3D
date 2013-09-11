@@ -22,6 +22,11 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/SurfaceDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/EdgeDataContainer.h
   ${DREAM3DLib_SOURCE_DIR}/Common/VertexDataContainer.h
+  ${DREAM3DLib_SOURCE_DIR}/Common/VertexArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/EdgeArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/FaceArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/CellArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/DynamicListArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DMath.h
