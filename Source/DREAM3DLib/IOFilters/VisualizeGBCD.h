@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+          qDebug() << "Error Writing Binary VTK Data into file " << "\n";
           fclose(f);
           return -1;
         }

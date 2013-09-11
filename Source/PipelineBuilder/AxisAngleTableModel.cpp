@@ -67,7 +67,7 @@ AxisAngleTableModel::~AxisAngleTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "AxisAngleTableModel::flags" << std::endl;
+  //  qDebug() << "AxisAngleTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -203,7 +203,7 @@ bool AxisAngleTableModel::setHeaderData(int col, Qt::Orientation o, const QVaria
 // -----------------------------------------------------------------------------
 bool AxisAngleTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "AxisAngleTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "AxisAngleTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

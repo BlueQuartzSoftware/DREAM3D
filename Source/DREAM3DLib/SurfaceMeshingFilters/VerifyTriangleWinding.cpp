@@ -173,7 +173,7 @@ class LabelVisitorInfo
 
       if (m_Relabeled == true)
       {
-        //  std::cout << "    Reverting Label " << m_NewLabel << " To " << m_Label << std::endl;
+        //  qDebug() << "    Reverting Label " << m_NewLabel << " To " << m_Label << "\n";
         for (QSet<int32_t>::iterator triIter = m_OriginalFaceList.begin(); triIter != m_OriginalFaceList.end(); ++triIter )
         {
           if (masterFaceList[(*triIter) * 2] == m_NewLabel) { masterFaceList[(*triIter) * 2] = m_Label; }
@@ -504,17 +504,17 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &tri
 }
 
 #define PRINT_FACE(index, triangles)\
-  std::cout << " " << triangles[index].verts[0] << " " << triangles[index].verts[1] << " " << triangles[index].verts[2] << std::endl;\
-  std::cout << "Face ID: " << index << std::endl;\
-  std::cout << "Face.labels[0] " << triangles[index].labels[0] << std::endl;\
-  std::cout << "Face.labels[1] " << triangles[index].labels[1] << std::endl;\
+  qDebug() << " " << triangles[index].verts[0] << " " << triangles[index].verts[1] << " " << triangles[index].verts[2] << "\n";\
+  qDebug() << "Face ID: " << index << "\n";\
+  qDebug() << "Face.labels[0] " << triangles[index].labels[0] << "\n";\
+  qDebug() << "Face.labels[1] " << triangles[index].labels[1] << "\n";\
 
 #define PRINT_VERT(index)\
-  std::cout << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << std::endl;
+  qDebug() << index << " " << verts[index].pos[0] << " " << verts[index].pos[1] << " " << verts[index].pos[2] << "\n";
 
 #define PRINT_NORMAL(i, nodes, triangles)\
 { VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);\
-  std::cout << normal.x << " " << normal.y << " " << normal.z << std::endl;}
+  qDebug() << normal.x << " " << normal.y << " " << normal.z << "\n";}
 
 // -----------------------------------------------------------------------------
 //
@@ -522,7 +522,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &tri
 int VerifyTriangleWinding::verifyTriangleWinding()
 {
   int err = 0;
-  //  std::cout << "--------------------------------------------------------------" << std::endl;
+  //  qDebug() << "--------------------------------------------------------------" << "\n";
   //  FaceListType& masterFaceList = *(mesh->triangles());  // Create a reference variable for better syntax
   //  NodeVector&       masterNodeList = *(mesh->nodes());
 
@@ -571,7 +571,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   getLabelTriangelMap(trianglesToLabelMap);
   //  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
   //  {
-  //    std::cout << "Grain: " << (*iter).first << "   Face Count: " << (*iter).second.size() << std::endl;
+  //    qDebug() << "Grain: " << (*iter).first << "   Face Count: " << (*iter).second.size() << "\n";
   //  }
 
 
@@ -646,7 +646,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     }
     else if (curLdo->getPrimed() == false && curLdo->getRelabeled() == true)
     {
-      //    std::cout << "    Reint32_ting could not find a starting index. Using first index in triangle set" << std::endl;
+      //    qDebug() << "    Reint32_ting could not find a starting index. Using first index in triangle set" << "\n";
       curLdo->setStartIndex( *(curLdo->m_Faces.begin()) );
       curLdo->setPrimed(true);
     }
@@ -675,25 +675,25 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       DREAM3D::Mesh::Face_t& triangle = triangles[triangleIndex];
       int32_t* faceLabel = faceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
 
-      //   std::cout << " $ tIndex: " << triangleIndex << std::endl;
+      //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
 
       QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceDataContainer(), triangleIndex, currentLabel);
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
-        // std::cout << "  ^ AdjTri index: " << *adjTri << std::endl;
+        // qDebug() << "  ^ AdjTri index: " << *adjTri << "\n";
         if (masterVisited[*adjTri] == false)
         {
-          //    std::cout << "   * Checking Winding: " << *adjTri << std::endl;
+          //    qDebug() << "   * Checking Winding: " << *adjTri << "\n";
           if (TriangleOps::verifyWinding(triangle, triangles[*adjTri], faceLabel, faceLabels + (*adjTri * 2), currentLabel) == true)
           {
-         //   std::cout << "Face winding flipped for triangle id = " << *adjTri << " Grain Id: " << currentLabel << std::endl;
+         //   qDebug() << "Face winding flipped for triangle id = " << *adjTri << " Grain Id: " << currentLabel << "\n";
           }
         }
 
         if (localVisited.find(*adjTri) == localVisited.end()
             && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
         {
-          //std::cout << "   # Adding to Deque: " << *adjTri << std::endl;
+          //qDebug() << "   # Adding to Deque: " << *adjTri << "\n";
           triangleDeque.push_back(*adjTri);
           localVisited.insert(*adjTri);
           masterVisited[*adjTri] = true;
@@ -730,7 +730,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
         labelsToVisitSet.insert(triangleLabel[0]);
         LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[0], triangleIndex);
         labelObjectsToVisit.push_back(l);
-        // std::cout << "    Adding Label " << triangle.labels[0] << " to visit starting at tIndex " << triangleIndex << std::endl;
+        // qDebug() << "    Adding Label " << triangle.labels[0] << " to visit starting at tIndex " << triangleIndex << "\n";
       }
       if ( labelsToVisitSet.find(triangleLabel[1]) == labelsToVisitSet.end()
            && (labelsVisitedSet.find(triangleLabel[1]) == labelsVisitedSet.end() ) )
@@ -739,7 +739,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
         labelsToVisitSet.insert(triangleLabel[1]);
         LabelVisitorInfo::Pointer l = LabelVisitorInfo::New(triangleLabel[1], triangleIndex);
         labelObjectsToVisit.push_back(l);
-        //  std::cout << "    Adding Label " << triangle.labels[1] << " to visit starting at tIndex " << triangleIndex << std::endl;
+        //  qDebug() << "    Adding Label " << triangle.labels[1] << " to visit starting at tIndex " << triangleIndex << "\n";
       }
 
     }
@@ -747,43 +747,43 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     QSet<int32_t>::size_type nLabelTriEnd = curLdo->m_Faces.size();
     if (nLabelTriStart == nLabelTriEnd )
     {
-      // std::cout << "    !--!++! No new triangles visited for int32_t " << currentLabel << std::endl;
+      // qDebug() << "    !--!++! No new triangles visited for int32_t " << currentLabel << "\n";
     }
     else if (nLabelTriEnd == 0)
     {
-      //  std::cout << "    No Faces remain to be visited for label " << std::endl;
+      //  qDebug() << "    No Faces remain to be visited for label " << "\n";
       // If this currentLabel was the result of a "relabeling" then revert back to the original
       // label for those triangles.
       curLdo->revertFaceLabels(faceLabelsPtr);
     }
     else
     {
-      //std::cout << "    Not all triangles visited for label"  << std::endl;
-      //std::cout << "    " << nLabelTriEnd << " Faces Remaining to be visited" << std::endl;
+      //qDebug() << "    Not all triangles visited for label"  << "\n";
+      //qDebug() << "    " << nLabelTriEnd << " Faces Remaining to be visited" << "\n";
       // At this point relabel the remaining triangles
       //      if (currentLabel == 28) {
-      //        std::cout << "break" << std::endl;
+      //        qDebug() << "break" << "\n";
       //      }
       LabelVisitorInfo::Pointer p = curLdo->relabelFaces(mesh, faceLabelsPtr, masterVisited);
       labelObjectsToVisit.push_back(p);
       labelsToVisitSet.insert(p->getLabel());
       // Revert the current labelVisitorObject to its original label
       curLdo->revertFaceLabels(faceLabelsPtr);
-      //std::cout << "    New label " << mesh->getMaxLabel() << " added to visit" << std::endl;
+      //qDebug() << "    New label " << mesh->getMaxLabel() << " added to visit" << "\n";
     }
 
   } // End of Loop over each int32_t
 
-  //std::cout << "Total: "<< total << std::endl;
-  //std::cout << "labelsToVisitSet.size() :" << labelsToVisitSet.size() << std::endl;
+  //qDebug() << "Total: "<< total << "\n";
+  //qDebug() << "labelsToVisitSet.size() :" << labelsToVisitSet.size() << "\n";
   if (labelsToVisitSet.size() != 0) {
-    //std::cout << " labelsToVisitSet:" << std::endl;
+    //qDebug() << " labelsToVisitSet:" << "\n";
     for (STDEXT::hash_set<int32_t>::iterator iter = labelsToVisitSet.begin(); iter != labelsToVisitSet.end(); ++iter )
     {
-      //std::cout << "  int32_t: " << *iter << std::endl;
+      //qDebug() << "  int32_t: " << *iter << "\n";
     }
   }
-  //std::cout << "labelsVisited.size() :" << labelsVisitedSet.size() << std::endl;
+  //qDebug() << "labelsVisited.size() :" << labelsVisitedSet.size() << "\n";
 
 
   QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(faceLabelsPtr);
@@ -792,13 +792,13 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     thelabels.erase(*iter);
   }
 
-  //std::cout << "labels NOT visited:" << std::endl;
+  //qDebug() << "labels NOT visited:" << "\n";
   for (QSet<int32_t>::iterator iter = thelabels.begin(); iter != thelabels.end(); ++iter )
   {
-    //std::cout << "  int32_t: " << *iter << std::endl;
+    //qDebug() << "  int32_t: " << *iter << "\n";
   }
 
-  // std::cout << "--------------------------------------------------------------" << std::endl;
+  // qDebug() << "--------------------------------------------------------------" << "\n";
   return err;
 }
 

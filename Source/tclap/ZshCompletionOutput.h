@@ -98,7 +98,7 @@ ZshCompletionOutput::ZshCompletionOutput()
 
 inline void ZshCompletionOutput::version(CmdLineInterface& _cmd)
 {
-	std::cout << _cmd.getVersion() << std::endl;
+	qDebug() << _cmd.getVersion() << "\n";
 }
 
 inline void ZshCompletionOutput::usage(CmdLineInterface& _cmd )
@@ -109,8 +109,8 @@ inline void ZshCompletionOutput::usage(CmdLineInterface& _cmd )
 	theDelimiter = _cmd.getDelimiter();
 	basename(progName);
 
-	std::cout << "#compdef " << progName << std::endl << std::endl <<
-		"# " << progName << " version " << _cmd.getVersion() << std::endl << std::endl <<
+	qDebug() << "#compdef " << progName << "\n" << "\n" <<
+		"# " << progName << " version " << _cmd.getVersion() << "\n" << "\n" <<
 		"_arguments -s -S";
 
 	for (ArgListIterator it = argList.begin(); it != argList.end(); it++)
@@ -121,14 +121,14 @@ inline void ZshCompletionOutput::usage(CmdLineInterface& _cmd )
 			printOption((*it), getMutexList(_cmd, *it));
 	}
 
-	std::cout << std::endl;
+	qDebug() << "\n";
 }
 
 inline void ZshCompletionOutput::failure( CmdLineInterface& _cmd,
 				                ArgException& e )
 {
 	static_cast<void>(_cmd); // unused
-	std::cout << e.what() << std::endl;
+	qDebug() << e.what() << "\n";
 }
 
 inline void ZshCompletionOutput::quoteSpecialChars( QString& s )
@@ -163,26 +163,26 @@ inline void ZshCompletionOutput::printArg(Arg* a)
 {
 	static int count = 1;
 
-	std::cout << " \\" << std::endl << "  '";
+	qDebug() << " \\" << "\n" << "  '";
 	if ( a->acceptsMultipleValues() )
-		std::cout << '*';
+		qDebug() << '*';
 	else
-		std::cout << count++;
-	std::cout << ':';
+		qDebug() << count++;
+	qDebug() << ':';
 	if ( !a->isRequired() )
-		std::cout << ':';
+		qDebug() << ':';
 
-	std::cout << a->getName() << ':';
+	qDebug() << a->getName() << ':';
 	QMap<QString, QString>::iterator compArg = common.find(a->getName());
 	if ( compArg != common.end() )
 	{
-		std::cout << compArg->second;
+		qDebug() << compArg->second;
 	}
 	else
 	{
-		std::cout << "_guard \"^-*\" " << a->getName();
+		qDebug() << "_guard \"^-*\" " << a->getName();
 	}
-	std::cout << '\'';
+	qDebug() << '\'';
 }
 
 inline void ZshCompletionOutput::printOption(Arg* a, QString mutex)
@@ -211,20 +211,20 @@ inline void ZshCompletionOutput::printOption(Arg* a, QString mutex)
 		desc.replace(0, 1, 1, tolower(desc.at(0)));
 	}
 
-	std::cout << " \\" << std::endl << "  '" << mutex;
+	qDebug() << " \\" << "\n" << "  '" << mutex;
 
 	if ( a->getFlag().empty() )
 	{
-		std::cout << name;
+		qDebug() << name;
 	}
 	else
 	{
-		std::cout << "'{" << flag << ',' << name << "}'";
+		qDebug() << "'{" << flag << ',' << name << "}'";
 	}
 	if ( theDelimiter == '=' && a->isValueRequired() )
-		std::cout << "=-";
+		qDebug() << "=-";
 	quoteSpecialChars(desc);
-	std::cout << '[' << desc << ']';
+	qDebug() << '[' << desc << ']';
 
 	if ( a->isValueRequired() )
 	{
@@ -250,20 +250,20 @@ inline void ZshCompletionOutput::printOption(Arg* a, QString mutex)
 			}
 			while ( (p = arg.find_first_of('|', p)) != QString::npos );
 			quoteSpecialChars(arg);
-			std::cout << ": :(" << arg << ')';
+			qDebug() << ": :(" << arg << ')';
 		}
 		else
 		{
-			std::cout << ':' << arg;
+			qDebug() << ':' << arg;
 			QMap<QString, QString>::iterator compArg = common.find(arg);
 			if ( compArg != common.end() )
 			{
-				std::cout << ':' << compArg->second;
+				qDebug() << ':' << compArg->second;
 			}
 		}
 	}
 
-	std::cout << '\'';
+	qDebug() << '\'';
 }
 
 inline QString ZshCompletionOutput::getMutexList( CmdLineInterface& _cmd, Arg* a)

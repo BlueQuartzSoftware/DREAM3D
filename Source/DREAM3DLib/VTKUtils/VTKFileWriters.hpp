@@ -283,7 +283,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
             size_t totalWritten = fwrite( buffer.get(), sizeof(char), dims[0] * sizeof(float), f);
             if (totalWritten != dims[0] * 4)
             {
-              std::cout << "Error Writing Binary Data for Euler Angles to file " << std::endl;
+              qDebug() << "Error Writing Binary Data for Euler Angles to file " << "\n";
               fclose(f);
               return -1;
             }
@@ -405,7 +405,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
       size_t totalWritten = fwrite(rgba, sizeof(char), total * 4, f);
       if (totalWritten != total * 4)
       {
-        std::cout << "Error Writing Binary Data for IPF Colors to file " << std::endl;
+        qDebug() << "Error Writing Binary Data for IPF Colors to file " << "\n";
         fclose( f);
         return -1;
       }
@@ -479,7 +479,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+          qDebug() << "Error Writing Binary VTK Data into file " << "\n";
           fclose(f);
           return -1;
         }

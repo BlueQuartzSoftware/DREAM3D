@@ -167,20 +167,20 @@ int SPParksWriter::writeHeader()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() << "\n";
     return -1;
   }
 
-  outfile << "-" << std::endl;
-  outfile << "3 dimension" << std::endl;
-  outfile << totalpoints << " sites" << std::endl;
-  outfile << "26 max neighbors" << std::endl;
-  outfile << "0 " << udims[0] << " xlo xhi" << std::endl;
-  outfile << "0 " << udims[1] << " ylo yhi" << std::endl;
-  outfile << "0 " << udims[2] << " zlo zhi" << std::endl;
-  outfile << std::endl;
-  outfile << "Values" << std::endl;
-  outfile << std::endl;
+  outfile << "-" << "\n";
+  outfile << "3 dimension" << "\n";
+  outfile << totalpoints << " sites" << "\n";
+  outfile << "26 max neighbors" << "\n";
+  outfile << "0 " << udims[0] << " xlo xhi" << "\n";
+  outfile << "0 " << udims[1] << " ylo yhi" << "\n";
+  outfile << "0 " << udims[2] << " zlo zhi" << "\n";
+  outfile << "\n";
+  outfile << "Values" << "\n";
+  outfile << "\n";
   outfile.close();
   return 0;
 }
@@ -226,7 +226,7 @@ int SPParksWriter::writeFile()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary | std::ios_base::app);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() << "\n";
     return -1;
   }
 

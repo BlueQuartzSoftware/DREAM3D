@@ -64,7 +64,7 @@ SGBetaTableModel::~SGBetaTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags SGBetaTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGBetaTableModel::flags" << std::endl;
+  //  qDebug() << "SGBetaTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -229,7 +229,7 @@ int SGBetaTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 bool SGBetaTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "SGBetaTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGBetaTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

@@ -179,7 +179,7 @@ class QualityMetricItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "QualityMetricItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "QualityMetricItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == QualityMetricTableModel::FieldName)

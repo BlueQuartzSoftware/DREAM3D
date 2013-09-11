@@ -374,10 +374,10 @@ void DataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
 {
-  xdmf << "<?xml version=\"1.0\"?>" << std::endl;
-  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << std::endl;
-  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << std::endl;
-  xdmf << " <Domain>" << std::endl;
+  xdmf << "<?xml version=\"1.0\"?>" << "\n";
+  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << "\n";
+  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << "\n";
+  xdmf << " <Domain>" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -385,8 +385,8 @@ void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
 // -----------------------------------------------------------------------------
 void DataContainerWriter::writeXdmfFooter(std::ostream &xdmf)
 {
-  xdmf << " </Domain>" << std::endl;
-  xdmf << "</Xdmf>" << std::endl;
+  xdmf << " </Domain>" << "\n";
+  xdmf << "</Xdmf>" << "\n";
 }
 
 // -----------------------------------------------------------------------------

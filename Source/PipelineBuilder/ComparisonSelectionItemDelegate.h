@@ -183,7 +183,7 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "ComparisonSelectionItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "ComparisonSelectionItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == ComparisonSelectionTableModel::FieldName)

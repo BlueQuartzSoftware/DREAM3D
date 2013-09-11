@@ -93,9 +93,9 @@ void SurfaceDataContainer::addFaceData(const QString &name, IDataArray::Pointer 
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_FaceData[name] = data;
@@ -155,7 +155,7 @@ void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
@@ -173,7 +173,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceFieldData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -183,9 +183,9 @@ void SurfaceDataContainer::addFaceFieldData(const QString &name, IDataArray::Poi
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_FaceFieldData[name] = data;
@@ -203,7 +203,7 @@ IDataArray::Pointer SurfaceDataContainer::removeFaceFieldData(const QString &nam
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FaceFieldData.erase(it);
   return p;
 }
@@ -245,7 +245,7 @@ void SurfaceDataContainer::resizeFaceFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
@@ -263,7 +263,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceEnsembleData(const QString &nam
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -273,9 +273,9 @@ void SurfaceDataContainer::addFaceEnsembleData(const QString &name, IDataArray::
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_FaceEnsembleData[name] = data;
@@ -293,7 +293,7 @@ IDataArray::Pointer SurfaceDataContainer::removeFaceEnsembleData(const QString &
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FaceEnsembleData.erase(it);
   return p;
 }
@@ -335,7 +335,7 @@ void SurfaceDataContainer::resizeFaceEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceEnsembleData.begin(); iter != m_FaceEnsembleData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }

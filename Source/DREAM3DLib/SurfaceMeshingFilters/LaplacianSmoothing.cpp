@@ -796,8 +796,8 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   //  int start = 3094380;
   //  int end = 3094450;
   //  int triangleCount = end - start;
-  std::cout << "---------------------------------------------------------------------------" << std::endl;
-  std::cout << outputVtkFile << std::endl;
+  qDebug() << "---------------------------------------------------------------------------" << "\n";
+  qDebug() << outputVtkFile << "\n";
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
@@ -807,9 +807,9 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];
       tData[3] = triangles[tid].verts[2];
-      //      std::cout << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << std::endl;
-      //      std::cout << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << std::endl;
-      //      std::cout << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << std::endl;
+      //      qDebug() << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << "\n";
+      //      qDebug() << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << "\n";
+      //      qDebug() << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << "\n";
       if (m_WriteBinaryFile == true)
       {
         tData[0] = 3; // Push on the total number of entries for this entry

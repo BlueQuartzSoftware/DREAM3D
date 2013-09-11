@@ -132,7 +132,7 @@ class SGMDFItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGMDFItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "SGMDFItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == SGMDFTableModel::Angle || col == SGMDFTableModel::Weight)

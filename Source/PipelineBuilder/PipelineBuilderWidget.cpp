@@ -570,7 +570,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
+      //qDebug() << fi.absoluteFilePath().toStdString() << "\n";
       // Add a tree widget item for this Prebuilt Group
       nextDirItem = new QTreeWidgetItem(currentDirItem);
       nextDirItem->setText(0, fi.baseName());
@@ -588,7 +588,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
     pbPref.beginGroup(Detail::PipelineBuilderGroup);
     QString pbName = pbPref.value("Name").toString();
     pbPref.endGroup();
-    //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
+    //qDebug() << pbinfo.absoluteFilePath().toStdString() << "\n";
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
     prebuiltItem->setText(0, pbName);
@@ -707,10 +707,10 @@ void PipelineBuilderWidget::setupGui()
 
   m_favorites->setExpanded(true);
 
-  //  std::cout << "Groups Found: " << std::endl;
+  //  qDebug() << "Groups Found: " << "\n";
   for(QSet<QString>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
-    //   std::cout << *iter << std::endl;
+    //   qDebug() << *iter << "\n";
     QString iconName(":/");
     iconName.append( QString::fromStdString(*iter));
     iconName.append("_Icon.png");
@@ -971,7 +971,7 @@ QString PipelineBuilderWidget::writeNewFavoriteFilePath(QString newFavoriteTitle
   bool success = f.rename(newPath);
   if (false == success)
   {
-    std::cout << "Failed";
+    qDebug() << "Failed";
   }
 
   filterLibraryTree->blockSignals(true);
@@ -1182,7 +1182,7 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 {
-  std::cout << item->text().toStdString().c_str() << std::endl;
+  qDebug() << item->text().toStdString().c_str() << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -1262,7 +1262,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   {
     if(m_FilterPipeline!= NULL)
     {
-      //std::cout << "canceling from GUI...." << std::endl;
+      //qDebug() << "canceling from GUI...." << "\n";
       emit cancelPipeline();
     }
     return;
@@ -1340,7 +1340,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::pipelineComplete()
 {
-  // std::cout << "PipelineBuilderWidget::PipelineBuilder_Finished()" << std::endl;
+  // qDebug() << "PipelineBuilderWidget::PipelineBuilder_Finished()" << "\n";
   if (m_hasErrors) {
     displayDialogBox(QString::fromStdString("Pipeline Errors"),
                      QString::fromStdString("Errors occurred during processing.\nPlease check the error table for more information."),

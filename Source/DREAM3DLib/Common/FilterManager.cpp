@@ -61,7 +61,7 @@ FilterManager::Pointer FilterManager::Instance()
 
   if (singleton.get() == NULL)
   {
-  //  std::cout << "FilterManager::Instance singleton was NULL" << std::endl;
+  //  qDebug() << "FilterManager::Instance singleton was NULL" << "\n";
     singleton.reset ( new FilterManager() );
 //    singleton->RegisterKnownFilters();
   }
@@ -96,7 +96,7 @@ void FilterManager::printFactoryNames()
 {
     for(Collection::iterator iter = m_Factories.begin(); iter != m_Factories.end(); ++iter)
     {
-      std::cout << "Name: " << (*iter).first << std::endl;
+      qDebug() << "Name: " << (*iter).first << "\n";
     }
 }
 
@@ -151,7 +151,7 @@ void FilterManager::addFilterFactory(const QString &name, IFilterFactory::Pointe
 // -----------------------------------------------------------------------------
 QSet<QString> FilterManager::getGroupNames()
 {
- // std::cout << "FilterManager::getGroupNames" << std::endl;
+ // qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
@@ -160,7 +160,7 @@ QSet<QString> FilterManager::getGroupNames()
   {
     IFilterFactory::Pointer filterFactory = (*factory).second;
     groupNames.insert((*factory).second->getFilterGroup());
-  //  std::cout << (*factory).second->getFilterGroup() << std::endl;
+  //  qDebug() << (*factory).second->getFilterGroup() << "\n";
   }
   return groupNames;
 }
@@ -170,7 +170,7 @@ QSet<QString> FilterManager::getGroupNames()
 // -----------------------------------------------------------------------------
 QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
 {
- // std::cout << "FilterManager::getGroupNames" << std::endl;
+ // qDebug() << "FilterManager::getGroupNames" << "\n";
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();

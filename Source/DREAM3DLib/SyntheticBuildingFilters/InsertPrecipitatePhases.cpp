@@ -219,7 +219,7 @@ void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fi
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    ss << "Stats Array Not Initialized At Beginning Correctly" << std::endl;
+    ss << "Stats Array Not Initialized At Beginning Correctly" << "\n";
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
@@ -1889,7 +1889,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumCellFieldTuples()-firstPrecipitateField << std::endl;
+  outFile << m->getNumCellFieldTuples()-firstPrecipitateField << "\n";
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getFieldArrayNameList();
 
@@ -1921,7 +1921,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
       data.push_back(p);
     }
   }
-  outFile << std::endl;
+  outFile << "\n";
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
@@ -1949,6 +1949,6 @@ void InsertPrecipitatePhases::write_goal_attributes()
       outFile << space;
       (*p)->printTuple(outFile, i, space);
     }
-    outFile << std::endl;
+    outFile << "\n";
   }
 }

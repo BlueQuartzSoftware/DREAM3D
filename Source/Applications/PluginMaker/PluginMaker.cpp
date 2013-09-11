@@ -40,7 +40,7 @@
 
 
 
-
+#include <QtCore/QtDebug>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 #include <QtCore/QFileInfo>
@@ -663,7 +663,7 @@ void PluginMaker::on_addFilterBtn_clicked()
   }
 //  for(int i = 0;i < m_FilterBundles.count(); ++i)
 //  {
-//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << std::endl;
+//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << "\n";
 //  }
 }
 
@@ -792,7 +792,7 @@ qint32 PluginMaker::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 void PluginMaker::writeSettings()
 {
-  // std::cout << "writeSettings" << std::endl;
+  // qDebug() << "writeSettings" << "\n";
 #if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
@@ -824,7 +824,7 @@ void PluginMaker::writeWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void PluginMaker::readSettings()
 {
-  // std::cout << "Read Settings" << std::endl;
+  // qDebug() << "Read Settings" << "\n";
 #if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
@@ -851,7 +851,7 @@ void PluginMaker::readWindowSettings(QSettings &prefs)
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
-      std::cout << "Error Restoring the Window Geometry" << std::endl;
+      qDebug() << "Error Restoring the Window Geometry" << "\n";
     }
   }
 
@@ -882,8 +882,8 @@ QString PluginMaker::generateCmakeContents() {
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
     bool isPublic = m_FilterBundles[i].isPublic();
 
-    //std::cout << cppGen->getFileName().toStdString() << std::endl;
-    //std::cout << hGen->getFileName().toStdString() << std::endl;
+    //qDebug() << cppGen->getFileName().toStdString() << "\n";
+    //qDebug() << hGen->getFileName().toStdString() << "\n";
 
     //  hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
     //  srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");

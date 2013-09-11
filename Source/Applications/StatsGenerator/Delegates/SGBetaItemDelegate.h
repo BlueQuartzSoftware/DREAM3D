@@ -145,7 +145,7 @@ class SGBetaItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGBetaItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "SGBetaItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == SGBetaTableModel::Alpha || col == SGBetaTableModel::Beta)

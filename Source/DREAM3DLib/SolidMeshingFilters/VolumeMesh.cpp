@@ -149,9 +149,9 @@ void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 #ifdef DREAM3D_USE_QT
       emit updateMessage(QString(message));
       emit updateProgress(progress);
-     // std::cout << message.toStdString() << std::endl;
+     // qDebug() << message.toStdString() << "\n";
 #else
-  std::cout << message << std::endl;
+  qDebug() << message << "\n";
 #endif
 }
 
@@ -161,7 +161,7 @@ void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 // -----------------------------------------------------------------------------
 void VolumeMesh::on_CancelWorker()
 {
-  // std::cout << "VolumeMesh::cancelWorker()" << std::endl;
+  // qDebug() << "VolumeMesh::cancelWorker()" << "\n";
   this->m_Cancel = true;
 }
 #endif

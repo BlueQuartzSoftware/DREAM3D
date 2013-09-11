@@ -141,7 +141,7 @@ void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader
 int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   BOOST_ASSERT(writer != NULL);
-  std::cout << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << std::endl;
+  qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << "\n";
   return -1;
 }
 

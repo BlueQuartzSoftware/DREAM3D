@@ -518,7 +518,7 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
+      // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << "\n";
       QObject::connect( com, SIGNAL(activated(const QString &)),
                         this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
@@ -547,7 +547,7 @@ void QFilterWidget::setupGui()
       theSlot.append("set");
       theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
+      // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << "\n";
       QObject::connect( com, SIGNAL(activated(const QString &)),
                         this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
@@ -1194,8 +1194,8 @@ AbstractFilter::Pointer QFilterWidget::getFilter(bool defaultValues)
 void QFilterWidget::updateQLineEditIntValue()
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-  //      << whoSent->objectName().toStdString() << std::endl;
+  //  qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << "\n";
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -1214,8 +1214,8 @@ void QFilterWidget::updateQLineEditIntValue()
 void QFilterWidget::updateQLineEditDoubleValue()
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-  //     << whoSent->objectName().toStdString() << std::endl;
+  //  qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //     << whoSent->objectName().toStdString() << "\n";
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -1258,7 +1258,7 @@ void QFilterWidget::selectInputFile()
   if (true == ok) { }
   else
   {
-    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  qDebug() << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< "\n";
   }
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
@@ -1306,7 +1306,7 @@ void QFilterWidget::selectInputPath()
   if (true == ok) { }
   else
   {
-    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  qDebug() << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< "\n";
   }
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
@@ -1356,7 +1356,7 @@ void QFilterWidget::selectOutputFile()
   if (true == ok) {}
   else
   {
-    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  qDebug() << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< "\n";
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
@@ -1408,7 +1408,7 @@ void QFilterWidget::selectOutputPath()
   if (true == ok) {}
   else
   {
-    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
+    //  qDebug() << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< "\n";
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
@@ -1439,7 +1439,7 @@ void QFilterWidget::selectOutputPath()
 void QFilterWidget::updateComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  //  qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << "\n";
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1448,7 +1448,7 @@ void QFilterWidget::updateComboBoxValue(int v)
     if (true == ok) { }
     else
     {
-      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+      qDebug() << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << "\n";
     }
   }
 }
@@ -1460,7 +1460,7 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  // std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  // qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << "\n";
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1470,7 +1470,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
     if (true == ok) { }
     else
     {
-      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+      qDebug() << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << "\n";
     }
   }
 }
@@ -1481,7 +1481,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 {
   QObject* whoSent = sender();
-  //std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
+  //qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << "\n";
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
@@ -1490,7 +1490,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
     if (true == ok) { }
     else
     {
-      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
+      qDebug() << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << "\n";
     }
   }
 }
@@ -1501,8 +1501,8 @@ void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 void QFilterWidget::updateQLineEditStringValue(const QString &v)
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
-  //      << whoSent->objectName().toStdString() << std::endl;
+  //  qDebug() << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << "\n";
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le)
   {
@@ -1533,7 +1533,7 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 void QFilterWidget::updateQCheckBoxValue(int v)
 {
   QObject* whoSent = sender();
-  //  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+  //  qDebug() << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
   //      << " via QCheckBox." <<  std::endl;
   QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
   if(le)
@@ -1548,7 +1548,7 @@ void QFilterWidget::updateQCheckBoxValue(int v)
 void QFilterWidget::updateLineEdit(const QString &v)
 {
   QObject* whoSent = sender();
-  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+  qDebug() << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
             << " via QLineEdit." <<  std::endl;
   BOOST_ASSERT(false);
 }
@@ -1683,11 +1683,11 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
   //  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
   //  {
-  //    std::cout << "Drag should close the widget because it was MOVE" << std::endl;
+  //    qDebug() << "Drag should close the widget because it was MOVE" << "\n";
   //  }
   //  else
   //  {
-  //    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
+  //    qDebug() << "Drag should leave Widget alone because it was COPY" << "\n";
   //  }
   drag->exec(Qt::MoveAction);
 }
@@ -1811,7 +1811,7 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
 // -----------------------------------------------------------------------------
 void QFilterWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
-  //  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
+  //  qDebug() << "void QFilterWidget::preflightDoneExecuting(...)" << "\n";
 }
 
 // -----------------------------------------------------------------------------

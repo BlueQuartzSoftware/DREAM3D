@@ -496,7 +496,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
 
 
-    //  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+    //  qDebug() << "********* RUNNING PIPELINE **********************" << "\n";
     // // pipeline->run();
       pipeline->clear();
 

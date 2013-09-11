@@ -129,7 +129,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
-  //    std::cout << input.arrayName << "  " << input.compOperator << "  " << input.compValue << std::endl;
+  //    qDebug() << input.arrayName << "  " << input.compOperator << "  " << input.compValue << "\n";
   //  }
   if (m_ComparisonInputs.size() == 0)
   {

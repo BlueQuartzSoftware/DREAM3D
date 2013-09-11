@@ -93,9 +93,9 @@ void EdgeDataContainer::addEdgeData(const QString &name, IDataArray::Pointer dat
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Edge array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Edge array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_EdgeData[name] = data;
@@ -170,9 +170,9 @@ void EdgeDataContainer::addEdgeFieldData(const QString &name, IDataArray::Pointe
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_EdgeFieldData[name] = data;
@@ -232,7 +232,7 @@ void EdgeDataContainer::resizeEdgeFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
@@ -260,9 +260,9 @@ void EdgeDataContainer::addEdgeEnsembleData(const QString &name, IDataArray::Poi
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_EdgeEnsembleData[name] = data;
@@ -322,7 +322,7 @@ void EdgeDataContainer::resizeEdgeEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeEnsembleData.begin(); iter != m_EdgeEnsembleData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }

@@ -550,7 +550,7 @@ void VisualizeGBCD::execute()
       int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
       delete[] gn;
       if (totalWritten != (total))  {
-        std::cout << "Error Writing Binary VTK Data into file " << m_OutputFile << std::endl;
+        qDebug() << "Error Writing Binary VTK Data into file " << m_OutputFile << "\n";
         fclose(f);
       }
     }

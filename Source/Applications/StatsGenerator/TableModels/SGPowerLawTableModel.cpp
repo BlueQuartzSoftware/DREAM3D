@@ -64,7 +64,7 @@ SGPowerLawTableModel::~SGPowerLawTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags SGPowerLawTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGPowerLawTableModel::flags" << std::endl;
+  //  qDebug() << "SGPowerLawTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -247,7 +247,7 @@ int SGPowerLawTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 bool SGPowerLawTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "SGPowerLawTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGPowerLawTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

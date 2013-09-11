@@ -76,7 +76,7 @@ ComparisonSelectionTableModel::~ComparisonSelectionTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "ComparisonSelectionTableModel::flags" << std::endl;
+  //  qDebug() << "ComparisonSelectionTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -251,7 +251,7 @@ bool ComparisonSelectionTableModel::setHeaderData(int col, Qt::Orientation o, co
 // -----------------------------------------------------------------------------
 bool ComparisonSelectionTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "ComparisonSelectionTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
