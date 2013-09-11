@@ -20,7 +20,7 @@
    <string>Form</string>
   </property>
   <property name="currentIndex">
-   <number>1</number>
+   <number>3</number>
   </property>
   <widget class="QWidget" name="vertex_data">
    <attribute name="title">
@@ -181,7 +181,7 @@ font-size: 11pt;
      <number>0</number>
     </property>
     <item row="1" column="6">
-     <widget class="QListWidget" name="surfaceEnsembleArrayList"/>
+     <widget class="QListWidget" name="surfaceFaceEnsembleArrayList"/>
     </item>
     <item row="0" column="0">
      <widget class="QCheckBox" name="surfaceVertexArraysCB">
@@ -203,7 +203,7 @@ font-size: 11pt;
      <widget class="QListWidget" name="surfaceEdgeArrayList"/>
     </item>
     <item row="0" column="6">
-     <widget class="QCheckBox" name="surfaceEnsembleArraysCB">
+     <widget class="QCheckBox" name="surfaceFaceEnsembleArraysCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -235,7 +235,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="5">
-     <widget class="QCheckBox" name="surfaceFieldArraysCB">
+     <widget class="QCheckBox" name="surfaceFaceFieldArraysCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -251,7 +251,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="1" column="5">
-     <widget class="QListWidget" name="surfaceFieldArrayList"/>
+     <widget class="QListWidget" name="surfaceFaceFieldArrayList"/>
     </item>
     <item row="1" column="0">
      <widget class="QListWidget" name="surfaceVertexArrayList"/>
@@ -308,7 +308,7 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="0" column="4">
-     <widget class="QCheckBox" name="volumeFieldCB">
+     <widget class="QCheckBox" name="volumeCellFieldCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {
@@ -324,13 +324,13 @@ font-size: 11pt;
      </widget>
     </item>
     <item row="1" column="4">
-     <widget class="QListWidget" name="volumeFieldArrayList"/>
+     <widget class="QListWidget" name="volumeCellFieldArrayList"/>
     </item>
     <item row="1" column="5">
-     <widget class="QListWidget" name="volumeEnsembleArrayList"/>
+     <widget class="QListWidget" name="volumeCellEnsembleArrayList"/>
     </item>
     <item row="0" column="5">
-     <widget class="QCheckBox" name="volumeEnsembleCB">
+     <widget class="QCheckBox" name="volumeCellEnsembleCB">
       <property name="styleSheet">
        <string notr="true">QCheckBox 
 {

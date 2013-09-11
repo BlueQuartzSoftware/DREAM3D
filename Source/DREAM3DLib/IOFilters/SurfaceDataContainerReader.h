@@ -51,7 +51,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
+class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerReader
 {
   public:
     DREAM3D_SHARED_POINTERS(SurfaceDataContainerReader)

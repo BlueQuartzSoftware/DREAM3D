@@ -51,7 +51,6 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainer::SurfaceDataContainer() :
-Observable(),
 m_NumFaceTuples(0)
 {
 
