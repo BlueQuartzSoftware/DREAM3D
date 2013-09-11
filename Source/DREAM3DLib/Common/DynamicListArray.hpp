@@ -80,6 +80,21 @@ class DynamicListArray
     // Get a link structure given a point id.
     ElementList& getElementList(size_t ptId) {return this->Array[ptId];}
 
+    bool setElementList(size_t ptId, uint16_t nCells, int32_t* data)
+    {
+      if(ptId >= Size) return false;
+      if(NULL != Array[ptId].cells && Array[ptId].ncells > 0)
+      {
+        Array[ptId].cells = NULL;
+        Array[ptId].ncells = 0;
+      }
+      Array[ptId].ncells = nCells;
+      //If nCells is huge then there could be problems with this
+      this->Array[ptId].cells = new int[nCells];    
+      ::memcpy(Array[ptId].cells, data, sizeof(int) * nCells);
+      return true;
+    }
+
     // Description:
     // Get the number of cells using the point specified by ptId.
     unsigned short getNumberOfElements(size_t ptId) {return this->Array[ptId].ncells;}
