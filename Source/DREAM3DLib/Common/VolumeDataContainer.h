@@ -83,8 +83,8 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellCellFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellCellEnsembleData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
 
@@ -111,12 +111,12 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     virtual IDataArray::Pointer removeCellData(const std::string &name);
 
     /**
-    * @brief Renames a cell data array from the Data Container 
+    * @brief Renames a cell data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameCellData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Cell Arrays
      */
     virtual void clearCellData();
@@ -164,12 +164,12 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     virtual IDataArray::Pointer removeCellFieldData(const std::string &name);
 
     /**
-    * @brief Renames a field data array from the Data Container 
+    * @brief Renames a field data array from the Data Container
     * @param name The name of the array
     */
     virtual bool renameCellFieldData(const std::string &oldname, const std::string &newname);
 
-	/**
+  /**
      * @brief Removes all the Field Arrays
      */
     virtual void clearCellFieldData();
