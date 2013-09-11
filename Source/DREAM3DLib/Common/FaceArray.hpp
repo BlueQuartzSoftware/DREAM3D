@@ -53,7 +53,7 @@
 class FaceArray
 {
   public:
-    
+
     typedef struct
     {
       size_t verts[3];
@@ -113,8 +113,8 @@ class FaceArray
       m_FacesContainingVert = DynamicListArray::New();
 
       // Allocate the basic structures
-      m_FacesContainingVert->allocate(numCells);
-
+      //m_FacesContainingVert->allocate(numCells);
+      std::vector<uint16_t> linkCount(numCells, 0);
       size_t cellId;
       unsigned short* linkLoc;
 
@@ -135,12 +135,13 @@ class FaceArray
         getVerts(Faces, cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
-          m_FacesContainingVert->incrementLinkCount(pts[j]);
+         // m_FacesContainingVert->incrementLinkCount(pts[j]);
+         linkCount[pts[j]]++;
         }
       }
 
       // now allocate storage for the links
-      m_FacesContainingVert->allocateLinks(numCells);
+      m_FacesContainingVert->allocateLists(linkCount);
 
       for (cellId=0; cellId < numCells; cellId++)
       {
