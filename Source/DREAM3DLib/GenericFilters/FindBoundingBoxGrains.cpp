@@ -87,7 +87,7 @@ int FindBoundingBoxGrains::writeFilterParameters(AbstractFilterParametersWriter*
 void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
@@ -133,7 +133,7 @@ void FindBoundingBoxGrains::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QTextStream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     notifyErrorMessage(ss.str(), -1);
     return;

@@ -114,7 +114,7 @@ class CmdLineInterface
 		/**
 		 * Returns the argList. 
 		 */
-		virtual std::list<Arg*>& getArgList()=0;
+		virtual QList<Arg*>& getArgList()=0;
 
 		/**
 		 * Returns the XorHandler. 

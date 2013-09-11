@@ -160,7 +160,7 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   if(getOutputFile().empty() == true)
@@ -227,7 +227,7 @@ void VisualizeGBCD::preflight()
 void VisualizeGBCD::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)

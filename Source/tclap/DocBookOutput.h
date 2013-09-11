@@ -94,7 +94,7 @@ inline void DocBookOutput::version(CmdLineInterface& _cmd)
 
 inline void DocBookOutput::usage(CmdLineInterface& _cmd ) 
 {
-	std::list<Arg*> argList = _cmd.getArgList();
+	QList<Arg*> argList = _cmd.getArgList();
 	QString progName = _cmd.getProgramName();
 	QString version = _cmd.getVersion();
 	theDelimiter = _cmd.getDelimiter();

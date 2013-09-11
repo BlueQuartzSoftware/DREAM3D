@@ -103,7 +103,7 @@ inline void ZshCompletionOutput::version(CmdLineInterface& _cmd)
 
 inline void ZshCompletionOutput::usage(CmdLineInterface& _cmd )
 {
-	std::list<Arg*> argList = _cmd.getArgList();
+	QList<Arg*> argList = _cmd.getArgList();
 	QString progName = _cmd.getProgramName();
 	QString version = _cmd.getVersion();
 	theDelimiter = _cmd.getDelimiter();

@@ -221,7 +221,7 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -264,7 +264,7 @@ void ReverseTriangleWinding::preflight()
 void ReverseTriangleWinding::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

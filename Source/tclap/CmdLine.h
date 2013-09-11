@@ -75,7 +75,7 @@ class CmdLine : public CmdLineInterface
 		 * The list of arguments that will be tested against the
 		 * command line.
 		 */
-		std::list<Arg*> _argList;
+		QList<Arg*> _argList;
 
 		/**
 		 * The name of the program.  Set to argv[0].
@@ -115,14 +115,14 @@ class CmdLine : public CmdLineInterface
 		 * is called.  At the moment, this only includes the three default
 		 * Args.
 		 */
-		std::list<Arg*> _argDeleteOnExitList;
+		QList<Arg*> _argDeleteOnExitList;
 
 		/**
 		 * A list of Visitors to be explicitly deleted when the destructor
 		 * is called.  At the moment, these are the Vistors created for the
 		 * default Args.
 		 */
-		std::list<Visitor*> _visitorDeleteOnExitList;
+		QList<Visitor*> _visitorDeleteOnExitList;
 
 		/**
 		 * Object that handles all output for the CmdLine.
@@ -265,7 +265,7 @@ private:
 		/**
 		 *
 		 */
-		std::list<Arg*>& getArgList();
+		QList<Arg*>& getArgList();
 
 		/**
 		 *
@@ -566,7 +566,7 @@ inline QString& CmdLine::getProgramName()
 	return _progName;
 }
 
-inline std::list<Arg*>& CmdLine::getArgList()
+inline QList<Arg*>& CmdLine::getArgList()
 {
 	return _argList;
 }

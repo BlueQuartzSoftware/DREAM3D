@@ -105,7 +105,7 @@ int EdgeDataContainerReader::writeFilterParameters(AbstractFilterParametersWrite
 void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   EdgeDataContainer* m = getEdgeDataContainer();
 
   if(NULL == m)
@@ -146,7 +146,7 @@ void EdgeDataContainerReader::preflight()
 void EdgeDataContainerReader::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -163,7 +163,7 @@ void EdgeDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherData(bool preflight)
 {
-  QTextStream ss;
+  QString ss;
 
   if(m_HdfFileId < 0)
   {
@@ -336,7 +336,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  QTextStream ss;
+  QString ss;
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);

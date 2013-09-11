@@ -153,7 +153,7 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
@@ -201,7 +201,7 @@ void SaveImages::preflight()
 void SaveImages::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

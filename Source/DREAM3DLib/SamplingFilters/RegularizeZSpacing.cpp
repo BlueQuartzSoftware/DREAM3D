@@ -213,8 +213,8 @@ void RegularizeZSpacing::execute()
     }
   }
 
-  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
-  for (std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);

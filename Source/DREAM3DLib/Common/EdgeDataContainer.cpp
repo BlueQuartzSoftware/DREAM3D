@@ -130,9 +130,9 @@ void EdgeDataContainer::clearEdgeData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> EdgeDataContainer::getEdgeArrayNameList()
+QList<QString> EdgeDataContainer::getEdgeArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -205,9 +205,9 @@ void EdgeDataContainer::clearEdgeFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> EdgeDataContainer::getEdgeFieldArrayNameList()
+QList<QString> EdgeDataContainer::getEdgeFieldArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -295,9 +295,9 @@ void EdgeDataContainer::clearEdgeEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> EdgeDataContainer::getEdgeEnsembleArrayNameList()
+QList<QString> EdgeDataContainer::getEdgeEnsembleArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeEnsembleData.begin(); iter != m_EdgeEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);

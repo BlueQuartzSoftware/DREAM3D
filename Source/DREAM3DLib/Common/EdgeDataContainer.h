@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      */
     void clearEdgeData();
 
-    std::list<QString> getEdgeArrayNameList();
+    QList<QString> getEdgeArrayNameList();
 
     int getNumEdgeArrays();
 
@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<QString> getEdgeFieldArrayNameList();
+    QList<QString> getEdgeFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
@@ -213,7 +213,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<QString> getEdgeEnsembleArrayNameList();
+    QList<QString> getEdgeEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group

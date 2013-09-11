@@ -365,14 +365,14 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<QString> groupList;
+  QList<QString> groupList;
   err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QTextStream ss;
+    QString ss;
     ss << i;
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 

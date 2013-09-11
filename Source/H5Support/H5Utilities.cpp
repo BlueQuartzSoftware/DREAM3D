@@ -256,7 +256,7 @@ herr_t H5Utilities::closeHDF5Object(hid_t obj_id)
 // HDF Group Methods
 //--------------------------------------------------------------------//
 
-/*! @brief Returns a std::list of std::strings containing the names
+/*! @brief Returns a QList of std::strings containing the names
  *   of all objects attached to the group referred to by loc_id
  *
  * @parameter typeFilter is one of DREAM3D_GROUP, HDF5_DATASET, HDF5_TYPE,
@@ -264,7 +264,7 @@ herr_t H5Utilities::closeHDF5Object(hid_t obj_id)
  *  command.  Or you can pass in HDF5_ANY (equivalent to: HDF5_GROUP |
  *  HDF5_DATASET | HDF5_TYPE | HDF5_LINK) to not filter at all
  */
-herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<std::string>& names)
+herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<std::string>& names)
 {
   herr_t err=0;
   hsize_t numObjs = 0;
@@ -484,11 +484,11 @@ bool H5Utilities::probeForAttribute(hid_t loc_id,
 }
 
 //--------------------------------------------------------------------//
-// Returns a std::list of all attribute names attached to the object
+// Returns a QList of all attribute names attached to the object
 //  referred to by obj_id
 //--------------------------------------------------------------------//
 herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
-                                         std::list<std::string> &results)
+                                         QList<std::string> &results)
 {
   if (obj_id < 0) { return -1; }
   herr_t err = -1;
@@ -517,7 +517,7 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
 // -----------------------------------------------------------------------------
 herr_t H5Utilities::getAllAttributeNames(hid_t loc_id,
                                          const std::string &obj_name,
-                                         std::list<std::string> &names)
+                                         QList<std::string> &names)
 {
   hid_t obj_id = -1;
   herr_t err = -1;
@@ -549,10 +549,10 @@ herr_t H5Utilities::getAttributesMap(hid_t loc_id,
   MXATypes::Int32Vector ires;
   MXATypes::Float32Vector fres;
   std::vector<uint64_t> dims;  //Reusable for the loop
-  std::list<std::string> names;
+  QList<std::string> names;
   err = getAllAttributeNames(loc_id, obj_name, names);
   if (err < 0) { return err; }
-  std::list<std::string>::iterator iter;
+  QList<std::string>::iterator iter;
   for (iter=names.begin(); iter != names.end(); iter++)
   {
     err = H5Lite::getAttributeInfo(loc_id, obj_name, (*iter), dims, attr_type, attr_size, tid);
@@ -608,9 +608,9 @@ herr_t H5Utilities::readAllAttributes(hid_t fileId,
   std::string res;
 
   std::vector<hsize_t> dims;  //Reusable for the loop
-  std::list<std::string> names;
+  QList<std::string> names;
   err = H5Utilities::getAllAttributeNames(fileId, datasetPath, names );
-  for (std::list<std::string>::iterator iter=names.begin(); iter != names.end(); iter++)
+  for (QList<std::string>::iterator iter=names.begin(); iter != names.end(); iter++)
   {
     //std::cout << "Reading Attribute " << *iter << std::endl;
     err = H5Lite::getAttributeInfo(fileId, datasetPath, (*iter), dims, attr_type, attr_size, typeId);

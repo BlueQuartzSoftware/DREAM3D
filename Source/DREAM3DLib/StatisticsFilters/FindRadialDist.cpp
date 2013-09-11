@@ -120,7 +120,7 @@ int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer
 void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
@@ -188,7 +188,7 @@ void FindRadialDist::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      QTextStream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);

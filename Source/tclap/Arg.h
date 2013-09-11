@@ -183,7 +183,7 @@ class Arg
 		 * Adds this to the specified list of Args.
 		 * \param argList - The list to add this to.
 		 */
-		virtual void addToList( std::list<Arg*>& argList ) const;
+		virtual void addToList( QList<Arg*>& argList ) const;
 
 		/**
 		 * Begin ignoring arguments since the "--" argument was specified.
@@ -373,7 +373,7 @@ class Arg
 /**
  * Typedef of an Arg list iterator.
  */
-typedef std::list<Arg*>::iterator ArgListIterator;
+typedef QList<Arg*>::iterator ArgListIterator;
 
 /**
  * Typedef of an Arg vector iterator.
@@ -383,7 +383,7 @@ typedef QVector<Arg*>::iterator ArgVectorIterator;
 /**
  * Typedef of a Visitor list iterator.
  */
-typedef std::list<Visitor*>::iterator VisitorListIterator;
+typedef QList<Visitor*>::iterator VisitorListIterator;
 
 /*
  * Extract a value of type T from it's string representation contained
@@ -641,7 +641,7 @@ inline void Arg::xorSet()
 /**
  * Overridden by Args that need to added to the end of the list.
  */
-inline void Arg::addToList( std::list<Arg*>& argList ) const
+inline void Arg::addToList( QList<Arg*>& argList ) const
 {
 	argList.push_back( const_cast<Arg*>(this) );
 }

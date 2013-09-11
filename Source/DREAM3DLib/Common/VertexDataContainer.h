@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Point group
      * @return
      */
-    std::list<QString> getVertexArrayNameList();
+    QList<QString> getVertexArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Point group
@@ -170,7 +170,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<QString> getVertexFieldArrayNameList();
+    QList<QString> getVertexFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
@@ -223,7 +223,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<QString> getVertexEnsembleArrayNameList();
+    QList<QString> getVertexEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group

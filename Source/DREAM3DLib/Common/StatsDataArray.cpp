@@ -296,7 +296,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
     return err;
   }
 
-  std::list<QString> names;
+  QList<QString> names;
   err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_GROUP, names);
   if(err < 0)
   {
@@ -304,7 +304,7 @@ int StatsDataArray::readH5Data(hid_t parentId)
     return err;
   }
 
-  for (std::list<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
+  for (QList<QString>::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     int index = 0;
     statsType = "";

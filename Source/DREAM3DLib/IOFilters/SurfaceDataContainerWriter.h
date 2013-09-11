@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    typedef std::list<QString> NameListType;
+    typedef QList<QString> NameListType;
 
     void setXdmfOStream(std::ostream* xdmf);
 

@@ -145,7 +145,7 @@ int SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter*
 void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 
@@ -183,7 +183,7 @@ void SingleThresholdFields::execute()
     return;
   }
   //int err = 0;
-  QTextStream ss;
+  QString ss;
 
   IDataArray::Pointer inputData = m->getCellFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())

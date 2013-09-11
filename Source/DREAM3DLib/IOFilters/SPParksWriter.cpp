@@ -112,7 +112,7 @@ int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -134,7 +134,7 @@ int SPParksWriter::writeHeader()
     VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
@@ -193,7 +193,7 @@ int SPParksWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
@@ -236,7 +236,7 @@ int SPParksWriter::writeFile()
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  QTextStream ss;
+  QString ss;
 
   int increment = totalpoints * .01;
 

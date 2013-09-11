@@ -118,7 +118,7 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getOutputFile().empty() == true)
@@ -168,7 +168,7 @@ int DxWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -202,7 +202,7 @@ int DxWriter::writeFile()
   QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-    QTextStream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);

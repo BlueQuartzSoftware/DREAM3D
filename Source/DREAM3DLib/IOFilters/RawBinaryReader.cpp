@@ -355,7 +355,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -502,7 +502,7 @@ void RawBinaryReader::preflight()
 void RawBinaryReader::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

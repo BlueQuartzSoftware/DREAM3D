@@ -117,7 +117,7 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -163,7 +163,7 @@ int  EnsembleInfoReader::readFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -174,7 +174,7 @@ int  EnsembleInfoReader::readFile()
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);

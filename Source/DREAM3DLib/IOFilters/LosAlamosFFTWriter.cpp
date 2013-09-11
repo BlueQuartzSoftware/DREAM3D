@@ -120,7 +120,7 @@ int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(getOutputFile().empty() == true)
   {
@@ -160,13 +160,13 @@ int LosAlamosFFTWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
-  QTextStream ss;
+  QString ss;
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();

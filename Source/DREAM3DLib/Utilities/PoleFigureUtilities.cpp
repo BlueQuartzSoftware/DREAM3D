@@ -69,7 +69,7 @@ PoleFigureUtilities::~PoleFigureUtilities()
 // -----------------------------------------------------------------------------
 void writeVtkFile(FloatArrayType* xyz, const QString &filename)
 {
-  QTextStream ss;
+  QString ss;
   FILE* f = NULL;
   f = fopen(filename.c_str(), "wb");
   if(NULL == f)

@@ -158,7 +158,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   bool computeMean = (m_MeanCurvature.get() != NULL);
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
-  QTextStream ss;
+  QString ss;
   QVector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(QVector<int>::size_type i = 0; i < tCount; ++i)

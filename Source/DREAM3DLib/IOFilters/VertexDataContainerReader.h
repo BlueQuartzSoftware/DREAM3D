@@ -67,7 +67,7 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<QString> NameListType;
+    typedef QList<QString> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

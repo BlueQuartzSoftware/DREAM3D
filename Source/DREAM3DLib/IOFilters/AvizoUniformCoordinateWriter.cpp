@@ -114,7 +114,7 @@ int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParameters
 void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_OutputFile.empty() == true)
@@ -160,7 +160,7 @@ void AvizoUniformCoordinateWriter::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-    QTextStream ss;
+    QString ss;
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -176,7 +176,7 @@ void AvizoUniformCoordinateWriter::execute()
   MXAFileWriter64 writer(m_OutputFile);
   if(false == writer.initWriter())
   {
-    QTextStream ss;
+    QString ss;
     ss << "Error opening file '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -197,7 +197,7 @@ void AvizoUniformCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 QString AvizoUniformCoordinateWriter::generateHeader()
 {
-  QTextStream ss;
+  QString ss;
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
@@ -261,7 +261,7 @@ int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
     int count = 0;
-    QTextStream ss;
+    QString ss;
     for (int64_t i = 0; i < totalPoints; ++i)
     {
       ss << m_GrainIds[i];

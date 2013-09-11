@@ -146,7 +146,7 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
 
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -197,7 +197,7 @@ int  FieldInfoReader::readFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    QTextStream ss;
+    QString ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
@@ -210,7 +210,7 @@ int  FieldInfoReader::readFile()
   inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -288,7 +288,7 @@ int  FieldInfoReader::readFile()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
-    QTextStream ss;
+    QString ss;
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

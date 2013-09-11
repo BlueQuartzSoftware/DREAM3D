@@ -202,7 +202,7 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * Instead of pushing to the front of list, push to the back.
 		 * \param argList - The list to add this to.
 		 */
-		virtual void addToList( std::list<Arg*>& argList ) const;
+		virtual void addToList( QList<Arg*>& argList ) const;
 
 };
 
@@ -331,7 +331,7 @@ bool UnlabeledValueArg<T>::operator==(const Arg& a ) const
 }
 
 template<class T>
-void UnlabeledValueArg<T>::addToList( std::list<Arg*>& argList ) const
+void UnlabeledValueArg<T>::addToList( QList<Arg*>& argList ) const
 {
 	argList.push_back( const_cast<Arg*>(static_cast<const Arg* const>(this)) );
 }
