@@ -112,6 +112,16 @@ class DynamicListArray
     }
 
 
+    void allocateLists(std::vector<uint16_t> &linkCounts)
+    {
+      allocate(linkCounts.size());
+      for (size_t i=0; i < linkCounts.size(); i++)
+      {
+        this->Array[i].cells = new int[this->Array[i].ncells];
+        this->Array[i].ncells = linkCounts[i];
+      }
+    }
+
   protected:
     DynamicListArray();
 
@@ -147,25 +157,6 @@ class DynamicListArray
       }
     }
 
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void incrementLinkCount(size_t ptId)
-    {
-      this->Array[ptId].ncells++;
-    }
-
-
-    //----------------------------------------------------------------------------
-    // This will allocate the actual memory to hold each NeighborList
-    void allocateLinks(size_t n)
-    {
-      for (size_t i=0; i < n; i++)
-      {
-        this->Array[i].cells = new int[this->Array[i].ncells];
-      }
-    }
 
   private:
     ElementList* Array;   // pointer to data
