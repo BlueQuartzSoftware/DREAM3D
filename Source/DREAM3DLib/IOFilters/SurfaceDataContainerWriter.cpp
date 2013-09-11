@@ -70,7 +70,6 @@ public:
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
-  AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
   m_XdmfPtr(NULL)

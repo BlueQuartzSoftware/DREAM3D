@@ -163,7 +163,7 @@ class CellArray
 
       DynamicListArray::Pointer m_CellNeighbors = DynamicListArray::New();
 
-      std::vector<uint16_t> linkCount(nFaces, 0);
+      std::vector<uint16_t> linkCount(nCells, 0);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nCells]);

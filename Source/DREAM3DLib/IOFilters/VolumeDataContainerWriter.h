@@ -56,7 +56,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerWriter
 {
   public:
     DREAM3D_SHARED_POINTERS(VolumeDataContainerWriter)

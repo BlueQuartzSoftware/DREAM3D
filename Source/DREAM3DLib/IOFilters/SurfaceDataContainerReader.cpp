@@ -50,7 +50,6 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerReader::SurfaceDataContainerReader() :
-  AbstractFilter(),
   m_HdfFileId(-1),
   m_ReadVertexData(true),
   m_ReadEdgeData(true),
