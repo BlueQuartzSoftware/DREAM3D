@@ -213,7 +213,7 @@ if (size*numComp != iDataArray->GetSize()) {\
   return gi;\
 }\
 if (numComp != iDataArray->GetNumberOfComponents()) {\
-      if (NULL != obv) {QString ss;\
+      if (NULL != obv) {\
       ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << numComp << " but the array"\
       << " that was supplied has " << iDataArray->GetNumberOfComponents() << "." << std::endl;\
       obv->addErrorMessage(obv->getHumanLabel(), ss.str(),503);}\

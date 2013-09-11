@@ -176,7 +176,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
         if(err < 0)
         {
           setErrorCondition(err);
-          QString ss;
+          
           ss << "Error writing Ensemble data set '" << label << "'";
         }
       }

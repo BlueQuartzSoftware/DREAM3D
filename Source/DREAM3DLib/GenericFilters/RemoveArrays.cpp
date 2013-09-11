@@ -193,7 +193,7 @@ void RemoveArrays::preflight()
 void RemoveArrays::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

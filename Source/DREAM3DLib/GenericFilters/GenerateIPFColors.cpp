@@ -131,7 +131,7 @@ int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -168,7 +168,7 @@ void GenerateIPFColors::preflight()
 void GenerateIPFColors::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

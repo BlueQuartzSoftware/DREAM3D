@@ -119,7 +119,7 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -144,7 +144,7 @@ void Hex2SqrConverter::preflight()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::execute()
 {
-  QString ss;
+  
   herr_t err = 0;
 
   QVector<int> indices;

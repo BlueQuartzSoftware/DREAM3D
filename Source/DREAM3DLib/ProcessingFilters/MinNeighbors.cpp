@@ -121,7 +121,7 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
@@ -277,7 +277,7 @@ void MinNeighbors::assign_badpoints()
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
-			  QString ss;
+			  
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -371,7 +371,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	QString ss;
+	
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

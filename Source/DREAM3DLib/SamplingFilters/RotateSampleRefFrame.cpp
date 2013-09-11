@@ -233,7 +233,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;

@@ -146,7 +146,7 @@ int NeighborOrientationCorrelation::writeFilterParameters(AbstractFilterParamete
 void NeighborOrientationCorrelation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)

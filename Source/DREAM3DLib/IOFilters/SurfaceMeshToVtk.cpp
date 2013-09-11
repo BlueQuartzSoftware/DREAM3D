@@ -128,7 +128,7 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_OutputVtkFile.empty() == true)
   {
@@ -191,7 +191,7 @@ class ScopedFileMonitor
 void SurfaceMeshToVtk::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -376,7 +376,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -414,7 +414,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -531,7 +531,7 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
 {
   // Write the Grain Face ID Data to the file
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -576,7 +576,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -629,7 +629,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QString ss;
+  
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));

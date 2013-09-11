@@ -147,7 +147,7 @@ int SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
 void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
 
@@ -186,7 +186,7 @@ void SingleThresholdCells::execute()
     return;
   }
   //int err = 0;
-  QString ss;
+  
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())

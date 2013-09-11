@@ -170,7 +170,7 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
 {
-  QString ss;
+  
 
   extractHelpIndexEntries(filterPtr);
 
@@ -442,7 +442,7 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
       instream.open(filename.c_str(), std::ios_base::binary);
       if (!instream.is_open())
       {
-        QString ss;
+        
         std::cout << " file could not be opened: " << filename << std::endl;
         return;
       }
@@ -487,7 +487,7 @@ void createSourceFile( const QString &group,
                        QVector<FilterParameter::Pointer> options,
                        const QString &outputPath)
 {
-  QString ss;
+  
 
   QString completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -597,7 +597,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           QString ss;\n");
+      fprintf(f, "           \n");
       fprintf(f, "           ss << filter->get%s();\n", prop.c_str());
       fprintf(f, "           w->setText( QString::fromStdString(ss.str()) );\n");
       fprintf(f, "        }\n");
@@ -646,7 +646,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.c_str());
       fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.c_str());
       fprintf(f, "        if (w1 && w2 && w3) {\n");
-      fprintf(f, "           QString ss;\n\n");
+      fprintf(f, "           \n\n");
       fprintf(f, "           ss << filter->get%s().x;\n", prop.c_str());
       fprintf(f, "           w1->setText( QString::fromStdString(ss.str()) );\n");
       fprintf(f, "           ss.str(\"\");\n");
@@ -678,7 +678,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
-      fprintf(f, "              QString ss;\n");
+      fprintf(f, "              \n");
       fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
       fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
       fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");

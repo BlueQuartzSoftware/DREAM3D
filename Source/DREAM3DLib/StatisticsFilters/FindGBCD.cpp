@@ -362,7 +362,7 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -403,7 +403,7 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -436,7 +436,7 @@ void FindGBCD::preflight()
 void FindGBCD::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)

@@ -181,7 +181,7 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_OutputFile.empty() == true)
   {
@@ -222,7 +222,7 @@ void DataContainerWriter::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss <<  " DataContainer was NULL";
     notifyErrorMessage(ss.str(), -10);
     return;
@@ -230,7 +230,7 @@ void DataContainerWriter::execute()
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-  QString ss;
+  
   int err = 0;
 
   // Make sure any directory path is also available as the user may have just typed
@@ -238,7 +238,7 @@ void DataContainerWriter::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss;
+    
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);

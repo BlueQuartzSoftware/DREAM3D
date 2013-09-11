@@ -133,7 +133,7 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
   {
@@ -164,7 +164,7 @@ void AlignSections::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss << " DataContainer was NULL";
     notifyErrorMessage(ss.str(), -1);
     return;
@@ -209,7 +209,7 @@ void AlignSections::execute()
   DimType progIncrement = dims[2]/100;
   DimType prog = 1;
   int progressInt = 0;
-  QString ss;
+  
 
   for (DimType i = 1; i < dims[2]; i++)
   {

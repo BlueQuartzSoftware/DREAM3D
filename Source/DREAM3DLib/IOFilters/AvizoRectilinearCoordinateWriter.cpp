@@ -117,7 +117,7 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_OutputFile.empty() == true)
@@ -164,7 +164,7 @@ void AvizoRectilinearCoordinateWriter::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss;
+    
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -180,7 +180,7 @@ void AvizoRectilinearCoordinateWriter::execute()
   MXAFileWriter64 writer(m_OutputFile);
   if(false == writer.initWriter())
   {
-    QString ss;
+    
     ss << "Error opening file '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -202,7 +202,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 QString AvizoRectilinearCoordinateWriter::generateHeader()
 {
-  QString ss;
+  
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
@@ -272,7 +272,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
     int count = 0;
-    QString ss;
+    
     for (int64_t i = 0; i < totalPoints; ++i)
     {
       ss << m_GrainIds[i];
@@ -315,7 +315,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
   {
     for (int d = 0; d < 3; ++d)
     {
-      QString ss;
+      
       for (size_t i = 0; i < dims[d]; ++i)
       {
         ss << (origin[d] + (res[d] * i)) << " ";

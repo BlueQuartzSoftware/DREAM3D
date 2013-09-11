@@ -96,7 +96,7 @@ int FindSurfaceVoxelFractions::writeFilterParameters(AbstractFilterParametersWri
 void FindSurfaceVoxelFractions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 

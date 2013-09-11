@@ -372,7 +372,7 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QString ss;
+    
     ss << i;
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 

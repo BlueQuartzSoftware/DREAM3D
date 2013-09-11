@@ -141,7 +141,7 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
 
   if (m_TrianglesFile.empty() == true)
   {
@@ -200,7 +200,7 @@ void NodesTrianglesToStl::preflight()
 void NodesTrianglesToStl::execute()
 {
   int err = 0;
-  QString ss;
+  
 
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -221,7 +221,7 @@ void NodesTrianglesToStl::execute()
   // in a path without actually creating the full path
   if(!MXADir::mkdir(getOutputStlDirectory(), true))
   {
-      QString ss;
+      
       ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);

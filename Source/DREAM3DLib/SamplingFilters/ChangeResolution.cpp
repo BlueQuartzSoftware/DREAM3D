@@ -180,7 +180,7 @@ void ChangeResolution::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    QString ss;
+    
     ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
     notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)

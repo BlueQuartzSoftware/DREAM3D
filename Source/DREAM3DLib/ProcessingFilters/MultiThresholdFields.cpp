@@ -124,7 +124,7 @@ int MultiThresholdFields::writeFilterParameters(AbstractFilterParametersWriter* 
 void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
@@ -157,7 +157,7 @@ void MultiThresholdFields::preflight()
 void MultiThresholdFields::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

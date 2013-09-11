@@ -120,7 +120,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	  err = H5Lite::readPointerDataset(scalarGid, dsetName, data);
  	  if(err < 0)
 	  {
-	    QString ss;
+	    
 	    ss << " Error Reading the " << dsetName;
 	    addErrorMessage(getHumanLabel(), ss.str(), err);
 	    err = H5Gclose(scalarGid);
@@ -157,7 +157,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     err = H5Lite::readVectorDataset(fieldGid, dsetName, nativeData);
     if(err < 0)
     {
-      QString ss;
+      
       ss <<  ": Error Reading the " << dsetName;
       addErrorMessage(getHumanLabel(), ss.str(), err);
       err |= H5Gclose(fieldGid);

@@ -188,7 +188,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -234,7 +234,7 @@ void InsertPrecipitatePhases::preflight()
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
   {
-    QString ss;
+    
     ss << ClassName() << " needs the Csv Output File Set and it was not.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
@@ -457,7 +457,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75 * factor * curphasetotalvol))
       {
-        QString ss;
+        
         ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
         notifyStatusMessage(ss.str());
 
@@ -532,7 +532,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   fillingerror = 1;
   for (size_t i = firstPrecipitateField; i < numgrains; i++)
   {
-    QString ss;
+    
     ss << "Packing Grains - Placing Grain #" << i;
     notifyStatusMessage(ss.str());
 
@@ -613,7 +613,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   int totalAdjustments = static_cast<int>(10 * ((numgrains-firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    QString ss;
+    
     ss << "Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
     if(iteration % 100 == 0) notifyStatusMessage(ss.str());
 
@@ -1876,7 +1876,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   QString parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      QString ss;
+      
       ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
@@ -1925,7 +1925,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  QString ss;
+  
   float threshold = 0.0f;
 
   // Skip the first grain

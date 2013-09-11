@@ -100,7 +100,7 @@ int VertexDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
@@ -140,7 +140,7 @@ void VertexDataContainerReader::preflight()
 void VertexDataContainerReader::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -157,7 +157,7 @@ void VertexDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::gatherData(bool preflight)
 {
-  QString ss;
+  
 
   if(m_HdfFileId < 0)
   {
@@ -304,7 +304,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  QString ss;
+  
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);

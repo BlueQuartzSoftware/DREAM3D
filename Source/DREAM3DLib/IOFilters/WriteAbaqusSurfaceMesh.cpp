@@ -153,7 +153,7 @@ void WriteAbaqusSurfaceMesh::preflight()
 void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
-  QString ss;
+  
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -175,7 +175,7 @@ void WriteAbaqusSurfaceMesh::execute()
   QString parentPath = MXAFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-      QString ss;
+      
       ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
@@ -284,7 +284,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   int err = 0;
 
-  QString ss;
+  
 
   DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
   DREAM3D::Mesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();

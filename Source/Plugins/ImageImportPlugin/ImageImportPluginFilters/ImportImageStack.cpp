@@ -124,7 +124,7 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (m_ImageFileList.size() == 0)
@@ -210,7 +210,7 @@ void ImportImageStack::execute()
     return;
   }
   setErrorCondition(0);
-  QString ss;
+  
 
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

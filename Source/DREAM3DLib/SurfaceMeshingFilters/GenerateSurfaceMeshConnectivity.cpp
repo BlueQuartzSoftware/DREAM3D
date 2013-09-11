@@ -133,7 +133,7 @@ int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParamet
 void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -175,7 +175,7 @@ void GenerateSurfaceMeshConnectivity::preflight()
 void GenerateSurfaceMeshConnectivity::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

@@ -201,7 +201,7 @@ void SurfaceMeshToNodesTrianglesEdges::preflight()
 void SurfaceMeshToNodesTrianglesEdges::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
 
 
@@ -232,7 +232,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   QString parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss;
+    
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -263,7 +263,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   parentPath = MXAFileInfo::parentPath(getOutputEdgesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss;
+    
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -314,7 +314,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   parentPath = MXAFileInfo::parentPath(getOutputTrianglesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss;
+    
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
