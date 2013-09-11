@@ -246,7 +246,7 @@ void CSVGrainDataReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the ANG file
 // -----------------------------------------------------------------------------
-void CSVGrainDataReader::readData(const std::string &line, int row, size_t i)
+void CSVGrainDataReader::readData(const QString &line, int row, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 11 columns of data. The column names should be the following:

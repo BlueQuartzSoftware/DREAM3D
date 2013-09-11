@@ -37,7 +37,8 @@
 #include <stdlib.h>
 
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"

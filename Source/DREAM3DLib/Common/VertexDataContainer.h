@@ -42,10 +42,10 @@
 #endif
 
 //-- C++ includes
-#include <vector>
-#include <map>
-#include <sstream>
-#include <list>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
+#include <QtCore/QTextStream>
+#include <QtCore/QList>
 
 //-- Boost includes
 #include <boost/shared_array.hpp>

@@ -36,7 +36,7 @@
 #ifndef _StructArray_H_
 #define _StructArray_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -59,7 +59,7 @@ class StructArray : public IDataArray
      */
     static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -92,7 +92,7 @@ class StructArray : public IDataArray
      */
     virtual ~StructArray()
     {
-      //std::cout << "~StructArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~StructArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -205,7 +205,7 @@ class StructArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->m_IsAllocated = true;
@@ -514,7 +514,7 @@ class StructArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -530,7 +530,7 @@ class StructArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -557,7 +557,7 @@ class StructArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                     const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
@@ -688,7 +688,7 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -701,7 +701,7 @@ class StructArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -710,7 +710,7 @@ class StructArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 

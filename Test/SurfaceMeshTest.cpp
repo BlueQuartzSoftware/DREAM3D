@@ -74,8 +74,8 @@ int main(int argc, char** argv)
   SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
 
 
-  std::string nodesFileName = argv[1];
-  std::string trianglesFileName = argv[2];
+  QString nodesFileName = argv[1];
+  QString trianglesFileName = argv[2];
   Observer observer;
 
   // This will read the mesh from the temp file and store it in the SurfaceMesh Data container

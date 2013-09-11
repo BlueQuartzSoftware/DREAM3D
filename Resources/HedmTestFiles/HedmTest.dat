@@ -1,0 +1,7 @@
+3.6078, 3.6078, 3.6078     a, b, c unit cell lengths
+90.,90.,90.,               alpha, beta, gamma, unit cell angles
+4                          number of basis atoms
+29, 0.,0.,0.,              Z and coordinates
+29, 0.,0.5,0.5
+29, 0.5,0.,0.5
+29  0.5,0.5,0.

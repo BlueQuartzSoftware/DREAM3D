@@ -41,7 +41,7 @@
 #include "H5Support/H5Utilities.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/StringUtils.h"
+
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"

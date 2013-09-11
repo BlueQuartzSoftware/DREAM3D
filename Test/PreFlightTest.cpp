@@ -36,7 +36,8 @@
 #include <vector>
 
 #include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -51,9 +52,9 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getH5StatsFile()
+QString getH5StatsFile()
 {
-  std::string s = UnitTest::DataDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
+  QString s = UnitTest::DataDir + MXADir::Separator + "Equiaxed_Precip.h5stats";
   return s;
 }
 
@@ -89,9 +90,9 @@ void RemoveTestFiles()
 void SyntheticBuilder_PreFlight()
 {
 
-  std::string m_H5StatsFile("");
-  std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
-  std::string m_OutputFilePrefix("");
+  QString m_H5StatsFile("");
+  QString m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
+  QString m_OutputFilePrefix("");
   size_t m_XPoints = 128;
   size_t m_YPoints = 128;
   size_t m_ZPoints = 128;
@@ -107,7 +108,7 @@ void SyntheticBuilder_PreFlight()
 //  double m_FractionPrecipitates = 0.0f;
 
   bool m_PeriodicBoundary = false;
-  std::string m_StructureFile("");
+  QString m_StructureFile("");
   bool m_AlreadyFormed = false;
 
 //  int m_Precipitates = 0;
@@ -163,7 +164,7 @@ void SyntheticBuilder_PreFlight()
   pipeline.push_back(write_fielddata);
 
   int preflightError = 0;
-  std::stringstream preflightMessageStream;
+  QStringstream preflightMessageStream;
   // Start looping through the Pipeline and preflight everything
 
   for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter)
@@ -199,7 +200,7 @@ void name##_PreFlightTest() {\
   name::Pointer filter = name::New();\
   pipeline.push_back(filter);\
   int preflightError = 0;\
-  std::stringstream ss;\
+  QStringstream ss;\
   ss << "------------------------------------------------" << std::endl;\
   ss << "Starting Preflight test for " << #name << std::endl;\
   for (std::vector<AbstractFilter::Pointer>::iterator filter = pipeline.begin(); filter != pipeline.end(); ++filter) {\

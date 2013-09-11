@@ -36,8 +36,7 @@
 #ifndef DREAM3DRANDOM_H_
 #define DREAM3DRANDOM_H_
 
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
+#include <QtCore/QDateTime>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -198,7 +197,7 @@ class DREAM3DLib_EXPORT DREAM3DRandom
 #define DREAM3D_RANDOMNG_NEW()\
 DREAM3DRandom rg;\
 {\
-unsigned long long int seed = MXA::getMilliSeconds();\
+unsigned long long int seed = QDateTime::currentMSecsSinceEpoch();\
 unsigned int* seedPtr = reinterpret_cast<unsigned int*> (&seed);\
 rg.init_genrand(seedPtr[AIMRNG_OFFSET]);\
 }
