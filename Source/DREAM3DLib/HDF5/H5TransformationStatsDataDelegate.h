@@ -37,7 +37,7 @@
 #ifndef _H5TransformationStatsData_DELEGATE_H_
 #define _H5TransformationStatsData_DELEGATE_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 

@@ -37,7 +37,7 @@
 #ifndef _STATSDATAARRAY_H_
 #define _STATSDATAARRAY_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -262,8 +262,8 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      */
     virtual int32_t Resize(size_t numTuples);
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',');
-    virtual void printComponent(std::ostream &out, size_t i, int j);
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',');
+    virtual void printComponent(QTextStream &out, size_t i, int j);
 
     /**
      *
@@ -281,7 +281,7 @@ class DREAM3DLib_EXPORT StatsDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
             const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";

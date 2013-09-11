@@ -13,8 +13,8 @@
 
 
 //-- C++
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 #include <vector>
 
 #include <hdf5.h>
@@ -169,8 +169,8 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int32_t Resize(size_t numTuples) = 0;
 
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',') = 0;
-    virtual void printComponent(std::ostream &out, size_t i, int j) = 0;
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',') = 0;
+    virtual void printComponent(QTextStream &out, size_t i, int j) = 0;
 
 
     /**
@@ -181,9 +181,9 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
 //    {
-//      std::cout << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." << std::endl;
+//      qDebug() << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." ;
 //      return -1;
 //    }
 

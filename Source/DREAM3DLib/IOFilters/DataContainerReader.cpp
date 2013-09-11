@@ -40,7 +40,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/StringUtils.h"
+
 
 #include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"

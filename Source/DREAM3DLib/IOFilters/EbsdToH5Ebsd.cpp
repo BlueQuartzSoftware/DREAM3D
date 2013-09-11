@@ -41,7 +41,7 @@
 
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/StringUtils.h"
+
 
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"

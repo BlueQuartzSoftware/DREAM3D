@@ -36,8 +36,8 @@
 
 #include "H5PrecipitateStatsDataDelegate.h"
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 
 // -----------------------------------------------------------------------------
@@ -62,7 +62,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createBetaDistributionArrays(
 {
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  QVector<FloatArrayType::Pointer> vect;
+  std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(betas);
   return vect;
@@ -73,7 +73,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createPowerDistributionArrays
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Exp_k);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  QVector<FloatArrayType::Pointer> vect;
+  std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(ks);
   vect.push_back(betas);
@@ -84,7 +84,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createLogNormalDistributionAr
 {
   FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Average);
   FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::HDF5::StandardDeviation);
-  QVector<FloatArrayType::Pointer> vect;
+  std::vector<FloatArrayType::Pointer> vect;
   vect.push_back(avgs);
   vect.push_back(sd);
   return vect;
@@ -108,7 +108,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createDistributionVector(unsi
   {
     return createLogNormalDistributionArrays();
   }
-   QVector<FloatArrayType::Pointer> empty;
+   std::vector<FloatArrayType::Pointer> empty;
    return empty;
 }
 
@@ -312,7 +312,7 @@ int H5PrecipitateStatsDataDelegate::writeVectorOfArrays(hid_t pid,
   size_t numColumns = colData.size();
   for (size_t c = 0; c < numColumns; ++c)
   {
-    //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
+    //qDebug() << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] ;
     err = -1;
     if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
     {
@@ -325,9 +325,9 @@ int H5PrecipitateStatsDataDelegate::writeVectorOfArrays(hid_t pid,
     }
     else
     {
-      std::cout << ":Null Data Column had no data. Did you create the data?" << std::endl;
-      std::cout << "  File: " << __FILE__ << std::endl;
-      std::cout << "  Line: " << __LINE__ << std::endl;
+      qDebug() << ":Null Data Column had no data. Did you create the data?" ;
+      qDebug() << "  File: " << __FILE__ ;
+      qDebug() << "  Line: " << __LINE__ ;
       break;
     }
 
@@ -370,14 +370,14 @@ int H5PrecipitateStatsDataDelegate::readMDFWeights(hid_t pid, PrecipitateStatsDa
   mdfWeights.push_back(axis);
   mdfWeights.push_back(weight);
 
-  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
 
   err = readVectorOfArrays(groupId, mdfWeights);
   if (err >= 0) {
     data->setMDF_Weights(mdfWeights);
   }
 
-  err = H5Utilities::closeHDF5Object(groupId);
+  err = QH5Utilities::closeHDF5Object(groupId);
   return err;
 }
 
@@ -402,7 +402,7 @@ int H5PrecipitateStatsDataDelegate::readODFWeights(hid_t pid, PrecipitateStatsDa
   odfWeights.push_back(weight);
   odfWeights.push_back(sigma);
 
-  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
 
   err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
@@ -410,7 +410,7 @@ int H5PrecipitateStatsDataDelegate::readODFWeights(hid_t pid, PrecipitateStatsDa
     data->setODF_Weights(odfWeights);
   }
 
-  err |= H5Utilities::closeHDF5Object(groupId);
+  err |= QH5Utilities::closeHDF5Object(groupId);
 
   return err;
 }
@@ -437,7 +437,7 @@ int H5PrecipitateStatsDataDelegate::readAxisODFWeights(hid_t pid, PrecipitateSta
   odfWeights.push_back(sigma);
   odfWeights.push_back(weight);
 
-  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
+  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
 
   err = readVectorOfArrays(groupId, odfWeights);
   if(err >= 0)
@@ -445,7 +445,7 @@ int H5PrecipitateStatsDataDelegate::readAxisODFWeights(hid_t pid, PrecipitateSta
     data->setAxisODF_Weights(odfWeights);
   }
 
-  err |= H5Utilities::closeHDF5Object(groupId);
+  err |= QH5Utilities::closeHDF5Object(groupId);
 
   return err;
 }
@@ -459,7 +459,7 @@ int H5PrecipitateStatsDataDelegate::writeWeightsData(hid_t pid, const QString &h
   herr_t err = 0;
   if (colData.size() == 0) { return err; }
   // Create the Group Folder
-  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
+  hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
     err = writeVectorOfArrays(disId, colData);
@@ -501,10 +501,10 @@ int H5PrecipitateStatsDataDelegate::writeDistributionData(hid_t pid,
   }
 
   // Create the Group Folder
-  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
+  hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
     if(err >= 0)
     {
       err |= writeVectorOfArrays(disId, colData);
@@ -533,7 +533,7 @@ uint32_t H5PrecipitateStatsDataDelegate::readDistributionType(hid_t pid, const Q
   uint32_t dType = DREAM3D::DistributionType::UnknownDistributionType;
 
   QString disTypeStr;
-  err = H5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+  err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
 
   if (disTypeStr.compare(DREAM3D::HDF5::BetaDistribution) == 0)
   {
@@ -559,7 +559,7 @@ int H5PrecipitateStatsDataDelegate::readDistributionData(hid_t pid,
                                               VectorOfFloatArray colData)
 {
   int err = 0;
-  hid_t disId = H5Utilities::openHDF5Object(pid, hdf5GroupName);
+  hid_t disId = QH5Utilities::openHDF5Object(pid, hdf5GroupName);
   if(disId < 0)
   {
     return -1;
@@ -571,7 +571,7 @@ int H5PrecipitateStatsDataDelegate::readDistributionData(hid_t pid,
     err |= d->readH5Data(disId);
   }
 
-  err |= H5Utilities::closeHDF5Object(disId);
+  err |= QH5Utilities::closeHDF5Object(disId);
   return err;
 }
 
@@ -581,7 +581,7 @@ int H5PrecipitateStatsDataDelegate::readDistributionData(hid_t pid,
 int H5PrecipitateStatsDataDelegate::writeBoundaryArea(PrecipitateStatsData* data, hid_t pid)
 {
   float BoundaryArea = data->getBoundaryArea();
-  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
 }
 
 // -----------------------------------------------------------------------------
@@ -590,7 +590,7 @@ int H5PrecipitateStatsDataDelegate::writeBoundaryArea(PrecipitateStatsData* data
 int H5PrecipitateStatsDataDelegate::readBoundaryArea(PrecipitateStatsData* data, hid_t pid)
 {
   float BoundaryArea = 0.0f;
-  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
   data->setBoundaryArea(BoundaryArea);
   return err;
 }
@@ -600,7 +600,7 @@ int H5PrecipitateStatsDataDelegate::readBoundaryArea(PrecipitateStatsData* data,
 int H5PrecipitateStatsDataDelegate::writePhaseFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -609,7 +609,7 @@ int H5PrecipitateStatsDataDelegate::writePhaseFraction(PrecipitateStatsData* dat
 int H5PrecipitateStatsDataDelegate::readPhaseFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }
@@ -619,7 +619,7 @@ int H5PrecipitateStatsDataDelegate::readPhaseFraction(PrecipitateStatsData* data
 int H5PrecipitateStatsDataDelegate::writePrecipBoundaryFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float var = data->getPrecipBoundaryFraction();
-  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, var);
+  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, var);
 }
 
 // -----------------------------------------------------------------------------
@@ -628,7 +628,7 @@ int H5PrecipitateStatsDataDelegate::writePrecipBoundaryFraction(PrecipitateStats
 int H5PrecipitateStatsDataDelegate::readPrecipBoundaryFraction(PrecipitateStatsData* data, hid_t pid)
 {
   float precipBoundaryFraction = 0.0f;
-  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, precipBoundaryFraction);
+  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PrecipitateBoundaryFraction, precipBoundaryFraction);
   data->setPrecipBoundaryFraction(precipBoundaryFraction);
   return err;
 }
@@ -648,7 +648,7 @@ int H5PrecipitateStatsDataDelegate::writeGrainDiameterInfo(PrecipitateStatsData*
   float grainDiameterInfo[3];
   data->getGrainDiameterInfo(grainDiameterInfo);
 
-  return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
+  return QH5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
 }
 
 // -----------------------------------------------------------------------------
@@ -663,7 +663,7 @@ int H5PrecipitateStatsDataDelegate::readGrainDiameterInfo(PrecipitateStatsData* 
   float grainDiameterInfo[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = H5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
+  err = QH5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
   data->setGrainDiameterInfo(grainDiameterInfo);
   return err;
 }

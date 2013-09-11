@@ -30,7 +30,7 @@
 #ifndef _PIPELINEMESSAGE_H_
 #define _PIPELINEMESSAGE_H_
 
-#include <string>
+#include <QtCore/QString>
 
 
 
@@ -194,9 +194,8 @@ class PipelineMessage
      */
     QString generateErrorString()
     {
-      
-      ss << "Error(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
-      return ss.str();
+      QString ss = QObject::tr("Error (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      return ss;
     }
 
     /**
@@ -204,9 +203,8 @@ class PipelineMessage
      */
     QString generateWarningString()
     {
-      
-      ss << "Warning(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
-      return ss.str();
+      QString ss = QObject::tr("Warning (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
+      return ss;
     }
 
     /**
@@ -214,9 +212,8 @@ class PipelineMessage
      */
     QString generateStatusString()
      {
-       
-       ss << m_MessagePrefix << ":" << m_Msg;
-       return ss.str();
+      QString ss = QObject::tr("%1:%2").arg(m_MessagePrefix).arg(m_Msg);
+      return ss;
      }
 
   private:

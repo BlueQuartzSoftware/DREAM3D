@@ -30,9 +30,6 @@
 #ifndef UNITTESTSUPPORT_HPP_
 #define UNITTESTSUPPORT_HPP_
 
-#include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-
 
 //-- C++ Includes
 #include <string.h>
@@ -224,7 +221,8 @@ void TestFailed(const std::string &test)
 
 #define DREAM3D_REQUIRED(L, Q, R)\
 { \
-  std::stringstream ss;\
+  QString buf;\
+  QTextStream ss(&buf);\
   bool b = (L Q R);\
   if ( (b) == (false) ) \
 {\
@@ -232,27 +230,29 @@ void TestFailed(const std::string &test)
   ss << #L << " " << #Q << " " << #R << "' but this condition was not met.\n";\
   ss << "            " << #L << " = " << L << "\n";\
   ss << "            " << #R << " = " << R << "\n";\
-  DREAM3D_TEST_THROW_EXCEPTION( ss.str() )\
+  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() )\
   }\
   }
 
 #define DREAM3D_REQUIRE_NE( L, R )\
   if ( (L) == (R) ) {  \
-  std::stringstream ss;\
+  QString buf;\
+  QTextStream ss(&buf);\
   ss << "Your test required the following\n            '";\
   ss << #L << " != " << #R << "'\n             but this condition was not met.\n";\
   ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 
 #define DREAM3D_REQUIRE_EQUAL( L, R) \
   if ( (L) != (R) ) {  \
-  std::stringstream ss;\
+  QString buf;\
+  QTextStream ss(&buf);\
   ss << "Your test required the following\n            '";\
   ss << #L << " == " << #R << "'\n             but this condition was not met.\n";\
   ss << "             " << L << "==" << R;\
-  DREAM3D_TEST_THROW_EXCEPTION( ss.str() ) }
+  DREAM3D_TEST_THROW_EXCEPTION( buf.toStdString() ) }
 
 
 

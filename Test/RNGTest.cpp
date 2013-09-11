@@ -33,8 +33,6 @@
 
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
-#include "MXA/Common/LogTime.h"
-
 int main(int argc, char **argv)
 {
   std::cout << "RNGTest Start..." << std::endl;

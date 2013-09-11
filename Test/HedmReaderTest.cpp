@@ -1,6 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
- * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
+ * Copyright (c) 2010, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2010, Dr. Michael A. Groeber (US Air Force Research Laboratories
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -34,77 +34,36 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "H5MatrixStatsDataDelegate.h"
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include <string.h>
 
+#include "EbsdLib/HEDM/MicReader.h"
+
+
+#include "UnitTestSupport.hpp"
+#include "HedmTestFileLocation.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5MatrixStatsDataDelegate::H5MatrixStatsDataDelegate()
+void TestHedmReader()
 {
+  MicReader reader;
+  reader.setFileName(UnitTest::HedmReaderTest::MicFile);
+  int err =  reader.readFile();
+  DREAM3D_REQUIRE(err >= 0);
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-H5MatrixStatsDataDelegate::~H5MatrixStatsDataDelegate()
+int main(int argc, char **argv)
 {
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5MatrixStatsDataDelegate::readMatrixStatsData(MatrixStatsData* data, hid_t groupId)
-{
-  int err = 0;
-  //Read the PhaseFraction
-  err = readPhaseFraction(data, groupId);
-
-  return err;
-}
+  int err = EXIT_SUCCESS;
+  DREAM3D_REGISTER_TEST( TestHedmReader() )
 
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5MatrixStatsDataDelegate::writeMatrixStatsData(MatrixStatsData* data, hid_t groupId)
-{
-  if (NULL == data)
-  {
-    return -1;
-  }
-  int err = 0;
-
-  // Write the PhaseFraction
-  err = writePhaseFraction(data, groupId);
-  if (err < 0)
-  {
-    return err;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t pid)
-{
-  float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int H5MatrixStatsDataDelegate::readPhaseFraction(MatrixStatsData* data, hid_t pid)
-{
-  float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
-  data->setPhaseFraction(phaseFraction);
+  PRINT_TEST_SUMMARY();
   return err;
 }

@@ -89,7 +89,7 @@
 #include "MXA/Common/MXAEndian.h"
 #include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/StringUtils.h"
+
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

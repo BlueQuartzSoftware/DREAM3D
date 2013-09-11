@@ -58,7 +58,7 @@ void Observable::addObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 void Observable::removeObserver(Observer* observer)
 {
-  for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter )
   {
     if ((*iter) == observer)
     {
@@ -92,11 +92,11 @@ void Observable::notifyMessage(PipelineMessage &msg)
     // If the programmer set a prefix (which FilterPipeline does) we are going to
     // use the prefix in place of the 'FilterName' because this gives us more
     // information to use and display to the user.
-    if (m_Prefix.empty() == false)
+    if (m_Prefix.isEmpty() == false)
     {
        msg.setMessagePrefix(m_Prefix);
     }
-    for (QVector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+    for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
     {
         (*iter)->sendPipelineMessage(msg);
     }
@@ -146,9 +146,9 @@ void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-//void Observable::notifyMessage(QVector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
+//void Observable::notifyMessage(std::vector<ErrorMessage::Pointer> messages, int progress, ObserverAspect a)
 //{
-//  for (QVector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
+//  for (std::vector<ErrorMessage::Pointer>::iterator iter = messages.begin(); iter != messages.end(); ++iter)
 //  {
 //    notifyMessage(*iter, progress, a);
 //  }
@@ -158,12 +158,12 @@ void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<Observer*> Observable::getObservers()
+std::vector<Observer*> Observable::getObservers()
 {
   return this->m_Observers;
 }
 #if 0
-void Observable::getObservers(QVector<Observer*> &observers)
+void Observable::getObservers(std::vector<Observer*> &observers)
 {
   observers.resize(m_Observers.size());
   for(size_t i = 0; i < m_Observers.size(); ++i)
@@ -176,7 +176,7 @@ void Observable::getObservers(QVector<Observer*> &observers)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setObservers(QVector<Observer*> obs)
+void Observable::setObservers(std::vector<Observer*> obs)
 {
   this->m_Observers = obs;
 }
