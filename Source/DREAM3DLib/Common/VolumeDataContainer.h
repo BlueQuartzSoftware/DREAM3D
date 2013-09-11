@@ -83,8 +83,8 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(CellEnsemble)
 
     METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellCellFieldData)
-    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellCellEnsembleData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellFieldData)
+    METHOD_DEF_TEMPLATE_GETARRAYDATA(getCellEnsembleData)
 
     DREAM3D_INSTANCE_PROPERTY(CellArray::Pointer, Cells)
 
