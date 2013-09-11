@@ -78,10 +78,10 @@ set(CMP_VERSION_MAJOR "4.3")
 set(CMAKE_MODULE_PATH ${CMP_MODULES_SOURCE_DIR} ${CMAKE_MODULE_PATH})
 
 # Build shared libraries
-OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" OFF)
+OPTION (BUILD_SHARED_LIBS "Build Shared Libraries" ON)
 set(LIB_TYPE STATIC)
 if(BUILD_SHARED_LIBS)
-  message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
+  #message(FATAL_ERROR "Due to issues exporting symbols with MSVC DREAM3D does NOT currently support intermediate shared libraries. Please turn OFF BUILD_SHARED_LIBS")
     set(LIB_TYPE SHARED)
     list(APPEND CMP_LIB_SEARCH_DIRS  ${CMAKE_RUNTIME_OUTPUT_DIRECTORY} )
     if(MSVC)
@@ -121,7 +121,7 @@ ENDif(HDF5_FOUND)
 # Should we use Intel Threading Building Blocks
 # --------------------------------------------------------------------
 set(DREAM3D_USE_PARALLEL_ALGORITHMS "")
-option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" OFF)
+option(DREAM3D_USE_MULTITHREADED_ALGOS "Use MultiThreaded Algorithms where possible" ON)
 if(DREAM3D_USE_MULTITHREADED_ALGOS)
     find_package(TBB)
     if(TBB_FOUND)
@@ -142,7 +142,7 @@ endif()
 # value/vector calculations.
 Find_Package(Eigen REQUIRED)
 if(NOT EIGEN_FOUND)
-  message(WARNING "The Eigen Library is required for some algorithms. The Eigen Library could not be located so these algorithms will be disabled.")
+  message(WARNING "The Eigen Library is required for parallel algorithms. The Eigen Library could not be located so these algorithms will be compiled in serial mode.")
 else()
   message(STATUS "Found Eigen Library")
   include_directories( ${EIGEN_INCLUDE_DIRS} )
@@ -200,19 +200,56 @@ include_directories(${PROJECT_BINARY_DIR})
 # Setup some Global Lists that are used to gather Documentation Information
 file(WRITE ${DREAM3DProj_BINARY_DIR}/DREAM3DDocGroupList "")
 
+# ------------------------------------------------------------------------------
+#  Qt 4 Section
+# ------------------------------------------------------------------------------
+# by default only QtCore and QtGui modules are enabled
+# other modules must be enabled like this:
+if(WIN32)
+   set(QT_USE_QTMAIN TRUE)
+ENDif(WIN32)
+
+# this command finds Qt4 libraries and sets all required variables
+# note that it's Qt4, not QT4 or qt4
+FIND_PACKAGE( Qt4 REQUIRED )
+if(QT4_FOUND)
+   CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
+   CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
+else()
+  message(FATAL_ERROR "Qt version 4.7 is REQUIRED to build DREAM3D")
+endif()
+
+set(QT_USE_QTCORE "TRUE")
+set(QT_USE_QTGUI "TRUE")
+set(QT_USE_QTNETWORK "TRUE")
+
+
+# add some useful macros and variables
+# (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
+# contains a path to CMake script)
+INCLUDE( ${QT_USE_FILE} )
+
+# Append the locations of the Qt libraries to our Library Search Paths
+list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
 
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary HDF5 Support Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/H5Support ${PROJECT_BINARY_DIR}/H5Support)
 
-# -----------------------------------------------------------------------
-# -- Add in the Necessary MXA Sources into a library
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/MXA ${PROJECT_BINARY_DIR}/MXA)
 
 # -----------------------------------------------------------------------
 # -- Add in the Necessary EBSD Sources into a library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/EbsdLib ${PROJECT_BINARY_DIR}/EbsdLib)
+
+
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
+OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
+if(DREAM3D_BUILD_TESTING)
+    ENABLE_TESTING()
+endif()
+
+
 
 #--- This needs to be set here as we are going to look for files in this directory
 set(FilterWidgetsLib_SOURCE_DIR ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
@@ -222,66 +259,18 @@ set(FilterWidgetsLib_BINARY_DIR ${DREAM3DProj_BINARY_DIR}/FilterWidgets)
 # -- Add in the DREAM3D Sources into a static library
 add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_DIR}/DREAM3DLib)
 
-
-
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
-option(DREAM3D_BUILD_QT_APPS "Compile the Qt based GUI applications" ON)
-#if we are going to build Qt based applications then we need to find Qt 4 first
-if(DREAM3D_BUILD_QT_APPS)
-   # ------------------------------------------------------------------------------
-   #  Qt 4 Section
-   # ------------------------------------------------------------------------------
-   # by default only QtCore and QtGui modules are enabled
-   # other modules must be enabled like this:
-   if(WIN32)
-       set(QT_USE_QTMAIN TRUE)
-   ENDif(WIN32)
+# Build the static QtSupport library - which MUST be a static library or the linking
+# will not work due to signals/slots mechanism.
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
 
-   # this command finds Qt4 libraries and sets all required variables
-   # note that it's Qt4, not QT4 or qt4
-   FIND_PACKAGE( Qt4 REQUIRED )
-   if(QT4_FOUND)
-       CMP_COPY_QT4_RUNTIME_LIBRARIES( "QtCore;QtGui;QtNetwork")
-       CMP_QT_LIBRARIES_INSTALL_RULES("QtCore;QtGui;QtNetwork" ".")
-   endif()
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
 
-   set(QT_USE_QTCORE "TRUE")
-   set(QT_USE_QTGUI "TRUE")
-   set(QT_USE_QTNETWORK "TRUE")
+# --------------------------------------------------------------------
+# Build the FilterWidgets Static Library which is ONLY needed by this plugin
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
-
-   # add some useful macros and variables
-   # (QT_USE_FILE is a variable defined by FIND_PACKAGE( Qt4 ) that
-   # contains a path to CMake script)
-   INCLUDE( ${QT_USE_FILE} )
-
-   # Append the locations of the Qt libraries to our Library Search Paths
-   list(APPEND CMP_LIB_SEARCH_DIRS ${QT_BINARY_DIR} ${QT_LIBRARY_DIR} )
-
-   # Build the static QtSupport library - which MUST be a static library or the linking
-   # will not work due to signals/slots mechanism.
-   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
-
-   add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
-
-   # --------------------------------------------------------------------
-   # Build the FilterWidgets Static Library which is ONLY needed by this plugin
-   add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
-
-endif()
-
-# Forcibly set some options to OFF if we are NOT building the GUI apps using the Qt frameworks
-if(NOT DREAM3D_BUILD_QT_APPS)
-    set(DREAM3D_BUILD_DREAM3D "OFF" CACHE BOOL "" FORCE)
-    set(DREAM3D_BUILD_STATS_GENERATOR "OFF" CACHE BOOL "" FORCE)
-endif()
-
-# ------- Enable the CTest testing. Use make test to run all tests ---------------
-OPTION(DREAM3D_BUILD_TESTING "Compile the test programs" ON)
-if(DREAM3D_BUILD_TESTING)
-    ENABLE_TESTING()
-endif()
 
 # --------------------------------------------------------------------
 # This function optionally compiles a named plugin when compiling DREAM3D
@@ -307,7 +296,7 @@ endfunction()
 #-----------------
 # These are the core plugins
 set(DREAM3D_PLUGIN_LIST
-    ImageImportPlugin
+    ExamplePlugin;ImageImportPlugin;OrientationAnalysis
 )
 
 # Clear this file out before we go any further
@@ -323,7 +312,7 @@ foreach(p ${DREAM3D_PLUGIN_LIST})
 endforeach()
 
 
-if(DREAM3D_BUILD_DREAM3D AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_DREAM3D)
     #- Add in the Main DREAM.3D Application
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
     #- Now set up the dependency between the main application and each of the plugins so that
@@ -340,7 +329,7 @@ endif()
 
 #- Add in the Main DREAM.3D Application
 option(DREAM3D_BUILD_PLUGINMAKER "Compile the PluginMaker Application" ON)
-if(DREAM3D_BUILD_PLUGINMAKER AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_PLUGINMAKER)
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/PluginMaker  ${PROJECT_BINARY_DIR}/Applications/PluginMaker)
 endif()
 
@@ -403,7 +392,7 @@ endforeach(userPlugin ${DREAM3D_EXTRA_PLUGINS})
 
 # Build the StatsGenerator Application
 OPTION(DREAM3D_BUILD_STATS_GENERATOR "Compile the Statistics Generator GUI Application" ON)
-if(DREAM3D_BUILD_STATS_GENERATOR AND DREAM3D_BUILD_QT_APPS)
+if(DREAM3D_BUILD_STATS_GENERATOR)
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/Applications/StatsGenerator ${PROJECT_BINARY_DIR}/Applications/StatsGenerator)
 endif()
 
@@ -413,11 +402,6 @@ endif()
 option(DREAM3D_BUILD_CLI_TOOLS "Build the command line versions of the applications" ON)
 if( DREAM3D_BUILD_CLI_TOOLS )
     add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Tools ${PROJECT_BINARY_DIR}/Tools)
-endif()
-
-# ------- Enable the CTest testing. Use make test to run all tests ---------------
-if(DREAM3D_BUILD_TESTING)
-    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
 endif()
 
 
@@ -465,3 +449,9 @@ endif()
 
 # This should be the last line in this file:
 include(${PROJECT_RESOURCES_DIR}/CPack/PackageProject.cmake)
+
+# ------- Enable the CTest testing. Use make test to run all tests ---------------
+if(DREAM3D_BUILD_TESTING)
+    add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Test ${PROJECT_BINARY_DIR}/Test)
+endif()
+

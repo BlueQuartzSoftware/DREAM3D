@@ -38,6 +38,9 @@
 
 #include <vector>
 
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/StringDataArray.hpp"
@@ -82,10 +85,10 @@ namespace Detail
     }
 
     T* data = (T*)(ptr->GetVoidPointer(0));
-    err = H5Lite::readPointerDataset(locId, datasetPath, data);
+    err = QH5Lite::readPointerDataset(locId, datasetPath, data);
     if(err < 0)
     {
-      std::cout << "readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" << std::endl;
+      qDebug() << "readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" ;
       ptr = IDataArray::NullPointer();
     }
     return ptr;
@@ -106,27 +109,27 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
 
   QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
-  //std::cout << "Reading Attribute " << *iter << std::endl;
-  typeId = H5Lite::getDatasetType(gid, name);
+  //qDebug() << "Reading Attribute " << *iter ;
+  typeId = QH5Lite::getDatasetType(gid, name);
   if (typeId < 0)
   {
     return ptr;
   }
-  err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
+  err = QH5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
-    std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+    qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
   }
   else
   {
     QString classType;
-    err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+    err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {
       return ptr;
     }
     int numComp = 1;
-    err = H5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
     if (err < 0)
     {
       numComp = 1;
@@ -193,27 +196,27 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
 
   QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
-  //std::cout << "Reading Attribute " << *iter << std::endl;
-  typeId = H5Lite::getDatasetType(gid, name);
+  //qDebug() << "Reading Attribute " << *iter ;
+  typeId = QH5Lite::getDatasetType(gid, name);
   if (typeId < 0)
   {
     return ptr;
   }
-  err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
+  err = QH5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
-    std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+    qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
   }
   else
   {
     QString classType;
-    err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+    err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {
       return ptr;
     }
     int numComp = 1;
-    err = H5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+    err = QH5Lite::readScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
     if (err < 0)
     {
       numComp = 1;
@@ -230,7 +233,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
     {
       case H5T_STRING:
         res.clear(); //Clear the string out first
-        err = H5Lite::readStringDataset(gid, name, res);
+        err = QH5Lite::readStringDataset(gid, name, res);
         //        if(err >= 0)
         //        {
         //          IDataArray::Pointer attr = MXAAsciiStringData::Create(res);
@@ -239,7 +242,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
         //        }
         break;
       case H5T_INTEGER:
-        //std::cout << "User Meta Data Type is Integer" << std::endl;
+        //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           if (preflightOnly == false) ptr = Detail::readH5Dataset<uint8_t>(gid, name, dims);
@@ -282,7 +285,7 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
         }
         else
         {
-          std::cout << "Unknown Type: " << typeId << " at " << name << std::endl;
+          qDebug() << "Unknown Type: " << typeId << " at " << name ;
           err = -1;
           retErr = -1;
         }
@@ -300,14 +303,14 @@ IDataArray::Pointer H5DataArrayReader::readIDataArray(hid_t gid, const QString &
         }
         else
         {
-          std::cout << "Unknown Floating point type" << std::endl;
+          qDebug() << "Unknown Floating point type" ;
           err = -1;
           retErr = -1;
         }
         break;
       default:
-        std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
-        H5Utilities::printHDFClassType(attr_type);
+        qDebug() << "Error: readUserMetaData() Unknown attribute type: " << attr_type ;
+        QH5Utilities::printHDFClassType(attr_type);
     }
 
     CloseH5T(typeId, err, retErr);
@@ -331,14 +334,12 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
 
   QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer iDataArray = IDataArray::NullPointer();
-  //std::cout << "Reading Attribute " << *iter << std::endl;
-  typeId = H5Lite::getDatasetType(gid, name);
-  QString keyname;
-  err = H5Lite::readStringAttribute(gid, name, "Linked NumNeighbors Dataset", keyname);
-  err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
+  //qDebug() << "Reading Attribute " << *iter ;
+  typeId = QH5Lite::getDatasetType(gid, name);
+  err = QH5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
-    std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+    qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
   }
 
   else
@@ -347,7 +348,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
     {
       case H5T_STRING:
         res.clear(); //Clear the string out first
-        err = H5Lite::readStringDataset(gid, name, res);
+        err = QH5Lite::readStringDataset(gid, name, res);
         //        if(err >= 0)
         //        {
         //          IDataArray::Pointer attr = MXAAsciiStringData::Create(res);
@@ -356,12 +357,11 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         //        }
         break;
       case H5T_INTEGER:
-        //std::cout << "User Meta Data Type is Integer" << std::endl;
+        //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           NeighborList<uint8_t>::Pointer ptr = NeighborList<uint8_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -372,7 +372,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<uint16_t>::Pointer ptr = NeighborList<uint16_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -383,7 +382,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<uint32_t>::Pointer ptr = NeighborList<uint32_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -394,7 +392,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<uint64_t>::Pointer ptr = NeighborList<uint64_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -405,7 +402,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<int8_t>::Pointer ptr = NeighborList<int8_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -416,7 +412,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<int16_t>::Pointer ptr = NeighborList<int16_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -427,7 +422,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<int32_t>::Pointer ptr = NeighborList<int32_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -438,7 +432,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<int64_t>::Pointer ptr = NeighborList<int64_t>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -447,7 +440,7 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else
         {
-          std::cout << "Unknown Type: " << typeId << " at " << name << std::endl;
+          qDebug() << "Unknown Type: " << typeId << " at " << name ;
           err = -1;
         }
         break;
@@ -456,7 +449,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<float>::Pointer ptr = NeighborList<float>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -467,7 +459,6 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         {
           NeighborList<double>::Pointer ptr = NeighborList<double>::New();
           ptr->SetName(name);
-          ptr->setNumNeighborsArrayName(keyname);
           if(false == preflightOnly)
           {
             ptr->readH5Data(gid);
@@ -476,13 +467,13 @@ IDataArray::Pointer H5DataArrayReader::readNeighborListData(hid_t gid, const QSt
         }
         else
         {
-          std::cout << "Unknown Floating point type" << std::endl;
+          qDebug() << "Unknown Floating point type" ;
           err = -1;
         }
         break;
       default:
-        std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
-        H5Utilities::printHDFClassType(attr_type);
+        qDebug() << "Error: readUserMetaData() Unknown attribute type: " << attr_type ;
+        QH5Utilities::printHDFClassType(attr_type);
     }
     int retErr = 0;
     CloseH5T(typeId, err, retErr);

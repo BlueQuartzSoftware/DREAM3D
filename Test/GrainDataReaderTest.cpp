@@ -44,7 +44,7 @@
 int main(int argc, char **argv)
 {
 
-  std::string csvFile (argv[1]);
+  QString csvFile (argv[1]);
 
 
   CSVGrainDataReader reader;

@@ -37,9 +37,9 @@
 #define _SHAPETYPE_H_
 
 
-#include <string>
-#include <vector>
-#include <map>
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"

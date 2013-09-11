@@ -849,7 +849,7 @@ ENDMACRO()
 # generate a version string based on today's date. The output string should be
 # of the form YYYY.MM.DD.
 #  Required CMake variables to be set are:
-#   EmInit_CMAKE_DIR - The path to the MXA CMake directory
+#   Project_CMAKE_DIR - The path to the Project CMake directory
 #  The following variables are set, all of which should have been already
 #  initialized to a default value
 #   ${CMP_PROJECT_NAME}_VERSION

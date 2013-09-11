@@ -41,7 +41,7 @@
 #include <fstream>
 
 
-#include "MXA/Utilities/StringUtils.h"
+
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -170,7 +170,7 @@ class DataArray : public IDataArray
      */
     static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -252,7 +252,7 @@ class DataArray : public IDataArray
      */
     virtual ~DataArray()
     {
-      //std::cout << "~DataArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~DataArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -329,7 +329,7 @@ class DataArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->Size = newSize;
@@ -669,7 +669,7 @@ class DataArray : public IDataArray
       return RawResize(numTuples * this->NumberOfComponents);
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       for(int j = 0; j < NumberOfComponents; ++j)
       {
@@ -678,7 +678,7 @@ class DataArray : public IDataArray
       }
     }
 
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       out << Array[i*NumberOfComponents + j];
     }
@@ -754,10 +754,10 @@ class DataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) return "bool";
 
-      // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
+      // qDebug()  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) ;
       const char* name = typeid(value).name();
       if (NULL != name && name[0] == 'l' ) {
-        std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
+        qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." ;
       }
       return "UnknownType";
     }
@@ -780,17 +780,17 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                                     const QString &groupPath, const QString &label)
     {
       if (Array == NULL) { return -85648; }
-      QTextStream dimStr;
+      QString dimStr;
       int precision = 0;
       QString xdmfTypeName;
       GetXdmfTypeAndSize(xdmfTypeName, precision);
       if (0 == precision)
       {
-        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+        out << "<!-- " << GetName() << " has unknown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
         return -100;
       }
 
@@ -799,22 +799,22 @@ class DataArray : public IDataArray
       if (numComp == 1)
       {
         out << "AttributeType=\"Scalar\" ";
-        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " ";
+        dimStr = QString("%1 %2 %3 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]);
       }
       else
       {
         out << "AttributeType=\"Vector\" ";
-        dimStr << volDims[2] << " " << volDims[1] << " " << volDims[0] << " " << numComp << " ";
+        dimStr = QString("%1 %2 %3 %4 ").arg(volDims[2]).arg(volDims[1]).arg(volDims[0]).arg(numComp);
       }
-      out << "Center=\"Cell\">" << std::endl;
+      out << "Center=\"Cell\">\n" ;
       // Open the <DataItem> Tag
-      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
-      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+      out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
+      out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >\n" ;
 
 
-      out << "        " << hdfFileName << groupPath << "/" << GetName() << std::endl;
-      out << "      </DataItem>" << std::endl;
-      out << "    </Attribute>" << std::endl << std::endl;
+      out << "        " << hdfFileName << groupPath << "/" << GetName() << "\n";
+      out << "      </DataItem>" << "\n";
+      out << "    </Attribute>" << "\n";
       return 1;
     }
 
@@ -1003,7 +1003,7 @@ class DataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -1016,7 +1016,7 @@ class DataArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -1025,7 +1025,7 @@ class DataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 

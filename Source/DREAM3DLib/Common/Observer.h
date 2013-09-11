@@ -31,7 +31,8 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
-#include <vector>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

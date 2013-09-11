@@ -38,7 +38,7 @@
 
 #include "hdf5.h"
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -103,8 +103,6 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
 
   private:
     hid_t m_CurrentGroupId;
-
-    QVector<QString> tokenize(const char* buf, char delimiter);
 
     H5FilterParametersReader(const H5FilterParametersReader&); // Copy Constructor Not Implemented
     void operator=(const H5FilterParametersReader&); // Operator '=' Not Implemented

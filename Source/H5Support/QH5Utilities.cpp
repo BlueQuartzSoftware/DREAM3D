@@ -110,11 +110,11 @@ herr_t QH5Utilities::closeHDF5Object(hid_t obj_id)
 herr_t QH5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<QString> &names)
 {
 
-  QList<std::string> sNames;
+  std::list<std::string> sNames;
   herr_t err = H5Utilities::getGroupObjects(loc_id, typeFilter, sNames);
 
   names.clear();
-  for(QList<std::string>::iterator name = sNames.begin(); name != sNames.end(); ++name)
+  for(std::list<std::string>::iterator name = sNames.begin(); name != sNames.end(); ++name)
   {
     names.push_back( QString::fromStdString(*name));
   }
@@ -175,9 +175,9 @@ herr_t QH5Utilities::getAllAttributeNames(hid_t obj_id,
                                           QList<QString> &names)
 {
   names.clear();
-  QList<std::string> sResults;
+  std::list<std::string> sResults;
   herr_t err = H5Utilities::getAllAttributeNames(obj_id, sResults);
-  for(QList<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
+  for(std::list<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
   {
     names.push_back(QString::fromStdString(*iter));
   }
@@ -192,9 +192,9 @@ herr_t QH5Utilities::getAllAttributeNames(hid_t loc_id,
                                           QList<QString> &names)
 {
   names.clear();
-  QList<std::string> sResults;
+  std::list<std::string> sResults;
   herr_t err = H5Utilities::getAllAttributeNames(loc_id, obj_name.toStdString(), sResults);
-  for(QList<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
+  for(std::list<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
   {
     names.push_back(QString::fromStdString(*iter));
   }
