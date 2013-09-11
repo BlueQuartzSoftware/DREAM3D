@@ -70,7 +70,7 @@ QualityMetricTableModel::~QualityMetricTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags QualityMetricTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "QualityMetricTableModel::flags" << std::endl;
+  //  qDebug() << "QualityMetricTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -245,7 +245,7 @@ bool QualityMetricTableModel::setHeaderData(int col, Qt::Orientation o, const QV
 // -----------------------------------------------------------------------------
 bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "QualityMetricTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "QualityMetricTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

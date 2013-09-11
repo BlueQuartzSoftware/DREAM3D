@@ -257,7 +257,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
-    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << "\n";}
   }
 
   fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
@@ -390,7 +390,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     }
     if (numTriToWrite != 0)
     {
-      std::cout << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second << std::endl;
+      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second << "\n";
     }
 
   }
@@ -537,7 +537,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
   for (int i = 0; i < numNodes; i++)
   {
     if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
-    else { std::cout << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << std::endl;}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << "\n";}
   }
   // This is the section header
   fprintf(vtkFile, "\n");

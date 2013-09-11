@@ -195,7 +195,7 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
+  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << "\n";
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -235,15 +235,15 @@ int DxWriter::writeFile()
   }
   totalPoints = fileXDim * fileYDim * fileZDim;
   //Write the header
-  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
-  out << "origin 0 0 0" << std::endl;
-  out << "delta  1 0 0" << std::endl;
-  out << "delta  0 1 0" << std::endl;
-  out << "delta  0 0 1" << std::endl;
-  out << std::endl;
-  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
-  out << std::endl;
-  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << std::endl;
+  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
+  out << "origin 0 0 0" << "\n";
+  out << "delta  1 0 0" << "\n";
+  out << "delta  0 1 0" << "\n";
+  out << "delta  0 0 1" << "\n";
+  out << "\n";
+  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
+  out << "\n";
+  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << "\n";
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;
@@ -255,7 +255,7 @@ int DxWriter::writeFile()
       if(rnIndex == 20)
       {
         rnIndex = 0;
-        out << std::endl;
+        out << "\n";
       }
       rnIndex++;
     }
@@ -271,7 +271,7 @@ int DxWriter::writeFile()
       {
         out << "-4 ";
       }
-      out << std::endl;
+      out << "\n";
     }
     for (DimType y = 0; y < dims[1]; ++y)
     {
@@ -298,7 +298,7 @@ int DxWriter::writeFile()
       {
         out << "-6 ";
       }
-      out << std::endl;
+      out << "\n";
     }
     // Add a trailing surface Row for this plane if needed
     if(m_AddSurfaceLayer)
@@ -307,7 +307,7 @@ int DxWriter::writeFile()
       {
         out << "-7 ";
       }
-      out << std::endl;
+      out << "\n";
     }
   }
 
@@ -320,21 +320,21 @@ int DxWriter::writeFile()
       out << "-8 ";
       if(rnIndex == 20)
       {
-        out << std::endl;
+        out << "\n";
         rnIndex = 0;
       }
       rnIndex++;
     }
   }
-  out << std::endl;
-  out << "attribute \"dep\" string \"connections\"" << std::endl;
-  out << std::endl;
-  out << "object \"DREAM3D Generated\" class field" << std::endl;
-  out << "component  \"positions\"    value 1" << std::endl;
-  out << "component  \"connections\"  value 2" << std::endl;
-  out << "component  \"data\"         value 3" << std::endl;
-  out << "" << std::endl;
-  out << "end" << std::endl;
+  out << "\n";
+  out << "attribute \"dep\" string \"connections\"" << "\n";
+  out << "\n";
+  out << "object \"DREAM3D Generated\" class field" << "\n";
+  out << "component  \"positions\"    value 1" << "\n";
+  out << "component  \"connections\"  value 2" << "\n";
+  out << "component  \"data\"         value 3" << "\n";
+  out << "" << "\n";
+  out << "end" << "\n";
 
   out.close();
 #if 0

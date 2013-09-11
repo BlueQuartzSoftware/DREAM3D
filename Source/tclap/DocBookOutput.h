@@ -89,7 +89,7 @@ class DocBookOutput : public CmdLineOutput
 
 inline void DocBookOutput::version(CmdLineInterface& _cmd) 
 { 
-	std::cout << _cmd.getVersion() << std::endl;
+	qDebug() << _cmd.getVersion() << "\n";
 }
 
 inline void DocBookOutput::usage(CmdLineInterface& _cmd ) 
@@ -102,36 +102,36 @@ inline void DocBookOutput::usage(CmdLineInterface& _cmd )
 	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
 	basename(progName);
 
-	std::cout << "<?xml version='1.0'?>" << std::endl;
-	std::cout << "<!DOCTYPE refentry PUBLIC \"-//OASIS//DTD DocBook XML V4.2//EN\"" << std::endl;
-	std::cout << "\t\"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\">" << std::endl << std::endl;
+	qDebug() << "<?xml version='1.0'?>" << "\n";
+	qDebug() << "<!DOCTYPE refentry PUBLIC \"-//OASIS//DTD DocBook XML V4.2//EN\"" << "\n";
+	qDebug() << "\t\"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\">" << "\n" << "\n";
 
-	std::cout << "<refentry>" << std::endl;
+	qDebug() << "<refentry>" << "\n";
 
-	std::cout << "<refmeta>" << std::endl;
-	std::cout << "<refentrytitle>" << progName << "</refentrytitle>" << std::endl;
-	std::cout << "<manvolnum>1</manvolnum>" << std::endl;
-	std::cout << "</refmeta>" << std::endl;
+	qDebug() << "<refmeta>" << "\n";
+	qDebug() << "<refentrytitle>" << progName << "</refentrytitle>" << "\n";
+	qDebug() << "<manvolnum>1</manvolnum>" << "\n";
+	qDebug() << "</refmeta>" << "\n";
 
-	std::cout << "<refnamediv>" << std::endl;
-	std::cout << "<refname>" << progName << "</refname>" << std::endl;
-	std::cout << "<refpurpose>" << _cmd.getMessage() << "</refpurpose>" << std::endl;
-	std::cout << "</refnamediv>" << std::endl;
+	qDebug() << "<refnamediv>" << "\n";
+	qDebug() << "<refname>" << progName << "</refname>" << "\n";
+	qDebug() << "<refpurpose>" << _cmd.getMessage() << "</refpurpose>" << "\n";
+	qDebug() << "</refnamediv>" << "\n";
 
-	std::cout << "<refsynopsisdiv>" << std::endl;
-	std::cout << "<cmdsynopsis>" << std::endl;
+	qDebug() << "<refsynopsisdiv>" << "\n";
+	qDebug() << "<cmdsynopsis>" << "\n";
 
-	std::cout << "<command>" << progName << "</command>" << std::endl;
+	qDebug() << "<command>" << progName << "</command>" << "\n";
 
 	// xor
 	for ( int i = 0; (unsigned int)i < xorList.size(); i++ )
 	{
-		std::cout << "<group choice='req'>" << std::endl;
+		qDebug() << "<group choice='req'>" << "\n";
 		for ( ArgVectorIterator it = xorList[i].begin(); 
 						it != xorList[i].end(); it++ )
 			printShortArg((*it));
 
-		std::cout << "</group>" << std::endl;
+		qDebug() << "</group>" << "\n";
 	}
 	
 	// rest of args
@@ -139,35 +139,35 @@ inline void DocBookOutput::usage(CmdLineInterface& _cmd )
 		if ( !xorHandler.contains( (*it) ) )
 			printShortArg((*it));
 
- 	std::cout << "</cmdsynopsis>" << std::endl;
-	std::cout << "</refsynopsisdiv>" << std::endl;
+ 	qDebug() << "</cmdsynopsis>" << "\n";
+	qDebug() << "</refsynopsisdiv>" << "\n";
 
-	std::cout << "<refsect1>" << std::endl;
-	std::cout << "<title>Description</title>" << std::endl;
-	std::cout << "<para>" << std::endl;
-	std::cout << _cmd.getMessage() << std::endl; 
-	std::cout << "</para>" << std::endl;
-	std::cout << "</refsect1>" << std::endl;
+	qDebug() << "<refsect1>" << "\n";
+	qDebug() << "<title>Description</title>" << "\n";
+	qDebug() << "<para>" << "\n";
+	qDebug() << _cmd.getMessage() << "\n"; 
+	qDebug() << "</para>" << "\n";
+	qDebug() << "</refsect1>" << "\n";
 
-	std::cout << "<refsect1>" << std::endl;
-	std::cout << "<title>Options</title>" << std::endl;
+	qDebug() << "<refsect1>" << "\n";
+	qDebug() << "<title>Options</title>" << "\n";
 
-	std::cout << "<variablelist>" << std::endl;
+	qDebug() << "<variablelist>" << "\n";
 	
 	for (ArgListIterator it = argList.begin(); it != argList.end(); it++)
 		printLongArg((*it));
 
-	std::cout << "</variablelist>" << std::endl;
-	std::cout << "</refsect1>" << std::endl;
+	qDebug() << "</variablelist>" << "\n";
+	qDebug() << "</refsect1>" << "\n";
 
-	std::cout << "<refsect1>" << std::endl;
-	std::cout << "<title>Version</title>" << std::endl;
-	std::cout << "<para>" << std::endl;
-	std::cout << version << std::endl; 
-	std::cout << "</para>" << std::endl;
-	std::cout << "</refsect1>" << std::endl;
+	qDebug() << "<refsect1>" << "\n";
+	qDebug() << "<title>Version</title>" << "\n";
+	qDebug() << "<para>" << "\n";
+	qDebug() << version << "\n"; 
+	qDebug() << "</para>" << "\n";
+	qDebug() << "</refsect1>" << "\n";
 	
-	std::cout << "</refentry>" << std::endl;
+	qDebug() << "</refentry>" << "\n";
 
 }
 
@@ -175,7 +175,7 @@ inline void DocBookOutput::failure( CmdLineInterface& _cmd,
 				    ArgException& e ) 
 { 
 	static_cast<void>(_cmd); // unused
-	std::cout << e.what() << std::endl;
+	qDebug() << e.what() << "\n";
 	throw ExitException(1);
 }
 
@@ -224,16 +224,16 @@ inline void DocBookOutput::printShortArg(Arg* a)
 	if ( a->isRequired() )
 		choice = "plain";
 
-	std::cout << "<arg choice='" << choice << '\'';
+	qDebug() << "<arg choice='" << choice << '\'';
 	if ( a->acceptsMultipleValues() )
-		std::cout << " rep='repeat'";
+		qDebug() << " rep='repeat'";
 
 
-	std::cout << '>';
+	qDebug() << '>';
 	if ( !a->getFlag().empty() )
-		std::cout << a->flagStartChar() << a->getFlag();
+		qDebug() << a->flagStartChar() << a->getFlag();
 	else
-		std::cout << a->nameStartString() << a->getName();
+		qDebug() << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
 		QString arg = a->shortID();
@@ -242,10 +242,10 @@ inline void DocBookOutput::printShortArg(Arg* a)
 		removeChar(arg,'<');
 		removeChar(arg,'>');
 		arg.erase(0, arg.find_last_of(theDelimiter) + 1);
-		std::cout << theDelimiter;
-		std::cout << "<replaceable>" << arg << "</replaceable>";
+		qDebug() << theDelimiter;
+		qDebug() << "<replaceable>" << arg << "</replaceable>";
 	}
-	std::cout << "</arg>" << std::endl;
+	qDebug() << "</arg>" << "\n";
 
 }
 
@@ -258,20 +258,20 @@ inline void DocBookOutput::printLongArg(Arg* a)
 	substituteSpecialChars(desc,'<',lt);
 	substituteSpecialChars(desc,'>',gt);
 
-	std::cout << "<varlistentry>" << std::endl;
+	qDebug() << "<varlistentry>" << "\n";
 
 	if ( !a->getFlag().empty() )
 	{
-		std::cout << "<term>" << std::endl;
-		std::cout << "<option>";
-		std::cout << a->flagStartChar() << a->getFlag();
-		std::cout << "</option>" << std::endl;
-		std::cout << "</term>" << std::endl;
+		qDebug() << "<term>" << "\n";
+		qDebug() << "<option>";
+		qDebug() << a->flagStartChar() << a->getFlag();
+		qDebug() << "</option>" << "\n";
+		qDebug() << "</term>" << "\n";
 	}
 
-	std::cout << "<term>" << std::endl;
-	std::cout << "<option>";
-	std::cout << a->nameStartString() << a->getName();
+	qDebug() << "<term>" << "\n";
+	qDebug() << "<option>";
+	qDebug() << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
 		QString arg = a->shortID();
@@ -280,19 +280,19 @@ inline void DocBookOutput::printLongArg(Arg* a)
 		removeChar(arg,'<');
 		removeChar(arg,'>');
 		arg.erase(0, arg.find_last_of(theDelimiter) + 1);
-		std::cout << theDelimiter;
-		std::cout << "<replaceable>" << arg << "</replaceable>";
+		qDebug() << theDelimiter;
+		qDebug() << "<replaceable>" << arg << "</replaceable>";
 	}
-	std::cout << "</option>" << std::endl;
-	std::cout << "</term>" << std::endl;
+	qDebug() << "</option>" << "\n";
+	qDebug() << "</term>" << "\n";
 
-	std::cout << "<listitem>" << std::endl;
-	std::cout << "<para>" << std::endl;
-	std::cout << desc << std::endl;
-	std::cout << "</para>" << std::endl;
-	std::cout << "</listitem>" << std::endl;
+	qDebug() << "<listitem>" << "\n";
+	qDebug() << "<para>" << "\n";
+	qDebug() << desc << "\n";
+	qDebug() << "</para>" << "\n";
+	qDebug() << "</listitem>" << "\n";
 
-	std::cout << "</varlistentry>" << std::endl;
+	qDebug() << "</varlistentry>" << "\n";
 }
 
 } //namespace TCLAP

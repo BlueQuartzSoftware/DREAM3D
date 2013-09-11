@@ -79,9 +79,9 @@ void VertexDataContainer::addVertexData(const QString &name, IDataArray::Pointer
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "VertexDataContainer::Adding Cell array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "VertexDataContainer::Adding Cell array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_VertexData[name] = data;
@@ -99,7 +99,7 @@ IDataArray::Pointer VertexDataContainer::getVertexData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 
@@ -114,7 +114,7 @@ IDataArray::Pointer VertexDataContainer::removeVertexData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_VertexData.erase(it);
   return p;
 }
@@ -159,7 +159,7 @@ IDataArray::Pointer VertexDataContainer::getVertexFieldData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -169,9 +169,9 @@ void VertexDataContainer::addVertexFieldData(const QString &name, IDataArray::Po
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_VertexFieldData[name] = data;
@@ -189,7 +189,7 @@ IDataArray::Pointer VertexDataContainer::removeVertexFieldData(const QString &na
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_VertexFieldData.erase(it);
   return p;
 }
@@ -231,7 +231,7 @@ void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
@@ -249,7 +249,7 @@ IDataArray::Pointer VertexDataContainer::getVertexEnsembleData(const QString &na
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -259,9 +259,9 @@ void VertexDataContainer::addVertexEnsembleData(const QString &name, IDataArray:
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_VertexEnsembleData[name] = data;
@@ -279,7 +279,7 @@ IDataArray::Pointer VertexDataContainer::removeVertexEnsembleData(const QString 
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_VertexEnsembleData.erase(it);
   return p;
 }
@@ -321,7 +321,7 @@ void VertexDataContainer::resizeVertexEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }

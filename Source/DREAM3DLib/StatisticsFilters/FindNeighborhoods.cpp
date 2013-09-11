@@ -134,7 +134,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addCellFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
-      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << "\n";
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >

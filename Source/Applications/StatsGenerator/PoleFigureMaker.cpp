@@ -188,7 +188,7 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData &confi
   int imageWidth = config.imageSize[0];
   int imageHeight = config.imageSize[1];
 
-  //  std::cout << "Size: " << size << std::endl;
+  //  qDebug() << "Size: " << size << "\n";
 
   // Generate the Kernel Weights
   generateKernelWeigths(kernelWidth, kernelHeight);
@@ -218,7 +218,7 @@ QImage PoleFigureMaker::generateColorPoleFigureImage(const PoleFigureData &confi
 
   }
 
- // std::cout << "Max Data[]: " << max << std::endl;
+ // qDebug() << "Max Data[]: " << max << "\n";
 
   qint32 value = 0;
   for (int yCoord = 0; yCoord < imageHeight; ++yCoord)
@@ -304,7 +304,7 @@ QImage PoleFigureMaker::generatePoleFigureImage(const PoleFigureData &config)
     int yCoord = (yPoints[i] + 1) * imageHeight/2;
     if (xCoord > imageWidth || yCoord > imageHeight)
     {
-      std::cout << "This is bad" << std::endl;
+      qDebug() << "This is bad" << "\n";
     }
     image.setPixel(xCoord, yCoord, black_Rgba);
   }

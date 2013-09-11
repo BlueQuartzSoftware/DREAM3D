@@ -286,7 +286,7 @@ void QReadH5EbsdWidget::on_m_InputFile_textChanged(const QString &text)
 // -----------------------------------------------------------------------------
 bool QReadH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  //  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {

@@ -200,7 +200,7 @@ void ConvertEulerAngles::execute()
   }
 
   totalPoints = totalPoints * 3;
-  //  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
+  //  qDebug() << "ConvertEulerAngles: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {

@@ -174,7 +174,7 @@ void SurfaceDataContainerWriter::execute()
   if (err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << DREAM3D::HDF5::SurfaceDataContainerName << std::endl;
+    ss << "Error creating HDF Group " << DREAM3D::HDF5::SurfaceDataContainerName << "\n";
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -183,7 +183,7 @@ void SurfaceDataContainerWriter::execute()
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceDataContainerName << "\n";
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
@@ -304,25 +304,25 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   }
 
   std::ostream& out = *m_XdmfPtr;
-  out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << std::endl;
+  out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
 
-  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << std::endl;
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << std::endl;
+  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << "\n";
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  out << "        " << hdfFileName << ":/SurfaceDataContainer/Faces" << std::endl;
-  out << "      </DataItem>" << std::endl;
-  out << "    </Topology>" << std::endl;
+  out << "        " << hdfFileName << ":/SurfaceDataContainer/Faces" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
 
-  out << "    <Geometry Type=\"XYZ\">" << std::endl;
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << std::endl;
-  out << "        " << hdfFileName << ":/SurfaceDataContainer/Vertices" << std::endl;
-  out << "      </DataItem>" << std::endl;
-  out << "    </Geometry>" << std::endl;
-  out << "" << std::endl;
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/SurfaceDataContainer/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -340,9 +340,9 @@ void SurfaceDataContainerWriter::writeXdmfGridFooter()
     return;
   }
   std::ostream& out = *m_XdmfPtr;
-  out << "  </Grid>" << std::endl;
-  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << std::endl;
-  out << std::endl;
+  out << "  </Grid>" << "\n";
+  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << "\n";
+  out << "\n";
 }
 
 
@@ -367,10 +367,10 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    out << "Center=\"" << centering << "\">" << std::endl;
+    out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
-    out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+    out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
     ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
     QVector<char> nameBuffer(nameSize, 0);
@@ -379,9 +379,9 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
 
-    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << std::endl;
-    out << "      </DataItem>" << std::endl;
-    out << "    </Attribute>" << std::endl << std::endl;
+    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
   }
   else
   {
@@ -390,50 +390,50 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "AttributeType=\"" << attrType << "\" ";
     dimStr1 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
     dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
-    out << "Center=\"" << centering << "\">" << std::endl;
+    out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr1half.str() <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 0)\" >" << std::endl;
-    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << std::endl;
-    out << "          0        0" << std::endl;
-    out << "          1        1" << std::endl;
-    out << "          " << dimStr1half.str() << " </DataItem>" << std::endl;
-    out << std::endl;
-    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr1.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 0)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        0" << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStr1half.str() << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr1.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
     ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
     QVector<char> nameBuffer(nameSize, 0);
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
     QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = MXAFileInfo::filename(hdfFileName);
-    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << std::endl;
-    out << "        </DataItem>" << std::endl;
-    out << "      </DataItem>" << std::endl;
-    out << "    </Attribute>" << std::endl << std::endl;
+    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
 
     //Second Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     dimStr2 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
     dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
-    out << "Center=\"" << centering << "\">" << std::endl;
+    out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr2half.str() <<  "\" ";
-    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << std::endl;
-    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << std::endl;
-    out << "          0        " << (array->GetNumberOfComponents()/2) << std::endl;
-    out << "          1        1" << std::endl;
-    out << "          " << dimStr2half.str() << " </DataItem>" << std::endl;
-    out << std::endl;
-    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr2.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
+    out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << "\n";
+    out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << "\n";
+    out << "          0        " << (array->GetNumberOfComponents()/2) << "\n";
+    out << "          1        1" << "\n";
+    out << "          " << dimStr2half.str() << " </DataItem>" << "\n";
+    out << "\n";
+    out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr2.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
     ssize_t nameSize2 = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
     QVector<char> nameBuffer2(nameSize2, 0);
     nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
     QString hdfFileName2(&(nameBuffer2.front()), nameSize2);
     hdfFileName2 = MXAFileInfo::filename(hdfFileName2);
-    out << "        " << hdfFileName2 << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << std::endl;
-    out << "        </DataItem>" << std::endl;
-    out << "      </DataItem>" << std::endl;
-    out << "    </Attribute>" << std::endl << std::endl;
+    out << "        " << hdfFileName2 << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        </DataItem>" << "\n";
+    out << "      </DataItem>" << "\n";
+    out << "    </Attribute>" << "\n" << "\n";
   }
   return out.str();
 }
@@ -462,7 +462,7 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
   if (0 == precision)
   {
-    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << std::endl;
+    out << "<!-- " << array->GetName() << " has unkown type or unsupported type or precision for XDMF to understand" << " -->" << "\n";
     return;
   }
   int numComp = array->GetNumberOfComponents();
@@ -471,7 +471,7 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 
   QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
 
-  out << block << std::endl;
+  out << block << "\n";
 }
 
 
@@ -480,16 +480,16 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
-  // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
+  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
   if (err < 0)
   {
-    std::cout << "Error creating HDF Group " << hdfGroupPath << std::endl;
+    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
   }
   err = H5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
-    std::cout << "Error writing string attribute to HDF Group " << hdfGroupPath << std::endl;
+    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
   }
   return err;
 }
@@ -590,7 +590,7 @@ int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_VERTEX_DATA_GROUP_NAME << "\n";
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -600,7 +600,7 @@ int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_VERTEX_DATA_GROUP_NAME << "\n";
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -610,7 +610,7 @@ int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Cell Data '" << *iter << "' to HDF5 File" << "\n";
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = sm->getVertexData(*iter);
     err = array->writeH5Data(cellGroupId);
@@ -726,7 +726,7 @@ int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -736,7 +736,7 @@ int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -746,7 +746,7 @@ int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << "\n";
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = sm->getFaceData(*iter);
     err = array->writeH5Data(cellGroupId);
@@ -792,7 +792,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return err;
@@ -801,7 +801,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << std::endl;
+    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return err;
@@ -810,7 +810,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     ss.str("");
-    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << std::endl;
+    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << "\n";
     notifyStatusMessage(ss.str());
     IDataArray::Pointer array = sm->getEdgeData(*iter);
     err = array->writeH5Data(cellGroupId);
@@ -856,7 +856,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
-    std::cout << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
     return err;
   }
   err = H5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
@@ -869,7 +869,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
     setErrorCondition(-65);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -996,7 +996,7 @@ int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-66);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -1008,7 +1008,7 @@ int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
   if(err < 0)
   {
     ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << std::endl;
+    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << "\n";
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss.str(), err);
     H5Gclose(dcGid); // Close the Data Container Group

@@ -45,7 +45,7 @@
 QRecentFileList::QRecentFileList(QObject* parent) :
 QObject(parent)
 {
-  //std::cout << "QRecentFileList()" << std::endl;
+  //qDebug() << "QRecentFileList()" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -53,7 +53,7 @@ QObject(parent)
 // -----------------------------------------------------------------------------
 QRecentFileList::~QRecentFileList()
 {
- // std::cout << "~QRecentFileList()" << std::endl;
+ // qDebug() << "~QRecentFileList()" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -61,7 +61,7 @@ QRecentFileList::~QRecentFileList()
 // -----------------------------------------------------------------------------
 QRecentFileList* QRecentFileList::instance()
 {
- // std::cout << "QRecentFileList::instance()" << std::endl;
+ // qDebug() << "QRecentFileList::instance()" << "\n";
   static QRecentFileList* singleton;
 
   if (singleton == NULL)
@@ -86,8 +86,8 @@ bool QRecentFileList::contains(const QString &file)
 // -----------------------------------------------------------------------------
 void QRecentFileList::addFile(const QString &file)
 {
-  //std::cout << "QRecentFileList::addFile()" << std::endl;
-  //std::cout << "recentFiles.count: " << recentFiles.count() << std::endl;
+  //qDebug() << "QRecentFileList::addFile()" << "\n";
+  //qDebug() << "recentFiles.count: " << recentFiles.count() << "\n";
   if (QFile::exists(file) == true)
   {
     if (this->recentFiles.contains(file) == false)
@@ -112,7 +112,7 @@ QStringList QRecentFileList::fileList()
 // -----------------------------------------------------------------------------
 void QRecentFileList::removeFile(const QString &file)
 {
-  //std::cout << "QRecentFileList::removeFile()" << std::endl;
+  //qDebug() << "QRecentFileList::removeFile()" << "\n";
   this->recentFiles.removeAll(file);
 }
 
@@ -121,7 +121,7 @@ void QRecentFileList::removeFile(const QString &file)
 // -----------------------------------------------------------------------------
 void QRecentFileList::writeList(QSettings &prefs)
 {
-  //std::cout << "QRecentFileList::writeList()" << std::endl;
+  //qDebug() << "QRecentFileList::writeList()" << "\n";
   prefs.beginGroup("RecentFiles");
   prefs.setValue("recentFileList", this->recentFiles );
   prefs.endGroup();
@@ -132,7 +132,7 @@ void QRecentFileList::writeList(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void QRecentFileList::readList(QSettings &prefs)
 {
-  //std::cout << "QRecentFileList::readList()" << std::endl;
+  //qDebug() << "QRecentFileList::readList()" << "\n";
   prefs.beginGroup("RecentFiles");
   this->recentFiles = prefs.value("recentFileList").toStringList();
   prefs.endGroup();

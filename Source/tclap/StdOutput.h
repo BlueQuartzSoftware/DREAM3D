@@ -110,21 +110,21 @@ inline void StdOutput::version(CmdLineInterface& _cmd)
 	QString progName = _cmd.getProgramName();
 	QString version = _cmd.getVersion();
 
-	std::cout << std::endl << progName << "  version: " 
-			  << version << std::endl << std::endl;
+	qDebug() << "\n" << progName << "  version: " 
+			  << version << "\n" << "\n";
 }
 
 inline void StdOutput::usage(CmdLineInterface& _cmd ) 
 {
-	std::cout << std::endl << "USAGE: " << std::endl << std::endl; 
+	qDebug() << "\n" << "USAGE: " << "\n" << "\n"; 
 
 	_shortUsage( _cmd, std::cout );
 
-	std::cout << std::endl << std::endl << "Where: " << std::endl << std::endl;
+	qDebug() << "\n" << "\n" << "Where: " << "\n" << "\n";
 
 	_longUsage( _cmd, std::cout );
 
-	std::cout << std::endl; 
+	qDebug() << "\n"; 
 
 }
 
@@ -133,18 +133,18 @@ inline void StdOutput::failure( CmdLineInterface& _cmd,
 {
 	QString progName = _cmd.getProgramName();
 
-	std::cerr << "PARSE ERROR: " << e.argId() << std::endl
-		      << "             " << e.error() << std::endl << std::endl;
+	std::cerr << "PARSE ERROR: " << e.argId() << "\n"
+		      << "             " << e.error() << "\n" << "\n";
 
 	if ( _cmd.hasHelpAndVersion() )
 		{
-			std::cerr << "Brief USAGE: " << std::endl;
+			std::cerr << "Brief USAGE: " << "\n";
 
 			_shortUsage( _cmd, std::cerr );	
 
-			std::cerr << std::endl << "For complete USAGE and HELP type: " 
-					  << std::endl << "   " << progName << " --help" 
-					  << std::endl << std::endl;
+			std::cerr << "\n" << "For complete USAGE and HELP type: " 
+					  << "\n" << "   " << progName << " --help" 
+					  << "\n" << "\n";
 		}
 	else
 		usage(_cmd);
@@ -209,7 +209,7 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 					if ( it+1 != xorList[i].end() )
 						spacePrint(os, "-- OR --", 75, 9, 0);
 				}
-			os << std::endl << std::endl;
+			os << "\n" << "\n";
 		}
 
 	// then the rest
@@ -218,10 +218,10 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 			{
 				spacePrint( os, (*it)->longID(), 75, 3, 3 ); 
 				spacePrint( os, (*it)->getDescription(), 75, 5, 0 ); 
-				os << std::endl;
+				os << "\n";
 			}
 
-	os << std::endl;
+	os << "\n";
 
 	spacePrint( os, message, 75, 3, 0 );
 }
@@ -277,7 +277,7 @@ inline void StdOutput::spacePrint( std::ostream& os,
 							allowedLen -= secondLineOffset;
 						}
 
-					os << s.substr(start,stringLen) << std::endl;
+					os << s.substr(start,stringLen) << "\n";
 
 					// so we don't start a line with a space
 					while ( s[stringLen+start] == ' ' && start < len )
@@ -290,7 +290,7 @@ inline void StdOutput::spacePrint( std::ostream& os,
 		{
 			for ( int i = 0; i < indentSpaces; i++ )
 				os << " ";
-			os << s << std::endl;
+			os << s << "\n";
 		}
 }
 

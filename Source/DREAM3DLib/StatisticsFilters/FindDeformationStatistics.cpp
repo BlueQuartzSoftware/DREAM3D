@@ -452,8 +452,8 @@ void FindDeformationStatistics::execute()
       }
     }
   }
-  outFile << "Kernel Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << std::endl;
+  outFile << "Kernel Misorientation Data" << "\n";
+  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << "\n";
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
   for (int i = 0; i < 20; i++)
   {
@@ -474,12 +474,12 @@ void FindDeformationStatistics::execute()
                            << kmvF1spt[i][0] << "	" << kmvF1spt[i][1] << "	"
                            << kmvF7[i][0] << "	" << kmvF7[i][1] << "	"
                            << kmvmprime[i][0] << "	" << kmvmprime[i][1] << "	"
-                           << kmvdis[i][0] << "	" << kmvdis[i][1] << std::endl;
+                           << kmvdis[i][0] << "	" << kmvdis[i][1] << "\n";
   }
-  outFile << std::endl;
-  outFile << std::endl;
-  outFile << "Grain Average Misorientation Data" << std::endl;
-  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << std::endl;
+  outFile << "\n";
+  outFile << "\n";
+  outFile << "Grain Average Misorientation Data" << "\n";
+  outFile << "GB		TJ		QP		SF		F1		F1spt		F7		mprime		DIS" << "\n";
   outFile << avgGBdist << "		" << avgTJdist << "		" << avgQPdist << "		" << avgSF << "		" << avgF1 << "		" << avgF1spt << "		" << avgF7 << "		" << avgmprime << "		" << avgDIS <<std::endl;
   for (int i = 0; i < 20; i++)
   {
@@ -500,14 +500,14 @@ void FindDeformationStatistics::execute()
                             << gamvF1spt[i][0] << "	" << gamvF1spt[i][1] << "	"
                             << gamvF7[i][0] << "	" << gamvF7[i][1] << "	"
                             << gamvmprime[i][0] << "	" << gamvmprime[i][1] << "	"
-                            << gamvdis[i][0] << "	" << gamvdis[i][1] << std::endl;
+                            << gamvdis[i][0] << "	" << gamvdis[i][1] << "\n";
   }
-  outFile << std::endl;
-  outFile << std::endl;
-  outFile << "KAM DIST		GAM DIST" << std::endl;
+  outFile << "\n";
+  outFile << "\n";
+  outFile << "KAM DIST		GAM DIST" << "\n";
   for (int i = 0; i < 20; i++)
   {
-    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << std::endl;
+    outFile << float(i)*0.25+0.125 << "	" << kmdist[i] << "	" << float(i)*0.5+0.25 << "	" << gamdist[i] << "\n";
   }
   outFile.close();
 
@@ -516,7 +516,7 @@ void FindDeformationStatistics::execute()
   vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
-    std::cout << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" << std::endl;
+    qDebug() << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" << "\n";
     return;
   }
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");

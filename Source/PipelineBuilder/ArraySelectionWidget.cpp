@@ -260,7 +260,7 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
   }
 
 
-//  std::cout << "List Widget: " << listWidget->objectName().toStdString() << " Count: " << listWidget->count() << std::endl;
+//  qDebug() << "List Widget: " << listWidget->objectName().toStdString() << " Count: " << listWidget->count() << "\n";
   listWidget->blockSignals(false);
 
 }

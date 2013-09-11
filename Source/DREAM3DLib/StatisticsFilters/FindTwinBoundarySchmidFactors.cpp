@@ -390,10 +390,10 @@ void FindTwinBoundarySchmidFactors::execute()
   std::ofstream outFile;
   outFile.open(m_TwinBoundarySchmidFactorsFile.c_str(), std::ios_base::binary);
 
-  outFile << "Grain1	Grain2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << std::endl;
+  outFile << "Grain1	Grain2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << "\n";
   for (size_t i = 0; i < numTriangles; i++)
   {
-    outFile << m_SurfaceMeshFaceLabels[2*i] << "  " << m_SurfaceMeshFaceLabels[2*i+1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+2] << std::endl;
+    outFile << m_SurfaceMeshFaceLabels[2*i] << "  " << m_SurfaceMeshFaceLabels[2*i+1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+2] << "\n";
   }
   outFile.close();
 

@@ -185,7 +185,7 @@ void FieldDataCSVWriter::execute()
   outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumCellFieldTuples()-1 << std::endl;
+  outFile << m->getNumCellFieldTuples()-1 << "\n";
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getFieldArrayNameList();
 
@@ -217,7 +217,7 @@ void FieldDataCSVWriter::execute()
       data.push_back(p);
     }
   }
-  outFile << std::endl;
+  outFile << "\n";
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
@@ -245,7 +245,7 @@ void FieldDataCSVWriter::execute()
       outFile << space;
       (*p)->printTuple(outFile, i, space);
     }
-    outFile << std::endl;
+    outFile << "\n";
   }
 
   if(m_WriteNeighborListData == true)
@@ -258,7 +258,7 @@ void FieldDataCSVWriter::execute()
       IDataArray::Pointer p = m->getCellFieldData(*iter);
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
-        outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << std::endl;
+        outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << "\n";
         size_t numTuples = p->GetNumberOfTuples();
         //	  float threshold = 0.0f;
 
@@ -270,7 +270,7 @@ void FieldDataCSVWriter::execute()
           // Print a row of data
           outFile << space;
           p->printTuple(outFile, i, space);
-          outFile << std::endl;
+          outFile << "\n";
         }
       }
     }

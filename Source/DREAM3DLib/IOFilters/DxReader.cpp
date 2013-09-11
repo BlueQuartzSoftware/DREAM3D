@@ -266,7 +266,7 @@ int DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss.clear();
-        ss << "ERROR: Unable to read data dimensions from the header" << std::endl;
+        ss << "ERROR: Unable to read data dimensions from the header" << "\n";
         addErrorMessage(getHumanLabel(), ss.str(), -7);
         setErrorCondition(-499);
         m_InStream.close();
@@ -293,10 +293,10 @@ int DxReader::readHeader()
     nz--;
   }
 
-//  std::cout << "INFO: DX data dimensions: " << std::endl;
-//  std::cout << "nz= " << nz << std::endl;
-//  std::cout << "ny= " << ny << std::endl;
-//  std::cout << "nx= " << nx << std::endl;
+//  qDebug() << "INFO: DX data dimensions: " << "\n";
+//  qDebug() << "nz= " << nz << "\n";
+//  qDebug() << "ny= " << ny << "\n";
+//  qDebug() << "nx= " << nx << "\n";
 
   //The DX file has a unique format of 20 entries on each line. I have
   //no idea who initiated this insanity but I am about to perpetuate
@@ -328,7 +328,7 @@ int DxReader::readHeader()
       if(tokens.size() == 20)
       {
         ss.clear();
-        ss << "ERROR: Unable to locate the last header line" << std::endl;
+        ss << "ERROR: Unable to locate the last header line" << "\n";
         addErrorMessage(getHumanLabel(), ss.str(), -8);
         setErrorCondition(-496);
         m_InStream.close();
@@ -344,7 +344,7 @@ int DxReader::readHeader()
     tokens.clear();
   }
   m->setDimensions(nx, ny, nz);
-//  std::cout << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << std::endl;
+//  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << "\n";
   return error;
 }
 
@@ -422,8 +422,8 @@ int DxReader::readFile()
   if(index != static_cast<size_t>(m->getTotalPoints()))
   {
     ss.clear();
-    ss << "ERROR: data size does not match header dimensions" << std::endl;
-    ss << "\t" << index << "\t" << m->getTotalPoints() << std::endl;
+    ss << "ERROR: data size does not match header dimensions" << "\n";
+    ss << "\t" << index << "\t" << m->getTotalPoints() << "\n";
     setErrorCondition(-495);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     m_InStream.close();
@@ -442,7 +442,7 @@ int DxReader::readFile()
 //  }
 //  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
 //  {
-//    std::cout << "Grain ID: " << (*iter) << std::endl;
+//    qDebug() << "Grain ID: " << (*iter) << "\n";
 //  }
 
   notifyStatusMessage("Complete");

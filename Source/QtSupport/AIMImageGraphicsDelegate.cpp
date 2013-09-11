@@ -225,15 +225,15 @@ void AIMImageGraphicsDelegate::setZoomFactor(double zoomFactor)
 // -----------------------------------------------------------------------------
 QImage AIMImageGraphicsDelegate::_scaleImage()
 {
-  //std::cout << "  AIMImageGraphicsDelegate::_scaleImage()" << std::endl;
+  //qDebug() << "  AIMImageGraphicsDelegate::_scaleImage()" << "\n";
   QSize imageSize = this->m_CachedImage.size();
- // std::cout << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << std::endl;
+ // qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // std::cout << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << std::endl;
+ // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_zoomFactor > -1.0)
   {
-   // std::cout << "  _zoomFactor: " << _zoomFactor << std::endl;
+   // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
     imageSize *= _zoomFactor;
   }
 
@@ -245,15 +245,15 @@ QImage AIMImageGraphicsDelegate::_scaleImage()
 // -----------------------------------------------------------------------------
 QImage AIMImageGraphicsDelegate::_scaleImage(QImage image)
 {
-  //std::cout << "  AIMImageGraphicsDelegate::_scaleImage()" << std::endl;
+  //qDebug() << "  AIMImageGraphicsDelegate::_scaleImage()" << "\n";
   QSize imageSize = image.size();
- // std::cout << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << std::endl;
+ // qDebug() << "    imageSize (W x H) :" << imageSize.width() << " x " << imageSize.height() << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // std::cout << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << std::endl;
+ // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_zoomFactor > -1.0)
   {
-   // std::cout << "  _zoomFactor: " << _zoomFactor << std::endl;
+   // qDebug() << "  _zoomFactor: " << _zoomFactor << "\n";
     imageSize *= _zoomFactor;
   }
 
@@ -265,10 +265,10 @@ QImage AIMImageGraphicsDelegate::_scaleImage(QImage image)
 // -----------------------------------------------------------------------------
 void AIMImageGraphicsDelegate::on_parentResized()
 {
-  //std::cout << "  AIMImageGraphicsDelegate::on_parentResized" << std::endl;
+  //qDebug() << "  AIMImageGraphicsDelegate::on_parentResized" << "\n";
 //  int gvWidth = m_GraphicsView->size().width();
 //  int gvHeight = m_GraphicsView->size().height();
- // std::cout << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << std::endl;
+ // qDebug() << "    GV Size (W X H) :" << gvWidth << " x " << gvHeight << "\n";
   if (_shouldFitToWindow == true)
   {
     fitToWindow();

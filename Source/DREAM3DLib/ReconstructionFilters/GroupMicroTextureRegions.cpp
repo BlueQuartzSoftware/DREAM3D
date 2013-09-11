@@ -177,7 +177,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
       if(m_ContiguousNeighborList == NULL)
       {
-        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+        ss << "NeighborLists Array Not Initialized correctly" << "\n";
         setErrorCondition(-304);
         addErrorMessage(getHumanLabel(), ss.str(), -1);
       }
@@ -189,7 +189,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborhoodList).get());
       if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
       {
-        ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
+        ss << "NeighborhoodLists Array Not Initialized correctly" << "\n";
         setErrorCondition(-305);
         addErrorMessage(getHumanLabel(), ss.str(), -1);
       }

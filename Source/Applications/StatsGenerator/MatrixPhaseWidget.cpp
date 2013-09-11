@@ -86,9 +86,9 @@
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
 if (err < 0) {\
-  std::cout << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
+  qDebug() << "MatrixPhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+  qDebug() << "  File: " << __FILE__ << "\n";\
+  qDebug() << "  Line: " << __LINE__ << "\n";\
   return err;\
 }
 

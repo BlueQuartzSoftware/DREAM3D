@@ -473,7 +473,7 @@ qint32 StatsGeneratorUI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::on_actionClose_triggered()
 {
-  // std::cout << "RepresentationUI::on_actionClose_triggered" << std::endl;
+  // qDebug() << "RepresentationUI::on_actionClose_triggered" << "\n";
   qint32 err = -1;
   err = checkDirtyDocument();
   if (err >= 0)
@@ -523,7 +523,7 @@ bool StatsGeneratorUI::verifyPathExists(QString outFilePath, QLineEdit* lineEdit
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::updateRecentFileList(const QString &file)
 {
-  // std::cout << "IPHelperMainWindow::updateRecentFileList" << std::endl;
+  // qDebug() << "IPHelperMainWindow::updateRecentFileList" << "\n";
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -546,12 +546,12 @@ void StatsGeneratorUI::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 void StatsGeneratorUI::openRecentFile()
 {
-  //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
+  //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
   QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
-    //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
+    //qDebug() << "Opening Recent file: " << action->data().toString().toStdString() << "\n";
     QString file = action->data().toString();
     openFile(file);
   }
@@ -622,7 +622,7 @@ void StatsGeneratorUI::on_action_OpenDREAM3D_triggered()
 void StatsGeneratorUI::on_actionSave_triggered()
 {
   int err = 0;
-  //std::cout << "StatsGeneratorUI::on_actionSave_triggered()" << std::endl;
+  //qDebug() << "StatsGeneratorUI::on_actionSave_triggered()" << "\n";
   if (m_FileSelected == false)
   {
     //QString proposedFile = m_OpenDialogLastDirectory + QDir::separator() + m_FileName;
@@ -1031,7 +1031,7 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
    bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
+   //  qDebug() << "Could not open URL: " << url.path().toStdString() << "\n";
        displayDialogBox(QString::fromStdString("Error Opening Help File"),
          QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
          QMessageBox::Critical);

@@ -147,7 +147,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     if(m_NeighborList == NULL)
     {
       ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
 	}
@@ -165,7 +165,7 @@ void FindMDF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     if(m_SharedSurfaceAreaList == NULL)
 	{
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
 	}

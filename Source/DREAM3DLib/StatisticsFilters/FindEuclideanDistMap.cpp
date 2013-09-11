@@ -71,7 +71,7 @@ class FindEuclideanMap
 
     void operator()() const
     {
-      // std::cout << "  FindEuclideanMap: Loop = " << loop << std::endl;
+      // qDebug() << "  FindEuclideanMap: Loop = " << loop << "\n";
       int64_t totalPoints = m->getTotalPoints();
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), m_GrainIds);
       GET_NAMED_ARRAY_SIZE_CHK_NOMSG(m, Cell, DREAM3D::CellData::NearestNeighbors, Int32ArrayType, int32_t, (totalPoints*3), m_NearestNeighbors);

@@ -116,7 +116,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->addCellFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
-      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << "\n";
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -147,7 +147,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << "\n";
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }

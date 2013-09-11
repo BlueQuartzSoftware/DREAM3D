@@ -71,7 +71,7 @@ PMFilterGenerator::~PMFilterGenerator()
 // -----------------------------------------------------------------------------
 void PMFilterGenerator::pluginNameChanged(const QString &pluginName)
 {
- // std::cout << "PMFilterGenerator::pluginNameChanged" << std::endl;
+ // qDebug() << "PMFilterGenerator::pluginNameChanged" << "\n";
   // Just call the super class's implementation
   PMFileGenerator::pluginNameChanged(pluginName);
 
@@ -82,7 +82,7 @@ void PMFilterGenerator::pluginNameChanged(const QString &pluginName)
 // -----------------------------------------------------------------------------
 void PMFilterGenerator::outputDirChanged(const QString &outputDir)
 {
- // std::cout << "PMFilterGenerator::outputDirChanged" << std::endl;
+ // qDebug() << "PMFilterGenerator::outputDirChanged" << "\n";
   setOutputDir(outputDir);
 }
 
@@ -91,7 +91,7 @@ void PMFilterGenerator::outputDirChanged(const QString &outputDir)
 // -----------------------------------------------------------------------------
 void PMFilterGenerator::generateOutput()
 {
- // std::cout << "PMFilterGenerator::generateOutput" << std::endl;
+ // qDebug() << "PMFilterGenerator::generateOutput" << "\n";
   if (doesGenerateOutput() == false)
   {
     return;

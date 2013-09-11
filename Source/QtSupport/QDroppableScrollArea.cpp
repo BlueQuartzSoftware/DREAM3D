@@ -38,6 +38,9 @@
 #include <string>
 #include <iostream>
 
+
+#include <QtCore/QtDebug>
+
 #include <QtGui/QMouseEvent>
 #include <QtGui/QDropEvent>
 #include <QtGui/QDragEnterEvent>
@@ -77,12 +80,12 @@ void QDroppableScrollArea::dragEnterEvent(QDragEnterEvent *event)
 // -----------------------------------------------------------------------------
 void QDroppableScrollArea::dropEvent(QDropEvent *event)
 {
-  std::cout << "QDroppableScrollArea::dropEvent" << std::endl;
+  qDebug() << "QDroppableScrollArea::dropEvent" << "\n";
   if (event->mimeData()->hasText())
   {
     QByteArray dropData =  event->mimeData()->data("text/plain");
     QString name(dropData);
-  //  std::cout << "name: " << name.toStdString() << std::endl;
+  //  qDebug() << "name: " << name.toStdString() << "\n";
     emit filterDropped(name);
   }
 
@@ -96,11 +99,11 @@ void QDroppableScrollArea::dropEvent(QDropEvent *event)
 // -----------------------------------------------------------------------------
 void QDroppableScrollArea::dragMoveEvent( QDragMoveEvent* event)
 {
- // std::cout << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << std::endl;
+ // qDebug() << "QScrollContentsWidget::dragMoveEvent: " << event->pos().x() << ", " << event->pos().y() << "\n";
  // QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
  // if (w != NULL)
   {
- //   std::cout << "--- Child at Pos: " << w->objectName().toStdString() << std::endl;
+ //   qDebug() << "--- Child at Pos: " << w->objectName().toStdString() << "\n";
   }
 }
 

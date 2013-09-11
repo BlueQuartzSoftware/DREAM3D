@@ -380,13 +380,13 @@ void GrainFaceCurvatureFilter::execute()
   tbb::task_group* g = new tbb::task_group;
 //  if(true)
 //  {
-//    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
-//    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
+//    qDebug() << "Default Number of Threads to Use: " << init.default_num_threads() << "\n";
+//    qDebug() << "GrainFaceCurvatureFilter Running in Parallel." << "\n";
 //  }
 #else
   //if()
 //  {
-//    std::cout << "CalculateFaceGroupCurvatures Running in Serial." << std::endl;
+//    qDebug() << "CalculateFaceGroupCurvatures Running in Serial." << "\n";
 //  }
 #endif
   // typedef here for conveneince
@@ -463,7 +463,7 @@ void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
   
-  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << std::endl;
+  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << "\n";
   notifyStatusMessage(ss.str());
 }
 

@@ -101,7 +101,7 @@ FloatArrayType::Pointer TransformationStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  std::cout << d << std::endl;
+  //  qDebug() << d << "\n";
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }
