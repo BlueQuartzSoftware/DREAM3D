@@ -1298,7 +1298,6 @@ std::vector<UInt8ArrayType::Pointer> HexagonalOps::generatePoleFigure(PoleFigure
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-#include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
 DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
 {
   BOOST_ASSERT(false);
@@ -1315,9 +1314,6 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF &q, const Qua
 
   //get misorientation
   w=getMisoQuat(q1, q2, n1, n2, n3);
-  n1=fabs(n1);
-  n2=fabs(n2);
-  n3=fabs(n3);
 
   //eq c5.1
   k=tan(w/2.0f);
@@ -1364,7 +1360,15 @@ DREAM3D::Rgb HexagonalOps::generateMisorientationColor(const QuatF &q, const Qua
   zo2=zo1;
 
   //eq c5.4
-  k=sqrtf(xo2*xo2+yo2*yo2)/std::max(xo2,yo2);
+  k=std::max(xo2,yo2);
+  if(fabs(k)>0)
+  {
+      k=sqrtf(xo2*xo2+yo2*yo2)/k;
+  }
+  else
+  {
+      k=sqrtf(xo2*xo2+yo2*yo2);
+  }
   xo3=xo2*k;
   yo3=yo2*k;
   zo3=zo2;
