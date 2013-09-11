@@ -194,7 +194,7 @@ class PipelineMessage
      */
     QString generateErrorString()
     {
-      QString ss;
+      
       ss << "Error(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
@@ -204,7 +204,7 @@ class PipelineMessage
      */
     QString generateWarningString()
     {
-      QString ss;
+      
       ss << "Warning(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
       return ss.str();
     }
@@ -214,7 +214,7 @@ class PipelineMessage
      */
     QString generateStatusString()
      {
-       QString ss;
+       
        ss << m_MessagePrefix << ":" << m_Msg;
        return ss.str();
      }

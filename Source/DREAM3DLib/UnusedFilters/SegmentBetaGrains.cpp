@@ -233,7 +233,7 @@ int SegmentBetaGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void SegmentBetaGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 
@@ -365,7 +365,7 @@ int SegmentBetaGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

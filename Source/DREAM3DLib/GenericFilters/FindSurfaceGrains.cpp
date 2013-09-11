@@ -82,7 +82,7 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
@@ -105,12 +105,12 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss << " DataContainer was NULL";
     notifyErrorMessage(ss.str(), -1);
     return;

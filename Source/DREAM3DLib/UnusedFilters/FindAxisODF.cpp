@@ -91,7 +91,7 @@ int FindAxisODF::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void FindAxisODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 

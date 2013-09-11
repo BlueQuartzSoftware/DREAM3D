@@ -112,7 +112,7 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -198,7 +198,7 @@ void H5VoxelFileReader::execute()
 {
   if(NULL == getVolumeDataContainer())
   {
-    QString ss;
+    
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);

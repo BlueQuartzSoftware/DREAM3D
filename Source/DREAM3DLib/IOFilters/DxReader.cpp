@@ -137,7 +137,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -198,7 +198,7 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  QString ss;
+  
   int err = 0;
 
   m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
@@ -234,7 +234,7 @@ void DxReader::execute()
 int DxReader::readHeader()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  QString ss;
+  
   int error = 0;
 
   QString line;
@@ -353,7 +353,7 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {

@@ -106,7 +106,7 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -162,7 +162,7 @@ void RenumberGrains::execute()
     return;
   }
 
-  QString ss;
+  
   size_t goodcount = 1;
   QVector<size_t> NewNames;
   NewNames.resize(totalFields,0);

@@ -279,7 +279,7 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_SelectedCellArrayName.empty() == true)
@@ -371,7 +371,7 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

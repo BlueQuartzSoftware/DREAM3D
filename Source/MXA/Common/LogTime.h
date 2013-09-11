@@ -98,7 +98,7 @@ inline QString logTime() {
   t = localtime(&long_time);
 #endif
 
-  QString ss;
+  
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss  << "[" << QSetw(4) << t->tm_year + 1900 << ":"
@@ -131,7 +131,7 @@ inline QString tifDateTime() {
   t = localtime(&long_time);
 #endif
 
-  QString ss;
+  
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss   << QSetw(4) << t->tm_year + 1900 << ":"
@@ -166,7 +166,7 @@ inline QString MXAVersionString()
   t = localtime(&long_time);
 #endif
 
-  QString ss;
+  
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss << QSetw(4) << t->tm_year + 1900 << "."
@@ -200,7 +200,7 @@ namespace MXA {
     unsigned long long int Hours = millis / (1000*60*60);
     unsigned long long intMinutes = (millis % (1000*60*60)) / (1000*60);
     unsigned long long intSeconds = ((millis % (1000*60*60)) % (1000*60)) / 1000;
-    QString ss;
+    
     ss.setf(std::ios::fixed);
     ss.fill('0');
     ss << QSetw(2) << Hours << ":"

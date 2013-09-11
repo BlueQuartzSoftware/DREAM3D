@@ -121,7 +121,7 @@ void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
   m_OutputFile->setText( QString::fromStdString ( filter->getOutputFile() ) );
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
-  QString ss;
+  
   ss << filter->getZResolution();
   m_zSpacing->setText( QString::fromStdString(ss.str()) );
   m_SampleTransformationAngle = filter->getSampleTransformationAngle();

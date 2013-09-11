@@ -158,7 +158,7 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
 void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -251,7 +251,7 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
     count = 0;
     xCentroid[iter] = 0;
     yCentroid[iter] = 0;
-    QString ss;
+    
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
     //  notifyStatusMessage(ss.str());
     slice = static_cast<int>( (dims[2] - 1) - iter );

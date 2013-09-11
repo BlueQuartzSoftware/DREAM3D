@@ -109,7 +109,7 @@ int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
@@ -154,7 +154,7 @@ void VolumeDataContainerReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss <<" DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -162,7 +162,7 @@ void VolumeDataContainerReader::execute()
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
-  QString ss;
+  
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -202,7 +202,7 @@ void VolumeDataContainerReader::execute()
 int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
-  QString ss;
+  
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
@@ -266,7 +266,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
 int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
-  QString ss;
+  
   int64_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =
@@ -396,7 +396,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  QString ss;
+  
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);

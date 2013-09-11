@@ -140,7 +140,7 @@ int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParameters
 void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -177,7 +177,7 @@ void GenerateMisorientationColors::preflight()
 void GenerateMisorientationColors::execute()
 {
   int err = 0;
-  QString ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

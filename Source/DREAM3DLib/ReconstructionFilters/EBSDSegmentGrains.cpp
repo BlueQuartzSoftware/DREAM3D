@@ -141,7 +141,7 @@ int EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType,  true, voxels, 1)
@@ -271,7 +271,7 @@ int64_t EBSDSegmentGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QString ss;
+    
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

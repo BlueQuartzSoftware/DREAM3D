@@ -127,7 +127,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
@@ -166,7 +166,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  QString ss;
+  
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -202,7 +202,7 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  QString ss;
+  
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

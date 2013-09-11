@@ -191,7 +191,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
+  
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -216,7 +216,7 @@ void CropVolume::preflight()
 
   VolumeDataContainer* m = getVolumeDataContainer();
   setErrorCondition(0);
-  QString ss;
+  
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -329,7 +329,7 @@ void CropVolume::execute()
     return;
   }
 
-  QString ss;
+  
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if (dims[0] <= m_XMax)
   {
@@ -363,7 +363,7 @@ void CropVolume::execute()
   QList<QString> voxelArrayNames = m->getCellArrayNameList();
   for (int64_t i = 0; i < m_ZP; i++)
   {
-    QString ss;
+    
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
     planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
@@ -412,7 +412,7 @@ void CropVolume::execute()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
-    QString ss;
+    
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)
