@@ -79,7 +79,7 @@ int TextFilterParametersWriter::writeValue(const QString name, const QString val
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, const QVector<std::string> value)
+int TextFilterParametersWriter::writeValue(const QString name, const QVector<QString> value)
 {
   int err = -1;
   return err;
@@ -314,7 +314,7 @@ int TextFilterParametersWriter::writeValue(const QString name, AxisAngleInput_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int TextFilterParametersWriter::writeValue(const QString name, QSet<std::string> v)
+int TextFilterParametersWriter::writeValue(const QString name, QSet<QString> v)
 {
   int err = -1;
   return err;

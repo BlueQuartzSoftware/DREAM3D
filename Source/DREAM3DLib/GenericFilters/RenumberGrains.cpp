@@ -106,7 +106,7 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -130,8 +130,8 @@ void RenumberGrains::preflight()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  std::list<std::string> headers = m->getFieldArrayNameList();
-  for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  std::list<QString> headers = m->getFieldArrayNameList();
+  for (std::list<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
       IDataArray::Pointer p = m->getCellFieldData(*iter);
 	  QString type = p->getTypeAsString();
@@ -162,7 +162,7 @@ void RenumberGrains::execute()
     return;
   }
 
-  std::stringstream ss;
+  QTextStream ss;
   size_t goodcount = 1;
   QVector<size_t> NewNames;
   NewNames.resize(totalFields,0);
@@ -188,8 +188,8 @@ void RenumberGrains::execute()
 
   if(RemoveList.size() > 0)
   {
-    std::list<std::string> headers = m->getFieldArrayNameList();
-    for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    std::list<QString> headers = m->getFieldArrayNameList();
+    for (std::list<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       IDataArray::Pointer p = m->getCellFieldData(*iter);
       ss.str("");

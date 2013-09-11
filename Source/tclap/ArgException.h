@@ -44,9 +44,9 @@ class ArgException : public std::exception
 		 * \param td - Text describing the type of ArgException it is.
 		 * of the exception.
 		 */
-		ArgException( const std::string& text = "undefined exception", 
-					  const std::string& id = "undefined",
-					  const std::string& td = "Generic ArgException")
+		ArgException( const QString& text = "undefined exception", 
+					  const QString& id = "undefined",
+					  const QString& td = "Generic ArgException")
 			: std::exception(), 
 			  _errorText(text), 
 			  _argId( id ), 
@@ -127,12 +127,12 @@ class ArgParseException : public ArgException
 		 * \param id - The text identifying the argument source 
 		 * of the exception.
 		 */
-		ArgParseException( const std::string& text = "undefined exception", 
-					       const std::string& id = "undefined" )
+		ArgParseException( const QString& text = "undefined exception", 
+					       const QString& id = "undefined" )
 			: ArgException( text, 
 			                id, 
-							std::string( "Exception found while parsing " ) + 
-							std::string( "the value the Arg has been passed." ))
+							QString( "Exception found while parsing " ) + 
+							QString( "the value the Arg has been passed." ))
 			{ }
 };
 
@@ -149,14 +149,14 @@ class CmdLineParseException : public ArgException
 		 * \param id - The text identifying the argument source 
 		 * of the exception.
 		 */
-		CmdLineParseException( const std::string& text = "undefined exception", 
-					           const std::string& id = "undefined" )
+		CmdLineParseException( const QString& text = "undefined exception", 
+					           const QString& id = "undefined" )
 			: ArgException( text, 
 			                id,
-							std::string( "Exception found when the values ") +
-							std::string( "on the command line do not meet ") +
-							std::string( "the requirements of the defined ") +
-							std::string( "Args." ))
+							QString( "Exception found when the values ") +
+							QString( "on the command line do not meet ") +
+							QString( "the requirements of the defined ") +
+							QString( "Args." ))
 		{ }
 };
 
@@ -173,13 +173,13 @@ class SpecificationException : public ArgException
 		 * \param id - The text identifying the argument source 
 		 * of the exception.
 		 */
-		SpecificationException( const std::string& text = "undefined exception",
-					            const std::string& id = "undefined" )
+		SpecificationException( const QString& text = "undefined exception",
+					            const QString& id = "undefined" )
 			: ArgException( text, 
 			                id,
-							std::string("Exception found when an Arg object ")+
-							std::string("is improperly defined by the ") +
-							std::string("developer." )) 
+							QString("Exception found when an Arg object ")+
+							QString("is improperly defined by the ") +
+							QString("developer." )) 
 		{ }
 
 };

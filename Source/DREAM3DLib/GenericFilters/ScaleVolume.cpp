@@ -248,7 +248,7 @@ void ScaleVolume::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
 
   if (m_ApplyToVoxelVolume ==true)
@@ -279,7 +279,7 @@ void ScaleVolume::execute()
 void ScaleVolume::updateSurfaceMesh()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

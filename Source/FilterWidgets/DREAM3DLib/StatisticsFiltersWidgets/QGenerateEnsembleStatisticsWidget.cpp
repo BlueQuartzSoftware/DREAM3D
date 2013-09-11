@@ -337,7 +337,7 @@ void QGenerateEnsembleStatisticsWidget::inputChanged()
 // -----------------------------------------------------------------------------
 void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
 {
-  QVector<std::string> phaseTypeStrings;
+  QVector<QString> phaseTypeStrings;
   PhaseType::getPhaseTypeStrings(phaseTypeStrings);
   QVector<unsigned int> phaseTypeEnums;
   PhaseType::getPhaseTypeEnums(phaseTypeEnums);

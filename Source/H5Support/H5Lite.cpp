@@ -37,14 +37,10 @@
 
 #include <string.h>
 
-#ifdef H5LITE_USE_MXA_CONSTRUCTS
-#include <MXA/Base/IMXAArray.h>
-#include <MXA/DataWrappers/MXAAsciiStringData.h>
-#endif
-
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
 #endif
+
 
 /*-------------------------------------------------------------------------
  * Function: find_dataset
@@ -115,7 +111,6 @@ herr_t find_attr(hid_t loc_id, const char *name, const H5A_info_t* info, void *o
 
  return ret;
 }
-
 
 // -----------------------------------------------------------------------------
 //  Protected Constructor
@@ -277,7 +272,7 @@ herr_t  H5Lite::writeStringDataset (hid_t loc_id,
 // -----------------------------------------------------------------------------
 //  Writes a string to a HDF5 dataset
 // -----------------------------------------------------------------------------
-herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, const QString &data)
+herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, const std::string &data)
 {
   hid_t   did=-1;
   hid_t   sid=-1;
@@ -340,11 +335,11 @@ herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, co
 //
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeStringAttributes(hid_t loc_id,
-                                     const QString &objName,
-                                     const QMap<std::string, std::string> &attributes)
+                                     const std::string &objName,
+                                     const std::map<std::string, std::string> &attributes)
 {
   herr_t err = 0;
-  for ( QMap<std::string, std::string>::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter ) {
+  for ( std::map<std::string, std::string>::const_iterator iter = attributes.begin(); iter != attributes.end(); ++iter ) {
     err = H5Lite::writeStringAttribute(loc_id, objName, (*(iter)).first, (*(iter)).second);
     if (err < 0)
     {
@@ -454,9 +449,10 @@ herr_t H5Lite::writeStringAttribute(hid_t loc_id,
 }
 
 // -----------------------------------------------------------------------------
-//  Reads a String dataset
+//  Reads a String dataset into a std::string
 // -----------------------------------------------------------------------------
-herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, QString &data) {
+herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std::string &data)
+{
   hid_t did; // dataset id
   hid_t tid; //type id
   herr_t err = 0;
@@ -472,7 +468,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, QStr
   if ( tid >= 0 ) {
 
     size = H5Dget_storage_size(did);
-    QVector<char> buf(static_cast<int>(size+1), 0x00); //Allocate and Zero and array
+    std::vector<char> buf(static_cast<int>(size+1), 0x00); //Allocate and Zero and array
     err = H5Dread(did, tid, H5S_ALL, H5S_ALL, H5P_DEFAULT, &(buf.front()) );
     if (err<0) {
       std::cout << "Error Reading string dataset." << std::endl;
@@ -490,8 +486,8 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, QStr
 //
 // -----------------------------------------------------------------------------
 herr_t H5Lite::readStringDataset(hid_t loc_id,
-                                 const QString &dsetName,
-                                 uint8_t* data)
+                                 const std::string &dsetName,
+                                 char *data)
 {
   hid_t did; // dataset id
   hid_t tid; //type id
@@ -522,7 +518,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
 //  Reads a string Attribute from the HDF file
 // -----------------------------------------------------------------------------
 herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, const std::string& attrName,
-                              QString &data)
+                              std::string &data)
 {
 
  /* identifiers */
@@ -530,7 +526,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
  H5O_info_t statbuf;
  hid_t      attr_id;
  hid_t      attr_type;
- QVector<char> attr_out;
+ std::vector<char> attr_out;
  hsize_t    size;
  herr_t err = 0;
  herr_t retErr = 0;
@@ -590,7 +586,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
 herr_t H5Lite::readStringAttribute(hid_t loc_id,
                                    const std::string& objName,
                                    const std::string& attrName,
-                                   uint8_t* data)
+                                   char *data)
 {
 
  /* identifiers */
@@ -684,7 +680,6 @@ herr_t H5Lite::getDatasetNDims( hid_t loc_id, const std::string& dsetName, hid_t
   return retErr;
 }
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -739,7 +734,7 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
 //  Returns the type of data stored in the dataset. You MUST use H5Tclose(tid)
 //  on the returned value or resource leaks will occur.
 // -----------------------------------------------------------------------------
-hid_t H5Lite::getDatasetType(hid_t loc_id, const QString &dsetName)
+hid_t H5Lite::getDatasetType(hid_t loc_id, const std::string &dsetName)
 {
   herr_t err = 0;
   herr_t retErr = 0;
@@ -764,7 +759,7 @@ hid_t H5Lite::getDatasetType(hid_t loc_id, const QString &dsetName)
 // -----------------------------------------------------------------------------
 herr_t H5Lite::getDatasetInfo( hid_t loc_id,
                              const std::string& dsetName,
-                             QVector<hsize_t> &dims,
+                             std::vector<hsize_t> &dims,
                              H5T_class_t &classType,
                              size_t &sizeType )
 {
@@ -804,7 +799,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
     if ( rank > 0)
     {
      // hsize_t _dims[rank]; // allocate space for the dimensions
-      QVector<hsize_t> _dims(rank, 0);
+      std::vector<hsize_t> _dims(rank, 0);
       /* Get dimensions */
       err = H5Sget_simple_extent_dims( sid, &(_dims.front() ), NULL);
       if ( err < 0 ) {
@@ -843,7 +838,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
 herr_t H5Lite::getAttributeInfo(hid_t loc_id,
                                 const std::string& objName,
                                 const std::string& attrName,
-                                QVector<hsize_t> &dims,
+                                std::vector<hsize_t> &dims,
                                 H5T_class_t &type_class,
                                 size_t &type_size,
                                 hid_t &tid)
@@ -889,7 +884,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
           else
           {
             rank = H5Sget_simple_extent_ndims( sid );
-            QVector<hsize_t> _dims(rank, 0);
+            std::vector<hsize_t> _dims(rank, 0);
             /* Get dimensions */
             err = H5Sget_simple_extent_dims( sid, &(_dims.front() ), NULL);
             if (err<0) {
@@ -922,12 +917,12 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
  return retErr;
 }
 
-#ifdef H5LITE_USE_MXA_CONSTRUCTS
+#ifdef H5LITE_USE_DREAM3D_CONSTRUCTS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeMXAArray(hid_t loc_id,
-                            const QString &dsetName,
+                            const std::string &dsetName,
                             IMXAArray* array)
 {
   herr_t err    = -1;
@@ -937,7 +932,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
 
   void* data = array->getVoidPointer(0);
   int32_t rank = array->getNumberOfDimensions();
-  QVector<size_t> dims(rank, 0);
+  std::vector<size_t> dims(rank, 0);
   array->getDimensions( &(dims.front() )  );
 
   hid_t dataType = array->getDataType();
@@ -951,9 +946,9 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
   }
 
   //Create the DataSpace
- // QVector<uint64_t>::size_type size = static_cast<QVector<uint64_t>::size_type>(rank);
+ // std::vector<uint64_t>::size_type size = static_cast<std::vector<uint64_t>::size_type>(rank);
 
-  QVector<hsize_t> _dims(rank, 0);
+  std::vector<hsize_t> _dims(rank, 0);
   for (int32_t i = 0; i < rank; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
@@ -993,8 +988,8 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
 //
 // -----------------------------------------------------------------------------
 herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
-                            const QString &objName,
-                            const QString &attrName,
+                            const std::string &objName,
+                            const std::string &attrName,
                             IMXAArray* array)
 {
   hid_t      obj_id, sid, attr_id;
@@ -1005,7 +1000,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
    void* data = array->getVoidPointer(0);
    int32_t rank = array->getNumberOfDimensions();
-   QVector<size_t> dims(rank, 0);
+   std::vector<size_t> dims(rank, 0);
    array->getDimensions( &(dims.front() )  );
 
    hid_t dataType = array->getDataType();
@@ -1034,7 +1029,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
    /* Create the data space for the attribute. */
    hsize_t* dimsPtr = 0x0;
   // size mismatch between hsize_t and size_t
-   QVector<hsize_t> _dims(rank, 0);
+   std::vector<hsize_t> _dims(rank, 0);
    for (int32_t i = 0; i < rank; ++i)
    {
      _dims[i] = static_cast<hsize_t>(dims[i]);
@@ -1097,14 +1092,14 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 //
 // -----------------------------------------------------------------------------
 IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
-                           const QString &dsetName)
+                           const std::string &dsetName)
 {
   hid_t   did;
   herr_t  err = 0;
   herr_t retErr = 0;
   hid_t spaceId;
   IMXAArray* data = NULL;
-  QString sData;
+  std::string sData;
 
  /* Open the dataset. */
   did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
@@ -1115,14 +1110,14 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
   if ( did >= 0 ) {
     spaceId = H5Dget_space(did);
     if ( spaceId > 0 ) {
-        QVector<hsize_t> dims;
+        std::vector<hsize_t> dims;
         hid_t typeId = -1;
         H5T_class_t attr_type;
         size_t attr_size;
         err = H5Lite::getDatasetInfo(loc_id, dsetName, dims, attr_type, attr_size);
         if (err < 0 ) {  }
         typeId = H5Lite::getDatasetType(loc_id, dsetName);
-        QVector<size_t> _dims(dims.size(), 0);
+        std::vector<size_t> _dims(dims.size(), 0);
         for (unsigned int i = 0; i<dims.size(); ++i)
         {
           _dims[i] = static_cast<uint64_t>(dims[i]);
@@ -1215,8 +1210,8 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
 //
 // -----------------------------------------------------------------------------
 IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
-                                   const QString &dsetName,
-                                   const QString &attributeKey)
+                                   const std::string &dsetName,
+                                   const std::string &attributeKey)
  {
 
   /* identifiers */
@@ -1226,7 +1221,7 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
   herr_t retErr = 0;
   hid_t attr_id;
   IMXAArray* data = NULL;
-  QString sData;
+  std::string sData;
   //std::cout << "   Reading Vector Attribute at Path '" << objName << "' with Key: '" << attrName << "'" << std::endl;
   /* Get the type of object */
   err = H5Gget_objinfo(loc_id, dsetName.c_str(), 1, &statbuf);
@@ -1243,10 +1238,10 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
       hid_t typeId = -1;
       H5T_class_t type_class;
       size_t attr_size;
-      QVector<hsize_t> dims;
+      std::vector<hsize_t> dims;
       err = H5Lite::getAttributeInfo(loc_id, dsetName, attributeKey, dims, type_class, attr_size, typeId);
       if (err < 0){  }
-      QVector<size_t> _dims(dims.size(), 0);
+      std::vector<size_t> _dims(dims.size(), 0);
       for (unsigned int i = 0; i<dims.size(); ++i)
       {
         _dims[i] = static_cast<size_t>(dims[i]);

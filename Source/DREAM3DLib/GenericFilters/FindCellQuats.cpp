@@ -96,7 +96,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
@@ -133,7 +133,7 @@ void FindCellQuats::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumCellFieldTuples();

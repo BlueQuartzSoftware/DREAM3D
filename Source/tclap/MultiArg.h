@@ -66,7 +66,7 @@ protected:
 	 * is thrown.
 	 * \param val - The string to be read.
 	 */
-	void _extractValue( const std::string& val );
+	void _extractValue( const QString& val );
 
 	/**
 	 * Used by XorHandler to decide whether to keep parsing for this arg.
@@ -92,11 +92,11 @@ public:
 	 * \param v - An optional visitor.  You probably should not
 	 * use this unless you have a very good reason.
 	 */
-	MultiArg( const std::string& flag,
-                  const std::string& name,
-                  const std::string& desc,
+	MultiArg( const QString& flag,
+                  const QString& name,
+                  const QString& desc,
                   bool req,
-                  const std::string& typeDesc,
+                  const QString& typeDesc,
                   Visitor* v = NULL);
 
 	/**
@@ -117,11 +117,11 @@ public:
 	 * \param v - An optional visitor.  You probably should not
 	 * use this unless you have a very good reason.
 	 */
-	MultiArg( const std::string& flag, 
-                  const std::string& name,
-                  const std::string& desc,
+	MultiArg( const QString& flag, 
+                  const QString& name,
+                  const QString& desc,
                   bool req,
-                  const std::string& typeDesc,
+                  const QString& typeDesc,
                   CmdLineInterface& parser,
                   Visitor* v = NULL );
 
@@ -140,9 +140,9 @@ public:
 	 * \param v - An optional visitor.  You probably should not
 	 * use this unless you have a very good reason.
 	 */
-	MultiArg( const std::string& flag,
-                  const std::string& name,
-                  const std::string& desc,
+	MultiArg( const QString& flag,
+                  const QString& name,
+                  const QString& desc,
                   bool req,
                   Constraint<T>* constraint,
                   Visitor* v = NULL );
@@ -163,9 +163,9 @@ public:
 	 * \param v - An optional visitor.  You probably should not
 	 * use this unless you have a very good reason.
 	 */
-	MultiArg( const std::string& flag, 
-                  const std::string& name,
-                  const std::string& desc,
+	MultiArg( const QString& flag, 
+                  const QString& name,
+                  const QString& desc,
                   bool req,
                   Constraint<T>* constraint,
                   CmdLineInterface& parser,
@@ -179,7 +179,7 @@ public:
 	 * \param i - Pointer the the current argument in the list.
 	 * \param args - Mutable list of strings. Passed from main().
 	 */
-	virtual bool processArg(int* i, QVector<std::string>& args); 
+	virtual bool processArg(int* i, QVector<QString>& args); 
 
 	/**
 	 * Returns a vector of type T containing the values parsed from
@@ -203,13 +203,13 @@ public:
 	 * Returns the a short id string.  Used in the usage. 
 	 * \param val - value to be used.
 	 */
-	virtual QString shortID(const std::string& val="val") const;
+	virtual QString shortID(const QString& val="val") const;
 
 	/**
 	 * Returns the a long id string.  Used in the usage. 
 	 * \param val - value to be used.
 	 */
-	virtual QString longID(const std::string& val="val") const;
+	virtual QString longID(const QString& val="val") const;
 
 	/**
 	 * Once we've matched the first value, then the arg is no longer
@@ -224,11 +224,11 @@ public:
 };
 
 template<class T>
-MultiArg<T>::MultiArg(const std::string& flag, 
-                      const std::string& name,
-                      const std::string& desc,
+MultiArg<T>::MultiArg(const QString& flag, 
+                      const QString& name,
+                      const QString& desc,
                       bool req,
-                      const std::string& typeDesc,
+                      const QString& typeDesc,
                       Visitor* v)
 : Arg( flag, name, desc, req, true, v ),
   _typeDesc( typeDesc ),
@@ -239,11 +239,11 @@ MultiArg<T>::MultiArg(const std::string& flag,
 }
 
 template<class T>
-MultiArg<T>::MultiArg(const std::string& flag, 
-                      const std::string& name,
-                      const std::string& desc,
+MultiArg<T>::MultiArg(const QString& flag, 
+                      const QString& name,
+                      const QString& desc,
                       bool req,
-                      const std::string& typeDesc,
+                      const QString& typeDesc,
                       CmdLineInterface& parser,
                       Visitor* v)
 : Arg( flag, name, desc, req, true, v ),
@@ -259,9 +259,9 @@ MultiArg<T>::MultiArg(const std::string& flag,
  *
  */
 template<class T>
-MultiArg<T>::MultiArg(const std::string& flag, 
-                      const std::string& name,
-                      const std::string& desc,
+MultiArg<T>::MultiArg(const QString& flag, 
+                      const QString& name,
+                      const QString& desc,
                       bool req,
                       Constraint<T>* constraint,
                       Visitor* v)
@@ -274,9 +274,9 @@ MultiArg<T>::MultiArg(const std::string& flag,
 }
 
 template<class T>
-MultiArg<T>::MultiArg(const std::string& flag, 
-                      const std::string& name,
-                      const std::string& desc,
+MultiArg<T>::MultiArg(const QString& flag, 
+                      const QString& name,
+                      const QString& desc,
                       bool req,
                       Constraint<T>* constraint,
                       CmdLineInterface& parser,
@@ -294,7 +294,7 @@ template<class T>
 const QVector<T>& MultiArg<T>::getValue() { return _values; }
 
 template<class T>
-bool MultiArg<T>::processArg(int *i, QVector<std::string>& args) 
+bool MultiArg<T>::processArg(int *i, QVector<QString>& args) 
 {
  	if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -348,7 +348,7 @@ bool MultiArg<T>::processArg(int *i, QVector<std::string>& args)
  *
  */
 template<class T>
-QString MultiArg<T>::shortID(const std::string& val) const
+QString MultiArg<T>::shortID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::shortID(_typeDesc) + " ... ";
@@ -358,7 +358,7 @@ QString MultiArg<T>::shortID(const std::string& val) const
  *
  */
 template<class T>
-QString MultiArg<T>::longID(const std::string& val) const
+QString MultiArg<T>::longID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::longID(_typeDesc) + "  (accepted multiple times)";
@@ -384,7 +384,7 @@ bool MultiArg<T>::isRequired() const
 }
 
 template<class T>
-void MultiArg<T>::_extractValue( const std::string& val ) 
+void MultiArg<T>::_extractValue( const QString& val ) 
 {
     try {
 	T tmp;

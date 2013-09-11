@@ -91,7 +91,7 @@ void Observer::updatePipelineMessage(const char* msg)
 // -----------------------------------------------------------------------------
 void Observer::sendPipelineMessage(PipelineMessage &msg)
 {
-  std::stringstream ss;
+  QTextStream ss;
   if(msg.getMessageType() == PipelineMessage::Error)
   {
     ss << msg.generateErrorString();

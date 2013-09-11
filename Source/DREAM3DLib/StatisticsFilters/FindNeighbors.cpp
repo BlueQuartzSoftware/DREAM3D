@@ -95,7 +95,7 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
@@ -184,7 +184,7 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -240,7 +240,7 @@ void FindNeighbors::execute()
   neighborsurfacearealist.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Finding Neighbors - Initializing Neighbor Lists - " << (static_cast<float>(i)/totalFields)*100 << " Percent Complete";
  //   notifyStatusMessage(ss.str());
     m_NumNeighbors[i] = 0;
@@ -253,7 +253,7 @@ void FindNeighbors::execute()
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Finding Neighbors - Determining Neighbor Lists - " << (static_cast<float>(j)/totalPoints)*100 << " Percent Complete";
  //   notifyStatusMessage(ss.str());
     onsurf = 0;
@@ -299,7 +299,7 @@ void FindNeighbors::execute()
 
   for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
 

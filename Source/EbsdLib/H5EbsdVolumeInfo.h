@@ -37,8 +37,8 @@
 #ifndef H5EBSDVOLUMEREADER_H_
 #define H5EBSDVOLUMEREADER_H_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"

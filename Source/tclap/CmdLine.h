@@ -145,7 +145,7 @@ class CmdLine : public CmdLineInterface
 		 * into a single argument.
 		 * \param s - The message to be used in the usage.
 		 */
-		bool _emptyCombined(const std::string& s);
+		bool _emptyCombined(const QString& s);
 
 		/**
 		 * Perform a delete ptr; operation on ptr when this object is deleted.
@@ -191,9 +191,9 @@ private:
 		 * \param helpAndVersion - Whether or not to create the Help and
 		 * Version switches. Defaults to true.
 		 */
-		CmdLine(const std::string& message,
+		CmdLine(const QString& message,
 				const char delimiter = ' ',
-				const std::string& version = "none",
+				const QString& version = "none",
 				bool helpAndVersion = true);
 
 		/**
@@ -240,7 +240,7 @@ private:
 		 * \param args - A vector of strings representing the args.
 		 * args[0] is still the program name.
 		 */
-		void parse(QVector<std::string>& args);
+		void parse(QVector<QString>& args);
 
 		/**
 		 *
@@ -255,12 +255,12 @@ private:
 		/**
 		 *
 		 */
-		std::string& getVersion();
+		QString& getVersion();
 
 		/**
 		 *
 		 */
-		std::string& getProgramName();
+		QString& getProgramName();
 
 		/**
 		 *
@@ -280,7 +280,7 @@ private:
 		/**
 		 *
 		 */
-		std::string& getMessage();
+		QString& getMessage();
 
 		/**
 		 *
@@ -314,9 +314,9 @@ private:
 //Begin CmdLine.cpp
 
 
-inline CmdLine::CmdLine(const std::string& m,
+inline CmdLine::CmdLine(const QString& m,
 			char delim,
-			const std::string& v,
+			const QString& v,
 			bool help )
 : _progName("not_set_yet"),
   _message(m),
@@ -423,14 +423,14 @@ inline void CmdLine::parse(int argc, const char * const * argv)
 {
 		// this step is necessary so that we have easy access to
 		// mutable strings.
-		QVector<std::string> args;
+		QVector<QString> args;
 		for (int i = 0; i < argc; i++)
 			args.push_back(argv[i]);
 
 		parse(args);
 }
 
-inline void CmdLine::parse(QVector<std::string>& args)
+inline void CmdLine::parse(QVector<QString>& args)
 {
 	bool shouldExit = false;
 	int estat = 0;
@@ -496,7 +496,7 @@ inline void CmdLine::parse(QVector<std::string>& args)
 		exit(estat);
 }
 
-inline bool CmdLine::_emptyCombined(const std::string& s)
+inline bool CmdLine::_emptyCombined(const QString& s)
 {
 	if ( s.length() > 0 && s[0] != Arg::flagStartChar() )
 		return false;
@@ -556,12 +556,12 @@ inline void CmdLine::setOutput(CmdLineOutput* co)
 	_output = co;
 }
 
-inline std::string& CmdLine::getVersion()
+inline QString& CmdLine::getVersion()
 {
 	return _version;
 }
 
-inline std::string& CmdLine::getProgramName()
+inline QString& CmdLine::getProgramName()
 {
 	return _progName;
 }
@@ -581,7 +581,7 @@ inline char CmdLine::getDelimiter()
 	return _delimiter;
 }
 
-inline std::string& CmdLine::getMessage()
+inline QString& CmdLine::getMessage()
 {
 	return _message;
 }

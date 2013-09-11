@@ -202,7 +202,7 @@ static Pointer New args \
  * information. */
 #define DREAM3D_TYPE_MACRO(thisClass) \
   public: \
-  virtual const QString getNameOfClass() {return std::string(#thisClass);}\
+  virtual const QString getNameOfClass() {return QString(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -226,8 +226,8 @@ static Pointer New args \
 
 #define DREAM3D_TYPE_MACRO_SUPER(thisClass,superclass) \
   public: \
-  virtual const QString getNameOfClass() {return std::string(#thisClass);}\
-  static QString ClassName() {return std::string(#thisClass);}\
+  virtual const QString getNameOfClass() {return QString(#thisClass);}\
+  static QString ClassName() {return QString(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -451,7 +451,7 @@ void set##name##Pointer(type* f)\
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      QString msg = std::string(Message);\
+      QString msg = QString(Message);\
       pipelineErrorMessage(msg.c_str());\
       updatePipelineProgress(0);\
       pipelineFinished();\
@@ -472,14 +472,14 @@ namespace DREAM3D
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
-    bad_lexical_cast(const std::string& s)
+    bad_lexical_cast(const QString& s)
       : std::runtime_error(s)
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
-    bad_any_cast(const std::string& s)
+    bad_any_cast(const QString& s)
       : std::runtime_error(s)
     { }
   };

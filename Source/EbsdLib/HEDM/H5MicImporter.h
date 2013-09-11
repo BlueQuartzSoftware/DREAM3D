@@ -47,8 +47,8 @@
 
 #include "hdf5.h"
 
-#include <vector>
-#include <string>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"

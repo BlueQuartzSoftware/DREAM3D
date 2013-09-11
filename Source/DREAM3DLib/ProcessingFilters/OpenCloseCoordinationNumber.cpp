@@ -127,7 +127,7 @@ int OpenCloseCoordinationNumber::writeFilterParameters(AbstractFilterParametersW
 void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -214,7 +214,7 @@ void OpenCloseCoordinationNumber::execute()
   int current = 0;
   int most = 0;
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
 
   QVector<int > n(numgrains + 1,0);
 
@@ -269,7 +269,7 @@ void OpenCloseCoordinationNumber::execute()
         int neighbor = m_Neighbors[point];
         if (coordinationNumber[point] >= m_CoordinationNumber && coordinationNumber[point] > 0)
         {
-            for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+            for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
             {
               QString name = *iter;
               IDataArray::Pointer p = m->getCellData(*iter);

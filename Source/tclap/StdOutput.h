@@ -97,7 +97,7 @@ class StdOutput : public CmdLineOutput
 		 * and all subsequent lines in addition to indentSpaces.
 		 */
 		void spacePrint( std::ostream& os, 
-						 const std::string& s, 
+						 const QString& s, 
 						 int maxWidth, 
 						 int indentSpaces, 
 						 int secondLineOffset ) const;
@@ -227,7 +227,7 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 }
 
 inline void StdOutput::spacePrint( std::ostream& os, 
-						           const std::string& s, 
+						           const QString& s, 
 						           int maxWidth, 
 						           int indentSpaces, 
 						           int secondLineOffset ) const

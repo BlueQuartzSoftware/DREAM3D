@@ -76,8 +76,8 @@
         if (cn.compare(name) == 0 || dn.compare(name) == 0) {return true;}\
         return false;\
     }\
-    const QString className() { return std::string(#m_msgType); }\
-    const QString displayName() { return std::string(display); }\
+    const QString className() { return QString(#m_msgType); }\
+    const QString displayName() { return QString(display); }\
     protected:\
     name(){}\
     private:\

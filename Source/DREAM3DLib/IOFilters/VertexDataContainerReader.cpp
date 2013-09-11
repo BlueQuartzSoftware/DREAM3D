@@ -100,7 +100,7 @@ int VertexDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
@@ -140,7 +140,7 @@ void VertexDataContainerReader::preflight()
 void VertexDataContainerReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -157,7 +157,7 @@ void VertexDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::gatherData(bool preflight)
 {
-  std::stringstream ss;
+  QTextStream ss;
 
   if(m_HdfFileId < 0)
   {
@@ -224,7 +224,7 @@ int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
   }
 
   // Read all the Vertex Attribute data
-  QVector<std::string> readNames;
+  QVector<QString> readNames;
   err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -239,7 +239,7 @@ int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::gatherVertexFieldData(hid_t dcGid, bool preflight)
 {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     herr_t err = readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, m_VertexFieldArraysToRead);
     if(err < 0)
     {
@@ -255,7 +255,7 @@ int VertexDataContainerReader::gatherVertexFieldData(hid_t dcGid, bool preflight
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::gatherVertexEnsembleData(hid_t dcGid, bool preflight)
 {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     herr_t err = readGroupsData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_VertexEnsembleArraysToRead);
     if(err < 0)
     {
@@ -301,10 +301,10 @@ int VertexDataContainerReader::readVertices(hid_t dcGid)
 //
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<std::string> &namesRead,
-                                                QSet<std::string> &namesToRead)
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
@@ -319,7 +319,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    QSet<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();

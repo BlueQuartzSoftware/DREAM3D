@@ -189,9 +189,9 @@ void RemoveTestFiles()
 // -----------------------------------------------------------------------------
 //  Function used to generate test sets
 // -----------------------------------------------------------------------------
-QSet<std::string> getSet(QString name1, QString name2, QString name3, QString name4)
+QSet<QString> getSet(QString name1, QString name2, QString name3, QString name4)
 {
-  QSet<std::string> set1;
+  QSet<QString> set1;
   set1.insert(name1);
   set1.insert(name2);
   set1.insert(name3);
@@ -232,47 +232,47 @@ void ArraySelectionExampleTest()
 
   ArraySelectionExample::Pointer filt = ArraySelectionExample::New();
 
-  QSet<std::string> set1 = getSet(SelectedVolumeCellArraysString1, SelectedVolumeCellArraysString2,
+  QSet<QString> set1 = getSet(SelectedVolumeCellArraysString1, SelectedVolumeCellArraysString2,
                                       SelectedVolumeCellArraysString3, SelectedVolumeCellArraysString4);
   filt->setSelectedVolumeCellArrays(set1);
 
-  QSet<std::string> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
+  QSet<QString> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
                                       SelectedVolumeFieldArraysString3, SelectedVolumeFieldArraysString4);
   filt->setSelectedVolumeFieldArrays(set2);
 
-  QSet<std::string> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
+  QSet<QString> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
                                       SelectedVolumeEnsembleArraysString3, SelectedVolumeEnsembleArraysString4);
   filt->setSelectedVolumeEnsembleArrays(set3);
 
-  QSet<std::string> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
+  QSet<QString> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
                                       SelectedSurfaceVertexArraysString3, SelectedSurfaceVertexArraysString4);
   filt->setSelectedSurfaceVertexArrays(set4);
 
-  QSet<std::string> set5 = getSet(SelectedSurfaceFaceArraysString1, SelectedSurfaceFaceArraysString2,
+  QSet<QString> set5 = getSet(SelectedSurfaceFaceArraysString1, SelectedSurfaceFaceArraysString2,
                                       SelectedSurfaceFaceArraysString3, SelectedSurfaceFaceArraysString4);
   filt->setSelectedSurfaceFaceArrays(set5);
 
-  QSet<std::string> set6 = getSet(SelectedSurfaceEdgeArraysString1, SelectedSurfaceEdgeArraysString2,
+  QSet<QString> set6 = getSet(SelectedSurfaceEdgeArraysString1, SelectedSurfaceEdgeArraysString2,
                                       SelectedSurfaceEdgeArraysString3, SelectedSurfaceEdgeArraysString4);
   filt->setSelectedSurfaceEdgeArrays(set6);
 
-  QSet<std::string> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
+  QSet<QString> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
                                       SelectedSurfaceFieldArraysString3, SelectedSurfaceFieldArraysString4);
   filt->setSelectedSurfaceFieldArrays(set7);
 
-  QSet<std::string> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
+  QSet<QString> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
                                       SelectedSurfaceEnsembleArraysString3, SelectedSurfaceEnsembleArraysString4);
   filt->setSelectedSurfaceEnsembleArrays(set8);
 
-  QSet<std::string> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
+  QSet<QString> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
                                       SelectedVertexVertexArraysString3, SelectedVertexVertexArraysString4);
   filt->setSelectedVertexVertexArrays(set9);
 
-  QSet<std::string> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
+  QSet<QString> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
                                        SelectedVertexFieldArraysString3, SelectedVertexFieldArraysString4);
   filt->setSelectedVertexFieldArrays(set10);
 
-  QSet<std::string> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
+  QSet<QString> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
                                        SelectedVertexEnsembleArraysString3, SelectedVertexEnsembleArraysString4);
   filt->setSelectedVertexEnsembleArrays(set11);
 
@@ -301,8 +301,8 @@ void ArraySelectionExampleTest()
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
 
-  QSet<std::string> set1Read = filt->getSelectedVolumeCellArrays();
-  QSet<std::string>::iterator iter = set1Read.begin();
+  QSet<QString> set1Read = filt->getSelectedVolumeCellArrays();
+  QSet<QString>::iterator iter = set1Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString1, ==, *iter)
       iter++;
@@ -312,7 +312,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, ==, *iter)
 
-      QSet<std::string> set2Read = filt->getSelectedVolumeFieldArrays();
+      QSet<QString> set2Read = filt->getSelectedVolumeFieldArrays();
   iter = set2Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeFieldArraysString1, ==, *iter)
@@ -323,7 +323,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeFieldArraysString4, ==, *iter)
 
-      QSet<std::string> set3Read = filt->getSelectedVolumeEnsembleArrays();
+      QSet<QString> set3Read = filt->getSelectedVolumeEnsembleArrays();
   iter = set3Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString1, ==, *iter)
@@ -334,7 +334,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString4, ==, *iter)
 
-      QSet<std::string> set4Read = filt->getSelectedSurfaceVertexArrays();
+      QSet<QString> set4Read = filt->getSelectedSurfaceVertexArrays();
   iter = set4Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString1, ==, *iter)
@@ -345,7 +345,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString4, ==, *iter)
 
-      QSet<std::string> set5Read = filt->getSelectedSurfaceFaceArrays();
+      QSet<QString> set5Read = filt->getSelectedSurfaceFaceArrays();
   iter = set5Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString1, ==, *iter)
@@ -356,7 +356,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString4, ==, *iter)
 
-      QSet<std::string> set6Read = filt->getSelectedSurfaceEdgeArrays();
+      QSet<QString> set6Read = filt->getSelectedSurfaceEdgeArrays();
   iter = set6Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString1, ==, *iter)
@@ -367,7 +367,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, ==, *iter)
 
-      QSet<std::string> set7Read = filt->getSelectedSurfaceFieldArrays();
+      QSet<QString> set7Read = filt->getSelectedSurfaceFieldArrays();
   iter = set7Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString1, ==, *iter)
@@ -378,7 +378,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString4, ==, *iter)
 
-      QSet<std::string> set8Read = filt->getSelectedSurfaceEnsembleArrays();
+      QSet<QString> set8Read = filt->getSelectedSurfaceEnsembleArrays();
   iter = set8Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString1, ==, *iter)
@@ -389,7 +389,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString4, ==, *iter)
 
-      QSet<std::string> set9Read = filt->getSelectedVertexVertexArrays();
+      QSet<QString> set9Read = filt->getSelectedVertexVertexArrays();
   iter = set9Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString1, ==, *iter)
@@ -400,7 +400,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, ==, *iter)
 
-      QSet<std::string> set10Read = filt->getSelectedVertexFieldArrays();
+      QSet<QString> set10Read = filt->getSelectedVertexFieldArrays();
   iter = set10Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexFieldArraysString1, ==, *iter)
@@ -411,7 +411,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVertexFieldArraysString4, ==, *iter)
 
-      QSet<std::string> set11Read = filt->getSelectedVertexEnsembleArrays();
+      QSet<QString> set11Read = filt->getSelectedVertexEnsembleArrays();
   iter = set11Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString1, ==, *iter)
@@ -459,7 +459,7 @@ void GenericExampleTest()
   filt->setSelectedVertexFieldArrayName(SolidMeshFaceArrayNameTestValue);
   filt->setSelectedVertexEnsembleArrayName(SolidMeshEdgeArrayNameTestValue);
 
-  QVector<std::string> strVector;
+  QVector<QString> strVector;
   strVector.push_back(SurfaceMeshVertexArrayNameTestValue);
   strVector.push_back(SurfaceMeshFaceArrayNameTestValue);
   strVector.push_back(SurfaceMeshEdgeArrayNameTestValue);
@@ -571,7 +571,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(AxisAngles2LTestValue, ==, axisAngles2Read.l)
 
   // Test the string vector
-  QVector<std::string> strVectorRead = filt->getStrVector();
+  QVector<QString> strVectorRead = filt->getStrVector();
 
   DREAM3D_REQUIRED(SurfaceMeshVertexArrayNameTestValue, ==, strVectorRead[0])
   DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, strVectorRead[1])
@@ -740,14 +740,14 @@ int readPipelineFromFile(hid_t fileId)
   reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<std::string> groupList;
+  std::list<QString> groupList;
   err = H5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << i;
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 

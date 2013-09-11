@@ -147,7 +147,7 @@ int NodesTrianglesToVtk::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if (m_TrianglesFile.empty() == true)
   {
@@ -202,7 +202,7 @@ void NodesTrianglesToVtk::preflight()
 void NodesTrianglesToVtk::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)

@@ -431,10 +431,10 @@ void ComparisonSelectionTableModel::setPossibleFields(QStringList fields)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionTableModel::setPossibleFields(std::list<std::string> &fields)
+void ComparisonSelectionTableModel::setPossibleFields(std::list<QString> &fields)
 {
   m_PossibleFields.clear();
-  for(std::list<std::string>::iterator iter = fields.begin(); iter != fields.end(); ++iter)
+  for(std::list<QString>::iterator iter = fields.begin(); iter != fields.end(); ++iter)
   {
     m_PossibleFields << QString::fromStdString(*iter);
   }

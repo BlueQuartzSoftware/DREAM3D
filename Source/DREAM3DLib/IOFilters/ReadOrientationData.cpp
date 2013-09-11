@@ -133,7 +133,7 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -162,7 +162,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     int64_t dims[3];
 
     QString ext = MXAFileInfo::extension(m_InputFile);
-    QVector<std::string> names;
+    QVector<QString> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       AngReader reader;
@@ -175,7 +175,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       AngFields fields;
-      names = fields.getFilterFields<QVector<std::string> > ();
+      names = fields.getFilterFields<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -208,7 +208,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
-      names = fields.getFilterFields<QVector<std::string> > ();
+      names = fields.getFilterFields<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -235,7 +235,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields fields;
-      names = fields.getFilterFields<QVector<std::string> > ();
+      names = fields.getFilterFields<QVector<QString> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -291,7 +291,7 @@ void ReadOrientationData::preflight()
 void ReadOrientationData::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

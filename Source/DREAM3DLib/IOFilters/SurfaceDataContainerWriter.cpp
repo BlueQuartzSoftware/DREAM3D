@@ -125,7 +125,7 @@ int SurfaceDataContainerWriter::writeFilterParameters(AbstractFilterParametersWr
 void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
@@ -158,7 +158,7 @@ void SurfaceDataContainerWriter::preflight()
 void SurfaceDataContainerWriter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -355,12 +355,12 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
                                                                               const QString &centering,
                                                                               int precision, const QString &xdmfTypeName)
 {
-  std::stringstream out;
-  std::stringstream dimStr;
-  std::stringstream dimStr1;
-  std::stringstream dimStr1half;
-  std::stringstream dimStr2;
-  std::stringstream dimStr2half;
+  QTextStream out;
+  QTextStream dimStr;
+  QTextStream dimStr1;
+  QTextStream dimStr1half;
+  QTextStream dimStr2;
+  QTextStream dimStr2half;
 
   if((numComp%2) == 1)
   {
@@ -456,7 +456,7 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 
 
   std::ostream& out = *m_XdmfPtr;
-  std::stringstream dimStr;
+  QTextStream dimStr;
   int precision = 0;
   QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
@@ -581,7 +581,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -717,7 +717,7 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -783,7 +783,7 @@ int SurfaceDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -834,7 +834,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
@@ -846,7 +846,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -987,7 +987,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 

@@ -71,15 +71,15 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, CellArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<std::string> NameListType;
+    typedef std::list<QString> NameListType;
 
 
     /**
@@ -142,8 +142,8 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
 
     int gatherData(bool preflight);
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                       QVector<std::string> &namesRead,
-                       QSet<std::string> &namesToRead);
+                       QVector<QString> &namesRead,
+                       QSet<QString> &namesToRead);
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:

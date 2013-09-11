@@ -89,7 +89,7 @@ class CmdLineInterface
          * \param args - A vector of strings representing the args. 
          * args[0] is still the program name.
          */
-        void parse(QVector<std::string>& args);
+        void parse(QVector<QString>& args);
 
 		/**
 		 * Returns the CmdLineOutput object.
@@ -104,12 +104,12 @@ class CmdLineInterface
 		/**
 		 * Returns the version string.
 		 */
-		virtual std::string& getVersion()=0;
+		virtual QString& getVersion()=0;
 
 		/**
 		 * Returns the program name string.
 		 */
-		virtual std::string& getProgramName()=0;
+		virtual QString& getProgramName()=0;
 
 		/**
 		 * Returns the argList. 
@@ -129,7 +129,7 @@ class CmdLineInterface
 		/**
 		 * Returns the message string.
 		 */
-		virtual std::string& getMessage()=0;
+		virtual QString& getMessage()=0;
 
 		/**
 		 * Indicates whether or not the help and version switches were created

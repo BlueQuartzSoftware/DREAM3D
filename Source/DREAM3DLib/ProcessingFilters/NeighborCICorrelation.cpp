@@ -127,7 +127,7 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
@@ -233,13 +233,13 @@ void NeighborCICorrelation::execute()
         }
       }
     }
-      std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+      std::list<QString> voxelArrayNames = m->getCellArrayNameList();
       for (size_t j = 0; j < totalPoints; j++)
       {
         neighbor = bestNeighbor[j];
         if (neighbor != -1)
         {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);

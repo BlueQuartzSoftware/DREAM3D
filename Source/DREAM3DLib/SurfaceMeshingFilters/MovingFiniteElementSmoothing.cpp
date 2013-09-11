@@ -79,15 +79,15 @@ typedef struct
 } TripleNN;
 
 
-void tokenize(const std::string& str, QVector<std::string>& tokens, const std::string& delimiters = " ")
+void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ")
 {
   // Skip delimiters at beginning.
-  std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+  QString::size_type lastPos = str.find_first_not_of(delimiters, 0);
 
   // Find first "non-delimiter".
-  std::string::size_type pos = str.find_first_of(delimiters, lastPos);
+  QString::size_type pos = str.find_first_of(delimiters, lastPos);
 
-  while (std::string::npos != pos || std::string::npos != lastPos)
+  while (QString::npos != pos || QString::npos != lastPos)
   {
     // Found a token, add it to the vector.
     tokens.push_back(str.substr(lastPos, pos - lastPos));
@@ -254,7 +254,7 @@ int MovingFiniteElementSmoothing::writeFilterParameters(AbstractFilterParameters
 void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -315,7 +315,7 @@ void MovingFiniteElementSmoothing::preflight()
 void MovingFiniteElementSmoothing::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
 
   // This needs to get run so that our private pointers are set correctly.
@@ -379,7 +379,7 @@ void MovingFiniteElementSmoothing::execute()
   triplennPtr->initializeWithZeros();
   TripleNN* triplenn = triplennPtr->GetPointer(0);
 
-//  QVector<std::string> data;
+//  QVector<QString> data;
 #if 0
   // read in nodes/triangles
   std::ifstream input1(nodesFile.c_str());
@@ -933,7 +933,7 @@ void MovingFiniteElementSmoothing::execute()
 
     // extract the basename from the provided filename
     QString infile = outputNodesFile;
-    QVector<std::string> tokens;
+    QVector<QString> tokens;
     QString delimiters = "."; // Only a period
     QString basename;
     tokenize(infile, tokens, delimiters);

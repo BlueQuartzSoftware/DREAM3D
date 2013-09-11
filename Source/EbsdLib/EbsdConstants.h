@@ -37,7 +37,7 @@
 #ifndef _EbsdConstants_h_
 #define _EbsdConstants_h_
 
-#include <string>
+#include <QtCore/QString>
 
 /**
  * @file EbsdConstants.h

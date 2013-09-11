@@ -40,7 +40,7 @@
 #define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){ \
     setErrorCondition(errCode##000);\
-    std::stringstream _##Name##_ss;\
+    QTextStream _##Name##_ss;\
     _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
     addErrorMessage(getHumanLabel(), _##Name##_ss.str(), errCode##000);\
   }\
@@ -205,7 +205,7 @@ if (iDataArray.get() == 0) {\
   return gi;\
 }\
 if (size*numComp != iDataArray->GetSize()) {\
-  std::stringstream s;\
+  QTextStream s;\
   s << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
   s << " Required: " << (size*numComp) << " Contains: " << iDataArray->GetSize();\
   if (NULL != obv) {obv->setErrorCondition(-501);\
@@ -213,7 +213,7 @@ if (size*numComp != iDataArray->GetSize()) {\
   return gi;\
 }\
 if (numComp != iDataArray->GetNumberOfComponents()) {\
-      if (NULL != obv) {std::stringstream ss;\
+      if (NULL != obv) {QTextStream ss;\
       ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << numComp << " but the array"\
       << " that was supplied has " << iDataArray->GetNumberOfComponents() << "." << std::endl;\
       obv->addErrorMessage(obv->getHumanLabel(), ss.str(),503);}\
@@ -222,7 +222,7 @@ if (numComp != iDataArray->GetNumberOfComponents()) {\
   gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == gi) {\
     typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
-    std::stringstream s;\
+    QTextStream s;\
     s << " - The filter requested an array named '" << arrayName << " ' with type " << dat->getTypeAsString() << " from the " << getNameOfClass() << std::endl;\
     s << "An Array with name '" << arrayName << "' is stored in the " << getNameOfClass() << " but is of type " << iDataArray->getTypeAsString() << std::endl;\
     if (NULL != obv) {obv->setErrorCondition(-502);\
@@ -245,7 +245,7 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp,
     iDataArray->initializeWithZeros();\
     iDataArray->SetNumberOfComponents(numComp);\
     if (NULL == iDataArray.get()) { \
-      std::stringstream s;\
+      QTextStream s;\
       s << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
       if (NULL != obv) {obv->setErrorCondition(-25);\
       obv->addErrorMessage(getNameOfClass(), s.str(), -25);}\
@@ -256,7 +256,7 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp,
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == valuePtr) {\
-    std::stringstream s;\
+    QTextStream s;\
     s << ": Array '" << arrayName << "' could not be cast to proper type;";\
     if (NULL != obv) {obv->setErrorCondition(-12);\
     obv->addErrorMessage(getNameOfClass(), s.str(), -12);}\
@@ -271,14 +271,14 @@ m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
-    std::stringstream s;\
+    QTextStream s;\
     s << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
     setErrorCondition(-10);\
     addErrorMessage(getNameOfClass(), s.str(), -10);\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    std::stringstream s;\
+    QTextStream s;\
     s << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
     setErrorCondition(-20);\
     addErrorMessage(getNameOfClass(), s.str(), -20);\
@@ -287,7 +287,7 @@ m_msgType* valuePtr = NULL;\
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
-    std::stringstream s;\
+    QTextStream s;\
     s << ": Array " << name << " from the DataContainer class could not be cast to type " << #m_msgType;\
     setErrorCondition(-30);\
     addErrorMessage(getNameOfClass(), s.str(), -30);\
@@ -337,7 +337,7 @@ virtual bool does##DType##Exist(const QString &name);
 
 #define DOES_DATASET_EXIST_DEFN(Class, DType)\
 bool Class::does##DType##Exist(const QString &name) {\
-  QMap<std::string, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
+  QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
   return ( iter != m_##DType.end());\
 }
 

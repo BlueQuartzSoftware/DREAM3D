@@ -121,7 +121,7 @@ void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
   m_OutputFile->setText( QString::fromStdString ( filter->getOutputFile() ) );
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
-  std::stringstream ss;
+  QTextStream ss;
   ss << filter->getZResolution();
   m_zSpacing->setText( QString::fromStdString(ss.str()) );
   m_SampleTransformationAngle = filter->getSampleTransformationAngle();
@@ -166,9 +166,9 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
-  QVector<std::string> realFileList;
-  for(QVector<std::string>::size_type i = 0; i < fileList.size(); ++i)
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> realFileList;
+  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath = QString::fromStdString(fileList[i]);
     QFileInfo fi(filePath);
@@ -205,7 +205,7 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
 
   w->setEbsdFileList(fileList);
 
@@ -525,11 +525,11 @@ void QEbsdToH5EbsdWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<std::string> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool &hasMissingFiles,
+QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool &hasMissingFiles,
                                                                bool stackLowToHigh, QString filename)
 {
   int index = 0;
-  QVector<std::string> fileList;
+  QVector<QString> fileList;
 
   for (int i = 0; i < (end-start)+1; ++i)
   {
@@ -569,12 +569,12 @@ void QEbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
-  for(QVector<std::string>::size_type i = 0; i < fileList.size(); ++i)
+  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i).c_str());
     QFileInfo fi(filePath);
@@ -622,7 +622,7 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
   if (fileList.size() == 0)
   {
     return;

@@ -207,7 +207,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -243,7 +243,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("Little");
     choices.push_back("Big");
     parameter->setChoices(choices);
@@ -355,7 +355,7 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -502,7 +502,7 @@ void RawBinaryReader::preflight()
 void RawBinaryReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

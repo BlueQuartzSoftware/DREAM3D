@@ -62,7 +62,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
 
     virtual ~FilterWidgetManager();
 
-    typedef QMap<std::string, IFilterWidgetFactory::Pointer> Collection;
+    typedef QMap<QString, IFilterWidgetFactory::Pointer> Collection;
 
     /**
      * @brief Static instance to retrieve the global instance of this class
@@ -112,14 +112,14 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
      * @return
      */
-    QSet<std::string> getGroupNames();
+    QSet<QString> getGroupNames();
 
     /**
      * @brief getSubGroupNames For a given group, returns all the subgroups
      * @param groupName The name of the Filter group
      * @return
      */
-    QSet<std::string> getSubGroupNames(const QString &groupName);
+    QSet<QString> getSubGroupNames(const QString &groupName);
 
 
     /**

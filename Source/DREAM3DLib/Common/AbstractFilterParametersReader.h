@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
     virtual int closeFilterGroup() = 0;
 
     virtual QString readValue(const QString name, QString value) = 0;
-    virtual QVector<std::string> readValue(const QString name, QVector<std::string> value) = 0;
+    virtual QVector<QString> readValue(const QString name, QVector<QString> value) = 0;
 
     virtual int8_t readValue(const QString name, int8_t value) = 0;
     virtual int16_t readValue(const QString name, int16_t value) = 0;
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersReader
   virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v) = 0;
   virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
   virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
-  virtual QSet<std::string> readValue(const QString name, QSet<std::string> v) = 0;
+  virtual QSet<QString> readValue(const QString name, QSet<QString> v) = 0;
 
   protected:
     AbstractFilterParametersReader();

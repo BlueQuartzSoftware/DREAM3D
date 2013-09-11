@@ -358,7 +358,7 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
@@ -401,7 +401,7 @@ void PackPrimaryPhases::preflight()
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << ClassName() << " needs the Csv Output File Set and it was not.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
@@ -473,7 +473,7 @@ void PackPrimaryPhases::execute()
   totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumCellEnsembleTuples();
-  std::stringstream ss;
+  QTextStream ss;
 
   // float change1, change2;
   float change = 0.0f;
@@ -601,7 +601,7 @@ void PackPrimaryPhases::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
       {
-        std::stringstream ss;
+        QTextStream ss;
         ss << "Packing Grains (1/2) - Generating Grain #" << gid;
         notifyStatusMessage(ss.str());
         if (gid + 1 >= static_cast<int>(m->getNumCellFieldTuples()))
@@ -651,7 +651,7 @@ void PackPrimaryPhases::execute()
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
         {
-          std::stringstream ss;
+          QTextStream ss;
           ss << "Packing Grains (2/2) - Generating Grain #" << gid;
           notifyStatusMessage(ss.str());
           if (gid + 1 >= static_cast<int>(m->getNumCellFieldTuples()) )
@@ -1805,7 +1805,7 @@ void PackPrimaryPhases::assign_voxels()
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
-  std::stringstream ss;
+  QTextStream ss;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1996,7 +1996,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage("Assigning Gaps");
 
-  std::stringstream ss;
+  QTextStream ss;
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -2390,7 +2390,7 @@ void PackPrimaryPhases::write_goal_attributes()
   QString parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -2405,7 +2405,7 @@ void PackPrimaryPhases::write_goal_attributes()
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-firstPrimaryField << std::endl;
   // Get all the names of the arrays from the Data Container
-  std::list<std::string> headers = m->getFieldArrayNameList();
+  std::list<QString> headers = m->getFieldArrayNameList();
 
   QVector<IDataArray::Pointer> data;
 
@@ -2415,7 +2415,7 @@ void PackPrimaryPhases::write_goal_attributes()
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(std::list<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getCellFieldData(*iter);
@@ -2439,7 +2439,7 @@ void PackPrimaryPhases::write_goal_attributes()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  std::stringstream ss;
+  QTextStream ss;
   float threshold = 0.0f;
 
   // Skip the first grain

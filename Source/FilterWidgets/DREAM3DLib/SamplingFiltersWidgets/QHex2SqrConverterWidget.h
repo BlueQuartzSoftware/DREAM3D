@@ -76,7 +76,7 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
     QHex2SqrConverterWidget(QWidget *parent = 0);
     virtual ~QHex2SqrConverterWidget();
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
 
     virtual AbstractFilter::Pointer getFilter(bool defaultValues);
 
@@ -106,7 +106,7 @@ class QHex2SqrConverterWidget : public QFilterWidget, private Ui::QHex2SqrConver
     void m_findEbsdMaxSliceAndPrefix();
     void m_generateExampleEbsdInputFile();
 
-    QVector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
+    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
                                                    QString filename);
 
     virtual void openHtmlHelpFile();

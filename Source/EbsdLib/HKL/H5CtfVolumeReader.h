@@ -36,15 +36,14 @@
 #ifndef H5CTFVOLUMEREADER_H_
 #define H5CTFVOLUMEREADER_H_
 
-//-- STL Includes
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 //-- EbsdLib Includes
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/H5EbsdVolumeReader.h"
-
 #include "EbsdLib/HKL/CtfPhase.h"
 
 

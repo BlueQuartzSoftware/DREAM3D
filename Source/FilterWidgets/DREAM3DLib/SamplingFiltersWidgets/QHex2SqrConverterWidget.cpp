@@ -103,7 +103,7 @@ void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
   Hex2SqrConverter* filter = Hex2SqrConverter::SafeObjectDownCast<AbstractFilter*, Hex2SqrConverter*>(filt);
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
-  std::stringstream ss;
+  QTextStream ss;
   ss << filter->getXResolution();
   m_xSpacing->setText(QString::fromStdString(ss.str()));
   ss.clear();
@@ -138,9 +138,9 @@ AbstractFilter::Pointer QHex2SqrConverterWidget::getFilter(bool defaultValues)
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
-  QVector<std::string> realFileList;
-  for(QVector<std::string>::size_type i = 0; i < fileList.size(); ++i)
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, filename);
+  QVector<QString> realFileList;
+  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath = QString::fromStdString(fileList[i]);
     QFileInfo fi(filePath);
@@ -177,7 +177,7 @@ QFilterWidget* QHex2SqrConverterWidget::createDeepCopy()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, filename);
 
   w->setEbsdFileList(fileList);
 
@@ -389,11 +389,11 @@ void QHex2SqrConverterWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<std::string> QHex2SqrConverterWidget::generateFileList(int start, int end, bool &hasMissingFiles,
+QVector<QString> QHex2SqrConverterWidget::generateFileList(int start, int end, bool &hasMissingFiles,
                                                QString filename)
 {
   int index = 0;
-  QVector<std::string> fileList;
+  QVector<QString> fileList;
 
   for (int i = 0; i < (end-start)+1; ++i)
   {
@@ -426,12 +426,12 @@ void QHex2SqrConverterWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<std::string> fileList = generateFileList(start, end, hasMissingFiles, filename);
+  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, filename);
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
-  for(QVector<std::string>::size_type i = 0; i < fileList.size(); ++i)
+  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
     QString filePath(fileList.at(i).c_str());
     QFileInfo fi(filePath);

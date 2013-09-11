@@ -1733,7 +1733,7 @@ void make_nodes(int iter)
 //  itoa(iter, num, 10);
 //  strcat(fileout, num);
 //  strcat(fileout, fileoutext);
-  std::stringstream ss;
+  QTextStream ss;
   ss << "pointcheck" << iter << ".vtk";
   QString fileout = ss.str();
 

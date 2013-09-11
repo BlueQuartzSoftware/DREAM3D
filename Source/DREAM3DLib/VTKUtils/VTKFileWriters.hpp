@@ -239,7 +239,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
     size_t dims[3];
     r->getDimensions(dims);
 
-    QVector<std::string> names(3);
+    QVector<QString> names(3);
     names[0] = "Phi1";
     names[1] = "Phi";
     names[2] = "Phi2";

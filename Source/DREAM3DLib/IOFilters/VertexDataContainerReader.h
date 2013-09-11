@@ -62,12 +62,12 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexFieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexEnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<std::string> NameListType;
+    typedef std::list<QString> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -133,8 +133,8 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
 
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<std::string> &namesRead,
-                                                QSet<std::string> &namesToRead);
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead);
 
   private:
 

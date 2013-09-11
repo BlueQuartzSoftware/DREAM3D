@@ -25,7 +25,7 @@ private:
 
 	//#################### CONSTRUCTORS ####################
 public:
-	explicit Exception(const std::string& cause)
+	explicit Exception(const QString& cause)
 	:	m_cause(cause)
 	{}
 
@@ -34,7 +34,7 @@ public:
 	virtual ~Exception() {}
 
 	//#################### PUBLIC METHODS ####################
-	virtual const std::string& error() const
+	virtual const QString& error() const
 	{
 		return m_cause;
 	}

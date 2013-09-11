@@ -109,7 +109,7 @@ void ConvertEulerAngles::setupFilterParameters()
     option->setPropertyName("ConversionType");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);
@@ -148,7 +148,7 @@ int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* wr
 void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)

@@ -119,7 +119,7 @@ void FlattenImage::setupFilterParameters()
     option->setPropertyName("FlattenMethod");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("Lightness");
     choices.push_back("Average");
     choices.push_back("Luminosity");
@@ -159,7 +159,7 @@ int FlattenImage::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 

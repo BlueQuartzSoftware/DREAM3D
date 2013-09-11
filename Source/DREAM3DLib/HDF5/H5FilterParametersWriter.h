@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int closeFilterGroup();
 
     virtual int writeValue(const QString name, const QString value);
-    virtual int writeValue(const QString name, const QVector<std::string> value);
+    virtual int writeValue(const QString name, const QVector<QString> value);
 
     virtual int writeValue(const QString name, int8_t value);
     virtual int writeValue(const QString name, int16_t value);
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT H5FilterParametersWriter : public AbstractFilterParamete
     virtual int writeValue(const QString name, ComparisonInput_t v, int vectorPos);
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v);
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos);
-    virtual int writeValue(const QString name, QSet<std::string> v);
+    virtual int writeValue(const QString name, QSet<QString> v);
 
     protected:
       H5FilterParametersWriter();

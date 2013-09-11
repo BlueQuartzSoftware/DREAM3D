@@ -50,6 +50,17 @@ set(CMP_ENABLE_PLUGINS "0")
 set(CMP_LIB_SEARCH_DIRS "")
 INCLUDE (${CMP_SOURCE_DIR}/cmpProject.cmake)
 
+#-------------------------------------------------------------------------------
+# Set our H5Lite codes to also compile the Qt API version of H5Lite
+#-------------------------------------------------------------------------------
+set(H5Support_USE_QT 0)
+option(H5Support_INCLUDE_QT_API "Include support for using Qt classes with H5Lite" ON)
+if(H5Support_INCLUDE_QT_API)
+  set(H5Support_USE_QT 1)
+endif()
+MARK_AS_ADVANCED(H5Support_INCLUDE_QT_API)
+MARK_AS_ADVANCED(H5Support_USE_QT)
+
 set(H5Support_SRCS
     ${H5Support_SOURCE_DIR}/H5Lite.cpp
     ${H5Support_SOURCE_DIR}/H5Utilities.cpp
@@ -60,7 +71,22 @@ set(H5Support_HDRS
     ${H5Support_SOURCE_DIR}/H5Lite.h
     ${H5Support_SOURCE_DIR}/H5Utilities.h
     ${H5Support_SOURCE_DIR}/HDF5ScopedFileSentinel.h
+    ${H5Support_SOURCE_DIR}/H5Macros.h
 )
+
+if(H5Support_USE_QT)
+  set(H5Support_SRCS
+    ${H5Support_SRCS}
+    ${H5Support_SOURCE_DIR}/QH5Lite.cpp
+    ${H5Support_SOURCE_DIR}/QH5Utilities.cpp
+  )
+  set(H5Support_HDRS
+    ${H5Support_HDRS}
+    ${H5Support_SOURCE_DIR}/QH5Lite.h
+    ${H5Support_SOURCE_DIR}/QH5Utilities.h
+  )
+endif()
+
 cmp_IDE_SOURCE_PROPERTIES( "H5Support" "${H5Support_HDRS}" "${H5Support_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 # --------------------------------------------------------------------
@@ -93,7 +119,7 @@ set(PROJECT_SRCS
 )
 
 add_library(${PROJECT_NAME}  ${LIB_TYPE} ${PROJECT_SRCS})
-target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} )
+target_link_libraries(${PROJECT_NAME} ${HDF5_LIBRARIES} ${QT_QTCORE_LIBRARY} )
 
 
 LibraryProperties( ${PROJECT_NAME}  ${EXE_DEBUG_EXTENSION} )

@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT Hex2SqrConverter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, YResolution)
     DREAM3D_INSTANCE_PROPERTY(int, NumCols)
     DREAM3D_INSTANCE_PROPERTY(int, NumRows)
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
 
     DREAM3D_INSTANCE_PROPERTY(bool, HeaderIsComplete)
 

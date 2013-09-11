@@ -130,7 +130,7 @@ int INLWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int
 void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(getOutputFile().empty() == true)
   {
@@ -189,13 +189,13 @@ int INLWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
-  std::stringstream ss;
+  QTextStream ss;
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();

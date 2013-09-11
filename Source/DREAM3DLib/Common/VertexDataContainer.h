@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Point group
      * @return
      */
-    std::list<std::string> getVertexArrayNameList();
+    std::list<QString> getVertexArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Point group
@@ -170,7 +170,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getVertexFieldArrayNameList();
+    std::list<QString> getVertexFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
@@ -223,7 +223,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<std::string> getVertexEnsembleArrayNameList();
+    std::list<QString> getVertexEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group
@@ -251,9 +251,9 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
 
    private:
 
-     QMap<std::string, IDataArray::Pointer> m_VertexData;
-     QMap<std::string, IDataArray::Pointer> m_VertexFieldData;
-     QMap<std::string, IDataArray::Pointer> m_VertexEnsembleData;
+     QMap<QString, IDataArray::Pointer> m_VertexData;
+     QMap<QString, IDataArray::Pointer> m_VertexFieldData;
+     QMap<QString, IDataArray::Pointer> m_VertexEnsembleData;
 
      VertexDataContainer(const VertexDataContainer&);
      void operator =(const VertexDataContainer&);

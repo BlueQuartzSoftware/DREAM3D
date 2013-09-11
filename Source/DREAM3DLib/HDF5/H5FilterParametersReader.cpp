@@ -102,12 +102,12 @@ QString H5FilterParametersReader::readValue(const QString name, QString value)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<std::string> H5FilterParametersReader::readValue(const QString name, QVector<std::string> value)
+QVector<QString> H5FilterParametersReader::readValue(const QString name, QVector<QString> value)
 {
   int vectorSize = 0;
   QString str = "";
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -218,7 +218,7 @@ QVector<int8_t> H5FilterParametersReader::readValue(const QString name, QVector<
   int vectorSize = 0;
   int8_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -238,7 +238,7 @@ QVector<int16_t> H5FilterParametersReader::readValue(const QString name, QVector
   int vectorSize = 0;
   int16_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -258,7 +258,7 @@ QVector<int32_t> H5FilterParametersReader::readValue(const QString name, QVector
   int vectorSize = 0;
   int32_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -278,7 +278,7 @@ QVector<int64_t> H5FilterParametersReader::readValue(const QString name, QVector
   int vectorSize = 0;
   int64_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -298,7 +298,7 @@ QVector<uint8_t> H5FilterParametersReader::readValue(const QString name, QVector
   int vectorSize = 0;
   uint8_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -318,7 +318,7 @@ QVector<uint16_t> H5FilterParametersReader::readValue(const QString name, QVecto
   int vectorSize = 0;
   uint16_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -338,7 +338,7 @@ QVector<uint32_t> H5FilterParametersReader::readValue(const QString name, QVecto
   int vectorSize = 0;
   uint32_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -358,7 +358,7 @@ QVector<uint64_t> H5FilterParametersReader::readValue(const QString name, QVecto
   int vectorSize = 0;
   uint64_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -378,7 +378,7 @@ QVector<float> H5FilterParametersReader::readValue(const QString name, QVector<f
   int vectorSize = 0;
   float scalar = 0.0f;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -398,7 +398,7 @@ QVector<double> H5FilterParametersReader::readValue(const QString name, QVector<
   int vectorSize = 0;
   double scalar = 0.0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
-  std::stringstream ss;
+  QTextStream ss;
   for (int i=0; i<vectorSize; i++)
   {
     ss << i;
@@ -444,7 +444,7 @@ ComparisonInput_t H5FilterParametersReader::readValue(const QString name, Compar
   int err = 0;
   ComparisonInput_t v;
 
-  std::stringstream ss;
+  QTextStream ss;
   ss << vectorPos <<  H5FilterParameter::ComparisonInput;
 
   QString data;
@@ -455,7 +455,7 @@ ComparisonInput_t H5FilterParametersReader::readValue(const QString name, Compar
     return defaultValue;
   }
 
-  QVector<std::string> tokens = tokenize(data.c_str(), '\n');
+  QVector<QString> tokens = tokenize(data.c_str(), '\n');
   if(tokens.size() >= 1)
   {
     v.arrayName = tokens[0];
@@ -496,7 +496,7 @@ AxisAngleInput_t H5FilterParametersReader::readValue(const QString name, AxisAng
   //  int32_t rank = 1;
   //  hsize_t dims[1] = { 4 };
 
-  std::stringstream ss;
+  QTextStream ss;
   ss << vectorPos <<  H5FilterParameter::AxisAngleInput;
 
   err = H5Lite::readPointerAttribute<float>(m_CurrentGroupId, name, ss.str(), reinterpret_cast<float*>(&v) );
@@ -526,7 +526,7 @@ QVector<AxisAngleInput_t> H5FilterParametersReader::readValue(const QString name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> H5FilterParametersReader::readValue(const QString name, QSet<std::string> v)
+QSet<QString> H5FilterParametersReader::readValue(const QString name, QSet<QString> v)
 {
   size_t size = 0;
   QString strData = "";
@@ -537,7 +537,7 @@ QSet<std::string> H5FilterParametersReader::readValue(const QString name, QSet<s
   // Now read the the attribute that says how many arrays are in the data set.
   err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, "NumArrays", size);
 
-  QVector<std::string> strVector = tokenize(strData.c_str(), '\n');
+  QVector<QString> strVector = tokenize(strData.c_str(), '\n');
 
   if (strVector.size() != size)
   {
@@ -555,19 +555,19 @@ QSet<std::string> H5FilterParametersReader::readValue(const QString name, QSet<s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<std::string> H5FilterParametersReader::tokenize(const char* buf, char delimiter)
+QVector<QString> H5FilterParametersReader::tokenize(const char* buf, char delimiter)
 {
-  QVector<std::string> output;
+  QVector<QString> output;
   QString values(buf);
-  std::string::size_type start = 0;
-  std::string::size_type pos = 0;
+  QString::size_type start = 0;
+  QString::size_type pos = 0;
   //  std::cout << "-----------------------------" << std::endl;
-  while(pos != std::string::npos && pos != values.size() - 1)
+  while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
     output.push_back(values.substr(start, pos-start));
     //   std::cout << "Adding: " << output.back() << std::endl;
-    if (pos != std::string::npos)
+    if (pos != QString::npos)
     {
       start = pos + 1;
     }

@@ -17,7 +17,7 @@ set(HEDM_SRCS
     ${EbsdLib_SOURCE_DIR}/HEDM/MicPhase.cpp
     ${EbsdLib_SOURCE_DIR}/HEDM/MicFields.cpp
     )
- 
+
 set(HEDM_HDRS
     ${EbsdLib_SOURCE_DIR}/HEDM/MicConstants.h
     ${EbsdLib_SOURCE_DIR}/HEDM/MicHeaderEntry.h
@@ -25,6 +25,7 @@ set(HEDM_HDRS
     ${EbsdLib_SOURCE_DIR}/HEDM/MicPhase.h
     ${EbsdLib_SOURCE_DIR}/HEDM/MicFields.h
 )
+
 
 if(EbsdLib_ENABLE_HDF5)
     add_definitions(-DEbsdLib_HAVE_HDF5)
@@ -40,6 +41,8 @@ if(EbsdLib_ENABLE_HDF5)
     )
     set(EbsdLib_HDF5_SUPPORT 1)
 endif()
+
+
 cmp_IDE_SOURCE_PROPERTIES( "EbsdLib/HEDM" "${HEDM_HDRS}" "${HEDM_SRCS}" ${PROJECT_INSTALL_HEADERS})
 
 if( ${EbsdLib_INSTALL_FILES} EQUAL 1 )

@@ -344,7 +344,7 @@ QString MD5::hexdigest() const
     sprintf(buf+i*2, "%02x", digest[i]);
   buf[32]=0;
 
-  return std::string(buf);
+  return QString(buf);
 }
 
 //////////////////////////////

@@ -80,7 +80,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 
 
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
-  std::stringstream ss;
+  QTextStream ss;
   QString filename("/tmp/");
   filename.append("ModifiedLambert_Square_Coords_").append(coords->GetName()).append(".vtk");
   FILE* f = NULL;

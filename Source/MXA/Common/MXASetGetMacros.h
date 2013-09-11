@@ -118,7 +118,7 @@ static Pointer New args \
  * information. */
 #define MXA_TYPE_MACRO(thisClass) \
 public: \
-virtual const QString getNameOfClass() {return std::string(#thisClass);}\
+virtual const QString getNameOfClass() {return QString(#thisClass);}\
 static int IsTypeOf(const char *m_msgType) \
 { \
 if ( !strcmp(#thisClass,m_msgType) ) \
@@ -142,8 +142,8 @@ return static_cast<Target>(x);\
 
 #define MXA_TYPE_MACRO_SUPER(thisClass,superclass) \
 public: \
-virtual const QString getNameOfClass() {return std::string(#thisClass);}\
-static QString ClassName() {return std::string(#thisClass);}\
+virtual const QString getNameOfClass() {return QString(#thisClass);}\
+static QString ClassName() {return QString(#thisClass);}\
 static int IsTypeOf(const char *m_msgType) \
 { \
 if ( !strcmp(#thisClass,m_msgType) ) \
@@ -288,14 +288,14 @@ namespace MXA
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
-    bad_lexical_cast(const std::string& s)
+    bad_lexical_cast(const QString& s)
       : std::runtime_error(s)
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
-    bad_any_cast(const std::string& s)
+    bad_any_cast(const QString& s)
       : std::runtime_error(s)
     { }
   };

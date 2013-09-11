@@ -251,7 +251,7 @@ int FilterPipeline::preflightPipeline()
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
 
   // Start looping through the Pipeline and preflight everything
@@ -290,8 +290,8 @@ int FilterPipeline::preflightPipeline()
   }
 
 #if 0
-  std::list<std::string> cellNames = m->getCellArrayNameList();
-  for (std::list<std::string>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
+  std::list<QString> cellNames = m->getCellArrayNameList();
+  for (std::list<QString>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
   {
     std::cout << *name << std::endl;
   }
@@ -333,7 +333,7 @@ void FilterPipeline::execute()
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-  std::stringstream ss;
+  QTextStream ss;
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   DEFINE_CLOCK;

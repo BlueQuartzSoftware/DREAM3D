@@ -164,7 +164,7 @@ int VTKFileReader::readHeader()
   instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
-  setComment(std::string(buf));
+  setComment(QString(buf));
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
   QString fileType(buf);
@@ -210,7 +210,7 @@ int VTKFileReader::readHeader()
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    std::stringstream s;
+    QTextStream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
                 << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
@@ -221,7 +221,7 @@ int VTKFileReader::readHeader()
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    std::stringstream s;
+    QTextStream s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
     s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);

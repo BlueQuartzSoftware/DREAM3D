@@ -113,7 +113,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -177,7 +177,7 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   //VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
@@ -342,7 +342,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::writeImage( QImage &image)
 {
-  std::stringstream ss;
+  QTextStream ss;
   ss << "Writing Image " << m_OutputFile;
   notifyStatusMessage(ss.str());
 

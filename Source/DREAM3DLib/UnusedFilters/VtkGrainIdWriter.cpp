@@ -98,7 +98,7 @@ int VtkGrainIdWriter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void VtkGrainIdWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
 
@@ -132,7 +132,7 @@ int VtkGrainIdWriter::writeFile()
   // Copy all the variables into the helper class from above
   if (NULL == getVoxelDataContainer())
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);
@@ -141,7 +141,7 @@ int VtkGrainIdWriter::writeFile()
   VoxelDataContainer* m = getVoxelDataContainer();
   if (NULL == m)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorMessage(ss.str());
     setErrorCondition(-1);

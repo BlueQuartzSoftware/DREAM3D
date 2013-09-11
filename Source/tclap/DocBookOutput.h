@@ -76,9 +76,9 @@ class DocBookOutput : public CmdLineOutput
 		 * \param r - The char to replace. 
 		 * \param x - What to replace r with. 
 		 */
-		void substituteSpecialChars( std::string& s, char r, std::string& x );
-		void removeChar( std::string& s, char r);
-		void basename( std::string& s );
+		void substituteSpecialChars( QString& s, char r, QString& x );
+		void removeChar( QString& s, char r);
+		void basename( QString& s );
 
 		void printShortArg(Arg* it);
 		void printLongArg(Arg* it);
@@ -179,31 +179,31 @@ inline void DocBookOutput::failure( CmdLineInterface& _cmd,
 	throw ExitException(1);
 }
 
-inline void DocBookOutput::substituteSpecialChars( std::string& s,
+inline void DocBookOutput::substituteSpecialChars( QString& s,
 				                                   char r,
-												   std::string& x )
+												   QString& x )
 {
 	size_t p;
-	while ( (p = s.find_first_of(r)) != std::string::npos )
+	while ( (p = s.find_first_of(r)) != QString::npos )
 	{
 		s.erase(p,1);
 		s.insert(p,x);
 	}
 }
 
-inline void DocBookOutput::removeChar( std::string& s, char r)
+inline void DocBookOutput::removeChar( QString& s, char r)
 {
 	size_t p;
-	while ( (p = s.find_first_of(r)) != std::string::npos )
+	while ( (p = s.find_first_of(r)) != QString::npos )
 	{
 		s.erase(p,1);
 	}
 }
 
-inline void DocBookOutput::basename( std::string& s )
+inline void DocBookOutput::basename( QString& s )
 {
 	size_t p = s.find_last_of('/');
-	if ( p != std::string::npos )
+	if ( p != QString::npos )
 	{
 		s.erase(0, p + 1);
 	}

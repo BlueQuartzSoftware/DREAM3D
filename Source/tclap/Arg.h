@@ -166,9 +166,9 @@ class Arg
 		 * \param valreq - Whether the a value is required for the argument.
 		 * \param v - The visitor checked by the argument. Defaults to NULL.
 		 */
- 		Arg( const std::string& flag,
-			 const std::string& name,
-			 const std::string& desc,
+ 		Arg( const QString& flag,
+			 const QString& name,
+			 const QString& desc,
 			 bool req,
 			 bool valreq,
 			 Visitor* v = NULL );
@@ -242,7 +242,7 @@ class Arg
 		 * \param args - Mutable list of strings. What is
 		 * passed in from main.
 		 */
-		virtual bool processArg(int *i, QVector<std::string>& args) = 0;
+		virtual bool processArg(int *i, QVector<QString>& args) = 0;
 
 		/**
 		 * Operator ==.
@@ -254,12 +254,12 @@ class Arg
 		/**
 		 * Returns the argument flag.
 		 */
-		const std::string& getFlag() const;
+		const QString& getFlag() const;
 
 		/**
 		 * Returns the argument name.
 		 */
-		const std::string& getName() const;
+		const QString& getName() const;
 
 		/**
 		 * Returns the argument description.
@@ -307,7 +307,7 @@ class Arg
 		 * \param s - The string to be compared to the flag/name to determine
 		 * whether the arg matches.
 		 */
-		virtual bool argMatches( const std::string& s ) const;
+		virtual bool argMatches( const QString& s ) const;
 
 		/**
 		 * Returns a simple string representation of the argument.
@@ -319,13 +319,13 @@ class Arg
 		 * Returns a short ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual QString shortID( const std::string& valueId = "val" ) const;
+		virtual QString shortID( const QString& valueId = "val" ) const;
 
 		/**
 		 * Returns a long ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual QString longID( const std::string& valueId = "val" ) const;
+		virtual QString longID( const QString& valueId = "val" ) const;
 
 		/**
 		 * Trims a value off of the flag.
@@ -334,7 +334,7 @@ class Arg
 		 * \param value - Where the value trimmed from the string will
 		 * be stored.
 		 */
-		virtual void trimFlag( std::string& flag, std::string& value ) const;
+		virtual void trimFlag( QString& flag, QString& value ) const;
 
 		/**
 		 * Checks whether a given string has blank chars, indicating that
@@ -342,14 +342,14 @@ class Arg
 		 * false.
 		 * \param s - string to be checked.
 		 */
-		bool _hasBlanks( const std::string& s ) const;
+		bool _hasBlanks( const QString& s ) const;
 
 		/**
 		 * Sets the requireLabel. Used by XorHandler.  You shouldn't ever
 		 * use this.
 		 * \param s - Set the requireLabel to this value.
 		 */
-		void setRequireLabel( const std::string& s );
+		void setRequireLabel( const QString& s );
 
 		/**
 		 * Used for MultiArgs and XorHandler to determine whether args
@@ -392,7 +392,7 @@ typedef std::list<Visitor*>::iterator VisitorListIterator;
  * ValueLike traits use operator>> to assign the value from strVal.
  */
 template<typename T> void
-ExtractValue(T &destVal, const std::string& strVal, ValueLike vl)
+ExtractValue(T &destVal, const QString& strVal, ValueLike vl)
 {
     static_cast<void>(vl); // Avoid warning about unused vl
     std::istringstream is(strVal);
@@ -429,7 +429,7 @@ ExtractValue(T &destVal, const std::string& strVal, ValueLike vl)
  * StringLike uses assignment (operator=) to assign from strVal.
  */
 template<typename T> void
-ExtractValue(T &destVal, const std::string& strVal, StringLike sl)
+ExtractValue(T &destVal, const QString& strVal, StringLike sl)
 {
     static_cast<void>(sl); // Avoid warning about unused sl
     SetString(destVal, strVal);
@@ -439,9 +439,9 @@ ExtractValue(T &destVal, const std::string& strVal, StringLike sl)
 //BEGIN Arg.cpp
 //////////////////////////////////////////////////////////////////////
 
-inline Arg::Arg(const std::string& flag,
-         const std::string& name,
-         const std::string& desc,
+inline Arg::Arg(const QString& flag,
+         const QString& name,
+         const QString& desc,
          bool req,
          bool valreq,
          Visitor* v) :
@@ -472,7 +472,7 @@ inline Arg::Arg(const std::string& flag,
 
 	if ( ( _name.substr( 0, Arg::flagStartString().length() ) == Arg::flagStartString() ) ||
 		 ( _name.substr( 0, Arg::nameStartString().length() ) == Arg::nameStartString() ) ||
-		 ( _name.find( " ", 0 ) != std::string::npos ) )
+		 ( _name.find( " ", 0 ) != QString::npos ) )
 		throw(SpecificationException("Argument name begin with either '" +
 							Arg::flagStartString() + "' or '" +
 							Arg::nameStartString() + "' or space.",
@@ -482,7 +482,7 @@ inline Arg::Arg(const std::string& flag,
 
 inline Arg::~Arg() { }
 
-inline QString Arg::shortID( const std::string& valueId ) const
+inline QString Arg::shortID( const QString& valueId ) const
 {
 	QString id = "";
 
@@ -492,7 +492,7 @@ inline QString Arg::shortID( const std::string& valueId ) const
 		id = Arg::nameStartString() + _name;
 
 	if ( _valueRequired )
-		id += std::string( 1, Arg::delimiter() ) + "<" + valueId  + ">";
+		id += QString( 1, Arg::delimiter() ) + "<" + valueId  + ">";
 
 	if ( !_required )
 		id = "[" + id + "]";
@@ -500,7 +500,7 @@ inline QString Arg::shortID( const std::string& valueId ) const
 	return id;
 }
 
-inline QString Arg::longID( const std::string& valueId ) const
+inline QString Arg::longID( const QString& valueId ) const
 {
 	QString id = "";
 
@@ -509,7 +509,7 @@ inline QString Arg::longID( const std::string& valueId ) const
 		id += Arg::flagStartString() + _flag;
 
 		if ( _valueRequired )
-			id += std::string( 1, Arg::delimiter() ) + "<" + valueId + ">";
+			id += QString( 1, Arg::delimiter() ) + "<" + valueId + ">";
 
 		id += ",  ";
 	}
@@ -517,7 +517,7 @@ inline QString Arg::longID( const std::string& valueId ) const
 	id += Arg::nameStartString() + _name;
 
 	if ( _valueRequired )
-		id += std::string( 1, Arg::delimiter() ) + "<" + valueId + ">";
+		id += QString( 1, Arg::delimiter() ) + "<" + valueId + ">";
 
 	return id;
 
@@ -544,9 +544,9 @@ inline QString Arg::getDescription() const
 	return desc;
 }
 
-inline const std::string& Arg::getFlag() const { return _flag; }
+inline const QString& Arg::getFlag() const { return _flag; }
 
-inline const std::string& Arg::getName() const { return _name; }
+inline const QString& Arg::getName() const { return _name; }
 
 inline bool Arg::isRequired() const { return _required; }
 
@@ -562,12 +562,12 @@ inline bool Arg::isSet() const
 
 inline bool Arg::isIgnoreable() const { return _ignoreable; }
 
-inline void Arg::setRequireLabel( const std::string& s)
+inline void Arg::setRequireLabel( const QString& s)
 {
 	_requireLabel = s;
 }
 
-inline bool Arg::argMatches( const std::string& argFlag ) const
+inline bool Arg::argMatches( const QString& argFlag ) const
 {
 	if ( ( argFlag == Arg::flagStartString() + _flag && _flag != "" ) ||
 		 argFlag == Arg::nameStartString() + _name )
@@ -597,7 +597,7 @@ inline void Arg::_checkWithVisitor() const
 /**
  * Implementation of trimFlag.
  */
-inline void Arg::trimFlag(std::string& flag, std::string& value) const
+inline void Arg::trimFlag(QString& flag, QString& value) const
 {
 	int stop = 0;
 	for ( int i = 0; static_cast<unsigned int>(i) < flag.length(); i++ )
@@ -618,7 +618,7 @@ inline void Arg::trimFlag(std::string& flag, std::string& value) const
 /**
  * Implementation of _hasBlanks.
  */
-inline bool Arg::_hasBlanks( const std::string& s ) const
+inline bool Arg::_hasBlanks( const QString& s ) const
 {
 	for ( int i = 1; static_cast<unsigned int>(i) < s.length(); i++ )
 		if ( s[i] == Arg::blankChar() )

@@ -33,12 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef EBSDREADER_H_
-#define EBSDREADER_H_
+#ifndef _EBSDREADER_H_
+#define _EBSDREADER_H_
 
-#include <string>
-#include <map>
-
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -195,16 +195,14 @@ class EbsdLib_EXPORT EbsdReader
   #if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
           _mm_free(ptr );
   #else
-          //delete[] ptr;
           free(ptr);
   #endif
           ptr = NULL;
-   //       m_NumberOfElements = 0;
         }
       }
 
   protected:
-    QMap<std::string, EbsdHeaderEntry::Pointer> m_HeaderMap;
+    QMap<QString, EbsdHeaderEntry::Pointer> m_HeaderMap;
 
 
   private:

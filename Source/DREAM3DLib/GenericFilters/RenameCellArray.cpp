@@ -121,7 +121,7 @@ void RenameCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, si
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if(m_SelectedCellArrayName.empty() == true)
   {
@@ -165,7 +165,7 @@ void RenameCellArray::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   bool check = m->renameCellData(m_SelectedCellArrayName, m_NewCellArrayName);
 

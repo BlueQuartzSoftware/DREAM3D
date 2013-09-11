@@ -72,14 +72,14 @@ class ZshCompletionOutput : public CmdLineOutput
 
 	protected:
 
-		void basename( std::string& s );
-		void quoteSpecialChars( std::string& s );
+		void basename( QString& s );
+		void quoteSpecialChars( QString& s );
 
 		QString getMutexList( CmdLineInterface& _cmd, Arg* a );
 		void printOption( Arg* it, QString mutex );
 		void printArg( Arg* it );
 
-		QMap<std::string, std::string> common;
+		QMap<QString, QString> common;
 		char theDelimiter;
 };
 
@@ -131,29 +131,29 @@ inline void ZshCompletionOutput::failure( CmdLineInterface& _cmd,
 	std::cout << e.what() << std::endl;
 }
 
-inline void ZshCompletionOutput::quoteSpecialChars( std::string& s )
+inline void ZshCompletionOutput::quoteSpecialChars( QString& s )
 {
 	size_t idx = s.find_last_of(':');
-	while ( idx != std::string::npos )
+	while ( idx != QString::npos )
 	{
 		s.insert(idx, 1, '\\');
 		idx = s.find_last_of(':', idx);
 	}
 	idx = s.find_last_of('\'');
-	while ( idx != std::string::npos )
+	while ( idx != QString::npos )
 	{
 		s.insert(idx, "'\\'");
 		if (idx == 0)
-			idx = std::string::npos;
+			idx = QString::npos;
 		else
 			idx = s.find_last_of('\'', --idx);
 	}
 }
 
-inline void ZshCompletionOutput::basename( std::string& s )
+inline void ZshCompletionOutput::basename( QString& s )
 {
 	size_t p = s.find_last_of('/');
-	if ( p != std::string::npos )
+	if ( p != QString::npos )
 	{
 		s.erase(0, p + 1);
 	}
@@ -173,7 +173,7 @@ inline void ZshCompletionOutput::printArg(Arg* a)
 		std::cout << ':';
 
 	std::cout << a->getName() << ':';
-	QMap<std::string, std::string>::iterator compArg = common.find(a->getName());
+	QMap<QString, QString>::iterator compArg = common.find(a->getName());
 	if ( compArg != common.end() )
 	{
 		std::cout << compArg->second;
@@ -242,20 +242,20 @@ inline void ZshCompletionOutput::printOption(Arg* a, QString mutex)
 			arg.erase(0, 1);
 		}
 		size_t p = arg.find('|');
-		if ( p != std::string::npos )
+		if ( p != QString::npos )
 		{
 			do
 			{
 				arg.replace(p, 1, 1, ' ');
 			}
-			while ( (p = arg.find_first_of('|', p)) != std::string::npos );
+			while ( (p = arg.find_first_of('|', p)) != QString::npos );
 			quoteSpecialChars(arg);
 			std::cout << ": :(" << arg << ')';
 		}
 		else
 		{
 			std::cout << ':' << arg;
-			QMap<std::string, std::string>::iterator compArg = common.find(arg);
+			QMap<QString, QString>::iterator compArg = common.find(arg);
 			if ( compArg != common.end() )
 			{
 				std::cout << ':' << compArg->second;
