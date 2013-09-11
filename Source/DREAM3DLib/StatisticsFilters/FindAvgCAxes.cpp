@@ -162,14 +162,6 @@ void FindAvgCAxes::execute()
       m_AvgCAxes[3*m_GrainIds[i]] += c1[0];
       m_AvgCAxes[3*m_GrainIds[i]+1] += c1[1];
       m_AvgCAxes[3*m_GrainIds[i]+2] += c1[2];
-      if(i == 2328287)
-{
-float w = q1.w;
-float x = q1.x;
-float y = q1.y;
-float z = q1.z;
-int stop = 0;
-}
     }
   }
   for (size_t i = 1; i < numgrains; i++)

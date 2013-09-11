@@ -21,22 +21,32 @@ macro (ConvertPathToHeaderCompatible INPUT)
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
     endif()
 endmacro()
+
+set(DIR_SEP "/")
+if(WIN32)
+	set(DIR_SEP "\\\\")
+endif()
 #message(STATUS "DREAM3DTest_BINARY_DIR: ${DREAM3DTest_BINARY_DIR}")
 include_directories(${DREAM3DTest_BINARY_DIR})
-set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp)
+set(TEST_TEMP_DIR ${DREAM3DTest_BINARY_DIR}/Temp/)
 
 GET_FILENAME_COMPONENT(MXA_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMPORT_XML_FILE)
-file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BUILD_DIR_NATIVE)
-file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" DREAM3DProj_BUILD_DIR_NATIVE)
-file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/Bin" DREAM3DProj_BIN_DIR_NATIVE)
+file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}/" DREAM3DTest_BUILD_DIR_NATIVE)
+file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/" DREAM3DProj_BUILD_DIR_NATIVE)
+file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}/Bin/" DREAM3DProj_BIN_DIR_NATIVE)
+file(TO_NATIVE_PATH "${TEST_TEMP_DIR}/" TEST_TEMP_DIR_NATIVE)
+
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
 set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${TEST_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
 ConvertPathToHeaderCompatible(TEST_TEMP_DIR)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
 ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
 ConvertPathToHeaderCompatible(DREAM3DTest_BUILD_DIR_NATIVE)
-#ConvertPathToHeaderCompatible(MXA_BINARY_DIR_NATIVE)
+ConvertPathToHeaderCompatible(DREAM3DProj_BIN_DIR_NATIVE)
+ConvertPathToHeaderCompatible(DREAM3DProj_BUILD_DIR_NATIVE)
+ConvertPathToHeaderCompatible(TEST_TEMP_DIR_NATIVE)
+
 
 configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
                ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)

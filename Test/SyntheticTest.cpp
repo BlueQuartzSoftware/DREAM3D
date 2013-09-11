@@ -56,7 +56,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::SyntheticTest::OutputFile);
+//  MXADir::remove(UnitTest::SyntheticTest::OutputFile);
 #endif
 }
 
