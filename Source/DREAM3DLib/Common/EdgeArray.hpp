@@ -112,8 +112,7 @@ class EdgeArray
       m_EdgesContainingVert = DynamicListArray::New();
 
       // Allocate the basic structures
-      m_EdgesContainingVert->allocate(numCells);
-
+      std::vector<uint16_t> linkCount(numCells, 0);
       size_t cellId;
       unsigned short* linkLoc;
 
@@ -134,12 +133,12 @@ class EdgeArray
         getVerts(Edges, cellId, pts);
         for (size_t j=0; j < 2; j++)
         {
-          m_EdgesContainingVert->incrementLinkCount(pts[j]);
+         linkCount[pts[j]]++;
         }
       }
 
       // now allocate storage for the links
-      m_EdgesContainingVert->allocateLinks(numCells);
+      m_EdgesContainingVert->allocateLists(linkCount);
 
       for (cellId=0; cellId < numCells; cellId++)
       {
@@ -162,7 +161,7 @@ class EdgeArray
 
       DynamicListArray::Pointer m_EdgeNeighbors = DynamicListArray::New();
 
-      m_EdgeNeighbors->allocate(nEdges);
+      std::vector<uint16_t> linkCount(nEdges, 0);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nEdges]);
@@ -217,9 +216,9 @@ class EdgeArray
               //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
-              loop_neighbors[m_EdgeNeighbors->Array[t].ncells] = vertIdxs[vt];
-              m_EdgeNeighbors->Array[t].ncells++;// Increment the count for the next time through
-              if (m_EdgeNeighbors->Array[t].ncells >= loop_neighbors.size())
+              loop_neighbors[linkCount[t]] = vertIdxs[vt];
+              linkCount[t]++;// Increment the count for the next time through
+              if (linkCount[t] >= loop_neighbors.size())
               {
                 loop_neighbors.resize(loop_neighbors.size() + 10);
               }
@@ -227,16 +226,14 @@ class EdgeArray
             }
           }
         }
-        BOOST_ASSERT(m_EdgeNeighbors->Array[t].ncells > 1);
+        BOOST_ASSERT(linkCount[t] > 1);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < m_EdgeNeighbors->Array[t].ncells; ++k)
+        for(size_t k = 0;k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
         // Allocate the array storage for the current triangle to hold its Face list
-        m_EdgeNeighbors->Array[t].cells = new int[m_EdgeNeighbors->Array[t].ncells];
-        // Only copy the first "N" values from the loop_neighbors vector into the storage array
-        ::memcpy(m_EdgeNeighbors->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * m_EdgeNeighbors->Array[t].ncells);
+        m_EdgeNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
     }
 

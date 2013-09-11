@@ -113,7 +113,7 @@ class CellArray
       m_CellsContainingVert = DynamicListArray::New();
 
       // Allocate the basic structures
-      m_CellsContainingVert->allocate(numCells);
+      std::vector<uint16_t> linkCount(numCells, 0);
 
       size_t cellId;
       unsigned short* linkLoc;
@@ -135,12 +135,12 @@ class CellArray
         getVerts(Cells, cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
-          m_CellsContainingVert->incrementLinkCount(pts[j]);
+         linkCount[pts[j]]++;
         }
       }
 
       // now allocate storage for the links
-      m_CellsContainingVert->allocateLinks(numCells);
+      m_CellsContainingVert->allocateLists(linkCount);
 
       for (cellId=0; cellId < numCells; cellId++)
       {
@@ -163,7 +163,7 @@ class CellArray
 
       DynamicListArray::Pointer m_CellNeighbors = DynamicListArray::New();
 
-      m_CellNeighbors->allocate(nCells);
+      std::vector<uint16_t> linkCount(nFaces, 0);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nCells]);
@@ -224,9 +224,9 @@ class CellArray
               //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
-              loop_neighbors[m_CellNeighbors->Array[t].ncells] = vertIdxs[vt];
-              m_CellNeighbors->Array[t].ncells++;// Increment the count for the next time through
-              if (m_CellNeighbors->Array[t].ncells >= loop_neighbors.size())
+              loop_neighbors[linkCount[t]] = vertIdxs[vt];
+              linkCount[t]++;// Increment the count for the next time through
+              if (linkCount[t] >= loop_neighbors.size())
               {
                 loop_neighbors.resize(loop_neighbors.size() + 10);
               }
@@ -234,16 +234,14 @@ class CellArray
             }
           }
         }
-        BOOST_ASSERT(m_CellNeighbors->Array[t].ncells > 2);
+        BOOST_ASSERT(linkCount[t] > 2);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < m_CellNeighbors->Array[t].ncells; ++k)
+        for(size_t k = 0;k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
         // Allocate the array storage for the current triangle to hold its Cell list
-        m_CellNeighbors->Array[t].cells = new int[m_CellNeighbors->Array[t].ncells];
-        // Only copy the first "N" values from the loop_neighbors vector into the storage array
-        ::memcpy(m_CellNeighbors->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * m_CellNeighbors->Array[t].ncells);
+        m_CellNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
     }
 
