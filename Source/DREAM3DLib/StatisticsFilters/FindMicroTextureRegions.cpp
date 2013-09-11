@@ -65,12 +65,12 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 
   // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionNumCells, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionFractionOccupied, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionNumCells, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionFractionOccupied, float, FloatArrayType, 0, fields, 1)
 
 }
 

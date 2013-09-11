@@ -117,15 +117,15 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, ss, float, FloatArrayType, 0, fields, 2)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, float, FloatArrayType, 0, fields, 2)
 }
 
 

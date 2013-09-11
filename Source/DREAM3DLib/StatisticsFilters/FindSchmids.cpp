@@ -123,18 +123,18 @@ void FindSchmids::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, ss, int32_t, Int32ArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, int32_t, Int32ArrayType, 0, fields, 3)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, int32_t, Int32ArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 

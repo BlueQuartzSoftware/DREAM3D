@@ -364,76 +364,76 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteParentIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WritePhaseIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteGoodVoxels == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
   }
   if(m_WriteGlobAlpha == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, -303, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, -303, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteKernelAverageMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGrainReferenceMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGrainReferenceCAxisMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, -304, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteConfidenceIndicies == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -304, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -304, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteImageQualities == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, ss, -304, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, -304, float, FloatArrayType, voxels, 1)
   }
 //  if(m_WriteIPFColors == true)
 //  {
-//    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
 //  }
   if(m_WriteGBEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteTJEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteQPEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteSchmidFactors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
   }
   if(m_WriteEulerAngles == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
   }
 
   if(m_WriteGrainSizes == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -305, float, FloatArrayType, fields, 1)
   }
 }
 

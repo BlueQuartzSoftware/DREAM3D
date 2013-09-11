@@ -147,29 +147,29 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
 
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, -306, int32_t, Int32ArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, -306, float, FloatArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, -307, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, -308, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, -309, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, -310, float, FloatArrayType, voxels, 1)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

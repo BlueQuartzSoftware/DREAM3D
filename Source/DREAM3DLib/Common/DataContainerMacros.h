@@ -64,7 +64,7 @@
  * @param size The number of tuples in the array
  * @param NumComp The number of components of the DataArray
  */
-#define GET_PREREQ_DATA( dc, NameSpace, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
+#define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){ \
     setErrorCondition(err##000);\
     ss << "The name of the array for the " << #NameSpace << "::" << #DType << "::" << #Name << " was empty. Please provide a name for this array" << std::endl;\
@@ -123,7 +123,7 @@
   }}}
 
 
-#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ss, ptrType, ArrayType, initValue, size, NumComp)\
+#define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ptrType, ArrayType, initValue, size, NumComp)\
   {\
   if (m_##Name##ArrayName.empty() == true)\
   {\
@@ -347,19 +347,19 @@ bool Class::does##DType##Exist(const std::string &name) {\
 /*
    // Cell Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, -300, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -300, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, -300, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -300, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
   GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, ss, -300, float, FloatArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, -300, int32_t, Int32ArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, ss, -300, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType,  voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighborDistances, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType,  voxels, 3)
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1)
@@ -374,23 +374,23 @@ bool Class::does##DType##Exist(const std::string &name) {\
 
   // Field Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, ss, -303,  int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, -304, bool, BoolArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -300, float, FloatArrayType, voxels, 5)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, ss, -304, float, FloatArrayType, voxels, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -304, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, ss, -306, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, ss, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, -303, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, -303,  int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, -304, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, -304, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -304, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -303, bool, BoolArrayType, fields, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, ss, -307, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -307, float, FloatArrayType, fields, 3)
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, ss, -308, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, -309, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, -310, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, ss, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -309, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -310, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, -306, int32_t, Int32ArrayType, fields, 1)
 
 
 
@@ -432,7 +432,7 @@ bool Class::does##DType##Exist(const std::string &name) {\
 
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, TotalSurfaceArea, ss, -303,  float, FloatArrayType, m->crystruct.size(), 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, TotalSurfaceArea, -303,  float, FloatArrayType, m->crystruct.size(), 1);
 
 
 

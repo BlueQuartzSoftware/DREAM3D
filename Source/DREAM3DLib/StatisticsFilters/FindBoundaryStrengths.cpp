@@ -159,11 +159,11 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, ss, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, ss, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, ss, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, ss, float, FloatArrayType, 0, fields, 2)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, fields, 2)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, fields, 2)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, fields, 2)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, fields, 2)
     }
   }
 }
@@ -177,11 +177,11 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

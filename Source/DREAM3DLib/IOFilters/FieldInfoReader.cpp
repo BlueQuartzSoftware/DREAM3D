@@ -162,16 +162,16 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if (m_CreateCellLevelArrays)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------

@@ -349,13 +349,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, 6)
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -495,8 +495,8 @@ void ReadH5Ebsd::execute()
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, ss, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), 6)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), 6)
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)

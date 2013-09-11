@@ -90,9 +90,9 @@ void FindVolFractions::dataCheck(bool preflight, size_t voxels, size_t fields, s
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, VolFractions, ss, float, FloatArrayType, 0, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, VolFractions, float, FloatArrayType, 0, ensembles, 1)
 }
 
 

@@ -147,7 +147,7 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 
   if(m_SelectedFieldArrayName.empty() == true)
   {

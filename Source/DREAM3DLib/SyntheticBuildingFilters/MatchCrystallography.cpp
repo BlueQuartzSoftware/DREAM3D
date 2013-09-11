@@ -151,18 +151,18 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
 
       // Field Data
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, float, FloatArrayType, 0, fields, 4)
 
 
 
@@ -205,9 +205,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -307, unsigned int, XTalStructArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, -308, int32_t, Int32ArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
