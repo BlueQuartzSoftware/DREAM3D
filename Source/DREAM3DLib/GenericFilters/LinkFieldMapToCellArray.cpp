@@ -132,7 +132,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
     return;
   }
 
-  m->clearFieldData();
+  m->clearCellFieldData();
   BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
   // bool* mActive = m_Active->GetPointer(0);
   m->addCellFieldData(DREAM3D::FieldData::Active, active);

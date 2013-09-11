@@ -1065,13 +1065,13 @@ void PackPrimaryPhases::execute()
     write_goal_attributes();
   }
 
-  m->removeFieldData(m_EquivalentDiametersArrayName);
-  m->removeFieldData(m_Omega3sArrayName);
-  m->removeFieldData(m_AxisEulerAnglesArrayName);
-  m->removeFieldData(m_AxisLengthsArrayName);
-  m->removeFieldData(m_VolumesArrayName);
-  m->removeFieldData(m_CentroidsArrayName);
-  m->removeFieldData(m_NeighborhoodsArrayName);
+  m->removeCellFieldData(m_EquivalentDiametersArrayName);
+  m->removeCellFieldData(m_Omega3sArrayName);
+  m->removeCellFieldData(m_AxisEulerAnglesArrayName);
+  m->removeCellFieldData(m_AxisLengthsArrayName);
+  m->removeCellFieldData(m_VolumesArrayName);
+  m->removeCellFieldData(m_CentroidsArrayName);
+  m->removeCellFieldData(m_NeighborhoodsArrayName);
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("Packing Grains Complete");
