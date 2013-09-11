@@ -37,6 +37,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
@@ -50,7 +51,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
- // MXADir::remove();
+ // QFile::remove();
 #endif
 }
 
@@ -72,7 +73,7 @@ void TestCubicOps()
 
   float n[3] = {0.0, 0.0, 1.0f};
   float w = co.getMisoQuat(q0, q1, n[0], n[1], n[2]);
-  DREAM3D_REQUIRE(w == 0.0)
+  DREAM3D_REQUIRE(w >= 0.523598900 && w <= 0.523598914)
 }
 
 
