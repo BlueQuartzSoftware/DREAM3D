@@ -61,14 +61,14 @@ ModifiedLambertProjectionArray::~ModifiedLambertProjectionArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ModifiedLambertProjectionArray::SetName(const std::string &name)
+void ModifiedLambertProjectionArray::SetName(const QString &name)
 {
   m_Name = name;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string ModifiedLambertProjectionArray::GetName()
+QString ModifiedLambertProjectionArray::GetName()
 {
   return m_Name;
 }
@@ -151,7 +151,7 @@ size_t ModifiedLambertProjectionArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ModifiedLambertProjectionArray::EraseTuples(std::vector<size_t> &idxs)
+int ModifiedLambertProjectionArray::EraseTuples(QVector<size_t> &idxs)
 {
   int err = 0;
 
@@ -169,13 +169,13 @@ int ModifiedLambertProjectionArray::EraseTuples(std::vector<size_t> &idxs)
 
   // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
   // off the end of the array and return an error code.
-  for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+  for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
   {
     if (idxs[i] >= m_ModifiedLambertProjectionArray.size()) { return -100; }
   }
 
 
-  std::vector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
+  QVector<ModifiedLambertProjection::Pointer> replacement(m_ModifiedLambertProjectionArray.size() - idxs.size());
   size_t idxsIndex = 0;
   size_t rIdx = 0;
   for(size_t dIdx = 0; dIdx < m_ModifiedLambertProjectionArray.size(); ++dIdx)
@@ -258,7 +258,7 @@ void ModifiedLambertProjectionArray::printComponent(std::ostream &out, size_t i,
 }
 
 // -------------------------------------------------------------------------- */
-void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSize, double* north, double* south)
+void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, double* north, double* south)
 {
   hid_t dataspace = -1, dataset = -1;
   hid_t filespace = -1;
@@ -330,7 +330,7 @@ void AppendRowToH5Dataset(hid_t gid, const std::string &dsetName, int lambertSiz
 /* -----------------------------------------------------------------------------
 //
 // -------------------------------------------------------------------------- */
-void Create2DExpandableDataset(hid_t gid, const std::string &dsetName, int lambertSize, hsize_t chunk_dim,
+void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSize, hsize_t chunk_dim,
                                double* north, double* south)
 {
 
@@ -425,7 +425,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
     return -1;
   }
 
-  std::string dsetName = StringUtils::numToString(m_Phase);
+  QString dsetName = StringUtils::numToString(m_Phase);
   ModifiedLambertProjection::Pointer tmp = m_ModifiedLambertProjectionArray[0];
   tmp->getDimension();
   int lambertDimension = tmp->getDimension();
@@ -461,7 +461,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
 int ModifiedLambertProjectionArray::readH5Data(hid_t parentId)
 {
   int err = 0;
-  std::string statsType;
+  QString statsType;
   hid_t gid = H5Utilities::openHDF5Object(parentId, DREAM3D::HDF5::Statistics);
   if(gid < 0)
   {

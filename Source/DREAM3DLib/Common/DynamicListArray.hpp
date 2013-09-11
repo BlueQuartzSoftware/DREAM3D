@@ -91,7 +91,7 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nElements)
+    void deserializeLinks(QVector<uint8_t> &buffer, size_t nElements)
     {
       size_t offset = 0;
       allocate(nElements); // Allocate all the links with 0 and NULL;
@@ -112,7 +112,7 @@ class DynamicListArray
     }
 
 
-    void allocateLists(std::vector<uint16_t> &linkCounts)
+    void allocateLists(QVector<uint16_t> &linkCounts)
     {
       allocate(linkCounts.size());
       for (size_t i=0; i < linkCounts.size(); i++)

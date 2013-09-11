@@ -69,14 +69,14 @@ class DREAM3DLib_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Triangle Dihedral Angles"; }
+    virtual const QString getHumanLabel() { return "Generate Triangle Dihedral Angles"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

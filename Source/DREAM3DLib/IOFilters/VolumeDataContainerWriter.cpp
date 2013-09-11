@@ -70,7 +70,7 @@ VolumeDataContainerWriter::~VolumeDataContainerWriter()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -273,7 +273,7 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
+void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
@@ -294,7 +294,7 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string &label)
+void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
@@ -309,7 +309,7 @@ void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string &label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
@@ -526,12 +526,12 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 
   // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
+  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
@@ -592,12 +592,12 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -628,7 +628,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   }
 
   size_t total = 0;
-  typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
+  typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
   NameListType names = m->getFieldArrayNameList();
@@ -683,7 +683,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   // Write the NeighborLists onto their own grid
   // We need to determine how many total elements we are going to end up with and group the arrays by
   // those totals so we can minimize the number of grids
-  typedef std::map<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
+  typedef QMap<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
   SizeToIDataArrays_t sizeToDataArrays;
 
   for(VectorOfIDataArrays_t::iterator iter = neighborListArrays.begin(); iter < neighborListArrays.end(); ++iter)
@@ -791,7 +791,7 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VolumeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);

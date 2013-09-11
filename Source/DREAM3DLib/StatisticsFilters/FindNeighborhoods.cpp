@@ -76,7 +76,7 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MultiplesOfAverage");
@@ -205,7 +205,7 @@ void FindNeighborhoods::find_neighborhoods()
   float xn, yn, zn;
   float dx, dy, dz;
 
-  std::vector<std::vector<int> > neighborhoodlist;
+  QVector<QVector<int> > neighborhoodlist;
 
   int totalFields = int(m->getNumCellFieldTuples());
 
@@ -249,7 +249,7 @@ void FindNeighborhoods::find_neighborhoods()
 //  int numZBins = int(sizeZ/criticalDistance);
 
   int xbin, ybin, zbin, bin, bin1, bin2;
-  std::vector<size_t> bins(totalFields, 0);
+  QVector<size_t> bins(totalFields, 0);
   for (size_t i = 1; i < totalFields; i++)
   {
       x = m_Centroids[3*i];
@@ -304,7 +304,7 @@ void FindNeighborhoods::find_neighborhoods()
   for (size_t i = 1; i < totalFields; i++)
   {
       // Set the vector for each list into the NeighborhoodList Object
-      NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
+      NeighborList<int>::SharedVectorType sharedNeiLst(new QVector<int>);
       sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
       m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
   }

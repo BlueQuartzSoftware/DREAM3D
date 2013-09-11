@@ -230,7 +230,7 @@ void FindMDF::execute()
   float q2[5];
   size_t numgrains = m->getNumFieldTuples();
   unsigned int phase1, phase2;
-  std::vector<FloatArrayType::Pointer> misobin;
+  QVector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
   size_t numensembles = m->getNumEnsembleTuples();

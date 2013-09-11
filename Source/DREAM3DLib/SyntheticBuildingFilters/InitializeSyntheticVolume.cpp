@@ -84,7 +84,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -172,7 +172,7 @@ void InitializeSyntheticVolume::preflight()
 
   dataCheck(true, 1, 1, 1);
 
-  std::set<std::string> selectedArrays;
+  QSet<std::string> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -212,7 +212,7 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  std::set<std::string> selectedArrays;
+  QSet<std::string> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);

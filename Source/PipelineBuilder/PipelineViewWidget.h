@@ -111,7 +111,7 @@ class PipelineViewWidget : public QFrame
     void preflightPipeline();
 
     // Slots for the pipeline to communicate back to us
-    void preflightErrorMessage(std::vector<PipelineMessage> messages);
+    void preflightErrorMessage(QVector<PipelineMessage> messages);
 
     /**
      * @brief doAutoScroll This does the actual scrolling of the Widget
@@ -141,7 +141,7 @@ class PipelineViewWidget : public QFrame
     QStringList               m_PipelineErrorList;
     QLabel*                   m_EmptyPipelineLabel;
     QTableWidget*                       errorTableWidget;
-    std::vector<PipelineMessage>       errorStream;
+    QVector<PipelineMessage>       errorStream;
     QPoint                    m_LastDragPoint;
     QScrollArea*              m_ScrollArea;
     QTimer					  m_autoScrollTimer;

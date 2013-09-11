@@ -78,9 +78,9 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 	DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
 	DREAM3D_INSTANCE_PROPERTY(int, Level)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Neighbor Orientation Correlation"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Neighbor Orientation Correlation"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT NeighborOrientationCorrelation : public AbstractFilter
 
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     float* m_ConfidenceIndex;
     float* m_Quats;

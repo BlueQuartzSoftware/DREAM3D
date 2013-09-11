@@ -63,7 +63,7 @@ PrimaryStatsData::~PrimaryStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string PrimaryStatsData::getStatsType()
+QString PrimaryStatsData::getStatsType()
 {
   return DREAM3D::HDF5::PrimaryStatsData;
 }
@@ -96,7 +96,7 @@ FloatArrayType::Pointer PrimaryStatsData::generateBinNumbers()
 {
   float grainDiameterInfo[3];
   getGrainDiameterInfo(grainDiameterInfo);
-  std::vector<float> bins;
+  QVector<float> bins;
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {

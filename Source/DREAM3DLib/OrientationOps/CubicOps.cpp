@@ -1304,12 +1304,12 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("<001>");
-  std::string label1("<011>");
-  std::string label2("<111>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("<001>");
+  QString label1("<011>");
+  QString label2("<111>");
 
 
   int numOrientations = config.eulers->GetNumberOfTuples();

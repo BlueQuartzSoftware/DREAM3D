@@ -64,7 +64,7 @@ class CalculateGBCDImpl
     int* m_GBCDsizes;
     float* m_GBCDlimits;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
@@ -318,7 +318,7 @@ FindGBCD::~FindGBCD()
 // -----------------------------------------------------------------------------
 void FindGBCD::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("GBCDRes");

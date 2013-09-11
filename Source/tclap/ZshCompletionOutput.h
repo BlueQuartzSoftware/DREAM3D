@@ -75,11 +75,11 @@ class ZshCompletionOutput : public CmdLineOutput
 		void basename( std::string& s );
 		void quoteSpecialChars( std::string& s );
 
-		std::string getMutexList( CmdLineInterface& _cmd, Arg* a );
-		void printOption( Arg* it, std::string mutex );
+		QString getMutexList( CmdLineInterface& _cmd, Arg* a );
+		void printOption( Arg* it, QString mutex );
 		void printArg( Arg* it );
 
-		std::map<std::string, std::string> common;
+		QMap<std::string, std::string> common;
 		char theDelimiter;
 };
 
@@ -104,8 +104,8 @@ inline void ZshCompletionOutput::version(CmdLineInterface& _cmd)
 inline void ZshCompletionOutput::usage(CmdLineInterface& _cmd )
 {
 	std::list<Arg*> argList = _cmd.getArgList();
-	std::string progName = _cmd.getProgramName();
-	std::string version = _cmd.getVersion();
+	QString progName = _cmd.getProgramName();
+	QString version = _cmd.getVersion();
 	theDelimiter = _cmd.getDelimiter();
 	basename(progName);
 
@@ -173,7 +173,7 @@ inline void ZshCompletionOutput::printArg(Arg* a)
 		std::cout << ':';
 
 	std::cout << a->getName() << ':';
-	std::map<std::string, std::string>::iterator compArg = common.find(a->getName());
+	QMap<std::string, std::string>::iterator compArg = common.find(a->getName());
 	if ( compArg != common.end() )
 	{
 		std::cout << compArg->second;
@@ -185,11 +185,11 @@ inline void ZshCompletionOutput::printArg(Arg* a)
 	std::cout << '\'';
 }
 
-inline void ZshCompletionOutput::printOption(Arg* a, std::string mutex)
+inline void ZshCompletionOutput::printOption(Arg* a, QString mutex)
 {
-	std::string flag = a->flagStartChar() + a->getFlag();
-	std::string name = a->nameStartString() + a->getName();
-	std::string desc = a->getDescription();
+	QString flag = a->flagStartChar() + a->getFlag();
+	QString name = a->nameStartString() + a->getName();
+	QString desc = a->getDescription();
 
 	// remove full stop and capitalisation from description as
 	// this is the convention for zsh function
@@ -228,7 +228,7 @@ inline void ZshCompletionOutput::printOption(Arg* a, std::string mutex)
 
 	if ( a->isValueRequired() )
 	{
-		std::string arg = a->shortID();
+		QString arg = a->shortID();
 		arg.erase(0, arg.find_last_of(theDelimiter) + 1);
 		if ( arg.at(arg.length()-1) == ']' )
 			arg.erase(arg.length()-1);
@@ -255,7 +255,7 @@ inline void ZshCompletionOutput::printOption(Arg* a, std::string mutex)
 		else
 		{
 			std::cout << ':' << arg;
-			std::map<std::string, std::string>::iterator compArg = common.find(arg);
+			QMap<std::string, std::string>::iterator compArg = common.find(arg);
 			if ( compArg != common.end() )
 			{
 				std::cout << ':' << compArg->second;
@@ -266,10 +266,10 @@ inline void ZshCompletionOutput::printOption(Arg* a, std::string mutex)
 	std::cout << '\'';
 }
 
-inline std::string ZshCompletionOutput::getMutexList( CmdLineInterface& _cmd, Arg* a)
+inline QString ZshCompletionOutput::getMutexList( CmdLineInterface& _cmd, Arg* a)
 {
 	XorHandler xorHandler = _cmd.getXorHandler();
-	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
+	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
 	
 	if (a->getName() == "help" || a->getName() == "version")
 	{

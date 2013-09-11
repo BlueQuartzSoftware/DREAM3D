@@ -88,9 +88,9 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
-    virtual const std::string getHumanLabel() { return "Generate Ensemble Statistics"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::EnsembleStatsFilters; }
+    virtual const QString getHumanLabel() { return "Generate Ensemble Statistics"; }
 
     DREAM3D_INSTANCE_PROPERTY(int, SizeCorrelationResolution)
     DREAM3D_INSTANCE_PROPERTY(bool, SizeDistribution)
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateODF)
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateMDF)
     DREAM3D_INSTANCE_PROPERTY(bool, CalculateAxisODF)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<unsigned int>, PhaseTypeArray)
+    DREAM3D_INSTANCE_PROPERTY(QVector<unsigned int>, PhaseTypeArray)
 
     /**
     * @brief This method will write the options to a file
@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     void gatherAxisODFStats();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;
@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
 
     StatsDataArray* m_StatsDataArray;
 
-    std::vector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
+    QVector<DistributionAnalysisOps::Pointer> m_DistributionAnalysis;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

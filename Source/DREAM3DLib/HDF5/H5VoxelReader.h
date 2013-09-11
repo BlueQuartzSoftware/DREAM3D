@@ -91,8 +91,8 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	int readVoxelData(int* grain_indicies,
 	                  int* phases,
 	                  float* eulerangles,
-	                  std::vector<unsigned int> &crystruct,
-	                  std::vector<unsigned int> &phaseType,
+	                  QVector<unsigned int> &crystruct,
+	                  QVector<unsigned int> &phaseType,
 	                  int64_t totalpoints);
 
 
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	 *
 	 */
 	template<typename T>
-	int readScalarData(const std::string &dsetName, T* data )
+	int readScalarData(const QString &dsetName, T* data )
 	{
 	  int err = 0;
 	  if (m_FileId < 0)
@@ -137,7 +137,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
 	 *
 	 */
 	template<typename CastTo, typename NativeType>
-	int readFieldData(const std::string &dsetName, std::vector<CastTo> &data)
+	int readFieldData(const QString &dsetName, QVector<CastTo> &data)
 	{
     int err = 0;
     if (m_FileId < 0)
@@ -153,7 +153,7 @@ class DREAM3DLib_EXPORT H5VoxelReader : public AbstractFilter
     OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), m_FileId);
     OPEN_RECONSTRUCTION_GROUP(fieldGid, H5_FIELD_DATA_GROUP_NAME, reconGid);
 
-    std::vector<NativeType> nativeData;
+    QVector<NativeType> nativeData;
     err = H5Lite::readVectorDataset(fieldGid, dsetName, nativeData);
     if(err < 0)
     {

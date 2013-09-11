@@ -63,9 +63,9 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const std::string getHumanLabel() { return "Update Cell Quaternions"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() { return "Update Cell Quaternions"; }
 
     /**
     * @brief This method will write the options to a file
@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
    private:
     float* m_Quats;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

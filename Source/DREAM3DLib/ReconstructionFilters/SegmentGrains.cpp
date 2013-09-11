@@ -147,7 +147,7 @@ void SegmentGrains::execute()
   DimType col, row, plane;
   int64_t size = 0;
   int64_t initialVoxelsListSize = 10000;
-  std::vector<int64_t> voxelslist(initialVoxelsListSize, -1);
+  QVector<int64_t> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[6];
   neighpoints[0] = -(dims[0] * dims[1]);
   neighpoints[1] = -dims[0];

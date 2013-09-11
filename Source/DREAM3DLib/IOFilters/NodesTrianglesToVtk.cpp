@@ -64,7 +64,7 @@ NodesTrianglesToVtk::~NodesTrianglesToVtk()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Nodes File");
@@ -388,7 +388,7 @@ void NodesTrianglesToVtk::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
 //# first line = number of nodes
 //# column 1 = node id, starts from zero.
@@ -412,7 +412,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   fscanf(nodesFile, "%d", &nodeId); // Read the number of nodes
-  std::vector<int> data (nNodes, 0);
+  QVector<int> data (nNodes, 0);
   for (int i = 0; i < nNodes; i++)
   {
     nread = fscanf(nodesFile, "%d %d %f %f %f", &nodeId, &nodeKind, pos, pos+1, pos+2); // Read one set of positions from the nodes file
@@ -436,7 +436,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const std::string &NodesFile, FILE
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtkFile, int nNodes, bool conformalMesh)
 {
   int err = 0;
   int nodeId = 0;
@@ -469,7 +469,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const std::string &NodesFile, FILE*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
 //# first line = number of triangles
 //# column 1 = triangle id, starts from zero
@@ -491,7 +491,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
     triangleCount = nTriangles * 2;
     offset = 2;
   }
-  std::vector<int> tri_ids(triangleCount);
+  QVector<int> tri_ids(triangleCount);
   // Write the GrainId Data to the file
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "CELL_DATA %d\n", triangleCount);
@@ -499,7 +499,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
 
-  std::vector<int> cell_data(triangleCount);
+  QVector<int> cell_data(triangleCount);
   for (int i = 0; i < nTriangles; i++)
   {
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData+1,tData+2,tData+3,tData+4,tData+5,tData+6,tData+7,tData+8 );
@@ -543,7 +543,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const std::string &TrianglesFile, F
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToVtk::writeASCIICellData(const std::string &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
+int NodesTrianglesToVtk::writeASCIICellData(const QString &TrianglesFile, FILE* vtkFile, int nTriangles, bool conformalMesh)
 {
   int nread = 0;
   // Open the triangles file for reading

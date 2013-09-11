@@ -103,7 +103,7 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -346,7 +346,7 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   // Make sure what we are checking is an actual file name and not a directory
   if (MXAFileInfo::isDirectory(m_OutputFile) == false)
   {
-    std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+    QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
     if (MXADir::exists(parentPath) == false)
     {
       ss.str("");
@@ -461,7 +461,7 @@ void VtkRectilinearGridWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -481,7 +481,7 @@ void VtkRectilinearGridWriter::execute()
 
 
   // Setup all the classes that will help us write the Scalars to the VTK File
-  std::vector<VtkScalarWriter*> scalarsToWrite;
+  QVector<VtkScalarWriter*> scalarsToWrite;
 
   if (m_WriteGrainIds == true)
   {
@@ -612,7 +612,7 @@ void VtkRectilinearGridWriter::execute()
 
   int err = write(m_OutputFile, m, scalarsToWrite);
   // Now Delete all the Scalar Helpers that we just created and used.
-  for (std::vector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
+  for (QVector<VtkScalarWriter*>::iterator iter = scalarsToWrite.begin(); iter != scalarsToWrite.end(); ++iter)
   {
     delete (*iter);
   }
@@ -632,7 +632,7 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const std::string &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r, QVector<VtkScalarWriter*> &scalars)
 {
   int err = 0;
   FILE* f = NULL;
@@ -662,7 +662,7 @@ int VtkRectilinearGridWriter::write(const std::string &file, VolumeDataContainer
   std::stringstream ss;
   int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
-  for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
+  for (QVector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
   {
     ss.str("");
     ss << "Writing Scalar " << index++ << " of " << scalars.size();

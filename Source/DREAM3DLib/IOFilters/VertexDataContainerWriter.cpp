@@ -89,7 +89,7 @@ VertexDataContainerWriter::~VertexDataContainerWriter()
 // -----------------------------------------------------------------------------
 void VertexDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -264,9 +264,9 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->GetNumberOfTuples() << "\">" << std::endl;
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->GetNumberOfTuples() << " 1\">" << std::endl;
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
   out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << std::endl;
   out << "      </DataItem>" << std::endl;
@@ -299,11 +299,11 @@ void VertexDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
-                                                                              const std::string &groupName,
+QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const QString &attrType,
+                                                                              const QString &groupName,
                                                                               IDataArray::Pointer array,
-                                                                              const std::string &centering,
-                                                                              int precision, const std::string &xdmfTypeName)
+                                                                              const QString &centering,
+                                                                              int precision, const QString &xdmfTypeName)
 {
   std::stringstream out;
   std::stringstream dimStr;
@@ -321,10 +321,10 @@ std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp,
   out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << std::endl;
 
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
 
   out << "        " << hdfFileName << ":/VertexDataContainer/" << groupName << "/" << array->GetName() << std::endl;
@@ -337,7 +337,7 @@ std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering)
 {
 #if 0
       <Attribute Name="Node Type" Center="Node">
@@ -354,7 +354,7 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupN
   std::ostream& out = *m_XdmfPtr;
   std::stringstream dimStr;
   int precision = 0;
-  std::string xdmfTypeName;
+  QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
   if (0 == precision)
   {
@@ -362,10 +362,10 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupN
     return;
   }
   int numComp = array->GetNumberOfComponents();
-  std::string attrType = "Scalar";
+  QString attrType = "Scalar";
   if(numComp > 2) attrType = "Vector";
 
-  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  QString block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
 
   out << block << std::endl;
 }
@@ -374,7 +374,7 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupN
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VertexDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
@@ -482,12 +482,12 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
-  std::vector<char> nameBuffer(nameSize, 0);
+  QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
-  std::string hdfFileName(&(nameBuffer.front()), nameSize);
+  QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -518,7 +518,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
   }
 
   size_t total = 0;
-  typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
+  typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
   NameListType names = vdc->getVertexFieldArrayNameList();
@@ -573,7 +573,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
   // Write the NeighborLists onto their own grid
   // We need to determine how many total elements we are going to end up with and group the arrays by
   // those totals so we can minimize the number of grids
-  typedef std::map<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
+  typedef QMap<size_t, VectorOfIDataArrays_t> SizeToIDataArrays_t;
   SizeToIDataArrays_t sizeToDataArrays;
 
   for(VectorOfIDataArrays_t::iterator iter = neighborListArrays.begin(); iter < neighborListArrays.end(); ++iter)

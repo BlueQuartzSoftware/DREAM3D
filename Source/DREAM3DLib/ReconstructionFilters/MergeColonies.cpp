@@ -158,7 +158,7 @@ MergeColonies::~MergeColonies()
 // -----------------------------------------------------------------------------
 void MergeColonies::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Axis Tolerance");
@@ -310,7 +310,7 @@ void MergeColonies::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);
     pid[0] = 0;
-    std::set<int32_t> parentIdSet;
+    QSet<int32_t> parentIdSet;
     parentIdSet.insert(0);
     for(int i = 1; i < numParents; ++i)
     {
@@ -362,7 +362,7 @@ void MergeColonies::merge_colonies()
   //Converting the user defined tolerance to radians.
   m_AxisTolerance = m_AxisTolerance*DREAM3D::Constants::k_Pi/180.0f;
 
-  std::vector<int> colonylist;
+  QVector<int> colonylist;
   float w;
   float n1 = 0.0f, n2 = 0.0f, n3 = 0.0f;
   float r1 = 0.0f, r2 = 0.0f, r3 = 0.0f;
@@ -385,7 +385,7 @@ void MergeColonies::merge_colonies()
       parentnumbers[i] = parentcount;
       m_Active[i] = true;
       colonylist.push_back(i);
-      for (std::vector<int>::size_type j = 0; j < colonylist.size(); j++)
+      for (QVector<int>::size_type j = 0; j < colonylist.size(); j++)
       {
         int firstgrain = colonylist[j];
         int size = int(neighborlist[firstgrain].size());
@@ -561,8 +561,8 @@ void MergeColonies::identify_globAlpha()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
-  std::vector<int> betaSize(numParents,0);
-  std::vector<int> totalSize(numParents,0);
+  QVector<int> betaSize(numParents,0);
+  QVector<int> totalSize(numParents,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
     int pnum = m_CellParentIds[i];

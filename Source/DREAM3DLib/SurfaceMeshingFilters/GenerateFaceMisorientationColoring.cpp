@@ -68,7 +68,7 @@ class CalculateFaceMisorientationColorsImpl
     float* m_Quats;
     float* m_Colors;
     unsigned int* m_CrystalStructures;
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateFaceMisorientationColorsImpl(int32_t* labels, int32_t* phases, float* quats, float* colors, unsigned int* crystalStructures) :
@@ -205,7 +205,7 @@ GenerateFaceMisorientationColoring::~GenerateFaceMisorientationColoring()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 

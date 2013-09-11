@@ -95,7 +95,7 @@ void MicrostructurePresetManager::registerFactory(AbstractMicrostructurePresetFa
 // -----------------------------------------------------------------------------
 //  Static Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const std::string &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPreset(const QString &classname)
 {
   MicrostructurePresetManager::Pointer idManager = MicrostructurePresetManager::instance();
   return idManager->createPreset( classname );
@@ -105,7 +105,7 @@ AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPres
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const std::string &classname)
+AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const QString &classname)
 {
   //std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
@@ -131,7 +131,7 @@ void MicrostructurePresetManager::addFactory(AbstractMicrostructurePresetFactory
 // -----------------------------------------------------------------------------
 // public Method
 // -----------------------------------------------------------------------------
-AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const std::string &classname)
+AbstractMicrostructurePresetFactory::Pointer MicrostructurePresetManager::getFactory(const QString &classname)
 {
   for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
   {

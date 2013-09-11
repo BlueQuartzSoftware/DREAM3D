@@ -64,9 +64,9 @@ class DREAM3DLib_EXPORT ChangeResolution : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Resolution)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
-    virtual const std::string getHumanLabel() { return "Change Resolution"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ResolutionFilters; }
+    virtual const QString getHumanLabel() { return "Change Resolution"; }
 
     virtual void setupFilterParameters();
     /**

@@ -78,9 +78,9 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgCAxisMisorientationsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Reference C-Axis Misorientations"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Reference C-Axis Misorientations"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -102,7 +102,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
     FindGrainReferenceCAxisMisorientations();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

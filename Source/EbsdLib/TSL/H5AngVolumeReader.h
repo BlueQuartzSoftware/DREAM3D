@@ -93,19 +93,19 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
      * @brief
      * @return
      */
-    std::vector<AngPhase::Pointer> getPhases();
+    QVector<AngPhase::Pointer> getPhases();
     /**
       * @brief Returns the pointer to the data for a given field
       * @param fieldName The name of the field to return the pointer to.
       */
-    void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const QString &fieldName);
 
     /**
       * @brief Returns an enumeration value that depicts the numerical
       * primitive type that the data is stored as (Int, Float, etc).
       * @param fieldName The name of the field.
       */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const QString &fieldName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
      * and then splats '0' across all the bytes of the memory allocation
@@ -120,7 +120,7 @@ class EbsdLib_EXPORT H5AngVolumeReader : public H5EbsdVolumeReader
     H5AngVolumeReader();
 
   private:
-    std::vector<AngPhase::Pointer> m_Phases;
+    QVector<AngPhase::Pointer> m_Phases;
 
     H5AngVolumeReader(const H5AngVolumeReader&);    // Copy Constructor Not Implemented
     void operator=(const H5AngVolumeReader&);  // Operator '=' Not Implemented

@@ -75,21 +75,21 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, MisAxis)
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, MisorientationRotations)
+    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, MisorientationRotations)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Visualize GBCD"; }
+    virtual const QString getHumanLabel() { return "Visualize GBCD"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -134,7 +134,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     void dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned int* m_CrystalStructures;
     double* m_GBCD;

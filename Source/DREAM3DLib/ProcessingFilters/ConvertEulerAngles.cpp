@@ -102,14 +102,14 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
     option->setPropertyName("ConversionType");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);

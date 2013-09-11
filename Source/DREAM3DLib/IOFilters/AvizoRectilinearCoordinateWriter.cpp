@@ -66,7 +66,7 @@ AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -161,7 +161,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;
@@ -187,7 +187,7 @@ void AvizoRectilinearCoordinateWriter::execute()
     return;
   }
 
-  std::string header = generateHeader();
+  QString header = generateHeader();
   writer.writeString(header);
 
   err = writeData(writer);
@@ -200,7 +200,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AvizoRectilinearCoordinateWriter::generateHeader()
+QString AvizoRectilinearCoordinateWriter::generateHeader()
 {
   std::stringstream ss;
   if(m_WriteBinaryFile == true)
@@ -260,7 +260,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
   getVolumeDataContainer()->getResolution(res);
   char newLine = '\n';
 
-  std::string start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
+  QString start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
   writer.writeString(start);
   if (true == m_WriteBinaryFile)
   {
@@ -302,7 +302,7 @@ int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
   {
     for (int d = 0; d < 3; ++d)
     {
-      std::vector<float> coords(dims[d]);
+      QVector<float> coords(dims[d]);
       for (size_t i = 0; i < dims[d]; ++i)
       {
         coords[i] = origin[d] + (res[d] * i);

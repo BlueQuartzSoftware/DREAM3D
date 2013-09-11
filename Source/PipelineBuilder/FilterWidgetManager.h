@@ -62,7 +62,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
 
     virtual ~FilterWidgetManager();
 
-    typedef std::map<std::string, IFilterWidgetFactory::Pointer> Collection;
+    typedef QMap<std::string, IFilterWidgetFactory::Pointer> Collection;
 
     /**
      * @brief Static instance to retrieve the global instance of this class
@@ -75,7 +75,7 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param name The name of the filter
      * @param factory An instance of the factory
      */
-    static void RegisterFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
+    static void RegisterFilterWidgetFactory(const QString &name, IFilterWidgetFactory::Pointer factory);
 
     static void RegisterKnownQFilterWidgets();
 
@@ -92,34 +92,34 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param groupName The name of the group.
      * @return
      */
-    Collection getFactories(const std::string &groupName);
+    Collection getFactories(const QString &groupName);
 
     /**
      * @brief Returns the mapping of names to the Factory instances for a given filter subgroup
      * @param subGroupName The name of the subgroup.
      * @return
      */
-    Collection getFactories(const std::string &groupName, const std::string &subGroupName);
+    Collection getFactories(const QString &groupName, const QString &subGroupName);
 
   /**
      * @brief Adds a Factory that creates QFilterWidgets
      * @param name
      * @param factory
      */
-    void addFilterWidgetFactory(const std::string &name, IFilterWidgetFactory::Pointer factory);
+    void addFilterWidgetFactory(const QString &name, IFilterWidgetFactory::Pointer factory);
 
     /**
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
      * @return
      */
-    std::set<std::string> getGroupNames();
+    QSet<std::string> getGroupNames();
 
     /**
      * @brief getSubGroupNames For a given group, returns all the subgroups
      * @param groupName The name of the Filter group
      * @return
      */
-    std::set<std::string> getSubGroupNames(const std::string &groupName);
+    QSet<std::string> getSubGroupNames(const QString &groupName);
 
 
     /**
@@ -127,14 +127,14 @@ class PipelineBuilderLib_EXPORT FilterWidgetManager
      * @param filterName
      * @return
      */
-    IFilterWidgetFactory::Pointer getFactoryForFilter(const std::string &filterName);
+    IFilterWidgetFactory::Pointer getFactoryForFilter(const QString &filterName);
 
     /**
      * @brief getFactoryForFilterHumanName For a given human label, the FilterWidgetFactory is given
      * @param humanName
      * @return
      */
-    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const std::string &humanName);
+    IFilterWidgetFactory::Pointer getFactoryForFilterHumanName(const QString &humanName);
 
 
   protected:

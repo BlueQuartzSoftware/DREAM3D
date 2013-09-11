@@ -98,7 +98,7 @@ FindDeformationStatistics::~FindDeformationStatistics()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Deformation Statistics File");
@@ -201,7 +201,7 @@ void FindDeformationStatistics::execute()
     return;
   }
 
-  //  std::string filename = m_OutputFile1;
+  //  QString filename = m_OutputFile1;
   std::ofstream outFile;
   outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
   float w, n1, n2, n3;
@@ -511,7 +511,7 @@ void FindDeformationStatistics::execute()
   }
   outFile.close();
 
-  // std::string filename2 = m_OutputFile2;
+  // QString filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
   vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
   if (NULL == vtkFile)

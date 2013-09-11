@@ -77,7 +77,7 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 void CropVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min (Voxels)");
@@ -380,7 +380,7 @@ void CropVolume::execute()
         index = plane + row + col;
         for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
-          std::string name = *iter;
+          QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
           p->CopyTuple(index_old, index);
         }
@@ -394,7 +394,7 @@ void CropVolume::execute()
   // Resize all the other Voxel Arrays
   for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    std::string name = *iter;
+    QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     err = p->Resize(totalPoints);
   }

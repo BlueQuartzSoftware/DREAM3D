@@ -48,7 +48,7 @@
  */
 #define HEADERENTRY_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
-  static SuperClass##Type New##SuperClass(const std::string &key) \
+  static SuperClass##Type New##SuperClass(const QString &key) \
 { \
   SuperClass##Type sharedPtr (new thisClass(key)); \
   return sharedPtr; \
@@ -74,9 +74,9 @@ class EbsdLib_EXPORT EbsdHeaderEntry
     /**
      * @brief Returns the key of the header entry
      */
-    virtual std::string getKey() = 0;
+    virtual QString getKey() = 0;
 
-    virtual std::string getHDFType() = 0;
+    virtual QString getHDFType() = 0;
 
     /**
      * @brief Parses the value for a given header key

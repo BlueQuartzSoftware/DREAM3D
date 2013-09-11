@@ -66,7 +66,7 @@ RenumberGrains::~RenumberGrains()
 // -----------------------------------------------------------------------------
 void RenumberGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Grains");
@@ -134,7 +134,7 @@ void RenumberGrains::preflight()
   for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
       IDataArray::Pointer p = m->getCellFieldData(*iter);
-	  std::string type = p->getTypeAsString();
+	  QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
   }
 }
@@ -164,13 +164,13 @@ void RenumberGrains::execute()
 
   std::stringstream ss;
   size_t goodcount = 1;
-  std::vector<size_t> NewNames;
+  QVector<size_t> NewNames;
   NewNames.resize(totalFields,0);
 
   ss.str("");
   ss << " - Generating Active Grain List";
   notifyStatusMessage(ss.str());
-  std::vector<size_t> RemoveList;
+  QVector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
     if(m_Active[i] == false)
@@ -197,7 +197,7 @@ void RenumberGrains::execute()
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
-	  std::string type = p->getTypeAsString();
+	  QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;

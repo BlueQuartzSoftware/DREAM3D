@@ -51,7 +51,7 @@ ImageUtilities::~ImageUtilities(){}
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const std::string &name, double min, double max)
+UInt8ArrayType::Pointer ImageUtilities::CreateColorImage(DoubleArrayType* data, int width, int height, int nColors, const QString &name, double min, double max)
 {
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(width * height, 4, name);
   PoleFigureConfiguration_t config;
@@ -88,7 +88,7 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
   int numColors = config.numColors;
-  std::vector<float> colors(numColors*3, 0.0);
+  QVector<float> colors(numColors*3, 0.0);
   ColorTable::GetColorTable(config.numColors, colors);
 
   float r=0.0, g=0.0, b=0.0;

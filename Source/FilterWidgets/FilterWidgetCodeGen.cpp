@@ -61,28 +61,28 @@
 
 
 
-typedef std::map<std::string, std::set<std::string> >  FilterMapType;
-typedef std::set<std::string>  StringSetType;
+typedef QMap<std::string, QSet<std::string> >  FilterMapType;
+typedef QSet<std::string>  StringSetType;
 
 // These will be defined in an include header file below.
-std::string FILTER_WIDGETS_BINARY_DIR();
-std::string FILTER_WIDGETS_SOURCE_DIR();
-std::string FILTER_WIDGETS_TEMP_DIR();
-std::string FILTER_WIDGETS_DOCS_DIR();
-std::string DREAM3D_SOURCE_DIR();
-std::string FILTER_INCLUDE_PREFIX();
-std::string DREAM3D_SOURCE_DIR();
-std::string DREAM3D_BINARY_DIR();
-std::string DREAM3DLIB_SOURCE_DIR();
+QString FILTER_WIDGETS_BINARY_DIR();
+QString FILTER_WIDGETS_SOURCE_DIR();
+QString FILTER_WIDGETS_TEMP_DIR();
+QString FILTER_WIDGETS_DOCS_DIR();
+QString DREAM3D_SOURCE_DIR();
+QString FILTER_INCLUDE_PREFIX();
+QString DREAM3D_SOURCE_DIR();
+QString DREAM3D_BINARY_DIR();
+QString DREAM3DLIB_SOURCE_DIR();
 
-typedef std::map<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
+typedef QMap<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
 
-std::map<std::string, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
+QMap<std::string, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void copyFile(const std::string &src, const std::string &dest)
+void copyFile(const QString &src, const QString &dest)
 {
   size_t tempFileSize = MXAFileInfo::fileSize(src);
 
@@ -123,7 +123,7 @@ void extractHelpIndexEntries(AbstractFilter* filter)
 
   for(CreatedArrayHelpIndexEntry::VectorType::iterator entry = entries.begin(); entry != entries.end(); ++entry)
   {
-    std::string entryName = (*entry)->getArrayDefaultName();
+    QString entryName = (*entry)->getArrayDefaultName();
     entryName = entryName + " (" + (*entry)->getArrayGroup() + ")";
     CreatedArrayHelpIndexEntry::VectorType& vec = helpIndex[entryName]; // Will Create one if not there already
     vec.push_back((*entry));
@@ -137,7 +137,7 @@ void extractHelpIndexEntries(AbstractFilter* filter)
 void createMarkdownCreatedArrayIndex()
 {
 
-  std::string path = DREAM3D_BINARY_DIR();
+  QString path = DREAM3D_BINARY_DIR();
   path = path + MXADir::Separator + "createdarrayindex.md";
 
   FILE* f = fopen(path.c_str(), "wb");
@@ -146,7 +146,7 @@ void createMarkdownCreatedArrayIndex()
 
   for(IndexMap_t::iterator entry = helpIndex.begin(); entry != helpIndex.end(); ++entry)
   {
-    std::string name = (*entry).first;
+    QString name = (*entry).first;
     fprintf (f, "## %s ##\n\n", (*entry).first.c_str());
 
     CreatedArrayHelpIndexEntry::VectorType& filters = (*entry).second;
@@ -154,7 +154,7 @@ void createMarkdownCreatedArrayIndex()
 
     for(CreatedArrayHelpIndexEntry::VectorType::iterator indexEntry = filters.begin(); indexEntry != filters.end(); ++indexEntry)
     {
-      std::string lower = (*indexEntry)->getFilterName();
+      QString lower = (*indexEntry)->getFilterName();
       std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
       fprintf(f, "+ [%s](%s.html) (%s->%s)\n", (*indexEntry)->getFilterHumanLabel().c_str(), lower.c_str(), (*indexEntry)->getFilterGroup().c_str(), (*indexEntry)->getFilterSubGroup().c_str());
     }
@@ -168,25 +168,25 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const std::string &group, const std::string &filterName, AbstractFilter* filterPtr, const std::string &outputPath)
+void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
 {
   std::stringstream ss;
 
   extractHelpIndexEntries(filterPtr);
 
-  std::string completePath = MXADir::toNativeSeparators(outputPath);
+  QString completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
-  std::string parentPath = MXADir::parentPath(completePath);
+  QString parentPath = MXADir::parentPath(completePath);
   if (MXADir::exists(parentPath) == false)
   {
     MXADir::mkdir(parentPath, true);
   }
 
-  std::vector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
+  QVector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
 
   ss.str("");
   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
-  std::string tempPath = ss.str();
+  QString tempPath = ss.str();
 
   FILE* f = fopen(tempPath.c_str(), "wb");
   if (NULL == f)
@@ -245,12 +245,12 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   for(size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
     if (opt->getCastableValueType().empty() == false)
     {
-      std::string cType = opt->getCastableValueType();
+      QString cType = opt->getCastableValueType();
       fprintf(f, "  private:\n");
       fprintf(f, "    %s m_%s;\n", cType.c_str(), prop.c_str());
       fprintf(f, "  public:\n");
@@ -262,7 +262,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else if (opt->getValueType().compare("string") == 0)
     {
-      std::string cType = "QString";
+      QString cType = "QString";
       fprintf(f, "  private:\n");
       fprintf(f, "    QString m_%s;\n", prop.c_str());
       fprintf(f, "  public:\n");
@@ -291,7 +291,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, %s)\n\n", prop.c_str());
+      fprintf(f, "DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, %s)\n\n", prop.c_str());
       axisAngleWidgetCount++;
       if (axisAngleWidgetCount > 1)
       {
@@ -302,7 +302,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
              && implementPreflightAboutToExecute == true)
     {
-      fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, %s)\n\n", prop.c_str());
+      fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, %s)\n\n", prop.c_str());
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
       fprintf(f, "\n\n");
@@ -358,7 +358,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     MD5 md5_current;
     md5_current.update(currentContents, currentFileSize);
     md5_current.finalize();
-    std::string currentHexDigest = md5_current.hexdigest();
+    QString currentHexDigest = md5_current.hexdigest();
 
 
     FILE* t = fopen(tempPath.c_str(), "rb");
@@ -373,7 +373,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     MD5 md5;
     md5.update(tempContents, tempFileSize);
     md5.finalize();
-    std::string tempHexDigest = md5.hexdigest();
+    QString tempHexDigest = md5.hexdigest();
 
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
@@ -430,10 +430,10 @@ int readLine(std::istream &in, char* buf, int bufSize)
 
 
 #define kBufferSize 1024
-void parseSourceFileForMarker(const std::string filename, const std::string marker, const std::string &replace)
+void parseSourceFileForMarker(const QString filename, const QString marker, const QString &replace)
 {
 
-  std::string tempfile = filename + "_tmp";
+  QString tempfile = filename + "_tmp";
   {
       std::ofstream out(tempfile.c_str(), std::ios_base::binary);
 
@@ -482,26 +482,26 @@ void parseSourceFileForMarker(const std::string filename, const std::string mark
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createSourceFile( const std::string &group,
-                       const std::string &filter,
-                       std::vector<FilterParameter::Pointer> options,
-                       const std::string &outputPath)
+void createSourceFile( const QString &group,
+                       const QString &filter,
+                       QVector<FilterParameter::Pointer> options,
+                       const QString &outputPath)
 {
   std::stringstream ss;
 
-  std::string completePath = MXADir::toNativeSeparators(outputPath);
+  QString completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
-  std::string parentPath = MXADir::parentPath(completePath);
+  QString parentPath = MXADir::parentPath(completePath);
   if (MXADir::exists(parentPath) == false)
   {
     MXADir::mkdir(ss.str(), true);
   }
 
-  //std::string headerFile = parentPath + MXADir::Separator + MXAFileInfo::fileNameWithOutExtension(completePath) + ".h";
+  //QString headerFile = parentPath + MXADir::Separator + MXAFileInfo::fileNameWithOutExtension(completePath) + ".h";
 
   ss.str("");
   ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.cpp";
-  std::string tempPath = ss.str();
+  QString tempPath = ss.str();
 
   FILE* f = fopen(tempPath.c_str(), "wb");
 
@@ -578,8 +578,8 @@ void createSourceFile( const std::string &group,
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
       if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
         || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
@@ -674,7 +674,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "     {\n");
       fprintf(f, "        AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "        if (NULL != w) {\n");
-      fprintf(f, "           std::vector<AxisAngleInput_t> v = filter->get%s();\n", prop.c_str());
+      fprintf(f, "           QVector<AxisAngleInput_t> v = filter->get%s();\n", prop.c_str());
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
@@ -740,8 +740,8 @@ else
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
     {
       fprintf(f, "  filter->set%s( get%s().toStdString() );\n", prop.c_str(), prop.c_str());
@@ -789,12 +789,12 @@ else
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
     if(opt->getCastableValueType().empty() == false)
     {
-      std::string cType = opt->getCastableValueType();
+      QString cType = opt->getCastableValueType();
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
       fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n", filter.c_str(), prop.c_str(), cType.c_str() );
@@ -805,7 +805,7 @@ else
     }
     else if(opt->getValueType().compare("string") == 0)
     {
-      std::string cType = "QString";
+      QString cType = "QString";
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
       fprintf(f, "void Q%sWidget::set%s(const %s &v, bool emitChanged)\n{\n  m_%s = v;\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str());
@@ -835,8 +835,8 @@ else
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
     if(opt->getWidgetType() == FilterParameter::InputFileWidget
        || opt->getWidgetType() == FilterParameter::InputPathWidget
        || opt->getWidgetType() == FilterParameter::OutputFileWidget
@@ -918,9 +918,9 @@ else
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
-    std::string hl = opt->getHumanLabel();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
+    QString hl = opt->getHumanLabel();
     fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
     fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.c_str(), prop.c_str());
 
@@ -1121,9 +1121,9 @@ else
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];
-      std::string prop = opt->getPropertyName();
-      std::string typ = opt->getValueType();
-      std::string hl = opt->getHumanLabel();
+      QString prop = opt->getPropertyName();
+      QString typ = opt->getValueType();
+      QString hl = opt->getHumanLabel();
       if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
           && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget ) {
         fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.c_str());
@@ -1141,9 +1141,9 @@ else
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];
-      std::string prop = opt->getPropertyName();
-      std::string typ = opt->getValueType();
-      std::string hl = opt->getHumanLabel();
+      QString prop = opt->getPropertyName();
+      QString typ = opt->getValueType();
+      QString hl = opt->getHumanLabel();
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
 
@@ -1163,7 +1163,7 @@ else
 
 
   /* Implement the htmlHelpIndexFile() method */
-  std::string lower = filter;
+  QString lower = filter;
   std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "void Q%sWidget::openHtmlHelpFile()\n{\n", filter.c_str());
@@ -1200,7 +1200,7 @@ else
     MD5 md5_current;
     md5_current.update(currentContents, currentFileSize);
     md5_current.finalize();
-    std::string currentHexDigest = md5_current.hexdigest();
+    QString currentHexDigest = md5_current.hexdigest();
 
     FILE* t = fopen(tempPath.c_str(), "rb");
     unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
@@ -1214,7 +1214,7 @@ else
     MD5 md5;
     md5.update(tempContents, tempFileSize);
     md5.finalize();
-    std::string tempHexDigest = md5.hexdigest();
+    QString tempHexDigest = md5.hexdigest();
 
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
@@ -1232,9 +1232,9 @@ else
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void createPreflightTestCode( const std::string &group, const std::string &filter)
+void createPreflightTestCode( const QString &group, const QString &filter)
 {
-  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  QString s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_1.h");
   FILE* f = fopen(s.c_str(), "ab+"); // Clear out this file
   fprintf(f, "MAKE_FILTER_TEST(  %s, FAIL_IS_PASS)\n", filter.c_str());
@@ -1262,7 +1262,7 @@ int main(int argc, char **argv)
   // if (true) return 0;
 
 #if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
-  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  QString s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_1.h");
   FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
   fclose(f);

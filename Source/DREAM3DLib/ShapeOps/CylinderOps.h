@@ -54,7 +54,7 @@
 
       virtual ~CylinderOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+      virtual float radcur1(QMap<ArgName, float> args);
       virtual float inside(float axis1comp, float axis2comp, float axis3comp);
       virtual void init() {  }
 

@@ -83,7 +83,7 @@ class DREAM3DLib_EXPORT AngleFileLoader
 
 
     FloatArrayType::Pointer loadData();
-    std::vector<std::string> tokenize(char* buf, const char* delimiter);
+    QVector<std::string> tokenize(char* buf, const char* delimiter);
 
   protected:
     AngleFileLoader();

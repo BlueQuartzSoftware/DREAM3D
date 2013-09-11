@@ -64,7 +64,7 @@ class ValueArg : public Arg
          * consistent support for human readable names, we are left to our
          * own devices.
          */
-        std::string _typeDesc;
+        QString _typeDesc;
 
         /**
          * A Constraint this Arg must conform to. 
@@ -215,7 +215,7 @@ class ValueArg : public Arg
          * \param args - Mutable list of strings. Passed 
          * in from main().
          */
-        virtual bool processArg(int* i, std::vector<std::string>& args); 
+        virtual bool processArg(int* i, QVector<std::string>& args); 
 
         /**
          * Returns the value of the argument.
@@ -226,13 +226,13 @@ class ValueArg : public Arg
          * Specialization of shortID.
          * \param val - value to be used.
          */
-        virtual std::string shortID(const std::string& val = "val") const;
+        virtual QString shortID(const std::string& val = "val") const;
 
         /**
          * Specialization of longID.
          * \param val - value to be used.
          */
-        virtual std::string longID(const std::string& val = "val") const;
+        virtual QString longID(const std::string& val = "val") const;
         
         virtual void reset() ;
 
@@ -319,7 +319,7 @@ T& ValueArg<T>::getValue() { return _value; }
  * Implementation of processArg().
  */
 template<class T>
-bool ValueArg<T>::processArg(int *i, std::vector<std::string>& args)
+bool ValueArg<T>::processArg(int *i, QVector<std::string>& args)
 {
     if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -327,9 +327,9 @@ bool ValueArg<T>::processArg(int *i, std::vector<std::string>& args)
     if ( _hasBlanks( args[*i] ) )
 		return false;
 
-    std::string flag = args[*i];
+    QString flag = args[*i];
 
-    std::string value = "";
+    QString value = "";
     trimFlag( flag, value );
 
     if ( argMatches( flag ) )
@@ -366,7 +366,7 @@ bool ValueArg<T>::processArg(int *i, std::vector<std::string>& args)
  * Implementation of shortID.
  */
 template<class T>
-std::string ValueArg<T>::shortID(const std::string& val) const
+QString ValueArg<T>::shortID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::shortID( _typeDesc ); 
@@ -376,7 +376,7 @@ std::string ValueArg<T>::shortID(const std::string& val) const
  * Implementation of longID.
  */
 template<class T>
-std::string ValueArg<T>::longID(const std::string& val) const
+QString ValueArg<T>::longID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::longID( _typeDesc ); 

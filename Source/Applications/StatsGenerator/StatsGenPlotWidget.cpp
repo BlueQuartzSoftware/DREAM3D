@@ -229,9 +229,9 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   FloatArrayType::Pointer col1;
   FloatArrayType::Pointer col2;
 
-  std::vector<float> v0;
-  std::vector<float> v1;
-  std::vector<float> v2;
+  QVector<float> v0;
+  QVector<float> v1;
+  QVector<float> v2;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model

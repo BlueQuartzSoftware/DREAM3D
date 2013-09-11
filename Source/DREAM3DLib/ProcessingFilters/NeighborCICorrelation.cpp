@@ -75,7 +75,7 @@ NeighborCICorrelation::~NeighborCICorrelation()
 // -----------------------------------------------------------------------------
 void NeighborCICorrelation::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
@@ -193,7 +193,7 @@ void NeighborCICorrelation::execute()
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
 
-  std::vector<int> bestNeighbor(totalPoints,-1);
+  QVector<int> bestNeighbor(totalPoints,-1);
 
   int count = 0;
   float best;
@@ -241,7 +241,7 @@ void NeighborCICorrelation::execute()
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }

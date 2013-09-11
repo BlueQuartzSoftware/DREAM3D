@@ -64,7 +64,7 @@
 
 #define READ_EBSD_HEADER_STRING_DATA(cname, class, m_msgType, getName, key)\
 {\
-  std::string t;\
+  QString t;\
   err = H5Lite::readStringDataset(gid, key, t);\
   if (err < 0) {\
     std::ostringstream ss;\
@@ -83,7 +83,7 @@
 
 #define READ_PHASE_STRING_DATA(cname, pid, fqKey, key, phase)\
 {\
-  std::string t;\
+  QString t;\
   err = H5Lite::readStringDataset(pid, fqKey, t);\
   if (err < 0) {\
     std::ostringstream ss;\

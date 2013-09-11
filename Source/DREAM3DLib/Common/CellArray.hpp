@@ -171,7 +171,7 @@ class CellArray
       ::memset(visitedPtr.get(), 0, nCells);
 
       // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
-      std::vector<int> loop_neighbors(32, 0);
+      QVector<int> loop_neighbors(32, 0);
 
       // Build up the Cell Adjacency list now that we have the cell links
       for(size_t t = 0; t < nCells; ++t)

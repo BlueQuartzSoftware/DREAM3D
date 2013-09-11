@@ -59,7 +59,7 @@ ArraySelectionExample::~ArraySelectionExample()
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   /* To select arrays */
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -120,12 +120,12 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedCellArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+void ArraySelectionExample::setVolumeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                             QSet<std::string> selectedEdgeArrays,
+                                                             QSet<std::string> selectedFaceArrays,
+                                                             QSet<std::string> selectedCellArrays,
+                                                             QSet<std::string> selectedFieldArrays,
+                                                             QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
@@ -138,11 +138,11 @@ void ArraySelectionExample::setVolumeSelectedArrayNames(std::set<std::string> se
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+void ArraySelectionExample::setSurfaceSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                             QSet<std::string> selectedEdgeArrays,
+                                                             QSet<std::string> selectedFaceArrays,
+                                                             QSet<std::string> selectedFieldArrays,
+                                                             QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -154,10 +154,10 @@ void ArraySelectionExample::setSurfaceSelectedArrayNames(std::set<std::string> s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+void ArraySelectionExample::setEdgeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                             QSet<std::string> selectedEdgeArrays,
+                                                             QSet<std::string> selectedFieldArrays,
+                                                             QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -168,9 +168,9 @@ void ArraySelectionExample::setEdgeSelectedArrayNames(std::set<std::string> sele
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void ArraySelectionExample::setVertexSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

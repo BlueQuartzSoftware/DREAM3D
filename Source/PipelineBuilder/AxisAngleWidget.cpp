@@ -110,9 +110,9 @@ void AxisAngleWidget::on_deleteRow_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<AxisAngleInput_t> AxisAngleWidget::getAxisAngleRotations()
+QVector<AxisAngleInput_t> AxisAngleWidget::getAxisAngleRotations()
 {
-  std::vector<AxisAngleInput_t> comps;
+  QVector<AxisAngleInput_t> comps;
   if (m_TableModel == NULL) { return comps; }
 
   int filterCount = m_TableModel->rowCount();
@@ -154,14 +154,14 @@ void AxisAngleWidget::on_loadData_clicked()
   else
   {
     size_t numMisorients = 0;
-    std::string filename = file.toStdString();
+    QString filename = file.toStdString();
     std::ifstream inFile;
     inFile.open(filename.c_str());
 
     inFile >> numMisorients;
 
     float angle, weight;
-    std::string axis, n1, n2, n3;
+    QString axis, n1, n2, n3;
     for(size_t i = 0; i < numMisorients; i++)
     {
       inFile >> angle >> n1 >> n2 >> n3 >> weight;

@@ -74,14 +74,14 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Vertex DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Vertex DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -125,7 +125,7 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
 
     int writeVertices(hid_t dcGid);
     int writeVertexData(hid_t dcGid);
@@ -134,8 +134,8 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
-    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+    void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
+    QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
 
   private:

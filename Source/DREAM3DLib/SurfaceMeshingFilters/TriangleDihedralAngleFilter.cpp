@@ -140,7 +140,7 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 

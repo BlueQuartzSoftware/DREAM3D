@@ -71,9 +71,9 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNamesArrayName)
 
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write INL File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write INL File"; }
 
     virtual void setupFilterParameters();
     /**

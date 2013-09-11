@@ -98,9 +98,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     typedef boost::shared_array<float> SharedFloatArray;
     typedef boost::shared_array<int> SharedIntArray;
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const std::string getHumanLabel() { return "Pack Primary Phases"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const QString getHumanLabel() { return "Pack Primary Phases"; }
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ErrorOutputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(VtkOutputFile)
@@ -152,9 +152,9 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     void cleanup_grains();
   void write_goal_attributes();
 
-    void compare_1Ddistributions(std::vector<float>, std::vector<float>, float &sqrerror);
-    void compare_2Ddistributions(std::vector<std::vector<float> >, std::vector<std::vector<float> >, float &sqrerror);
-    void compare_3Ddistributions(std::vector<std::vector<std::vector<float> > >, std::vector<std::vector<std::vector<float> > >, float &sqrerror);
+    void compare_1Ddistributions(QVector<float>, QVector<float>, float &sqrerror);
+    void compare_2Ddistributions(QVector<QVector<float> >, QVector<QVector<float> >, float &sqrerror);
+    void compare_3Ddistributions(QVector<QVector<QVector<float> > >, QVector<QVector<QVector<float> > >, float &sqrerror);
 
     int writeVtkFile(int32_t* grainOwners, bool* exclusionZonesPtr);
     int estimate_numgrains(int xpoints, int ypoints, int zpoints, float xres, float yres, float zres);
@@ -185,7 +185,7 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     StatsDataArray* m_StatsDataArray;
 
     // All other private variables
-    std::map<unsigned int, ShapeOps*> m_ShapeOps;
+    QMap<unsigned int, ShapeOps*> m_ShapeOps;
     ShapeOps::Pointer m_UnknownShapeOps;
     ShapeOps::Pointer m_CubicOctohedronOps;
     ShapeOps::Pointer m_CylinderOps;
@@ -194,10 +194,10 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
 
     OrthoRhombicOps::Pointer m_OrthoOps;
 
-    std::vector<std::vector<int> > columnlist;
-    std::vector<std::vector<int> > rowlist;
-    std::vector<std::vector<int> > planelist;
-    std::vector<std::vector<float> > ellipfunclist;
+    QVector<QVector<int> > columnlist;
+    QVector<QVector<int> > rowlist;
+    QVector<QVector<int> > planelist;
+    QVector<QVector<float> > ellipfunclist;
 
     unsigned long long int Seed;
 
@@ -216,20 +216,20 @@ class DREAM3DLib_EXPORT PackPrimaryPhases : public AbstractFilter
     int m_PackingPoints[3];
     int m_TotalPackingPoints;
 
-    std::vector<std::vector<float> > grainsizedist;
-    std::vector<std::vector<float> > simgrainsizedist;
-    std::vector<std::vector<std::vector<float> > > neighbordist;
-    std::vector<std::vector<std::vector<float> > > simneighbordist;
+    QVector<QVector<float> > grainsizedist;
+    QVector<QVector<float> > simgrainsizedist;
+    QVector<QVector<QVector<float> > > neighbordist;
+    QVector<QVector<QVector<float> > > simneighbordist;
 
-    std::vector<float> grainsizediststep;
-    std::vector<float> neighbordiststep;
+    QVector<float> grainsizediststep;
+    QVector<float> neighbordiststep;
 
-    std::vector<int> newnames;
-    std::vector<int> packqualities;
-    std::vector<int> gsizes;
+    QVector<int> newnames;
+    QVector<int> packqualities;
+    QVector<int> gsizes;
 
-    std::vector<int> primaryphases;
-    std::vector<float> primaryphasefractions;
+    QVector<int> primaryphases;
+    QVector<float> primaryphasefractions;
 
     float fillingerror, oldfillingerror;
     float currentneighborhooderror, oldneighborhooderror;

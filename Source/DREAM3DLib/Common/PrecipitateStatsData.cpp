@@ -62,7 +62,7 @@ PrecipitateStatsData::~PrecipitateStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string PrecipitateStatsData::getStatsType()
+QString PrecipitateStatsData::getStatsType()
 {
   return DREAM3D::HDF5::PrecipitateStatsData;
 }
@@ -83,7 +83,7 @@ FloatArrayType::Pointer PrecipitateStatsData::generateBinNumbers()
 {
   float grainDiameterInfo[3];
   getGrainDiameterInfo(grainDiameterInfo);
-  std::vector<float> bins;
+  QVector<float> bins;
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {

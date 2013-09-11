@@ -129,7 +129,7 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 
 void InsertPrecipitatePhases::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
@@ -438,7 +438,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   }
 
   Precip precip;
-  std::vector<float> curphasevol;
+  QVector<float> curphasevol;
   curphasevol.resize(precipitatephases.size());
   float change = 0.0f;
   float factor = 1.0;
@@ -636,7 +636,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
       //      int32_t fldPhse = m_FieldPhases[randomgrain];
       //      StatsData::Pointer  phaseStatsData = statsDataArray[fldPhse];
       //      int precision = 0;
-      //      std::string xdmfType = "";
+      //      QString xdmfType = "";
       //      phaseStatsData->GetXdmfTypeAndSize(xdmfType, precision);
       PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[m_FieldPhases[randomgrain]].get());
       if (NULL == pp)
@@ -908,10 +908,10 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
   size_t diabin = 0;
   size_t nnumbin = 0;
   int index = 0;
-  std::vector<int> count;
+  QVector<int> count;
   int counter = 0;
   int phase;
-  typedef std::vector<std::vector<float> > VectOfVectFloat_t;
+  typedef QVector<QVector<float> > VectOfVectFloat_t;
   for (size_t iter = 0; iter < simneighbordist.size(); ++iter)
   {
     phase = precipitatephases[iter];
@@ -1008,7 +1008,7 @@ float InsertPrecipitatePhases::check_neighborhooderror(int gadd, int gremove)
   neighborerror = bhattdist;
   return neighborerror;
 }
-void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1, std::vector<float> array2, float &bhattdist)
+void InsertPrecipitatePhases::compare_1Ddistributions(QVector<float> array1, QVector<float> array2, float &bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1016,7 +1016,7 @@ void InsertPrecipitatePhases::compare_1Ddistributions(std::vector<float> array1,
     bhattdist = bhattdist + sqrt((array1[i]*array2[i]));
   }
 }
-void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<float> > array1, std::vector<std::vector<float> > array2, float &bhattdist)
+void InsertPrecipitatePhases::compare_2Ddistributions(QVector<QVector<float> > array1, QVector<QVector<float> > array2, float &bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1028,7 +1028,7 @@ void InsertPrecipitatePhases::compare_2Ddistributions(std::vector<std::vector<fl
   }
 }
 
-void InsertPrecipitatePhases::compare_3Ddistributions(std::vector<std::vector<std::vector<float> > > array1, std::vector<std::vector<std::vector<float> > > array2, float &bhattdist)
+void InsertPrecipitatePhases::compare_3Ddistributions(QVector<QVector<QVector<float> > > array1, QVector<QVector<QVector<float> > > array2, float &bhattdist)
 {
   bhattdist = 0;
   for (size_t i = 0; i < array1.size(); i++)
@@ -1064,9 +1064,9 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
     phase = precipitatephases[iter];
     PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[phase].get());
     count = 0;
-    std::vector<float>& curGrainSizeDist = grainsizedist[iter];
-    std::vector<float>::size_type curGrainSizeDistSize = curGrainSizeDist.size();
-    std::vector<float>& curSimGrainSizeDist = simgrainsizedist[iter];
+    QVector<float>& curGrainSizeDist = grainsizedist[iter];
+    QVector<float>::size_type curGrainSizeDistSize = curGrainSizeDist.size();
+    QVector<float>& curSimGrainSizeDist = simgrainsizedist[iter];
     // Initialize all Values to Zero
     for (size_t i = 0; i < curGrainSizeDistSize; i++)
     {
@@ -1130,9 +1130,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
   if(gadd > 0)
   {
     size_t size = columnlist[gadd].size();
-    std::vector<int>& cl_gadd = columnlist[gadd];
-    std::vector<int>& rl_gadd = rowlist[gadd];
-    std::vector<int>& pl_gadd = planelist[gadd];
+    QVector<int>& cl_gadd = columnlist[gadd];
+    QVector<int>& rl_gadd = rowlist[gadd];
+    QVector<int>& pl_gadd = planelist[gadd];
     float packquality = 0;
     for (size_t i = 0; i < size; i++)
     {
@@ -1171,9 +1171,9 @@ float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32Ar
   if(gremove > 0)
   {
     size_t size = columnlist[gremove].size();
-    std::vector<int>& cl_gremove = columnlist[gremove];
-    std::vector<int>& rl_gremove = rowlist[gremove];
-    std::vector<int>& pl_gremove = planelist[gremove];
+    QVector<int>& cl_gremove = columnlist[gremove];
+    QVector<int>& rl_gremove = rowlist[gremove];
+    QVector<int>& pl_gremove = planelist[gremove];
     for (size_t i = 0; i < size; i++)
     {
       col = cl_gremove[i];
@@ -1228,12 +1228,12 @@ void InsertPrecipitatePhases::insert_precipitate(size_t gnum)
   unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
 
   // init any values for each of the Shape Ops
-  for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
     (*ops).second->init();
   }
   // Create our Argument Map
-  std::map<ShapeOps::ArgName, float> shapeArgMap;
+  QMap<ShapeOps::ArgName, float> shapeArgMap;
   shapeArgMap[ShapeOps::Omega3] = omega3;
   shapeArgMap[ShapeOps::VolCur] = volcur;
   shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1359,12 +1359,12 @@ void InsertPrecipitatePhases::assign_voxels()
     unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
     // init any values for each of the Shape Ops
-    for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
       (*ops).second->init();
     }
     // Create our Argument Map
-    std::map<ShapeOps::ArgName, float> shapeArgMap;
+    QMap<ShapeOps::ArgName, float> shapeArgMap;
     shapeArgMap[ShapeOps::Omega3] = omega3;
     shapeArgMap[ShapeOps::VolCur] = volcur;
     shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1537,12 +1537,12 @@ void InsertPrecipitatePhases::assign_gaps()
       unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
       // init any values for each of the Shape Ops
-      for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+      for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
       {
         (*ops).second->init();
       }
       // Create our Argument Map
-      std::map<ShapeOps::ArgName, float> shapeArgMap;
+      QMap<ShapeOps::ArgName, float> shapeArgMap;
       shapeArgMap[ShapeOps::Omega3] = omega3;
       shapeArgMap[ShapeOps::VolCur] = volcur;
       shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1684,10 +1684,10 @@ void InsertPrecipitatePhases::cleanup_grains()
   neighpoints[3] = 1;
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
-  std::vector<std::vector<int> > vlists;
+  QVector<QVector<int> > vlists;
   vlists.resize(m->getNumCellFieldTuples());
-  std::vector<int> currentvlist;
-  std::vector<bool> checked;
+  QVector<int> currentvlist;
+  QVector<bool> checked;
   checked.resize(totpoints,false);
   size_t count;
   int touchessurface = 0;
@@ -1873,7 +1873,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -1883,7 +1883,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
       return;
   }
 
-  std::string filename = getCsvOutputFile();
+  QString filename = getCsvOutputFile();
 
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
@@ -1893,7 +1893,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
-  std::vector<IDataArray::Pointer> data;
+  QVector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -1944,7 +1944,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
     // Print the grain id
     outFile << i;
     // Print a row of data
-    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for( QVector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
       outFile << space;
       (*p)->printTuple(outFile, i, space);

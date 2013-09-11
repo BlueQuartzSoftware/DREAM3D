@@ -303,7 +303,7 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
   for (; iter != filters.end(); iter++)
   {
 
-    std::string filterName = (*iter)->getNameOfClass();
+    QString filterName = (*iter)->getNameOfClass();
   //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
     QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
    // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
@@ -369,7 +369,7 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  std::string classNameStr = "";
+  QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
     std::stringstream ss;
@@ -688,7 +688,7 @@ void PipelineBuilderWidget::setupGui()
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
 
-  std::set<std::string> groupNames = fm->getGroupNames();
+  QSet<std::string> groupNames = fm->getGroupNames();
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, Detail::Library);
@@ -708,7 +708,7 @@ void PipelineBuilderWidget::setupGui()
   m_favorites->setExpanded(true);
 
   //  std::cout << "Groups Found: " << std::endl;
-  for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
+  for(QSet<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
     //   std::cout << *iter << std::endl;
     QString iconName(":/");
@@ -725,8 +725,8 @@ void PipelineBuilderWidget::setupGui()
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
     filterGroup->setText(0, QString::fromStdString(*iter));
     filterGroup->setIcon(0, icon);
-    std::set<std::string> subGroupNames = fm->getSubGroupNames(*iter);
-    for(std::set<std::string>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
+    QSet<std::string> subGroupNames = fm->getSubGroupNames(*iter);
+    for(QSet<std::string>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
     {
       QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
       filterSubGroup->setText(0, QString::fromStdString(*iter2));

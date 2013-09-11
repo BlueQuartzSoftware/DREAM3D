@@ -179,7 +179,7 @@ bool FilterPipeline::empty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::string &name)
+AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const QString &name)
 {
   AbstractFilter::Pointer f = AbstractFilter::NullPointer();
   for(FilterContainerType::iterator it = m_Pipeline.begin(); it != m_Pipeline.end(); ++it)
@@ -265,12 +265,12 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setVolumeDataContainer(NULL);
     (*filter)->setSurfaceDataContainer(NULL);
     (*filter)->setVertexDataContainer(NULL);
-    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
+    QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
     // warning messages we are going to let the preflight pass. Hopefully if the warning
     // turns into an error the filter will handle it correctly and gracefully fail with
     // a nice message to the user.
-    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+    for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
     {
        if ( (*iter).getMessageType() == PipelineMessage::Error)
         {

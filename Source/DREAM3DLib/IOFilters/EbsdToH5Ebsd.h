@@ -79,18 +79,18 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, EbsdFileList)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
 
     virtual void setupFilterParameters();
     /**

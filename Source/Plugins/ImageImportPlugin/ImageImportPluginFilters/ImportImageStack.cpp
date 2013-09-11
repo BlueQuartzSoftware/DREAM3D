@@ -78,7 +78,7 @@ ImportImageStack::~ImportImageStack()
 // -----------------------------------------------------------------------------
 void ImportImageStack::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
 
 
 
@@ -229,9 +229,9 @@ void ImportImageStack::execute()
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
-  for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
+  for (QVector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
-    std::string imageFName = *filepath;
+    QString imageFName = *filepath;
     ss.str("");
     ss << "Importing file " << imageFName;
     notifyStatusMessage(ss.str());

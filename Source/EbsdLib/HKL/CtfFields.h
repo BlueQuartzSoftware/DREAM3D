@@ -61,7 +61,7 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     virtual ~CtfFields();
     EBSD_TYPE_MACRO_SUPER(CtfFields, AbstractEbsdFields)
 
-    virtual std::vector<std::string> getFieldNames();
+    virtual QVector<std::string> getFieldNames();
 
     template<typename T>
     T getFilterFields()

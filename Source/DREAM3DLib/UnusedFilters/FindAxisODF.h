@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Axis ODF"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Axis ODF"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT FindAxisODF : public AbstractFilter
 
     StatsDataArray* m_StatsDataArray;
 
-    std::vector<OrientationMath*> m_OrientationOps;
+    QVector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

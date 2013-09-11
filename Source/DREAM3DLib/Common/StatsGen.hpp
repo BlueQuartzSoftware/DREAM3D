@@ -184,11 +184,11 @@ class StatsGen
      * @param sigma
      * @param cutoff
      * @param binstep
-     * @param x Type that adheres to the std::vector API
-     * @param y Type that adheres to the std::vector API
+     * @param x Type that adheres to the QVector API
+     * @param y Type that adheres to the QVector API
      * @param yMax
      * @param numsizebins
-     * @param binsizes Type that adheres to the std::vector API
+     * @param binsizes Type that adheres to the QVector API
      * @return
      */
     template<typename J, typename Vector>
@@ -260,7 +260,7 @@ class StatsGen
      * @brief  This method will generate ODF data for a Hexagonal material and
      * generate 3 scatter plots which are the
      * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
+     * type is a QVector conforming class type that holds the data.
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param odf [input] The ODF data
@@ -303,7 +303,7 @@ class StatsGen
      * @brief  This method will generate ODF data for a OrthoRhombic material and
      * generate 3 scatter plots which are the
      * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
+     * type is a QVector conforming class type that holds the data.
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param odf The ODF Data
@@ -350,7 +350,7 @@ class StatsGen
      * @brief  This method will generate ODF data for a OrthoRhombic material and
      * generate 3 scatter plots which are the
      * <001>, <011> and <111> directions. The method is a C++ Template which the parameter
-     * type is a std::vector conforming class type that holds the data.
+     * type is a QVector conforming class type that holds the data.
      * QVector falls into this category. The input data for the
      * euler angles is in Columnar fashion instead of row major format.
      * @param e1s The first euler angles (input)

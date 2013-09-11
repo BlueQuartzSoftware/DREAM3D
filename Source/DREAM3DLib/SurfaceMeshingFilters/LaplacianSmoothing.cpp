@@ -109,7 +109,7 @@ class LaplacianSmoothingImpl
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
         MeshLinks::FaceList& list = m_MeshLinks->getFaceList(v);
-        std::set<int32_t> neighbours;
+        QSet<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
         {
@@ -122,7 +122,7 @@ class LaplacianSmoothingImpl
         float konst1 = lambdas[v]/neighbours.size();
 
         // Now that we have our connectivity iterate over the vertices generating a new position
-        for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
+        for(QSet<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
         {
           DREAM3D::Mesh::Vert_t& vert = vertices[*iter];
 
@@ -179,7 +179,7 @@ LaplacianSmoothing::~LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -710,7 +710,7 @@ namespace Detail {
 // -----------------------------------------------------------------------------
 // This is just here for some debugging issues.
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
+void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();

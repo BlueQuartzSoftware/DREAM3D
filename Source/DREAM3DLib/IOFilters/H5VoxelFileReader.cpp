@@ -71,7 +71,7 @@ H5VoxelFileReader::~H5VoxelFileReader()
 // -----------------------------------------------------------------------------
 void H5VoxelFileReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -228,7 +228,7 @@ void H5VoxelFileReader::execute()
   DataArray<float>::Pointer eulers = DataArray<float>::CreateArray(totalpoints*3, DREAM3D::CellData::EulerAngles);
   eulers->SetNumberOfComponents(3);
 
-  std::string arrayname = "GrainID";
+  QString arrayname = "GrainID";
   err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));
   if(err < 0)
   {
@@ -269,8 +269,8 @@ void H5VoxelFileReader::execute()
   }
   getVolumeDataContainer()->resizeFieldDataArrays(maxId+1);
 
-  std::vector<unsigned int> crystruct;
-  std::vector<unsigned int> phaseType;
+  QVector<unsigned int> crystruct;
+  QVector<unsigned int> phaseType;
 
   arrayname = "CrystalStructure";
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);

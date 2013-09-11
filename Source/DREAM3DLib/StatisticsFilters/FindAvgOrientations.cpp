@@ -138,7 +138,7 @@ void FindAvgOrientations::execute()
   }
 
   size_t numgrains = m->getNumCellFieldTuples();
-  std::vector<float> counts(numgrains, 0.0);
+  QVector<float> counts(numgrains, 0.0);
 
   int phase;
   QuatF voxquat;

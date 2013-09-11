@@ -51,7 +51,7 @@ DistributionAnalysisOps::~DistributionAnalysisOps()
 {
 
 }
-void DistributionAnalysisOps::determinemaxandminvalues(std::vector<float> &data, float &max, float &min)
+void DistributionAnalysisOps::determinemaxandminvalues(QVector<float> &data, float &max, float &min)
 {
 	float value;
     min = std::numeric_limits<float>::max();

@@ -97,7 +97,7 @@ void H5CtfVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  std::set<std::string> arrayNames = getArraysToRead();
+  QSet<std::string> arrayNames = getArraysToRead();
 
   H5CTFREADER_ALLOCATE_ARRAY(Phase, int)
   H5CTFREADER_ALLOCATE_ARRAY(X, float)
@@ -134,7 +134,7 @@ void H5CtfVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5CtfVolumeReader::getPointerByName(const std::string &fieldName)
+void* H5CtfVolumeReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
@@ -153,7 +153,7 @@ void* H5CtfVolumeReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5CtfVolumeReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &fieldName)
   {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
@@ -172,12 +172,12 @@ Ebsd::NumType H5CtfVolumeReader::getPointerType(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
+QVector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 {
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  std::string index = StringUtils::numToString(getZStart());
+  QString index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
   hid_t fileId = H5Utilities::openFile(getFileName(), true);

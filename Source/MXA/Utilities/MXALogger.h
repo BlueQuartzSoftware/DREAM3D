@@ -74,7 +74,7 @@ class MXA_EXPORT MXALogger_Implementation
     MXA_INSTANCE_PROPERTY(bool, IsFileBased)
     MXA_INSTANCE_STRING_PROPERTY(FileName)
 
-    bool open(const std::string &fn, std::ios::openmode mode = std::ios::trunc);
+    bool open(const QString &fn, std::ios::openmode mode = std::ios::trunc);
     bool close();
 
     std::ostream& dateTime() { CHECK_PRECONDITION(logTime()) }
@@ -88,7 +88,7 @@ class MXA_EXPORT MXALogger_Implementation
     std::ostream& operator<<(uint64_t v) { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(int64_t v) { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(double v)  { CHECK_PRECONDITION(v) }
-    std::ostream& operator<<(const std::string &v) { CHECK_PRECONDITION(v) }
+    std::ostream& operator<<(const QString &v) { CHECK_PRECONDITION(v) }
     std::ostream& operator<<(const char* v) { CHECK_PRECONDITION(v) }
 
   private:

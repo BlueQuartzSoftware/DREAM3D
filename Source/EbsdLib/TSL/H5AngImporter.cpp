@@ -152,7 +152,7 @@ int H5AngImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFile)
+int H5AngImporter::importFile(hid_t fileId, int64_t z, const QString &angFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -206,7 +206,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
 
   // Write the file Version number to the file
   {
-    std::vector<hsize_t> dims;
+    QVector<hsize_t> dims;
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
@@ -284,7 +284,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, SampleID, Ebsd::Ang::SampleId)
   WRITE_ANG_HEADER_STRING_DATA(reader, std::string, ScanID, Ebsd::Ang::ScanId)
 
-  std::string angCompleteHeader = reader.getOriginalHeader();
+  QString angCompleteHeader = reader.getOriginalHeader();
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, angCompleteHeader);
   err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalFile, angFile);
 
@@ -356,7 +356,7 @@ int H5AngImporter::importFile(hid_t fileId, int64_t z, const std::string &angFil
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<m_msgType> tempVar = reader->get##prpty();\
+  QVector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
   m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
@@ -382,8 +382,8 @@ int H5AngImporter::writePhaseData(AngReader &reader, hid_t phasesGid)
  // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
-  std::vector<AngPhase::Pointer> phases = reader.getPhaseVector();
-  for (std::vector<AngPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  QVector<AngPhase::Pointer> phases = reader.getPhaseVector();
+  for (QVector<AngPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     AngPhase* p = (*phase).get();
     hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
@@ -425,9 +425,9 @@ int H5AngImporter::writeHKLFamilies(AngPhase* p, hid_t hklGid)
   hsize_t     dims[1] = {1};
   herr_t      status = -1;
   int index = 0;
-  std::vector<HKLFamily::Pointer> families = p->getHKLFamilies();
+  QVector<HKLFamily::Pointer> families = p->getHKLFamilies();
   HKLFamily_t hkl;
-  for (std::vector<HKLFamily::Pointer>::iterator f = families.begin(); f != families.end(); ++f )
+  for (QVector<HKLFamily::Pointer>::iterator f = families.begin(); f != families.end(); ++f )
   {
     (*f)->copyToStruct(&hkl);
 

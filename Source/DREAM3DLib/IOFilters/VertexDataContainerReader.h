@@ -62,9 +62,9 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexFieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexEnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, VertexEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef std::list<std::string> NameListType;
@@ -74,14 +74,14 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Vertex DataContainer Reader"; }
+    virtual const QString getHumanLabel() { return "Vertex DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -132,9 +132,9 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
     int readVertices(hid_t dcGid);
 
 
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead);
+    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<std::string> &namesRead,
+                                                QSet<std::string> &namesToRead);
 
   private:
 

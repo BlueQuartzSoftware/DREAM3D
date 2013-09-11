@@ -59,7 +59,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of ManagedArrayOfArraysTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
       if (name.empty() == true)
       {
@@ -77,13 +77,13 @@ class ManagedArrayOfArrays : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = ManagedArrayOfArrays<T>::CreateArray(numElements, name);
       return p;
@@ -115,18 +115,18 @@ class ManagedArrayOfArrays : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
     }
 
-    virtual std::string getTypeAsString() { return "ManagedArrayOfArrays";}
+    virtual QString getTypeAsString() { return "ManagedArrayOfArrays";}
     /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -135,7 +135,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString GetName()
     {
       return m_Name;
     }
@@ -247,7 +247,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -266,7 +266,7 @@ class ManagedArrayOfArrays : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] > this->MaxId) { return -100; }
       }
@@ -310,9 +310,9 @@ class ManagedArrayOfArrays : public IDataArray
         return 0;
       }
 
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
+      QVector<size_t> srcIdx(idxs.size() + 1);
+      QVector<size_t> destIdx(idxs.size() + 1);
+      QVector<size_t> copyElements(idxs.size() + 1);
       srcIdx[0] = 0;
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0);
@@ -520,8 +520,8 @@ class ManagedArrayOfArrays : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+                                    const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -717,7 +717,7 @@ class ManagedArrayOfArrays : public IDataArray
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
     ManagedArrayOfArrays(const ManagedArrayOfArrays&); //Not Implemented

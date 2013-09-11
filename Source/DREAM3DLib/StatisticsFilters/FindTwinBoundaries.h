@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Twin Boundaries"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Twin Boundaries"; }
 
     virtual void setupFilterParameters();
     /**
@@ -108,7 +108,7 @@ class DREAM3DLib_EXPORT FindTwinBoundaries : public AbstractFilter
     FindTwinBoundaries();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

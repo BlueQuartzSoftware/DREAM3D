@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find MDF"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find MDF"; }
 
     /**
     * @brief This method will write the options to a file
@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     FindMDF();
 
   private:
-    std::vector<OrientationMath*> m_OrientationOps;
+    QVector<OrientationMath*> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

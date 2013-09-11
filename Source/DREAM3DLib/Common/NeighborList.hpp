@@ -69,11 +69,11 @@ class NeighborList : public IDataArray
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
 
-    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       return NeighborList<T>::New();
     }
-    typedef std::vector<T> VectorType;
+    typedef QVector<T> VectorType;
     typedef boost::shared_ptr<VectorType> SharedVectorType;
 
     virtual ~NeighborList() {}
@@ -90,7 +90,7 @@ class NeighborList : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -118,10 +118,10 @@ class NeighborList : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return NeighborList<T>::ClassName();}
+    virtual QString getTypeAsString() { return NeighborList<T>::ClassName();}
 
-    void SetName(const std::string &name) { m_Name = name; }
-    std::string GetName() { return m_Name; }
+    void SetName(const QString &name) { m_Name = name; }
+    QString GetName() { return m_Name; }
 
 
     void takeOwnership() {    }
@@ -138,7 +138,7 @@ class NeighborList : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
       int err = 0;
             // If nothing is to be erased just return
@@ -155,13 +155,13 @@ class NeighborList : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] >= _data.size()) { return -100; }
       }
 
 
-      std::vector<SharedVectorType> replacement(_data.size() - idxs.size());
+      QVector<SharedVectorType> replacement(_data.size() - idxs.size());
       size_t idxsIndex = 0;
       size_t rIdx = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
@@ -279,7 +279,7 @@ class NeighborList : public IDataArray
       // can compare this with what is written in the file. If they are
       // different we are going to overwrite what is in the file with what
       // we compute here.
-      std::vector<int32_t> numNeighbors(_data.size());
+      QVector<int32_t> numNeighbors(_data.size());
       size_t total = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -292,7 +292,7 @@ class NeighborList : public IDataArray
       if (H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == false)
       {
         // The NumNeighbors Array is NOT already in the file so write it to the file
-		    std::vector<hsize_t> dims(1, numNeighbors.size());
+		    QVector<hsize_t> dims(1, numNeighbors.size());
 		    err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
 		    if(err < 0)
 		    {
@@ -313,7 +313,7 @@ class NeighborList : public IDataArray
       {
         // The NumNeighbors array is in the dream3d file so read it up into memory and compare with what
         // we have in memory.
-        std::vector<int32_t> fileNumNeigh(_data.size());
+        QVector<int32_t> fileNumNeigh(_data.size());
         err = H5Lite::readVectorDataset(parentId, m_NumNeighborsArrayName, fileNumNeigh);
         if (err < 0)
         {
@@ -361,7 +361,7 @@ class NeighborList : public IDataArray
       // Allocate an array of the proper size to we can concatenate all the arrays together into a single array that
       // can be written to the HDF5 File. This operation can ballon the memory size temporarily until this operation
       // is complete.
-      std::vector<T> flat (total);
+      QVector<T> flat (total);
       size_t currentStart = 0;
       for(size_t dIdx = 0; dIdx < _data.size(); ++dIdx)
       {
@@ -414,14 +414,14 @@ class NeighborList : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-            const std::string &groupPath, const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+            const QString &groupPath, const QString &label)
     {
 
       std::stringstream dimStr;
       dimStr << volDims[0] << " " << volDims[1] << " " << volDims[2] << " ";
       int precision = 0;
-      std::string xdmfTypeName;
+      QString xdmfTypeName;
       GetXdmfTypeAndSize(xdmfTypeName, precision);
 
       /*
@@ -451,7 +451,7 @@ class NeighborList : public IDataArray
 
       // Generate the number of neighbors array and also compute the total number
       // of elements that would be needed to flatten the array
-      std::vector<int32_t> numNeighbors;
+      QVector<int32_t> numNeighbors;
 
       // Check to see if the NumNeighbors exists in the file, which it must.
       if(H5Lite::datasetExists(parentId, m_NumNeighborsArrayName) == true)
@@ -468,7 +468,7 @@ class NeighborList : public IDataArray
         return -703;
       }
 
-      std::vector<T> flat;
+      QVector<T> flat;
       err = H5Lite::readVectorDataset(parentId, GetName(), flat);
       if (err < 0)
       {
@@ -478,7 +478,7 @@ class NeighborList : public IDataArray
       // Loop over all the entries and make new Vectors to hold the incoming data
       _data.resize(numNeighbors.size());
       size_t currentStart = 0;
-      for(std::vector<int32_t>::size_type dIdx = 0; dIdx < numNeighbors.size(); ++dIdx)
+      for(QVector<int32_t>::size_type dIdx = 0; dIdx < numNeighbors.size(); ++dIdx)
       {
         size_t nEle = numNeighbors[dIdx];
         if(nEle > 0)
@@ -650,9 +650,9 @@ class NeighborList : public IDataArray
       m_Name("NeighborList")  {    }
 
   private:
-    std::string m_Name;
+    QString m_Name;
 
-    std::vector<SharedVectorType> _data;
+    QVector<SharedVectorType> _data;
 
     NeighborList(const NeighborList&); // Copy Constructor Not Implemented
     void operator=(const NeighborList&); // Operator '=' Not Implemented

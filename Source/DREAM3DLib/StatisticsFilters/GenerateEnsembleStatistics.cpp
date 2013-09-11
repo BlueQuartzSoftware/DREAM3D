@@ -369,9 +369,9 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   float maxdiam;
   float mindiam;
   float totalUnbiasedVolume = 0.0;
-  std::vector<VectorOfFloatArray> sizedist;
-  std::vector<std::vector<std::vector<float > > > values;
-  std::vector<float> fractions;
+  QVector<VectorOfFloatArray> sizedist;
+  QVector<QVector<QVector<float > > > values;
+  QVector<float> fractions;
   FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
@@ -450,12 +450,12 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 
   size_t bin;
 
-  std::vector<VectorOfFloatArray> boveras;
-  std::vector<VectorOfFloatArray> coveras;
-  std::vector<std::vector<std::vector<float> > > bvalues;
-  std::vector<std::vector<std::vector<float> > > cvalues;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
+  QVector<VectorOfFloatArray> boveras;
+  QVector<VectorOfFloatArray> coveras;
+  QVector<QVector<QVector<float> > > bvalues;
+  QVector<QVector<QVector<float> > > cvalues;
+  QVector<float> mindiams;
+  QVector<float> binsteps;
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
@@ -549,10 +549,10 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 
   size_t bin;
 
-  std::vector<VectorOfFloatArray> omega3s;
-  std::vector<std::vector<std::vector<float> > > values;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
+  QVector<VectorOfFloatArray> omega3s;
+  QVector<QVector<QVector<float> > > values;
+  QVector<float> mindiams;
+  QVector<float> binsteps;
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
@@ -624,10 +624,10 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   size_t bin;
-  std::vector<VectorOfFloatArray> neighborhoods;
-  std::vector<std::vector<std::vector<float > > > values;
-  std::vector<float> mindiams;
-  std::vector<float> binsteps;
+  QVector<VectorOfFloatArray> neighborhoods;
+  QVector<QVector<QVector<float > > > values;
+  QVector<float> mindiams;
+  QVector<float> binsteps;
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
@@ -710,8 +710,8 @@ void GenerateEnsembleStatistics::gatherODFStats()
   size_t bin;
   size_t numgrains = m->getNumCellFieldTuples();
   int phase;
-  std::vector<float> totalvol;
-  std::vector<FloatArrayType::Pointer> eulerodf;
+  QVector<float> totalvol;
+  QVector<FloatArrayType::Pointer> eulerodf;
 
   size_t numensembles = m->getNumCellEnsembleTuples();
 
@@ -813,8 +813,8 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
-  std::vector<float> totalSurfaceArea;
-  std::vector<FloatArrayType::Pointer> misobin;
+  QVector<float> totalSurfaceArea;
+  QVector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
   size_t numensembles = m->getNumCellEnsembleTuples();
@@ -913,8 +913,8 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
 
   float r1, r2, r3;
   int bin;
-  std::vector<FloatArrayType::Pointer> axisodf;
-  std::vector<float> totalaxes;
+  QVector<FloatArrayType::Pointer> axisodf;
+  QVector<float> totalaxes;
   size_t numXTals = m->getNumCellEnsembleTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);

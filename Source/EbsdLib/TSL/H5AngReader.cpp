@@ -196,7 +196,7 @@ int H5AngReader::readHeader(hid_t parId)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Formula, Formula, m_CurrentPhase)
     READ_PHASE_STRING_DATA("H5AngReader", pid, Ebsd::Ang::Info, Info, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5AngReader", pid, uint32_t, int, Ebsd::Ang::Symmetry, Symmetry, m_CurrentPhase)
-    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, std::vector<float>, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
+    READ_PHASE_HEADER_ARRAY("H5AngReader", pid, QVector<float>, Ebsd::Ang::LatticeConstants, LatticeConstants, m_CurrentPhase)
     READ_PHASE_HEADER_DATA("H5AngReader", pid, int, Ebsd::Ang::NumberFamilies, NumberFamilies, m_CurrentPhase)
 
     if (m_CurrentPhase->getNumberFamilies() > 0)
@@ -212,13 +212,13 @@ int H5AngReader::readHeader(hid_t parId)
     /* The 'Categories' header may actually be missing from certain types of .ang files */
     if (H5Lite::datasetExists(pid, Ebsd::Ang::Categories) == true)
     {
-      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, std::vector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
+      READ_PHASE_HEADER_ARRAY("H5AngReader", pid, QVector<int>, Ebsd::Ang::Categories, Categories, m_CurrentPhase)
     }
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
 
-  std::string completeHeader;
+  QString completeHeader;
   err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   if (err < 0)
   {
@@ -240,10 +240,10 @@ int H5AngReader::readHKLFamilies(hid_t hklGid, AngPhase::Pointer phase)
   hid_t dataset, memtype;
   herr_t status = 1;
   HKLFamily_t data;
-  std::vector<HKLFamily::Pointer> families;
+  QVector<HKLFamily::Pointer> families;
   for (int i = 0; i < phase->getNumberFamilies(); ++i)
   {
-    std::string dsetName = StringUtils::numToString(i);
+    QString dsetName = StringUtils::numToString(i);
 
     dataset = H5Dopen(hklGid, dsetName.c_str(), H5P_DEFAULT);
 
@@ -305,7 +305,7 @@ int H5AngReader::readData(hid_t parId)
   // Initialize new pointers
   size_t totalDataRows = 0;
 
-  std::string grid = getGrid();
+  QString grid = getGrid();
 
   size_t nOddCols = getNumOddCols();
   size_t nEvenCols = getNumEvenCols();
@@ -389,7 +389,7 @@ int H5AngReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5AngReader::setArraysToRead(std::set<std::string> names)
+void H5AngReader::setArraysToRead(QSet<std::string> names)
 {
   m_ArrayNames = names;
 }

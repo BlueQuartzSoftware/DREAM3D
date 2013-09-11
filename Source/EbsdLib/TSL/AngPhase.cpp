@@ -66,7 +66,7 @@ void AngPhase::parsePhase(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
+  QString data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
   ss >> m_PhaseIndex;
 }
@@ -95,7 +95,7 @@ void AngPhase::parseMaterialName(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
+  QString data(&(value[start]), len - start);
   m_MaterialName = data;
 }
 
@@ -123,7 +123,7 @@ void AngPhase::parseFormula(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
+  QString data(&(value[start]), len - start);
   m_Formula = data;
 }
 
@@ -151,7 +151,7 @@ void AngPhase::parseInfo(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
+  QString data(&(value[start]), len - start);
   m_Info = data;
 }
 
@@ -164,7 +164,7 @@ void AngPhase::parseSymmetry(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
+  QString data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
   unsigned int symm;
   ss >> symm;
@@ -197,7 +197,7 @@ void AngPhase::parseLatticeConstants(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
+  QString data(&(value[start]), len - start);
   std::stringstream ss(data);
   float lc;
   while(ss.good() )
@@ -217,7 +217,7 @@ void AngPhase::parseNumberFamilies(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
+  QString data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
   ss >> m_NumberFamilies;
 }
@@ -232,7 +232,7 @@ void AngPhase::parseHKLFamilies(char* value, size_t start, size_t length)
   {
     ++start;
   } // move past the ":" character
-  std::string data(&(value[start]), strlen(value) - start);
+  QString data(&(value[start]), strlen(value) - start);
   std::stringstream ss(data);
 
   while(ss.good() )
@@ -275,7 +275,7 @@ void AngPhase::parseCategories(char* value, size_t start, size_t length)
   {
     len--;
   }
-  std::string data(&(value[start]), len - start);
+  QString data(&(value[start]), len - start);
   std::stringstream ss(data);
   int cat;
   while(ss.good() )
@@ -297,7 +297,7 @@ void AngPhase::printSelf(std::ostream &stream)
   stream << Ebsd::Ang::Symmetry << ": " << m_Symmetry << std::endl;
 
   stream << Ebsd::Ang::LatticeConstants;
-  for (std::vector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
+  for (QVector<float>::iterator iter = m_LatticeConstants.begin(); iter != m_LatticeConstants.end(); ++iter )
   {
     stream << " " << *iter;
   }
@@ -306,14 +306,14 @@ void AngPhase::printSelf(std::ostream &stream)
   stream << Ebsd::Ang::NumberFamilies << ": " << m_NumberFamilies << std::endl;
 
 
-  for (std::vector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
+  for (QVector<HKLFamily::Pointer>::iterator iter = m_HKLFamilies.begin(); iter != m_HKLFamilies.end(); ++iter )
   {
    (*iter)->printSelf(stream);
   }
 
 
   stream << Ebsd::Ang::Categories;
-  for (std::vector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
+  for (QVector<int>::iterator iter = m_Categories.begin(); iter != m_Categories.end(); ++iter )
   {
     stream << " " << *iter;
   }

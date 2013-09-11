@@ -65,7 +65,7 @@ MXALogger_Implementation::~MXALogger_Implementation()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool MXALogger_Implementation::open(const std::string &fn, std::ios::openmode mode)
+bool MXALogger_Implementation::open(const QString &fn, std::ios::openmode mode)
 {
   if (fn == this->m_FileName && m_OutStream.is_open() == true) {
     return true;

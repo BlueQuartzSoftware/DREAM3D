@@ -93,7 +93,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
     EbsdHeader_INSTANCE_PROPERTY(CtfHeaderEntry<int>, int, NumPhases, Ebsd::Ctf::NumPhases)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<CtfPhase::Pointer>, PhaseVector)
+    EBSD_INSTANCE_PROPERTY(QVector<CtfPhase::Pointer>, PhaseVector)
 
     EBSD_POINTER_PROP(Phase, Phase, int)
     EBSD_POINTER_PROP(X, X, float)
@@ -112,8 +112,8 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
-    void setPointerByName(const std::string &name, void* p);
+    void* getPointerByName(const QString &fieldName);
+    void setPointerByName(const QString &name, void* p);
 
 
 
@@ -122,11 +122,11 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
-    int getTypeSize(const std::string &fieldName);
-    DataParser::Pointer getParser(const std::string &fieldName, void* ptr, size_t size);
+    Ebsd::NumType getPointerType(const QString &fieldName);
+    int getTypeSize(const QString &fieldName);
+    DataParser::Pointer getParser(const QString &fieldName, void* ptr, size_t size);
 
-    std::vector<std::string> getColumnNames();
+    QVector<std::string> getColumnNames();
 
     /**
     * @brief Reads the complete HKL .ctf file.
@@ -166,17 +166,17 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
 
   private:
     int m_SingleSliceRead;
-    std::vector<void*>  m_ColumnData;
-    std::map<std::string, int> m_NameIndexMap;
-    std::map<std::string, void*> m_NamePointerMap;
-    std::vector<DataParser::Pointer> m_DataParsers;
+    QVector<void*>  m_ColumnData;
+    QMap<std::string, int> m_NameIndexMap;
+    QMap<std::string, void*> m_NamePointerMap;
+    QVector<DataParser::Pointer> m_DataParsers;
 
     /**
      * @brief Breaks a string apart into string tokens using the delimiter
      * @param buf
      * @param delimiter
      */
-    std::vector<std::string> tokenize(char* buf, char delimiter);
+    QVector<std::string> tokenize(char* buf, char delimiter);
 
     /**
      * @brief
@@ -184,7 +184,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
      * @param headerLines
      * @return
      */
-    int getHeaderLines(std::ifstream &reader, std::vector<std::vector<std::string> > &headerLines);
+    int getHeaderLines(std::ifstream &reader, QVector<QVector<std::string> > &headerLines);
 
     /**
     * Checks that the line is the header of the columns for the data.
@@ -194,12 +194,12 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @return <code>true</code> if the line is the columns header line,
     *         <code>false</code> otherwise
     */
-    bool isDataHeaderLine(std::vector<std::string> &columns);
+    bool isDataHeaderLine(QVector<std::string> &columns);
 
     /**
     *
     */
-    int parseHeaderLines(std::vector<std::vector<std::string> > &headerLines);
+    int parseHeaderLines(QVector<QVector<std::string> > &headerLines);
 	
 	/**
      * @brief
@@ -216,7 +216,7 @@ class EbsdLib_EXPORT CtfReader : public EbsdReader
     * @param yCells Number of Y Data Points
     * @param col The current Column of Data
     */
-    void parseDataLine(const std::string &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
+    void parseDataLine(const QString &line, size_t row, size_t col, size_t i, size_t xCells, size_t yCells );
 
     CtfReader(const CtfReader&); // Copy Constructor Not Implemented
     void operator=(const CtfReader&); // Operator '=' Not Implemented

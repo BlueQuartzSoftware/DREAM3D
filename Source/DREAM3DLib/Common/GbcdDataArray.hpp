@@ -68,7 +68,7 @@ class GbcdDataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(GbcdDataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(GbcdDataArray<T>, IDataArray)
 
-    typedef std::vector<Pointer>   ContainterType;
+    typedef QVector<Pointer>   ContainterType;
 
   enum NumType {
     Int8 = 0,
@@ -91,7 +91,7 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t* dims, const std::string &name, bool allocateArray = true)
+    static Pointer CreateArray(size_t* dims, const QString &name, bool allocateArray = true)
     {
       if (name.empty() == true)
       {
@@ -116,7 +116,7 @@ class GbcdDataArray : public IDataArray
      * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4,
-                              const std::string &name, bool allocateArray = true)
+                              const QString &name, bool allocateArray = true)
     {
       GbcdDataArray<T>* d = new GbcdDataArray<T> (dim0, dim1, dim2, dim3, dim4, true);
       if (allocateArray && d->Allocate() < 0)
@@ -130,13 +130,13 @@ class GbcdDataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
       return p;
@@ -190,7 +190,7 @@ class GbcdDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
    //   T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -248,7 +248,7 @@ class GbcdDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const std::string &name)
+    virtual void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -257,7 +257,7 @@ class GbcdDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    virtual std::string GetName()
+    virtual QString GetName()
     {
       return m_Name;
     }
@@ -370,7 +370,7 @@ class GbcdDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
       int err = -1;
       return err;
@@ -509,9 +509,9 @@ class GbcdDataArray : public IDataArray
      * from
      * @return The HDF5 native type for the value
      */
-    std::string getFullNameOfClass()
+    QString getFullNameOfClass()
     {
-      std::string theType = getTypeAsString();
+      QString theType = getTypeAsString();
       theType = "GbcdDataArray<" + theType + ">";
       return theType;
     }
@@ -520,7 +520,7 @@ class GbcdDataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    std::string getTypeAsString()
+    QString getTypeAsString()
     {
       T value = static_cast<T>(0);
       if (typeid(value) == typeid(float)) return "float";
@@ -600,8 +600,8 @@ class GbcdDataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
-    const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
+    const QString &label)
     {
       int err = -1;
       return err;
@@ -830,7 +830,7 @@ class GbcdDataArray : public IDataArray
     // unsigned long long int MUD_FLAP_4;
     size_t m_Dims[5];
     //  unsigned long long int MUD_FLAP_5;
-    std::string m_Name;
+    QString m_Name;
 
 
     GbcdDataArray(const GbcdDataArray&); //Not Implemented

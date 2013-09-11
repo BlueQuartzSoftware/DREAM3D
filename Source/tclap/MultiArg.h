@@ -39,7 +39,7 @@ template<class T>
 class MultiArg : public Arg
 {
 public:
-	typedef std::vector<T> container_type;	
+	typedef QVector<T> container_type;	
 	typedef typename container_type::iterator iterator;
 	typedef typename container_type::const_iterator const_iterator;
 
@@ -48,12 +48,12 @@ protected:
 	/**
 	 * The list of values parsed from the CmdLine.
 	 */
-	std::vector<T> _values;
+	QVector<T> _values;
 
 	/**
 	 * The description of type T to be used in the usage.
 	 */
-	std::string _typeDesc;
+	QString _typeDesc;
 
 	/**
 	 * A list of constraint on this Arg. 
@@ -179,13 +179,13 @@ public:
 	 * \param i - Pointer the the current argument in the list.
 	 * \param args - Mutable list of strings. Passed from main().
 	 */
-	virtual bool processArg(int* i, std::vector<std::string>& args); 
+	virtual bool processArg(int* i, QVector<std::string>& args); 
 
 	/**
 	 * Returns a vector of type T containing the values parsed from
 	 * the command line.
 	 */
-	const std::vector<T>& getValue();
+	const QVector<T>& getValue();
 
 	/**
 	 * Returns an iterator over the values parsed from the command
@@ -203,13 +203,13 @@ public:
 	 * Returns the a short id string.  Used in the usage. 
 	 * \param val - value to be used.
 	 */
-	virtual std::string shortID(const std::string& val="val") const;
+	virtual QString shortID(const std::string& val="val") const;
 
 	/**
 	 * Returns the a long id string.  Used in the usage. 
 	 * \param val - value to be used.
 	 */
-	virtual std::string longID(const std::string& val="val") const;
+	virtual QString longID(const std::string& val="val") const;
 
 	/**
 	 * Once we've matched the first value, then the arg is no longer
@@ -291,10 +291,10 @@ MultiArg<T>::MultiArg(const std::string& flag,
 }
 
 template<class T>
-const std::vector<T>& MultiArg<T>::getValue() { return _values; }
+const QVector<T>& MultiArg<T>::getValue() { return _values; }
 
 template<class T>
-bool MultiArg<T>::processArg(int *i, std::vector<std::string>& args) 
+bool MultiArg<T>::processArg(int *i, QVector<std::string>& args) 
 {
  	if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -302,8 +302,8 @@ bool MultiArg<T>::processArg(int *i, std::vector<std::string>& args)
 	if ( _hasBlanks( args[*i] ) )
 		return false;
 
-	std::string flag = args[*i];
-	std::string value = "";
+	QString flag = args[*i];
+	QString value = "";
 
    	trimFlag( flag, value );
 
@@ -348,7 +348,7 @@ bool MultiArg<T>::processArg(int *i, std::vector<std::string>& args)
  *
  */
 template<class T>
-std::string MultiArg<T>::shortID(const std::string& val) const
+QString MultiArg<T>::shortID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::shortID(_typeDesc) + " ... ";
@@ -358,7 +358,7 @@ std::string MultiArg<T>::shortID(const std::string& val) const
  *
  */
 template<class T>
-std::string MultiArg<T>::longID(const std::string& val) const
+QString MultiArg<T>::longID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::longID(_typeDesc) + "  (accepted multiple times)";

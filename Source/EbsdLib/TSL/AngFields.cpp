@@ -54,9 +54,9 @@ AngFields::~AngFields()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> AngFields::getFieldNames()
+QVector<std::string> AngFields::getFieldNames()
 {
-  std::vector<std::string> fields;
+  QVector<std::string> fields;
   fields.push_back(Ebsd::Ang::Phi1);
   fields.push_back(Ebsd::Ang::Phi);
   fields.push_back(Ebsd::Ang::Phi2);

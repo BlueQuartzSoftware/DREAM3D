@@ -206,7 +206,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   // Get the Number of Phases in the Material
   // DO NOT Use the accessor methods below to get variables. Directly access them otherwise you
   // will cause an infinite recursion to occur.
-  std::string index = StringUtils::numToString(m_ZStart);
+  QString index = StringUtils::numToString(m_ZStart);
   hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   if (gid > 0)
   {
@@ -320,7 +320,7 @@ int H5EbsdVolumeInfo::getResolution(float &xRes, float &yRes, float &zRes)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string H5EbsdVolumeInfo::getManufacturer()
+QString H5EbsdVolumeInfo::getManufacturer()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
@@ -418,7 +418,7 @@ float H5EbsdVolumeInfo::getSampleTransformationAngle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
+QVector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
@@ -426,7 +426,7 @@ std::vector<float> H5EbsdVolumeInfo::getSampleTransformationAxis()
     err = readVolumeInfo();
     if (err < 0)
     {
-      std::vector<float> axis(3);
+      QVector<float> axis(3);
       axis[0] = 0.0;
       axis[1] = 0.0;
       axis[2] = 1.0;
@@ -451,7 +451,7 @@ float H5EbsdVolumeInfo::getEulerTransformationAngle()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
+QVector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
 {
   int err = -1;
   if (m_ValuesAreCached == false)
@@ -459,7 +459,7 @@ std::vector<float> H5EbsdVolumeInfo::getEulerTransformationAxis()
     err = readVolumeInfo();
     if (err < 0)
     {
-      std::vector<float> axis(3);
+      QVector<float> axis(3);
       axis[0] = 0.0;
       axis[1] = 0.0;
       axis[2] = 1.0;

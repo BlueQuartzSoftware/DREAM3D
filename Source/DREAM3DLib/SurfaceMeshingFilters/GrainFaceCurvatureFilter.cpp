@@ -88,7 +88,7 @@ GrainFaceCurvatureFilter::~GrainFaceCurvatureFilter()
 // -----------------------------------------------------------------------------
 void GrainFaceCurvatureFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Neighborhood Ring Count");

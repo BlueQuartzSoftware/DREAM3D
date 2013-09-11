@@ -66,7 +66,7 @@ SurfaceMeshToVtk::~SurfaceMeshToVtk()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
 {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Output Vtk File");
@@ -228,7 +228,7 @@ void SurfaceMeshToVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
   if(!MXADir::mkdir(parentPath, true))
   {
       ss.str("");
@@ -372,7 +372,7 @@ void SurfaceMeshToVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -409,8 +409,8 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                                bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -526,7 +526,7 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writeCellScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   // Write the Grain Face ID Data to the file
@@ -571,8 +571,8 @@ void writeCellScalarData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                                bool writeBinaryData, bool writeConformalMesh, const std::string &vtkAttributeType,
+void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                                bool writeBinaryData, bool writeConformalMesh, const QString &vtkAttributeType,
                                 FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
@@ -624,7 +624,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
                                 bool writeBinaryData, bool writeConformalMesh,
                                 FILE* vtkFile, int nT)
 {

@@ -80,17 +80,17 @@ class CmdLine : public CmdLineInterface
 		/**
 		 * The name of the program.  Set to argv[0].
 		 */
-		std::string _progName;
+		QString _progName;
 
 		/**
 		 * A message used to describe the program.  Used in the usage output.
 		 */
-		std::string _message;
+		QString _message;
 
 		/**
 		 * The version to be displayed with the --version switch.
 		 */
-		std::string _version;
+		QString _version;
 
 		/**
 		 * The number of arguments that are required to be present on
@@ -226,7 +226,7 @@ private:
 		 * add does not need to be called.
 		 * \param xors - List of Args to be added and xor'd.
 		 */
-		void xorAdd( std::vector<Arg*>& xors );
+		void xorAdd( QVector<Arg*>& xors );
 
 		/**
 		 * Parses the command line.
@@ -240,7 +240,7 @@ private:
 		 * \param args - A vector of strings representing the args.
 		 * args[0] is still the program name.
 		 */
-		void parse(std::vector<std::string>& args);
+		void parse(QVector<std::string>& args);
 
 		/**
 		 *
@@ -378,7 +378,7 @@ inline void CmdLine::_constructor()
 	deleteOnExit(v);
 }
 
-inline void CmdLine::xorAdd( std::vector<Arg*>& ors )
+inline void CmdLine::xorAdd( QVector<Arg*>& ors )
 {
 	_xorHandler.add( ors );
 
@@ -393,7 +393,7 @@ inline void CmdLine::xorAdd( std::vector<Arg*>& ors )
 
 inline void CmdLine::xorAdd( Arg& a, Arg& b )
 {
-    std::vector<Arg*> ors;
+    QVector<Arg*> ors;
     ors.push_back( &a );
     ors.push_back( &b );
 	xorAdd( ors );
@@ -423,14 +423,14 @@ inline void CmdLine::parse(int argc, const char * const * argv)
 {
 		// this step is necessary so that we have easy access to
 		// mutable strings.
-		std::vector<std::string> args;
+		QVector<std::string> args;
 		for (int i = 0; i < argc; i++)
 			args.push_back(argv[i]);
 
 		parse(args);
 }
 
-inline void CmdLine::parse(std::vector<std::string>& args)
+inline void CmdLine::parse(QVector<std::string>& args)
 {
 	bool shouldExit = false;
 	int estat = 0;
@@ -512,7 +512,7 @@ inline void CmdLine::missingArgsException()
 {
 		int count = 0;
 
-		std::string missingArgList;
+		QString missingArgList;
 		for (ArgListIterator it = _argList.begin(); it != _argList.end(); it++)
 		{
 			if ( (*it)->isRequired() && !(*it)->isSet() )
@@ -524,7 +524,7 @@ inline void CmdLine::missingArgsException()
 		}
 		missingArgList = missingArgList.substr(0,missingArgList.length()-2);
 
-		std::string msg;
+		QString msg;
 		if ( count > 1 )
 			msg = "Required arguments missing: ";
 		else

@@ -42,15 +42,15 @@
 
 namespace H5FilterParameter
 {
-  const std::string ArrayNameConstant = "_ArrayName";
-  const std::string CompOperatorConstant = "_CompOperator";
-  const std::string CompValueConstant = "_CompValue";
-  const std::string AngleConstant = "_Angle";
-  const std::string ComparisonInput = "_ComparisonInput";
-  const std::string AxisAngleInput = "_AxisAngleInput";
-  const std::string HConstant = "_H";
-  const std::string KConstant = "_K";
-  const std::string LConstant = "_L";
+  const QString ArrayNameConstant = "_ArrayName";
+  const QString CompOperatorConstant = "_CompOperator";
+  const QString CompValueConstant = "_CompValue";
+  const QString AngleConstant = "_Angle";
+  const QString ComparisonInput = "_ComparisonInput";
+  const QString AxisAngleInput = "_AxisAngleInput";
+  const QString HConstant = "_H";
+  const QString KConstant = "_K";
+  const QString LConstant = "_L";
 }
 
 #endif /* _H5FilterParametersConstants_H_ */

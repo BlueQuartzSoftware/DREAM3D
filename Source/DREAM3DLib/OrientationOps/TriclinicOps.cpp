@@ -547,12 +547,12 @@ DREAM3D::Rgb TriclinicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> TriclinicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Triclinic <001>");
-  std::string label1("Triclinic <100>");
-  std::string label2("Triclinic <010>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("Triclinic <001>");
+  QString label1("Triclinic <100>");
+  QString label2("Triclinic <010>");
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 

@@ -73,9 +73,9 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -103,8 +103,8 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
 
     int32_t* m_GrainIds;
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    QVector<QVector<int> > voxellists;
+    QVector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

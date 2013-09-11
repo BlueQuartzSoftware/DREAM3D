@@ -65,9 +65,9 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-     virtual const std::string getHumanLabel() { return "Find Boundary Cells"; }
+     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+     virtual const QString getHumanLabel() { return "Find Boundary Cells"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

@@ -62,7 +62,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundarySchmidFactors;
     float* m_LoadDir;
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundarySchmidFactorsImpl(float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
@@ -248,7 +248,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Twin Boundary Info File");

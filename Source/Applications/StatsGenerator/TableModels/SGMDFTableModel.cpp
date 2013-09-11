@@ -424,7 +424,7 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SGMDFTableModel::setRowData(int row, float angle, std::string axis, float weight)
+void SGMDFTableModel::setRowData(int row, float angle, QString axis, float weight)
 {
    m_Angles[row] = angle;
    m_Axis[row] = QString::fromStdString(axis);

@@ -63,7 +63,7 @@ StatsData::~StatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string StatsData::getStatsType()
+QString StatsData::getStatsType()
 {
   return DREAM3D::HDF5::StatsData;
 }

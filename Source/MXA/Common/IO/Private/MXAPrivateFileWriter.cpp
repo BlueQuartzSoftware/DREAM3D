@@ -14,7 +14,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-MXAFILEWRITER_CLASS_NAME::MXAFILEWRITER_CLASS_NAME(const std::string &filename) :
+MXAFILEWRITER_CLASS_NAME::MXAFILEWRITER_CLASS_NAME(const QString &filename) :
   _filename(filename)
 {
 

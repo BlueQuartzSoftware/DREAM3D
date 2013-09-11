@@ -62,7 +62,7 @@ SharedGrainFaceFilter::~SharedGrainFaceFilter()
 // -----------------------------------------------------------------------------
 void SharedGrainFaceFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -169,8 +169,8 @@ void SharedGrainFaceFilter::execute()
   grainFaceId->initializeWithZeros();
 
 
-  std::map<uint64_t, int> faceSizeMap;
-  std::map<uint64_t, int32_t> faceIdMap; // This maps a unique 64 bit integer to an increasing 32 bit integer
+  QMap<uint64_t, int> faceSizeMap;
+  QMap<uint64_t, int32_t> faceIdMap; // This maps a unique 64 bit integer to an increasing 32 bit integer
   uint32_t index = 0;
   struct { int g; int r; } faceId;
   uint64_t* faceId_64 = reinterpret_cast<uint64_t*>(&faceId);
@@ -192,7 +192,7 @@ void SharedGrainFaceFilter::execute()
       faceId.r = fl0;
     }
 
-    std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);
+    QMap<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);
     if(iter==faceSizeMap.end())
     {
       faceSizeMap[*faceId_64] = 1;
@@ -211,7 +211,7 @@ void SharedGrainFaceFilter::execute()
   SharedGrainFaces_t faces;
 
   // Allocate all the vectors that we need
-  for(std::map<uint64_t, int>::iterator iter = faceSizeMap.begin(); iter != faceSizeMap.end(); ++iter)
+  for(QMap<uint64_t, int>::iterator iter = faceSizeMap.begin(); iter != faceSizeMap.end(); ++iter)
   {
     FaceIds_t v;
     v.reserve((*iter).second);

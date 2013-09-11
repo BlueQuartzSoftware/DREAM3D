@@ -114,7 +114,7 @@ class FaceArray
 
       // Allocate the basic structures
       //m_FacesContainingVert->allocate(numCells);
-      std::vector<uint16_t> linkCount(numCells, 0);
+      QVector<uint16_t> linkCount(numCells, 0);
       size_t cellId;
       unsigned short* linkLoc;
 
@@ -172,7 +172,7 @@ class FaceArray
       ::memset(visitedPtr.get(), 0, nFaces);
 
       // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
-      std::vector<int> loop_neighbors(32, 0);
+      QVector<int> loop_neighbors(32, 0);
 
       // Build up the Face Adjacency list now that we have the cell links
       for(size_t t = 0; t < nFaces; ++t)

@@ -78,14 +78,14 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Voxel DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Voxel DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -130,10 +130,10 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
+    int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
                               float spacing[3], float origin[3]);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
     int writeVertexData(hid_t dcGid);
     int writeEdgeData(hid_t dcGid);
     int writeFaceData(hid_t dcGid);
@@ -142,20 +142,20 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     int writeEnsembleData(hid_t dcGid);
 
     void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
+    void writeFieldXdmfGridHeader(size_t numElements, const QString &label);
     //void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeXdmfGridFooter(const std::string &label);
+    void writeXdmfGridFooter(const QString &label);
 
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
+    int writeEnsembleDataArray(hid_t ensembleGid, const QVector<T> &v, const QString &label)
      {
       herr_t err = 0;
       int numComp = 1;
-      std::vector<int> eData(v.size());
+      QVector<int> eData(v.size());
       for (size_t i = 0; i < v.size(); ++i)
       {
         eData[i] = v[i];

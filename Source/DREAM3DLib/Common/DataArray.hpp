@@ -87,7 +87,7 @@ class DataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(DataArray<T> )
     DREAM3D_TYPE_MACRO_SUPER(DataArray<T>, IDataArray)
 
-    typedef std::vector<Pointer>   ContainterType;
+    typedef QVector<Pointer>   ContainterType;
 
   enum NumType {
     Int8 = 0,
@@ -109,7 +109,7 @@ class DataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       T value = 0x00;
       xdmfTypeName = "UNKNOWN";
@@ -168,7 +168,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
       if (name.empty() == true)
       {
@@ -192,7 +192,7 @@ class DataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer CreateArray(size_t numTuples, int numComponents, const std::string &name)
+    static Pointer CreateArray(size_t numTuples, int numComponents, const QString &name)
     {
 
       DataArray<T>* d = new DataArray<T> (numTuples, numComponents, true);
@@ -207,13 +207,13 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    static Pointer FromStdVector(std::vector<T> &vec, const std::string &name)
+    static Pointer FromStdVector(QVector<T> &vec, const QString &name)
     {
       Pointer p = CreateArray(vec.size(), name);
       ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
@@ -227,7 +227,7 @@ class DataArray : public IDataArray
      * @param name
      * @return
      */
-    static Pointer FromPointer(T* data, size_t size, const std::string &name)
+    static Pointer FromPointer(T* data, size_t size, const QString &name)
     {
       Pointer p = CreateArray(size, name);
       ::memcpy(p->GetPointer(0), data, size * sizeof(T));
@@ -235,13 +235,13 @@ class DataArray : public IDataArray
     }
 
     /**
-     * @brief Static Method to create a DataArray from a std::vector through a deep copy of the data
+     * @brief Static Method to create a DataArray from a QVector through a deep copy of the data
      * contained in the vector. The number of components will be set to 1.
      * @param vec The vector to copy the data from
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = DataArray<T>::CreateArray(numElements, numComponents, name);
       return p;
@@ -269,7 +269,7 @@ class DataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const std::string &name)
+    virtual void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -278,7 +278,7 @@ class DataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    virtual std::string GetName()
+    virtual QString GetName()
     {
       return m_Name;
     }
@@ -385,7 +385,7 @@ class DataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -404,7 +404,7 @@ class DataArray : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] * this->NumberOfComponents > this->MaxId) { return -100; }
       }
@@ -447,9 +447,9 @@ class DataArray : public IDataArray
         return 0;
       }
 
-      std::vector<size_t> srcIdx(idxs.size() + 1);
-      std::vector<size_t> destIdx(idxs.size() + 1);
-      std::vector<size_t> copyElements(idxs.size() + 1);
+      QVector<size_t> srcIdx(idxs.size() + 1);
+      QVector<size_t> destIdx(idxs.size() + 1);
+      QVector<size_t> copyElements(idxs.size() + 1);
       srcIdx[0] = 0;
       destIdx[0] = 0;
       copyElements[0] = (idxs[0] - 0) * NumberOfComponents;
@@ -689,9 +689,9 @@ class DataArray : public IDataArray
      * from
      * @return The HDF5 native type for the value
      */
-    std::string getFullNameOfClass()
+    QString getFullNameOfClass()
     {
-      std::string theType = getTypeAsString();
+      QString theType = getTypeAsString();
       theType = "DataArray<" + theType + ">";
       return theType;
     }
@@ -700,7 +700,7 @@ class DataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    std::string getTypeAsString()
+    QString getTypeAsString()
     {
       T value = static_cast<T>(0);
       if (typeid(value) == typeid(float)) return "float";
@@ -780,13 +780,13 @@ class DataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                                    const std::string &groupPath, const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+                                                    const QString &groupPath, const QString &label)
     {
       if (Array == NULL) { return -85648; }
       std::stringstream dimStr;
       int precision = 0;
-      std::string xdmfTypeName;
+      QString xdmfTypeName;
       GetXdmfTypeAndSize(xdmfTypeName, precision);
       if (0 == precision)
       {
@@ -1062,7 +1062,7 @@ class DataArray : public IDataArray
 
     bool m_IsAllocated;
     //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
     //  unsigned long long int MUD_FLAP_5;
 
     DataArray(const DataArray&); //Not Implemented

@@ -76,7 +76,7 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 void MinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -225,7 +225,7 @@ void MinSize::assign_badpoints()
   m_Neighbors = neighborsPtr->GetPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
-  std::vector<int > remove;
+  QVector<int > remove;
   int good = 1;
   //  int neighbor;
   //  int index = 0;
@@ -244,14 +244,14 @@ void MinSize::assign_badpoints()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  std::vector<int> currentvlist;
+  QVector<int> currentvlist;
 
   size_t counter = 1;
   size_t count = 0;
   int kstride, jstride;
   int grainname, grain;
   int neighbor;
-  std::vector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1,0);
   while (counter != 0)
   {
     counter = 0;
@@ -328,7 +328,7 @@ void MinSize::assign_badpoints()
 
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }
@@ -352,7 +352,7 @@ void MinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  std::vector<int> voxcounts;
+  QVector<int> voxcounts;
   voxcounts.resize(numgrains,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {

@@ -63,7 +63,7 @@ TransformationStatsData::~TransformationStatsData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string TransformationStatsData::getStatsType()
+QString TransformationStatsData::getStatsType()
 {
   return DREAM3D::HDF5::TransformationStatsData;
 }
@@ -97,7 +97,7 @@ FloatArrayType::Pointer TransformationStatsData::generateBinNumbers()
 {
   float grainDiameterInfo[3];
   getGrainDiameterInfo(grainDiameterInfo);
-  std::vector<float> bins;
+  QVector<float> bins;
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {

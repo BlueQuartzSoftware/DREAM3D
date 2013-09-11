@@ -50,7 +50,7 @@
 
 /**
  * @class StringDataArray StringDataArray.h DREAM3DLib/Common/StringDataArray.h
- * @brief Stores an array of std::string objects
+ * @brief Stores an array of QString objects
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Nov 13, 2012
  * @version 1.0
@@ -61,7 +61,7 @@ class StringDataArray : public IDataArray
     DREAM3D_SHARED_POINTERS(StringDataArray )
     DREAM3D_TYPE_MACRO_SUPER(StringDataArray, IDataArray)
 
-    static Pointer CreateArray(size_t numElements, const std::string &name)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
       if (name.empty() == true)
       {
@@ -80,7 +80,7 @@ class StringDataArray : public IDataArray
      * @param name
      * @return
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const QString &name)
     {
       IDataArray::Pointer p = StringDataArray::CreateArray(numElements, name);
       return p;
@@ -100,7 +100,7 @@ class StringDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision)
     {
       xdmfTypeName = getNameOfClass();
       precision = 0;
@@ -110,13 +110,13 @@ class StringDataArray : public IDataArray
      * @brief getTypeAsString
      * @return
      */
-    virtual std::string getTypeAsString() { return "StringDataArray";}
+    virtual QString getTypeAsString() { return "StringDataArray";}
 
     /**
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    void SetName(const std::string &name)
+    void SetName(const QString &name)
     {
       m_Name = name;
     }
@@ -125,7 +125,7 @@ class StringDataArray : public IDataArray
      * @brief Returns the human readable name of this array
      * @return
      */
-    std::string GetName()
+    QString GetName()
     {
       return m_Name;
     }
@@ -206,7 +206,7 @@ class StringDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(QVector<size_t> &idxs)
     {
 
       int err = 0;
@@ -225,19 +225,19 @@ class StringDataArray : public IDataArray
 
       // Sanity Check the Indices in the vector to make sure we are not trying to remove any indices that are
       // off the end of the array and return an error code.
-      for(std::vector<size_t>::size_type i = 0; i < idxs.size(); ++i)
+      for(QVector<size_t>::size_type i = 0; i < idxs.size(); ++i)
       {
         if (idxs[i] >= m_Array.size()) { return -100; }
       }
 
 
       // Create a new Array to copy into
-      std::vector<std::string> newArray;
-      std::vector<size_t>::size_type start = 0;
-      for(std::vector<std::string>::size_type i = 0; i < m_Array.size(); ++i)
+      QVector<std::string> newArray;
+      QVector<size_t>::size_type start = 0;
+      for(QVector<std::string>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
-        for(std::vector<size_t>::size_type j = start; j < idxs.size(); ++j)
+        for(QVector<size_t>::size_type j = start; j < idxs.size(); ++j)
         {
           if (i == idxs[j]) { keep = false; break;}
         }
@@ -257,7 +257,7 @@ class StringDataArray : public IDataArray
      */
     virtual int CopyTuple(size_t currentPos, size_t newPos)
     {
-      std::string s = m_Array[currentPos];
+      QString s = m_Array[currentPos];
       m_Array[newPos] = s;
       return 0;
     }
@@ -329,7 +329,7 @@ class StringDataArray : public IDataArray
      * @brief getFullNameOfClass
      * @return
      */
-    std::string getFullNameOfClass()
+    QString getFullNameOfClass()
     {
       return "StringDataArray";
     }
@@ -367,8 +367,8 @@ class StringDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName,
-                                    const std::string &groupPath, const std::string &labelb)
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+                                    const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
       return -1;
@@ -402,7 +402,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param value
      */
-    void SetValue(size_t i, const std::string &value)
+    void SetValue(size_t i, const QString &value)
     {
       m_Array.at(i) = value;
     }
@@ -412,7 +412,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @return
      */
-    std::string GetValue(size_t i)
+    QString GetValue(size_t i)
     {
       return m_Array.at(i);
     }
@@ -432,7 +432,7 @@ class StringDataArray : public IDataArray
 
   private:
       //  unsigned long long int MUD_FLAP_0;
-    std::vector<std::string> m_Array;
+    QVector<std::string> m_Array;
   //  unsigned long long int MUD_FLAP_1;
     //size_t Size;
   //  unsigned long long int MUD_FLAP_4;
@@ -440,7 +440,7 @@ class StringDataArray : public IDataArray
   //  unsigned long long int MUD_FLAP_2;
   //  size_t MaxId;
  //   unsigned long long int MUD_FLAP_3;
-    std::string m_Name;
+    QString m_Name;
   //  unsigned long long int MUD_FLAP_5;
 
     StringDataArray(const StringDataArray&); //Not Implemented

@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT MinNeighbors : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MinNumNeighbors)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Number of Neighbors Filter"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Minimum Number of Neighbors Filter"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);

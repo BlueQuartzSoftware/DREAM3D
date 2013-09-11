@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT SegmentGrains : public AbstractFilter
 
     virtual ~SegmentGrains();
 
-    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const std::string getHumanLabel() {return "Segment Grains";}
+    virtual const QString getGroupName() {return DREAM3D::FilterGroups::ReconstructionFilters;}
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getHumanLabel() {return "Segment Grains";}
 
     /**
     * @brief This method will write the options to a file

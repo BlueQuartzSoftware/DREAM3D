@@ -84,7 +84,7 @@ GenerateMisorientationColors::~GenerateMisorientationColors()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -216,7 +216,7 @@ void GenerateMisorientationColors::execute()
   // Make sure we are dealing with a unit 1 vector.
   MatrixMath::Normalize3x1(m_ReferenceAxis.x, m_ReferenceAxis.y, m_ReferenceAxis.z);
   // Create 1 of every type of Ops class. This condenses the code below
-  std::vector<OrientationOps::Pointer> ops;
+  QVector<OrientationOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
   ops.push_back(CubicOps::New());
   ops.push_back(HexagonalLowOps::New());

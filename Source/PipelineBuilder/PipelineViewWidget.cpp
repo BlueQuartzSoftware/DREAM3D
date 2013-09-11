@@ -340,11 +340,11 @@ void PipelineViewWidget::preflightPipeline()
 
       filter->preflight();
       int err = filter->getErrorCondition();
-      std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
+      QVector<PipelineMessage> msgs = filter->getPipelineMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
-        for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+        for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
         {
           if ( (*iter).getMessageType() == PipelineMessage::Error)
           {
@@ -379,14 +379,14 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
+void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
   {
 
    // int rc = errorTableWidget->rowCount();
 
-    for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
+    for (QVector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
       emit preflightHasMessage(errorStream.at(i));
 

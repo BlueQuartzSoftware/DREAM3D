@@ -225,7 +225,7 @@ uint64_t MXAMemory::usedVirtual()
 //
 ///////////////////////////////////////////////////////////////////////////////
 
-std::string MXAMemory::formatPhysical()
+QString MXAMemory::formatPhysical()
 {
   const uint64_t toKB ( 1 );
   std::ostringstream out;

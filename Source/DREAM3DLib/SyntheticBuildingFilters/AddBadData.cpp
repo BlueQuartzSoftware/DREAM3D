@@ -71,7 +71,7 @@ AddBadData::~AddBadData()
 // -----------------------------------------------------------------------------
 void AddBadData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Random Noise");
@@ -212,7 +212,7 @@ void  AddBadData::add_noise()
 		{
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
 			p->InitializeTuple(i,0); 
           }
@@ -225,7 +225,7 @@ void  AddBadData::add_noise()
 		{
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
 			p->InitializeTuple(i,0); 
           }

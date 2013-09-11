@@ -63,7 +63,7 @@ SurfaceMeshToNonconformalVtk::~SurfaceMeshToNonconformalVtk()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Vtk File");
@@ -215,7 +215,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     ss.str("");
@@ -304,7 +304,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
 
   // Store all the unique Spins
-  std::map<int32_t, int32_t> grainTriangleCount;
+  QMap<int32_t, int32_t> grainTriangleCount;
   for (int i = 0; i < triangleCount; i++)
   {
     if (grainTriangleCount.find(faceLabels[i*2]) == grainTriangleCount.end())
@@ -331,7 +331,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   size_t totalCells = 0;
   // Loop over all the grains
-  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
     totalCells += (*grainIter).second;
   }
@@ -339,7 +339,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
 
   // Loop over all the grains
-  for(std::map<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
+  for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
     int32_t gid = (*grainIter).first; // The current Grain Id
     int32_t numTriToWrite = (*grainIter).second; // The number of triangles for this grain
@@ -417,7 +417,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointScalarData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
+void writePointScalarData(DataContainer* dc, const QString &dataName, const QString &dataType,
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -454,8 +454,8 @@ void writePointScalarData(DataContainer* dc, const std::string &dataName, const 
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writePointVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                          bool writeBinaryData, const std::string &vtkAttributeType,
+void writePointVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                          bool writeBinaryData, const QString &vtkAttributeType,
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
@@ -593,8 +593,8 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 //
 // -----------------------------------------------------------------------------
 template<typename SurfaceDataContainer, typename T>
-void writeCellScalarData(SurfaceDataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
@@ -615,11 +615,11 @@ void writeCellScalarData(SurfaceDataContainer* dc, const std::string &dataName, 
     fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id
-      std::vector<T> buffer(size, 0);
+      QVector<T> buffer(size, 0);
       totalCellsWritten += size;
       size_t index = 0;
 
@@ -661,8 +661,8 @@ void writeCellScalarData(SurfaceDataContainer* dc, const std::string &dataName, 
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellNormalData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellNormalData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
 
   StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
@@ -682,11 +682,11 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
     fprintf(vtkFile, "\n");
     fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id
-      std::vector<T> buffer(size* 3, 0);
+      QVector<T> buffer(size* 3, 0);
       totalCellsWritten += size*3;
       size_t index = 0;
 
@@ -740,9 +740,9 @@ void writeCellNormalData(DataContainer* dc, const std::string &dataName, const s
 //
 // -----------------------------------------------------------------------------
 template<typename DataContainer, typename T>
-void writeCellVectorData(DataContainer* dc, const std::string &dataName, const std::string &dataType,
-                         bool writeBinaryData, const std::string &vtkAttributeType,
-                         FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+void writeCellVectorData(DataContainer* dc, const QString &dataName, const QString &dataType,
+                         bool writeBinaryData, const QString &vtkAttributeType,
+                         FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
@@ -788,7 +788,7 @@ void writeCellVectorData(DataContainer* dc, const std::string &dataName, const s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t, int32_t> &grainIds)
+int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
   int err = 0;
   if (NULL == vtkFile)
@@ -817,11 +817,11 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, std::map<int32_t,
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
 
     // Loop over all the grains
-    for(std::map<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
       int32_t gid = (*grainIter).first; // The current Grain Id
       size_t size = (*grainIter).second; // The number of triangles for this grain id
-      std::vector<int32_t> buffer(size, 0);
+      QVector<int32_t> buffer(size, 0);
       totalCellsWritten += size;
 
       // Endian Swap our current grain Id since we are going to write it a bunch of times.

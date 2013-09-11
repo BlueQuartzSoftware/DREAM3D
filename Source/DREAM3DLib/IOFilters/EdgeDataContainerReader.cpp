@@ -71,7 +71,7 @@ EdgeDataContainerReader::~EdgeDataContainerReader()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -211,7 +211,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherEdgeFieldData(hid_t dcGid, bool preflight)
 {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_EdgeFieldArraysToRead);
     if(err < 0)
     {
@@ -227,7 +227,7 @@ int EdgeDataContainerReader::gatherEdgeFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherEdgeEnsembleData(hid_t dcGid, bool preflight)
 {
-    std::vector<std::string> readNames;
+    QVector<std::string> readNames;
     herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EdgeEnsembleArraysToRead);
     if(err < 0)
     {
@@ -244,7 +244,7 @@ int EdgeDataContainerReader::gatherEdgeEnsembleData(hid_t dcGid, bool preflight)
 int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 {
   int err = 0;
-//  std::vector<hsize_t> dims;
+//  QVector<hsize_t> dims;
 //  H5T_class_t type_class;
 //  size_t type_size;
 
@@ -263,7 +263,7 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //  }
 
   // Read all the Edge Attribute data
-  std::vector<std::string> readNames;
+  QVector<std::string> readNames;
   err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -288,7 +288,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 
   size_t nVerts = verticesPtr->GetNumberOfTuples();
   herr_t err = 0;
-  std::vector<hsize_t> dims;
+  QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size = 0;
   err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
@@ -304,7 +304,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   if (false == preflight && type_size > 0)
   {
     //Read the array into the buffer
-    std::vector<uint8_t> buffer;
+    QVector<uint8_t> buffer;
     err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {
@@ -332,9 +332,9 @@ int EdgeDataContainerReader::readEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead)
+int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<std::string> &namesRead,
+                                                QSet<std::string> &namesToRead)
 {
   std::stringstream ss;
   int err = 0;
@@ -348,10 +348,10 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &grou
   NameListType names;
   H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
   //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
-  std::string classType;
+  QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    std::set<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<std::string>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();

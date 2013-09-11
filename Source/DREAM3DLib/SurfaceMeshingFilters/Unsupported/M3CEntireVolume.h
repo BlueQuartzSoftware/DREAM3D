@@ -84,13 +84,13 @@ class DREAM3DLib_EXPORT M3CEntireVolume : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "M3C Surface Meshing (Volume)"; }
+    virtual const QString getHumanLabel() { return "M3C Surface Meshing (Volume)"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

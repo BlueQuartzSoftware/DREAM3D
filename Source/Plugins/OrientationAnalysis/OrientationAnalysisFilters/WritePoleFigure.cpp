@@ -125,7 +125,7 @@ WritePoleFigure::~WritePoleFigure()
 // -----------------------------------------------------------------------------
 void WritePoleFigure::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
@@ -143,7 +143,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -287,7 +287,7 @@ void WritePoleFigure::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename Ops>
-std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -319,7 +319,7 @@ void WritePoleFigure::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(getOutputPath());
+  QString parentPath = MXAFileInfo::parentPath(getOutputPath());
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;
@@ -390,7 +390,7 @@ void WritePoleFigure::execute()
     }
     if (subEulers->GetNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
 
-    std::vector<UInt8ArrayType::Pointer> figures;
+    QVector<UInt8ArrayType::Pointer> figures;
 
     PoleFigureConfiguration_t config;
     config.eulers = subEulers.get();
@@ -483,7 +483,7 @@ QString WritePoleFigure::generateVtkPath( QString label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
+void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
@@ -507,7 +507,7 @@ void WritePoleFigure::writeVtkFile(const std::string filename, DoubleArrayType *
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeImage(const std::string outputPath, QImage image, int dimension, QString label)
+void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
   std::stringstream ss;
   ss << "Writing Image " << outputPath;

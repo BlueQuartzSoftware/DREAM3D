@@ -49,8 +49,8 @@ using namespace Ang;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AngDirectoryPatterns::Pointer AngDirectoryPatterns::New(const std::string &parentDirectory,
-    const std::string &fileprefix,
+AngDirectoryPatterns::Pointer AngDirectoryPatterns::New(const QString &parentDirectory,
+    const QString &fileprefix,
     int32_t width)
 {
   Pointer sharedPtr (new AngDirectoryPatterns);
@@ -81,26 +81,26 @@ AngDirectoryPatterns::~AngDirectoryPatterns()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateFullPathAngFileName(int slice)
+QString AngDirectoryPatterns::generateFullPathAngFileName(int slice)
 {
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
 
-  ss << m_ParentDirectory << MXADir::Separator << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  ss << m_ParentDirectory << MXADir::Separator << m_Prefix << QSetw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
   return ss.str();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string AngDirectoryPatterns::generateAngFileName(int slice)
+QString AngDirectoryPatterns::generateAngFileName(int slice)
 {
   std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
 
-  ss << m_Prefix << std::setw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
+  ss << m_Prefix << QSetw(m_MaxSlice) << slice << m_Suffix << Ang::DirectoryPatterns::Dot << m_Extension;
   return ss.str();
 }
 
@@ -108,7 +108,7 @@ std::string AngDirectoryPatterns::generateAngFileName(int slice)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngDirectoryPatterns::extractSlice(const std::string &dirName)
+int AngDirectoryPatterns::extractSlice(const QString &dirName)
 {
   std::string::size_type pos = m_Prefix.length();
   const char* data = dirName.data();
@@ -119,7 +119,7 @@ int AngDirectoryPatterns::extractSlice(const std::string &dirName)
   }
 
   std::string::size_type sliceLen = pos - m_Prefix.length();
-  std::string sliceStr = dirName.substr(m_Prefix.length(),  sliceLen);
+  QString sliceStr = dirName.substr(m_Prefix.length(),  sliceLen);
   int sliceVal = -1;
   bool ok = StringUtils::stringToNum<int>(sliceVal, sliceStr);
   if (!ok) {
@@ -133,8 +133,8 @@ int AngDirectoryPatterns::extractSlice(const std::string &dirName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AngDirectoryPatterns::parseDocumentName(const std::string &prefix,
-                                            const std::string &sampleAngFile)
+int AngDirectoryPatterns::parseDocumentName(const QString &prefix,
+                                            const QString &sampleAngFile)
 {
   //std::cout << "AngDirectoryPatterns::parseDocumentName: " << sampleAngFile << std::endl;
   m_Extension = EbsdLib::MXADir::extension(sampleAngFile);

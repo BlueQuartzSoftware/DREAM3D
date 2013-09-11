@@ -67,8 +67,8 @@ namespace Detail
   // -----------------------------------------------------------------------------
   template<typename T>
   IDataArray::Pointer readGbcdDataset(hid_t locId,
-                                    const std::string &datasetPath,
-                                    const std::vector<hsize_t> &dims)
+                                    const QString &datasetPath,
+                                    const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -91,7 +91,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::string &name, bool preflightOnly)
+IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -99,9 +99,9 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
   //std::cout << "Reading Attribute " << *iter << std::endl;
   typeId = H5Lite::getDatasetType(gid, name);
@@ -116,7 +116,7 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
   }
   else
   {
-    std::string classType;
+    QString classType;
     err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {

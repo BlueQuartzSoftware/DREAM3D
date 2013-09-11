@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, YDirOn)
     DREAM3D_INSTANCE_PROPERTY(bool, ZDirOn)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Erode/Dilate Bad Data"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Erode/Dilate Bad Data"; }
 
     virtual void setupFilterParameters();
     /**
@@ -105,8 +105,8 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     int32_t* m_Neighbors;
     int32_t* m_GrainIds;
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    QVector<QVector<int> > voxellists;
+    QVector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

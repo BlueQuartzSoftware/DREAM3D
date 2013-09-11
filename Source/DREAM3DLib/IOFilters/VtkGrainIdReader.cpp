@@ -69,7 +69,7 @@ VtkGrainIdReader::~VtkGrainIdReader()
 // -----------------------------------------------------------------------------
 void VtkGrainIdReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Vtk File");
@@ -262,7 +262,7 @@ int VtkGrainIdReader::readHeader()
   setComment(std::string(buf));
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
-  std::string fileType(buf);
+  QString fileType(buf);
   if (fileType.find("BINARY", 0) == 0)
   {
     setFileIsBinary(true);
@@ -292,7 +292,7 @@ int VtkGrainIdReader::readHeader()
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
     }
-    std::string dataset(&(text[16]));
+    QString dataset(&(text[16]));
     setDatasetType(dataset);
   }
 
@@ -349,7 +349,7 @@ int VtkGrainIdReader::readFile()
 {
   int err = 0;
 
-  std::string filename = getInputFile();
+  QString filename = getInputFile();
   std::ifstream instream;
   instream.open(filename.c_str(), std::ios_base::binary);
   if (!instream.is_open())
@@ -437,7 +437,7 @@ int VtkGrainIdReader::readFile()
   //int fieldNum = 0;
   bool needGrainIds = true;
 
-  std::string scalarName;
+  QString scalarName;
   int typeByteSize = 0;
 
   //size_t index = 0;
@@ -478,7 +478,7 @@ int VtkGrainIdReader::readFile()
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
-    //  std::map<int, int> grainIdMap;
+    //  QMap<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
         // Splat 0xAB across the entire array. that way if the read messes up we

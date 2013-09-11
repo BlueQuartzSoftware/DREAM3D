@@ -51,7 +51,7 @@ class MXA_EXPORT  MXAFILEWRITER_CLASS_NAME
 
 
 public:
-  explicit MXAFILEWRITER_CLASS_NAME(const std::string &filename);
+  explicit MXAFILEWRITER_CLASS_NAME(const QString &filename);
 
   virtual ~MXAFILEWRITER_CLASS_NAME();
 
@@ -88,7 +88,7 @@ public:
    * @param str The string to write
    * @return True on success
    */
-  bool writeString(const std::string &str)
+  bool writeString(const QString &str)
   {
     DWORD nBytesToWrite = static_cast<DWORD>(str.size());
     DWORD nBytesWritten = 0;
@@ -181,9 +181,9 @@ public:
 
 
 private:
-  std::string _filename;
+  QString _filename;
   WRITER64_OUTPUT_STREAM _outStream;
-  std::vector<char> _buffer;
+  QVector<char> _buffer;
 
 };
 

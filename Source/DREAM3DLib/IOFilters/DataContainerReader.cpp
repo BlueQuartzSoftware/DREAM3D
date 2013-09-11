@@ -79,7 +79,7 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -161,7 +161,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   int32_t err = 0;
-  std::string m_FileVersion;
+  QString m_FileVersion;
   float fVersion;
   bool check;
 
@@ -316,7 +316,7 @@ void DataContainerReader::execute()
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   // Read our File Version string to the Root "/" group
-  std::string fileVersion;
+  QString fileVersion;
   float fVersion;
 
   err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
@@ -451,7 +451,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  std::string classNameStr = "";
+  QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
     std::stringstream ss;
@@ -497,12 +497,12 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedCellArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setVolumeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedFaceArrays,
+                                                           QSet<std::string> selectedEdgeArrays,
+                                                           QSet<std::string> selectedCellArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
@@ -516,11 +516,11 @@ void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> sele
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setSurfaceSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedEdgeArrays,
+                                                           QSet<std::string> selectedFaceArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -533,10 +533,10 @@ void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> sel
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setEdgeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                           QSet<std::string> selectedEdgeArrays,
+                                                           QSet<std::string> selectedFieldArrays,
+                                                           QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -548,9 +548,9 @@ void DataContainerReader::setEdgeSelectedArrayNames(std::set<std::string> select
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                         std::set<std::string> selectedFieldArrays,
-                                                         std::set<std::string> selectedEnsembleArrays)
+void DataContainerReader::setVertexSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                         QSet<std::string> selectedFieldArrays,
+                                                         QSet<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

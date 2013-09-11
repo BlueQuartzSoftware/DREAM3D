@@ -40,7 +40,7 @@ public:
 * @param s
 * @return The boolean value
 */
-static bool stringToBool(const std::string &s)
+static bool stringToBool(const QString &s)
 {
   if (s.compare("TRUE") == 0 ) return true;
   if (s.compare("True") == 0 ) return true;
@@ -60,7 +60,7 @@ static bool stringToBool(const std::string &s)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string boolStringToBool(const std::string &s)
+static QString boolStringToBool(const QString &s)
 {
   if (s.compare("TRUE") == 0 ) return "1";
   if (s.compare("True") == 0 ) return "1";
@@ -76,7 +76,7 @@ static std::string boolStringToBool(const std::string &s)
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-static bool stringToNum(T &t, const std::string &s, std::ios_base& (*f)(std::ios_base&))
+static bool stringToNum(T &t, const QString &s, std::ios_base& (*f)(std::ios_base&))
 {
   std::istringstream iss(s);
   return !(iss >> f >> t).fail();
@@ -86,7 +86,7 @@ static bool stringToNum(T &t, const std::string &s, std::ios_base& (*f)(std::ios
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-static bool stringToNum(T &t, const std::string &s)
+static bool stringToNum(T &t, const QString &s)
 {
   std::istringstream iss(s);
   return !(iss >> t).fail();
@@ -95,7 +95,7 @@ static bool stringToNum(T &t, const std::string &s)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string numToString(int num)
+static QString numToString(int num)
 {
 	std::stringstream converter;
   converter << num;
@@ -106,7 +106,7 @@ static std::string numToString(int num)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-static std::string numToString(T num)
+static QString numToString(T num)
 {
   std::stringstream converter;
   converter << num;
@@ -116,7 +116,7 @@ static std::string numToString(T num)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static  std::string numToString(size_t num)
+static  QString numToString(size_t num)
 {
   std::stringstream converter;
   converter << num;
@@ -126,7 +126,7 @@ static  std::string numToString(size_t num)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static void addRightSlash(std::string &path)
+static void addRightSlash(QString &path)
 {
   //if (! (path.at(path.length()-1) == '/')) {
     path += "/";
@@ -136,7 +136,7 @@ static void addRightSlash(std::string &path)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static bool hasRightSlash(const std::string &path)
+static bool hasRightSlash(const QString &path)
 {
   return (path.at(path.length()-1) == '/');
 }
@@ -145,7 +145,7 @@ static bool hasRightSlash(const std::string &path)
 //
 // -----------------------------------------------------------------------------
 /* Returns a copy of the list. Not memory efficient at all */
-static std::list<std::string> splitString(std::string sep, std::string str)
+static std::list<std::string> splitString(QString sep, QString str)
 {
   std::list<std::string> strings;
   std::string::size_type sep_length = sep.length();
@@ -163,9 +163,9 @@ static std::list<std::string> splitString(std::string sep, std::string str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string joinList(std::string sep, std::list<std::string> strs)
+static QString joinList(QString sep, std::list<std::string> strs)
 {
-  std::string result("");
+  QString result("");
   std::list<std::string>::const_iterator iter = strs.begin();
   result += *iter;
   if (iter != strs.end()) {
@@ -183,9 +183,9 @@ static std::string joinList(std::string sep, std::list<std::string> strs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string joinList(std::string sep, std::list<int> nums)
+static QString joinList(QString sep, std::list<int> nums)
 {
-  std::string result("");
+  QString result("");
 
   std::list<int>::const_iterator iter = nums.begin();
   result += numToString(*iter);
@@ -201,9 +201,9 @@ static std::string joinList(std::string sep, std::list<int> nums)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string makePath(const std::string parentPath, const std::string name)
+static QString makePath(const QString parentPath, const QString name)
 {
-  std::string result;
+  QString result;
   if (parentPath == "/") {
     result = name;
   } else {
@@ -219,7 +219,7 @@ static std::string makePath(const std::string parentPath, const std::string name
 // -----------------------------------------------------------------------------
 //  Determines if a string ends with another string
 // -----------------------------------------------------------------------------
-static bool endsWith(const std::string &base, const std::string ending) {
+static bool endsWith(const QString &base, const QString ending) {
   std::string::size_type len = base.length();
   std::string::size_type eLen = ending.length();
   std::string::size_type npos = len - eLen;
@@ -230,7 +230,7 @@ static bool endsWith(const std::string &base, const std::string ending) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static std::string indent(int32_t depth)
+static QString indent(int32_t depth)
 {
   return std::string(2 * depth, ' ');
 }

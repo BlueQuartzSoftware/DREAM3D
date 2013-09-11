@@ -67,7 +67,7 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Nodes File");
@@ -274,7 +274,7 @@ void NodesTrianglesToStl::execute()
   { 0.0f, 0.0f, 0.0f };
   size_t nread = 0;
   // Read the POINTS data (Vertex)
-  std::map<int, int> nodeIdToIndex;
+  QMap<int, int> nodeIdToIndex;
   DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
 
@@ -308,7 +308,7 @@ void NodesTrianglesToStl::execute()
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     // Read from the Input Triangles Temp File
@@ -339,13 +339,13 @@ void NodesTrianglesToStl::execute()
   int triCount = 0;
 
   //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     ss.str("");
     // Generate the output file name
     ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
-    std::string filename = ss.str();
+    QString filename = ss.str();
     FILE* f = fopen(filename.c_str(), "wb");
     ScopedFileMonitor fPtr(f);
 
@@ -438,7 +438,7 @@ void NodesTrianglesToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int triCount)
+int NodesTrianglesToStl::writeHeader(FILE* f, const QString &header, int triCount)
 {
   if (NULL == f)
   {
@@ -458,7 +458,7 @@ int NodesTrianglesToStl::writeHeader(FILE* f, const std::string &header, int tri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int NodesTrianglesToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
+int NodesTrianglesToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
 {
   // We need to update the number of triangles in the file
   int err =0;

@@ -30,7 +30,7 @@ Filt0::~Filt0()
 // -----------------------------------------------------------------------------
 void Filt0::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/
@@ -149,7 +149,7 @@ Filt1::~Filt1()
 // -----------------------------------------------------------------------------
 void Filt1::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
 
   /*  For an Integer use this code*/

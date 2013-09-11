@@ -338,7 +338,7 @@ void FindEuclideanDistMap::find_euclideandistmap()
   int add = 1;
   int good = 0;
   int grain, neighbor;
-  std::vector<int> coordination;
+  QVector<int> coordination;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

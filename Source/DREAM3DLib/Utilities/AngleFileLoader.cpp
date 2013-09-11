@@ -74,10 +74,10 @@ AngleFileLoader::~AngleFileLoader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> AngleFileLoader::tokenize(char* buf, const char* delimiter)
+QVector<std::string> AngleFileLoader::tokenize(char* buf, const char* delimiter)
 {
-  std::vector<std::string> output;
-  std::string values(buf);
+  QVector<std::string> output;
+  QString values(buf);
   std::string::size_type start = 0;
   std::string::size_type pos = 0;
   //  std::cout << "-----------------------------" << std::endl;
@@ -139,7 +139,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   std::ifstream reader(getInputFile().c_str());
   ::memset(buf, 0, kBufferSize);
   reader.getline(buf, kBufferSize);
-  std::string s(buf);
+  QString s(buf);
   StringUtils::stringToNum<int>(numOrients, s);
 
   // Allocate enough for the angles
@@ -155,7 +155,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
     ::memset(buf, 0, kBufferSize);
     reader.getline(buf, kBufferSize);
-    std::vector<std::string> tokens;
+    QVector<std::string> tokens;
     tokens = tokenize(buf, getDelimiter().data());
 
 

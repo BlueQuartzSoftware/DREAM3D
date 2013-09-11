@@ -62,12 +62,12 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 
     virtual ~AngHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+    QString getKey() { return m_key; }
+    QString getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
     void parseValue(char* value, size_t start, size_t length)
     {
       if (value[start] == ':') { ++start; } // move past the ":" character
-      std::string data( &(value[start]), strlen(value) - start);
+      QString data( &(value[start]), strlen(value) - start);
       std::stringstream ss(data);
       ss >> m_value;
     }
@@ -79,7 +79,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     void setValue(T value) { m_value = value;}
 
   protected:
-    AngHeaderEntry(const std::string &key) :
+    AngHeaderEntry(const QString &key) :
       m_value(0),
       m_key(key)
     {
@@ -89,7 +89,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 
   private:
     T m_value;
-    std::string m_key;
+    QString m_key;
 
     AngHeaderEntry(const AngHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const AngHeaderEntry&); // Operator '=' Not Implemented
@@ -110,8 +110,8 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
     virtual ~AngStringHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { return "H5T_STRING"; }
+    QString getKey() { return m_key; }
+    QString getHDFType() { return "H5T_STRING"; }
 
     void parseValue(char* value, size_t start, size_t length)
     {
@@ -120,21 +120,21 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
       {
         ++start;
       }
-      std::string data( &(value[start]), strlen(value) - start);
+      QString data( &(value[start]), strlen(value) - start);
       m_value = data;
     }
     void print(std::ostream &out) {
       out << m_key << "  " << m_value << std::endl;
     }
 
-    std::string getValue() { return m_value; }
-    void setValue(const std::string &value)
+    QString getValue() { return m_value; }
+    void setValue(const QString &value)
     {
       m_value = value;
     }
 
   protected:
-    AngStringHeaderEntry(const std::string &key) :
+    AngStringHeaderEntry(const QString &key) :
       m_key(key)
     {
     }
@@ -142,8 +142,8 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     AngStringHeaderEntry() {}
 
   private:
-    std::string m_value;
-    std::string m_key;
+    QString m_value;
+    QString m_key;
 
     AngStringHeaderEntry(const AngStringHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const AngStringHeaderEntry&); // Operator '=' Not Implemented

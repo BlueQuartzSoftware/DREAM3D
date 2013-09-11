@@ -107,8 +107,8 @@ class StdOutput : public CmdLineOutput
 
 inline void StdOutput::version(CmdLineInterface& _cmd) 
 {
-	std::string progName = _cmd.getProgramName();
-	std::string version = _cmd.getVersion();
+	QString progName = _cmd.getProgramName();
+	QString version = _cmd.getVersion();
 
 	std::cout << std::endl << progName << "  version: " 
 			  << version << std::endl << std::endl;
@@ -131,7 +131,7 @@ inline void StdOutput::usage(CmdLineInterface& _cmd )
 inline void StdOutput::failure( CmdLineInterface& _cmd,
 								ArgException& e ) 
 {
-	std::string progName = _cmd.getProgramName();
+	QString progName = _cmd.getProgramName();
 
 	std::cerr << "PARSE ERROR: " << e.argId() << std::endl
 		      << "             " << e.error() << std::endl << std::endl;
@@ -157,11 +157,11 @@ StdOutput::_shortUsage( CmdLineInterface& _cmd,
 						std::ostream& os ) const
 {
 	std::list<Arg*> argList = _cmd.getArgList();
-	std::string progName = _cmd.getProgramName();
+	QString progName = _cmd.getProgramName();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
+	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
 
-	std::string s = progName + " ";
+	QString s = progName + " ";
 
 	// first the xor
 	for ( int i = 0; static_cast<unsigned int>(i) < xorList.size(); i++ )
@@ -192,9 +192,9 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 					   std::ostream& os ) const
 {
 	std::list<Arg*> argList = _cmd.getArgList();
-	std::string message = _cmd.getMessage();
+	QString message = _cmd.getMessage();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
+	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
 
 	// first the xor 
 	for ( int i = 0; static_cast<unsigned int>(i) < xorList.size(); i++ )

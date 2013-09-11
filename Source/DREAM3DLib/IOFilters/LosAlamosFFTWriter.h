@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write Los Alamos FFT File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write Los Alamos FFT File"; }
 
     virtual void setupFilterParameters();
     /**

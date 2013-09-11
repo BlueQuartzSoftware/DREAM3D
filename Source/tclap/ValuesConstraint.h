@@ -57,7 +57,7 @@ class ValuesConstraint : public Constraint<T>
 		 * Constructor. 
 		 * \param allowed - vector of allowed values. 
 		 */
-		ValuesConstraint(std::vector<T>& allowed);	
+		ValuesConstraint(QVector<T>& allowed);	
 
 		/**
 		 * Virtual destructor.
@@ -67,12 +67,12 @@ class ValuesConstraint : public Constraint<T>
 		/**
 		 * Returns a description of the Constraint. 
 		 */
-		virtual std::string description() const;
+		virtual QString description() const;
 
 		/**
 		 * Returns the short ID for the Constraint.
 		 */
-		virtual std::string shortID() const;
+		virtual QString shortID() const;
 
 		/**
 		 * The method used to verify that the value parsed from the command
@@ -86,17 +86,17 @@ class ValuesConstraint : public Constraint<T>
 		/**
 		 * The list of valid values. 
 		 */
-		std::vector<T> _allowed;
+		QVector<T> _allowed;
 
 		/**
 		 * The string used to describe the allowed values of this constraint.
 		 */
-		std::string _typeDesc;
+		QString _typeDesc;
 
 };
 
 template<class T>
-ValuesConstraint<T>::ValuesConstraint(std::vector<T>& allowed)
+ValuesConstraint<T>::ValuesConstraint(QVector<T>& allowed)
 : _allowed(allowed)
 { 
     for ( unsigned int i = 0; i < _allowed.size(); i++ )
@@ -112,7 +112,7 @@ ValuesConstraint<T>::ValuesConstraint(std::vector<T>& allowed)
 
         os << _allowed[i];
 
-        std::string temp( os.str() ); 
+        QString temp( os.str() ); 
 
         if ( i > 0 )
 			_typeDesc += "|";
@@ -130,13 +130,13 @@ bool ValuesConstraint<T>::check( const T& val ) const
 }
 
 template<class T>
-std::string ValuesConstraint<T>::shortID() const
+QString ValuesConstraint<T>::shortID() const
 {
     return _typeDesc;	
 }
 
 template<class T>
-std::string ValuesConstraint<T>::description() const
+QString ValuesConstraint<T>::description() const
 {
     return _typeDesc;	
 }

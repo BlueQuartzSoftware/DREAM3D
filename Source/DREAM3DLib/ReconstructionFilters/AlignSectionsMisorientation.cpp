@@ -92,7 +92,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
   //AlignSections::setupFilterParameters();
   // Now append our options
 
-  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
 
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -224,7 +224,7 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
@@ -267,7 +267,7 @@ void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::ve
   unsigned int phase1, phase2;
   int progInt = 0;
 
-  std::vector<std::vector<float> >  misorients;
+  QVector<QVector<float> >  misorients;
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {

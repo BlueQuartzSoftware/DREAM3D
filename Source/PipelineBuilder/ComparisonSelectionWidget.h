@@ -108,7 +108,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @brief setComparisons
      * @param comparisons
      */
-    virtual void setComparisons(std::vector<ComparisonInput_t> comparisons);
+    virtual void setComparisons(QVector<ComparisonInput_t> comparisons);
 
     /**
      * @brief writeOptions
@@ -126,7 +126,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @brief getComparisonInputs
      * @return
      */
-    std::vector<ComparisonInput_t> getComparisonInputs();
+    QVector<ComparisonInput_t> getComparisonInputs();
 
   signals:
     void parametersChanged();

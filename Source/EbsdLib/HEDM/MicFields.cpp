@@ -54,9 +54,9 @@ MicFields::~MicFields()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> MicFields::getFieldNames()
+QVector<std::string> MicFields::getFieldNames()
 {
-  std::vector<std::string> fields;
+  QVector<std::string> fields;
   fields.push_back(Ebsd::Mic::Euler1);
   fields.push_back(Ebsd::Mic::Euler2);
   fields.push_back(Ebsd::Mic::Euler3);

@@ -306,8 +306,8 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
 
   //Get all the colors that we will need
 
-  std::vector<DREAM3D::Rgb> colorTable(numColors);
-  std::vector<float> colors(3*numColors, 0.0);
+  QVector<DREAM3D::Rgb> colorTable(numColors);
+  QVector<float> colors(3*numColors, 0.0);
   ColorTable::GetColorTable(numColors, colors);
 
   float r=0.0, g=0.0, b=0.0;

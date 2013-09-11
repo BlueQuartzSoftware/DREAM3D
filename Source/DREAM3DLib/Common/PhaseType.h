@@ -57,15 +57,15 @@ class DREAM3DLib_EXPORT PhaseType
 
     virtual ~PhaseType();
 
-    static std::string PrimaryStr() { return std::string("Primary"); }
-    static std::string PrecipitateStr() { return std::string("Precipitate"); }
-    static std::string TransformationStr() { return std::string("Transformation"); }
-    static std::string MatrixStr() { return std::string("Matrix"); }
-    static std::string BoundaryStr() { return std::string("Boundary"); }
-    static std::string UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
+    static QString PrimaryStr() { return std::string("Primary"); }
+    static QString PrecipitateStr() { return std::string("Precipitate"); }
+    static QString TransformationStr() { return std::string("Transformation"); }
+    static QString MatrixStr() { return std::string("Matrix"); }
+    static QString BoundaryStr() { return std::string("Boundary"); }
+    static QString UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
 
 
-    static std::string getPhaseTypeString(unsigned int phaseType)
+    static QString getPhaseTypeString(unsigned int phaseType)
     {
       switch(phaseType)
       {
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT PhaseType
     }
 
 
-    static void getPhaseTypeStrings(std::vector<std::string> &strings)
+    static void getPhaseTypeStrings(QVector<std::string> &strings)
     {
       strings.clear();
       strings.push_back(PrimaryStr());
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT PhaseType
       strings.push_back(UnknownPhaseTypeStr());
     }
 
-    static void getPhaseTypeEnums(std::vector<unsigned int> &types)
+    static void getPhaseTypeEnums(QVector<unsigned int> &types)
     {
       types.clear();
       types.push_back(DREAM3D::PhaseType::PrimaryPhase);
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT PhaseType
       types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
-    static void getPhaseTypeMap(std::map<int, std::string> &map)
+    static void getPhaseTypeMap(QMap<int, std::string> &map)
     {
       map.clear();
       map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();

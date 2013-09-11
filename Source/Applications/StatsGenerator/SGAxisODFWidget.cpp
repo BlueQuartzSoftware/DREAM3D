@@ -527,7 +527,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.lambertDim = lamberSize;
   config.numColors = numColors;
 
-  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+  QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
     QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -619,7 +619,7 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     size_t numOrients = 0;
-    std::string filename = file.toStdString();
+    QString filename = file.toStdString();
     std::ifstream inFile;
     inFile.open(filename.c_str());
 

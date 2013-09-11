@@ -36,9 +36,9 @@ class DREAM3DLib_EXPORT FindMicroTextureRegions : public AbstractFilter
     //------ Required Field Data
     //------ Required Ensemble Data
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find MicroTexture Regions"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find MicroTexture Regions"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

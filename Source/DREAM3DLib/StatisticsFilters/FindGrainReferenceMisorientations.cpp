@@ -88,14 +88,14 @@ FindGrainReferenceMisorientations::~FindGrainReferenceMisorientations()
 // -----------------------------------------------------------------------------
 void FindGrainReferenceMisorientations::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Reference Orientation");
     option->setPropertyName("ReferenceOrientation");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("Grain's Average Orientation");
     choices.push_back("Orientation at Grain's Centroid");
     option->setChoices(choices);
@@ -231,8 +231,8 @@ void FindGrainReferenceMisorientations::execute()
 
   size_t gnum;
   float dist;
-  std::vector<size_t> m_Centers(totalFields,0);
-  std::vector<float> m_CenterDists(totalFields,0);
+  QVector<size_t> m_Centers(totalFields,0);
+  QVector<float> m_CenterDists(totalFields,0);
   if(m_ReferenceOrientation == 1)
   {
     for (int64_t i = 0; i < totalPoints; i++)

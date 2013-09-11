@@ -75,7 +75,7 @@ AdjustVolume::~AdjustVolume()
 
 void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
@@ -189,8 +189,8 @@ void AdjustVolume::execute()
 
   gsizes.resize(m->getNumFieldTuples());
 
-  std::vector<int> voxellist(vListSize,-1);
-  std::vector<int> affectedvoxellist(vListSize,-1);
+  QVector<int> voxellist(vListSize,-1);
+  QVector<int> affectedvoxellist(vListSize,-1);
   for(size_t i=1;i<m->getNumFieldTuples();i++)
   {
     gsizes[i] = 0;

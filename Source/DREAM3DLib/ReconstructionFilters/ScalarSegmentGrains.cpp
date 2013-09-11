@@ -154,7 +154,7 @@ ScalarSegmentGrains::~ScalarSegmentGrains()
 // -----------------------------------------------------------------------------
 void ScalarSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -285,7 +285,7 @@ void ScalarSegmentGrains::execute()
     m_GrainIds[i] = 0;
   }
 
-  std::string dType = m_InputData->getTypeAsString();
+  QString dType = m_InputData->getTypeAsString();
   if(m_InputData->GetNumberOfComponents() != 1)
   {
     m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
@@ -358,7 +358,7 @@ void ScalarSegmentGrains::execute()
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
-    std::set<int32_t> grainIdSet;
+    QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
     for(size_t i = 1; i < totalFields; ++i)
     {

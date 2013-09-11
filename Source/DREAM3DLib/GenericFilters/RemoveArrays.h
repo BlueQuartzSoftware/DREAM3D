@@ -60,64 +60,64 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVolumeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVolumeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedEdgeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedEdgeEnsembleArrays)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVertexEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVertexEnsembleArrays)
 
     virtual ~RemoveArrays();
 
-    typedef std::set<std::string> ArrayList_t;
+    typedef QSet<std::string> ArrayList_t;
 
-    virtual void setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedCellArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                   std::set<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedEdgeArrays,
-                                                  std::set<std::string> selectedFieldArrays,
-                                                  std::set<std::string> selectedEnsembleArrays);
-    virtual void setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                  std::set<std::string> selectedFaceArrays,
-                                                  std::set<std::string> selectedEdgeArrays);
+    virtual void setVolumeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedCellArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                   QSet<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setEdgeSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedEdgeArrays,
+                                                  QSet<std::string> selectedFieldArrays,
+                                                  QSet<std::string> selectedEnsembleArrays);
+    virtual void setVertexSelectedArrayNames(QSet<std::string> selectedVertexArrays,
+                                                  QSet<std::string> selectedFaceArrays,
+                                                  QSet<std::string> selectedEdgeArrays);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Delete Arrays"; }
+    virtual const QString getHumanLabel() { return "Delete Arrays"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

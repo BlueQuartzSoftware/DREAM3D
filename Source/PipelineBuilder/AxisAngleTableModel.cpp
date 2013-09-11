@@ -392,7 +392,7 @@ void AxisAngleTableModel::setTableData(QVector<float> angles, QVector<float> axi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleTableModel::setRowData(int row, float angle, std::string axis)
+void AxisAngleTableModel::setRowData(int row, float angle, QString axis)
 {
    m_Angles[row] = angle;
    m_Axis[row] = QString::fromStdString(axis);

@@ -63,8 +63,8 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 
     virtual ~CtfHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+    QString getKey() { return m_key; }
+    QString getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
 
     void parseValue(char* value, size_t start, size_t length)
     {
@@ -73,7 +73,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
       {
         if (value[c] == ',') { value[c] = '.';}
       }
-      std::string data( &(value[start]), strlen(value) - start);
+      QString data( &(value[start]), strlen(value) - start);
       std::stringstream ss(data);
       ss >> m_value;
     }
@@ -85,7 +85,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
     void setValue(T value) { m_value = value;}
 
   protected:
-    CtfHeaderEntry(const std::string &key) :
+    CtfHeaderEntry(const QString &key) :
       m_value(0),
       m_key(key)
     {
@@ -95,7 +95,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 
   private:
     T m_value;
-    std::string m_key;
+    QString m_key;
 
     CtfHeaderEntry(const CtfHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const CtfHeaderEntry&); // Operator '=' Not Implemented
@@ -116,8 +116,8 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
     virtual ~CtfStringHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { return "H5T_STRING"; }
+    QString getKey() { return m_key; }
+    QString getHDFType() { return "H5T_STRING"; }
 
     void parseValue(char* value, size_t start, size_t length)
     {
@@ -128,14 +128,14 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
       out << m_key << "  " << m_value << std::endl;
     }
 
-    std::string getValue() { return m_value; }
-    void setValue(const std::string &value)
+    QString getValue() { return m_value; }
+    void setValue(const QString &value)
     {
       m_value = value;
     }
 
   protected:
-    CtfStringHeaderEntry(const std::string &key) :
+    CtfStringHeaderEntry(const QString &key) :
       m_key(key)
     {
     }
@@ -143,8 +143,8 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     CtfStringHeaderEntry() {}
 
   private:
-    std::string m_value;
-    std::string m_key;
+    QString m_value;
+    QString m_key;
 
     CtfStringHeaderEntry(const CtfStringHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const CtfStringHeaderEntry&); // Operator '=' Not Implemented

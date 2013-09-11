@@ -64,10 +64,10 @@ class DREAM3DLib_EXPORT IDataArray
     IDataArray();
     virtual ~IDataArray();
 
-    virtual void SetName(const std::string &name) = 0;
-    virtual std::string GetName() = 0;
+    virtual void SetName(const QString &name) = 0;
+    virtual QString GetName() = 0;
 
-    virtual Pointer createNewArray(size_t numElements, int numComponents, const std::string &name) = 0;
+    virtual Pointer createNewArray(size_t numElements, int numComponents, const QString &name) = 0;
 
     /**
      * @brief Has all the memory needed for this class been allocated?
@@ -124,14 +124,14 @@ class DREAM3DLib_EXPORT IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    virtual void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision) = 0;
+    virtual void GetXdmfTypeAndSize(QString &xdmfTypeName, int &precision) = 0;
 
     /**
      * @brief Erases tuples based on a list of specific Tuple indices
      * @param idxs The indices to erase
      * @return
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs) = 0;
+    virtual int EraseTuples(QVector<size_t> &idxs) = 0;
 
     /**
      * @brief Copies a Tuple from one position to another.
@@ -181,13 +181,13 @@ class DREAM3DLib_EXPORT IDataArray
     virtual int writeH5Data(hid_t parentId) = 0;
     virtual int readH5Data(hid_t parentId) = 0;
 
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath, const std::string &label) = 0;
+    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath, const QString &label) = 0;
 //    {
 //      std::cout << "IDataArray::writeXdmfAttribute needs to be implemented for the data being written." << std::endl;
 //      return -1;
 //    }
 
-    virtual std::string getTypeAsString() = 0;
+    virtual QString getTypeAsString() = 0;
 
   protected:
 

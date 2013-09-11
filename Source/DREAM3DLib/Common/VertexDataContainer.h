@@ -95,14 +95,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexData(const std::string &name);
+    IDataArray::Pointer getVertexData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -110,7 +110,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const QString &name);
 
     /**
      * @brief Removes all the Point Arrays
@@ -143,14 +143,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexFieldData(const std::string &name, IDataArray::Pointer data);
+    void addVertexFieldData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexFieldData(const std::string &name);
+    IDataArray::Pointer getVertexFieldData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -158,7 +158,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexFieldData(const std::string &name);
+    IDataArray::Pointer removeVertexFieldData(const QString &name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -196,14 +196,14 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addVertexEnsembleData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexEnsembleData(const std::string &name);
+    IDataArray::Pointer getVertexEnsembleData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -211,7 +211,7 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexEnsembleData(const std::string &name);
+    IDataArray::Pointer removeVertexEnsembleData(const QString &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -251,9 +251,9 @@ class DREAM3DLib_EXPORT VertexDataContainer : public Observable
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_VertexFieldData;
-     std::map<std::string, IDataArray::Pointer> m_VertexEnsembleData;
+     QMap<std::string, IDataArray::Pointer> m_VertexData;
+     QMap<std::string, IDataArray::Pointer> m_VertexFieldData;
+     QMap<std::string, IDataArray::Pointer> m_VertexEnsembleData;
 
      VertexDataContainer(const VertexDataContainer&);
      void operator =(const VertexDataContainer&);

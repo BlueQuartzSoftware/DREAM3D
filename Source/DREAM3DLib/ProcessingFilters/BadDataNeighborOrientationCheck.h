@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
 
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     float* m_Quats;
     bool* m_GoodVoxels;

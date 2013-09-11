@@ -97,8 +97,8 @@ namespace Endian {
 
 const char BIGE[4] = { 'B', 'I', 'G', 'E' };
 const char LITE[4] = { 'L', 'I', 'T', 'E'};
-const std::string BIGE_STR ("BIGE");
-const std::string LITE_STR ("LITE");
+const QString BIGE_STR ("BIGE");
+const QString LITE_STR ("LITE");
 
 //
 //  Run-time checking for big endian.

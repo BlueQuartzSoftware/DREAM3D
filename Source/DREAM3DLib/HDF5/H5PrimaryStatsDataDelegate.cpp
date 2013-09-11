@@ -62,7 +62,7 @@ VectorOfFloatArray H5PrimaryStatsDataDelegate::createBetaDistributionArrays()
 {
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(betas);
   return vect;
@@ -73,7 +73,7 @@ VectorOfFloatArray H5PrimaryStatsDataDelegate::createPowerDistributionArrays()
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Exp_k);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(ks);
   vect.push_back(betas);
@@ -84,7 +84,7 @@ VectorOfFloatArray H5PrimaryStatsDataDelegate::createLogNormalDistributionArrays
 {
   FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Average);
   FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::HDF5::StandardDeviation);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(avgs);
   vect.push_back(sd);
   return vect;
@@ -108,7 +108,7 @@ VectorOfFloatArray H5PrimaryStatsDataDelegate::createDistributionVector(unsigned
   {
     return createLogNormalDistributionArrays();
   }
-   std::vector<FloatArrayType::Pointer> empty;
+   QVector<FloatArrayType::Pointer> empty;
    return empty;
 }
 
@@ -451,7 +451,7 @@ int H5PrimaryStatsDataDelegate::readAxisODFWeights(hid_t pid, PrimaryStatsData* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
+int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const QString &hdf5GroupName,
                                           VectorOfFloatArray colData)
 {
   herr_t err = 0;
@@ -473,13 +473,13 @@ int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const std::string &h
 // -----------------------------------------------------------------------------
 int H5PrimaryStatsDataDelegate::writeDistributionData(hid_t pid,
                                                uint32_t disType,
-                                               const std::string &hdf5GroupName,
+                                               const QString &hdf5GroupName,
                                                VectorOfFloatArray colData)
 {
   herr_t err = 0;
   herr_t retErr = 0;
 
-  std::string disTypeStr;
+  QString disTypeStr;
   switch(disType)
   {
     case DREAM3D::DistributionType::Beta:
@@ -525,12 +525,12 @@ int H5PrimaryStatsDataDelegate::writeDistributionData(hid_t pid,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const std::string &hdf5GroupName)
+uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const QString &hdf5GroupName)
 {
   int err = 0;
   uint32_t dType = DREAM3D::DistributionType::UnknownDistributionType;
 
-  std::string disTypeStr;
+  QString disTypeStr;
   err = H5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
 
   if (disTypeStr.compare(DREAM3D::HDF5::BetaDistribution) == 0)
@@ -553,7 +553,7 @@ uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const std::
 //
 // -----------------------------------------------------------------------------
 int H5PrimaryStatsDataDelegate::readDistributionData(hid_t pid,
-                                              const std::string &hdf5GroupName,
+                                              const QString &hdf5GroupName,
                                               VectorOfFloatArray colData)
 {
   int err = 0;

@@ -601,12 +601,12 @@ DREAM3D::Rgb TrigonalOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> TrigonalOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("Trigonal <0001>");
-  std::string label1("Trigonal <0-110>");
-  std::string label2("Trigonal <1-100>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("Trigonal <0001>");
+  QString label1("Trigonal <0-110>");
+  QString label2("Trigonal <1-100>");
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 

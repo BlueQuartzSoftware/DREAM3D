@@ -62,7 +62,7 @@ class DREAM3DLib_EXPORT ShapeOps
 
     float ShapeClass2Omega[41][2];
 
-    virtual float radcur1(std::map<ArgName, float> args);
+    virtual float radcur1(QMap<ArgName, float> args);
 
     virtual float inside(float axis1comp, float axis2comp, float axis3comp);
 

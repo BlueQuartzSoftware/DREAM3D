@@ -61,12 +61,12 @@ class ArgException : public std::exception
 		/**
 		 * Returns the error text.
 		 */
-		std::string error() const { return ( _errorText ); }
+		QString error() const { return ( _errorText ); }
 
 		/**
 		 * Returns the argument id.
 		 */
-		std::string argId() const  
+		QString argId() const  
 		{ 
 			if ( _argId == "undefined" )
 				return " ";
@@ -79,7 +79,7 @@ class ArgException : public std::exception
 		 */
 		const char* what() const throw() 
 		{
-			static std::string ex; 
+			static QString ex; 
 			ex = _argId + " -- " + _errorText;
 			return ex.c_str();
 		}
@@ -88,7 +88,7 @@ class ArgException : public std::exception
 		 * Returns the type of the exception.  Used to explain and distinguish
 		 * between different child exceptions.
 		 */
-		std::string typeDescription() const
+		QString typeDescription() const
 		{
 			return _typeDescription; 
 		}
@@ -99,18 +99,18 @@ class ArgException : public std::exception
 		/**
 		 * The text of the exception message.
 		 */
-		std::string _errorText;
+		QString _errorText;
 
 		/**
 		 * The argument related to this exception.
 		 */
-		std::string _argId;
+		QString _argId;
 
 		/**
 		 * Describes the type of the exception.  Used to distinguish
 		 * between different child exceptions.
 		 */
-		std::string _typeDescription;
+		QString _typeDescription;
 
 };
 

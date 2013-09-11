@@ -78,14 +78,14 @@ OpenCloseBadData::~OpenCloseBadData()
 // -----------------------------------------------------------------------------
 void OpenCloseBadData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Operation");
     option->setPropertyName("Direction");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<std::string> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");
     option->setChoices(choices);
@@ -235,7 +235,7 @@ void OpenCloseBadData::execute()
   neighpoints[3] = static_cast<int>(1);
   neighpoints[4] = static_cast<int>(dims[0]);
   neighpoints[5] = static_cast<int>(dims[0] * dims[1]);
-  std::vector<int> currentvlist;
+  QVector<int> currentvlist;
 
   size_t count = 0;
   int kstride, jstride;
@@ -244,7 +244,7 @@ void OpenCloseBadData::execute()
   int current;
   int most;
 
-  std::vector<int > n(numgrains + 1,0);
+  QVector<int > n(numgrains + 1,0);
   for (int iteration = 0; iteration < m_NumIterations; iteration++)
   {
     for (int k = 0; k < dims[2]; k++)
@@ -326,7 +326,7 @@ void OpenCloseBadData::execute()
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }

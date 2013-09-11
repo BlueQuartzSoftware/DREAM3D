@@ -60,7 +60,7 @@ class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
     MicFields();
     virtual ~MicFields();
 
-    virtual std::vector<std::string> getFieldNames();
+    virtual QVector<std::string> getFieldNames();
 
     template<typename T>
     T getFilterFields()

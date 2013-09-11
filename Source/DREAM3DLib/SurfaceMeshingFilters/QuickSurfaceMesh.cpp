@@ -172,8 +172,8 @@ void QuickSurfaceMesh::execute()
   float yRes = m->getYRes();
   float zRes = m->getZRes();
 
-  std::vector<int> m_NodeIds;
-  std::vector<std::set<int> > ownerLists;
+  QVector<int> m_NodeIds;
+  QVector<QSet<int> > ownerLists;
 
   size_t possibleNumNodes = (xP+1)*(yP+1)*(zP+1);
   m_NodeIds.resize(possibleNumNodes, -1);

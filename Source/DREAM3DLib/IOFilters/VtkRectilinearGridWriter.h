@@ -116,9 +116,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write Vtk File (Rectilinear Grid)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -200,8 +200,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
      * @return
      */
     template<typename T>
-    static int WriteDataArrayToFile(const std::string &filename, DataArray<T>* data, size_t* dims, float* res,
-                                    const std::string &dataType, bool writeBinary )
+    static int WriteDataArrayToFile(const QString &filename, DataArray<T>* data, size_t* dims, float* res,
+                                    const QString &dataType, bool writeBinary )
     {
       int err = 0;
       FILE* f = NULL;
@@ -283,7 +283,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const std::string &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
+    int write(const QString &file, VolumeDataContainer* r, QVector<VtkScalarWriter*> &scalars);
 
 
 

@@ -44,7 +44,7 @@
 
 
 
-typedef std::set<int64_t>  EdgeSet_t;
+typedef QSet<int64_t>  EdgeSet_t;
 typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 
 
@@ -73,7 +73,7 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -270,9 +270,9 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
-  std::map<int64_t, int> uedges_id_map;
+  QMap<int64_t, int> uedges_id_map;
 
-  std::map<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
+  QMap<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
 
   int edge_id = 0;
   int cur_edge_id = 0;
@@ -280,7 +280,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
 
-  typedef std::map<int64_t, int>::iterator EdgesIdMapIterator_t;
+  typedef QMap<int64_t, int>::iterator EdgesIdMapIterator_t;
 
   float curPercent = 0.0;
   std::stringstream ss;
@@ -366,7 +366,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   float total = static_cast<float>(uedges_id_map.size());
 
 
-  for(std::map<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
+  for(QMap<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
 
     if ( progIndex/total * 100.0f > (curPercent) )

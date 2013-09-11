@@ -66,7 +66,7 @@ SurfaceMeshToStl::~SurfaceMeshToStl()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output STL Directory");
@@ -201,7 +201,7 @@ void SurfaceMeshToStl::execute()
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
-  std::set<int> uniqueSpins;
+  QSet<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -224,13 +224,13 @@ void SurfaceMeshToStl::execute()
   int triCount = 0;
 
   //Loop over the unique Spins
-  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     ss.str("");
     // Generate the output file name
     ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
-    std::string filename = ss.str();
+    QString filename = ss.str();
     FILE* f = fopen(filename.c_str(), "wb");
 
     ss.str("");
@@ -322,7 +322,7 @@ void SurfaceMeshToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCount)
+int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
 {
   if (NULL == f)
   {
@@ -342,7 +342,7 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCou
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
+int SurfaceMeshToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
 {
   // We need to update the number of triangles in the file
   int err =0;

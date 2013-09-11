@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const std::string getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const QString getHumanLabel() { return "Identify MicroTexture (C-Axis Misorientation)"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, CAxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, UseNonContiguousNeighbors)
@@ -121,9 +121,9 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<int> parentnumbers;
+    QVector<int> parentnumbers;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

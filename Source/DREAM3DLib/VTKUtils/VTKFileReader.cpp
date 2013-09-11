@@ -167,7 +167,7 @@ int VTKFileReader::readHeader()
   setComment(std::string(buf));
   ::memset(buf, 0, kBufferSize);
   instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
-  std::string fileType(buf);
+  QString fileType(buf);
   if (fileType.find("BINARY", 0) == 0)
   {
     setFileIsBinary(true);
@@ -194,7 +194,7 @@ int VTKFileReader::readHeader()
       std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
       return -1;
     }
-    std::string dataset(&(text[16]));
+    QString dataset(&(text[16]));
     setDatasetType(dataset);
   }
 

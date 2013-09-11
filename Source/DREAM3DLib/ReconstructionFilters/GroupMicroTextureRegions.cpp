@@ -98,7 +98,7 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("C-Axis Alignment Tolerance");
@@ -252,7 +252,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
 
   float angcur = 180.0f;
-  std::vector<int> microtexturelist;
+  QVector<int> microtexturelist;
   float w;
   float g1[3][3];
   float g2[3][3];
@@ -279,7 +279,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       parentnumbers[i] = parentcount;
       m_Active[i] = true;
       microtexturelist.push_back(i);
-      for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
+      for (QVector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
         size1 = int(neighborlist[firstgrain].size());

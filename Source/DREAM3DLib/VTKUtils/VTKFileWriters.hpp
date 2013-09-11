@@ -100,7 +100,7 @@ class VoxelGrainIdScalarWriter : public VtkScalarWriter
   int writeScalars(FILE* f)
   {
     int err = 0;
-    std::string file;
+    QString file;
     int64_t totalPoints = r->getTotalPoints();
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);
 
@@ -135,7 +135,7 @@ class name : public VtkScalarWriter\
     virtual ~name(){}\
     int writeScalars(FILE* f)  {\
       int err = 0;\
-      std::string file;\
+      QString file;\
       int64_t totalPoints = r->getTotalPoints();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
       if (m_WriteBinaryFiles == true) {\
@@ -161,7 +161,7 @@ class name : public VtkScalarWriter\
     virtual ~name(){}\
     int writeScalars(FILE* f)  {\
       int err = 0;\
-      std::string file;\
+      QString file;\
       int64_t totalFields = r->getNumCellFieldTuples();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
       int64_t totalPoints = r->getTotalPoints();\
@@ -189,7 +189,7 @@ class name : public VtkScalarWriter\
     virtual ~name(){}\
     int writeScalars(FILE* f)  {\
     int err = 0;\
-    std::string file;\
+    QString file;\
     int64_t totalPoints = r->getTotalPoints();\
     GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalPoints, var);\
     if (m_WriteBinaryFiles == true) {\
@@ -239,7 +239,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
     size_t dims[3];
     r->getDimensions(dims);
 
-    std::vector<std::string> names(3);
+    QVector<std::string> names(3);
     names[0] = "Phi1";
     names[1] = "Phi";
     names[2] = "Phi2";
@@ -248,11 +248,11 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
 
     boost::shared_array<float> buffer(new float[dims[0]]);
 
-    //std::vector<float> buffer(dims[0]);
+    //QVector<float> buffer(dims[0]);
     // Loop over each component of the Euler Angles
     for (int eIndex = 0; eIndex < 3; ++eIndex)
     {
-      std::string name = names[eIndex];
+      QString name = names[eIndex];
       fprintf(f, "SCALARS %s %s 1\n", name.c_str(), "float");
       fprintf(f, "LOOKUP_TABLE default\n");
       size_t index = 0;
@@ -349,7 +349,7 @@ class VoxelRodriguesColorScalarWriter : public VtkScalarWriter
     // Write the Rodrigues Coloring Cell Data
     float r1, r2, r3;
 
-  std::vector<OrientationOps::Pointer> m_OrientationOps = OrientationOps::getOrientationOpsVector();
+  QVector<OrientationOps::Pointer> m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
     for (size_t i = 0; i < total; i++)
     {
@@ -508,7 +508,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
      * @return Negative Value on error
      */
     template<typename T>
-    int write(const std::string &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const QString &file, T* r, QVector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -536,7 +536,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
       // Now loop on all of our Scalars and write those arrays as CELL_DATA
-      for (typename std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
+      for (typename QVector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
       {
         err = (*iter)->writeScalars(f);
         if (err < 0)
@@ -573,7 +573,7 @@ class VTKStructuredPointsFileWriter
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
 
     template<typename T>
-    int write(const std::string &file, T* r, std::vector<VtkScalarWriter*> scalars)
+    int write(const QString &file, T* r, QVector<VtkScalarWriter*> scalars)
     {
       int err = 0;
       FILE* f = NULL;
@@ -594,7 +594,7 @@ class VTKStructuredPointsFileWriter
 
       //size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
       // Now loop on all of our Scalars and write those arrays as CELL_DATA
-      for (typename std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
+      for (typename QVector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter )
       {
         err = (*iter)->writeScalars(f);
         if (err < 0)
@@ -641,7 +641,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeDisorientationFile(T* m, const std::string &file)
+    int writeDisorientationFile(T* m, const QString &file)
     {
 
       FILE* f = NULL;
@@ -692,7 +692,7 @@ class VtkMiscFileWriter : public AbstractFilter
      * @return 0 on Success
      */
     template <typename T>
-    int writeSchmidFactorVizFile(T* m, const std::string &file)
+    int writeSchmidFactorVizFile(T* m, const QString &file)
     {
       FILE* f = NULL;
       f = fopen(file.c_str(), "wb");

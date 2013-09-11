@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
 	//------ Required Ensemble Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Schmid Factors"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getHumanLabel() { return "Find Schmid Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT FindSchmids : public AbstractFilter
     FindSchmids();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

@@ -54,7 +54,7 @@ class StandardizeEulerAnglesImpl
     int* m_CellPhases;
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     StandardizeEulerAnglesImpl(float* eulers, int* phases, unsigned int* crystructs, int64_t numCells, size_t numEnsembles) :
@@ -136,7 +136,7 @@ StandardizeEulerAngles::~StandardizeEulerAngles()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }

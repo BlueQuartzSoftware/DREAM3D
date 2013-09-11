@@ -72,7 +72,7 @@ FieldDataCSVWriter::~FieldDataCSVWriter()
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -135,7 +135,7 @@ void FieldDataCSVWriter::preflight()
     setErrorCondition(-1);
   }
 
-  std::string parentPath = MXAFileInfo::parentPath(getFieldDataFile());
+  QString parentPath = MXAFileInfo::parentPath(getFieldDataFile());
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -167,7 +167,7 @@ void FieldDataCSVWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
+  QString parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     std::stringstream ss;
@@ -179,7 +179,7 @@ void FieldDataCSVWriter::execute()
 
 
 
-  std::string filename = getFieldDataFile();
+  QString filename = getFieldDataFile();
 
   std::ofstream outFile;
   outFile.open(filename.c_str(), std::ios_base::binary);
@@ -189,7 +189,7 @@ void FieldDataCSVWriter::execute()
   // Get all the names of the arrays from the Data Container
   std::list<std::string> headers = m->getFieldArrayNameList();
 
-  std::vector<IDataArray::Pointer> data;
+  QVector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -240,7 +240,7 @@ void FieldDataCSVWriter::execute()
     // Print the grain id
     outFile << i;
     // Print a row of data
-    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for( QVector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
       outFile << space;
       (*p)->printTuple(outFile, i, space);

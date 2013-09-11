@@ -70,7 +70,7 @@ void MatrixStatsData::initialize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string MatrixStatsData::getStatsType()
+QString MatrixStatsData::getStatsType()
 {
   return DREAM3D::HDF5::MatrixStatsData;
 }

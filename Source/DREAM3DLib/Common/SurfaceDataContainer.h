@@ -97,14 +97,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceData(const std::string &name, IDataArray::Pointer data);
+    void addFaceData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceData(const std::string &name);
+    IDataArray::Pointer getFaceData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -112,7 +112,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceData(const std::string &name);
+    IDataArray::Pointer removeFaceData(const QString &name);
 
     /**
      * @brief Removes all the Face Arrays
@@ -150,14 +150,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceFieldData(const std::string &name, IDataArray::Pointer data);
+    void addFaceFieldData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceFieldData(const std::string &name);
+    IDataArray::Pointer getFaceFieldData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -165,7 +165,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceFieldData(const std::string &name);
+    IDataArray::Pointer removeFaceFieldData(const QString &name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -203,14 +203,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addFaceEnsembleData(const QString &name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceEnsembleData(const std::string &name);
+    IDataArray::Pointer getFaceEnsembleData(const QString &name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -218,7 +218,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceEnsembleData(const std::string &name);
+    IDataArray::Pointer removeFaceEnsembleData(const QString &name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -258,9 +258,9 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
 
    private:
 
-     std::map<std::string, IDataArray::Pointer> m_FaceData;
-     std::map<std::string, IDataArray::Pointer> m_FaceFieldData;
-     std::map<std::string, IDataArray::Pointer> m_FaceEnsembleData;
+     QMap<std::string, IDataArray::Pointer> m_FaceData;
+     QMap<std::string, IDataArray::Pointer> m_FaceFieldData;
+     QMap<std::string, IDataArray::Pointer> m_FaceEnsembleData;
 
      SurfaceDataContainer(const SurfaceDataContainer&);
      void operator =(const SurfaceDataContainer&);

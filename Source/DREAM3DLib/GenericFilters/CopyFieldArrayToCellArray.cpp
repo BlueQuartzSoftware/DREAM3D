@@ -61,7 +61,7 @@ CopyFieldArrayToCellArray::~CopyFieldArrayToCellArray()
 // -----------------------------------------------------------------------------
 void CopyFieldArrayToCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Field Array Name");
@@ -139,7 +139,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
 {
 
 
-  std::string cellArrayName = inputData->GetName();
+  QString cellArrayName = inputData->GetName();
 
   DataArray<T>* field = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == field)
@@ -203,7 +203,7 @@ void CopyFieldArrayToCellArray::execute()
     return;
   }
 
-  std::string dType = inputData->getTypeAsString();
+  QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {

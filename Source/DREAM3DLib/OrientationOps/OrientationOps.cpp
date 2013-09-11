@@ -274,9 +274,9 @@ int OrientationOps::_calcODFBin(float dim[3], float bins[3], float step[3], floa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
+QVector<OrientationOps::Pointer> OrientationOps::getOrientationOpsVector()
 {
-  std::vector<OrientationOps::Pointer> m_OrientationOps;
+  QVector<OrientationOps::Pointer> m_OrientationOps;
   m_OrientationOps.push_back(HexagonalOps::New());
 
   m_OrientationOps.push_back(CubicOps::New());

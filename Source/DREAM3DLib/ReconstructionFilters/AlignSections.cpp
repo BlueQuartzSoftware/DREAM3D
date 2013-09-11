@@ -83,7 +83,7 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
@@ -198,8 +198,8 @@ void AlignSections::execute()
   DimType currentPosition;
   //  unsigned int  phase2;
 
-  std::vector<int> xshifts;
-  std::vector<int> yshifts;
+  QVector<int> xshifts;
+  QVector<int> yshifts;
   xshifts.resize(dims[2],0);
   yshifts.resize(dims[2],0);
 
@@ -241,7 +241,7 @@ void AlignSections::execute()
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(currentPosition, newPosition);
           }
@@ -251,7 +251,7 @@ void AlignSections::execute()
         {
           for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->InitializeTuple(newPosition, 0.0);          }
         }
@@ -267,7 +267,7 @@ void AlignSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSections::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
 
 }

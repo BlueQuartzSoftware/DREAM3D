@@ -170,12 +170,12 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
 {
   int retErr = 0;
 
-  std::vector<float> e1s;
-  std::vector<float> e2s;
-  std::vector<float> e3s;
-  std::vector<float> weights;
-  std::vector<float> sigmas;
-  std::vector<float> odf;
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
 
   // Initialize xMax and yMax....
   e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
@@ -184,7 +184,7 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
   sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
 
-  for (std::vector<float>::size_type i = 0; i < e1s.size(); i++)
+  for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {
     e1s[i] = e1s[i] * M_PI / 180.0;
     e2s[i] = e2s[i] * M_PI / 180.0;
@@ -594,7 +594,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -629,7 +629,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -663,7 +663,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
     config.lambertDim = lamberSize;
     config.numColors = numColors;
 
-    std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+    QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
     {
       // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
       QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -779,7 +779,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     loader->setAngleRepresentation(angleRepresentation->currentIndex());
     loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
     loader->setOutputAnglesInDegrees(true);
-    std::string delim;
+    QString delim;
     int index = delimiter->currentIndex();
     switch(index)
     {

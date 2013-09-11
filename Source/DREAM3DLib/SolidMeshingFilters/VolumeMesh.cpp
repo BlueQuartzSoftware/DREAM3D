@@ -56,7 +56,7 @@
 #endif
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+    QString outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
 #if DREAM3D_USE_QT

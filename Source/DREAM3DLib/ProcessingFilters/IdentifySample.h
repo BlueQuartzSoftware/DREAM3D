@@ -70,9 +70,9 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Identify Sample"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Identify Sample"; }
 
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
@@ -97,8 +97,8 @@ class DREAM3DLib_EXPORT IdentifySample : public AbstractFilter
 
     bool* m_GoodVoxels;
 
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
+    QVector<QVector<int> > voxellists;
+    QVector<int> nuclei;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

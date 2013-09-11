@@ -99,7 +99,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   // Run the superclass first.
   //AlignSections::setupFilterParameters();
   // Now append our options
-  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
+  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
@@ -211,7 +211,7 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
@@ -260,7 +260,7 @@ void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std:
 
   form_grains_sections();
 
-  std::vector<std::vector<float> >  misorients;
+  QVector<QVector<float> >  misorients;
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
@@ -460,7 +460,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   m_GrainCounts->Resize(dims[2]);
   graincounts = m_GrainCounts->GetPointer(0);
 
-  std::vector<int> voxelslist(initialVoxelsListSize, -1);
+  QVector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4];
   neighpoints[0] = -dims[0];
   neighpoints[1] = -1;

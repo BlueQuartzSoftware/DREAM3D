@@ -77,7 +77,7 @@
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
   }\
   else { \
-  std::string _s(#Name); \
+  QString _s(#Name); \
   /* addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
@@ -112,7 +112,7 @@
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
   }\
   else { \
-  std::string _s(#Name); \
+  QString _s(#Name); \
   /* addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
@@ -131,7 +131,7 @@
     ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array." << std::endl; \
     addErrorMessage(getHumanLabel(), ss.str(), -10000);\
   }\
-  std::string _s(#Name);\
+  QString _s(#Name);\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
@@ -197,7 +197,7 @@ addCreatedArrayHelpIndexEntry(e);
 
 #define METHOD_DEF_TEMPLATE_GETARRAYDATA(GetMethod)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* GetMethod##SizeCheck(const std::string &arrayName, size_t size, int numComp, AbstractFilter* obv)\
+PtrType* GetMethod##SizeCheck(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
 {\
 PtrType* gi = NULL;\
 IDataArray::Pointer iDataArray = GetMethod(arrayName);\
@@ -236,7 +236,7 @@ return gi;\
 
 #define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
-PtrType* create##Field##Data(const std::string &arrayName, size_t size, int numComp, AbstractFilter* obv)\
+PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
 {\
   PtrType* valuePtr = NULL;\
   IDataArray::Pointer iDataArray = get##Field##Data(arrayName);\
@@ -333,11 +333,11 @@ m_msgType* valuePtr = NULL;\
 
 
 #define DOES_DATASET_EXIST_DECL(DType)\
-virtual bool does##DType##Exist(const std::string &name);
+virtual bool does##DType##Exist(const QString &name);
 
 #define DOES_DATASET_EXIST_DEFN(Class, DType)\
-bool Class::does##DType##Exist(const std::string &name) {\
-  std::map<std::string, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
+bool Class::does##DType##Exist(const QString &name) {\
+  QMap<std::string, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
   return ( iter != m_##DType.end());\
 }
 

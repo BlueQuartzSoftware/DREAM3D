@@ -90,7 +90,7 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -152,8 +152,8 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   else
   {
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
-    std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
-    std::vector<std::string> columnNames;
+    QString ext = MXAFileInfo::extension(m_EbsdFileList.front());
+    QVector<std::string> columnNames;
 //    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -176,7 +176,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       return;
     }
 //    columnNames = ebsdFields->getFieldNames();
-//    for(std::vector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+//    for(QVector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
 //    {
 //      addCreatedCellData(columnNames[i]);
 //    }
@@ -212,7 +212,7 @@ void EbsdToH5Ebsd::execute()
 
   if(m_OutputFile.empty() == true)
   {
-    std::string s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
+    QString s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");
 
     ss << "EbsdToH5Ebsd input filename was empty";
@@ -222,7 +222,7 @@ void EbsdToH5Ebsd::execute()
   }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       std::stringstream ss;
@@ -264,7 +264,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  std::string s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
+  QString s = Ebsd::StackingOrder::Utils::getStringForEnum(m_RefFrameZDir);
   err = H5Lite::writeStringAttribute(fileId, Ebsd::H5::StackingOrder, "Name", s);
   if(err < 0)
   {
@@ -283,7 +283,7 @@ void EbsdToH5Ebsd::execute()
     setErrorCondition(-1);
   }
 
-  std::vector<hsize_t> dims(1,3);
+  QVector<hsize_t> dims(1,3);
   err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::SampleTransformationAxis, dims, m_SampleTransformationAxis);
   if(err < 0)
   {
@@ -315,7 +315,7 @@ void EbsdToH5Ebsd::execute()
 
   // Write the Manufacturer of the OIM file here
   // This list will grow to be the number of EBSD file formats we support
-  std::string ext = MXAFileInfo::extension(m_EbsdFileList.front());
+  QString ext = MXAFileInfo::extension(m_EbsdFileList.front());
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
@@ -362,7 +362,7 @@ void EbsdToH5Ebsd::execute()
     return;
   }
 
-  std::vector<int> indices;
+  QVector<int> indices;
   // Loop on Each EBSD File
   float total = static_cast<float>( m_ZEndIndex - m_ZStartIndex );
   int progress = 0;
@@ -395,12 +395,12 @@ void EbsdToH5Ebsd::execute()
   int64_t biggestxDim = 0;
   int64_t biggestyDim = 0;
   int totalSlicesImported = 0;
-  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
+    QString ebsdFName = *filepath;
     progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
-    std::string msg = "Converting File: " + ebsdFName;
+    QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
     notifyStatusMessage(msg.c_str());
@@ -494,7 +494,7 @@ void EbsdToH5Ebsd::execute()
   {
     // Write an Index data set which contains all the z index values which
     // should help speed up the reading side of this file
-    std::vector<hsize_t> dims(1, indices.size());
+    QVector<hsize_t> dims(1, indices.size());
     err = H5Lite::writeVectorDataset(fileId, Ebsd::H5::Index, dims, indices);
   }
   err = H5Utilities::closeFile(fileId);

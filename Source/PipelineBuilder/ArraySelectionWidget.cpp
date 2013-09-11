@@ -520,8 +520,8 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
 
 
 #define REMOVE_ARRAYS_HELPER(dtype, dataContainer, grouping, op)\
-{std::set<std::string> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
-  for(std::set<std::string>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
+{QSet<std::string> arrays = get##op##Arrays(dtype##grouping##ArrayList);\
+  for(QSet<std::string>::iterator iter = arrays.begin(); iter != arrays.end(); ++iter) {\
   dataContainer->remove##grouping##Data(*iter);\
   }}
 
@@ -592,9 +592,9 @@ void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VolumeDataConta
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
+QSet<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
 {
-  std::set<std::string> selectedArrays;
+  QSet<std::string> selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
   {
     if (listWidget->item(i)->checkState() == Qt::Checked)
@@ -608,13 +608,13 @@ std::set<std::string> ArraySelectionWidget::getSelectedArrays(QListWidget*listWi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::setSelectedArrays(std::set<std::string> names, QListWidget*listWidget)
+void ArraySelectionWidget::setSelectedArrays(QSet<std::string> names, QListWidget*listWidget)
 {
   if (names.empty() == true)
   {
     return;
   }
-  std::set<std::string>::iterator iter = names.begin();
+  QSet<std::string>::iterator iter = names.begin();
   for (; iter != names.end(); iter++)
   {
     for(qint32 i = 0; i < listWidget->count(); ++i)
@@ -630,9 +630,9 @@ void ArraySelectionWidget::setSelectedArrays(std::set<std::string> names, QListW
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
+QSet<std::string> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
 {
-  std::set<std::string> non_selectedArrays;
+  QSet<std::string> non_selectedArrays;
   for(qint32 i = 0; i < listWidget->count(); ++i)
   {
     if (listWidget->item(i)->checkState() == Qt::Unchecked)
@@ -734,11 +734,11 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
 void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget)
 {
 
-  std::set<std::string> selections = getSelectedArrays(widget);
+  QSet<std::string> selections = getSelectedArrays(widget);
   int count = selections.size();
   prefs.beginWriteArray(name + "_" + prefix, count);
   count = 0;
-  for(std::set<std::string>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
+  for(QSet<std::string>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
   {
     prefs.setArrayIndex(count++);
     prefs.setValue(prefix, QString::fromStdString(*iter));

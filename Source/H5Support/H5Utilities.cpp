@@ -58,7 +58,7 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-hid_t H5Utilities::createFile(const std::string &filename)
+hid_t H5Utilities::createFile(const QString &filename)
 {
 // HDF_ERROR_HANDLER_OFF
   //Create the HDF File
@@ -70,7 +70,7 @@ hid_t H5Utilities::createFile(const std::string &filename)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-hid_t H5Utilities::openFile(const std::string &filename, bool readOnly)
+hid_t H5Utilities::openFile(const QString &filename, bool readOnly)
 {
   HDF_ERROR_HANDLER_OFF
   hid_t fileId = -1;
@@ -101,7 +101,7 @@ herr_t H5Utilities::closeFile(hid_t &fileId)
             H5F_OBJ_DATATYPE | H5F_OBJ_ATTR);
   if (num_open > 0) {
     std::cout << "WARNING: Some IDs weren't closed. Closing them."  << std::endl;
-    std::vector<hid_t> attr_ids(num_open, 0);
+    QVector<hid_t> attr_ids(num_open, 0);
     H5Fget_obj_ids(fileId, H5F_OBJ_DATASET | H5F_OBJ_GROUP |
        H5F_OBJ_DATATYPE | H5F_OBJ_ATTR,
        num_open, &(attr_ids.front()) );
@@ -132,14 +132,14 @@ herr_t H5Utilities::closeFile(hid_t &fileId)
 // -----------------------------------------------------------------------------
 //  Returns the full path to the object referred to by the
 // -----------------------------------------------------------------------------
-std::string H5Utilities::getObjectPath(hid_t loc_id, bool trim)
+QString H5Utilities::getObjectPath(hid_t loc_id, bool trim)
 {
   //char *obj_name;
   size_t name_size;
   name_size = 1 + H5Iget_name(loc_id, NULL, 0);
-  std::vector<char> obj_name(name_size, 0);
+  QVector<char> obj_name(name_size, 0);
   H5Iget_name(loc_id, &(obj_name.front()), name_size);
-  std::string objPath(&(obj_name.front()));
+  QString objPath(&(obj_name.front()));
 
   if ((objPath != "/") &&
       (objPath.at(0) == '/')) {
@@ -154,7 +154,7 @@ std::string H5Utilities::getObjectPath(hid_t loc_id, bool trim)
 // @brief Retrieves the HDF object type for obj_name at loc_id and stores
 //    it in the parameter obj_type passed in.
 // -----------------------------------------------------------------------------
-herr_t H5Utilities::getObjectType(hid_t objId, const std::string &objName, int32_t *objType)
+herr_t H5Utilities::getObjectType(hid_t objId, const QString &objName, int32_t *objType)
 {
   herr_t err=1;
   H5O_info_t obj_info;
@@ -173,7 +173,7 @@ herr_t H5Utilities::getObjectType(hid_t objId, const std::string &objName, int32
 
 // Opens and returns the HDF object (since the HDF api requires
 //  different open and close methods for different types of objects
-hid_t H5Utilities::openHDF5Object(hid_t loc_id, const std::string &objName)
+hid_t H5Utilities::openHDF5Object(hid_t loc_id, const QString &objName)
 {
   int32_t obj_type;
   hid_t obj_id;
@@ -292,12 +292,12 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
   {
     size = 1 + H5Lget_name_by_idx(loc_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, NULL, 0, H5P_DEFAULT);
 
-    std::vector<char> name(size * sizeof(char), 0);
+    QVector<char> name(size * sizeof(char), 0);
 
     H5Lget_name_by_idx(loc_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, &(name.front()), size, H5P_DEFAULT);
     if (typeFilter == H5Support_ANY)
     {
-      std::string objName( &(name.front()) );
+      QString objName( &(name.front()) );
       names.push_back(objName);
     }
     else
@@ -310,7 +310,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
         if ( ((type == H5O_TYPE_GROUP) && (H5Support_GROUP & typeFilter)) ||
             ((type == H5O_TYPE_DATASET) && (H5Support_DATASET & typeFilter)) )
         {
-          std::string objName( &(name.front()) );
+          QString objName( &(name.front()) );
           names.push_back(objName);
         }
       }
@@ -323,7 +323,7 @@ herr_t H5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<
 // -----------------------------------------------------------------------------
 // HDF Creation/Modification Methods
 // -----------------------------------------------------------------------------
-hid_t H5Utilities::createGroup(hid_t loc_id, const std::string &group)
+hid_t H5Utilities::createGroup(hid_t loc_id, const QString &group)
 {
   hid_t grp_id = -1;
   herr_t err = -1;
@@ -349,15 +349,15 @@ hid_t H5Utilities::createGroup(hid_t loc_id, const std::string &group)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t H5Utilities::createGroupsForDataset(const std::string &datasetPath, hid_t parent)
+int32_t H5Utilities::createGroupsForDataset(const QString &datasetPath, hid_t parent)
 {
   // Generate the internal HDF dataset path and create all the groups necessary to write the dataset
   std::string::size_type pos = 0;
   pos = datasetPath.find_last_of("/");
-  //std::string parentPath;
+  //QString parentPath;
   if (pos != 0 && pos != std::string::npos)
   {
-    std::string parentPath ( datasetPath.substr(0, pos)  );
+    QString parentPath ( datasetPath.substr(0, pos)  );
     return H5Utilities::createGroupsFromPath(parentPath, parent);
   }
   //Make sure all the intermediary groups are in place in the HDF5 File
@@ -368,14 +368,14 @@ int32_t H5Utilities::createGroupsForDataset(const std::string &datasetPath, hid_
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int32_t H5Utilities::createGroupsFromPath(const std::string &pathToCheck, hid_t parent)
+int32_t H5Utilities::createGroupsFromPath(const QString &pathToCheck, hid_t parent)
 {
 
   hid_t gid = 1;
   herr_t err = -1;
-  std::string first;
-  std::string second;
-  std::string path (pathToCheck); //make a copy of the input
+  QString first;
+  QString second;
+  QString path (pathToCheck); //make a copy of the input
 
 
   if (parent <= 0) {
@@ -457,7 +457,7 @@ int32_t H5Utilities::createGroupsFromPath(const std::string &pathToCheck, hid_t 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string H5Utilities::extractObjectName(const std::string &path)
+QString H5Utilities::extractObjectName(const QString &path)
 {
   std::string::size_type pos;
   pos = path.find_last_of('/');
@@ -473,8 +473,8 @@ std::string H5Utilities::extractObjectName(const std::string &path)
 // HDF Attribute Methods
 //--------------------------------------------------------------------//
 bool H5Utilities::probeForAttribute(hid_t loc_id,
-                                    const std::string &obj_name,
-                                    const std::string &attr_name)
+                                    const QString &obj_name,
+                                    const QString &attr_name)
 {
   herr_t err=0;
   int32_t rank;
@@ -508,7 +508,7 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
   {
     attr_id = H5Aopen_by_idx(obj_id, ".", H5_INDEX_NAME, H5_ITER_INC, i, H5P_DEFAULT, H5P_DEFAULT);
     name_size = 1 + H5Aget_name(attr_id, 0, NULL);
-    std::vector<char> attr_name(name_size * sizeof(char), 0);
+    QVector<char> attr_name(name_size * sizeof(char), 0);
     H5Aget_name(attr_id, name_size, &(attr_name.front() ) );
     results.push_back(std::string( &(attr_name.front() ) ) );
     err = H5Aclose(attr_id);
@@ -521,7 +521,7 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
 //
 // -----------------------------------------------------------------------------
  herr_t H5Utilities::getAllAttributeNames(hid_t loc_id,
-                                           const std::string &obj_name,
+                                           const QString &obj_name,
                                            std::list<std::string> &names)
 {
   hid_t obj_id = -1;
@@ -539,21 +539,21 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
 }
 
 #if 0
- // Returns a std::map with all of the attributes for obj_name
- //  and their attribute values in a std::string std::map
+ // Returns a QMap with all of the attributes for obj_name
+ //  and their attribute values in a QString QMap
  herr_t H5Utilities::getAttributesMap(hid_t loc_id,
-                                      const std::string &obj_name,
-                                      std::map<std::string, std::string> &attributes)
+                                      const QString &obj_name,
+                                      QMap<std::string, std::string> &attributes)
  {
-   //std::map<std::string, std::string> attributes;
+   //QMap<std::string, std::string> attributes;
    herr_t err=0;
    H5T_class_t attr_type;
    size_t attr_size;
-   std::string res;
+   QString res;
    hid_t tid;
    MXATypes::Int32Vector ires;
    MXATypes::Float32Vector fres;
-   std::vector<uint64_t> dims;  //Reusable for the loop
+   QVector<uint64_t> dims;  //Reusable for the loop
    std::list<std::string> names;
    err = getAllAttributeNames(loc_id, obj_name, names);
    if (err < 0) { return err; }
@@ -601,7 +601,7 @@ herr_t H5Utilities::getAllAttributeNames(hid_t obj_id,
 //
 // -----------------------------------------------------------------------------
 herr_t H5Utilities::readAllAttributes(hid_t fileId,
-                                      const std::string &datasetPath,
+                                      const QString &datasetPath,
                                       MXAAbstractAttributes &attributes)
 {
   CheckValidLocId(fileId);
@@ -610,9 +610,9 @@ herr_t H5Utilities::readAllAttributes(hid_t fileId,
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims;  //Reusable for the loop
+  QVector<hsize_t> dims;  //Reusable for the loop
   std::list<std::string> names;
   err = H5Utilities::getAllAttributeNames(fileId, datasetPath, names );
   for (std::list<std::string>::iterator iter=names.begin(); iter != names.end(); iter++)
@@ -707,7 +707,7 @@ herr_t H5Utilities::readAllAttributes(hid_t fileId,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
- std::string H5Utilities::HDFClassTypeAsStr(hid_t class_type)
+ QString H5Utilities::HDFClassTypeAsStr(hid_t class_type)
  {
    switch(class_type) {
    case H5T_INTEGER:
@@ -795,9 +795,9 @@ void H5Utilities::printHDFClassType(H5T_class_t class_type)
 
 
 // -----------------------------------------------------------------------------
-//  Returns a std::string that is the name of the object at the given index
+//  Returns a QString that is the name of the object at the given index
 // -----------------------------------------------------------------------------
-herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &name)
+herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, QString &name)
 {
   ssize_t err = -1;
   // call H5Gget_objname_by_idx with name as NULL to get its length
@@ -807,7 +807,7 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
     return -1;
   }
 
-  std::vector<char> buf(name_len + 1, 0);
+  QVector<char> buf(name_len + 1, 0);
   err = H5Lget_name_by_idx ( fileId, ".", H5_INDEX_NAME, H5_ITER_NATIVE, (hsize_t)idx, &(buf.front()), name_len + 1, H5P_DEFAULT );
   if (err < 0) {
     std::cout << "Error Trying to get the dataset name for index " << idx << std::endl;
@@ -821,7 +821,7 @@ herr_t H5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, std::string &na
 // -----------------------------------------------------------------------------
 // Checks the given name object to see what type of HDF5 object it is.
 // -----------------------------------------------------------------------------
-bool H5Utilities::isGroup(hid_t nodeId, const std::string &objName)   {
+bool H5Utilities::isGroup(hid_t nodeId, const QString &objName)   {
   bool isGroup = true;
   herr_t err = -1;
   H5O_info_t statbuf;

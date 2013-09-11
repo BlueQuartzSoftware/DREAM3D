@@ -103,7 +103,7 @@ class MultiSwitchArg : public SwitchArg
 		 * \param args - Mutable list of strings. Passed
 		 * in from main().
 		 */
-		virtual bool processArg(int* i, std::vector<std::string>& args); 
+		virtual bool processArg(int* i, QVector<std::string>& args); 
 
 		/**
 		 * Returns int, the number of times the switch has been set.
@@ -113,12 +113,12 @@ class MultiSwitchArg : public SwitchArg
 		/**
 		 * Returns the shortID for this Arg.
 		 */
-		std::string shortID(const std::string& val) const;
+		QString shortID(const std::string& val) const;
 
 		/**
 		 * Returns the longID for this Arg.
 		 */
-		std::string longID(const std::string& val) const;
+		QString longID(const std::string& val) const;
 		
 		void reset();
 
@@ -152,7 +152,7 @@ _default( init )
 
 inline int MultiSwitchArg::getValue() { return _value; }
 
-inline bool MultiSwitchArg::processArg(int *i, std::vector<std::string>& args)
+inline bool MultiSwitchArg::processArg(int *i, QVector<std::string>& args)
 {
 	if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -189,13 +189,13 @@ inline bool MultiSwitchArg::processArg(int *i, std::vector<std::string>& args)
 		return false;
 }
 
-inline std::string 
+inline QString 
 MultiSwitchArg::shortID(const std::string& val) const
 {
 	return Arg::shortID(val) + " ... ";
 }
 
-inline std::string 
+inline QString 
 MultiSwitchArg::longID(const std::string& val) const
 {
 	return Arg::longID(val) + "  (accepted multiple times)";

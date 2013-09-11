@@ -139,10 +139,10 @@ class DREAM3DLib_EXPORT HexagonalLowOps : public OrientationOps
      * @param eulers The Euler Angles to generate the pole figure from.
      * @param imageSize The size in Pixels of the final RGB Image.
      * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
-     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[12], int numsym,
