@@ -143,7 +143,7 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -268,7 +268,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
@@ -470,7 +470,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   unsigned int phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
     graincount = 1;
     noseeds = 0;

@@ -159,7 +159,7 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   int32_t err = 0;
   QString m_FileVersion;
   float fVersion;
@@ -299,7 +299,7 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   int32_t err = 0;
-  QTextStream ss;
+  QString ss;
   // dataCheck(false, 1, 1, 1);
 
   hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
@@ -447,14 +447,14 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<QString> groupList;
+  QList<QString> groupList;
   err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QTextStream ss;
+    QString ss;
     ss << i;
     err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 #if (__APPLE__)

@@ -153,7 +153,7 @@ int CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* wr
 void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
 
@@ -280,7 +280,7 @@ int64_t CAxisSegmentGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QTextStream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

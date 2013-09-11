@@ -121,7 +121,7 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
@@ -277,7 +277,7 @@ void MinNeighbors::assign_badpoints()
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
-			  QTextStream ss;
+			  QString ss;
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -329,14 +329,14 @@ void MinNeighbors::assign_badpoints()
 		  }
 		}
 	}
-    std::list<QString> voxelArrayNames = m->getCellArrayNameList();
+    QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor >= 0 && m_GrainIds[neighbor] >= 0)
       {
-          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
@@ -371,7 +371,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	QTextStream ss;
+	QString ss;
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

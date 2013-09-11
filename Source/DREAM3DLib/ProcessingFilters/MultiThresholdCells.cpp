@@ -124,7 +124,7 @@ int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* w
 void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
@@ -157,7 +157,7 @@ void MultiThresholdCells::preflight()
 void MultiThresholdCells::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

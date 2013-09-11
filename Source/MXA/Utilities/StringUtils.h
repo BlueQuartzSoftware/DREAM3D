@@ -145,9 +145,9 @@ static bool hasRightSlash(const QString &path)
 //
 // -----------------------------------------------------------------------------
 /* Returns a copy of the list. Not memory efficient at all */
-static std::list<QString> splitString(QString sep, QString str)
+static QList<QString> splitString(QString sep, QString str)
 {
-  std::list<QString> strings;
+  QList<QString> strings;
   QString::size_type sep_length = sep.length();
   QString::iterator iter = std::search(str.begin(), str.end(), sep.begin(), sep.end());
   strings.push_back(QString(str.begin(), iter));
@@ -163,10 +163,10 @@ static std::list<QString> splitString(QString sep, QString str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static QString joinList(QString sep, std::list<QString> strs)
+static QString joinList(QString sep, QList<QString> strs)
 {
   QString result("");
-  std::list<QString>::const_iterator iter = strs.begin();
+  QList<QString>::const_iterator iter = strs.begin();
   result += *iter;
   if (iter != strs.end()) {
     iter++;
@@ -183,11 +183,11 @@ static QString joinList(QString sep, std::list<QString> strs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static QString joinList(QString sep, std::list<int> nums)
+static QString joinList(QString sep, QList<int> nums)
 {
   QString result("");
 
-  std::list<int>::const_iterator iter = nums.begin();
+  QList<int>::const_iterator iter = nums.begin();
   result += numToString(*iter);
   if (iter != nums.end()) {
     iter++;

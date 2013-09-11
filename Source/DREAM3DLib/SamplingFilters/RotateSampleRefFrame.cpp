@@ -233,7 +233,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
@@ -478,8 +478,8 @@ void RotateSampleRefFrame::execute()
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
-  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
-  for (std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     //QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);

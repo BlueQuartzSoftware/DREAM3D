@@ -219,7 +219,7 @@ int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* w
 void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
@@ -265,7 +265,7 @@ void ScalarSegmentGrains::execute()
     return;
   }
 
-  QTextStream ss;
+  QString ss;
 
   m_InputData = m->getCellData(m_ScalarArrayName);
   if (NULL == m_InputData.get())
@@ -401,7 +401,7 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QTextStream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;

@@ -177,7 +177,7 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   //VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
@@ -342,7 +342,7 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::writeImage( QImage &image)
 {
-  QTextStream ss;
+  QString ss;
   ss << "Writing Image " << m_OutputFile;
   notifyStatusMessage(ss.str());
 

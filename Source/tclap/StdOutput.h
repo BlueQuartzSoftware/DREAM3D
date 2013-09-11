@@ -156,7 +156,7 @@ inline void
 StdOutput::_shortUsage( CmdLineInterface& _cmd, 
 						std::ostream& os ) const
 {
-	std::list<Arg*> argList = _cmd.getArgList();
+	QList<Arg*> argList = _cmd.getArgList();
 	QString progName = _cmd.getProgramName();
 	XorHandler xorHandler = _cmd.getXorHandler();
 	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
@@ -191,7 +191,7 @@ inline void
 StdOutput::_longUsage( CmdLineInterface& _cmd, 
 					   std::ostream& os ) const
 {
-	std::list<Arg*> argList = _cmd.getArgList();
+	QList<Arg*> argList = _cmd.getArgList();
 	QString message = _cmd.getMessage();
 	XorHandler xorHandler = _cmd.getXorHandler();
 	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();

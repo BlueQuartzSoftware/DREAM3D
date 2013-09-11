@@ -114,7 +114,7 @@ int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* w
 void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data

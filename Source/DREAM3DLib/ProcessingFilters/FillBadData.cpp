@@ -116,7 +116,7 @@ int FillBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -311,14 +311,14 @@ void FillBadData::execute()
 		}
       }
     }
-    std::list<QString> voxelArrayNames = m->getCellArrayNameList();
+    QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
       {
-          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);

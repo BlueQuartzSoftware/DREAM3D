@@ -1817,7 +1817,7 @@ void QFilterWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, Su
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArrayNameComboBox(const std::list<QString> &arrayNames, QString propertyName)
+void QFilterWidget::updateArrayNameComboBox(const QList<QString> &arrayNames, QString propertyName)
 {
   //if (arrayNames.size() == 0) { return; }
   QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
@@ -1826,7 +1826,7 @@ void QFilterWidget::updateArrayNameComboBox(const std::list<QString> &arrayNames
   cb->blockSignals(true);
   cb->clear();
   int index = 0;
-  for(std::list<QString>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  for(QList<QString>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
     QString name = QString::fromStdString(*iter);
     cb->addItem(name);

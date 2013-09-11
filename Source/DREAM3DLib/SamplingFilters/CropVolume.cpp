@@ -191,7 +191,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -216,7 +216,7 @@ void CropVolume::preflight()
 
   VolumeDataContainer* m = getVolumeDataContainer();
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -329,7 +329,7 @@ void CropVolume::execute()
     return;
   }
 
-  QTextStream ss;
+  QString ss;
   // Check to make sure the new dimensions are not "out of bounds" and warn the user if they are
   if (dims[0] <= m_XMax)
   {
@@ -360,10 +360,10 @@ void CropVolume::execute()
   int64_t colold, rowold, planeold;
   int64_t index;
   int64_t index_old;
-  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
   for (int64_t i = 0; i < m_ZP; i++)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
     planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
@@ -378,7 +378,7 @@ void CropVolume::execute()
         col = k;
         index_old = planeold + rowold + colold;
         index = plane + row + col;
-        for (std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
         {
           QString name = *iter;
           IDataArray::Pointer p = m->getCellData(*iter);
@@ -392,7 +392,7 @@ void CropVolume::execute()
 
 
   // Resize all the other Voxel Arrays
-  for (std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
@@ -412,7 +412,7 @@ void CropVolume::execute()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
-    QTextStream ss;
+    QString ss;
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

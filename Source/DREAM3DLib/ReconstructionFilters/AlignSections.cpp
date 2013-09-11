@@ -133,7 +133,7 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
 
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
   {
@@ -164,7 +164,7 @@ void AlignSections::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    QTextStream ss;
+    QString ss;
     ss << " DataContainer was NULL";
     notifyErrorMessage(ss.str(), -1);
     return;
@@ -205,11 +205,11 @@ void AlignSections::execute()
 
   find_shifts(xshifts, yshifts);
 
-  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
   DimType progIncrement = dims[2]/100;
   DimType prog = 1;
   int progressInt = 0;
-  QTextStream ss;
+  QString ss;
 
   for (DimType i = 1; i < dims[2]; i++)
   {
@@ -239,7 +239,7 @@ void AlignSections::execute()
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
            && (xspot + xshifts[i]) <= dims[0] - 1)
         {
-          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
@@ -249,7 +249,7 @@ void AlignSections::execute()
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
            || (xspot + xshifts[i]) > dims[0] - 1)
         {
-          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);

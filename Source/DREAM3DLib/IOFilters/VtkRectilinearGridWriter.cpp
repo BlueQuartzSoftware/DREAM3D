@@ -333,7 +333,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_OutputFile.empty() == true)
@@ -464,7 +464,7 @@ void VtkRectilinearGridWriter::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      QTextStream ss;
+      QString ss;
       ss << "Error creating parent path '" << parentPath << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
@@ -619,7 +619,7 @@ void VtkRectilinearGridWriter::execute()
 
   if (err < 0)
   {
-    QTextStream ss;
+    QString ss;
     ss << "Error writing output vtk file '" << m_OutputFile << "'\n ";
     addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
@@ -659,7 +659,7 @@ int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r,
   size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
-  QTextStream ss;
+  QString ss;
   int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
   for (QVector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)

@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * Cell (Formerly Cell) group
     * @return
     */
-    virtual std::list<QString> getCellArrayNameList();
+    virtual QList<QString> getCellArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Cell group
@@ -179,7 +179,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * Field (Formerly Grain) group
     * @return
     */
-    virtual std::list<QString> getCellFieldArrayNameList();
+    virtual QList<QString> getCellFieldArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Field group
@@ -227,7 +227,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
      */
     virtual void clearCellEnsembleData();
 
-    virtual std::list<QString> getCellEnsembleArrayNameList();
+    virtual QList<QString> getCellEnsembleArrayNameList();
 
      /**
      * @brief Returns if a data set with the name exists in the data container for the Cell Data

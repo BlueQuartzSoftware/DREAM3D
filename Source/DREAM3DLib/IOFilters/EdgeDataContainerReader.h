@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<QString> NameListType;
+    typedef QList<QString> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

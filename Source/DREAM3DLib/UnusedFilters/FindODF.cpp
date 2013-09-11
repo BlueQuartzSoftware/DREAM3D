@@ -102,7 +102,7 @@ int FindODF::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   VoxelDataContainer* m = getVoxelDataContainer();
   int err = 0;
 

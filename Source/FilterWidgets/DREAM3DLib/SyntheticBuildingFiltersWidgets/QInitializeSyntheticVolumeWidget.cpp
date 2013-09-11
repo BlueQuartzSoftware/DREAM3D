@@ -265,7 +265,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      QTextStream ss;
+      QString ss;
 
       m_DataContainer = VolumeDataContainer::New();
 

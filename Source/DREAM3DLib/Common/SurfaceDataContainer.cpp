@@ -129,9 +129,9 @@ void SurfaceDataContainer::clearFaceData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> SurfaceDataContainer::getFaceArrayNameList()
+QList<QString> SurfaceDataContainer::getFaceArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -219,9 +219,9 @@ void SurfaceDataContainer::clearFaceFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> SurfaceDataContainer::getFaceFieldArrayNameList()
+QList<QString> SurfaceDataContainer::getFaceFieldArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -309,9 +309,9 @@ void SurfaceDataContainer::clearFaceEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> SurfaceDataContainer::getFaceEnsembleArrayNameList()
+QList<QString> SurfaceDataContainer::getFaceEnsembleArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceEnsembleData.begin(); iter != m_FaceEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);

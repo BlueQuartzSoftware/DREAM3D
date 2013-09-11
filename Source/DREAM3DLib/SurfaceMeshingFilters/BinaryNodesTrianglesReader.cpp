@@ -120,7 +120,7 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -131,7 +131,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
 
   if (getBinaryNodesFile().empty() == true)
   {
-    QTextStream ss;
+    QString ss;
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
@@ -139,7 +139,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
 
   if (getBinaryNodesFile().empty() == true)
   {
-    QTextStream ss;
+    QString ss;
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
@@ -164,7 +164,7 @@ void BinaryNodesTrianglesReader::preflight()
 void BinaryNodesTrianglesReader::execute()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
 
   /* Make sure everything is in place */

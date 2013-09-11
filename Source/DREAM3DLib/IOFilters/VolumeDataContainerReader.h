@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<QString> NameListType;
+    typedef QList<QString> NameListType;
 
 
     /**

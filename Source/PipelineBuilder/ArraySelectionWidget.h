@@ -250,7 +250,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
 
     virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox *cb = NULL);
     virtual void populateArrayList(QListWidget* listWidget,
-                                    std::list<QString> &arrayNames, QCheckBox *cb = NULL);
+                                    QList<QString> &arrayNames, QCheckBox *cb = NULL);
 
     /**
      * @brief Returns the list of selected Array Names

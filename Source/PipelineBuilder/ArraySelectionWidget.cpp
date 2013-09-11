@@ -131,22 +131,22 @@ void ArraySelectionWidget::populateArrayNames(VolumeDataContainer::Pointer vldc,
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer vldc)
 {
-  std::list<QString> vertexNames = vldc->getVertexArrayNameList();
+  QList<QString> vertexNames = vldc->getVertexArrayNameList();
   populateArrayList(volumeVertexArrayList, vertexNames, volumeVertexCB);
 
-  std::list<QString> edgeNames = vldc->getEdgeArrayNameList();
+  QList<QString> edgeNames = vldc->getEdgeArrayNameList();
   populateArrayList(volumeEdgeArrayList, edgeNames, volumeEdgeCB);
 
-  std::list<QString> faceNames = vldc->getFaceArrayNameList();
+  QList<QString> faceNames = vldc->getFaceArrayNameList();
   populateArrayList(volumeFaceArrayList, faceNames, volumeFaceCB);
 
-  std::list<QString> cellNames = vldc->getCellArrayNameList();
+  QList<QString> cellNames = vldc->getCellArrayNameList();
   populateArrayList(volumeCellArrayList, cellNames, volumeCellCB);
 
-  std::list<QString> fieldNames = vldc->getFieldArrayNameList();
+  QList<QString> fieldNames = vldc->getFieldArrayNameList();
   populateArrayList(volumeFieldArrayList, fieldNames, volumeFieldCB);
 
-  std::list<QString> ensembleNames = vldc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = vldc->getEnsembleArrayNameList();
   populateArrayList(volumeEnsembleArrayList, ensembleNames, volumeEnsembleCB);
 }
 
@@ -155,19 +155,19 @@ void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc)
 {
-  std::list<QString> vertexNames = sdc->getVertexArrayNameList();
+  QList<QString> vertexNames = sdc->getVertexArrayNameList();
   populateArrayList(surfaceVertexArrayList, vertexNames, surfaceVertexArraysCB);
 
-  std::list<QString> edgeNames = sdc->getEdgeArrayNameList();
+  QList<QString> edgeNames = sdc->getEdgeArrayNameList();
   populateArrayList(surfaceEdgeArrayList, edgeNames, surfaceEdgeArraysCB);
 
-  std::list<QString> faceNames = sdc->getFaceArrayNameList();
+  QList<QString> faceNames = sdc->getFaceArrayNameList();
   populateArrayList(surfaceFaceArrayList, faceNames, surfaceFaceArraysCB);
 
-  std::list<QString> fieldNames = sdc->getFieldArrayNameList();
+  QList<QString> fieldNames = sdc->getFieldArrayNameList();
   populateArrayList(surfaceFieldArrayList, fieldNames, surfaceFieldArraysCB);
 
-  std::list<QString> ensembleNames = sdc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = sdc->getEnsembleArrayNameList();
   populateArrayList(surfaceEnsembleArrayList, ensembleNames, surfaceEnsembleArraysCB);
 }
 
@@ -176,16 +176,16 @@ void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Point
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc)
 {
-  std::list<QString> vertexNames = edc->getVertexArrayNameList();
+  QList<QString> vertexNames = edc->getVertexArrayNameList();
   populateArrayList(edgeVertexArrayList, vertexNames, edgeVertexCB);
 
-  std::list<QString> edgeNames = edc->getEdgeArrayNameList();
+  QList<QString> edgeNames = edc->getEdgeArrayNameList();
   populateArrayList(edgeEdgeArrayList, edgeNames, edgeEdgeCB);
 
-  std::list<QString> fieldNames = edc->getFieldArrayNameList();
+  QList<QString> fieldNames = edc->getFieldArrayNameList();
   populateArrayList(edgeFieldArrayList, fieldNames, edgeFieldCB);
 
-  std::list<QString> ensembleNames = edc->getEnsembleArrayNameList();
+  QList<QString> ensembleNames = edc->getEnsembleArrayNameList();
   populateArrayList(edgeEnsembleArrayList, ensembleNames, edgeEnsembleCB);
 }
 
@@ -194,13 +194,13 @@ void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer vdc)
 {
-  std::list<QString> vertexNames = vdc->getVertexArrayNameList();
+  QList<QString> vertexNames = vdc->getVertexArrayNameList();
   populateArrayList(vertexVertexArrayList, vertexNames, NULL);
 
-  std::list<QString> fieldNames = vdc->getVertexFieldArrayNameList();
+  QList<QString> fieldNames = vdc->getVertexFieldArrayNameList();
   populateArrayList(vertexVertexFieldArrayList, fieldNames, NULL);
 
-  std::list<QString> ensembleNames = vdc->getVertexEnsembleArrayNameList();
+  QList<QString> ensembleNames = vdc->getVertexEnsembleArrayNameList();
   populateArrayList(vertexVertexEnsembleArrayList, ensembleNames, NULL);
 }
 
@@ -208,11 +208,11 @@ void ArraySelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, std::list<QString> &arrayNames, QCheckBox* cb)
+void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QString> &arrayNames, QCheckBox* cb)
 {
   // Convert from STL container to Qt Container then pass through to the next method.
   QStringList qArrayNames;
-  for(std::list<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  for(QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
     qArrayNames << QString::fromStdString(*iter);
   }

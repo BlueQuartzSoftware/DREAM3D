@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * Face (Formerly Grain) group
      * @return
      */
-    std::list<QString> getFaceArrayNameList();
+    QList<QString> getFaceArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Face group
@@ -177,7 +177,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * Field (Formerly Grain) group
      * @return
      */
-    std::list<QString> getFaceFieldArrayNameList();
+    QList<QString> getFaceFieldArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Field group
@@ -230,7 +230,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
      * Ensemble (Formerly Grain) group
      * @return
      */
-    std::list<QString> getFaceEnsembleArrayNameList();
+    QList<QString> getFaceEnsembleArrayNameList();
 
     /**
      * @brief Returns the total number of arrays that are stored in the Ensemble group

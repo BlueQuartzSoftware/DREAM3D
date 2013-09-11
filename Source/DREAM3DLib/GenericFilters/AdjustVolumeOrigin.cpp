@@ -195,7 +195,7 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
 void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
   if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getVolumeDataContainer();
@@ -252,7 +252,7 @@ void AdjustVolumeOrigin::execute()
     return;
   }
   setErrorCondition(0);
-  QTextStream ss;
+  QString ss;
 
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume ==true)
@@ -278,7 +278,7 @@ void AdjustVolumeOrigin::execute()
 void AdjustVolumeOrigin::updateSurfaceMesh()
 {
   int err = 0;
-  QTextStream ss;
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

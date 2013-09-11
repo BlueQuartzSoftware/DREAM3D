@@ -130,9 +130,9 @@ void VertexDataContainer::clearVertexData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> VertexDataContainer::getVertexArrayNameList()
+QList<QString> VertexDataContainer::getVertexArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -205,9 +205,9 @@ void VertexDataContainer::clearVertexFieldData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> VertexDataContainer::getVertexFieldArrayNameList()
+QList<QString> VertexDataContainer::getVertexFieldArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
@@ -295,9 +295,9 @@ void VertexDataContainer::clearVertexEnsembleData()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::list<QString> VertexDataContainer::getVertexEnsembleArrayNameList()
+QList<QString> VertexDataContainer::getVertexEnsembleArrayNameList()
 {
-  std::list<QString> keys;
+  QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
     keys.push_back( (*iter).first);
