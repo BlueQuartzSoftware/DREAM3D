@@ -51,7 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainer::SurfaceDataContainer() :
-Observable(),
+EdgeDataContainer(),
 m_NumFaceTuples(0)
 {
 
@@ -83,7 +83,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ IDataArray::Pointer SurfaceDataContainer::removeFaceData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_FaceData.erase(it);
   return p;
 }
@@ -134,7 +134,7 @@ QList<QString> SurfaceDataContainer::getFaceArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key() );
   }
   return keys;
 }

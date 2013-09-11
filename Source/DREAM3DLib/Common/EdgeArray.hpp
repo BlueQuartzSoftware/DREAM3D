@@ -53,7 +53,7 @@
 class EdgeArray
 {
   public:
-    
+
     typedef struct
     {
       size_t verts[2];
@@ -112,7 +112,7 @@ class EdgeArray
       m_EdgesContainingVert = DynamicListArray::New();
 
       // Allocate the basic structures
-      std::vector<uint16_t> linkCount(numCells, 0);
+      QVector<uint16_t> linkCount(numCells, 0);
       size_t cellId;
       unsigned short* linkLoc;
 
@@ -161,7 +161,7 @@ class EdgeArray
 
       DynamicListArray::Pointer m_EdgeNeighbors = DynamicListArray::New();
 
-      std::vector<uint16_t> linkCount(nEdges, 0);
+      QVector<uint16_t> linkCount(nEdges, 0);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nEdges]);

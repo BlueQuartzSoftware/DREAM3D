@@ -62,7 +62,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createBetaDistributionArrays(
 {
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(betas);
   return vect;
@@ -73,7 +73,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createPowerDistributionArrays
   FloatArrayType::Pointer alphas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Alpha);
   FloatArrayType::Pointer ks = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Exp_k);
   FloatArrayType::Pointer betas = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Beta);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(alphas);
   vect.push_back(ks);
   vect.push_back(betas);
@@ -84,7 +84,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createLogNormalDistributionAr
 {
   FloatArrayType::Pointer avgs = FloatArrayType::CreateArray(0, DREAM3D::HDF5::Average);
   FloatArrayType::Pointer sd = FloatArrayType::CreateArray(0, DREAM3D::HDF5::StandardDeviation);
-  std::vector<FloatArrayType::Pointer> vect;
+  QVector<FloatArrayType::Pointer> vect;
   vect.push_back(avgs);
   vect.push_back(sd);
   return vect;
@@ -108,7 +108,7 @@ VectorOfFloatArray H5PrecipitateStatsDataDelegate::createDistributionVector(unsi
   {
     return createLogNormalDistributionArrays();
   }
-   std::vector<FloatArrayType::Pointer> empty;
+   QVector<FloatArrayType::Pointer> empty;
    return empty;
 }
 

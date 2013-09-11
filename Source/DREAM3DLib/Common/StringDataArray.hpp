@@ -37,7 +37,7 @@
 #ifndef _StrignDataArray_H_
 #define _StrignDataArray_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 
@@ -63,7 +63,7 @@ class StringDataArray : public IDataArray
 
     static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -278,7 +278,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      m_Array.assign(m_Array.size(), QString(""));
+      m_Array.fill(QString(""), m_Array.size());
     }
 
     /**
@@ -309,7 +309,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param delimiter
      */
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       out << m_Array[i];
     }
@@ -320,7 +320,7 @@ class StringDataArray : public IDataArray
      * @param i
      * @param j
      */
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       out << m_Array[i];
     }
@@ -352,7 +352,7 @@ class StringDataArray : public IDataArray
 
       for(size_t i = 0; i < m_Array.size(); ++i)
       {
-        ::memcpy(str, m_Array[i].c_str(), m_Array[i].size());
+        ::memcpy(str, m_Array[i].toLatin1().data(), m_Array[i].size());
         str = str + m_Array[i].size() + 1;
       }
 
@@ -367,7 +367,7 @@ class StringDataArray : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                     const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";
@@ -404,7 +404,7 @@ class StringDataArray : public IDataArray
      */
     void SetValue(size_t i, const QString &value)
     {
-      m_Array.at(i) = value;
+      m_Array[i] = value;
     }
 
     /**

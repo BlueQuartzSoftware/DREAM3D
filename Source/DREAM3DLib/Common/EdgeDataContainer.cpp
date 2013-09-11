@@ -51,6 +51,7 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainer::EdgeDataContainer() :
+VertexDataContainer(),
 m_NumEdgeTuples(0)
 {
 
