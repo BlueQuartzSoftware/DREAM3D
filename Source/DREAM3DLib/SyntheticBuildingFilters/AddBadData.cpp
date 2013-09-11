@@ -146,7 +146,7 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

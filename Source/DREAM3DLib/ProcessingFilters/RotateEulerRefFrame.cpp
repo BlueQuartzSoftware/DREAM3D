@@ -188,7 +188,7 @@ void RotateEulerRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------

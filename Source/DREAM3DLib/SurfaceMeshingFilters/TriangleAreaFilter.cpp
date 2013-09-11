@@ -174,7 +174,7 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields,
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleAreas, ss, double, DoubleArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleAreas, double, DoubleArrayType, 0, voxels, 1)
     }
 
   }

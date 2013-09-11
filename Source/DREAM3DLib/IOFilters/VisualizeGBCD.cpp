@@ -203,9 +203,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       }
       else
       {
-        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
+        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }

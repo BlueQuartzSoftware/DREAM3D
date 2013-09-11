@@ -108,7 +108,7 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if(m_SelectedFieldArrayName.empty() == true)
   {

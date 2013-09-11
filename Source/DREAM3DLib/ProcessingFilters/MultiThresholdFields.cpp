@@ -137,7 +137,7 @@ void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t field
     notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 }
 
 
