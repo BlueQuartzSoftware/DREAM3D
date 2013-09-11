@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * Cell (Formerly Cell) group
     * @return
     */
-    virtual std::list<std::string> getCellArrayNameList();
+    virtual std::list<QString> getCellArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Cell group
@@ -179,7 +179,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
     * Field (Formerly Grain) group
     * @return
     */
-    virtual std::list<std::string> getCellFieldArrayNameList();
+    virtual std::list<QString> getCellFieldArrayNameList();
 
     /**
     * @brief Returns the total number of arrays that are stored in the Field group
@@ -227,7 +227,7 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
      */
     virtual void clearCellEnsembleData();
 
-    virtual std::list<std::string> getCellEnsembleArrayNameList();
+    virtual std::list<QString> getCellEnsembleArrayNameList();
 
      /**
      * @brief Returns if a data set with the name exists in the data container for the Cell Data
@@ -271,9 +271,9 @@ class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 
   private:
 
-    QMap<std::string, IDataArray::Pointer> m_CellData;
-    QMap<std::string, IDataArray::Pointer> m_CellFieldData;
-    QMap<std::string, IDataArray::Pointer> m_CellEnsembleData;
+    QMap<QString, IDataArray::Pointer> m_CellData;
+    QMap<QString, IDataArray::Pointer> m_CellFieldData;
+    QMap<QString, IDataArray::Pointer> m_CellEnsembleData;
 
     VolumeDataContainer(const VolumeDataContainer&);
     void operator =(const VolumeDataContainer&);

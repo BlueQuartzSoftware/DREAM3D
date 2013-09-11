@@ -106,7 +106,7 @@ int H5EbsdVolumeReader::loadData(int64_t xpoints, int64_t ypoints, int64_t zpoin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5EbsdVolumeReader::setArraysToRead(QSet<std::string> names)
+void H5EbsdVolumeReader::setArraysToRead(QSet<QString> names)
 {
   m_ArrayNames = names;
 }
@@ -114,7 +114,7 @@ void H5EbsdVolumeReader::setArraysToRead(QSet<std::string> names)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> H5EbsdVolumeReader::getArraysToRead()
+QSet<QString> H5EbsdVolumeReader::getArraysToRead()
 {
   return m_ArrayNames;
 }

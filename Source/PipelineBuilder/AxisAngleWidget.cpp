@@ -166,7 +166,7 @@ void AxisAngleWidget::on_loadData_clicked()
     {
       inFile >> angle >> n1 >> n2 >> n3 >> weight;
 
-      axis = std::string("<" + n1 + "," + n2 + "," + n3 + ">");
+      axis = QString("<" + n1 + "," + n2 + "," + n3 + ">");
 
       if (!m_TableModel->insertRow(m_TableModel->rowCount())) return;
       int row = m_TableModel->rowCount() - 1;

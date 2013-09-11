@@ -37,8 +37,8 @@
 #ifndef MicFIELDS_H_
 #define MicFIELDS_H_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -60,14 +60,14 @@ class EbsdLib_EXPORT MicFields : public AbstractEbsdFields
     MicFields();
     virtual ~MicFields();
 
-    virtual QVector<std::string> getFieldNames();
+    virtual QVector<QString> getFieldNames();
 
     template<typename T>
     T getFilterFields()
     {
       T fields;
 
-      fields.push_back(Ebsd::Mic::Confidence.c_str());
+      fields.push_back(Ebsd::Mic::Confidence);
 
       return fields;
     }

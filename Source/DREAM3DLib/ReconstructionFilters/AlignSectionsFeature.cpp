@@ -114,7 +114,7 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
@@ -210,7 +210,7 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
   //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;

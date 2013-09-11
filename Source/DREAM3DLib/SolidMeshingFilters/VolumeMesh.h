@@ -52,7 +52,7 @@
 
 #define AIM_STRING QString
 #else
-#define AIM_STRING std::string
+#define AIM_STRING QString
 #endif
 
 /**

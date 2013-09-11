@@ -143,7 +143,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -237,7 +237,7 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
@@ -322,7 +322,7 @@ void WritePoleFigure::execute()
   QString parentPath = MXAFileInfo::parentPath(getOutputPath());
   if(!MXADir::mkdir(parentPath, true))
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -509,7 +509,7 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType *pole
 // -----------------------------------------------------------------------------
 void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
 {
-  std::stringstream ss;
+  QTextStream ss;
   ss << "Writing Image " << outputPath;
   notifyStatusMessage(ss.str());
 

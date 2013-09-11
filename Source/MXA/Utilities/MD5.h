@@ -45,7 +45,7 @@ documentation and/or software.
 //      2) finalize()
 //      3) get hexdigest() string
 //      or
-//      MD5(std::string).hexdigest()
+//      MD5(QString).hexdigest()
 //
 // assumes that char is 8 bit and int is 32 bit
 class MXA_EXPORT MD5
@@ -54,7 +54,7 @@ public:
   typedef unsigned int size_type; // must be 32bit
 
   MD5();
-  MD5(const std::string& text);
+  MD5(const QString& text);
   void update(const unsigned char *buf, size_type length);
   void update(const char *buf, size_type length);
   MD5& finalize();

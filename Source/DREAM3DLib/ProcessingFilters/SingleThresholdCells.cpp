@@ -81,7 +81,7 @@ void SingleThresholdCells::setupFilterParameters()
     option->setPropertyName("ComparisonOperator");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back(DREAM3D::Comparison::Strings::LessThan);
     choices.push_back(DREAM3D::Comparison::Strings::GreaterThan);
     choices.push_back(DREAM3D::Comparison::Strings::Equal);
@@ -103,7 +103,7 @@ void SingleThresholdCells::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back(DREAM3D::CellData::GoodVoxels);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -147,7 +147,7 @@ int SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
 void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
 
@@ -186,7 +186,7 @@ void SingleThresholdCells::execute()
     return;
   }
   //int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())

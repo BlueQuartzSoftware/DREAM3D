@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)

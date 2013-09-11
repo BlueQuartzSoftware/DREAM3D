@@ -67,7 +67,7 @@ void DecimateSolidMesh::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   SolidMeshDataContainer* sm = getSolidMeshDataContainer();
   if (NULL == sm)

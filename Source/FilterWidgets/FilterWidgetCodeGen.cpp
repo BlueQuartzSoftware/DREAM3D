@@ -61,8 +61,8 @@
 
 
 
-typedef QMap<std::string, QSet<std::string> >  FilterMapType;
-typedef QSet<std::string>  StringSetType;
+typedef QMap<QString, QSet<QString> >  FilterMapType;
+typedef QSet<QString>  StringSetType;
 
 // These will be defined in an include header file below.
 QString FILTER_WIDGETS_BINARY_DIR();
@@ -75,9 +75,9 @@ QString DREAM3D_SOURCE_DIR();
 QString DREAM3D_BINARY_DIR();
 QString DREAM3DLIB_SOURCE_DIR();
 
-typedef QMap<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
+typedef QMap<QString, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
 
-QMap<std::string, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
+QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 
 // -----------------------------------------------------------------------------
 //
@@ -170,7 +170,7 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
 {
-  std::stringstream ss;
+  QTextStream ss;
 
   extractHelpIndexEntries(filterPtr);
 
@@ -442,7 +442,7 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
       instream.open(filename.c_str(), std::ios_base::binary);
       if (!instream.is_open())
       {
-        std::stringstream ss;
+        QTextStream ss;
         std::cout << " file could not be opened: " << filename << std::endl;
         return;
       }
@@ -463,7 +463,7 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
       }
       else
       {
-        out << std::string(buf) << std::endl;
+        out << QString(buf) << std::endl;
       }
     }
   }
@@ -487,7 +487,7 @@ void createSourceFile( const QString &group,
                        QVector<FilterParameter::Pointer> options,
                        const QString &outputPath)
 {
-  std::stringstream ss;
+  QTextStream ss;
 
   QString completePath = MXADir::toNativeSeparators(outputPath);
   // Make sure the output path exists
@@ -597,7 +597,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           std::stringstream ss;\n");
+      fprintf(f, "           QTextStream ss;\n");
       fprintf(f, "           ss << filter->get%s();\n", prop.c_str());
       fprintf(f, "           w->setText( QString::fromStdString(ss.str()) );\n");
       fprintf(f, "        }\n");
@@ -646,7 +646,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.c_str());
       fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.c_str());
       fprintf(f, "        if (w1 && w2 && w3) {\n");
-      fprintf(f, "           std::stringstream ss;\n\n");
+      fprintf(f, "           QTextStream ss;\n\n");
       fprintf(f, "           ss << filter->get%s().x;\n", prop.c_str());
       fprintf(f, "           w1->setText( QString::fromStdString(ss.str()) );\n");
       fprintf(f, "           ss.str(\"\");\n");
@@ -678,7 +678,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
-      fprintf(f, "              std::stringstream ss;\n");
+      fprintf(f, "              QTextStream ss;\n");
       fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
       fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
       fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");
@@ -913,7 +913,7 @@ else
   fprintf(f, "void Q%sWidget::readOptions(QSettings &prefs)\n{\n", filter.c_str());
   // fprintf(f, "  std::cout << \"Reading Prefs for Filter  %s \" << std::endl;\n", filter.c_str());
 
-  std::stringstream replaceStream;
+  QTextStream replaceStream;
   replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << std::endl;
   for (size_t i = 0; i < options.size(); ++i)
   {

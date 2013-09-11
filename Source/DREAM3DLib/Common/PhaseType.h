@@ -57,12 +57,12 @@ class DREAM3DLib_EXPORT PhaseType
 
     virtual ~PhaseType();
 
-    static QString PrimaryStr() { return std::string("Primary"); }
-    static QString PrecipitateStr() { return std::string("Precipitate"); }
-    static QString TransformationStr() { return std::string("Transformation"); }
-    static QString MatrixStr() { return std::string("Matrix"); }
-    static QString BoundaryStr() { return std::string("Boundary"); }
-    static QString UnknownPhaseTypeStr() { return std::string("Unknown Phase Type"); }
+    static QString PrimaryStr() { return QString("Primary"); }
+    static QString PrecipitateStr() { return QString("Precipitate"); }
+    static QString TransformationStr() { return QString("Transformation"); }
+    static QString MatrixStr() { return QString("Matrix"); }
+    static QString BoundaryStr() { return QString("Boundary"); }
+    static QString UnknownPhaseTypeStr() { return QString("Unknown Phase Type"); }
 
 
     static QString getPhaseTypeString(unsigned int phaseType)
@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT PhaseType
         default:
           break;
       }
-      return std::string("Undefined Phase Type (Error)");
+      return QString("Undefined Phase Type (Error)");
     }
 
     static unsigned int getPhaseType(const char* str)
@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT PhaseType
     }
 
 
-    static void getPhaseTypeStrings(QVector<std::string> &strings)
+    static void getPhaseTypeStrings(QVector<QString> &strings)
     {
       strings.clear();
       strings.push_back(PrimaryStr());
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT PhaseType
       types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
-    static void getPhaseTypeMap(QMap<int, std::string> &map)
+    static void getPhaseTypeMap(QMap<int, QString> &map)
     {
       map.clear();
       map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();

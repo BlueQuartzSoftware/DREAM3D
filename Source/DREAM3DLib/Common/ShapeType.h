@@ -59,11 +59,11 @@ class DREAM3DLib_EXPORT ShapeType
 
     virtual ~ShapeType();
 
-    static QString EllipsoidStr() { return std::string("Ellipsoid"); }
-    static QString SuperEllipsoid() { return std::string("Super Ellipsoid"); }
-    static QString CubeOctahedronStr() { return std::string("Cube Octahedron"); }
-    static QString CylinderStr() { return std::string("Cylinder"); }
-    static QString UnknownShapeTypeStr() { return std::string("Unknown Shape Type"); }
+    static QString EllipsoidStr() { return QString("Ellipsoid"); }
+    static QString SuperEllipsoid() { return QString("Super Ellipsoid"); }
+    static QString CubeOctahedronStr() { return QString("Cube Octahedron"); }
+    static QString CylinderStr() { return QString("Cylinder"); }
+    static QString UnknownShapeTypeStr() { return QString("Unknown Shape Type"); }
 
     static QString getShapeTypeString(unsigned int ShapeType)
     {
@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT ShapeType
         default:
           break;
       }
-      return std::string("Undefined ShapeType (Error)");
+      return QString("Undefined ShapeType (Error)");
     }
 
     static unsigned int getShapeType(const char* str)
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT ShapeType
     }
 
 
-    static void getShapeTypeStrings(QVector<std::string> &strings)
+    static void getShapeTypeStrings(QVector<QString> &strings)
     {
       strings.clear();
       strings.push_back(EllipsoidStr());
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT ShapeType
       types.push_back(DREAM3D::ShapeType::UnknownShapeType);
     }
 
-    static void getShapeTypeMap(QMap<int, std::string> &map)
+    static void getShapeTypeMap(QMap<int, QString> &map)
     {
       map.clear();
       map[DREAM3D::ShapeType::EllipsoidShape] = EllipsoidStr();

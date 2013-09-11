@@ -195,7 +195,7 @@ class StringDataArray : public IDataArray
      */
     virtual size_t GetTypeSize()
     {
-      return sizeof(std::string);
+      return sizeof(QString);
     }
 
     /**
@@ -232,9 +232,9 @@ class StringDataArray : public IDataArray
 
 
       // Create a new Array to copy into
-      QVector<std::string> newArray;
+      QVector<QString> newArray;
       QVector<size_t>::size_type start = 0;
-      for(QVector<std::string>::size_type i = 0; i < m_Array.size(); ++i)
+      for(QVector<QString>::size_type i = 0; i < m_Array.size(); ++i)
       {
         bool keep = true;
         for(QVector<size_t>::size_type j = start; j < idxs.size(); ++j)
@@ -278,7 +278,7 @@ class StringDataArray : public IDataArray
      */
     virtual void initializeWithZeros()
     {
-      m_Array.assign(m_Array.size(), std::string(""));
+      m_Array.assign(m_Array.size(), QString(""));
     }
 
     /**
@@ -432,7 +432,7 @@ class StringDataArray : public IDataArray
 
   private:
       //  unsigned long long int MUD_FLAP_0;
-    QVector<std::string> m_Array;
+    QVector<QString> m_Array;
   //  unsigned long long int MUD_FLAP_1;
     //size_t Size;
   //  unsigned long long int MUD_FLAP_4;

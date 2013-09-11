@@ -75,7 +75,7 @@ void FindLargestCrossSections::setupFilterParameters()
     option->setPropertyName("Plane");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");
@@ -112,7 +112,7 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 

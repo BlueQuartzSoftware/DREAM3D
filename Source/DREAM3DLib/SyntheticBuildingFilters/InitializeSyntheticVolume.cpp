@@ -127,7 +127,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
@@ -166,13 +166,13 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  std::stringstream ss;
+  QTextStream ss;
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
   dataCheck(true, 1, 1, 1);
 
-  QSet<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -202,7 +202,7 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -212,7 +212,7 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  QSet<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);

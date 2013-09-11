@@ -157,7 +157,7 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
 
@@ -275,7 +275,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     progInt = ((float)iter/dims[2])*100.0f;
     ss << "Determining Shifts - " << progInt << "% Complete";
     notifyStatusMessage(ss.str());

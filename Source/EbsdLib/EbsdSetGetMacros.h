@@ -42,10 +42,12 @@
 
 #include <string.h>
 
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 #include <sstream>
 #include <stdexcept>
+
+#include <QtCore/QString>
 
 /**
  * @file EbsdSEtGetMacros.h
@@ -262,7 +264,8 @@ static Pointer New args \
 * @brief Creates a "setter" method to set the property.
 */
 #define EBSD_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const QString &value) { this->varname = value; }
+  void set##prpty(const QString &value) { this->varname = value; }\
+  void set##prpty(QString* value) { this->varname = *value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
@@ -298,7 +301,7 @@ static Pointer New args \
   void set##prpty(m_msgType value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
+      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;} }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
@@ -307,7 +310,7 @@ static Pointer New args \
   m_msgType get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
+      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl; return 0;} }
 
 
 #define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
@@ -351,22 +354,22 @@ namespace Ebsd
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
-    bad_lexical_cast(const std::string& s)
-      : std::runtime_error(s)
+    bad_lexical_cast(const QString& s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
-    bad_any_cast(const std::string& s)
-      : std::runtime_error(s)
+    bad_any_cast(const QString& s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   template<typename T>
   T lexical_cast(const QString &s)
   {
-    std::istringstream i(s);
+    std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

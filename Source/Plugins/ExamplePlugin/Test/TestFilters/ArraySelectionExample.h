@@ -71,31 +71,31 @@ class ArraySelectionExample : public AbstractFilter
 
     // -----------------------------------------------------------------------------
     /* These methods are needed if you use the ArraySelectionWidget as an input */
-    typedef QSet<std::string> ArrayList_t;
+    typedef QSet<QString> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(QSet<std::string> selectedCellArrays,
-                                            QSet<std::string> selectedFieldArrays,
-                                            QSet<std::string> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(QSet<std::string> selectedVertexArrays,
-                                                  QSet<std::string> selectedFaceArrays,
-                                                  QSet<std::string> selectedEdgeArrays,
-                                                  QSet<std::string> selectedFieldArrays,
-                                                  QSet<std::string> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(QSet<std::string> selectedVertexArrays,
-                                                QSet<std::string> selectedFaceArrays,
-                                                QSet<std::string> selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(QSet<QString> selectedCellArrays,
+                                            QSet<QString> selectedFieldArrays,
+                                            QSet<QString> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                  QSet<QString> selectedFaceArrays,
+                                                  QSet<QString> selectedEdgeArrays,
+                                                  QSet<QString> selectedFieldArrays,
+                                                  QSet<QString> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(QSet<QString> selectedVertexArrays,
+                                                QSet<QString> selectedFaceArrays,
+                                                QSet<QString> selectedEdgeArrays);
 
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, SelectedSolidMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelCellArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVoxelEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceMeshEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSolidMeshEdgeArrays)
 
   public:
 

@@ -70,10 +70,10 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		UnlabeledMultiArg( const std::string& name,
-				           const std::string& desc,
+		UnlabeledMultiArg( const QString& name,
+				           const QString& desc,
 						   bool req,
-				           const std::string& typeDesc,
+				           const QString& typeDesc,
 						   bool ignoreable = false,
 				           Visitor* v = NULL );
 		/**
@@ -94,10 +94,10 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		UnlabeledMultiArg( const std::string& name,
-				           const std::string& desc,
+		UnlabeledMultiArg( const QString& name,
+				           const QString& desc,
 						   bool req,
-				           const std::string& typeDesc,
+				           const QString& typeDesc,
 						   CmdLineInterface& parser,
 						   bool ignoreable = false,
 				           Visitor* v = NULL );
@@ -117,8 +117,8 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		UnlabeledMultiArg( const std::string& name,
-						   const std::string& desc,
+		UnlabeledMultiArg( const QString& name,
+						   const QString& desc,
 						   bool req,
 						   Constraint<T>* constraint,
 						   bool ignoreable = false,
@@ -140,8 +140,8 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		UnlabeledMultiArg( const std::string& name, 
-						   const std::string& desc, 
+		UnlabeledMultiArg( const QString& name, 
+						   const QString& desc, 
 						   bool req,
 						   Constraint<T>* constraint,
 						   CmdLineInterface& parser,
@@ -156,19 +156,19 @@ class UnlabeledMultiArg : public MultiArg<T>
 		 * \param i - Pointer the the current argument in the list.
 		 * \param args - Mutable list of strings. Passed from main().
 		 */
-		virtual bool processArg(int* i, QVector<std::string>& args); 
+		virtual bool processArg(int* i, QVector<QString>& args); 
 
 		/**
 		 * Returns the a short id string.  Used in the usage.
 		 * \param val - value to be used.
 		 */
-		virtual QString shortID(const std::string& val="val") const;
+		virtual QString shortID(const QString& val="val") const;
 
 		/**
 		 * Returns the a long id string.  Used in the usage.
 		 * \param val - value to be used.
 		 */
-		virtual QString longID(const std::string& val="val") const;
+		virtual QString longID(const QString& val="val") const;
 
 		/**
 		 * Opertor ==.
@@ -184,10 +184,10 @@ class UnlabeledMultiArg : public MultiArg<T>
 };
 
 template<class T>
-UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name, 
-				                        const std::string& desc, 
+UnlabeledMultiArg<T>::UnlabeledMultiArg(const QString& name, 
+				                        const QString& desc, 
 										bool req,
-					                    const std::string& typeDesc,
+					                    const QString& typeDesc,
 										bool ignoreable,
 					                    Visitor* v)
 : MultiArg<T>("", name, desc,  req, typeDesc, v)
@@ -197,10 +197,10 @@ UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name,
 }
 
 template<class T>
-UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name, 
-				                        const std::string& desc, 
+UnlabeledMultiArg<T>::UnlabeledMultiArg(const QString& name, 
+				                        const QString& desc, 
 										bool req,
-					                    const std::string& typeDesc,
+					                    const QString& typeDesc,
 										CmdLineInterface& parser,
 										bool ignoreable,
 					                    Visitor* v)
@@ -213,8 +213,8 @@ UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name,
 
 
 template<class T>
-UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name, 
-				                        const std::string& desc, 
+UnlabeledMultiArg<T>::UnlabeledMultiArg(const QString& name, 
+				                        const QString& desc, 
 										bool req,
 					                    Constraint<T>* constraint,
 										bool ignoreable,
@@ -226,8 +226,8 @@ UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name,
 }
 
 template<class T>
-UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name, 
-				                        const std::string& desc, 
+UnlabeledMultiArg<T>::UnlabeledMultiArg(const QString& name, 
+				                        const QString& desc, 
 										bool req,
 					                    Constraint<T>* constraint,
 										CmdLineInterface& parser,
@@ -242,7 +242,7 @@ UnlabeledMultiArg<T>::UnlabeledMultiArg(const std::string& name,
 
 
 template<class T>
-bool UnlabeledMultiArg<T>::processArg(int *i, QVector<std::string>& args) 
+bool UnlabeledMultiArg<T>::processArg(int *i, QVector<QString>& args) 
 {
 
 	if ( _hasBlanks( args[*i] ) )
@@ -268,17 +268,17 @@ bool UnlabeledMultiArg<T>::processArg(int *i, QVector<std::string>& args)
 }
 
 template<class T>
-QString UnlabeledMultiArg<T>::shortID(const std::string& val) const
+QString UnlabeledMultiArg<T>::shortID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
-	return std::string("<") + _typeDesc + "> ...";
+	return QString("<") + _typeDesc + "> ...";
 }
 
 template<class T>
-QString UnlabeledMultiArg<T>::longID(const std::string& val) const
+QString UnlabeledMultiArg<T>::longID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
-	return std::string("<") + _typeDesc + ">  (accepted multiple times)";
+	return QString("<") + _typeDesc + ">  (accepted multiple times)";
 }
 
 template<class T>

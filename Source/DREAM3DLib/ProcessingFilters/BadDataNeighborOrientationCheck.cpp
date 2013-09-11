@@ -134,7 +134,7 @@ int BadDataNeighborOrientationCheck::writeFilterParameters(AbstractFilterParamet
 void BadDataNeighborOrientationCheck::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, 1)

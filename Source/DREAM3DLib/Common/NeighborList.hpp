@@ -298,7 +298,7 @@ class NeighborList : public IDataArray
 		    {
 			    return -603;
 		    }
-		    err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
+		    err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, QString(H5_NUMCOMPONENTS), 1);
 		    if(err < 0)
 		    {
 			    return -605;
@@ -346,7 +346,7 @@ class NeighborList : public IDataArray
         {
           return -603;
         }
-        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, std::string(H5_NUMCOMPONENTS), 1);
+        err = H5Lite::writeScalarAttribute(parentId, m_NumNeighborsArrayName, QString(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -605;
@@ -385,7 +385,7 @@ class NeighborList : public IDataArray
         {
           return -605;
         }
-        err = H5Lite::writeScalarAttribute(parentId, GetName(), std::string(H5_NUMCOMPONENTS), 1);
+        err = H5Lite::writeScalarAttribute(parentId, GetName(), QString(H5_NUMCOMPONENTS), 1);
         if(err < 0)
         {
           return -606;
@@ -418,7 +418,7 @@ class NeighborList : public IDataArray
             const QString &groupPath, const QString &label)
     {
 
-      std::stringstream dimStr;
+      QTextStream dimStr;
       dimStr << volDims[0] << " " << volDims[1] << " " << volDims[2] << " ";
       int precision = 0;
       QString xdmfTypeName;

@@ -287,9 +287,9 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
 #define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
 {\
-  std::list<std::string> theList = dataContainer->get##type##ArrayNameList();\
+  std::list<QString> theList = dataContainer->get##type##ArrayNameList();\
   QList<QString> list;\
-  for(std::list<std::string>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+  for(std::list<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
     list << QString::fromStdString(*iter);\
   }\
   PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
@@ -316,7 +316,7 @@ void PipelineViewWidget::preflightPipeline()
   EdgeDataContainer::Pointer e = EdgeDataContainer::New();
   VertexDataContainer::Pointer v = VertexDataContainer::New();
 
-  std::stringstream ss;
+  QTextStream ss;
 
 
   // Build up the pipeline

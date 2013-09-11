@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int closeFilterGroup() = 0;
 
     virtual int writeValue(const QString name, const QString value) = 0;
-    virtual int writeValue(const QString name, const QVector<std::string> value) = 0;
+    virtual int writeValue(const QString name, const QVector<QString> value) = 0;
 
     virtual int writeValue(const QString name, int8_t value) = 0;
     virtual int writeValue(const QString name, int16_t value) = 0;
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT AbstractFilterParametersWriter
     virtual int writeValue(const QString name, QVector<ComparisonInput_t> v) = 0;
     virtual int writeValue(const QString name, AxisAngleInput_t v, int vectorPos) = 0;
     virtual int writeValue(const QString name, QVector<AxisAngleInput_t> v) = 0;
-    virtual int writeValue(const QString name, QSet<std::string> v) = 0;
+    virtual int writeValue(const QString name, QSet<QString> v) = 0;
 
 
 

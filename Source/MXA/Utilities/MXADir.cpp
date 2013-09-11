@@ -16,11 +16,11 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<std::string> MXA_FILESYSTEM_BASE_CLASS::entryList(const QString &path)
+QVector<QString> MXA_FILESYSTEM_BASE_CLASS::entryList(const QString &path)
 {
   DIR* dir = NULL;
   struct dirent* de = NULL;
-  QVector<std::string> list;
+  QVector<QString> list;
   dir = opendir( path.c_str() );
 
   if (NULL != dir)
@@ -46,7 +46,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const QString &name, bool createParentDire
   if (createParentDirectories) {
       dirName = MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName));
       // We specifically search for / so \ would break it..
-      std::string::size_type oldslash = std::string::npos;
+      QString::size_type oldslash = QString::npos;
       if (dirName[0] == '\\' && dirName[1] == '\\')
       {
           // Don't try to create the root fsPath of a UNC fsPath;
@@ -58,18 +58,18 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const QString &name, bool createParentDire
                   break;
               }
           }
-          if (oldslash != std::string::npos) {
+          if (oldslash != QString::npos) {
               oldslash = dirName.find(MXA_FILESYSTEM_BASE_CLASS::Separator, oldslash);
           }
       }
-      for (std::string::size_type slash=0; slash != std::string::npos; oldslash = slash) {
+      for (QString::size_type slash=0; slash != QString::npos; oldslash = slash) {
           slash = dirName.find(MXA_FILESYSTEM_BASE_CLASS::Separator, oldslash+1);
-          if (slash == std::string::npos) {
+          if (slash == QString::npos) {
               if(oldslash == dirName.length())
                   break;
               slash = dirName.length();
           }
-          if (slash != std::string::npos) {
+          if (slash != QString::npos) {
             QString chunk = dirName.substr(0, slash);
             bool existed = false;
             if (!isDirPath(chunk, &existed) && !existed)
@@ -87,16 +87,16 @@ bool MXA_FILESYSTEM_BASE_CLASS::mkdir(const QString &name, bool createParentDire
   if (createParentDirectories)
   {
     dirName = MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName);
-    std::string::size_type slash = 0;
-    for (std::string::size_type oldslash = 1; slash != std::string::npos; oldslash = slash)
+    QString::size_type slash = 0;
+    for (QString::size_type oldslash = 1; slash != QString::npos; oldslash = slash)
     {
       slash = dirName.find(MXA_FILESYSTEM_BASE_CLASS::Separator, oldslash + 1);
-      if (slash == std::string::npos)
+      if (slash == QString::npos)
       {
         if (oldslash == dirName.length()) break;
         slash = dirName.length();
       }
-      if (slash != std::string::npos)
+      if (slash != QString::npos)
       {
         QString chunk = dirName.substr(0, slash);
         if (exists(chunk) == false)
@@ -136,7 +136,7 @@ bool MXA_FILESYSTEM_BASE_CLASS::rmdir(const QString &name, bool recurseParentDir
   if (recurseParentDirectories)
   {
       dirName = MXA_FILESYSTEM_BASE_CLASS::toNativeSeparators(MXA_FILESYSTEM_BASE_CLASS::cleanPath(dirName));
-      for (std::string::size_type oldslash = 0, slash=dirName.length(); slash > 0; oldslash = slash)
+      for (QString::size_type oldslash = 0, slash=dirName.length(); slash > 0; oldslash = slash)
       {
           QString chunk = dirName.substr(0, slash);
           if (chunk.length() == 2 && isalpha(chunk[0]) && chunk[1] == ':')
@@ -194,7 +194,7 @@ QString MXA_FILESYSTEM_BASE_CLASS::tempPath()
 
   if (retLength) 
   {
-    ret = std::string(path);
+    ret = QString(path);
   }
 
   if (!ret.empty()) 
@@ -203,14 +203,14 @@ QString MXA_FILESYSTEM_BASE_CLASS::tempPath()
   }
   else
   {
-    ret = std::string("/Temp");
+    ret = QString("/Temp");
   }
 #else
 
     char* pPath;
      pPath = getenv ("TMPDIR");
      if (pPath!=NULL) {
-       ret = std::string(pPath);
+       ret = QString(pPath);
      }
      else
      {

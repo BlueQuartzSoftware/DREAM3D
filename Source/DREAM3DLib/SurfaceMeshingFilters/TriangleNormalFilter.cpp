@@ -160,7 +160,7 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -206,7 +206,7 @@ void TriangleNormalFilter::preflight()
 void TriangleNormalFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

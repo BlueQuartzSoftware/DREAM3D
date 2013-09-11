@@ -37,9 +37,9 @@
 #ifndef _H5EBSDVOLUMEREADER_H_
 #define _H5EBSDVOLUMEREADER_H_
 
-#include <string>
-#include <vector>
-#include <set>
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QSet>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -132,8 +132,8 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(QSet<std::string> names);
-    virtual QSet<std::string> getArraysToRead();
+    virtual void setArraysToRead(QSet<QString> names);
+    virtual QSet<QString> getArraysToRead();
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -147,7 +147,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     H5EbsdVolumeReader();
 
   private:
-    QSet<std::string> m_ArrayNames;
+    QSet<QString>         m_ArrayNames;
     bool                  m_ReadAllArrays;
 
 

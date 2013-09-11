@@ -150,7 +150,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionTableModel : public QAbstract
 
 
     void setPossibleFields(QStringList fields);
-    void setPossibleFields(std::list<std::string> &fields);
+    void setPossibleFields(std::list<QString> &fields);
 
     QStringList getPossibleFields();
 

@@ -99,7 +99,7 @@ int GenerateNodeTriangleConnectivity::writeFilterParameters(AbstractFilterParame
 void GenerateNodeTriangleConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if(NULL == sm)
   {
@@ -156,7 +156,7 @@ void GenerateNodeTriangleConnectivity::preflight()
 void GenerateNodeTriangleConnectivity::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   SurfaceMeshDataContainer* m = getSurfaceMeshDataContainer();
   if(NULL == m)
@@ -227,7 +227,7 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   float progIndex = 0.0;
   float curPercent = 0.0;
   float total = static_cast<float>(m_Node2Triangle.size());
-  std::stringstream ss;
+  QTextStream ss;
 
   // Loop over each entry in the map
   for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)

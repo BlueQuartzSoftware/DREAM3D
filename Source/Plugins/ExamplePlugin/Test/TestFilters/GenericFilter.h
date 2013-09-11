@@ -44,7 +44,7 @@ class GenericFilter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
     DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, TestAxisAngleRotations)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, StrVector)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)

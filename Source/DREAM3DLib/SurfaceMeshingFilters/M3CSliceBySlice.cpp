@@ -393,7 +393,7 @@ int M3CSliceBySlice::writeFilterParameters(AbstractFilterParametersWriter* write
 void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
@@ -450,7 +450,7 @@ void M3CSliceBySlice::execute()
   }
 
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);
 
@@ -788,7 +788,7 @@ void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
 void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
                                                     size_t* dims, int32_t* voxels)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int NSP = wrappedDims[0] * wrappedDims[1];
   size_t offset = 0;
 

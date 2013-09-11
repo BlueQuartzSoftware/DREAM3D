@@ -151,7 +151,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -212,14 +212,14 @@ void PhReader::execute()
    */
   if (NULL == getVolumeDataContainer())
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorCondition(-48020);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
 
   m_InStream = fopen(getInputFile().c_str(), "r");

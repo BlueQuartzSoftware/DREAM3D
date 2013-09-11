@@ -671,7 +671,7 @@ void QFilterWidget::setupGui()
       QComboBox* cb = new QComboBox(this);
       cb->setEditable(choiceFilterParameter->getEditable());
       cb->setObjectName(QString::fromStdString(option->getPropertyName()));
-      QVector<std::string> choices = choiceFilterParameter->getChoices();
+      QVector<QString> choices = choiceFilterParameter->getChoices();
       QVariant v = property(option->getPropertyName().c_str());
       int selectedIndex = -1;
       for(unsigned int i = 0; i < choices.size(); ++i)
@@ -1817,7 +1817,7 @@ void QFilterWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, Su
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName)
+void QFilterWidget::updateArrayNameComboBox(const std::list<QString> &arrayNames, QString propertyName)
 {
   //if (arrayNames.size() == 0) { return; }
   QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
@@ -1826,7 +1826,7 @@ void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayN
   cb->blockSignals(true);
   cb->clear();
   int index = 0;
-  for(std::list<std::string>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  for(std::list<QString>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
     QString name = QString::fromStdString(*iter);
     cb->addItem(name);

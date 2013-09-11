@@ -77,7 +77,7 @@ class ValueArg : public Arg
          * is thrown.
          * \param val - value to be parsed. 
          */
-        void _extractValue( const std::string& val );
+        void _extractValue( const QString& val );
 
 	public:
 
@@ -104,12 +104,12 @@ class ValueArg : public Arg
          * \param v - An optional visitor.  You probably should not
          * use this unless you have a very good reason.
          */
-        ValueArg( const std::string& flag, 
-                  const std::string& name, 
-                  const std::string& desc, 
+        ValueArg( const QString& flag, 
+                  const QString& name, 
+                  const QString& desc, 
                   bool req, 
                   T value,
-                  const std::string& typeDesc,
+                  const QString& typeDesc,
                   Visitor* v = NULL);
 				 
 				 
@@ -137,12 +137,12 @@ class ValueArg : public Arg
          * \param v - An optional visitor.  You probably should not
          * use this unless you have a very good reason.
          */
-        ValueArg( const std::string& flag, 
-                  const std::string& name, 
-                  const std::string& desc, 
+        ValueArg( const QString& flag, 
+                  const QString& name, 
+                  const QString& desc, 
                   bool req, 
                   T value,
-                  const std::string& typeDesc,
+                  const QString& typeDesc,
                   CmdLineInterface& parser,
                   Visitor* v = NULL );
  
@@ -168,9 +168,9 @@ class ValueArg : public Arg
          * \param v - An optional visitor.  You probably should not
          * use this unless you have a very good reason.
          */
-        ValueArg( const std::string& flag, 
-                  const std::string& name, 
-                  const std::string& desc, 
+        ValueArg( const QString& flag, 
+                  const QString& name, 
+                  const QString& desc, 
                   bool req, 
                   T value,
                   Constraint<T>* constraint,
@@ -198,9 +198,9 @@ class ValueArg : public Arg
          * \param v - An optional visitor.  You probably should not
          * use this unless you have a very good reason.
          */
-        ValueArg( const std::string& flag, 
-                  const std::string& name, 
-                  const std::string& desc, 
+        ValueArg( const QString& flag, 
+                  const QString& name, 
+                  const QString& desc, 
                   bool req, 
                   T value,
                   Constraint<T>* constraint,
@@ -215,7 +215,7 @@ class ValueArg : public Arg
          * \param args - Mutable list of strings. Passed 
          * in from main().
          */
-        virtual bool processArg(int* i, QVector<std::string>& args); 
+        virtual bool processArg(int* i, QVector<QString>& args); 
 
         /**
          * Returns the value of the argument.
@@ -226,13 +226,13 @@ class ValueArg : public Arg
          * Specialization of shortID.
          * \param val - value to be used.
          */
-        virtual QString shortID(const std::string& val = "val") const;
+        virtual QString shortID(const QString& val = "val") const;
 
         /**
          * Specialization of longID.
          * \param val - value to be used.
          */
-        virtual QString longID(const std::string& val = "val") const;
+        virtual QString longID(const QString& val = "val") const;
         
         virtual void reset() ;
 
@@ -243,12 +243,12 @@ class ValueArg : public Arg
  * Constructor implementation.
  */
 template<class T>
-ValueArg<T>::ValueArg(const std::string& flag, 
-                      const std::string& name, 
-                      const std::string& desc, 
+ValueArg<T>::ValueArg(const QString& flag, 
+                      const QString& name, 
+                      const QString& desc, 
                       bool req, 
                       T val,
-                      const std::string& typeDesc,
+                      const QString& typeDesc,
                       Visitor* v)
 : Arg(flag, name, desc, req, true, v),
   _value( val ),
@@ -258,12 +258,12 @@ ValueArg<T>::ValueArg(const std::string& flag,
 { }
 
 template<class T>
-ValueArg<T>::ValueArg(const std::string& flag, 
-                      const std::string& name, 
-                      const std::string& desc, 
+ValueArg<T>::ValueArg(const QString& flag, 
+                      const QString& name, 
+                      const QString& desc, 
                       bool req, 
                       T val,
-                      const std::string& typeDesc,
+                      const QString& typeDesc,
                       CmdLineInterface& parser,
                       Visitor* v)
 : Arg(flag, name, desc, req, true, v),
@@ -276,9 +276,9 @@ ValueArg<T>::ValueArg(const std::string& flag,
 }
 
 template<class T>
-ValueArg<T>::ValueArg(const std::string& flag, 
-                      const std::string& name, 
-                      const std::string& desc, 
+ValueArg<T>::ValueArg(const QString& flag, 
+                      const QString& name, 
+                      const QString& desc, 
                       bool req, 
                       T val,
                       Constraint<T>* constraint,
@@ -291,9 +291,9 @@ ValueArg<T>::ValueArg(const std::string& flag,
 { }
 
 template<class T>
-ValueArg<T>::ValueArg(const std::string& flag, 
-                      const std::string& name, 
-                      const std::string& desc, 
+ValueArg<T>::ValueArg(const QString& flag, 
+                      const QString& name, 
+                      const QString& desc, 
                       bool req, 
                       T val,
                       Constraint<T>* constraint,
@@ -319,7 +319,7 @@ T& ValueArg<T>::getValue() { return _value; }
  * Implementation of processArg().
  */
 template<class T>
-bool ValueArg<T>::processArg(int *i, QVector<std::string>& args)
+bool ValueArg<T>::processArg(int *i, QVector<QString>& args)
 {
     if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -366,7 +366,7 @@ bool ValueArg<T>::processArg(int *i, QVector<std::string>& args)
  * Implementation of shortID.
  */
 template<class T>
-QString ValueArg<T>::shortID(const std::string& val) const
+QString ValueArg<T>::shortID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::shortID( _typeDesc ); 
@@ -376,14 +376,14 @@ QString ValueArg<T>::shortID(const std::string& val) const
  * Implementation of longID.
  */
 template<class T>
-QString ValueArg<T>::longID(const std::string& val) const
+QString ValueArg<T>::longID(const QString& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 	return Arg::longID( _typeDesc ); 
 }
 
 template<class T>
-void ValueArg<T>::_extractValue( const std::string& val ) 
+void ValueArg<T>::_extractValue( const QString& val ) 
 {
     try {
 	ExtractValue(_value, val, typename ArgTraits<T>::ValueCategory());

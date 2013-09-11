@@ -116,7 +116,7 @@ int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer
 void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if (m_OutputVtkFile.empty() == true)
   {
@@ -180,7 +180,7 @@ class ScopedFileMonitor
 void SolidMeshToVtk::execute()
 {
 //  int err = 0;
-//  std::stringstream ss;
+//  QTextStream ss;
 //  setErrorCondition(err);
 //  dataCheck(false, 0, 0, 0);
 //  if(getErrorCondition() < 0)

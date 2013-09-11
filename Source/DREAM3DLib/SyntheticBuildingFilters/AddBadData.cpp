@@ -142,7 +142,7 @@ int AddBadData::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
@@ -199,7 +199,7 @@ void  AddBadData::add_noise()
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
 
   float random = 0.0;
   int64_t totalPoints = m->getTotalPoints();
@@ -210,7 +210,7 @@ void  AddBadData::add_noise()
 		random = static_cast<float>( rg.genrand_res53() );
 		if(random < m_BoundaryVolFraction)
 		{
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
@@ -223,7 +223,7 @@ void  AddBadData::add_noise()
 		random = static_cast<float>( rg.genrand_res53() );
 		if(random < m_PoissonVolFraction)
 		{
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);

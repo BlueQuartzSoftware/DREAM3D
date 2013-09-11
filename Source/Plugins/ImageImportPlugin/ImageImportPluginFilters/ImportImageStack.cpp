@@ -124,7 +124,7 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (m_ImageFileList.size() == 0)
@@ -157,7 +157,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QTextStream s;
       s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
       addErrorMessage(getHumanLabel(), s.str(), -1);
@@ -167,7 +167,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      std::stringstream s;
+      QTextStream s;
       s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
       s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
@@ -210,7 +210,7 @@ void ImportImageStack::execute()
     return;
   }
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -229,7 +229,7 @@ void ImportImageStack::execute()
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
-  for (QVector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
+  for (QVector<QString>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     QString imageFName = *filepath;
     ss.str("");

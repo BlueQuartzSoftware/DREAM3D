@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual int closeFilterGroup();
 
     virtual QString readValue(const QString name, QString value);
-    virtual QVector<std::string> readValue(const QString name, QVector<std::string> value);
+    virtual QVector<QString> readValue(const QString name, QVector<QString> value);
 
     virtual int8_t readValue(const QString name, int8_t value);
     virtual int16_t readValue(const QString name, int16_t value);
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
     virtual QVector<ComparisonInput_t> readValue(const QString name, QVector<ComparisonInput_t> v);
     virtual AxisAngleInput_t readValue(const QString name, AxisAngleInput_t v, int vectorPos);
     virtual QVector<AxisAngleInput_t> readValue(const QString name, QVector<AxisAngleInput_t> v);
-    virtual QSet<std::string> readValue(const QString name, QSet<std::string> v);
+    virtual QSet<QString> readValue(const QString name, QSet<QString> v);
 
   protected:
     H5FilterParametersReader();
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT H5FilterParametersReader : public AbstractFilterParamete
   private:
     hid_t m_CurrentGroupId;
 
-    QVector<std::string> tokenize(const char* buf, char delimiter);
+    QVector<QString> tokenize(const char* buf, char delimiter);
 
     H5FilterParametersReader(const H5FilterParametersReader&); // Copy Constructor Not Implemented
     void operator=(const H5FilterParametersReader&); // Operator '=' Not Implemented

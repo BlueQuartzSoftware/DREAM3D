@@ -65,7 +65,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    typedef std::list<std::string> NameListType;
+    typedef std::list<QString> NameListType;
 
     void setXdmfOStream(std::ostream* xdmf);
 

@@ -784,7 +784,7 @@ class DataArray : public IDataArray
                                                     const QString &groupPath, const QString &label)
     {
       if (Array == NULL) { return -85648; }
-      std::stringstream dimStr;
+      QTextStream dimStr;
       int precision = 0;
       QString xdmfTypeName;
       GetXdmfTypeAndSize(xdmfTypeName, precision);

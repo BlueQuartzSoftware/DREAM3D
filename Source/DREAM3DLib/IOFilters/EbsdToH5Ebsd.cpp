@@ -140,7 +140,7 @@ int EbsdToH5Ebsd::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -153,7 +153,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   {
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
     QString ext = MXAFileInfo::extension(m_EbsdFileList.front());
-    QVector<std::string> columnNames;
+    QVector<QString> columnNames;
 //    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -176,7 +176,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
       return;
     }
 //    columnNames = ebsdFields->getFieldNames();
-//    for(QVector<std::string>::size_type i = 0; i < columnNames.size(); ++i)
+//    for(QVector<QString>::size_type i = 0; i < columnNames.size(); ++i)
 //    {
 //      addCreatedCellData(columnNames[i]);
 //    }
@@ -206,7 +206,7 @@ void EbsdToH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::execute()
 {
-  std::stringstream ss;
+  QTextStream ss;
   herr_t err = 0;
   hid_t fileId = -1;
 
@@ -225,7 +225,7 @@ void EbsdToH5Ebsd::execute()
   QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
+      QTextStream ss;
       PipelineMessage em (getHumanLabel(), ss.str(), -1);
       addErrorMessage(em);
       setErrorCondition(-1);
@@ -395,7 +395,7 @@ void EbsdToH5Ebsd::execute()
   int64_t biggestxDim = 0;
   int64_t biggestyDim = 0;
   int totalSlicesImported = 0;
-  for (QVector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
     progress = static_cast<int>( z - m_ZStartIndex );

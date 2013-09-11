@@ -97,7 +97,7 @@ static bool stringToNum(T &t, const QString &s)
 // -----------------------------------------------------------------------------
 static QString numToString(int num)
 {
-	std::stringstream converter;
+	QTextStream converter;
   converter << num;
   return converter.str();
 }
@@ -108,7 +108,7 @@ static QString numToString(int num)
 template<typename T>
 static QString numToString(T num)
 {
-  std::stringstream converter;
+  QTextStream converter;
   converter << num;
   return converter.str();
 }
@@ -118,7 +118,7 @@ static QString numToString(T num)
 // -----------------------------------------------------------------------------
 static  QString numToString(size_t num)
 {
-  std::stringstream converter;
+  QTextStream converter;
   converter << num;
   return converter.str();
 }
@@ -145,17 +145,17 @@ static bool hasRightSlash(const QString &path)
 //
 // -----------------------------------------------------------------------------
 /* Returns a copy of the list. Not memory efficient at all */
-static std::list<std::string> splitString(QString sep, QString str)
+static std::list<QString> splitString(QString sep, QString str)
 {
-  std::list<std::string> strings;
-  std::string::size_type sep_length = sep.length();
-  std::string::iterator iter = std::search(str.begin(), str.end(), sep.begin(), sep.end());
-  strings.push_back(std::string(str.begin(), iter));
-  std::string::iterator iter_start;
+  std::list<QString> strings;
+  QString::size_type sep_length = sep.length();
+  QString::iterator iter = std::search(str.begin(), str.end(), sep.begin(), sep.end());
+  strings.push_back(QString(str.begin(), iter));
+  QString::iterator iter_start;
   while(iter != str.end()) {
     iter_start = iter+sep_length;
     iter = std::search(iter_start, str.end(), sep.begin(), sep.end());
-    strings.push_back(std::string(iter_start, iter));
+    strings.push_back(QString(iter_start, iter));
   }
   return strings;
 }
@@ -163,10 +163,10 @@ static std::list<std::string> splitString(QString sep, QString str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-static QString joinList(QString sep, std::list<std::string> strs)
+static QString joinList(QString sep, std::list<QString> strs)
 {
   QString result("");
-  std::list<std::string>::const_iterator iter = strs.begin();
+  std::list<QString>::const_iterator iter = strs.begin();
   result += *iter;
   if (iter != strs.end()) {
     iter++;
@@ -220,11 +220,11 @@ static QString makePath(const QString parentPath, const QString name)
 //  Determines if a string ends with another string
 // -----------------------------------------------------------------------------
 static bool endsWith(const QString &base, const QString ending) {
-  std::string::size_type len = base.length();
-  std::string::size_type eLen = ending.length();
-  std::string::size_type npos = len - eLen;
-  std::string::size_type pos = base.find(ending, npos);
-  return   ( pos != std::string::npos);
+  QString::size_type len = base.length();
+  QString::size_type eLen = ending.length();
+  QString::size_type npos = len - eLen;
+  QString::size_type pos = base.find(ending, npos);
+  return   ( pos != QString::npos);
 }
 
 // -----------------------------------------------------------------------------
@@ -232,7 +232,7 @@ static bool endsWith(const QString &base, const QString ending) {
 // -----------------------------------------------------------------------------
 static QString indent(int32_t depth)
 {
-  return std::string(2 * depth, ' ');
+  return QString(2 * depth, ' ');
 }
 
 };

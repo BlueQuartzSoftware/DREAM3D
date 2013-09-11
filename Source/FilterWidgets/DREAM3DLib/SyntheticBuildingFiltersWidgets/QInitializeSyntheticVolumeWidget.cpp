@@ -265,11 +265,11 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      std::stringstream ss;
+      QTextStream ss;
 
       m_DataContainer = VolumeDataContainer::New();
 
-      QSet<std::string> selectedArrays;
+      QSet<QString> selectedArrays;
       selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
       selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
       selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -303,7 +303,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
       int size = static_cast<int>(phases->GetNumberOfTuples());
-      QVector<std::string> shapeTypeStrings;
+      QVector<QString> shapeTypeStrings;
       ShapeType::getShapeTypeStrings(shapeTypeStrings);
       QVector<unsigned int> shapeTypeEnums;
       ShapeType::getShapeTypeEnums(shapeTypeEnums);

@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 
-#ifndef _HDF5_LITE_H_
-#define _HDF5_LITE_H_
+#ifndef _H5Lite_H_
+#define _H5Lite_H_
 
 
 //--C++ Headers
@@ -23,50 +23,11 @@
 
 //-- HDF Headers
 #include <hdf5.h>
-#include <H5Tpublic.h>
 
+//-- H5Support Headers
 #include "H5Support/H5Support.h"
-#include "H5Support/H5SupportDLLExport.h"
+#include "H5Support/H5Macros.h"
 
-
-
-/* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
- * this class. If this is being compiled as part of H5SupportDataModel this should
- * _always_ be defined. If this code is being used as part of another project
- * then this should probably NOT be defined.
- */
-#ifdef H5LITE_USE_H5Support_CONSTRUCTS
-class IH5SupportArray;
-#endif
-
-//TODO: Add tests for the find* methods
-
-#define CloseH5A(aid, err, retError)\
-   err = H5Aclose( attr_id );\
-   if (err<0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute." << std::endl;retErr = err;}
-
-#define CloseH5D(did, err, retError)\
-  err = H5Dclose(did);\
-  if (err < 0) { std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset." << std::endl; retError = err;}
-
-#define CloseH5S(sid, err, retError)\
-  err = H5Sclose(sid); \
-  if ( err < 0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing Dataspace." << std::endl;retErr = err;}
-
-#define CloseH5T(tid, err, retError)\
-  err = H5Tclose(tid);\
-  if (err < 0 ) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType" << std::endl; retErr = err;}
-
-#define HDF_ERROR_HANDLER_OFF\
-  herr_t (*_oldHDF_error_func)(hid_t, void *);\
-  void *_oldHDF_error_client_data;\
-  H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
-  H5Eset_auto(H5E_DEFAULT, NULL, NULL);
-
-#define HDF_ERROR_HANDLER_ON  H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
-
-
-#define UNUSED(x) ((void)(x));
 
 #ifdef __cplusplus
 extern "C" {
@@ -125,7 +86,7 @@ static H5Support_EXPORT herr_t closeId( hid_t obj_id, int32_t obj_type );
  * @param value The HDF_Type as a string
  * @return the hid_t value for the given type. -1 if the string does not match a type.
  */
-static hid_t HDFTypeFromString(const QString &value)
+static hid_t HDFTypeFromString(const std::string &value)
 {
   if (value.compare("H5T_STRING") == 0) return H5T_STRING;
 
@@ -154,7 +115,7 @@ static hid_t HDFTypeFromString(const QString &value)
  * @param type The HDF5 Type to query
  * @return
  */
-static QString StringForHDFType(hid_t type)
+static std::string StringForHDFType(hid_t type)
 {
   if ( type == H5T_STRING) return "H5T_STRING";
 
@@ -181,10 +142,10 @@ static QString StringForHDFType(hid_t type)
 * @brief Returns the HDF Type for a given primitive value.
  * @param value A value to use. Can be anything. Just used to get the type info
  * from
- * @return A QString representing the HDF5 Type
+ * @return A std::string representing the HDF5 Type
  */
 template<typename T>
-static QString HDFTypeForPrimitiveAsStr(T value)
+static std::string HDFTypeForPrimitiveAsStr(T value)
 {
   if (typeid(value) == typeid(int8_t)) return "H5T_NATIVE_INT8";
   if (typeid(value) == typeid(uint8_t)) return "H5T_NATIVE_UINT8";
@@ -305,26 +266,26 @@ static H5Support_EXPORT bool datasetExists( hid_t loc_id, const std::string& nam
  * @return Standard HDF5 error conditions
  *
  * The dimensions of the data sets are usually passed as both a "rank" and
- * dimensions array. By using a QVector<hsize_t> that stores the values of
+ * dimensions array. By using a std::vector<hsize_t> that stores the values of
  * each of the dimensions we can reduce the number of arguments to this method as
  * the value of the "rank" simply becomes dims.length(). So to create a Dims variable
  * for a 3D data space of size(x,y,z) = {10,20,30} I would use the following code:
  * <code>
- * QVector<hsize_t> dims;
+ * std::vector<hsize_t> dims;
  * dims.push_back(10);
  * dims.push_back(20);
  * dims.push_back(30);
  * </code>
  *
  * Also when passing data BE SURE that the type of data and the data type match.
- * For example if I create some data in a QVector<UInt8Type> I would need to
+ * For example if I create some data in a std::vector<UInt8Type> I would need to
  * pass H5T_NATIVE_UINT8 as the dataType.
  */
 template <typename T>
 static herr_t writeVectorDataset (hid_t loc_id,
                             const std::string& dsetName,
-                            QVector<hsize_t> &dims,
-                            QVector<T> &data)
+                            std::vector<hsize_t> &dims,
+                            std::vector<T> &data)
 {
   herr_t err = -1;
   hid_t did = -1;
@@ -336,10 +297,10 @@ static herr_t writeVectorDataset (hid_t loc_id,
     return -100;
   }
   //Create the DataSpace
-  QVector<uint64_t>::size_type size = dims.size();
-  //QVector<hsize_t> _dims(size, 0);
-  QVector<hsize_t> _dims(size, 0);
-  for (QVector<uint64_t>::size_type i = 0; i < size; ++i)
+  std::vector<uint64_t>::size_type size = dims.size();
+  //std::vector<hsize_t> _dims(size, 0);
+  std::vector<hsize_t> _dims(size, 0);
+  for (std::vector<uint64_t>::size_type i = 0; i < size; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
   }
@@ -403,9 +364,9 @@ static herr_t writePointerDataset (hid_t loc_id,
     return -1;
   }
   //Create the DataSpace
-  QVector<uint64_t>::size_type size = static_cast<QVector<uint64_t>::size_type>(rank);
+  std::vector<uint64_t>::size_type size = static_cast<std::vector<uint64_t>::size_type>(rank);
 
-  QVector<hsize_t> _dims(size, 0);
+  std::vector<hsize_t> _dims(size, 0);
   for (int32_t i = 0; i < rank; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
@@ -471,9 +432,9 @@ static herr_t replacePointerDataset (hid_t loc_id,
     return -1;
   }
   //Create the DataSpace
-  QVector<uint64_t>::size_type size = static_cast<QVector<uint64_t>::size_type>(rank);
+  std::vector<uint64_t>::size_type size = static_cast<std::vector<uint64_t>::size_type>(rank);
 
-  QVector<hsize_t> _dims(size, 0);
+  std::vector<hsize_t> _dims(size, 0);
   for (int32_t i = 0; i < rank; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
@@ -528,12 +489,12 @@ static herr_t replacePointerDataset (hid_t loc_id,
  * @return Standard HDF5 error conditions
  *
  * The dimensions of the data sets are usually passed as both a "rank" and
- * dimensions array. By using a QVector<hsize_t> that stores the values of
+ * dimensions array. By using a std::vector<hsize_t> that stores the values of
  * each of the dimensions we can reduce the number of arguments to this method as
  * the value of the "rank" simply becomes dims.length(). So to create a Dims variable
  * for a 3D data space of size(x,y,z) = {10,20,30} I would use the following code:
  * <code>
- * QVector<hsize_t> dims;
+ * std::vector<hsize_t> dims;
  * dims.push_back(10);
  * dims.push_back(20);
  * dims.push_back(30);
@@ -592,7 +553,7 @@ static herr_t writeDataset(hid_t loc_id,
 /**
  * @brief Creates a Dataset with the given name at the location defined by loc_id.
  * This version of writeDataset should be used with a single scalar value. If you
- * need to write an array of values, use the form that takes an QVector<>
+ * need to write an array of values, use the form that takes an std::vector<>
  *
  * @param loc_id The Parent location to store the data
  * @param dsetName The name of the dataset
@@ -648,7 +609,7 @@ static herr_t writeScalarDataset (hid_t loc_id,
 }
 
 /**
- * @brief Writes a QString as a HDF Dataset.
+ * @brief Writes a std::string as a HDF Dataset.
  * @param loc_id The Parent location to write the dataset
  * @param dsetName The Name to use for the dataset
  * @param data The actual data to write as a null terminated string
@@ -718,7 +679,7 @@ static herr_t writePointerAttribute(hid_t loc_id,
   /* Create the data space for the attribute. */
   hsize_t* dimsPtr = 0x0;
  // size mismatch between hsize_t and size_t
-  QVector<hsize_t> _dims(rank, 0);
+  std::vector<hsize_t> _dims(rank, 0);
   for (int32_t i = 0; i < rank; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
@@ -792,8 +753,8 @@ template <typename T>
 static herr_t writeVectorAttribute(hid_t loc_id,
                              const std::string& objName,
                              const std::string& attrName,
-                             QVector<hsize_t> &dims,
-                             QVector<T> &data )
+                             std::vector<hsize_t> &dims,
+                             std::vector<T> &data )
 {
   hid_t      obj_id, sid, attr_id;
   //hsize_t    dim_size = data.size();
@@ -821,10 +782,10 @@ static herr_t writeVectorAttribute(hid_t loc_id,
   /* Create the data space for the attribute. */
   hsize_t* dimsPtr = 0x0;
   //size mismatch between hsize_t and size_t
-  QVector<uint64_t>::size_type _size = dims.size();
+  std::vector<uint64_t>::size_type _size = dims.size();
   //hsize_t _dims[ _size ];
-  QVector<hsize_t> _dims(_size, 0);
-  for (QVector<uint64_t>::size_type i = 0; i < _size; ++i)
+  std::vector<hsize_t> _dims(_size, 0);
+  for (std::vector<uint64_t>::size_type i = 0; i < _size; ++i)
   {
     _dims[i] = static_cast<hsize_t>(dims[i]);
   }
@@ -920,8 +881,8 @@ static H5Support_EXPORT herr_t  writeStringAttribute(hid_t loc_id,
  * @return Standard HDF error condition
  */
 static H5Support_EXPORT herr_t writeStringAttributes(hid_t loc_id,
-                                     const QString &objName,
-                                     const QMap<std::string, std::string> &attributes);
+                                     const std::string &objName,
+                                     const std::map<std::string, std::string> &attributes);
 /**
  * @brief Writes an attribute to the given object. This method is designed with
  * a Template parameter that represents a primitive value. If you need to write
@@ -1076,12 +1037,12 @@ static herr_t readPointerDataset(hid_t loc_id,
 
 
 /**
- * @brief Reads data from the HDF5 File into an QVector<T> object. If the dataset
+ * @brief Reads data from the HDF5 File into an std::vector<T> object. If the dataset
  * is very large this can be an expensive method to use. It is here for convenience
  * using STL with hdf5.
  * @param loc_id The parent location that contains the dataset to read
  * @param dsetName The name of the dataset to read
- * @param data A QVector<T>. Note the vector WILL be resized to fit the data.
+ * @param data A std::vector<T>. Note the vector WILL be resized to fit the data.
  * The best idea is to just allocate the vector but not to size it. The method
  * will size it for you.
  * @return Standard HDF error condition
@@ -1089,7 +1050,7 @@ static herr_t readPointerDataset(hid_t loc_id,
 template <typename T>
 static herr_t readVectorDataset(hid_t loc_id,
                           const std::string& dsetName,
-                          QVector<T> &data)
+                          std::vector<T> &data)
 {
   hid_t   did;
   herr_t  err = 0;
@@ -1115,11 +1076,11 @@ static herr_t readVectorDataset(hid_t loc_id,
     if ( spaceId > 0 ) {
       int32_t rank = H5Sget_simple_extent_ndims(spaceId);
       if (rank > 0) {
-        QVector<hsize_t> dims;
+        std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
         err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
-        for (QVector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
+        for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);
         }
        // std::cout << "NumElements: " << numElements << std::endl;
@@ -1185,11 +1146,11 @@ static herr_t readScalarDataset(hid_t loc_id,
     if ( spaceId > 0 ) {
       int32_t rank = H5Sget_simple_extent_ndims(spaceId);
       if (rank > 0) {
-        QVector<hsize_t> dims;
+        std::vector<hsize_t> dims;
         dims.resize(rank);// Allocate enough room for the dims
         err = H5Sget_simple_extent_dims(spaceId, &(dims.front()), NULL);
         hsize_t numElements = 1;
-        for (QVector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
+        for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter ) {
           numElements = numElements * (*iter);
         }
         err = H5Dread(did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, &data );
@@ -1223,12 +1184,12 @@ static herr_t readScalarDataset(hid_t loc_id,
  * is cleared first before the new data is read into the string.
  * @param loc_id The parent group that holds the data object to read
  * @param dsetName The name of the dataset.
- * @param data The QString to hold the data
+ * @param data The std::string to hold the data
  * @return Standard HDF error condition
  */
 static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
                                      const std::string& dsetName,
-                                     QString &data);
+                                     std::string &data);
 
 
 
@@ -1241,8 +1202,8 @@ static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
  * @return Standard HDF error condition
  */
 static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
-                                           const QString &dsetName,
-                                           uint8_t* data);
+                                           const std::string &dsetName,
+                                           char* data);
 
 /**
  * @brief Reads an Attribute from an HDF5 Object.
@@ -1260,7 +1221,7 @@ template <typename T>
 static herr_t readVectorAttribute(hid_t loc_id,
                             const std::string& objName,
                             const std::string& attrName,
-                            QVector<T> &data)
+                            std::vector<T> &data)
 {
   /* identifiers */
   hid_t      obj_id;
@@ -1290,10 +1251,10 @@ static herr_t readVectorAttribute(hid_t loc_id,
       //Need to allocate the array size
       H5T_class_t type_class;
       size_t type_size;
-      QVector<hsize_t> dims;
+      std::vector<hsize_t> dims;
       err = H5Lite::getAttributeInfo(loc_id, objName, attrName, dims, type_class, type_size, tid);
       hsize_t numElements = 1;
-      for (QVector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter )
+      for (std::vector<hsize_t>::iterator iter = dims.begin(); iter < dims.end(); ++iter )
       {
         numElements *= *(iter);
       }
@@ -1459,7 +1420,7 @@ static herr_t readPointerAttribute(hid_t loc_id,
 static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
                                              const std::string& objName,
                                              const std::string& attrName,
-                                             QString &data);
+                                             std::string &data);
 
 /**
  * @brief Reads a string attribute from an HDF object into a precallocated buffer
@@ -1472,7 +1433,7 @@ static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
 static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
                                    const std::string& objName,
                                    const std::string& attrName,
-                                   uint8_t* data);
+                                   char* data);
 /**
  * @brief Returns the number of dimensions for a given attribute
  * @param loc_id The HDF5 id of the parent group/file for the objName
@@ -1499,21 +1460,21 @@ static H5Support_EXPORT hid_t getDatasetNDims(hid_t loc_id, const std::string& o
  * @param dsetName Path to the dataset
  * @return
  */
-static H5Support_EXPORT hid_t getDatasetType(hid_t loc_id, const QString &dsetName);
+static H5Support_EXPORT hid_t getDatasetType(hid_t loc_id, const std::string &dsetName);
 
 /**
  * @brief Get the information about a dataset.
  *
  * @param loc_id The parent location of the Dataset
  * @param dsetName The name of the dataset
- * @param dims A QVector that will hold the sizes of the dimensions
+ * @param dims A std::vector that will hold the sizes of the dimensions
  * @param type_class The HDF5 class type
  * @param type_size THe HDF5 size of the data
  * @return Negative value is Failure. Zero or Positive is success;
  */
 static H5Support_EXPORT herr_t getDatasetInfo( hid_t loc_id,
                               const std::string& dsetName,
-                              QVector<hsize_t> &dims,
+                              std::vector<hsize_t> &dims,
                               H5T_class_t &type_class,
                               size_t &type_size );
 
@@ -1525,7 +1486,7 @@ static H5Support_EXPORT herr_t getDatasetInfo( hid_t loc_id,
  * @param loc_id The parent location of the Dataset
  * @param objName The name of the dataset
  * @param attr_name The name of the attribute
- * @param dims A QVector that will hold the sizes of the dimensions
+ * @param dims A std::vector that will hold the sizes of the dimensions
  * @param type_class The HDF5 class type
  * @param type_size THe HDF5 size of the data
  * @param attr_type The Attribute ID - which needs to be closed after you are finished with the data
@@ -1534,70 +1495,13 @@ static H5Support_EXPORT herr_t getDatasetInfo( hid_t loc_id,
 static H5Support_EXPORT herr_t getAttributeInfo(hid_t loc_id,
                                const std::string& objName,
                                const std::string& attr_name,
-                               QVector<hsize_t> &dims,
+                               std::vector<hsize_t> &dims,
                                H5T_class_t &type_class,
                                size_t &type_size,
                                hid_t &attr_type);
 
 
 
-
-#ifdef H5LITE_USE_H5Support_CONSTRUCTS
-/**
- * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
- * @param loc_id The parent ID of the dataset
- * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
- * it represents a path YOU need to make sure all intermediate groups are already
- * crreated.
- * @param array The IH5SupportArray class
- * @return Standard hdf5 error condition
- */
-static H5Support_EXPORT herr_t writeH5SupportArray(hid_t loc_id,
-                            const QString &dsetName,
-                            IH5SupportArray* array);
-/**
- * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
- * @param loc_id The parent ID of the dataset
- * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
- * it represents a path YOU need to make sure all intermediate groups are already
- * crreated.
- * @param attributeKey The name of the attribute
- * @param array The IH5SupportArray class
- * @return Standard hdf5 error condition
- */
-static H5Support_EXPORT herr_t writeH5SupportAttribute(hid_t loc_id,
-                            const QString &dsetName,
-                            const QString &attributeKey,
-                            IH5SupportArray* array);
-
-
-/**
- * @brief Reads the data from an HDF5 file into a newly allocated H5SupportArrayTemplate
- * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
- * arrangements to clean up the pointer otherwise memory leaks will occur.
- * @param loc_id The HDF5 file or group Id into which to store the data
- * @param dsetName The name/path of the data set
- * @return IH5SupportArray Pointer. NULL value is possible on error
- */
-static H5Support_EXPORT IH5SupportArray* readH5SupportArray(hid_t loc_id,
-                           const QString &dsetName );
-
-
-/**
- * @brief Reads the attribute data from an HDF5 file into a newly allocated H5SupportArrayTemplate
- * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
- * arrangements to clean up the pointer otherwise memory leaks will occur.
- * @param loc_id The HDF5 file or group Id into which to store the data
- * @param dsetName The name/path of the data set
- * @param attributeKey The name of the attribute
- * @return IH5SupportArray Pointer. NULL value is possible on error
- */
-static H5Support_EXPORT IH5SupportArray* readH5SupportAttribute(hid_t loc_id,
-                                   const QString &dsetName,
-                                   const QString &attributeKey);
-
-
-#endif
 
 // -----------------------------------------------------------------------------
 protected:
@@ -1606,11 +1510,7 @@ protected:
 
 
 private:
-   void NEVER_USED() {
-//     herr_t ret = H5Aiterate( 0, NULL, find_attr, (void *)(NULL) );
-//     ret = H5Giterate( 0, NULL, 0, find_dataset, (void *)(NULL) );
-//     ret =0;
-   }
+
 };
 
 

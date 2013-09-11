@@ -40,8 +40,8 @@
 #ifndef _HKLConstants_h_
 #define _HKLConstants_h_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #define DECLARE_STRING_CONST(var)\
   const QString var(#var);
@@ -93,7 +93,7 @@ namespace Ctf
        }
      private:
 
-       QVector<std::string> m_Values;
+       QVector<QString> m_Values;
 
    };
 

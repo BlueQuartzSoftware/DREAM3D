@@ -227,17 +227,17 @@ int FileReader::readLine(std::istream &in, char* buf, int bufSize)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FileReader::tokenize(const std::string& str,
-                          QVector<std::string>& tokens,
-                          const std::string& delimiters)
+void FileReader::tokenize(const QString& str,
+                          QVector<QString>& tokens,
+                          const QString& delimiters)
 {
   // Skip delimiters at beginning.
-  std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+  QString::size_type lastPos = str.find_first_not_of(delimiters, 0);
 
   // Find first "non-delimiter".
-  std::string::size_type pos = str.find_first_of(delimiters, lastPos);
+  QString::size_type pos = str.find_first_of(delimiters, lastPos);
 
-  while (std::string::npos != pos || std::string::npos != lastPos)
+  while (QString::npos != pos || QString::npos != lastPos)
   {
     // Found a token, add it to the vector.
     tokens.push_back(str.substr(lastPos, pos - lastPos));

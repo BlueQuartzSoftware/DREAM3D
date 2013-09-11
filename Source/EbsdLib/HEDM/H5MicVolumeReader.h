@@ -37,7 +37,7 @@
 #ifndef _H5MicDATALOADER_H_
 #define _H5MicDATALOADER_H_
 
-#include <vector>
+#include <QtCore/QVector>
 
 //-- Ebsd Lib Includes
 #include "EbsdLib/EbsdSetGetMacros.h"

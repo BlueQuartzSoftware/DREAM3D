@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT FilterManager
 
     virtual ~FilterManager();
 
-    typedef QMap<std::string, IFilterFactory::Pointer> Collection;
+    typedef QMap<QString, IFilterFactory::Pointer> Collection;
     /**
      * @brief Static instance to retrieve the global instance of this class
      * @return
@@ -117,14 +117,14 @@ class DREAM3DLib_EXPORT FilterManager
      * @brief getGroupNames Returns the uniqe set of group names for all the filters
      * @return
      */
-    QSet<std::string> getGroupNames();
+    QSet<QString> getGroupNames();
 
     /**
      * @brief getSubGroupNames For a given group, returns all the subgroups
      * @param groupName The name of the Filter group
      * @return
      */
-    QSet<std::string> getSubGroupNames(const QString &groupName);
+    QSet<QString> getSubGroupNames(const QString &groupName);
 
 
     /**

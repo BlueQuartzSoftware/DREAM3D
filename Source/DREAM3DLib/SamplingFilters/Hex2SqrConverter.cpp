@@ -119,7 +119,7 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if (m_EbsdFileList.size() == 0)
   {
@@ -144,7 +144,7 @@ void Hex2SqrConverter::preflight()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::execute()
 {
-  std::stringstream ss;
+  QTextStream ss;
   herr_t err = 0;
 
   QVector<int> indices;
@@ -176,7 +176,7 @@ void Hex2SqrConverter::execute()
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
  // int totalSlicesImported = 0;
-  for (QVector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
     QString ebsdFName = *filepath;
 
@@ -223,7 +223,7 @@ void Hex2SqrConverter::execute()
               addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
             }
             char buf[kBufferSize];
-            std::stringstream in(origHeader);
+            QTextStream in(origHeader);
 
             QString newEbsdFName = path + "/Sqr_" + base + "." + ext;
             std::ofstream outFile;
@@ -383,14 +383,14 @@ QString Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
 
 QString Hex2SqrConverter::int_to_string(int value)
 {
-    std::stringstream oss;
+    QTextStream oss;
     oss << value;
     return oss.str();
 }
 
 QString Hex2SqrConverter::float_to_string(float value)
 {
-    std::stringstream oss;
+    QTextStream oss;
     oss << value;
     return oss.str();
 }

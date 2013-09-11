@@ -136,13 +136,13 @@ void FilterWidgetManager::addFilterWidgetFactory(const QString &name, IFilterWid
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> FilterWidgetManager::getGroupNames()
+QSet<QString> FilterWidgetManager::getGroupNames()
 {
  // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories();
-  QSet<std::string> groupNames;
+  QSet<QString> groupNames;
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
@@ -155,13 +155,13 @@ QSet<std::string> FilterWidgetManager::getGroupNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> FilterWidgetManager::getSubGroupNames(const QString &groupName)
+QSet<QString> FilterWidgetManager::getSubGroupNames(const QString &groupName)
 {
  // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories();
-  QSet<std::string> subGroupNames;
+  QSet<QString> subGroupNames;
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;

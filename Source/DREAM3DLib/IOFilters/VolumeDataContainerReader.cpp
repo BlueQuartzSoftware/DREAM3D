@@ -109,7 +109,7 @@ int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
@@ -154,7 +154,7 @@ void VolumeDataContainerReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
+    QTextStream ss;
     ss <<" DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
@@ -162,7 +162,7 @@ void VolumeDataContainerReader::execute()
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -202,7 +202,7 @@ void VolumeDataContainerReader::execute()
 int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
@@ -266,7 +266,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
 int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   int64_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =
@@ -313,7 +313,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadVertexData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
     if(err < 0)
     {
@@ -325,7 +325,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEdgeData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
     if(err < 0)
     {
@@ -337,7 +337,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFaceData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
     if(err < 0)
     {
@@ -349,7 +349,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
@@ -361,7 +361,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFieldData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -373,7 +373,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEnsembleData == true)
   {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -393,10 +393,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 //
 // -----------------------------------------------------------------------------
 int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<std::string> &namesRead,
-                                                QSet<std::string> &namesToRead)
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
@@ -415,7 +415,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    QSet<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();

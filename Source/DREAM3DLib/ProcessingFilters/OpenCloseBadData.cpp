@@ -85,7 +85,7 @@ void OpenCloseBadData::setupFilterParameters()
     option->setPropertyName("Direction");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("Dilate");
     choices.push_back("Erode");
     option->setChoices(choices);
@@ -164,7 +164,7 @@ int OpenCloseBadData::writeFilterParameters(AbstractFilterParametersWriter* writ
 void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -256,7 +256,7 @@ void OpenCloseBadData::execute()
         for (int i = 0; i < dims[0]; i++)
         {
           count = kstride+jstride+i;
-          std::stringstream ss;
+          QTextStream ss;
           grainname = m_GrainIds[count];
           if (grainname == 0)
           {
@@ -314,7 +314,7 @@ void OpenCloseBadData::execute()
         }
       }
     }
-    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+    std::list<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       int grainname = m_GrainIds[j];
@@ -324,7 +324,7 @@ void OpenCloseBadData::execute()
         if ( (grainname == 0 && m_GrainIds[neighbor] > 0 && m_Direction == 1)
           || (grainname > 0 && m_GrainIds[neighbor] == 0 && m_Direction == 0))
         {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
             QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);

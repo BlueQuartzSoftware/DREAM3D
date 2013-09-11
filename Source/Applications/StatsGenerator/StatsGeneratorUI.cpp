@@ -807,7 +807,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
 
-  QSet<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);

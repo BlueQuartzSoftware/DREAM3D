@@ -180,7 +180,7 @@ void ChangeResolution::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
     notifyStatusMessage(ss.str());
     for (int j = 0; j < m_YP; j++)
@@ -200,8 +200,8 @@ void ChangeResolution::execute()
     }
   }
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  std::list<QString> voxelArrayNames = m->getCellArrayNameList();
+  for (std::list<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
     QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);

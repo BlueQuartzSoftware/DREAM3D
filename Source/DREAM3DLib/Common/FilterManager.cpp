@@ -149,13 +149,13 @@ void FilterManager::addFilterFactory(const QString &name, IFilterFactory::Pointe
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> FilterManager::getGroupNames()
+QSet<QString> FilterManager::getGroupNames()
 {
  // std::cout << "FilterManager::getGroupNames" << std::endl;
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
-  QSet<std::string> groupNames;
+  QSet<QString> groupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterFactory::Pointer filterFactory = (*factory).second;
@@ -168,13 +168,13 @@ QSet<std::string> FilterManager::getGroupNames()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QSet<std::string> FilterManager::getSubGroupNames(const QString &groupName)
+QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
 {
  // std::cout << "FilterManager::getGroupNames" << std::endl;
   // Get all the  Factories and loop over each one we know about and instantiate a new one
   FilterManager::Pointer fm = FilterManager::Instance();
   FilterManager::Collection factories = fm->getFactories();
-  QSet<std::string> subGroupNames;
+  QSet<QString> subGroupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
     IFilterFactory::Pointer filterFactory = (*factory).second;

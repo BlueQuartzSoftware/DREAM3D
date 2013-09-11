@@ -102,7 +102,7 @@ class QImportImageStackWidget : public QFilterWidget, private Ui::QImportImageSt
     void m_generateExampleEbsdInputFile();
     Ebsd::RefFrameZDir getRefFrameZDir();
 
-    QVector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
+    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
                                                    bool stackLowToHigh, QString filename);
 
 

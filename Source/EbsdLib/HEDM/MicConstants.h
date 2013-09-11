@@ -40,8 +40,8 @@
 #ifndef MicCONSTANTS_H_
 #define MicCONSTANTS_H_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #define DECLARE_STRING_CONST(var)\
   const QString var(#var);

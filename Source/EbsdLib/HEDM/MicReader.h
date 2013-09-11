@@ -33,20 +33,19 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+#ifndef _MicREADER_H_
+#define _MicREADER_H_
 
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QFile>
 
-
-#ifndef MicREADER_H_
-#define MicREADER_H_
-
-#include <string>
-#include <map>
-
-
-#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
+#include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdReader.h"
+
+
 #include "MicConstants.h"
 #include "MicHeaderEntry.h"
 #include "MicPhase.h"
@@ -67,28 +66,28 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     MicReader();
     virtual ~MicReader();
 
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, InfileBasename, Ebsd::Mic::InfileBasename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, InfileBasename, Ebsd::Mic::InfileBasename)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, InfileSerialLength, Ebsd::Mic::InfileSerialLength)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OutfileBasename, Ebsd::Mic::OutfileBasename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OutfileBasename, Ebsd::Mic::OutfileBasename)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, OutfileSerialLength, Ebsd::Mic::OutfileSerialLength)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OutStructureBasename, Ebsd::Mic::OutStructureBasename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OutStructureBasename, Ebsd::Mic::OutStructureBasename)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, BCPeakDetectorOffset, Ebsd::Mic::BCPeakDetectorOffset)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, InFileType, Ebsd::Mic::InFileType)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OutfileExtension, Ebsd::Mic::OutfileExtension)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, InfileExtesnion, Ebsd::Mic::InfileExtesnion)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, InFileType, Ebsd::Mic::InFileType)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OutfileExtension, Ebsd::Mic::OutfileExtension)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, InfileExtesnion, Ebsd::Mic::InfileExtesnion)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, BeamEnergyWidth, Ebsd::Mic::BeamEnergyWidth)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, BeamDirection, Ebsd::Mic::BeamDirection)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, BeamDirection, Ebsd::Mic::BeamDirection)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, BeamDeflectionChiLaue, Ebsd::Mic::BeamDeflectionChiLaue)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, BeamHeight, Ebsd::Mic::BeamHeight)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, BeamEnergy, Ebsd::Mic::BeamEnergy)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, DetectorFilename, Ebsd::Mic::DetectorFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OptimizationConstrainFilename, Ebsd::Mic::OptimizationConstrainFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, DetectorFilename, Ebsd::Mic::DetectorFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OptimizationConstrainFilename, Ebsd::Mic::OptimizationConstrainFilename)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, EtaLimit, Ebsd::Mic::EtaLimit)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, SampleFilename, Ebsd::Mic::SampleFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, StructureFilename, Ebsd::Mic::StructureFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, RotationRangeFilename, Ebsd::Mic::RotationRangeFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, FundamentalZoneFilename, Ebsd::Mic::FundamentalZoneFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, SampleSymmetry, Ebsd::Mic::SampleSymmetry)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, SampleFilename, Ebsd::Mic::SampleFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, StructureFilename, Ebsd::Mic::StructureFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, RotationRangeFilename, Ebsd::Mic::RotationRangeFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, FundamentalZoneFilename, Ebsd::Mic::FundamentalZoneFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, SampleSymmetry, Ebsd::Mic::SampleSymmetry)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, MinAmplitudeFraction, Ebsd::Mic::MinAmplitudeFraction)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, MaxQ, Ebsd::Mic::MaxQ)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, MaxInitSideLength, Ebsd::Mic::MaxInitSideLength)
@@ -104,17 +103,17 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, SecondsBetweenSave, Ebsd::Mic::SecondsBetweenSave)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, NumParameterOptimizationSteps, Ebsd::Mic::NumParameterOptimizationSteps)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, NumElementToOptimizePerPE, Ebsd::Mic::NumElementToOptimizePerPE)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OptimizationFilename, Ebsd::Mic::OptimizationFilename)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, DetectionLimitFilename, Ebsd::Mic::DetectionLimitFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OptimizationFilename, Ebsd::Mic::OptimizationFilename)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, DetectionLimitFilename, Ebsd::Mic::DetectionLimitFilename)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, ParameterMCInitTemperature, Ebsd::Mic::ParameterMCInitTemperature)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, OrientationSearchMethod, Ebsd::Mic::OrientationSearchMethod)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, OrientationSearchMethod, Ebsd::Mic::OrientationSearchMethod)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, CoolingFraction, Ebsd::Mic::CoolingFraction)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, ThermalizeFraction, Ebsd::Mic::ThermalizeFraction)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, ParameterRefinements, Ebsd::Mic::ParameterRefinements)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, NumDetectors, Ebsd::Mic::NumDetectors)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, DetectorSpacing, Ebsd::Mic::DetectorSpacing)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, DetectorSpacing, Ebsd::Mic::DetectorSpacing)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, DetectorSpacingDeviation, Ebsd::Mic::DetectorSpacingDeviation)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, DetectorOrientationDeviationInEuler, Ebsd::Mic::DetectorOrientationDeviationInEuler)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, DetectorOrientationDeviationInEuler, Ebsd::Mic::DetectorOrientationDeviationInEuler)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, DetectorOrientationDeviationInSO3, Ebsd::Mic::DetectorOrientationDeviationInSO3)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, ParamMCMaxLocalRestarts, Ebsd::Mic::ParamMCMaxLocalRestarts)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, ParamMCMaxGlobalRestarts, Ebsd::Mic::ParamMCMaxGlobalRestarts)
@@ -123,10 +122,10 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, SearchVolumeReductionFactor, Ebsd::Mic::SearchVolumeReductionFactor)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, FileNumStart, Ebsd::Mic::FileNumStart)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, FileNumEnd, Ebsd::Mic::FileNumEnd)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, SampleLocation, Ebsd::Mic::SampleLocation)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, SampleOrientation, Ebsd::Mic::SampleOrientation)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, SampleLocation, Ebsd::Mic::SampleLocation)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, SampleOrientation, Ebsd::Mic::SampleOrientation)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<int>, int, EnableStrain, Ebsd::Mic::EnableStrain)
-    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, std::string, SampleCenter, Ebsd::Mic::SampleCenter)
+    EbsdHeader_INSTANCE_PROPERTY(MicStringHeaderEntry, QString, SampleCenter, Ebsd::Mic::SampleCenter)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, SampleRadius, Ebsd::Mic::SampleRadius)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, MaxDeepeningHitRatio, Ebsd::Mic::MaxDeepeningHitRatio)
     EbsdHeader_INSTANCE_PROPERTY(MicHeaderEntry<float>, float, ConsistencyError, Ebsd::Mic::ConsistencyError)
@@ -202,21 +201,23 @@ class EbsdLib_EXPORT MicReader : public EbsdReader
     float xRes;
     float yRes;
 
-    int readData(std::ifstream &in, char* buf, size_t bufSize);
+    int readMicFile();
+
+    int readDatFile();
 
     /** @brief Parses the value from a single line of the header section of the HEDM .Mic file
     * @param line The line to parse
     */
-    void parseHeaderLine(char* buf, size_t length);
+    void parseHeaderLine(QByteArray &line);
 
   /** @brief Parses the data from a line of data from the HEDM .Mic file
     * @param line The line of data to parse
     */
-    void parseDataLine(const QString &line, size_t i);
+    void parseDataLine(QByteArray &line, size_t i);
 
     MicReader(const MicReader&);    // Copy Constructor Not Implemented
     void operator=(const MicReader&);  // Operator '=' Not Implemented
 
 };
 
-#endif /* MicREADER_H_ */
+#endif /* _MicREADER_H_ */

@@ -104,7 +104,7 @@ int VolumeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
@@ -136,7 +136,7 @@ void VolumeDataContainerWriter::preflight()
 void VolumeDataContainerWriter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -351,7 +351,7 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeVertexData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -404,7 +404,7 @@ int VolumeDataContainerWriter::writeVertexData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeEdgeData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -457,7 +457,7 @@ int VolumeDataContainerWriter::writeEdgeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeFaceData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -510,7 +510,7 @@ int VolumeDataContainerWriter::writeFaceData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t volDims[3] =
@@ -531,7 +531,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_CELL_DATA_GROUP_NAME;
+  QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
   err = H5Utilities::createGroupsFromPath(H5_CELL_DATA_GROUP_NAME, dcGid);
@@ -585,7 +585,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -597,7 +597,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -738,7 +738,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
 

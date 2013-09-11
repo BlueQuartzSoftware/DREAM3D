@@ -87,7 +87,7 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)

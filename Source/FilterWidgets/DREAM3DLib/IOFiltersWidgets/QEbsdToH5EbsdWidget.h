@@ -88,7 +88,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
     /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
@@ -113,7 +113,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     Ebsd::RefFrameZDir getRefFrameZDir();
     void setRefFrameZDir(Ebsd::RefFrameZDir ref);
 
-    QVector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
+    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
                                               bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();

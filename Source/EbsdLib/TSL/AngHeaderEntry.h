@@ -33,12 +33,15 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
+#ifndef _AngHeaderEntry_H_
+#define _AngHeaderEntry_H_
 
 
 #include <string.h>
-#include <iostream>
+
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
+#include <QtCore/QtDebug>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -63,16 +66,18 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     virtual ~AngHeaderEntry() {}
 
     QString getKey() { return m_key; }
-    QString getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
-    void parseValue(char* value, size_t start, size_t length)
+    QString getHDFType() {
+      T value = static_cast<T>(0);
+      return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
+    }
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      QString data( &(value[start]), strlen(value) - start);
-      std::stringstream ss(data);
+      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
+      QTextStream ss(&value);
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -113,18 +118,14 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] == ' ')
-      {
-        ++start;
-      }
-      QString data( &(value[start]), strlen(value) - start);
-      m_value = data;
+      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
+      value = value.trimmed(); // remove leading/trailing white space
+      m_value = QString(value);
     }
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }
@@ -153,6 +154,5 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-
-
+#endif /* _AngHeaderEntry_H_ */
 

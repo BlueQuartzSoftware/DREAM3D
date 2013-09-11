@@ -27,12 +27,12 @@
  */
 
 #if defined (MXA_USE_SHARED_STRINGS)
-typedef boost::shared_ptr<std::string>    MXAString;
+typedef boost::shared_ptr<QString>    MXAString;
 #else
 typedef QString MXAString;
 #endif
 
-typedef boost::shared_ptr<std::string>   MXASharedString;
+typedef boost::shared_ptr<QString>   MXASharedString;
 
 //-- Define some Shared Arrays to use
 typedef boost::shared_array<uint8_t>                 UCharArray;

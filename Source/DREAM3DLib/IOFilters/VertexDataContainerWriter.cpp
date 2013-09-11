@@ -124,7 +124,7 @@ int VertexDataContainerWriter::writeFilterParameters(AbstractFilterParametersWri
 void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
@@ -156,7 +156,7 @@ void VertexDataContainerWriter::preflight()
 void VertexDataContainerWriter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   VertexDataContainer* m = getVertexDataContainer();
   if(NULL == m)
@@ -305,12 +305,12 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
                                                                               const QString &centering,
                                                                               int precision, const QString &xdmfTypeName)
 {
-  std::stringstream out;
-  std::stringstream dimStr;
-  std::stringstream dimStr1;
-  std::stringstream dimStr1half;
-  std::stringstream dimStr2;
-  std::stringstream dimStr2half;
+  QTextStream out;
+  QTextStream dimStr;
+  QTextStream dimStr1;
+  QTextStream dimStr1half;
+  QTextStream dimStr2;
+  QTextStream dimStr2half;
 
   out << "    <Attribute Name=\"" << array->GetName() << "\" ";
   out << "AttributeType=\"" << attrType << "\" ";
@@ -352,7 +352,7 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName,
 
 
   std::ostream& out = *m_XdmfPtr;
-  std::stringstream dimStr;
+  QTextStream dimStr;
   int precision = 0;
   QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
@@ -421,7 +421,7 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertexData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VertexDataContainer* vdc = getVertexDataContainer();
 
@@ -475,7 +475,7 @@ int VertexDataContainerWriter::writeVertexData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VertexDataContainer* vdc = getVertexDataContainer();
 
@@ -487,7 +487,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = MXAFileInfo::filename(hdfFileName);
-  QString xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
+  QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -628,7 +628,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertexEnsembleData(hid_t dcGid)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   VertexDataContainer* vdc = getVertexDataContainer();
 

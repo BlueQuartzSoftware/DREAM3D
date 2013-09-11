@@ -200,7 +200,7 @@ QString MXA_FILESYSTEM_BASE_CLASS::currentPath()
     }
     else
     {
-      currentPath = std::string(currentName);
+      currentPath = QString(currentName);
     }
 
   }
@@ -241,8 +241,8 @@ QString MXA_FILESYSTEM_BASE_CLASS::parentPath(const QString &path)
 {
   QString curAbsPath = MXA_FILESYSTEM_BASE_CLASS::absolutePath(path);
   curAbsPath = MXA_FILESYSTEM_BASE_CLASS::fromNativeSeparators(curAbsPath);
-  std::string::size_type nextToLastSlashPos = 0;
-  std::string::size_type lastSlashPos = curAbsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::UnixSeparator);
+  QString::size_type nextToLastSlashPos = 0;
+  QString::size_type lastSlashPos = curAbsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::UnixSeparator);
 // Remove trailing '/' if found
   if (lastSlashPos == curAbsPath.length() - 1)
   {
@@ -255,7 +255,7 @@ QString MXA_FILESYSTEM_BASE_CLASS::parentPath(const QString &path)
     nextToLastSlashPos = curAbsPath.find_last_of(MXA_FILESYSTEM_BASE_CLASS::UnixSeparator, lastSlashPos - 1);
   }
 
-  if (nextToLastSlashPos == std::string::npos) // Only 1 slash found, return the root directory
+  if (nextToLastSlashPos == QString::npos) // Only 1 slash found, return the root directory
   {
 #if defined (WIN32)
     curAbsPath = curAbsPath.substr(0, 3);
@@ -393,9 +393,9 @@ QString MXA_FILESYSTEM_BASE_CLASS::cleanPath(const QString &fsPath)
        path = path.substr(0, path.length() -1);
      }
 
-     QVector<std::string> stk;
-     std::string::size_type pos = 0;
-     std::string::size_type pos1 = 0;
+     QVector<QString> stk;
+     QString::size_type pos = 0;
+     QString::size_type pos1 = 0;
 
      pos = path.find_first_of(slash, pos);
      pos1 = path.find_first_of(slash, pos + 1);
@@ -412,13 +412,13 @@ QString MXA_FILESYSTEM_BASE_CLASS::cleanPath(const QString &fsPath)
      }
 
      // check for a top level Unix Path:
-     if (pos == 0 && pos1 == std::string::npos)
+     if (pos == 0 && pos1 == QString::npos)
      {
          stk.push_back(path);
      }
 
 
-     while (pos1 != std::string::npos)
+     while (pos1 != QString::npos)
      {
        if (pos1 - pos == 3 && path[pos+1] == dot && path[pos+2] == dot)
        {
@@ -439,13 +439,13 @@ QString MXA_FILESYSTEM_BASE_CLASS::cleanPath(const QString &fsPath)
        }
        pos = pos1;
        pos1 = path.find_first_of(slash, pos + 1);
-       if (pos1 == std::string::npos)
+       if (pos1 == QString::npos)
        {
          stk.push_back(path.substr(pos, path.length() - pos));
        }
      }
      QString ret;
-     for (QVector<std::string>::iterator iter = stk.begin(); iter != stk.end(); ++iter ) {
+     for (QVector<QString>::iterator iter = stk.begin(); iter != stk.end(); ++iter ) {
        ret.append(*iter);
      }
      ret = toNativeSeparators(ret);

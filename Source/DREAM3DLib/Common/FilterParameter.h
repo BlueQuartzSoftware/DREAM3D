@@ -172,7 +172,7 @@ class ChoiceFilterParameter : public FilterParameter
 
     virtual ~ChoiceFilterParameter(){}
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, Editable)
 
   protected:
@@ -196,7 +196,7 @@ class ComparisonFilterParameter : public FilterParameter
 
     virtual ~ComparisonFilterParameter(){}
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<std::string>, Choices)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, Choices)
     DREAM3D_INSTANCE_PROPERTY(bool, ShowOperators)
 
   protected:

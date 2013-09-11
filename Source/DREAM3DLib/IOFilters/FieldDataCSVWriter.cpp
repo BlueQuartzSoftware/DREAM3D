@@ -126,7 +126,7 @@ int FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void FieldDataCSVWriter::preflight()
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   if (getFieldDataFile().empty() == true)
   {
@@ -170,7 +170,7 @@ void FieldDataCSVWriter::execute()
   QString parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-    std::stringstream ss;
+    QTextStream ss;
     ss << "Error creating parent path '" << parentPath << "'";
     notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
@@ -187,7 +187,7 @@ void FieldDataCSVWriter::execute()
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-1 << std::endl;
   // Get all the names of the arrays from the Data Container
-  std::list<std::string> headers = m->getFieldArrayNameList();
+  std::list<QString> headers = m->getFieldArrayNameList();
 
   QVector<IDataArray::Pointer> data;
 
@@ -197,7 +197,7 @@ void FieldDataCSVWriter::execute()
   // Print the GrainIds Header before the rest of the headers
   outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(std::list<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getCellFieldData(*iter);
@@ -221,7 +221,7 @@ void FieldDataCSVWriter::execute()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  std::stringstream ss;
+  QTextStream ss;
   float threshold = 0.0f;
 
   // Skip the first grain
@@ -252,7 +252,7 @@ void FieldDataCSVWriter::execute()
   {
     // Print the GrainIds Header before the rest of the headers
     // Loop throught the list and print the rest of the headers, ignoring those we don't want
-    for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+    for(std::list<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       // Only get the array if the name does NOT match those listed
       IDataArray::Pointer p = m->getCellFieldData(*iter);

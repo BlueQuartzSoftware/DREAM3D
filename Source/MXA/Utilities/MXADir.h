@@ -129,7 +129,7 @@ class  MXADir
      * @param path The path to the directory
      * @return List of contents
      */
-    static MXA_EXPORT QVector<std::string> entryList(const QString &path);
+    static MXA_EXPORT QVector<QString> entryList(const QString &path);
 
     /**
      * @brief Create a directory or structure of directories

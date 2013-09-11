@@ -67,12 +67,12 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, EdgeFieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<std::string>, EdgeEnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<std::string> NameListType;
+    typedef std::list<QString> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -142,8 +142,8 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
 
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<std::string> &namesRead,
-                                                QSet<std::string> &namesToRead);
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead);
 
 
   private:

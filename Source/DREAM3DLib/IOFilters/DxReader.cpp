@@ -137,7 +137,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (getInputFile().empty() == true)
@@ -198,7 +198,7 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
 
   m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
@@ -234,12 +234,12 @@ void DxReader::execute()
 int DxReader::readHeader()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  std::stringstream ss;
+  QTextStream ss;
   int error = 0;
 
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */
-  QVector<std::string> tokens; /* vector to store the split data */
+  QVector<QString> tokens; /* vector to store the split data */
 
   getline(m_InStream, line, '\n');
   tokenize(line, tokens, delimeters);
@@ -353,7 +353,7 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -366,7 +366,7 @@ int DxReader::readFile()
 
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */
-  QVector<std::string> tokens; /* vector to store the split data */
+  QVector<QString> tokens; /* vector to store the split data */
 
   int error, spin; /* dummy variables */
 

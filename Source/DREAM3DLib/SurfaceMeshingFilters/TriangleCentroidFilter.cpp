@@ -145,7 +145,7 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -192,7 +192,7 @@ void TriangleCentroidFilter::preflight()
 void TriangleCentroidFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

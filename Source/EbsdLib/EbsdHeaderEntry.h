@@ -41,7 +41,7 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Lite.h"
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
@@ -51,6 +51,16 @@
   static SuperClass##Type New##SuperClass(const QString &key) \
 { \
   SuperClass##Type sharedPtr (new thisClass(key)); \
+  return sharedPtr; \
+}
+
+
+#define HEADERENTRY_NEW_SUPERCLASS_VALUE(thisClass, SuperClass)\
+static SuperClass##Type New##SuperClass(const QString &key, T value) \
+{ \
+  thisClass* object = new thisClass(key);\
+  object->setValue(value);\
+  SuperClass##Type sharedPtr(object); \
   return sharedPtr; \
 }\
 
@@ -84,7 +94,7 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @param start The starting position to look for the value
      * @param length The ending position to look for the value
      */
-    virtual void parseValue(char* value, size_t start, size_t length) = 0;
+    virtual void parseValue(QByteArray &value) = 0;
 
     /**
      * @brief prints out the key and value for this header entry

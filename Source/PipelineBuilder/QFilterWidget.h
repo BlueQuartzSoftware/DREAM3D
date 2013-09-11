@@ -145,7 +145,7 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     /**
      * @brief This method updates a combo box that is holding a list of Array Names from the data container
      */
-    virtual void updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName);
+    virtual void updateArrayNameComboBox(const std::list<QString> &arrayNames, QString propertyName);
 
     /**
      * @brief updateArraySelectionWidget This method allows the ArraySelectionWidget to update it's lists of arrays

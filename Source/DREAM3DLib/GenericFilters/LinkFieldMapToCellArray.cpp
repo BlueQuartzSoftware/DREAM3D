@@ -103,7 +103,7 @@ int LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWrite
 void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
@@ -172,7 +172,7 @@ void LinkFieldMapToCellArray::execute()
     return;
   }
   //int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
   m->clearCellFieldData();
 

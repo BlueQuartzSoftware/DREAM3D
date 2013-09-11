@@ -37,8 +37,8 @@
 #ifndef ANGFIELDS_H_
 #define ANGFIELDS_H_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -60,18 +60,18 @@ class EbsdLib_EXPORT AngFields : public AbstractEbsdFields
     AngFields();
     virtual ~AngFields();
 
-    virtual QVector<std::string> getFieldNames();
+    virtual QVector<QString> getFieldNames();
 
     template<typename T>
     T getFilterFields()
     {
       T fields;
 
-      fields.push_back(Ebsd::Ang::ImageQuality.c_str());
-      fields.push_back(Ebsd::Ang::ConfidenceIndex.c_str());
+      fields.push_back(Ebsd::Ang::ImageQuality);
+      fields.push_back(Ebsd::Ang::ConfidenceIndex);
 
-      fields.push_back(Ebsd::Ang::SEMSignal.c_str());
-      fields.push_back(Ebsd::Ang::Fit.c_str());
+      fields.push_back(Ebsd::Ang::SEMSignal);
+      fields.push_back(Ebsd::Ang::Fit);
 
       return fields;
     }

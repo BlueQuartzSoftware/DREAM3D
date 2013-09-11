@@ -168,7 +168,7 @@ struct ArgTraits<wchar_t> {
  * Strings have string like argument traits.
  */
 template<>
-struct ArgTraits<std::string> {
+struct ArgTraits<QString> {
     typedef StringLike ValueCategory;
 };
 

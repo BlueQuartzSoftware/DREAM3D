@@ -108,7 +108,7 @@ int SurfaceDataContainerReader::writeFilterParameters(AbstractFilterParametersWr
 void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
@@ -149,7 +149,7 @@ void SurfaceDataContainerReader::preflight()
 void SurfaceDataContainerReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -166,7 +166,7 @@ void SurfaceDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherData(bool preflight)
 {
-  std::stringstream ss;
+  QTextStream ss;
 
   if(m_HdfFileId < 0)
   {
@@ -217,7 +217,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -233,7 +233,7 @@ int SurfaceDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
 {
-    QVector<std::string> readNames;
+    QVector<QString> readNames;
     herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -277,7 +277,7 @@ int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
   }
 
   // Read all the Vertex Attribute data
-  QVector<std::string> readNames;
+  QVector<QString> readNames;
   err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -317,7 +317,7 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
   }
 
   // Read all the Face Attribute data
-  QVector<std::string> readNames;
+  QVector<QString> readNames;
   err = readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -352,7 +352,7 @@ int SurfaceDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //  }
 
   // Read all the Edge Attribute data
-  QVector<std::string> readNames;
+  QVector<QString> readNames;
   err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -561,10 +561,10 @@ int SurfaceDataContainerReader::readEdges(hid_t dcGid)
 //
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<std::string> &namesRead,
-                                                QSet<std::string> &namesToRead)
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead)
 {
-  std::stringstream ss;
+  QTextStream ss;
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
@@ -579,7 +579,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    QSet<std::string>::iterator contains = namesToRead.find(*iter);
+    QSet<QString>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();

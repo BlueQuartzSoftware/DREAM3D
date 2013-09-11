@@ -69,7 +69,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    typedef std::list<std::string> NameListType;
+    typedef std::list<QString> NameListType;
 
     void setXdmfOStream(std::ostream* xdmf);
 
@@ -170,13 +170,13 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
         { (hsize_t)num * (hsize_t)numComp };
 
         err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);
+        err |= H5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);
         err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
 
         if(err < 0)
         {
           setErrorCondition(err);
-          std::stringstream ss;
+          QTextStream ss;
           ss << "Error writing Ensemble data set '" << label << "'";
         }
       }

@@ -161,7 +161,7 @@ void SurfaceMeshToStl::preflight()
 void SurfaceMeshToStl::execute()
 {
  int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
 
     SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -182,7 +182,7 @@ void SurfaceMeshToStl::execute()
   // in a path without actually creating the full path
   if(!MXADir::mkdir(getOutputStlDirectory(), true))
   {
-      std::stringstream ss;
+      QTextStream ss;
       ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
       notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);

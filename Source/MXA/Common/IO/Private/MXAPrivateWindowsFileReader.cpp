@@ -52,7 +52,7 @@ bool MXAFILEREADER_CLASS_NAME::initReader()
                    NULL);                 // no attr. template
   if (_instream == INVALID_HANDLE_VALUE)
   {
-    std::cout << logTime() << "Error: Failed to open file: " + std::string(this->_filename) << " Error code:(" << GetLastError() << ")" << std::endl;
+    std::cout << logTime() << "Error: Failed to open file: " + QString(this->_filename) << " Error code:(" << GetLastError() << ")" << std::endl;
     return false;
   }
 #else

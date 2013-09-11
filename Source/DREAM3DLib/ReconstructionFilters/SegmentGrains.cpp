@@ -100,7 +100,7 @@ int SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
 
 }
 
@@ -119,7 +119,7 @@ void SegmentGrains::execute()
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
-  std::stringstream ss;
+  QTextStream ss;
   if(NULL == m)
   {
     setErrorCondition(-1);

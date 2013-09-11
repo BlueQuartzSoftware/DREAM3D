@@ -299,7 +299,7 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QTextStream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -350,7 +350,7 @@ void LaplacianSmoothing::preflight()
 void LaplacianSmoothing::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  QTextStream ss;
   setErrorCondition(err);
 
   dataCheck(false, 0, 0, 0);
@@ -470,7 +470,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // Get a Pointer to the Lambda array for conveneince
   DataArray<float>::Pointer lambdas = getLambdaArray();
   float* lambda = lambdas->GetPointer(0);
-  std::stringstream ss;
+  QTextStream ss;
 
   //  Generate the Unique Edges
   if (m_DoConnectivityFilter == true)
@@ -562,7 +562,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
     if(m_GenerateIterationOutputFiles)
     {
-      std::stringstream testFile;
+      QTextStream testFile;
       testFile << "LaplacianSmoothing_" << q << ".vtk";
       writeVTKFile(testFile.str());
     }
@@ -646,7 +646,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   newPositionsPtr->initializeWithZeros();
 
 
-  std::stringstream ss;
+  QTextStream ss;
   for (int q=0; q<m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
@@ -671,7 +671,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(DREAM3D::Mesh::Vert_t) * vertsPtr->GetNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
-    std::stringstream testFile;
+    QTextStream testFile;
     testFile << "/tmp/Laplacian_" << q << ".vtk";
     writeVTKFile(testFile.str());
 #endif
@@ -719,7 +719,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
-  std::stringstream ss;
+  QTextStream ss;
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
