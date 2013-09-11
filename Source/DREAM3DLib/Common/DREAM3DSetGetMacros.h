@@ -39,8 +39,8 @@
 
 #include <string.h>
 
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 #include <sstream>
 #include <stdexcept>
 
@@ -82,11 +82,11 @@
 #define DEEP_COPY_SHARED_VECTOR(sharedPtr, obj, VType, m_msgType)\
   if (NULL != sharedPtr.get())\
 {\
-  sharedPtr = VType(static_cast<QVector<m_msgType>*>(NULL));\
+  sharedPtr = VType(static_cast<std::vector<m_msgType>*>(NULL));\
   }\
   if (NULL != obj->sharedPtr.get())\
 {\
-  sharedPtr = VType(new QVector<m_msgType>(*(obj->sharedPtr.get())));\
+  sharedPtr = VType(new std::vector<m_msgType>(*(obj->sharedPtr.get())));\
   }
 
 
@@ -97,14 +97,14 @@
 #define DREAM3D_BENCHMARKS 0
 
 #if DREAM3D_BENCHMARKS
-#include "MXA/Common/LogTime.h"
+
 
 #define DEFINE_CLOCK unsigned long long int millis;
 
 #define START_CLOCK millis = MXA::getMilliSeconds();
 
 #define END_CLOCK(message)\
-  std::cout << message << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
+  qDebug() << message << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) ;
 
 
 #else
@@ -395,7 +395,7 @@ static Pointer New args \
   void set##prpty(type value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
+      qDebug() << "Value for Key: " << key << " was null." ;} }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
@@ -404,7 +404,7 @@ static Pointer New args \
   type get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
+      qDebug() << "Value for Key: " << key << " was null." ; return 0;} }
 
 
 #define DREAM3DHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
@@ -433,12 +433,12 @@ void set##name##Pointer(type* f)\
 //
 // -----------------------------------------------------------------------------
 #define CREATE_INPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + MXADir::Separator + n;\
-    f = MXADir::toNativeSeparators(f);
+    QString f = m_InputDirectory + QDir::Separator + n;\
+    f = QDir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + MXADir::Separator + n;\
-    f = MXADir::toNativeSeparators(f);
+    QString f = m_InputDirectory + QDir::Separator + n;\
+    f = QDir::toNativeSeparators(f);
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
@@ -452,14 +452,14 @@ void set##name##Pointer(type* f)\
     if(err < 0) {\
       setErrorCondition(err);\
       QString msg = QString(Message);\
-      pipelineErrorMessage(msg.c_str());\
+      pipelineErrorMessage(msg.toLatin1().data());\
       updatePipelineProgress(0);\
       pipelineFinished();\
       return;   }
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    QString outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+    QString outpath = m_OutputDirectory + QDir::Separator + m_OutputFilePrefix + filename;
 
 
 // -----------------------------------------------------------------------------
@@ -473,21 +473,21 @@ namespace DREAM3D
   class bad_lexical_cast : public std::runtime_error {
   public:
     bad_lexical_cast(const QString& s)
-      : std::runtime_error(s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
     bad_any_cast(const QString& s)
-      : std::runtime_error(s)
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   template<typename T>
   T lexical_cast(const QString &s)
   {
-    std::istringstream i(s);
+    std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

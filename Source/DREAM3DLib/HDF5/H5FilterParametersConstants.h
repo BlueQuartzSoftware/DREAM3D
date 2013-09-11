@@ -37,7 +37,7 @@
 #ifndef _H5FilterParametersConstants_H_
 #define _H5FilterParametersConstants_H_
 
-#include <string>
+#include <QtCore/QString>
 
 
 namespace H5FilterParameter

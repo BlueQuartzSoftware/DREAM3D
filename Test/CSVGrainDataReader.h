@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,7 +37,7 @@
 #ifndef CSVGRAINDATAREADER_H_
 #define CSVGRAINDATAREADER_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #define SET_GET_POINTER(name, var, type)\
 type* get##name##Pointer() { return m_##name; }\
@@ -69,8 +69,8 @@ class CSVGrainDataReader
 
 
     /** @brief Sets the file name of the ang file to be read */
-    void setFileName(const std::string &f) { m_FileName = f; }
-    std::string getFileName() { return m_FileName;}
+    void setFileName(const QString &f) { m_FileName = f; }
+    QString getFileName() { return m_FileName;}
 
     void setNumberOfElements(size_t n) { m_NumberOfElements = n;}
     size_t getNumberOfElements() { return m_NumberOfElements;}
@@ -153,7 +153,7 @@ protected:
       }
 
 private:
-    std::string m_FileName;
+    QString m_FileName;
     size_t m_NumberOfElements;
     int    m_NumFields;
 
@@ -180,7 +180,7 @@ private:
     /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void readData(const std::string &line, int row, size_t i);
+    void readData(const QString &line, int row, size_t i);
 
     CSVGrainDataReader(const CSVGrainDataReader&);    // Copy Constructor Not Implemented
     void operator=(const CSVGrainDataReader&);  // Operator '=' Not Implemented

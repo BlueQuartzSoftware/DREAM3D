@@ -227,7 +227,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
       hid_t phasesGid = H5Gopen(headerId, Ebsd::H5::Phases.toStdString().c_str(), H5P_DEFAULT);
       if (phasesGid > 0)
       {
-        QList<std::string> names;
+        std::list<std::string> names;
         err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
         if (err >= 0)
         {

@@ -132,7 +132,7 @@ public:
   * @param names Variable to store the list
   * @return
   */
-  static H5Support_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<std::string>& names);
+  static H5Support_EXPORT herr_t getGroupObjects(hid_t loc_id, int32_t typeFilter, std::list<std::string>& names);
 
   /**
    * @brief Creates a HDF Group by checking if the group already exists. If the
@@ -188,7 +188,7 @@ public:
   * @param names Variable to hold the list of attribute names
   * @return Negate value is error
   */
-  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, QList<std::string> &names);
+  static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, std::list<std::string> &names);
 
   /**
   * @brief Returns a list of all the attribute names
@@ -198,7 +198,7 @@ public:
   * @return Negative value is error
   */
   static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
-                                                  QList<std::string> &names);
+                                                  std::list<std::string> &names);
 
 
 protected:

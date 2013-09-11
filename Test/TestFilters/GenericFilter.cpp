@@ -136,7 +136,7 @@ void GenericFilter::setupFilterParameters()
     option->setPropertyName("ConversionType");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    std::vector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);

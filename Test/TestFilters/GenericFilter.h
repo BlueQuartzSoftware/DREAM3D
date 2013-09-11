@@ -69,19 +69,19 @@ class GenericFilter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ExamplePlugin"; }
+    virtual const QString getGroupName() { return "ExamplePlugin"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "GenericFilter"; }
+    virtual const QString getHumanLabel() { return "GenericFilter"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const std::string getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
