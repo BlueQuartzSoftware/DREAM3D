@@ -234,6 +234,8 @@ return gi;\
 
 
 
+
+
 #define METHOD_DEF_TEMPLATE_INITIALIZEARRAYDATA(Field)\
 template<typename PtrType, typename DataArrayType, typename AbstractFilter>\
 PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp, AbstractFilter* obv)\
