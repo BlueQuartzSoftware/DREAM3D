@@ -99,7 +99,7 @@
  * @param size The number of tuples in the array
  * @param NumComp The number of components of the DataArray
  */
-#define GET_PREREQ_DATA_2( dc, DType, Name, ss, err, ptrType, ArrayType, size, NumComp)\
+#define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, size, NumComp)\
   {if (m_##Name##ArrayName.empty() == true){ \
     setErrorCondition(err##000);\
     ss << "The name of the array for the " << #Name << " was empty. Please provide a name for this array" << std::endl;\
