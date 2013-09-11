@@ -134,8 +134,8 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 
   int err = 0;
   H5VoxelReader::Pointer reader = H5VoxelReader::New();
@@ -295,6 +295,6 @@ void H5VoxelFileReader::execute()
     crystructs->SetValue(i,crystruct[i]);
     phaseTypes->SetValue(i,phaseType[i]);
   }
-  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
-  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
+  getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 }

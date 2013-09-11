@@ -103,7 +103,7 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void findFacesContainingVert(StructArray<Vert_t>::Pointer Verts,
+    void findFacesContainingVert(StructArray<VertexArray::Vert_t>::Pointer Verts,
                                StructArray<Face_t>::Pointer Faces )
     {
 
@@ -156,7 +156,7 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindFaceNeighbors(StructArray<Vert_t>::Pointer Verts, StructArray<Face_t>::Pointer Faces)
+    void FindFaceNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Face_t>::Pointer Faces)
     {
 
       size_t nFaces = Faces->GetNumberOfTuples();
@@ -202,15 +202,15 @@ class FaceArray
             int trgtFaceVert1 = vertFace.verts[1];
             int trgtFaceVert2 = vertFace.verts[2];
 
-            if (seedTriVert0 == trgtTriVert0 || seedTriVert0 == trgtTriVert1 || seedTriVert0 == trgtTriVert2  )
+            if (seedFaceVert0 == trgtFaceVert0 || seedFaceVert0 == trgtFaceVert1 || seedFaceVert0 == trgtFaceVert2  )
             {
               vCount++;
             }
-            if (seedTriVert1 == trgtTriVert0 || seedTriVert1 == trgtTriVert1 || seedTriVert1 == trgtTriVert2  )
+            if (seedFaceVert1 == trgtFaceVert0 || seedFaceVert1 == trgtFaceVert1 || seedFaceVert1 == trgtFaceVert2  )
             {
               vCount++;
             }
-            if (seedTriVert2 == trgtTriVert0 || seedTriVert2 == trgtTriVert1 || seedTriVert2 == trgtTriVert2  )
+            if (seedFaceVert2 == trgtFaceVert0 || seedFaceVert2 == trgtFaceVert1 || seedFaceVert2 == trgtFaceVert2  )
             {
               vCount++;
             }

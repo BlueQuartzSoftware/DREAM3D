@@ -111,7 +111,7 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, -306, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, -306, bool, BoolArrayType, fields, 1)
 }
 
 
@@ -133,7 +133,7 @@ void RenumberGrains::preflight()
   std::list<std::string> headers = m->getFieldArrayNameList();
   for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-      IDataArray::Pointer p = m->getFieldData(*iter);
+      IDataArray::Pointer p = m->getCellFieldData(*iter);
 	  std::string type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeFieldData(*iter);}
   }
@@ -155,8 +155,8 @@ void RenumberGrains::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+  size_t totalFields = m->getNumCellFieldTuples();
+  dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -191,7 +191,7 @@ void RenumberGrains::execute()
     std::list<std::string> headers = m->getFieldArrayNameList();
     for (std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
-      IDataArray::Pointer p = m->getFieldData(*iter);
+      IDataArray::Pointer p = m->getCellFieldData(*iter);
       ss.str("");
       //ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
@@ -202,9 +202,9 @@ void RenumberGrains::execute()
       else {p->EraseTuples(RemoveList);}
       //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
     }
-    m->setNumFieldTuples(m->getNumFieldTuples() - RemoveList.size());
-    totalFields = m->getNumFieldTuples();
-    dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
+    m->setNumFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
+    totalFields = m->getNumCellFieldTuples();
+    dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
     // Loop over all the points and correct all the grain names
     ss.str("");

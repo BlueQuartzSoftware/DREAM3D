@@ -390,8 +390,8 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
       GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 1, ensembles, 5)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 1, ensembles, 5)
     }
 
   }
@@ -412,10 +412,10 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -467,10 +467,10 @@ void FindGBCD::execute()
 
   // Run the data check to allocate the memory for the centroid array
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size
-  dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumEnsembleTuples());
+  dataCheckSurfaceMesh(false, 0, totalFaces, m->getNumCellEnsembleTuples());
 
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
 
@@ -539,8 +539,8 @@ void FindGBCD::execute()
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
 
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
-  for(int i=0;i<m->getNumEnsembleTuples();i++)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellEnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumCellEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
+  for(int i=0;i<m->getNumCellEnsembleTuples();i++)
   {
     m_GBCDdimensions[5*i+0] = m_GBCDsizes[0];
     m_GBCDdimensions[5*i+1] = m_GBCDsizes[1];

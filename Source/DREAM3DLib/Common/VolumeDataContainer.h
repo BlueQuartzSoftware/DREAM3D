@@ -54,6 +54,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
@@ -68,7 +69,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VolumeDataContainer : public Observable
+class DREAM3DLib_EXPORT VolumeDataContainer : public SurfaceDataContainer
 {
   public:
     DREAM3D_SHARED_POINTERS(VolumeDataContainer)

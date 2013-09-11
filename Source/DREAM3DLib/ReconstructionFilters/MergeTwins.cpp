@@ -165,14 +165,14 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized Correctly" << std::endl;
@@ -181,7 +181,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ void MergeTwins::execute()
 
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -280,7 +280,7 @@ void MergeTwins::merge_twins()
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getVolumeDataContainer();
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -295,7 +295,7 @@ void MergeTwins::merge_twins()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
@@ -355,7 +355,7 @@ void MergeTwins::merge_twins()
 void MergeTwins::characterize_twins()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
 

@@ -354,11 +354,11 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
-  m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
+  m->addCellEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
 
   ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
 }
@@ -495,8 +495,8 @@ void ReadH5Ebsd::execute()
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumEnsembleTuples(), 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, -305, float, FloatArrayType, m->getNumEnsembleTuples(), 6)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumCellEnsembleTuples(), 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, LatticeConstants, ss, -305, float, FloatArrayType, m->getNumCellEnsembleTuples(), 6)
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)

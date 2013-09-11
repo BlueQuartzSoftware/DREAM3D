@@ -123,15 +123,15 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, -302, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
   if (getOutputFile().empty() == true)
   {
@@ -177,7 +177,7 @@ void FindRadialDist::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -213,7 +213,7 @@ void FindRadialDist::find_radialdist()
   float x, y, z;
   float xn, yn, zn;
   float dist;
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
 
   bool writeFile = !m_OutputFile.empty();
 
@@ -337,7 +337,7 @@ void FindRadialDist::find_radialdist()
 void FindRadialDist::find_boundingbox()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  size_t size = m->getNumFieldTuples();
+  size_t size = m->getNumCellFieldTuples();
 
   float coords[7];
   float x, y, z;

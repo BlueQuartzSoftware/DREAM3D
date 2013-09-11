@@ -103,7 +103,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void findCellsContainingVert(StructArray<Vert_t>::Pointer Verts,
+    void findCellsContainingVert(StructArray<VertexArray::Vert_t>::Pointer Verts,
                                StructArray<Cell_t>::Pointer Cells )
     {
 
@@ -156,7 +156,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindCellNeighbors(StructArray<Vert_t>::Pointer Verts, StructArray<Cell_t>::Pointer Cells)
+    void FindCellNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Cell_t>::Pointer Cells)
     {
 
       size_t nCells = Cells->GetNumberOfTuples();
@@ -202,15 +202,15 @@ class CellArray
             int trgtCellVert1 = vertCell.verts[1];
             int trgtCellVert2 = vertCell.verts[2];
 
-            if (seedTriVert0 == trgtTriVert0 || seedTriVert0 == trgtTriVert1 || seedTriVert0 == trgtTriVert2  )
+            if (seedCellVert0 == trgtCellVert0 || seedCellVert0 == trgtCellVert1 || seedCellVert0 == trgtCellVert2  )
             {
               vCount++;
             }
-            if (seedTriVert1 == trgtTriVert0 || seedTriVert1 == trgtTriVert1 || seedTriVert1 == trgtTriVert2  )
+            if (seedCellVert1 == trgtCellVert0 || seedCellVert1 == trgtCellVert1 || seedCellVert1 == trgtCellVert2  )
             {
               vCount++;
             }
-            if (seedTriVert2 == trgtTriVert0 || seedTriVert2 == trgtTriVert1 || seedTriVert2 == trgtTriVert2  )
+            if (seedCellVert2 == trgtCellVert0 || seedCellVert2 == trgtCellVert1 || seedCellVert2 == trgtCellVert2  )
             {
               vCount++;
             }

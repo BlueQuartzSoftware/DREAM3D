@@ -101,11 +101,11 @@ void FindAvgOrientations::dataCheck(bool preflight, size_t voxels, size_t fields
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -131,13 +131,13 @@ void FindAvgOrientations::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   std::vector<float> counts(numgrains, 0.0);
 
   int phase;

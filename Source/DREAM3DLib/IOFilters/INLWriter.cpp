@@ -146,9 +146,9 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-  IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
+  IDataArray::Pointer materialNamePtr = m->getCellEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {
@@ -197,8 +197,8 @@ int INLWriter::writeFile()
   }
   std::stringstream ss;
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, numgrains, numensembles);
   if(getErrorCondition() < 0)
   {
@@ -258,8 +258,8 @@ int INLWriter::writeFile()
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
- // IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
-  IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
+ // IDataArray::Pointer pDataPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+  IDataArray::Pointer materialNamePtr = m->getCellEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {

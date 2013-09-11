@@ -175,7 +175,7 @@ void StandardizeEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fie
       GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
       addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
 }
@@ -202,8 +202,8 @@ void StandardizeEulerAngles::execute()
   }
   setErrorCondition(0);
   int64_t totalPoints = m->getTotalPoints();
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, numgrains, numensembles);
   if (getErrorCondition() < 0)
   {

@@ -300,7 +300,7 @@ void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContai
       }
     }
 
-    vldc->addEnsembleData(phaseTypes->GetName(), phaseTypes);
+    vldc->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
   }
 }
 

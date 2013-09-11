@@ -94,7 +94,7 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
 
 }
 
@@ -124,8 +124,8 @@ void FindGrainCentroids::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {
@@ -145,7 +145,7 @@ void FindGrainCentroids::find_centroids()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   float x, y, z;
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   if (numgrains == 0) { return; }
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);

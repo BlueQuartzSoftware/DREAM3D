@@ -265,12 +265,12 @@ void FindTwinBoundaries::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -324,7 +324,7 @@ void FindTwinBoundaries::execute()
 #endif
 
   int numTriangles = sm->getNumFaceTuples();
-  dataCheckVoxel(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheckVoxel(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   dataCheckSurfaceMesh(false, 0, numTriangles, 0);
   if (getErrorCondition() < 0)
   {

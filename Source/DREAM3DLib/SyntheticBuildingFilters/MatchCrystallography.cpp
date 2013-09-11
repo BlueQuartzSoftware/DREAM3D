@@ -155,19 +155,19 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
 
       // Field Data
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
 
 
 
       // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      if (NULL == m->getFieldData(m_NeighborListArrayName).get())
+      if (NULL == m->getCellFieldData(m_NeighborListArrayName).get())
   {
     ss.str("");
     ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
@@ -176,10 +176,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
   else
   {
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   }
 
-  if(NULL == m->getFieldData(m_SharedSurfaceAreaListArrayName).get())
+  if(NULL == m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
     ss.str("");
     ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
@@ -188,10 +188,10 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
   else
   {
-    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   }
 
-  if(NULL == m->getEnsembleData(m_StatsDataArrayName).get())
+  if(NULL == m->getCellEnsembleData(m_StatsDataArrayName).get())
   {
     ss.str("");
     ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
@@ -200,14 +200,14 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   }
   else
   {
-    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(m_StatsDataArrayName).get());
+    m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(m_StatsDataArrayName).get());
   }
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -234,8 +234,8 @@ void MatchCrystallography::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
-  int numEnsembleTuples = m->getNumEnsembleTuples();
+  int totalFields = m->getNumCellFieldTuples();
+  int numEnsembleTuples = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, numEnsembleTuples);
   if (getErrorCondition() < 0)
   {
@@ -254,7 +254,7 @@ void MatchCrystallography::execute()
   determine_boundary_areas();
   ss.str("");
 
-  size_t size = m->getNumEnsembleTuples();
+  size_t size = m->getNumCellEnsembleTuples();
   for (size_t i = 1; i < size; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -294,7 +294,7 @@ void MatchCrystallography::initializeArrays(int ensem)
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
-  // size_t size = m->getNumEnsembleTuples();
+  // size_t size = m->getNumCellEnsembleTuples();
 
   if(m_PhaseTypes[ensem] == DREAM3D::PhaseType::PrecipitatePhase)
   {
@@ -337,8 +337,8 @@ void MatchCrystallography::determine_volumes()
   VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t totalPoints = m->getNumCellTuples();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
   unbiasedvol.resize(totalEnsembles);
   for (size_t i = 1; i < totalFields; i++)
@@ -370,8 +370,8 @@ void MatchCrystallography::determine_boundary_areas()
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
   totalSurfaceArea.resize(totalEnsembles,0.0);
 
@@ -413,7 +413,7 @@ void MatchCrystallography::assign_eulers(int ensem)
   float random;
   int choose, phase;
 
-  int totalFields = m->getNumFieldTuples();
+  int totalFields = m->getNumCellFieldTuples();
 
   std::stringstream ss;
   for (int i = 1; i < totalFields; i++)
@@ -522,7 +522,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
 
   //  float xRes = m->getXRes();
   //  float yRes = m->getYRes();
@@ -546,8 +546,8 @@ void MatchCrystallography::matchCrystallography(int ensem)
   float totaldensity = 0, deltaerror = 0;
   float currentodferror = 0, currentmdferror = 0;
   size_t selectedgrain1 = 0, selectedgrain2 = 0;
-  //size_t numensembles = m->getNumEnsembleTuples();
-  size_t numfields = m->getNumFieldTuples();
+  //size_t numensembles = m->getNumCellEnsembleTuples();
+  size_t numfields = m->getNumCellFieldTuples();
   iterations = 0;
   badtrycount = 0;
   if( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructures[ensem]) { numbins = 18 * 18 * 18; }
@@ -851,7 +851,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
 
   unsigned int crys1;
   int mbin = 0;
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
   //float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);

@@ -152,10 +152,10 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
 
@@ -184,7 +184,7 @@ void EBSDSegmentGrains::execute()
   int64_t totalPoints = m->getTotalPoints();
   m->resizeFieldDataArrays(1);
   // This runs a subfilter
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -201,7 +201,7 @@ void EBSDSegmentGrains::execute()
 
   SegmentGrains::execute();
 
-  size_t totalFields = m->getNumFieldTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
   if (totalFields < 2)
   {
     setErrorCondition(-87000);
@@ -299,7 +299,7 @@ int64_t EBSDSegmentGrains::getSeed(size_t gnum)
   {
     m_GrainIds[seed] = gnum;
     m->resizeFieldDataArrays(gnum+1);
-    dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+    dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   }
   return seed;
 }

@@ -184,8 +184,8 @@ void CopyFieldArrayToCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t fields = m->getNumFieldTuples();
-  dataCheck(false, voxels, fields, m->getNumEnsembleTuples());
+  int64_t fields = m->getNumCellFieldTuples();
+  dataCheck(false, voxels, fields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -193,7 +193,7 @@ void CopyFieldArrayToCellArray::execute()
   //int err = 0;
   std::stringstream ss;
 
-  IDataArray::Pointer inputData = m->getFieldData(m_SelectedFieldArrayName);
+  IDataArray::Pointer inputData = m->getCellFieldData(m_SelectedFieldArrayName);
   if (NULL == inputData.get())
   {
     ss.str("");

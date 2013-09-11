@@ -103,7 +103,7 @@ void FindCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, size
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 4)
 
@@ -136,8 +136,8 @@ void FindCellQuats::execute()
   std::stringstream ss;
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {

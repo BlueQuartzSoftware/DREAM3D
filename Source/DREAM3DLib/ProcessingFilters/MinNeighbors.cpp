@@ -125,9 +125,9 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
 
 }
@@ -179,7 +179,7 @@ void MinNeighbors::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -248,7 +248,7 @@ void MinNeighbors::assign_badpoints()
 //  int curgrain = 0;
  // DimType row, plane;
   int neighpoint;
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);
@@ -357,7 +357,7 @@ void MinNeighbors::merge_containedgrains()
   bool good = false;
 
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
-  size_t totalFields = static_cast<size_t>(m->getNumFieldTuples());
+  size_t totalFields = static_cast<size_t>(m->getNumCellFieldTuples());
   for (size_t i = 0; i < totalFields; i++)
   {
 	  m_Active[i] = true;

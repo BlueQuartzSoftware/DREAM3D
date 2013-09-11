@@ -155,21 +155,21 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
       GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
       GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -300, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, ss, -306, int32_t, Int32ArrayType, fields, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, ss, -306, float, FloatArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, ss, -307, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, ss, -308, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, ss, -309, float, FloatArrayType, voxels, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, ss, -310, float, FloatArrayType, voxels, 1)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -195,7 +195,7 @@ void FindDeformationStatistics::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -523,10 +523,10 @@ void FindDeformationStatistics::execute()
   fprintf(vtkFile,  "DREAM3D Generated Data Set: Deformation Statistics\n");
   fprintf(vtkFile,  "ASCII\n");
   fprintf(vtkFile,  "DATASET UNSTRUCTURED_GRID\n");
-  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumFieldTuples()-1);
+  fprintf(vtkFile,  "POINTS %ld float\n", m->getNumCellFieldTuples()-1);
 
 
-  size_t size = m->getNumFieldTuples();
+  size_t size = m->getNumCellFieldTuples();
 
   float x, y, z;
   float xtemp, ytemp, ztemp;
@@ -563,7 +563,7 @@ void FindDeformationStatistics::execute()
     fprintf(vtkFile, "%f %f %f\n", xFZ, yFZ, zFZ);
   }
 
-  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumFieldTuples()-1, ((m->getNumFieldTuples()-1)*2));
+  fprintf(vtkFile, "CELLS %ld %ld\n", m->getNumCellFieldTuples()-1, ((m->getNumCellFieldTuples()-1)*2));
   //  Store the Grain Ids so we don't have to re-read the triangles file again
   for(size_t i=1;i<size;i++)
   {
@@ -572,7 +572,7 @@ void FindDeformationStatistics::execute()
 
   // Write the CELL_TYPES into the file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumFieldTuples()-1);
+  fprintf(vtkFile, "CELL_TYPES %ld\n", m->getNumCellFieldTuples()-1);
   for(size_t i=1;i<size;i++)
   {
     fprintf(vtkFile, "1\n");
@@ -581,7 +581,7 @@ void FindDeformationStatistics::execute()
 
   // Write the GrainId Data to teh file
   fprintf(vtkFile, "\n");
-  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumFieldTuples()-1);
+  fprintf(vtkFile, "CELL_DATA %ld\n", m->getNumCellFieldTuples()-1);
   fprintf(vtkFile, "SCALARS Misorientation float\n");
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for (size_t i = 1; i < size; i++)

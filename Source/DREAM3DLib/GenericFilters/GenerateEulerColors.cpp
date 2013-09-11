@@ -117,7 +117,7 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
@@ -150,8 +150,8 @@ void GenerateEulerColors::execute()
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {

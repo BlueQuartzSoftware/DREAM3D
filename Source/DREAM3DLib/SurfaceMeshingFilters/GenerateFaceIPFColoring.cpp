@@ -304,10 +304,10 @@ void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
         typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -349,7 +349,7 @@ void GenerateFaceIPFColoring::execute()
 
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, sm->getNumFaceTuples(), 0);
-  dataCheckVoxel(false, m->getNumCellTuples(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheckVoxel(false, m->getNumCellTuples(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   bool doParallel = true;

@@ -102,7 +102,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void findEdgesContainingVert(StructArray<Vert_t>::Pointer Verts,
+    void findEdgesContainingVert(StructArray<VertexArray::Vert_t>::Pointer Verts,
                                StructArray<Edge_t>::Pointer Edges )
     {
 
@@ -155,7 +155,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindEdgeNeighbors(StructArray<Vert_t>::Pointer Verts, StructArray<Edge_t>::Pointer Edges)
+    void FindEdgeNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Edge_t>::Pointer Edges)
     {
 
       size_t nEdges = Edges->GetNumberOfTuples();
@@ -165,9 +165,9 @@ class EdgeArray
       m_EdgeNeighbors->allocate(nEdges);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
-      boost::shared_array<bool> visitedPtr(new bool[nFaces]);
+      boost::shared_array<bool> visitedPtr(new bool[nEdges]);
       bool* visited = visitedPtr.get();
-      ::memset(visitedPtr.get(), 0, nFaces);
+      ::memset(visitedPtr.get(), 0, nEdges);
 
       // Reuse this vector for each loop. Avoids re-allocating the memory each time through the loop
       std::vector<int> loop_neighbors(32, 0);

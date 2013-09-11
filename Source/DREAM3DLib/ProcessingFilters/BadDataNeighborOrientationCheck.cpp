@@ -141,7 +141,7 @@ void BadDataNeighborOrientationCheck::dataCheck(bool preflight, size_t voxels, s
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -170,7 +170,7 @@ void BadDataNeighborOrientationCheck::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0 && getErrorCondition() != -305)
   {
     return;
@@ -198,7 +198,7 @@ void BadDataNeighborOrientationCheck::execute()
   //float x, y, z;
   DimType column, row, plane;
  // int neighpoint;
-//  size_t numgrains = m->getNumFieldTuples();
+//  size_t numgrains = m->getNumCellFieldTuples();
 
   int neighpoints[6];
   neighpoints[0] = static_cast<int>(-dims[0] * dims[1]);

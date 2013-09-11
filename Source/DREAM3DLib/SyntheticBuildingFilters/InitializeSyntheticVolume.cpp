@@ -194,7 +194,7 @@ void InitializeSyntheticVolume::preflight()
   }
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -232,10 +232,10 @@ void InitializeSyntheticVolume::execute()
   m->setResolution(m_XRes, m_YRes, m_ZRes);
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::FromStdVector(m_ShapeTypes, DREAM3D::EnsembleData::ShapeTypes);
-  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   int64_t totalPoints = m->getTotalPoints();
-  int totalFields = m->getNumFieldTuples();
+  int totalFields = m->getNumCellFieldTuples();
   int totalEnsembles = m_ShapeTypes.size();
 
   // Check to make sure we have all of our data arrays available or make them available.

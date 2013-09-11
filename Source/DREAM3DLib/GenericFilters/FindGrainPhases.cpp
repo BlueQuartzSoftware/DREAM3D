@@ -96,7 +96,7 @@ void FindGrainPhases::dataCheck(bool preflight, size_t voxels, size_t fields, si
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -125,8 +125,8 @@ void FindGrainPhases::execute()
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembles = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembles = m->getNumCellEnsembleTuples();
   // This makes sure we get the allocated arrays and we size the Fields to 1 to avoid any errors
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
 

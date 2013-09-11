@@ -455,11 +455,11 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &gr
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getVolumeDataContainer()->addFieldData(dPtr->GetName(), dPtr);
+        getVolumeDataContainer()->addCellFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getVolumeDataContainer()->addEnsembleData(dPtr->GetName(), dPtr);
+        getVolumeDataContainer()->addCellEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

@@ -162,48 +162,48 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
    if(m_SizeDistribution == true || m_Omega3Distribution == true
          || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
   }
   if(m_AspectRatioDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields, 2)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, ss, -307, float, FloatArrayType, fields, 2)
   }
   if(m_Omega3Distribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
   }
   if(m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
   }
 
 
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   }
   if(m_CalculateODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
+        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
   }
   if(m_CalculateMDF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-        m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+        m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
       ss.str("");
@@ -212,7 +212,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
       addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
       ss.str("");
@@ -230,15 +230,15 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   else
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellEnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
   }
-  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
+  m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getCellEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
     StatsDataArray::Pointer p = StatsDataArray::New();
     m_StatsDataArray = p.get();
     m_StatsDataArray->fillArrayWithNewStatsData(ensembles, m_PhaseTypes);
-    m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+    m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, p);
   }
 
   if (m_SizeDistributionFitType != DREAM3D::DistributionType::LogNormal)
@@ -283,9 +283,9 @@ void GenerateEnsembleStatistics::execute()
   std::stringstream ss;
 
   //  int totalPoints = m->getTotalPoints();
-  //  int totalFields = m->getNumFieldTuples();
-  int totalEnsembles = m->getNumEnsembleTuples();
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  //  int totalFields = m->getNumCellFieldTuples();
+  int totalEnsembles = m->getNumCellEnsembleTuples();
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -313,16 +313,16 @@ void GenerateEnsembleStatistics::execute()
     {
       phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
     }
-    m->addEnsembleData(phaseTypes->GetName(), phaseTypes);
+    m->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
     m_PhaseTypes = phaseTypes->GetPointer(0);
   }
 
   StatsDataArray::Pointer p = StatsDataArray::New();
   m_StatsDataArray = p.get();
   m_StatsDataArray->fillArrayWithNewStatsData(totalEnsembles, m_PhaseTypes);
-  m->addEnsembleData(DREAM3D::EnsembleData::Statistics, p);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, p);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
   if(m_SizeDistribution == true)
   {
@@ -373,8 +373,8 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   std::vector<std::vector<std::vector<float > > > values;
   std::vector<float> fractions;
   FloatArrayType::Pointer binnumbers;
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   sizedist.resize(numensembles);
   values.resize(numensembles);
@@ -456,8 +456,8 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
   std::vector<std::vector<std::vector<float> > > cvalues;
   std::vector<float> mindiams;
   std::vector<float> binsteps;
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   boveras.resize(numensembles);
   coveras.resize(numensembles);
@@ -553,8 +553,8 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
   std::vector<std::vector<std::vector<float> > > values;
   std::vector<float> mindiams;
   std::vector<float> binsteps;
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   omega3s.resize(numensembles);
   values.resize(numensembles);
@@ -628,8 +628,8 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
   std::vector<std::vector<std::vector<float > > > values;
   std::vector<float> mindiams;
   std::vector<float> binsteps;
-  size_t numgrains = m->getNumFieldTuples();
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   neighborhoods.resize(numensembles);
   values.resize(numensembles);
@@ -708,12 +708,12 @@ void GenerateEnsembleStatistics::gatherODFStats()
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
   size_t bin;
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   int phase;
   std::vector<float> totalvol;
   std::vector<FloatArrayType::Pointer> eulerodf;
 
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   totalvol.resize(numensembles);
   eulerodf.resize(numensembles);
@@ -811,13 +811,13 @@ void GenerateEnsembleStatistics::gatherMDFStats()
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
   std::vector<float> totalSurfaceArea;
   std::vector<FloatArrayType::Pointer> misobin;
   int numbins = 0;
 
-  size_t numensembles = m->getNumEnsembleTuples();
+  size_t numensembles = m->getNumCellEnsembleTuples();
 
   misobin.resize(numensembles);
   totalSurfaceArea.resize(numensembles);
@@ -915,7 +915,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
   int bin;
   std::vector<FloatArrayType::Pointer> axisodf;
   std::vector<float> totalaxes;
-  size_t numXTals = m->getNumEnsembleTuples();
+  size_t numXTals = m->getNumCellEnsembleTuples();
   axisodf.resize(numXTals);
   totalaxes.resize(numXTals);
   for (size_t i = 1; i < numXTals; i++)
@@ -927,7 +927,7 @@ void GenerateEnsembleStatistics::gatherAxisODFStats()
       axisodf[i]->SetValue(j, 0.0);
     }
   }
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
     if(m_SurfaceFields[i] == false)
