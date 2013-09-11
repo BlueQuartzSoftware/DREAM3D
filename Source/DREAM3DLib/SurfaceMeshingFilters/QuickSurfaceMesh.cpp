@@ -477,7 +477,7 @@ void QuickSurfaceMesh::execute()
 
   //Cycle through again assigning coordinates to each node and assigning node numbers and grain labels to each triangle
   triangleCount = 0;
-  //const DREAM3D::Mesh::Float_t k_Two = static_cast<DREAM3D::Mesh::Float_t>(2.0);
+  //const float k_Two = static_cast<float>(2.0);
   for(size_t k = 0; k < zP; k++)
   {
     for(size_t j = 0; j < yP; j++)

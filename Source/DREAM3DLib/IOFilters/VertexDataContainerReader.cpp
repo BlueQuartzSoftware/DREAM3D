@@ -41,6 +41,7 @@
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/VertexArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -209,7 +210,8 @@ int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
-      DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+      VertexArray::Pointer vertices = VertexArray::New();
+      vertices->resizeArray(1);
       getVertexDataContainer()->setVertices(vertices);
     }
   }
@@ -282,9 +284,10 @@ int VertexDataContainerReader::readVertices(hid_t dcGid)
     return err;
   }
   // Allocate the data
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Pointer verticesPtr = VertexArray::New();
+  verticesPtr->resizeArray(dims[0]);
   // Read the data
-  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);

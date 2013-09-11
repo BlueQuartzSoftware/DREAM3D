@@ -43,6 +43,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/VertexArray.hpp"
 
 #define WRITE_FIELD_XDMF 0
 
@@ -251,7 +252,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   {
     return;
   }
-  DREAM3D::Mesh::VertListPointer_t verts = getVertexDataContainer()->getVertices();
+  VertexArray::Pointer verts = getVertexDataContainer()->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -396,16 +397,16 @@ int VertexDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupP
 int VertexDataContainerWriter::writeVertices(hid_t dcGid)
 {
   VertexDataContainer* sm = getVertexDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
+  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), 3};
 
-  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {

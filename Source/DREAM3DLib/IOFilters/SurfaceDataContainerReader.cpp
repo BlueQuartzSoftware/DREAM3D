@@ -381,7 +381,7 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
   // Allocate the data
   DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
   // Read the data
-  DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);

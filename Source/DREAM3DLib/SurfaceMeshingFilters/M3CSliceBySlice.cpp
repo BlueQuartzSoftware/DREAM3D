@@ -482,8 +482,8 @@ void M3CSliceBySlice::execute()
   //  GrainChecker::Pointer m_GrainChecker = GrainChecker::New();
 
   size_t dims[3];
-  DREAM3D::Mesh::Float_t res[3];
-  DREAM3D::Mesh::Float_t origin[3];
+  float res[3];
+  float origin[3];
 
   m->getDimensions(dims);
   m->getResolution(res);
@@ -891,30 +891,30 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Mesh::Float_t M3CSliceBySlice::find_xcoord(int index, int xDim, DREAM3D::Mesh::Float_t xRes)
+float M3CSliceBySlice::find_xcoord(int index, int xDim, float xRes)
 {
   index = index - 1;
-  DREAM3D::Mesh::Float_t x = xRes * float(index % xDim) + m_OriginX - (xRes/2.0);
+  float x = xRes * float(index % xDim) + m_OriginX - (xRes/2.0);
   return x;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Mesh::Float_t M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t yRes)
+float M3CSliceBySlice::find_ycoord(int index, int xDim, int yDim, float yRes)
 {
   index = index - 1;
-  DREAM3D::Mesh::Float_t y = yRes * float((index / xDim) % yDim) + m_OriginY - (yRes/2.0);
+  float y = yRes * float((index / xDim) % yDim) + m_OriginY - (yRes/2.0);
   return y;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Mesh::Float_t M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, DREAM3D::Mesh::Float_t zRes)
+float M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, float zRes)
 {
   index = index - 1;
-  DREAM3D::Mesh::Float_t z = zRes * float(index / (xDim * yDim)) + m_OriginZ - (zRes/2.0);
+  float z = zRes * float(index / (xDim * yDim)) + m_OriginZ - (zRes/2.0);
   return z;
 }
 
@@ -933,7 +933,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   int i, j;
   int id, oid;
   int tsite, locale;
-  DREAM3D::Mesh::Float_t x, y, z;
+  float x, y, z;
   int start = NSP + 1;
   if (zID == 0)
   {
@@ -941,9 +941,9 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
     numgrains = 0;
   }
 
-  DREAM3D::Mesh::Float_t xRes = res[0];
-  DREAM3D::Mesh::Float_t yRes = res[1];
-  DREAM3D::Mesh::Float_t zRes = res[2];
+  float xRes = res[0];
+  float yRes = res[1];
+  float zRes = res[2];
 
   DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
@@ -2502,13 +2502,13 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
   int tsite2[3] = { -1, -1, -1};
   //  int nSpin1, nSpin2;
   int tgrainname1[3], tgrainname2[3];
-  DREAM3D::Mesh::Float_t cx, cy, cz;
-  DREAM3D::Mesh::Float_t xSum, ySum, zSum;
-  DREAM3D::Mesh::Float_t vcoord[3][3];
-  DREAM3D::Mesh::Float_t u[3], w[3];
-  DREAM3D::Mesh::Float_t x, y, z;
-  DREAM3D::Mesh::Float_t a, b, c, d, length;
-  DREAM3D::Mesh::Float_t sidecheck;
+  float cx, cy, cz;
+  float xSum, ySum, zSum;
+  float vcoord[3][3];
+  float u[3], w[3];
+  float x, y, z;
+  float a, b, c, d, length;
+  float sidecheck;
   int shift = (zID * NSP);
   int locale;
 
@@ -2924,7 +2924,7 @@ void M3CSliceBySlice::analyzeWinding()
   //  std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
   //  std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
 
-  DREAM3D::Mesh::Float_t total = (float)(labelTriangleMap.size());
+  float total = (float)(labelTriangleMap.size());
   // Keeps a list of all the triangles that have been visited.
   std::vector<bool> masterVisited(cTriangle.size(), false);
 
@@ -2934,7 +2934,7 @@ void M3CSliceBySlice::analyzeWinding()
   // Get the first 2 labels to visit from the first triangle. We use these 2 labels
   // because this triangle shares these 2 labels and guarantees these 2 labels are
   // connected to each other.
-  DREAM3D::Mesh::Float_t curPercent = 0.0;
+  float curPercent = 0.0;
   int progressIndex = 0;
   for (LabelTriangleMapType::iterator cLabel = labelTriangleMap.begin(); cLabel != labelTriangleMap.end(); ++cLabel )
   {
