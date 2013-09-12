@@ -38,6 +38,7 @@
 #define AvizoRectilinearCoordinateWriter_H_
 
 #include <QtCore/QString>
+#include <QtCore/QDataStream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -130,7 +131,7 @@ class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    QString generateHeader();
+    void generateHeader(QDataStream &out);
 
     /**
      * @brief Writes the data to the Avizo file

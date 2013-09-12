@@ -39,6 +39,8 @@
 #include <vector>
 #include <sstream>
 
+#include <QtCore/QFileInfo>
+
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -49,7 +51,7 @@
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/ProcessingFilters/RotateEulerRefFrame.h"
@@ -179,21 +181,19 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
   if(dims[0] * dims[1] * dims[2] > max)
   {
     err = -1;
-    QTextStream s;
-    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+    QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), err);
+    addErrorMessage(getHumanLabel(), s, err);
     return err;
   }
 
   if(dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    QTextStream s;
-    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-    s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
+    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return err;
   }
   return err;
@@ -205,29 +205,29 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
 void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
+
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    QString ss = QObject::tr("%1: The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
 
+  QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
-    ss.str("");
-    ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
+    QString ss = QObject::tr("%1: Either the H5Ebsd file must exist or the Manufacturer must be set").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
-  else if (QFileInfo::exists(m_InputFile) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (m_InputFile.isEmpty() == false)
   {
@@ -236,9 +236,9 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     int err = reader->readVolumeInfo();
     if (err < 0)
     {
-      ss << getHumanLabel() << ": Error reading VolumeInfo from H5Ebsd File";
+      QString ss = QObject::tr("%1: Error reading VolumeInfo from H5Ebsd File").arg(getHumanLabel());
       setErrorCondition(-1);
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
@@ -257,9 +257,9 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     }
     else
     {
-      ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL, HKL or HEDM";
+       QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL, HKL or HEDM").arg(getHumanLabel());
       setErrorCondition(-1);
-      addErrorMessage(getHumanLabel(), ss.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
@@ -278,21 +278,19 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."\
+       " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[0]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -326,9 +324,9 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
   else
   {
-    ss << getHumanLabel() << ": Original Data source could not be determined. It should be TSL or HKL";
+    QString ss = QObject::tr("%1:  Original Data source could not be determined. It should be TSL or HKL").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
 
@@ -373,13 +371,12 @@ void ReadH5Ebsd::preflight()
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::execute()
 {
-  
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
     setErrorCondition(-1);
-    ss << " DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
   int err = 0;
@@ -406,21 +403,19 @@ void ReadH5Ebsd::execute()
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+      QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), s, -1);
       return;
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."\
+       " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[0]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -455,9 +450,9 @@ void ReadH5Ebsd::execute()
   else
   {
     setErrorCondition(-1);
-    QString msg("Could not determine or match a supported manufacturer from the data file.");
-    msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
-    msg = msg.append(", ").append(Ebsd::Ang::Manufacturer).append(" and ").append(Ebsd::Mic::Manufacturer);
+
+    QString msg = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
+    .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -1);
     return;
   }
@@ -470,13 +465,12 @@ void ReadH5Ebsd::execute()
 
   // Initialize all the arrays with some default values
   int64_t totalPoints = m->getTotalPoints();
-  ss.str("");
-  ss << " - Initializing " << totalPoints << " voxels";
-  notifyStatusMessage(ss.str());
+  QString ss = QObject::tr(" - Initializing %1 voxels").arg(totalPoints);
+  notifyStatusMessage(ss);
 
-  ss.str("");
-  ss << " - Reading Ebsd Data from file";
-  notifyStatusMessage(ss.str());
+  ss = QObject::tr(" - Reading Ebsd Data from file");
+
+  notifyStatusMessage(ss);
   ebsdReader->setSliceStart(m_ZStartIndex);
   ebsdReader->setSliceEnd(m_ZEndIndex);
   ebsdReader->readAllArrays(false);
@@ -510,9 +504,8 @@ void ReadH5Ebsd::execute()
   }
   else
   {
-    QString msg("Could not determine or match a supported manufacturer from the data file.");
-    msg = msg.append("Supported manufacturer codes are: ").append(Ebsd::Ctf::Manufacturer);
-    msg = msg.append(" and ").append(Ebsd::Ang::Manufacturer);
+    QString msg = QObject::tr("Could not determine or match a supported manufacturer from the data file. Supported manufacturer codes are: %1, %2 and %3")\
+    .arg(Ebsd::Ctf::Manufacturer).arg(Ebsd::Ang::Manufacturer).arg(Ebsd::Mic::Manufacturer);
     addErrorMessage(getHumanLabel(), msg, -10001);
     return;
   }
@@ -552,9 +545,7 @@ void ReadH5Ebsd::execute()
   }
 
   // If there is an error set this to something negative and also set a message
-  ss.str("");
-  ss << getHumanLabel() << " Completed";
-  notifyStatusMessage(ss.str());
+  notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------
