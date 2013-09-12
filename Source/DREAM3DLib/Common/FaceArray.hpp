@@ -79,7 +79,6 @@ class FaceArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
-    size_t count() { return m_Array->getNumberOfTuples(); }
 
 
     // -----------------------------------------------------------------------------
