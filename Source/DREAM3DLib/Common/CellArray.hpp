@@ -151,7 +151,7 @@ class CellArray
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Cells, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
          linkCount[pts[j]]++;
@@ -163,7 +163,7 @@ class CellArray
 
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Cells, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
           m_CellsContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);

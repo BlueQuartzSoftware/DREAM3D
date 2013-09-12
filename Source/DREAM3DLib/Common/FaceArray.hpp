@@ -151,7 +151,7 @@ class FaceArray
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Faces, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
          // m_FacesContainingVert->incrementLinkCount(pts[j]);
@@ -164,7 +164,7 @@ class FaceArray
 
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Faces, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 3; j++)
         {
           m_FacesContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
