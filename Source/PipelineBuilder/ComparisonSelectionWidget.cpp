@@ -134,7 +134,7 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
-  //std::cout << "on_removeComparisonSelection_clicked" << std::endl;
+  //qDebug() << "on_removeComparisonSelection_clicked" << "\n";
   QItemSelectionModel *selectionModel = m_ComparisonSelectionTableView->selectionModel();
   if (!selectionModel->hasSelection()) return;
   QModelIndex index = selectionModel->currentIndex();

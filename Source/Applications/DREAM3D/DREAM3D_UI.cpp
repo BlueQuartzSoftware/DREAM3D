@@ -128,11 +128,11 @@ DREAM3D_UI::~DREAM3D_UI()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::resizeEvent ( QResizeEvent * event )
 {
- // std::cout << "DREAM3D_UI::resizeEvent" << std::endl;
- // std::cout << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << std::endl;
- // std::cout << "   newSize: " << event->size().width() << " x " << event->size().height() << std::endl;
+ // qDebug() << "DREAM3D_UI::resizeEvent" << "\n";
+ // qDebug() << "   oldSize: " << event->oldSize().width() << " x " << event->oldSize().height() << "\n";
+ // qDebug() << "   newSize: " << event->size().width() << " x " << event->size().height() << "\n";
   emit parentResized();
- // std::cout << "DREAM3D_UI::resizeEvent --- Done" << std::endl;
+ // qDebug() << "DREAM3D_UI::resizeEvent --- Done" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -204,7 +204,7 @@ void DREAM3D_UI::closeEvent(QCloseEvent *event)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::readSettings()
 {
-  // std::cout << "Read Settings" << std::endl;
+  // qDebug() << "Read Settings" << "\n";
 #if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
@@ -243,7 +243,7 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
     ok = restoreGeometry(geo_data);
     if (!ok)
     {
-      std::cout << "Error Restoring the Window Geometry" << std::endl;
+      qDebug() << "Error Restoring the Window Geometry" << "\n";
     }
   }
 
@@ -260,7 +260,7 @@ void DREAM3D_UI::readWindowSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::writeSettings()
 {
-  // std::cout << "writeSettings" << std::endl;
+  // qDebug() << "writeSettings" << "\n";
 #if defined (Q_OS_MAC)
   QSettings prefs(QSettings::NativeFormat, QSettings::UserScope, QCoreApplication::organizationDomain(), QCoreApplication::applicationName());
 #else
@@ -549,7 +549,7 @@ qint32 DREAM3D_UI::checkDirtyDocument()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::updateRecentFileList(const QString &file)
 {
- // std::cout << "DREAM3D_UI::updateRecentFileList" << std::endl;
+ // qDebug() << "DREAM3D_UI::updateRecentFileList" << "\n";
 
   // Clear the Recent Items Menu
   this->menu_RecentFiles->clear();
@@ -573,12 +573,12 @@ void DREAM3D_UI::updateRecentFileList(const QString &file)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::openRecentFile()
 {
-  //std::cout << "QRecentFileList::openRecentFile()" << std::endl;
+  //qDebug() << "QRecentFileList::openRecentFile()" << "\n";
 
   QAction *action = qobject_cast<QAction *>(sender());
   if (action)
   {
-    //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
+    //qDebug() << "Opening Recent file: " << action->data().toString().toStdString() << "\n";
     QString file = action->data().toString();
     //TODO: use the 'file' object to figure out what to open
   }
@@ -590,7 +590,7 @@ void DREAM3D_UI::openRecentFile()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::threadHasMessage(QString message)
 {
-  std::cout << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << std::endl;
+  qDebug() << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << "\n";
   this->statusBar()->showMessage(message);
 }
 
@@ -599,7 +599,7 @@ void DREAM3D_UI::threadHasMessage(QString message)
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
-//  std::cout << "DREAM3D_UI::loadPlugins" << std::endl;
+//  qDebug() << "DREAM3D_UI::loadPlugins" << "\n";
 
   foreach (QObject *plugin, QPluginLoader::staticInstances())
     populateMenus(plugin);
@@ -608,7 +608,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
- // std::cout << "aPluginDir: " << aPluginDir.absolutePath().toStdString() << std::endl;
+ // qDebug() << "aPluginDir: " << aPluginDir.absolutePath().toStdString() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -652,11 +652,11 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    //std::cout << "Plugin Directory being Searched: " << pluginDirString.toStdString() << std::endl;
+    //qDebug() << "Plugin Directory being Searched: " << pluginDirString.toStdString() << "\n";
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
-      //   std::cout << "File: " << fileName.toStdString() << std::endl;
+      //   qDebug() << "File: " << fileName.toStdString() << "\n";
 #ifdef QT_DEBUG
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #else
@@ -665,7 +665,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
         //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
-        //std::cout << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << std::endl;
+        //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << "\n";
       }
     }
   }
@@ -675,14 +675,14 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   // file system and add each to the toolbar and menu
   foreach(QString path, pluginFilePaths)
   {
-    std::cout << "Plugin Being Loaded:" << std::endl;
-    std::cout << "    File Extension: .plugin" << std::endl;
-    std::cout << "    Path: " << path.toStdString() << std::endl;
+    qDebug() << "Plugin Being Loaded:" << "\n";
+    qDebug() << "    File Extension: .plugin" << "\n";
+    qDebug() << "    Path: " << path.toStdString() << "\n";
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
     QObject *plugin = loader.instance();
-    std::cout << "    Pointer: " << plugin << std::endl;
+    qDebug() << "    Pointer: " << plugin << "\n";
     if (plugin && m_PluginFileNames.contains(fileName, Qt::CaseSensitive) == false)
     {
       //populateMenus(plugin);
@@ -703,7 +703,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
                                 message,
                                 QMessageBox::Ok | QMessageBox::Default);
-      //std::cout << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << std::endl;
+      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << "\n";
     }
   }
 #if 0
@@ -726,7 +726,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
 {
 #if 0
 #ifdef QT_DEBUG
-  std::cout << "Found Plugin..." << std::endl;
+  qDebug() << "Found Plugin..." << "\n";
 #endif
   DREAM3DPluginInterface* ipPlugin = qobject_cast<DREAM3DPluginInterface * > (plugin);
   if (ipPlugin)

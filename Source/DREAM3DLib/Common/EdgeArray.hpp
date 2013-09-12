@@ -53,7 +53,7 @@
 class EdgeArray
 {
   public:
-    
+
     typedef struct
     {
       size_t verts[2];
@@ -174,11 +174,11 @@ class EdgeArray
       // Build up the Face Adjacency list now that we have the cell links
       for(size_t t = 0; t < nEdges; ++t)
       {
-        //   std::cout << "Analyzing Face " << t << std::endl;
+        //   qDebug() << "Analyzing Face " << t << "\n";
         Edge_t& seedEdge = *(Edges->GetPointer(t));
         for(size_t v = 0; v < 2; ++v)
         {
-          //   std::cout << " vert " << v << std::endl;
+          //   qDebug() << " vert " << v << "\n";
           int nEs = m_EdgesContainingVert->getNumberOfElements(seedEdge.verts[v]);
           int* vertIdxs = m_EdgesContainingVert->getElementListPointer(seedEdge.verts[v]);
 
@@ -186,7 +186,7 @@ class EdgeArray
           {
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
-            //      std::cout << "   Comparing Face " << vertIdxs[vt] << std::endl;
+            //      qDebug() << "   Comparing Face " << vertIdxs[vt] << "\n";
             Edge_t& vertEdge = *(Edges->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
@@ -213,7 +213,7 @@ class EdgeArray
             // into the list of Face Indices as neighbors for the source triangle.
             if (vCount == 1)
             {
-              //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
+              //qDebug() << "       Neighbor: " << vertIdxs[vt] << "\n";
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
               loop_neighbors[linkCount[t]] = vertIdxs[vt];

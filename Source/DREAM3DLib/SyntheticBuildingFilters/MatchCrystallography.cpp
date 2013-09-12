@@ -170,7 +170,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       if (NULL == m->getCellFieldData(m_NeighborListArrayName).get())
   {
     ss.str("");
-    ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << "\n";
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -182,7 +182,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
     ss.str("");
-    ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << "\n";
     setErrorCondition(-306);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -194,7 +194,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getCellEnsembleData(m_StatsDataArrayName).get())
   {
     ss.str("");
-    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline." << "\n";
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }

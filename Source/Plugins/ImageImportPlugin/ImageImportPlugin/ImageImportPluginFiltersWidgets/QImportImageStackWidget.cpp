@@ -345,7 +345,7 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 bool QImportImageStackWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+//  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -374,7 +374,7 @@ void QImportImageStackWidget::checkIOFiles()
 // -----------------------------------------------------------------------------
 void QImportImageStackWidget::on_m_InputDirBtn_clicked()
 {
-  // std::cout << "on_angDirBtn_clicked" << std::endl;
+  // qDebug() << "on_angDirBtn_clicked" << "\n";
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if (!outputFile.isNull())

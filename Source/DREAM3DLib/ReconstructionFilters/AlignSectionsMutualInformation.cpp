@@ -388,7 +388,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if(getWriteAlignmentShifts() == true)
     {
-      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << "\n";
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;

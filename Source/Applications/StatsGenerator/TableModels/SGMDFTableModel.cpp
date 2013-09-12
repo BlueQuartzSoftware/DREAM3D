@@ -67,7 +67,7 @@ SGMDFTableModel::~SGMDFTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags SGMDFTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGMDFTableModel::flags" << std::endl;
+  //  qDebug() << "SGMDFTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -221,7 +221,7 @@ bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "SGMDFTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGMDFTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

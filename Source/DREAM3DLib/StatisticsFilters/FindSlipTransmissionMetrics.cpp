@@ -120,7 +120,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   if(m_NeighborList == NULL)
   {
     ss.str("");
-    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+    ss << "NeighborLists Array Not Initialized correctly" << "\n";
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), -305);
   }
@@ -131,7 +131,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
-    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -142,7 +142,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
-    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -153,7 +153,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
-    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -164,7 +164,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
-    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
+    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
     setErrorCondition(-308);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }

@@ -175,7 +175,7 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized Correctly" << std::endl;
+    ss << "NeighborLists Array Not Initialized Correctly" << "\n";
     setErrorCondition(-304);
     addErrorMessage(getHumanLabel(), ss.str(), -304);
   }

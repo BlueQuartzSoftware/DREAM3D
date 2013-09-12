@@ -485,17 +485,17 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
   {
-    std::cout << "QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
+    qDebug() << "QFilterWidget Found: " << w->getFilter()->getNameOfClass() << "\n";
   }
   QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
   if (l != NULL)
   {
-    std::cout << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << std::endl;
+    qDebug() << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << "\n";
   }
   PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
   if (o != NULL)
   {
-    std::cout << "PipelineViewWidget::dragEnterEvent: " << o->objectName().toStdString() << std::endl;
+    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName().toStdString() << "\n";
   }
 #endif
 }

@@ -95,7 +95,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     virtual ~ManagedArrayOfArrays()
     {
-      //std::cout << "~ManagedArrayOfArraysTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~ManagedArrayOfArraysTemplate '" << m_Name << "'" << "\n";
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -183,7 +183,7 @@ class ManagedArrayOfArrays : public IDataArray
       this->Array = (Data_t*)malloc(newSize * sizeof(Data_t));
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << "\n";
         return -1;
       }
       this->Size = newSize;
@@ -658,7 +658,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)malloc(newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << "\n";
           return 0;
         }
 
@@ -671,7 +671,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)realloc(this->Array, newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << "\n";
           return 0;
         }
       }
@@ -680,7 +680,7 @@ class ManagedArrayOfArrays : public IDataArray
         newArray = (Data_t*)malloc(newSize * sizeof(Data_t));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(Data_t) << " bytes. " << "\n";
           return 0;
         }
 

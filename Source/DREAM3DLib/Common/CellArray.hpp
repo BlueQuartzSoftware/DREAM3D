@@ -39,7 +39,11 @@
 
 #include <string.h>
 
+
 #include <boost/shared_array.hpp>
+
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -53,7 +57,7 @@
 class CellArray
 {
   public:
-    
+
     typedef struct
     {
       size_t verts[3];
@@ -113,7 +117,7 @@ class CellArray
       m_CellsContainingVert = DynamicListArray::New();
 
       // Allocate the basic structures
-      std::vector<uint16_t> linkCount(numCells, 0);
+      QVector<uint16_t> linkCount(numCells, 0);
 
       size_t cellId;
       unsigned short* linkLoc;
@@ -176,11 +180,11 @@ class CellArray
       // Build up the Cell Adjacency list now that we have the cell links
       for(size_t t = 0; t < nCells; ++t)
       {
-        //   std::cout << "Analyzing Cell " << t << std::endl;
+        //   qDebug() << "Analyzing Cell " << t << "\n";
         Cell_t& seedCell = *(Cells->GetPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
-          //   std::cout << " vert " << v << std::endl;
+          //   qDebug() << " vert " << v << "\n";
           int nCs = m_CellsContainingVert->getNumberOfElements(seedCell.verts[v]);
           int* vertIdxs = m_CellsContainingVert->getElementListPointer(seedCell.verts[v]);
 
@@ -188,7 +192,7 @@ class CellArray
           {
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
-            //      std::cout << "   Comparing Cell " << vertIdxs[vt] << std::endl;
+            //      qDebug() << "   Comparing Cell " << vertIdxs[vt] << "\n";
             Cell_t& vertCell = *(Cells->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
@@ -221,7 +225,7 @@ class CellArray
             // into the list of Cell Indices as neighbors for the source triangle.
             if (vCount == 2)
             {
-              //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
+              //qDebug() << "       Neighbor: " << vertIdxs[vt] << "\n";
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
               loop_neighbors[linkCount[t]] = vertIdxs[vt];

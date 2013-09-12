@@ -138,8 +138,8 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
         inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
         {
-          std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-              << " vs " << (totalSize * sizeof(T)) << std::endl;
+          qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
+              << " vs " << (totalSize * sizeof(T)) << "\n";
           return -1;
         }
         if (totalSize > 1) {
@@ -183,8 +183,8 @@ class DREAM3DLib_EXPORT VTKFileReader : public FileReader
         inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
         {
-          std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
-              << (totalSize * sizeof(T)) << std::endl;
+          qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
+              << (totalSize * sizeof(T)) << "\n";
           return -1;
         }
         delete buffer;

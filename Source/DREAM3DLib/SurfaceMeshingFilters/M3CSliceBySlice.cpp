@@ -307,7 +307,7 @@ class GrainChecker
         vCount = m.size();
         if (tCount + 4 != vCount * 2)
         {
-          std::cout << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount << std::endl;
+          qDebug() << "Grain ID: " << i << " Does not satisfy equation T=2V-4    " << "  tCount: " << tCount << "   " << "  vCount: " << vCount << "\n";
         }
       }
     }
@@ -466,8 +466,8 @@ void M3CSliceBySlice::execute()
 
   if (m_DeleteTempFiles == false)
   {
-    std::cout << nodesFile << std::endl;
-    std::cout << trianglesFile << std::endl;
+    qDebug() << nodesFile << "\n";
+    qDebug() << trianglesFile << "\n";
   }
 
 
@@ -1164,7 +1164,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   }
                   cEdgePtr->Resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
                   currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
-                  //std::cout << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << std::endl;
+                  //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
                 }
 
                 SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
@@ -1655,10 +1655,10 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
     }
   }
 
-  //  std::cout << "cTrianglePtr->Resize(" << tidIn << ")" << std::endl;
+  //  qDebug() << "cTrianglePtr->Resize(" << tidIn << ")" << "\n";
   cTrianglePtr->Resize(tidIn);
 
-  //  std::cout << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array" << std::endl;
+  //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array" << "\n";
   cEdgePtr->Resize(0);
 
   return cTrianglePtr->GetNumberOfTuples();
@@ -1689,7 +1689,7 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   cTriangle[ctid].node_id[2] = n2;\
   cTriangle[ctid].nSpin[0] = label0;\
   cTriangle[ctid].nSpin[1] = label1;\
-  if (ctid == 3112052) { std::cout << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1] << std::endl;}
+  if (ctid == 3112052) { qDebug() << "ctid: " << ctid << "  " << label0 << " " << label1 << ":: " << cTriangle[ctid].nSpin[0] << "  " << cTriangle[ctid].nSpin[1] << "\n";}
 
 
 // -----------------------------------------------------------------------------
@@ -2775,7 +2775,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   size_t totalWritten = 0;
   FILE* f = NULL;
 
-  // std::cout << "M3CSliceBySlice writing Nodes file " << cNodeID << std::endl;
+  // qDebug() << "M3CSliceBySlice writing Nodes file " << cNodeID << "\n";
 
   // Create a new file if this is our first slice
   if (zID == 0)
@@ -2815,12 +2815,12 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
       totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
       if (totalWritten != 1)
       {
-        std::cout << "Not enough data written to the Nodes file." << std::endl;
+        qDebug() << "Not enough data written to the Nodes file." << "\n";
         return -1;
       }
       //      if (nodeKind[k] < 0)
       //      {
-      //        std::cout <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k] << std::endl;
+      //        std::cout <<getNameOfClass() <<  ": Node Id: " << record.nodeId << " NEGATIVE Node Type: " << nodeKind[k] << "\n";
       //      }
     }
   }
@@ -2846,7 +2846,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   const size_t BYTE_COUNT = SurfaceMesh::TrianglesFile::ByteCount;
   SurfaceMesh::TrianglesFile::TrianglesFileRecord_t record;
   record.triId = ctid;
-  //  std::cout << "Writing Triangles Starting at " << record.triId << std::endl;
+  //  qDebug() << "Writing Triangles Starting at " << record.triId << "\n";
   // int tag;
   int end = nt;
   int n1, n2, n3;
@@ -2901,7 +2901,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
     totalWritten = fwrite(&record, BYTE_COUNT, 1, f);
     if (totalWritten != 1)
     {
-      std::cout << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << std::endl;
+      qDebug() << "Error Writing Triangles Temp File. Not enough elements written. Wrote " << totalWritten << " of 6." << "\n";
       return -1;
     }
     record.triId = record.triId + 1;
@@ -2919,10 +2919,10 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::analyzeWinding()
 {
-  //  std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
-  //  std::cout << " Edge Count: " << eMap.size() << std::endl;
-  //  std::cout << " Triangle Count: " << cTriangle.size() << std::endl;
-  //  std::cout << "labelTriangleMap.size(): " << labelTriangleMap.size() << std::endl;
+  //  qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << "\n";
+  //  qDebug() << " Edge Count: " << eMap.size() << "\n";
+  //  qDebug() << " Triangle Count: " << cTriangle.size() << "\n";
+  //  qDebug() << "labelTriangleMap.size(): " << labelTriangleMap.size() << "\n";
 
   float total = (float)(labelTriangleMap.size());
   // Keeps a list of all the triangles that have been visited.
@@ -2946,16 +2946,16 @@ void M3CSliceBySlice::analyzeWinding()
 
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
-      //   std::cout << "Verifying Winding: " << curPercent << "% Complete" << std::endl;
+      //   qDebug() << "Verifying Winding: " << curPercent << "% Complete" << "\n";
       curPercent += 5.0f;
     }
     ++progressIndex;
-    //  std::cout << "Current Label: " << currentLabel << std::endl;
+    //  qDebug() << "Current Label: " << currentLabel << "\n";
     //  int seedTriIndex = masterTriangleIndex;
 
     if (NULL == t.get() )
     {
-      std::cout << "Could not find a triangle with the winding set. This should NOT happen" << std::endl;
+      qDebug() << "Could not find a triangle with the winding set. This should NOT happen" << "\n";
       BOOST_ASSERT(1 == 0);
     }
 
@@ -2966,15 +2966,15 @@ void M3CSliceBySlice::analyzeWinding()
     while (triangleDeque.empty() == false)
     {
       SurfaceMesh::M3C::Patch::Pointer currentTri = cTriangle[triangleDeque.front()];
-      //    std::cout << "tIndex = " << t->tIndex << std::endl;
+      //    qDebug() << "tIndex = " << t->tIndex << "\n";
       localVisited.insert(currentTri->tIndex);
       QVector<int> adjTris = findAdjacentTriangles(currentTri, currentLabel);
       for ( QVector<int>::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri )
       {
-        //  std::cout << "  ^ AdjTri index: " << (*adjTri)->tIndex << std::endl;
+        //  qDebug() << "  ^ AdjTri index: " << (*adjTri)->tIndex << "\n";
         if (masterVisited[*adjTri] == false)
         {
-          //   std::cout << "   * Checking Winding: " << (*adjTri)->tIndex << std::endl;
+          //   qDebug() << "   * Checking Winding: " << (*adjTri)->tIndex << "\n";
           SurfaceMesh::M3C::Patch::Pointer triToVerify = cTriangle[*adjTri];
           currentTri->verifyWinding( triToVerify.get(), currentLabel);
         }
@@ -2982,7 +2982,7 @@ void M3CSliceBySlice::analyzeWinding()
         if (localVisited.find(*adjTri) == localVisited.end()
             && find(triangleDeque.begin(), triangleDeque.end(), *adjTri) == triangleDeque.end())
         {
-          // std::cout << "   # Adding to Deque: " << (*adjTri)->tIndex << std::endl;
+          // qDebug() << "   # Adding to Deque: " << (*adjTri)->tIndex << "\n";
           triangleDeque.push_back(*adjTri);
           localVisited.insert(*adjTri);
           masterVisited[*adjTri] = true;
@@ -2994,7 +2994,7 @@ void M3CSliceBySlice::analyzeWinding()
 
   }
 
-  // std::cout << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << std::endl;
+  // qDebug() << "+++++++++++++++++++++++++++++++++++++++++++++++++++++++" << "\n";
 }
 
 
@@ -3022,7 +3022,7 @@ QVector<int> M3CSliceBySlice::findAdjacentTriangles(SurfaceMesh::M3C::Triangle* 
       if ( (t->nSpin[0] == label || t->nSpin[1] == label)
            && (t->tIndex != triangle->tIndex) )
       {
-        //   std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
+        //   qDebug() << "    Found Adjacent Triangle: " << t->tIndex << "\n";
         adjacentTris.push_back(t->tIndex);
       }
     }

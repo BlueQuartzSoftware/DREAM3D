@@ -59,9 +59,9 @@ FilterWidgetManager::Pointer FilterWidgetManager::Instance()
 
   if (singleton.get() == NULL)
   {
-   //   std::cout << "FilterWidgetManager::Instance singleton was NULL" << std::endl;
+   //   qDebug() << "FilterWidgetManager::Instance singleton was NULL" << "\n";
     singleton.reset (new FilterWidgetManager() );
-   // std::cout << "singleton.get(): " << singleton.get() << std::endl;
+   // qDebug() << "singleton.get(): " << singleton.get() << "\n";
   }
   return singleton;
 }
@@ -138,7 +138,7 @@ void FilterWidgetManager::addFilterWidgetFactory(const QString &name, IFilterWid
 // -----------------------------------------------------------------------------
 QSet<QString> FilterWidgetManager::getGroupNames()
 {
- // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
+ // qDebug() << "FilterWidgetManager::getGroupNames" << "\n";
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories();
@@ -147,7 +147,7 @@ QSet<QString> FilterWidgetManager::getGroupNames()
   {
     IFilterWidgetFactory::Pointer filterFactory = (*factory).second;
     groupNames.insert((*factory).second->getFilterGroup());
-  //  std::cout << (*factory).second->getFilterGroup() << std::endl;
+  //  qDebug() << (*factory).second->getFilterGroup() << "\n";
   }
   return groupNames;
 }
@@ -157,7 +157,7 @@ QSet<QString> FilterWidgetManager::getGroupNames()
 // -----------------------------------------------------------------------------
 QSet<QString> FilterWidgetManager::getSubGroupNames(const QString &groupName)
 {
- // std::cout << "FilterWidgetManager::getGroupNames" << std::endl;
+ // qDebug() << "FilterWidgetManager::getGroupNames" << "\n";
   // Get all the Widget Factories and loop over each one we know about and instantiate a new one
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
   FilterWidgetManager::Collection factories = fm->getFactories();

@@ -38,11 +38,11 @@
 
 
 #define TEST_PREREQ_DATA( dc, NameSpace, DType, Name, errVariable, errCode, ptrType, ArrayType, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){ \
+  {if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(errCode##000);\
-    QTextStream _##Name##_ss;\
-    _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getHumanLabel(), _##Name##_ss.str(), errCode##000);\
+    QString _##Name##_ss;\
+    _##Name##_ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array" ;\
+    addErrorMessage(getHumanLabel(), _##Name##_ss, errCode##000);\
   }\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL == m_##Name ) {\
@@ -65,26 +65,26 @@
  * @param NumComp The number of components of the DataArray
  */
 #define GET_PREREQ_DATA( dc, NameSpace, DType, Name, err, ptrType, ArrayType, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){ \
+  { QString ss; \
+  if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
-    ss << "The name of the array for the " << #NameSpace << "::" << #DType << "::" << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+    ss = QObject::tr("The name of the array for the %1::%2::%3 was empty. Please provide a name for this array").arg(#NameSpace).arg(#DType).arg(#Name);\
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
     setErrorCondition(err##001);\
-    ss.str("");\
-    ss << "An array with name '" << m_##Name##ArrayName << "'' in the " << #DType << " grouping does not exist and is required for this filter to execute." << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+    ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   else { \
-  QString _s(#Name); \
-  /* addRequired##DType(_s);*/\
+  /* QString _s(#Name); \
+  addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named 'm_" << #Name  << "' for this filter."\
-    << "The preflight failed for one or more reasons. Check additional error messages for more details." << std::endl;\
+    ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named 'm_%2' for this filter."\
+    "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#Name);\
     setErrorCondition(err##002);\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
   }}}
 
 /**
@@ -100,62 +100,61 @@
  * @param NumComp The number of components of the DataArray
  */
 #define GET_PREREQ_DATA_2( dc, DType, Name, err, ptrType, ArrayType, size, NumComp)\
-  {if (m_##Name##ArrayName.empty() == true){ \
+  {QString ss;\
+  if (m_##Name##ArrayName.isEmpty() == true){ \
     setErrorCondition(err##000);\
-    ss << "The name of the array for the " << #Name << " was empty. Please provide a name for this array" << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+    ss = QObject::tr("The name of the array for the %1 was empty. Please provide a name for this array").arg(#Name);\
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   if (dc->does##DType##Exist(m_##Name##ArrayName) == false) {\
     setErrorCondition(err##001);\
-    ss.str("");\
-    ss << "An array with name '" << m_##Name##ArrayName << "'' in the " << #DType << " grouping does not exist and is required for this filter to execute." << std::endl;\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+    ss = QObject::tr("An array with name '%1' in the %2 grouping does not exist and is required for this filter to execute.").arg(m_##Name##ArrayName).arg(#DType);\
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
   }\
   else { \
-  QString _s(#Name); \
-  /* addRequired##DType(_s);*/\
+  /* QString _s(#Name); \
+  addRequired##DType(_s);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, this);\
   if (NULL == m_##Name ) {\
-    ss << "\nThe current array with name '" << m_##Name##ArrayName << "' is not valid for the internal array named '" << #DType << "::" << #Name  << "' for this filter."\
-    << "The preflight failed for one or more reasons. Check additional error messages for more details." << std::endl;\
+    ss = QObject::tr("\nThe current array with name '%1' is not valid for the internal array named '%2::%3' for this filter."\
+     "The preflight failed for one or more reasons. Check additional error messages for more details.").arg(m_##Name##ArrayName).arg(#DType).arg(#Name);\
     setErrorCondition(err##002);\
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition()); \
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition()); \
   }}}
 
 
 #define CREATE_NON_PREREQ_DATA(dc, NameSpace, DType, Name, ptrType, ArrayType, initValue, size, NumComp)\
   {\
-  if (m_##Name##ArrayName.empty() == true)\
+  if (m_##Name##ArrayName.isEmpty() == true)\
   {\
     setErrorCondition(-10000);\
-    ss.str(""); ss << "The name of the array for the " << #NameSpace << #DType << #Name << " was empty. Please provide a name for this array." << std::endl; \
-    addErrorMessage(getHumanLabel(), ss.str(), -10000);\
+    QString ss = QObject::tr("The name of the array for the "  #NameSpace  #DType  #Name " was empty. Please provide a name for this array.");\
+    addErrorMessage(getHumanLabel(), ss, -10000);\
   }\
-  QString _s(#Name);\
+  /* QString _s(#Name);*/\
   m_##Name = dc->get##DType##SizeCheck<ptrType, ArrayType, AbstractFilter>(m_##Name##ArrayName, size, NumComp, NULL);\
   if (NULL ==  m_##Name ) \
   {\
     ArrayType::Pointer p = ArrayType::CreateArray((size * NumComp), m_##Name##ArrayName);\
     if (NULL == p.get()) \
     {\
-      ss.str(""); ss << "Filter " << getNameOfClass() << " attempted to create array "; \
-      if (m_##Name##ArrayName.empty() == true) \
+      QString ss;\
+      if (m_##Name##ArrayName.isEmpty() == true) \
       {\
-        ss << " with an empty name and that is not allowed." << std::endl;;\
+        ss = QObject::tr("Filter %1 attempted to create array with an empty name and that is not allowed.").arg(getNameOfClass());\
         setErrorCondition(-501);\
       } else {\
-        ss << "'" << m_##Name##ArrayName << "' but was unsuccessful. This is most likely due to not enough contiguous memory." << std::endl;\
+         ss = QObject::tr("Filter %1 attempted to create array' %2' but was unsuccessful. This is most likely due to not enough contiguous memory.").arg(getNameOfClass()).arg(m_##Name##ArrayName);\
         setErrorCondition(-500);\
       }\
-      addErrorMessage(getHumanLabel(), ss.str(), -50001);\
+      addErrorMessage(getHumanLabel(), ss, -50001);\
     } \
     else if (p->GetPointer(0) == NULL)\
     {\
       setErrorCondition(-11000);\
-      ss.str("");\
-      ss << "'" << m_##Name##ArrayName << "' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
-      << " Please add a filter before this filter that will result in a properly sized array.";\
-      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());\
+      QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
+        " Please add a filter before this filter that will result in a properly sized array.").arg(m_##Name##ArrayName);\
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());\
     }\
     else {\
       p->initializeWithValues(initValue);\
@@ -205,34 +204,30 @@ if (iDataArray.get() == 0) {\
   return gi;\
 }\
 if (size*numComp != iDataArray->GetSize()) {\
-  QTextStream s;\
-  s << " - Array '" << arrayName << "' from the DataContainer class did not have the required number of elements.";\
-  s << " Required: " << (size*numComp) << " Contains: " << iDataArray->GetSize();\
+  QString s = QObject::tr(" - Array '%1' from the DataContainer class did not have the required number of elements. Required: %2 Contains: %3").arg(arrayName).arg((size*numComp)).arg(iDataArray->GetSize());\
   if (NULL != obv) {obv->setErrorCondition(-501);\
-  obv->addErrorMessage(obv->getHumanLabel(), s.str(), -501);}\
+  obv->addErrorMessage(obv->getHumanLabel(), s, -501);}\
   return gi;\
 }\
 if (numComp != iDataArray->GetNumberOfComponents()) {\
       if (NULL != obv) {\
-      ss << "\nFilter " << obv->getHumanLabel() << " requires an array where the number of components is " << numComp << " but the array"\
-      << " that was supplied has " << iDataArray->GetNumberOfComponents() << "." << std::endl;\
-      obv->addErrorMessage(obv->getHumanLabel(), ss.str(),503);}\
+      QString ss = QObject::tr("Filter '%1'' requires an array where the number of components is %2 but the array"\
+      " that was supplied has %3.").arg(obv->getHumanLabel()).arg(numComp).arg(iDataArray->GetNumberOfComponents());\
+      obv->addErrorMessage(obv->getHumanLabel(), ss, -503);}\
       return gi;\
 }\
   gi = IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == gi) {\
     typename DataArrayType::Pointer dat = DataArrayType::CreateArray(1, "JUNK-INTERNAL-USE-ONLY");\
-    QTextStream s;\
-    s << " - The filter requested an array named '" << arrayName << " ' with type " << dat->getTypeAsString() << " from the " << getNameOfClass() << std::endl;\
-    s << "An Array with name '" << arrayName << "' is stored in the " << getNameOfClass() << " but is of type " << iDataArray->getTypeAsString() << std::endl;\
+    QString s = QObject::tr(" - The filter requested an array named '%1' with type '%2' from the %3.\n"\
+      "An Array with name '%4' is stored in the %5 but is of type %6\n")\
+    .arg(arrayName).arg(dat->getTypeAsString()).arg(getNameOfClass()).arg(arrayName).arg(getNameOfClass()).arg(iDataArray->getTypeAsString());\
     if (NULL != obv) {obv->setErrorCondition(-502);\
-    obv->addErrorMessage(obv->getHumanLabel(), s.str(), -502);}\
+    obv->addErrorMessage(obv->getHumanLabel(), s, -502);}\
     return gi;\
   }\
 return gi;\
 }
-
-
 
 
 
@@ -247,10 +242,9 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp,
     iDataArray->initializeWithZeros();\
     iDataArray->SetNumberOfComponents(numComp);\
     if (NULL == iDataArray.get()) { \
-      QTextStream s;\
-      s << ": Array '" << arrayName << "' could not allocate " << size << " elements.";\
+      QString s = QObject::tr(": Array '%1' could not allocate %2 elements.").arg(arrayName).arg(size);\
       if (NULL != obv) {obv->setErrorCondition(-25);\
-      obv->addErrorMessage(getNameOfClass(), s.str(), -25);}\
+      obv->addErrorMessage(getNameOfClass(), s, -25);}\
       return valuePtr;\
     }\
     add##Field##Data(arrayName, iDataArray);\
@@ -258,10 +252,9 @@ PtrType* create##Field##Data(const QString &arrayName, size_t size, int numComp,
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, DataArrayType*, PtrType* >(iDataArray.get());\
   if (NULL == valuePtr) {\
-    QTextStream s;\
-    s << ": Array '" << arrayName << "' could not be cast to proper type;";\
+      QString s = QObject::tr(": Array '%1' could not be cast to proper type").arg(arrayName);\
     if (NULL != obv) {obv->setErrorCondition(-12);\
-    obv->addErrorMessage(getNameOfClass(), s.str(), -12);}\
+    obv->addErrorMessage(getNameOfClass(), s, -12);}\
     return valuePtr;\
   }\
   return valuePtr;\
@@ -273,26 +266,23 @@ m_msgType* valuePtr = NULL;\
 {\
   IDataArray::Pointer iDataArray = dataContainer->get##field##Data(name);\
   if (iDataArray.get() == NULL) { \
-    QTextStream s;\
-    s << ": Array " << name << " from the DataContainer class was not in the DataContainer";\
+    QString s = QObject::tr(": Array %1 from the DataContainer class was not in the DataContainer").arg(name);\
     setErrorCondition(-10);\
-    addErrorMessage(getNameOfClass(), s.str(), -10);\
+    addErrorMessage(getNameOfClass(), s, -10);\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    QTextStream s;\
-    s << ": Array " << name << " from the DataContainer class did not have the correct number of elements.";\
+    QString s = QObject::tr(": Array %1 from the DataContainer class did not have the correct number of elements.").arg(name);\
     setErrorCondition(-20);\
-    addErrorMessage(getNameOfClass(), s.str(), -20);\
+    addErrorMessage(getNameOfClass(), s, -20);\
     return -20;\
   }\
   valuePtr =\
   IDataArray::SafeReinterpretCast<IDataArray*, typeClass*, m_msgType* >(dataContainer->get##field##Data(name).get());\
   if (NULL == valuePtr) {\
-    QTextStream s;\
-    s << ": Array " << name << " from the DataContainer class could not be cast to type " << #m_msgType;\
+    QString s = QObject::tr(": Array %1 from the DataContainer class could not be cast to type ").arg(#m_msgType);\
     setErrorCondition(-30);\
-    addErrorMessage(getNameOfClass(), s.str(), -30);\
+    addErrorMessage(getNameOfClass(), s, -30);\
     return -30;\
   }\
 }
@@ -322,7 +312,7 @@ m_msgType* valuePtr = NULL;\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    std::cout << name << " Size did not match." << size << " vs " << iDataArray->GetNumberOfTuples() << std::endl;\
+    qDebug() << name << " Size did not match." << size << " vs " << iDataArray->GetNumberOfTuples() ;\
     return -20;\
   }\
   valuePtr =\
@@ -339,8 +329,8 @@ virtual bool does##DType##Exist(const QString &name);
 
 #define DOES_DATASET_EXIST_DEFN(Class, DType)\
 bool Class::does##DType##Exist(const QString &name) {\
-  QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);\
-  return ( iter != m_##DType.end());\
+  /*QMap<QString, IDataArray::Pointer>::iterator iter = m_##DType.find(name);*/\
+  return  m_##DType.contains(name);\
 }
 
 #endif /* _DATACONTAINERMACROS_H_ */
@@ -353,7 +343,7 @@ bool Class::does##DType##Exist(const QString &name) {\
   GET_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, -300, bool, BoolArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -300, bool, BoolArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, -301, int8_t, Int8ArrayType, voxels)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, -301, int8_t, Int8ArrayType, voxels)
   GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainMisorientations, -300, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, MisorientationGradients, -300, float, FloatArrayType, voxels, 1)
@@ -364,77 +354,77 @@ bool Class::does##DType##Exist(const QString &name) {\
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType,  voxels, 3)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, ss, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, ss, bool, BoolArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, ss, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Neighbors, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, AlreadyChecked, bool, BoolArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Phases, C, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, voxels, 3)
 
 
   // Field Data
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, -303,  int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, -304, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, -303,  int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Active, -304, bool, BoolArrayType, fields, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -300, float, FloatArrayType, voxels, 5)
   GET_PREREQ_DATA(m, DREAM3D, CellData, EulerAngles, -304, float, FloatArrayType, voxels, 3)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -304, bool, BoolArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, -306, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, -302, int32_t, Int32ArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -303, bool, BoolArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, -307, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, ss, -308, float, FloatArrayType, fields)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, -309, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -310, float, FloatArrayType, fields, 3)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, -306, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -303, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -305, float, FloatArrayType, fields)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, -307, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, -308, float, FloatArrayType, fields)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, -309, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -310, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, -306, int32_t, Int32ArrayType, fields, 1)
 
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, ss, float, FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, ss, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, ss, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, ss, float, FloatArrayType, fields, 5)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, ss, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Neighborhoods, ss, int32_t, Int32ArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumCells, ss, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, ss, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Volumes, ss, float, FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisLengths, ss, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AxisEulerAngles, ss, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Omega3s, ss, float,FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, ss, float,FloatArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, ss, float, FloatArrayType, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Phases, F, ss, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SlipSystems, ss, int32_t, Int32ArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AspectRatios, ss, float,FloatArrayType, fields, 2)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, float, FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, float, FloatArrayType, fields, 5)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, int32_t, Int32ArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumCells, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, float,FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float,FloatArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Phases, F, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SlipSystems, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, float,FloatArrayType, fields, 2)
 
  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
+                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;
     setErrorCondition(-308);
   }
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
-    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" << std::endl;
+    ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;
     setErrorCondition(-309);
   }
 
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, TotalSurfaceArea, -303,  float, FloatArrayType, m->crystruct.size(), 1);
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, TotalSurfaceArea, -303,  float, FloatArrayType, m->crystruct.size(), 1);
 
 
 

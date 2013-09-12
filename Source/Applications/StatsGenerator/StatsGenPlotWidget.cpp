@@ -73,9 +73,9 @@
 #include "DREAM3DLib/Common/StatsGen.hpp"
 
 #define SG_ERROR_CHECK(name)\
-    std::cout << "Error writing HDF5 data to " << name << std::endl;\
-    std::cout << "  File: " << __FILE__ << std::endl;\
-    std::cout << "  Line: " << __LINE__ << std::endl;
+    qDebug() << "Error writing HDF5 data to " << name << "\n";\
+    qDebug() << "  File: " << __FILE__ << "\n";\
+    qDebug() << "  Line: " << __LINE__ << "\n";
 
 // -----------------------------------------------------------------------------
 //
@@ -415,7 +415,7 @@ void StatsGenPlotWidget::setupGui()
 // -----------------------------------------------------------------------------
 void StatsGenPlotWidget::updatePlotCurves()
 {
-// std::cout << "StatsGenPlotWidget::updatePlotCurves" << std::endl;
+// qDebug() << "StatsGenPlotWidget::updatePlotCurves" << "\n";
   //Loop over each entry in the table
   QwtPlotCurve* curve = NULL;
 
@@ -504,7 +504,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -551,7 +551,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];
@@ -598,7 +598,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   QwtArray<double> yD(size);
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];

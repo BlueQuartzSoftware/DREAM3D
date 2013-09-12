@@ -157,7 +157,7 @@ int VTKFileReader::readHeader()
   instream.open(getInputFile().c_str(), std::ios_base::binary);
   if (!instream.is_open())
   {
-    std::cout << logTime() << " vtk file could not be opened: " << getInputFile() << std::endl;
+    qDebug() << logTime() << " vtk file could not be opened: " << getInputFile() << "\n";
     return -1;
   }
   char buf[kBufferSize];
@@ -179,9 +179,9 @@ int VTKFileReader::readHeader()
   else
   {
     err = -1;
-    std::cout << logTime()
+    qDebug() << logTime()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+        << "\n";
     return err;
   }
   ::memset(buf, 0, kBufferSize);
@@ -191,7 +191,7 @@ int VTKFileReader::readHeader()
     int n = sscanf(buf, "%s %s", text, &(text[16]) );
     if (n < 2)
     {
-      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
+      qDebug() << "Error Reading the type of data set. Was expecting 2 fields but got " << n << "\n";
       return -1;
     }
     QString dataset(&(text[16]));

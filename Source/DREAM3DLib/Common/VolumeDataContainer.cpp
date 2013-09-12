@@ -87,9 +87,9 @@ void VolumeDataContainer::addCellData(const QString &name, IDataArray::Pointer d
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Cell array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Cell array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_CellData[name] = data;
@@ -107,7 +107,7 @@ IDataArray::Pointer VolumeDataContainer::getCellData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -121,7 +121,7 @@ IDataArray::Pointer VolumeDataContainer::removeCellData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_CellData.erase(it);
   return p;
 }
@@ -137,7 +137,7 @@ bool VolumeDataContainer::renameCellData(const QString &oldname, const QString &
   {
 	  return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeCellData(oldname);
   addCellData(newname, p);
@@ -186,7 +186,7 @@ IDataArray::Pointer VolumeDataContainer::getCellFieldData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -196,9 +196,9 @@ void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Poin
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Field array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Field array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_CellFieldData[name] = data;
@@ -216,7 +216,7 @@ IDataArray::Pointer VolumeDataContainer::removeCellFieldData(const QString &name
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_CellFieldData.erase(it);
   return p;
 }
@@ -232,7 +232,7 @@ bool VolumeDataContainer::renameCellFieldData(const QString &oldname, const QStr
   {
 	  return false;
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   p->SetName(newname);
   removeCellFieldData(oldname);
   addCellFieldData(newname, p);
@@ -276,7 +276,7 @@ void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
-    //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
+    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
     IDataArray::Pointer d = (*iter).second;
     d->Resize(size);
   }
@@ -294,7 +294,7 @@ IDataArray::Pointer VolumeDataContainer::getCellEnsembleData(const QString &name
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -304,9 +304,9 @@ void VolumeDataContainer::addCellEnsembleData(const QString &name, IDataArray::P
 {
   if (data->GetName().compare(name) != 0)
   {
-    std::cout << "Adding Ensemble array with different array name than key name" << std::endl;
-    std::cout << "Key name: " << name << std::endl;
-    std::cout << "Array Name:" << data->GetName() << std::endl;
+    qDebug() << "Adding Ensemble array with different array name than key name" << "\n";
+    qDebug() << "Key name: " << name << "\n";
+    qDebug() << "Array Name:" << data->GetName() << "\n";
     data->SetName(name);
   }
   m_CellEnsembleData[name] = data;
@@ -325,7 +325,7 @@ IDataArray::Pointer VolumeDataContainer::removeCellEnsembleData(const QString &n
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_CellEnsembleData.erase(it);
   return p;
 }

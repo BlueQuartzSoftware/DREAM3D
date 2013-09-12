@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          std::cout << "Error Writing Binary VTK Data into file " << std::endl;
+          qDebug() << "Error Writing Binary VTK Data into file " << "\n";
           fclose(f);
           return -1;
         }
@@ -208,9 +208,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       f = fopen(filename.c_str(), "wb");
       if(NULL == f)
       {
-        std::cout << "Could not open file for writing" << std::endl;
-        std::cout << "  FileName: " << filename << std::endl;
-        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+        qDebug() << "Could not open file for writing" << "\n";
+        qDebug() << "  FileName: " << filename << "\n";
+        qDebug() << "  Dataset Name: " << data->GetName() << "\n";
         return -1;
       }
       // Write the correct header
@@ -240,9 +240,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
       if (totalWritten != (total))
       {
-        std::cout << "Error Writing Binary VTK Data:" << std::endl;
-        std::cout << "  FileName: " << filename << std::endl;
-        std::cout << "  Dataset Name: " << data->GetName() << std::endl;
+        qDebug() << "Error Writing Binary VTK Data:" << "\n";
+        qDebug() << "  FileName: " << filename << "\n";
+        qDebug() << "  Dataset Name: " << data->GetName() << "\n";
       }
 #ifdef MXA_LITTLE_ENDIAN
       data->byteSwapElements();

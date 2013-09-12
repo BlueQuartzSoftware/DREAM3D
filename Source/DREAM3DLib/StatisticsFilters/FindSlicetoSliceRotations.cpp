@@ -282,7 +282,7 @@ void FindSlicetoSliceRotations::execute()
         outPlaneAxisY = outPlaneAxisY/outPlaneCount;
         outPlaneAxisZ = outPlaneAxisZ/outPlaneCount;
     }
-    outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << std::endl;
+    outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << "\n";
   }
 
 

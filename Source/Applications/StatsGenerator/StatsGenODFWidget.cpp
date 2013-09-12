@@ -524,7 +524,7 @@ void StatsGenODFWidget::showPoleFigure(int imageIndex)
 // -----------------------------------------------------------------------------
 void StatsGenODFWidget::poleFigureGenerationComplete()
 {
-  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
+  //  qDebug() << "ODF Pole Figure generation complete" << "\n";
 }
 
 // -----------------------------------------------------------------------------
