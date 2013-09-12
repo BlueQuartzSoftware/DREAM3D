@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QFilterParametersReader.h"
 
-
+#include <QtCore/QMetaType>
 #include <QtCore/QDataStream>
 
 
