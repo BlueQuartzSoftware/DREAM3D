@@ -310,7 +310,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   if(m_ReadVertexData == true)
   {
     QVector<QString> readNames;
-    err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
+    err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, getVertexArraysToRead());
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -319,10 +319,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadEdgeData == true)
+  if(getReadEdgeData() == true)
   {
     QVector<QString> readNames;
-    err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
+    err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, getEdgeArraysToRead());
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -331,10 +331,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadFaceData == true)
+  if(getReadFaceData() == true)
   {
     QVector<QString> readNames;
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, getFaceArraysToRead());
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -355,10 +355,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadFieldData == true)
+  if(m_ReadCellFieldData == true)
   {
     QVector<QString> readNames;
-    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
+    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_CellFieldArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -367,10 +367,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     }
   }
 
-  if(m_ReadEnsembleData == true)
+  if(m_ReadCellEnsembleData == true)
   {
     QVector<QString> readNames;
-    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_CellEnsembleArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);

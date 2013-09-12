@@ -474,7 +474,7 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
     return 0;
   }
   EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;

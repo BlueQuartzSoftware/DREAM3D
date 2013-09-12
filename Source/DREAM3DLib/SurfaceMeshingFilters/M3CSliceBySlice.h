@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      * @param cVertexNodeTypePtr
      */
     void initialize_nodes(int NSP, int zID, int *wrappedDims, float* res,
-                          DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                          VertexArray::Pointer cVertexPtr,
                           DataArray<int32_t>::Pointer voxelsPtr,
                           DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                           DataArray<int8_t>::Pointer cVertexNodeTypePtr );
@@ -228,7 +228,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     void arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims, float *res,
                             StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                            DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                            VertexArray::Pointer cVertexPtr,
                             DataArray<int32_t>::Pointer voxelsPtr,
                             StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr);
 
@@ -357,7 +357,7 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
      */
     int writeNodesFile(int zID, int cNodeID, int NSP,
                         const QString &nodesFile,
-                        DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                        VertexArray::Pointer cVertexPtr,
                         DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                         DataArray<int8_t>::Pointer cVertexNodeTypePtr);
 

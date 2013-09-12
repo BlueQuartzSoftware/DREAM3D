@@ -43,6 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
@@ -61,16 +62,16 @@
 class LaplacianSmoothingImpl
 {
     VertexArray::Pointer m_vertsPtr;
-    DREAM3D::Mesh::VertList_t::Pointer m_newPositions;
+    VertexArray::Pointer m_newPositions;
     MeshLinks::Pointer m_MeshLinks;
-    DREAM3D::Mesh::FaceList_t::Pointer m_facesPtr;
+    FaceArray::Pointer m_facesPtr;
     DataArray<float>::Pointer m_lambdasPtr;
 
   public:
     LaplacianSmoothingImpl(VertexArray::Pointer vertsPtr,
-                           DREAM3D::Mesh::VertList_t::Pointer newPositions,
+                           VertexArray::Pointer newPositions,
                            MeshLinks::Pointer MeshLinks,
-                           DREAM3D::Mesh::FaceList_t::Pointer facesPtr,
+                           FaceArray::Pointer facesPtr,
                            DataArray<float>::Pointer lambdasPtr) :
       m_vertsPtr(vertsPtr),
       m_newPositions(newPositions),
@@ -598,7 +599,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   }
 
 
-  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer facesPtr = getSurfaceDataContainer()->getFaces();
   //  FaceArray::Face_t* faces = facesPtr->GetPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -638,7 +639,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   DataArray<float>::Pointer lambdasPtr = getLambdaArray();
 
   // We need an array to store the new positions
-  DREAM3D::Mesh::VertList_t::Pointer newPositionsPtr = DREAM3D::Mesh::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
+  VertexArray::Pointer newPositionsPtr = VertexArray::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
   newPositionsPtr->initializeWithZeros();
 
 

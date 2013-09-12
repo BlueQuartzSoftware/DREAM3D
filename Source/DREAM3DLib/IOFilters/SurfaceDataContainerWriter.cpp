@@ -490,7 +490,7 @@ int SurfaceDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath
 int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -520,7 +520,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
     return 0;
   }
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -631,7 +631,7 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
     return 0;
   }
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  FaceArray::Pointer facesPtr = sm->getFaces();
   if (NULL == facesPtr.get())
   {
     return -1;
@@ -681,7 +681,7 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  FaceArray::Pointer facesPtr = sm->getFaces();
   if (facesPtr.get() == NULL)
   {
     return -1;

@@ -38,6 +38,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <QtCore/QDateTime>
 //#include <QtCore/QString>
 #include <sstream>
 //#include <iomanip>
@@ -227,7 +228,7 @@ int SPParksWriter::writeFile()
   }
 
 
-  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
@@ -244,7 +245,7 @@ int SPParksWriter::writeFile()
   {
     if (totalpoints % increment == 0)
     {
-      currentMillis = MXA::getMilliSeconds();
+      currentMillis = QDateTime::currentMSecsSinceEpoch());
       if (currentMillis - millis > 1000)
       {
         ss.str("");
@@ -253,7 +254,7 @@ int SPParksWriter::writeFile()
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
         notifyStatusMessage(ss.str());
-        millis = MXA::getMilliSeconds();
+        millis = QDateTime::currentMSecsSinceEpoch());
       }
     }
     outfile << k + 1 << " " << m_GrainIds[k] << "\n";

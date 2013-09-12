@@ -278,7 +278,7 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 {
   EdgeDataContainer* sm = getEdgeDataContainer();
-  DREAM3D::Mesh::VertList_t::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = sm->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;

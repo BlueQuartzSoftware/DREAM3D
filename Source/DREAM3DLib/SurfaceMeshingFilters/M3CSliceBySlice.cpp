@@ -399,8 +399,8 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
   else {
-    DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    FaceArray::Pointer triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
 
     int8_t* m_SurfaceMeshNodeType;
@@ -514,7 +514,7 @@ void M3CSliceBySlice::execute()
   StructArray<SurfaceMesh::M3C::Face>::Pointer cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::CreateArray(3*2*NSP, "M3CSliceBySlice_SurfaceMesh::M3C::Face_Array");
   cSquarePtr->initializeWithZeros();
 
-  DREAM3D::Mesh::VertList_t::Pointer cVertexPtr = DREAM3D::Mesh::VertList_t::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
+  VertexArray::Pointer cVertexPtr = VertexArray::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_Array");
   cVertexPtr->initializeWithZeros();
 
   DataArray<int32_t>::Pointer cVertexNodeIdPtr = DataArray<int32_t>::CreateArray(2*7*NSP, "M3CSliceBySlice_Node_NodeId_Array");
@@ -917,7 +917,7 @@ float M3CSliceBySlice::find_zcoord(int index, int xDim, int yDim, float zRes)
 //
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float* res,
-                                       DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                                       VertexArray::Pointer cVertexPtr,
                                        DataArray<int32_t>::Pointer voxelsPtr,
                                        DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                                        DataArray<int8_t>::Pointer cVertexNodeTypePtr  )
@@ -2485,7 +2485,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappedDims,float* res,
                                          StructArray<SurfaceMesh::M3C::Patch>::Pointer cTrianglePtr,
-                                         DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                                         VertexArray::Pointer cVertexPtr,
                                          DataArray<int32_t>::Pointer voxelsPtr,
                                          StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
 {
@@ -2751,7 +2751,7 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
 // -----------------------------------------------------------------------------
 int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
                                     const QString &nodesFile,
-                                    DREAM3D::Mesh::VertList_t::Pointer cVertexPtr,
+                                    VertexArray::Pointer cVertexPtr,
                                     DataArray<int32_t>::Pointer cVertexNodeIdPtr,
                                     DataArray<int8_t>::Pointer cVertexNodeTypePtr )
 {

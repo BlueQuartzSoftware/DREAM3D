@@ -402,7 +402,7 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap)
 {
-  DREAM3D::Mesh::FaceList_t::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -526,7 +526,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  DREAM3D::Mesh::FaceList_t::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -540,7 +540,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
   int numFaces = masterFaceList->GetNumberOfTuples();
 
-  DREAM3D::Mesh::VertList_t::Pointer masterNodeListPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer masterNodeListPtr = getSurfaceDataContainer()->getVertices();
   if(NULL == masterNodeListPtr.get())
   {
     setErrorCondition(-555);

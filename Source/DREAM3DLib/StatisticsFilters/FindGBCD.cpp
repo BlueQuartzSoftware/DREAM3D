@@ -549,12 +549,12 @@ void FindGBCD::execute()
     m_GBCDdimensions[5*i+4] = m_GBCDsizes[4];
   }
 
-  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch());
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  millis = MXA::getMilliSeconds();
+  millis = QDateTime::currentMSecsSinceEpoch());
   startMillis = millis;
   int lastIteration = 0;
   int numIterationsPerTime = 0;
@@ -588,13 +588,13 @@ void FindGBCD::execute()
 
     ss.str("");
     ss << "Calculating GBCD: Triangles " << i << "/" << totalFaces << " Completed";
-    currentMillis = MXA::getMilliSeconds();
+    currentMillis = QDateTime::currentMSecsSinceEpoch());
     if (currentMillis - millis > 1000)
     {
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFaces - i) / timeDiff;
       ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
-      millis = MXA::getMilliSeconds();
+      millis = QDateTime::currentMSecsSinceEpoch());
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }

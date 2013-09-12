@@ -77,13 +77,28 @@ class EdgeArray
     //
     // -----------------------------------------------------------------------------
     int64_t GetNumberOfTuples() { return m_Array->GetNumberOfTuples(); }
+    
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    static Pointer CreateArray(size_t numElements, const QString &name)
+    {
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      EdgeArray* d = new EdgeArray();
+      d->resizeArray(numElements);
+      Pointer ptr(d);
+      return ptr;
+    }
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getVerts(StructArray<Edge_t>::Pointer Edges, size_t edgeId, size_t* verts)
+    void getVerts(size_t edgeId, size_t* verts)
     {
-      Edge_t& Edge = *(Edges->GetPointer(edgeId));
+      Edge_t& Edge = *(m_Array->GetPointer(edgeId));
       verts[0] = Edge.verts[0];
       verts[1] = Edge.verts[1];
     }
@@ -91,9 +106,9 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setVerts(StructArray<Edge_t>::Pointer Edges, size_t edgeId, float* verts)
+    void setVerts(size_t edgeId, float* verts)
     {
-      Edge_t& Edge = *(Edges->GetPointer(edgeId));
+      Edge_t& Edge = *(m_Array->GetPointer(edgeId));
       Edge.verts[0] = verts[0];
       Edge.verts[1] = verts[1];
 
@@ -245,6 +260,7 @@ class EdgeArray
     DynamicListArray::Pointer m_EdgesContainingVert;
     DynamicListArray::Pointer m_EdgeNeighbors;
 
+    QString m_Name;
 
     EdgeArray(const EdgeArray&); // Copy Constructor Not Implemented
     void operator=(const EdgeArray&); // Operator '=' Not Implemented
