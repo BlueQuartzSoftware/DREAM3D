@@ -35,17 +35,19 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "DxReader.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
+
+#include <QtCore/QFileInfo>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
-FileReader(),
-m_InputFile(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
   m_Origin.x = 0.0;
   m_Origin.y = 0.0;
@@ -107,11 +109,11 @@ void DxReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setOrigin( reader->readValue("Origin", getOrigin() ) );
   setResolution( reader->readValue("Resolution", getResolution() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -135,52 +137,53 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+  QString ss;
+  QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (QFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  if (m_InStream.is_open() == true)
+  if (m_InStream.isOpen() == true)
   {
     m_InStream.close();
   }
-// We need to read the header of the input file to get the dimensions
-  m_InStream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
-  if(!m_InStream)
-  {
-    ss.clear();
-    ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
-        << " opened for reading. Do you have access to this file?";
-    setErrorCondition(-49800);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return;
-  }
 
-  int error = readHeader();
-  m_InStream.close();
-  if (error < 0)
+  if (getInputFile().isEmpty() == false && fi.exists() == true)
   {
-    setErrorCondition(error);
-    ss.clear();
-    ss << "Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?";
-    addErrorMessage(getHumanLabel(), ss.str(), -11000);
-  }
+    // We need to read the header of the input file to get the dimensions
+    m_InStream.setFileName(getInputFile());
+    if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
+    {
+      QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
+      setErrorCondition(-100);
+      notifyErrorMessage(ss, getErrorCondition());
+      return;
+    }
 
+    int error = readHeader();
+    m_InStream.close();
+    if (error < 0)
+    {
+      setErrorCondition(error);
+      ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      addErrorMessage(getHumanLabel(), ss, -11000);
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -196,17 +199,15 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  
+  QString ss;
   int err = 0;
 
-  m_InStream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
-  if(!m_InStream)
+  m_InStream.setFileName(getInputFile());
+  if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    ss.clear();
-    ss << " Runtime Error. The input file '" << getInputFile() << "' could not be"
-        << " opened for reading. Do you have access to this file?";
-    setErrorCondition(-49801);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    QString ss = QObject::tr("DxReader Input file could not be opened: %1").arg(getInputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -231,70 +232,46 @@ void DxReader::execute()
 // -----------------------------------------------------------------------------
 int DxReader::readHeader()
 {
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  
+
   int error = 0;
 
-  QString line;
+  QByteArray buf;
   QString delimeters(", ;\t"); /* delimeters to split the data */
-  QVector<QString> tokens; /* vector to store the split data */
+  QList<QByteArray> tokens; /* vector to store the split data */
 
-  getline(m_InStream, line, '\n');
-  tokenize(line, tokens, delimeters);
 
+  bool ok = false;
   // Process the header information and look for the QString "counts"
   // Then read the data size after that
-  size_t pos1 = 0;
-  while (pos1 == 0)
-  { // continue until we find the keyword
-    for (size_t i = 0; i < tokens.size(); i++)
-    {
-      if(tokens[i] == "counts")
-      {
-        pos1 = i;
-      }
-    }
-    // Read the next line of the header if we did not find the keyword
-    // in the line
-    if(pos1 == 0)
-    {
-      tokens.clear();
-      getline(m_InStream, line, '\n');
-      tokenize(line, tokens, delimeters);
-      if(tokens.size() == 20)
-      {
-        ss.clear();
-        ss << "ERROR: Unable to read data dimensions from the header" << "\n";
-        addErrorMessage(getHumanLabel(), ss.str(), -7);
-        setErrorCondition(-499);
-        m_InStream.close();
-        return -499;
-      }
-    }
-  }
-
   int nx = 0;
   int ny = 0;
   int nz = 0;
-
-  if(pos1 != 0)
+  bool done = false;
+  while (m_InStream.atEnd() == false && done == false)
   {
-    error = 0;
-    error += sscanf(tokens[pos1 + 1].toLatin1().data(), "%d", &nz);
-    error += sscanf(tokens[pos1 + 2].toLatin1().data(), "%d", &ny);
-    error += sscanf(tokens[pos1 + 3].toLatin1().data(), "%d", &nx);
-    tokens.clear();
-    // The dimensions listed in the DX file are always one greater
-    // than the actual dimensions
-    nx--;
-    ny--;
-    nz--;
+    buf = m_InStream.readLine();
+    buf = buf.trimmed();
+    tokens = buf.split(' ');
+    // continue until we find the keyword
+    for (qint32 i = 0; i < tokens.size(); i++)
+    {
+      if(tokens[i] == "counts")
+      {
+        nz = tokens[i+1].toInt(&ok, 10) - 1;
+        ny = tokens[i+2].toInt(&ok, 10) - 1;
+        nx = tokens[i+3].toInt(&ok, 10) - 1;
+        done = true;
+        break;
+      }
+    }
   }
 
-//  qDebug() << "INFO: DX data dimensions: " << "\n";
-//  qDebug() << "nz= " << nz << "\n";
-//  qDebug() << "ny= " << ny << "\n";
-//  qDebug() << "nx= " << nx << "\n";
+  //  qDebug() << "INFO: DX data dimensions: " ;
+  //  qDebug() << "nz= " << nz ;
+  //  qDebug() << "ny= " << ny ;
+  //  qDebug() << "nx= " << nx ;
 
   //The DX file has a unique format of 20 entries on each line. I have
   //no idea who initiated this insanity but I am about to perpetuate
@@ -306,10 +283,13 @@ int DxReader::readHeader()
   //  ADR:  6 Sep 08; time to make the input much more general!
   //  equivalent to list-direcvted input in Fortran, actually !!
 
-  pos1 = 0;
-  while (pos1 == 0)
+  qint32 pos1 = 0;
+  while (pos1 == 0 && m_InStream.atEnd() == false)
   { // continue until we find the keyword
-    for (size_t i = 0; i < tokens.size(); i++)
+    buf = m_InStream.readLine();
+    buf = buf.simplified();
+    tokens = buf.split(' ');
+    for (qint32 i = 0; i < tokens.size(); i++)
     {
       if(tokens[i] == "items")
       {
@@ -320,14 +300,10 @@ int DxReader::readHeader()
     // in the line
     if(pos1 == 0)
     {
-      tokens.clear();
-      getline(m_InStream, line, '\n');
-      tokenize(line, tokens, delimeters);
       if(tokens.size() == 20)
       {
-        ss.clear();
-        ss << "ERROR: Unable to locate the last header line" << "\n";
-        addErrorMessage(getHumanLabel(), ss.str(), -8);
+        ss = QObject::tr("ERROR: Unable to locate the last header line");
+        addErrorMessage(getHumanLabel(), ss, -8);
         setErrorCondition(-496);
         m_InStream.close();
         return -496;
@@ -338,11 +314,10 @@ int DxReader::readHeader()
   if(pos1 != 0)
   {
     error = 0;
-    error += sscanf(tokens[pos1 + 1].toLatin1().data(), "%d", &points);
-    tokens.clear();
+    points = tokens[pos1 + 1].toInt(&ok, 10);
   }
   m->setDimensions(nx, ny, nz);
-//  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz << "\n";
+  //  qDebug() << "Compare no. points " << points << " with x*y*z: " << nx * ny * nz ;
   return error;
 }
 
@@ -351,13 +326,12 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+  QString ss;
   if (NULL == m)
   {
-    ss.clear();
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -5);
+    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -5);
     setErrorCondition(-5);
     return -1;
   }
@@ -366,21 +340,21 @@ int DxReader::readFile()
   QString delimeters(", ;\t"); /* delimeters to split the data */
   QVector<QString> tokens; /* vector to store the split data */
 
-  int error, spin; /* dummy variables */
+  int error; /* dummy variables */
 
   bool finished_header, finished_data;
   finished_header = true;
   finished_data = false;
   size_t index = 0;
 
-  size_t totalPoints = m->getTotalPoints();
+  int64_t totalPoints = m->getTotalPoints();
 
   // Remove the array that we are about to create first as a 'datacheck()' was called from the super class's 'execute'
   // method which is performed before this function. This will cause an error -501 because the array with the name
   // m_GrainIdsArrayName already exists but of size 1, not the size we are going to read. So we get rid of the array
   m->removeCellData(m_GrainIdsArrayName);
   // Rerun the data check in order to allocate the array to store the data from the .dx file.
-//  dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  //  dataCheck(false, totalPoints, m->getNumFieldTuples(), m->getNumEnsembleTuples());
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, totalPoints, 1)
 
 
@@ -390,16 +364,18 @@ int DxReader::readFile()
     return -1;
   }
 
+  bool ok = false;
+  QByteArray buf = m_InStream.readLine();
 
-  while (getline(m_InStream, line, '\n') != NULL)
+  while (buf.size() > 0 && m_InStream.atEnd() == false)
   {
 
     // Get the remaining lines of the header and ignore
-    tokens.clear();
     error = 0;
-    tokenize(line, tokens, delimeters);
+    buf = buf.simplified();
+    QList<QByteArray> tokens = buf.split(' ');
 
-    size_t total = m->getTotalPoints();
+    int64_t total = m->getTotalPoints();
     if( index == total || ( finished_header && tokens.size() != 0 && tokens[0] == "attribute") )
     {
       finished_data = true;
@@ -408,22 +384,22 @@ int DxReader::readFile()
     // Allocate the DataArray at this point:
     if(finished_header && !finished_data)
     {
-      for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+      qint32 size = tokens.size();
+      for (int32_t in_spins = 0; in_spins < size; in_spins++)
       {
-        error += sscanf(tokens[in_spins].toLatin1().data(), "%d", &spin);
-        m_GrainIds[index] =  spin;
+        m_GrainIds[index] = tokens[in_spins].toInt(&ok, 10);
         ++index;
       }
+
     }
+    buf = m_InStream.readLine();
   }
 
   if(index != static_cast<size_t>(m->getTotalPoints()))
   {
-    ss.clear();
-    ss << "ERROR: data size does not match header dimensions" << "\n";
-    ss << "\t" << index << "\t" << m->getTotalPoints() << "\n";
+    ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
     setErrorCondition(-495);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();
     return getErrorCondition();
   }
@@ -433,15 +409,15 @@ int DxReader::readFile()
 
 
   // Find the unique set of grain ids
-//  QSet<int32_t> grainIdSet;
-//  for (int64_t i = 0; i < totalPoints; ++i)
-//  {
-//    grainIdSet.insert(m_GrainIds[i]);
-//  }
-//  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
-//  {
-//    qDebug() << "Grain ID: " << (*iter) << "\n";
-//  }
+  //  QSet<int32_t> grainIdSet;
+  //  for (int64_t i = 0; i < totalPoints; ++i)
+  //  {
+  //    grainIdSet.insert(m_GrainIds[i]);
+  //  }
+  //  for (QSet<int32_t>::iterator iter = grainIdSet.begin(); iter != grainIdSet.end(); ++iter )
+  //  {
+  //    qDebug() << "Grain ID: " << (*iter) ;
+  //  }
 
   notifyStatusMessage("Complete");
   return 0;
