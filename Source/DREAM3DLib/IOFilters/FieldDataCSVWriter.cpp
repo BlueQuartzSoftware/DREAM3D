@@ -37,14 +37,14 @@
 #include "FieldDataCSVWriter.h"
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
-
-
-
-
 
 
 // -----------------------------------------------------------------------------
@@ -123,24 +123,22 @@ int FieldDataCSVWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void FieldDataCSVWriter::preflight()
 {
   setErrorCondition(0);
-  
 
   if (getFieldDataFile().isEmpty() == true)
   {
-    ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
-  QString parentPath = QFileInfo::parentPath(getFieldDataFile());
-  if (MXADir::exists(parentPath) == false)
+  QFileInfo fi(getFieldDataFile());
+  QDir parentPath(fi.path());
+  if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
-
-  if (QFileInfo::extension(getFieldDataFile()).compare("") == 0)
+  if (fi.suffix().compare("") == 0)
   {
     setFieldDataFile(getFieldDataFile().append(".dx"));
   }
@@ -164,29 +162,35 @@ void FieldDataCSVWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(m_FieldDataFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getFieldDataFile());
+  QDir parentPath(fi.path());
+  if(!parentPath.mkpath("."))
   {
-    
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
 
 
+  QFile file(getFieldDataFile());
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  {
+    QString ss = QObject::tr("Field Data CSV Output file could not be opened: %1").arg(getFieldDataFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(ss, getErrorCondition());
+    return;
+  }
 
-  QString filename = getFieldDataFile();
+  QTextStream outFile(&file);
 
-  std::ofstream outFile;
-  outFile.open(filename.toLatin1().data(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  outFile << m->getNumCellFieldTuples()-1 << "\n";
+  outFile << m->getNumCellFieldTuples()-1 ;
   // Get all the names of the arrays from the Data Container
   QList<QString> headers = m->getCellFieldArrayNameList();
 
-  QVector<IDataArray::Pointer> data;
+  std::vector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -218,16 +222,16 @@ void FieldDataCSVWriter::execute()
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
-  
+  QString ss;
   float threshold = 0.0f;
 
   // Skip the first grain
   for(size_t i = 1; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold) {
-      ss.str("");
-      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
-      notifyStatusMessage(ss.str());
+
+      QString ss = QObject::tr("Writing Field Data - %1% Complete").arg(((float)i / numTuples) * 100);
+      notifyStatusMessage(ss);
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -237,7 +241,7 @@ void FieldDataCSVWriter::execute()
     // Print the grain id
     outFile << i;
     // Print a row of data
-    for( QVector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
+    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
       outFile << space;
       (*p)->printTuple(outFile, i, space);
@@ -272,7 +276,7 @@ void FieldDataCSVWriter::execute()
       }
     }
   }
-  outFile.close();
+  file.close();
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("FieldDataCSVWriter Completed");

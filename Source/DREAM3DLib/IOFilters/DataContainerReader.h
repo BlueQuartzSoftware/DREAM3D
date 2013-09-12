@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
@@ -117,6 +118,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
+
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                   QSet<QString> selectedFaceArrays,
                                                   QSet<QString> selectedEdgeArrays,
@@ -135,6 +137,7 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     virtual void setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                   QSet<QString> selectedFieldArrays,
                                                   QSet<QString> selectedEnsembleArrays);
+
     /**
      * @brief readExistingPipelineFromFile This will read the existing pipeline that is stored in the file and store it
      * in the class instance for later writing to another dream3d data file

@@ -36,9 +36,10 @@
 
 #include "DataContainerReader.h"
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
@@ -157,49 +158,48 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   int32_t err = 0;
   QString m_FileVersion;
-  float fVersion;
-  bool check;
-
+  float fVersion = 0.0f;
+  bool check = false;
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (QFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
     // Read the Meta Data and Array names from the file
-    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file as Read Only
+    hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
     if(fileId < 0)
     {
-      ss.str("");
-      ss << ": Error opening input file '" << m_InputFile << "'";
+      ss = QObject::tr(": Error opening input file '%1'").arg(ClassName());
       setErrorCondition(-150);
-      addErrorMessage(getHumanLabel(), ss.str(), err);
+      addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
 
     //Check to see if version of .dream3d file is prior to new data container names
-    err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
-    check = StringUtils::stringToNum(fVersion, m_FileVersion);
+    err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
+    m_FileVersion.toFloat(&check);
     if(fVersion < 5.0 || err < 0)
     {
-      H5Utilities::closeFile(fileId);
-      fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+      QH5Utilities::closeFile(fileId);
+      fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
       err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT); 
-      err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-      H5Utilities::closeFile(fileId);
-      fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+      err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+      QH5Utilities::closeFile(fileId);
+      fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -212,9 +212,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       volumeReader->setHdfFileId(fileId);
       volumeReader->setVolumeDataContainer(getVolumeDataContainer());
       volumeReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Volume Data ";
-      volumeReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Volume Data ";
+      volumeReader->setMessagePrefix(ss);
       volumeReader->preflight();
       if (volumeReader->getErrorCondition() < 0)
       {
@@ -231,9 +230,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       smReader->setHdfFileId(fileId);
       smReader->setSurfaceDataContainer(getSurfaceDataContainer());
       smReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Surface Data ";
-      smReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      smReader->setMessagePrefix(ss);
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
@@ -250,9 +248,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       eReader->setHdfFileId(fileId);
       eReader->setEdgeDataContainer(getEdgeDataContainer());
       eReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Surface Data ";
-      eReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      eReader->setMessagePrefix(ss);
       eReader->preflight();
       if (eReader->getErrorCondition() < 0)
       {
@@ -269,9 +266,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       smReader->setHdfFileId(fileId);
       smReader->setVertexDataContainer(getVertexDataContainer());
       smReader->setObservers(getObservers());
-      ss.str("");
-      ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
-      smReader->setMessagePrefix(ss.str());
+      ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+      smReader->setMessagePrefix(ss);
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
@@ -297,16 +293,15 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   int32_t err = 0;
-  
+  QString ss;
   // dataCheck(false, 1, 1, 1);
 
-  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file '" << m_InputFile << "'";
+    ss =QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
 
@@ -315,20 +310,8 @@ void DataContainerReader::execute()
 
   // Read our File Version string to the Root "/" group
   QString fileVersion;
-  float fVersion;
 
-  err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
-  bool check = StringUtils::stringToNum(fVersion, fileVersion);
-  if(fVersion < 5.0 || err < 0)
-  {
-    H5Utilities::closeFile(fileId);
-    fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT); 
-    err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-    H5Utilities::closeFile(fileId);
-    fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
-  }
+  err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
   err = readExistingPipelineFromFile(fileId);
 
@@ -346,9 +329,8 @@ void DataContainerReader::execute()
     volumeReader->setReadAllArrays(m_ReadAllArrays);
     volumeReader->setVolumeDataContainer(getVolumeDataContainer());
     volumeReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Volume Data ";
-    volumeReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Volume Data ";
+    volumeReader->setMessagePrefix(ss);
     volumeReader->execute();
     if (volumeReader->getErrorCondition() < 0)
     {
@@ -370,9 +352,8 @@ void DataContainerReader::execute()
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSurfaceDataContainer(getSurfaceDataContainer());
     smReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Surface Data ";
-    smReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Surface Data ";
+    smReader->setMessagePrefix(ss);
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
@@ -394,9 +375,8 @@ void DataContainerReader::execute()
     eReader->setReadAllArrays(m_ReadAllArrays);
     eReader->setEdgeDataContainer(getEdgeDataContainer());
     eReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Surface Data ";
-    eReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Surface Data ";
+    eReader->setMessagePrefix(ss);
     eReader->preflight();
     if (eReader->getErrorCondition() < 0)
     {
@@ -416,9 +396,8 @@ void DataContainerReader::execute()
     vReader->setReadAllArrays(m_ReadAllArrays);
     vReader->setVertexDataContainer(getVertexDataContainer());
     vReader->setObservers(getObservers());
-    ss.str("");
-    ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
-    vReader->setMessagePrefix(ss.str());
+    ss = getMessagePrefix() + " |--> Reading Edge Data ";
+    vReader->setMessagePrefix(ss);
     vReader->execute();
     if (vReader->getErrorCondition() < 0)
     {
@@ -444,17 +423,17 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    
-    ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    QString ss = QString::number(i, 10);
+
+    err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
 #if (__APPLE__)
 #warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
 #endif
