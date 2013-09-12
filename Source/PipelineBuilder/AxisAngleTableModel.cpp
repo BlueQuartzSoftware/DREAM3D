@@ -203,7 +203,7 @@ bool AxisAngleTableModel::setHeaderData(int col, Qt::Orientation o, const QVaria
 // -----------------------------------------------------------------------------
 bool AxisAngleTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "AxisAngleTableModel::setData " << value.toString()() << "\n";
+  // qDebug() << "AxisAngleTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

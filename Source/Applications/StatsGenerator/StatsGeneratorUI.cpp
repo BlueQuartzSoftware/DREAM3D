@@ -551,7 +551,7 @@ void StatsGeneratorUI::openRecentFile()
   QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
-    //qDebug() << "Opening Recent file: " << action->data().toString()() << "\n";
+    //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString file = action->data().toString();
     openFile(file);
   }
@@ -1031,7 +1031,7 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
    bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-   //  qDebug() << "Could not open URL: " << url.path()() << "\n";
+   //  qDebug() << "Could not open URL: " << url.path() << "\n";
        displayDialogBox(("Error Opening Help File"),
          QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
          QMessageBox::Critical);

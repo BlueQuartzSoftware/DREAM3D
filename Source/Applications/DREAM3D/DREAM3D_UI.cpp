@@ -578,7 +578,7 @@ void DREAM3D_UI::openRecentFile()
   QAction *action = qobject_cast<QAction *>(sender());
   if (action)
   {
-    //qDebug() << "Opening Recent file: " << action->data().toString()() << "\n";
+    //qDebug() << "Opening Recent file: " << action->data().toString() << "\n";
     QString file = action->data().toString();
     //TODO: use the 'file' object to figure out what to open
   }
@@ -608,7 +608,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
- // qDebug() << "aPluginDir: " << aPluginDir.absolutePath()() << "\n";
+ // qDebug() << "aPluginDir: " << aPluginDir.absolutePath() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -703,7 +703,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
                                 message,
                                 QMessageBox::Ok | QMessageBox::Default);
-      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString()() << "\n";
+      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString() << "\n";
     }
   }
 #if 0

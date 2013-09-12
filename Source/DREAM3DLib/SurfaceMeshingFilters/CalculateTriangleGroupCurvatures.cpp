@@ -107,7 +107,7 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateTriangleGroupCurvatures::operator()() const
+void CalculateTriangleGroupCurvatures::operator() const
 {
 
   // Get the Triangles Array

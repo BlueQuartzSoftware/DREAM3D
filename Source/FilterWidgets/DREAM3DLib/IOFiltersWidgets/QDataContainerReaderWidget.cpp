@@ -103,7 +103,7 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter(bool defaultValues
 {
   DataContainerReader::Pointer filter = DataContainerReader::New();
   if (defaultValues == true) { return filter; }
-  filter->setInputFile( getInputFile()() );
+  filter->setInputFile( getInputFile() );
   filter->setReadVolumeData( getReadVolumeData() );
   filter->setReadSurfaceData( getReadSurfaceData() );
   filter->setReadVertexData( getReadVertexData() );
@@ -356,7 +356,7 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Poi
   {
 
     hid_t fileId = -1;
-    fileId = H5Utilities::openFile(InputFile->text()(), true);
+    fileId = H5Utilities::openFile(InputFile->text(), true);
     if (fileId < 0) {
       return;
     }

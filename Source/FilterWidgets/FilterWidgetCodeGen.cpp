@@ -739,7 +739,7 @@ else
     QString typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
     {
-      fprintf(f, "  filter->set%s( get%s()() );\n", prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "  filter->set%s( get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {

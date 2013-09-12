@@ -483,7 +483,7 @@ QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // qDebug() << "SGAxisODFWidget[" << objectName()() << "]::on_m_CalculateODFBtn_clicked" << "\n";
+  // qDebug() << "SGAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << "\n";
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -619,7 +619,7 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     size_t numOrients = 0;
-    QString filename = file();
+    QString filename = file;
     std::ifstream inFile;
     inFile.open(filename.toLatin1().data());
 
