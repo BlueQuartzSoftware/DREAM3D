@@ -108,6 +108,7 @@ void FileReader::execute()
 
 }
 
+#if 0
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -249,3 +250,5 @@ void FileReader::tokenize(const QString& str,
     pos = str.find_first_of(delimiters, lastPos);
   }
 }
+#endif
+

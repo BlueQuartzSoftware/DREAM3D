@@ -163,7 +163,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
   float fVersion;
   bool check;
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);

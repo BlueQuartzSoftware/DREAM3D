@@ -229,7 +229,7 @@ void InsertPrecipitatePhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     
     ss << ClassName() << " needs the Csv Output File Set and it was not.";

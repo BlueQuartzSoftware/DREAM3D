@@ -119,7 +119,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  if (getOutputFile().empty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);

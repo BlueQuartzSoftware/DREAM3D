@@ -311,7 +311,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[0] = (*iter).second;
+//      tri.e_id[0] = iter.value();
     }
     edgeTriangleSet[*u64Edge].insert(i);
 
@@ -329,7 +329,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[1] = (*iter).second;
+//      tri.e_id[1] = iter.value();
     }
     edgeTriangleSet[*u64Edge].insert(i);
 
@@ -347,7 +347,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[2] = (*iter).second;
+//      tri.e_id[2] = iter.value();
     }
     edgeTriangleSet[*u64Edge].insert(i);
   }

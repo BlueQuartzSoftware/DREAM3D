@@ -463,7 +463,7 @@ void QFilterWidget::setupGui()
     FilterParameter::WidgetType wType = option->getWidgetType();
 
     QString labelName = (option->getHumanLabel());
-    if (option->getUnits().empty() == false)
+    if (option->getUnits().isEmpty() == false)
     {
       labelName.append(" (").append((option->getUnits())).append(")");
     }

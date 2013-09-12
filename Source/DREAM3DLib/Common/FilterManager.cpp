@@ -96,7 +96,7 @@ void FilterManager::printFactoryNames()
 {
     for(Collection::iterator iter = m_Factories.begin(); iter != m_Factories.end(); ++iter)
     {
-      qDebug() << "Name: " << (*iter).first << "\n";
+      qDebug() << "Name: " << iter.key() << "\n";
     }
 }
 
@@ -110,10 +110,10 @@ FilterManager::Collection FilterManager::getFactories(const QString &groupName)
 
   for (FilterManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
-    IFilterFactory::Pointer filterFactory = (*factory).second;
-    if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
+    IFilterFactory::Pointer filterFactory = factory.value();
+    if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
     {
-      groupFactories[(*factory).first] = (*factory).second;
+      groupFactories[factory.key()] = factory.value();
     }
   }
   return groupFactories;
@@ -129,10 +129,10 @@ FilterManager::Collection FilterManager::getFactories(const QString &groupName, 
 
   for (FilterManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
-    IFilterFactory::Pointer filterFactory = (*factory).second;
-  if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0 && (*factory).second->getFilterSubGroup().compare(subGroupName) == 0)
+    IFilterFactory::Pointer filterFactory = factory.value();
+  if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0 && factory.value()->getFilterSubGroup().compare(subGroupName) == 0)
     {
-      groupFactories[(*factory).first] = (*factory).second;
+      groupFactories[factory.key()] = factory.value();
     }
   }
   return groupFactories;
@@ -158,9 +158,9 @@ QSet<QString> FilterManager::getGroupNames()
   QSet<QString> groupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterFactory::Pointer filterFactory = (*factory).second;
-    groupNames.insert((*factory).second->getFilterGroup());
-  //  qDebug() << (*factory).second->getFilterGroup() << "\n";
+    IFilterFactory::Pointer filterFactory = factory.value();
+    groupNames.insert(factory.value()->getFilterGroup());
+  //  qDebug() << factory.value()->getFilterGroup() << "\n";
   }
   return groupNames;
 }
@@ -177,10 +177,10 @@ QSet<QString> FilterManager::getSubGroupNames(const QString &groupName)
   QSet<QString> subGroupNames;
   for (FilterManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterFactory::Pointer filterFactory = (*factory).second;
-  if ( NULL != filterFactory.get() && (*factory).second->getFilterGroup().compare(groupName) == 0)
+    IFilterFactory::Pointer filterFactory = factory.value();
+  if ( NULL != filterFactory.get() && factory.value()->getFilterGroup().compare(groupName) == 0)
     {
-      subGroupNames.insert((*factory).second->getFilterSubGroup());
+      subGroupNames.insert(factory.value()->getFilterSubGroup());
   }
   }
   return subGroupNames;
@@ -203,7 +203,7 @@ IFilterFactory::Pointer FilterManager::getFactoryForFilterHumanName(const QStrin
 
   for (FilterManager::Collection::iterator factory = m_Factories.begin(); factory != m_Factories.end(); ++factory)
   {
-    IFilterFactory::Pointer filterFactory = (*factory).second;
+    IFilterFactory::Pointer filterFactory = factory.value();
     if ( NULL != filterFactory.get() && filterFactory->getFilterHumanLabel().compare(humanName) == 0)
     {
       Factory = filterFactory;

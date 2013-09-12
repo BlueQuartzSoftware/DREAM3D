@@ -353,7 +353,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
   
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -366,7 +366,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if(m_OutputArrayName.empty() == true)
+  if(m_OutputArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";

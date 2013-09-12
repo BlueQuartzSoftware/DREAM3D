@@ -242,9 +242,9 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
     progIndex++;
     if (getCancel() == true) { return; }
 
-    int nodeId = (*iter).first;
+    int nodeId = iter.key();
     ManagedPointerArray<int>::Data_t& entry = *(nodeTriangleArray->GetPointer(nodeId));
-    UniqueTriangleIds_t& triangles = (*iter).second;
+    UniqueTriangleIds_t& triangles = iter.value();
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();
     if (entry.count > 0)

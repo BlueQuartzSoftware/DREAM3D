@@ -610,7 +610,7 @@ QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*listWidget)
 {
-  if (names.empty() == true)
+  if (names.isEmpty() == true)
   {
     return;
   }

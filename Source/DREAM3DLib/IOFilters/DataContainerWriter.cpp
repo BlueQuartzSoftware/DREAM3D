@@ -180,7 +180,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   
 
-  if (m_OutputFile.empty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -262,7 +262,7 @@ void DataContainerWriter::execute()
   if (m_WriteXdmfFile == true)
   {
     QString name = QFileInfo::fileNameWithOutExtension(m_OutputFile);
-    if(parentPath.empty() == true)
+    if(parentPath.isEmpty() == true)
     {
       name = name + ".xdmf";
     }

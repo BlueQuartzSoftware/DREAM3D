@@ -121,7 +121,7 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
   
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
@@ -232,7 +232,7 @@ int VtkGrainIdReader::readHeader()
   }
 
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     
     ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
@@ -488,7 +488,7 @@ int VtkGrainIdReader::readFile()
         for (size_t i = 0; i < totalVoxels; ++i)
         {
           t = grainIds->GetValue(i);
-          MXA::Endian::FromBigToSystem::convert<int>(t);
+          DREAM3D::Endian::FromBigToSystem::convert<int>(t);
           grainIds->SetValue(i, t);
         }
       }

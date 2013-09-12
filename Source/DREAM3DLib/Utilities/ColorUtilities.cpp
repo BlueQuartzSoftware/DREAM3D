@@ -56,8 +56,8 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
 {
 //hsv to rgb (from wikipedia hsv/hsl page)
   float c = v*s;
-  h=h*6.0f;
-  float x=c*(1.0f-fabs(fmod(h,2.0f)-1.0f));
+  float k=c*(1.0f-fabs(fmod(h*6.0f,2.0f)-1.0f));//x in wiki article
+  h=h*6;
   float r= 0.0f;
   float g= 0.0f;
   float b= 0.0f;
@@ -67,39 +67,45 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
       if(h<1.0f)
       {
           r=c;
-          g=x;
+          g=k;
       }
       else if(h<2.0f)
       {
-          r=x;
+          r=k;
           g=c;
       }
       else if(h<3.0f)
       {
           g=c;
-          b=x;
+          b=k;
       }
       else if(h<4.0f)
       {
-          g=x;
+          g=k;
           b=c;
       }
       else if (h<5.0f)
       {
-          r=x;
+          r=k;
           b=c;
       }
       else if(h<6.0f)
       {
           r=c;
-          b=x;
+          b=k;
       }
   }
 
   //adjust lumosity and invert
-  r=r+(v-c);
-  g=g+(v-c);
-  b=b+(v-c);
+  r=(r+(v-c));
+  g=(g+(v-c));
+  b=(b+(v-c));
+
+  //now standard 0-1 rgb, needs rotation
+  k=r;
+  r=1-g;
+  g=b;
+  b=k;
 
   return RgbColor::dRgb(r*255, g*255, b*255, 0);
 }

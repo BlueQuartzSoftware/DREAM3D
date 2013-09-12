@@ -130,7 +130,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
 
-  if (getOutputFile().empty() == true)
+  if (getOutputFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -212,7 +212,7 @@ void FindRadialDist::find_radialdist()
   float dist;
   size_t numgrains = m->getNumCellFieldTuples();
 
-  bool writeFile = !m_OutputFile.empty();
+  bool writeFile = !m_OutputFile.isEmpty();
 
 
   std::ofstream outFile;

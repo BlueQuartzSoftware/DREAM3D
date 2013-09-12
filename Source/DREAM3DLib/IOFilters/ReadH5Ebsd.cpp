@@ -217,7 +217,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     return;
   }
 
-  if (m_InputFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
@@ -230,7 +230,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (m_InputFile.empty() == false)
+  else if (m_InputFile.isEmpty() == false)
   {
     H5EbsdVolumeInfo::Pointer reader = H5EbsdVolumeInfo::New();
     reader->setFileName(m_InputFile);
