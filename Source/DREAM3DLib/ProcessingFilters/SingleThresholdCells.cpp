@@ -147,15 +147,15 @@ int SingleThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* 
 void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-    ss << "An array from the Voxel Data Container must be selected.";
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    QString ss = QObject::tr("An array from the Voxel Data Container must be selected.");
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 }
 
@@ -180,21 +180,21 @@ void SingleThresholdCells::execute()
     return;
   }
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
   //int err = 0;
-  
+  QString ss;
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedCellArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+    
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
