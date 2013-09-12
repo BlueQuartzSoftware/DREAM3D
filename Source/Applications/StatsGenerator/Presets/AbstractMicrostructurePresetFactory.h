@@ -36,11 +36,12 @@
 #ifndef ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
 #define ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
-#include "AbstractMicrostructurePreset.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+
+#include "AbstractMicrostructurePreset.h"
 
 
 /**
@@ -64,6 +65,7 @@
     public:\
     DREAM3D_SHARED_POINTERS(name)\
     DREAM3D_TYPE_MACRO(name)\
+    DREAM3D_STATIC_NEW_MACRO(name)\
     DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
     virtual ~name(){}\
     AbstractMicrostructurePreset::Pointer newMicrostructurePreset() {\

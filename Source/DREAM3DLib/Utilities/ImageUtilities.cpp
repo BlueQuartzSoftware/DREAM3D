@@ -88,7 +88,7 @@ void ImageUtilities::CreateColorImage(DoubleArrayType *data, PoleFigureConfigura
   uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
   int numColors = config.numColors;
-  std::vector<float> colors(numColors*3, 0.0);
+  QVector<float> colors(numColors*3, 0.0);
   ColorTable::GetColorTable(config.numColors, colors);
 
   float r=0.0, g=0.0, b=0.0;
