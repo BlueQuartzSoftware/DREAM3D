@@ -403,7 +403,7 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
   int32_t rank = 2;
   hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
 
-  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {

@@ -74,7 +74,7 @@
   m->add##DCType(#Type, t_##Type);\
   IDataArray::Pointer t = m->get##DCType(#Type);\
   DREAM3D_REQUIRE_NE(t.get(), NULL);\
-  t = m->removeFieldData(#Type);\
+  t = m->removeCellFieldData(#Type);\
   DREAM3D_REQUIRE_NE(t.get(), NULL);\
   t = m->get##DCType(#Type);\
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);\
@@ -129,7 +129,7 @@ void TestDataContainerWriter()
     avgEuler->SetComponent(i, 1, i*0.665f);
     avgEuler->SetComponent(i, 2, i*0.665f);
   }
-  m->addFieldData(DREAM3D::FieldData::AxisEulerAngles, avgEuler);
+  m->addCellFieldData(DREAM3D::FieldData::AxisEulerAngles, avgEuler);
 
 
   FloatArrayType::Pointer surfArea = FloatArrayType::CreateArray(4, DREAM3D::EnsembleData::TotalSurfaceAreas);
@@ -137,13 +137,13 @@ void TestDataContainerWriter()
   {
     surfArea->SetValue(i, i + 41.2f);
   }
-  m->addEnsembleData(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::TotalSurfaceAreas, surfArea);
 
 
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
   neighborlistPtr->SetName(DREAM3D::FieldData::NeighborList);
   neighborlistPtr->setNumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors);
-  m->addFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
+  m->addCellFieldData(DREAM3D::FieldData::NeighborList, neighborlistPtr);
 
   for(int i = 0; i < 4; ++i)
   {
@@ -187,16 +187,16 @@ void TestDataContainerReader()
   m->getDimensions(nx, ny, nz);
 
   DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 2);
-  DREAM3D_REQUIRE_EQUAL(m->getNumFieldArrays(), 3);
-  DREAM3D_REQUIRE_EQUAL(m->getNumEnsembleArrays(), 1);
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellFieldArrays(), 3);
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellEnsembleArrays(), 1);
 
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-      = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
-  size_t nLists = neighborlistPtr->GetNumberOfTuples();
+  size_t nLists = neighborlistPtr->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(nLists, 4);
   for(size_t l = 0; l < nLists; ++l)
   {
@@ -237,20 +237,20 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   t = m->getCellData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-  m->addFieldData("Test", p);
-  t = m->getFieldData("Test");
+  m->addCellFieldData("Test", p);
+  t = m->getCellCellFieldData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeFieldData( "Test" );
+  t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getFieldData( "Test" );
+  t = m->getCellFieldData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
-  m->addEnsembleData("Test", p);
-  t = m->getEnsembleData("Test");
+  m->addCellEnsembleData("Test", p);
+  t = m->getCellEnsembleData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->removeEnsembleData( "Test" );
+  t = m->removeCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
-  t = m->getEnsembleData( "Test" );
+  t = m->getCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 }
 
@@ -276,10 +276,10 @@ void TestInsertDelete()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getFieldArrayNameList();
+  nameList = m->getCellFieldArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getEnsembleArrayNameList();
+  nameList = m->getCellEnsembleArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 }
 
@@ -325,77 +325,77 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
   /********************************* Field Data Tests *********************************************/
-  ptr = m->createFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
+  ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
       DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
+  ptr =  m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
       DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool_ptr =  m->getFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
+  bool_ptr =  m->getCellFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
       DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->getCellFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
-  t = m->removeFieldData( "Test" );
+  t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
 
   /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
 
   // First try getting the array, but pass in a bad array name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
+  ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
       DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
-  ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
+  ptr =  m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
       DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
-  bool_ptr =  m->getEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
+  bool_ptr =  m->getCellEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
       DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
   // Zero Error Condition
-  ptr = m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->getCellEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_NE(ptr, NULL);
   DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
 
 
-  t = m->removeEnsembleData( "Test" );
+  t = m->removeCellEnsembleData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 }
 
@@ -497,8 +497,8 @@ void TestDataContainer()
     if (NULL != intPtr)
     {
       std::cout << "Downcast to intPtr pointer was successful" << std::endl;
-      std::cout << "Number of Tuples:" << intPtr->GetNumberOfTuples() << std::endl;
-      int32_t* p = intPtr->GetPointer(0);
+      std::cout << "Number of Tuples:" << intPtr->getNumberOfTuples() << std::endl;
+      int32_t* p = intPtr->getPointer(0);
       for (int i = 0; i < 5; ++i)
       {
         std::cout << (int)p[i] << std::endl;

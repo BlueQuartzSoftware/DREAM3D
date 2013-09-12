@@ -122,7 +122,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, in
   size_t numElements = p->getNumberOfTuples() * p->GetNumberOfComponents();
   size_t numRead = 0;
 
-  T* ptr = p->GetPointer(0);
+  T* ptr = p->getPointer(0);
 
   //Skip some header bytes by just reading those bytes into the pointer knowing that the next
   // thing we are going to do it over write those bytes with the real data that we are after.
@@ -147,7 +147,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, in
       break;
     }
     // If we are here we did NOT read all the data, so increment the pointer and loop again.
-    ptr = p->GetPointer(numRead);
+    ptr = p->getPointer(numRead);
   }
   return RBR_NO_ERROR;
 }

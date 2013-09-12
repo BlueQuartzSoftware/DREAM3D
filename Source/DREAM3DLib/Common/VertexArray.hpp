@@ -98,7 +98,7 @@ class VertexArray
     // -----------------------------------------------------------------------------
     void getCoords(size_t vertId, float* coords)
     {
-      Vert_t& Vert = *(m_Array->GetPointer(vertId));
+      Vert_t& Vert = *(m_Array->getPointer(vertId));
       coords[0] = Vert.pos[0];
       coords[1] = Vert.pos[1];
       coords[2] = Vert.pos[2];
@@ -109,7 +109,7 @@ class VertexArray
     // -----------------------------------------------------------------------------
     void setCoords(size_t vertId, float* coords)
     {
-      Vert_t& Vert = *(m_Array->GetPointer(vertId));
+      Vert_t& Vert = *(m_Array->getPointer(vertId));
       Vert.pos[0] = coords[0];
       Vert.pos[1] = coords[1];
       Vert.pos[2] = coords[2];
@@ -120,7 +120,7 @@ class VertexArray
     // -----------------------------------------------------------------------------
     Vert_t* getPointer(size_t i)
     {
-      return m_Array->GetPointer(i);
+      return m_Array->getPointer(i);
     }
 
      /**

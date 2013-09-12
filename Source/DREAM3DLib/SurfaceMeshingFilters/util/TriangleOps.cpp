@@ -63,10 +63,10 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
   QVector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
   FaceArray::Pointer facesPtr = sm->getFaces();
-//  FaceArray::Face_t* faces = facesPtr->GetPointer(0);
+//  FaceArray::Face_t* faces = facesPtr->getPointer(0);
   IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Get the Triangle Neighbor Structure
   MeshFaceNeighbors::Pointer triNeighbors = sm->getMeshFaceNeighborLists();
@@ -266,7 +266,7 @@ VectorType TriangleOps::computeNormal(VertexArray::Vert_t& n0, VertexArray::Vert
 QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
 {
   QSet<int32_t> uniqueLabels;
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   size_t count = faceLabelsPtr->getNumberOfTuples();
   for (size_t i =0; i < count; ++i)

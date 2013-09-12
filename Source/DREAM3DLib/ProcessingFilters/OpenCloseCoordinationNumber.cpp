@@ -166,7 +166,7 @@ void OpenCloseCoordinationNumber::execute()
   setErrorCondition(0);
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
+  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
   size_t udims[3] = {0,0,0};

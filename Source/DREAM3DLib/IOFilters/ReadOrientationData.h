@@ -213,10 +213,10 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
 
       }
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      m_CrystalStructures = crystalStructures->GetPointer(0);
+      m_CrystalStructures = crystalStructures->getPointer(0);
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      m_LatticeConstants = latticeConstants->GetPointer(0);
+      m_LatticeConstants = latticeConstants->getPointer(0);
       getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
       return 0;
     }

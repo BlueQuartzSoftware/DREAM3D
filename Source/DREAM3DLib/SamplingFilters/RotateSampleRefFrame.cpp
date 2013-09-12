@@ -100,7 +100,7 @@ class RotateSampleRefFrameImpl
     void convert(size_t zStart, size_t zEnd, size_t yStart, size_t yEnd, size_t xStart, size_t xEnd) const
     {
 
-      int64_t* newindicies = newIndicesPtr->GetPointer(0);
+      int64_t* newindicies = newIndicesPtr->getPointer(0);
       int64_t index = 0;
       int64_t ktot, jtot;
       //      float rotMatrixInv[3][3];
@@ -452,7 +452,7 @@ void RotateSampleRefFrame::execute()
 
   DataArray<int64_t>::Pointer newIndiciesPtr = DataArray<int64_t>::CreateArray(newNumCellTuples, 1, "RotateSampleRef_NewIndicies");
   newIndiciesPtr->initializeWithValues(-1);
-  int64_t* newindicies = newIndiciesPtr->GetPointer(0);
+  int64_t* newindicies = newIndiciesPtr->getPointer(0);
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;

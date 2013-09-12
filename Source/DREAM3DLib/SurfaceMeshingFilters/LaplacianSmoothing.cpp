@@ -89,11 +89,11 @@ class LaplacianSmoothingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      VertexArray::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
-      FaceArray::Face_t* faces = m_facesPtr->GetPointer(0);
-      VertexArray::Vert_t* newPositions = m_newPositions->GetPointer(0);
+      VertexArray::Vert_t* vertices = m_vertsPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
+      FaceArray::Face_t* faces = m_facesPtr->getPointer(0);
+      VertexArray::Vert_t* newPositions = m_newPositions->getPointer(0);
 
-      float* lambdas = m_lambdasPtr->GetPointer(0);
+      float* lambdas = m_lambdasPtr->getPointer(0);
 
 
       for(size_t v = start; v < end; ++v)
@@ -388,7 +388,7 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
     return -1;
   }
   int numNodes = nodesPtr->getNumberOfTuples();
-  int8_t* nodeType = nodeTypePtr->GetPointer(0);
+  int8_t* nodeType = nodeTypePtr->getPointer(0);
 
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "Laplacian_Smoothing_Lambda_Array");
   lambdas->initializeWithZeros();
@@ -436,7 +436,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   //
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
   int nvert = nodesPtr->getNumberOfTuples();
-  VertexArray::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  VertexArray::Vert_t* vsm = nodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -466,7 +466,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   }
   // Get a Pointer to the Lambda array for conveneince
   DataArray<float>::Pointer lambdas = getLambdaArray();
-  float* lambda = lambdas->GetPointer(0);
+  float* lambda = lambdas->getPointer(0);
   
 
   //  Generate the Unique Edges
@@ -502,17 +502,17 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     return -560;
   }
   // Get a pointer to the Unique Edges
-  int* uedges = uniqueEdges->GetPointer(0);
+  int* uedges = uniqueEdges->getPointer(0);
   int nedges = uniqueEdges->getNumberOfTuples();
 
 
   DataArray<int>::Pointer numConnections = DataArray<int>::CreateArray(nvert, "Laplacian_Smoothing_NumberConnections_Array");
   numConnections->initializeWithZeros();
-  int* ncon = numConnections->GetPointer(0);
+  int* ncon = numConnections->getPointer(0);
 
   DataArray<double>::Pointer deltaArray = DataArray<double>::CreateArray(nvert, 3, "Laplacian_Smoothing_Delta_Array");
   deltaArray->initializeWithZeros();
-  double* delta = deltaArray->GetPointer(0);
+  double* delta = deltaArray->getPointer(0);
 
 
   double dlta = 0.0;
@@ -588,7 +588,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
   VertexArray::Pointer vertsPtr = getSurfaceDataContainer()->getVertices();
   int numVerts = vertsPtr->getNumberOfTuples();
-  //  VertexArray::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  //  VertexArray::Vert_t* vertices = vertsPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
@@ -600,7 +600,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
   FaceArray::Pointer facesPtr = getSurfaceDataContainer()->getFaces();
-  //  FaceArray::Face_t* faces = facesPtr->GetPointer(0);
+  //  FaceArray::Face_t* faces = facesPtr->getPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
@@ -665,7 +665,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     }
 
     // SERIAL ONLY
-    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(VertexArray::Vert_t) * vertsPtr->getNumberOfTuples());
+    ::memcpy(vertsPtr->getPointer(0), newPositionsPtr->getPointer(0), sizeof(VertexArray::Vert_t) * vertsPtr->getNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
     QTextStream testFile;
@@ -720,7 +720,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   FILE* vtkFile = NULL;
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
@@ -780,7 +780,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   int grainInterest = 9;
   for(int i = 0; i < end; ++i)
   {
-    //FaceArray::Face_t* tri = triangles.GetPointer(i);
+    //FaceArray::Face_t* tri = triangles.getPointer(i);
     if (faceLabels[i*2] == grainInterest || faceLabels[i*2+1] == grainInterest)
     {
       ++triangleCount;
@@ -798,7 +798,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
-    //FaceArray::Face_t* tri = triangles.GetPointer(tid);
+    //FaceArray::Face_t* tri = triangles.getPointer(tid);
     if (faceLabels[tid*2] == grainInterest || faceLabels[tid*2+1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];

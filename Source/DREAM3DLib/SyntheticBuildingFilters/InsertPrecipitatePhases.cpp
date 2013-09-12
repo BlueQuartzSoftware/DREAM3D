@@ -275,7 +275,7 @@ void InsertPrecipitatePhases::execute()
 // this initializes the arrays to hold the details of the locations of all of the grains during packing
   Int32ArrayType::Pointer grainOwnersPtr = initialize_packinggrid();
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
-//  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+//  int32_t* grainOwners = grainOwnersPtr->getPointer(0);
 //  size_t grainOwnersIdx = 0;
 
 
@@ -1121,7 +1121,7 @@ float InsertPrecipitatePhases::check_sizedisterror(Precip* precip)
 float InsertPrecipitatePhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr)
 {
   size_t grainOwnersIdx = 0;
-  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
+  int32_t* grainOwners = grainOwnersPtr->getPointer(0);
   fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
   if(gadd > 0)
@@ -1509,11 +1509,11 @@ void InsertPrecipitatePhases::assign_gaps()
   float zRes = m->getZRes();
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
-  int32_t* newowners = newownersPtr->GetPointer(0);
+  int32_t* newowners = newownersPtr->getPointer(0);
   newownersPtr->initializeWithZeros();
 
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
-  float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+  float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
 
   while (unassignedcount != 0)

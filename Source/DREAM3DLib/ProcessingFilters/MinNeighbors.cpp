@@ -187,11 +187,11 @@ void MinNeighbors::execute()
   setErrorCondition(0);
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
+  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithZeros();
 
   BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
+  m_AlreadyChecked = alreadCheckedPtr->getPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
   merge_containedgrains();
@@ -235,7 +235,7 @@ void MinNeighbors::assign_badpoints()
   };
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
+  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
   QVector<int > remove;

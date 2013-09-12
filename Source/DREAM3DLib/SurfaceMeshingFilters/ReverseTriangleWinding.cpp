@@ -64,7 +64,7 @@ class ReverseWindingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      FaceArray::Face_t* triangles = m_Triangles->GetPointer(0);
+      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
 
       for (size_t i = start; i < end; i++)
       {

@@ -125,7 +125,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
   if (dType.compare("int32_t") == 0)
   {
     DataArray<int32_t>* field = DataArray<int32_t>::SafePointerDownCast(data.get());
-    m_SelectedCellData = field->GetPointer(0);
+    m_SelectedCellData = field->getPointer(0);
   }
   else
   {
@@ -137,7 +137,7 @@ void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fi
 
   m->clearCellFieldData();
   BoolArrayType::Pointer active = BoolArrayType::CreateArray(fields, 1, DREAM3D::FieldData::Active);
-  // bool* mActive = m_Active->GetPointer(0);
+  // bool* mActive = m_Active->getPointer(0);
   m->addCellFieldData(DREAM3D::FieldData::Active, active);
 
 }
@@ -193,7 +193,7 @@ void LinkFieldMapToCellArray::execute()
   }
 
   BoolArrayType::Pointer m_Active = BoolArrayType::CreateArray(maxIndex, 1, DREAM3D::FieldData::Active);
-  bool* mActive = m_Active->GetPointer(0);
+  bool* mActive = m_Active->getPointer(0);
   for(int i=0;i<maxIndex;i++)
   {
     mActive[i] = active[i];

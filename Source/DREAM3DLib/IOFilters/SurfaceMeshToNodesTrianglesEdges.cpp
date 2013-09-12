@@ -252,7 +252,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->getNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  VertexArray::Vert_t* v = nodes->GetPointer(0);
+  VertexArray::Vert_t* v = nodes->getPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
@@ -286,7 +286,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   int kind = 0;
   int newnid1 = 0, newnid2 = 0;
   StructArray<SurfaceMesh::M3C::Segment>* faceEdges = StructArray<SurfaceMesh::M3C::Segment>::SafePointerDownCast(edges.get());
-  SurfaceMesh::M3C::Segment* fe = faceEdges->GetPointer(0);
+  SurfaceMesh::M3C::Segment* fe = faceEdges->getPointer(0);
   fprintf(eFile, "%lu\n", nfe + nie);
 
   for (size_t k = 0; k < nfe; ++k)
@@ -300,7 +300,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   }
 
   StructArray<SurfaceMesh::M3C::ISegment>* internalEdges = StructArray<SurfaceMesh::M3C::ISegment>::SafePointerDownCast(iEdges.get());
-  SurfaceMesh::M3C::ISegment* ie = internalEdges->GetPointer(0);
+  SurfaceMesh::M3C::ISegment* ie = internalEdges->getPointer(0);
   for (size_t kk = 0; kk < nie; ++kk)
   {
 
@@ -336,12 +336,12 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   size_t numTriangles = triangles->getNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
   StructArray<FaceArray::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
-  FaceArray::Face_t* t = ts->GetPointer(0);
+  FaceArray::Face_t* t = ts->getPointer(0);
 
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   int n1, n2, n3, e1 = -1, e2 = -1, e3 = -1;

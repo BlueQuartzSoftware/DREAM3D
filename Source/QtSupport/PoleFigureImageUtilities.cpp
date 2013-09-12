@@ -460,7 +460,7 @@ QImage PoleFigureImageUtilities::PaintPoleFigureOverlay(int imageWidth, int imag
 // -----------------------------------------------------------------------------
 QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, bool includeOverlay)
 {
-  uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(poleFigurePtr->GetPointer(0));
+  uint32_t* rgbaPtr = reinterpret_cast<uint32_t*>(poleFigurePtr->getPointer(0));
 
   // Create a QImage
   QImage image(imageDimension, imageDimension, QImage::Format_ARGB32_Premultiplied);
