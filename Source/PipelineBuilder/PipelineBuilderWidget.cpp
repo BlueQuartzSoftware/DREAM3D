@@ -280,7 +280,7 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
 {
-  hid_t fid = H5Utilities::openFile( filePath() );
+  hid_t fid = H5Utilities::openFile( filePath );
   if (fid <= 0)
   {
     //Present a error dialog
@@ -570,7 +570,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      //qDebug() << fi.absoluteFilePath()() << "\n";
+      //qDebug() << fi.absoluteFilePath() << "\n";
       // Add a tree widget item for this Prebuilt Group
       nextDirItem = new QTreeWidgetItem(currentDirItem);
       nextDirItem->setText(0, fi.baseName());
@@ -588,7 +588,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
     pbPref.beginGroup(Detail::PipelineBuilderGroup);
     QString pbName = pbPref.value("Name").toString();
     pbPref.endGroup();
-    //qDebug() << pbinfo.absoluteFilePath()() << "\n";
+    //qDebug() << pbinfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
     prebuiltItem->setText(0, pbName);
@@ -915,7 +915,7 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
       favoritePrefs.endGroup();
 
       // Display error message
-      QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText().toLatin1().data()),
+      QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                             QMessageBox::Ok, QMessageBox::Ok);
 
       return true;
@@ -946,7 +946,7 @@ bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString
     favoritePrefs.endGroup();
 
     // Display error message
-    QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText().toLatin1().data()),
+    QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toLatin1().data()),
                           QMessageBox::Ok, QMessageBox::Ok);
 
     return true;
@@ -998,12 +998,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->text(0)());
+    factories = fm->getFactories(item->text(0));
     updateFilterGroupList(factories);
   }
   else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->parent()->text(0)(), item->text(0)());
+    factories = fm->getFactories(item->parent()->text(0), item->text(0));
     updateFilterGroupList(factories);
   }
   else
@@ -1109,11 +1109,11 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->text(0)());
+    factories = fm->getFactories(item->text(0));
   }
   else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->parent()->text(0)(), item->text(0)());
+    factories = fm->getFactories(item->parent()->text(0), item->text(0));
   }
 
   // Nothing was in the search Field so just reset to what was listed before
@@ -1194,7 +1194,7 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
   if (NULL == listItem) { return; }
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
 
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString()());
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString());
   if (NULL == wf) { return;}
 
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
@@ -1736,7 +1736,7 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
   for(int i = 0; i < filterNames.size(); ++i)
   {
     QString filterName = filterNames[i];
-    IFilterWidgetFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName());
+    IFilterWidgetFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
     if (NULL == wigFactory.get() )
     {
       continue;
