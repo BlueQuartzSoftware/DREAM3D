@@ -122,7 +122,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 
 
   // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
