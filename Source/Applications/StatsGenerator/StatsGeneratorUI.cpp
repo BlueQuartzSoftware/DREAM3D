@@ -699,7 +699,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setVolumeDataContainer(m.get());
-  writer->setOutputFile(m_FilePath());
+  writer->setOutputFile(m_FilePath);
   writer->setWriteVolumeData(true);
   writer->setWriteSurfaceData(false);
   writer->setWriteEdgeData(false);
@@ -815,7 +815,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath());
+  reader->setInputFile(m_FilePath);
   reader->setVolumeDataContainer(m.get());
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);

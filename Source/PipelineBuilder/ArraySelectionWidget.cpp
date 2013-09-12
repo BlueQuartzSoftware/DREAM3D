@@ -599,7 +599,7 @@ QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
   {
     if (listWidget->item(i)->checkState() == Qt::Checked)
     {
-      selectedArrays.insert(listWidget->item(i)->text()());
+      selectedArrays.insert(listWidget->item(i)->text());
     }
   }
   return selectedArrays;
@@ -619,7 +619,7 @@ void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*li
   {
     for(qint32 i = 0; i < listWidget->count(); ++i)
     {
-      if (listWidget->item(i)->text()() == *iter)
+      if (listWidget->item(i)->text() == *iter)
       {
         listWidget->item(i)->setCheckState(Qt::Checked);
       }
@@ -637,7 +637,7 @@ QSet<QString> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
   {
     if (listWidget->item(i)->checkState() == Qt::Unchecked)
     {
-      non_selectedArrays.insert(listWidget->item(i)->text()());
+      non_selectedArrays.insert(listWidget->item(i)->text());
     }
   }
   return non_selectedArrays;
