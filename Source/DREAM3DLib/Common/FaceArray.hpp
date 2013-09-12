@@ -265,6 +265,14 @@ class FaceArray
       }
     }
 
+    /*
+     * @brief
+     */
+    Face_t* getPointer(size_t i)
+    {
+      return m_Array->GetPointer(i);
+    }
+
      /**
      * @brief Returns reference to the Face_t at the index i
      * @param i

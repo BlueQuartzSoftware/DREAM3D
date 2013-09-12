@@ -96,7 +96,7 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
@@ -108,10 +108,9 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   IDataArray::Pointer neighborListPtr = m->getCellFieldData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
-    ss.str("");
-    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << "\n";
+    QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -128,10 +127,9 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
-      ss.str("");
-      ss << "MisorientationLists Array Not Initialized correctly" << "\n";
+      QString ss = QObject::tr("MisorientationLists Array Not Initialized correctly");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss.str(), -308);
+      addErrorMessage(getHumanLabel(), ss, -308);
     }
   }
   else
@@ -199,7 +197,7 @@ void FindMisorientations::execute()
   {
     QuaternionMathF::Copy(avgQuats[i], q1);
     phase1 = m_CrystalStructures[m_FieldPhases[i]];
-    misorientationlists[i].resize(neighborlist[i].size(), -1.0);
+    misorientationlists[i].fill(-1.0, neighborlist[i].size() );
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       w = 10000.0;
@@ -224,7 +222,7 @@ void FindMisorientations::execute()
   for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType misoL(new QVector<float>);
+    NeighborList<float>::SharedVectorType misoL(new std::vector<float>);
     misoL->assign(misorientationlists[i].begin(), misorientationlists[i].end());
     m_MisorientationList->setList(static_cast<int>(i), misoL);
   }

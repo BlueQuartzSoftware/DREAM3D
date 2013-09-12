@@ -36,7 +36,7 @@
 
 #include "FindSlipTransmissionMetrics.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -107,23 +107,24 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
-  //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
+
+
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss.str("");
-    ss << "NeighborLists Array Not Initialized correctly" << "\n";
+
+    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss.str(), -305);
+    addErrorMessage(getHumanLabel(), ss, -305);
   }
+
+
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
   f1Ptr->SetName(DREAM3D::FieldData::F1);
@@ -131,9 +132,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
-    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
+    QString ss = QObject::tr("F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
@@ -142,9 +143,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
-    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
+    QString ss = QObject::tr("F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
@@ -153,9 +154,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
-    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
+    QString ss = QObject::tr("F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
@@ -164,9 +165,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addCellFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
-    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << "\n";
+    QString ss = QObject::tr("mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -231,10 +232,10 @@ void FindSlipTransmissionMetrics::execute()
   mPrimelists.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    F1lists[i].resize(neighborlist[i].size(),0);
-    F1sptlists[i].resize(neighborlist[i].size(),0);
-    F7lists[i].resize(neighborlist[i].size(),0);
-    mPrimelists[i].resize(neighborlist[i].size(),0);
+    F1lists[i].fill(0.0f, neighborlist[i].size());
+    F1sptlists[i].fill(0.0f, neighborlist[i].size());
+    F7lists[i].fill(0.0f, neighborlist[i].size());
+    mPrimelists[i].fill(0.0f, neighborlist[i].size());
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];
@@ -273,22 +274,22 @@ void FindSlipTransmissionMetrics::execute()
   for (int64_t i = 1; i < totalFields; i++)
   {
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f1L(new QVector<float>);
+    NeighborList<float>::SharedVectorType f1L(new std::vector<float>);
     f1L->assign(F1lists[i].begin(), F1lists[i].end());
     m_F1->setList(static_cast<int>(i), f1L);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f1sptL(new QVector<float>);
+    NeighborList<float>::SharedVectorType f1sptL(new std::vector<float>);
     f1sptL->assign(F1sptlists[i].begin(), F1sptlists[i].end());
     m_F1spt->setList(static_cast<int>(i), f1sptL);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType f7L(new QVector<float>);
+    NeighborList<float>::SharedVectorType f7L(new std::vector<float>);
     f7L->assign(F7lists[i].begin(), F7lists[i].end());
     m_F7->setList(static_cast<int>(i), f7L);
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<float>::SharedVectorType mPrimeL(new QVector<float>);
+    NeighborList<float>::SharedVectorType mPrimeL(new std::vector<float>);
     mPrimeL->assign(mPrimelists[i].begin(), mPrimelists[i].end());
     m_mPrime->setList(static_cast<int>(i), mPrimeL);
   }
