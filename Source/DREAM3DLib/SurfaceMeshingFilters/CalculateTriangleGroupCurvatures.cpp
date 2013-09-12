@@ -172,7 +172,7 @@ void CalculateTriangleGroupCurvatures::operator() const
     nRingNeighborAlg->setSurfaceDataContainer(m_SurfaceDataContainer);
     nRingNeighborAlg->generate();
 
-    DREAM3D::Mesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
+    FaceArray::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
     DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->getPointer(0), QString("Patch_Centroids"));
@@ -314,7 +314,7 @@ void CalculateTriangleGroupCurvatures::operator() const
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, DREAM3D::Mesh::UniqueFaceIds_t &triPatch,
+DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(int triId, FaceArray::UniqueFaceIds_t &triPatch,
                                                                               double* data,
                                                                               const QString &name) const
 {

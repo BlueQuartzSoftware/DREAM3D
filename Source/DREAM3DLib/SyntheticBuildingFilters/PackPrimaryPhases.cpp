@@ -840,6 +840,7 @@ void PackPrimaryPhases::execute()
       estimatedTime = (float)(numgrains - i) / timeDiff;
       ss = QObject::tr(" Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       notifyStatusMessage(ss);
+
       millis = QDateTime::currentMSecsSinceEpoch();
     }
     determine_neighbors(i, 1);
@@ -2044,7 +2045,6 @@ void PackPrimaryPhases::assign_gaps_only()
             currentMillis = QDateTime::currentMSecsSinceEpoch();
             if (currentMillis - millis > 1000)
             {
-
               QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
               notifyStatusMessage(ss);
               millis = QDateTime::currentMSecsSinceEpoch();
