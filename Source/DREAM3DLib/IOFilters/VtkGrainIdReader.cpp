@@ -33,7 +33,7 @@
 #include <map>
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common//DREAM3DEndian.h"
 
 #define kBufferSize 1024
 
