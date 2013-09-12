@@ -36,11 +36,15 @@
 
 #include "FindRadialDist.h"
 
-#include <iostream>
-#include <fstream>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QtDebug>
+
+
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
@@ -117,7 +121,7 @@ int FindRadialDist::writeFilterParameters(AbstractFilterParametersWriter* writer
 void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
@@ -132,20 +136,22 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 
   if (getOutputFile().isEmpty() == true)
   {
-    ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if (MXADir::exists(parentPath) == false)
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (QFileInfo::extension(getOutputFile()).compare("") == 0)
+
+  if (fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".csv"));
   }
@@ -182,12 +188,13 @@ void FindRadialDist::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(m_OutputFile);
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(m_OutputFile);
+QString parentPath = fi.path();
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-      
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -267,8 +274,8 @@ void FindRadialDist::find_radialdist()
   QVector<QVector<float> > volume(sizebins);
   for (size_t i = 0; i < count.size(); i++)
   {
-    count[i].resize(numbins,0);
-    volume[i].resize(numbins,0);
+    count[i].fill(0.0f, numbins);
+    volume[i].fill(0.0f, numbins);
   }
   for (size_t i = 1; i < numgrains; i++)
   {
