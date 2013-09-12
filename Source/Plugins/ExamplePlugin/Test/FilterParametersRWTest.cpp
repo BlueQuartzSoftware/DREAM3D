@@ -127,14 +127,14 @@
 #define SelectedVolumeCellArraysString2 "SelectedVolumeCellArraysString2"
 #define SelectedVolumeCellArraysString3 "SelectedVolumeCellArraysString3"
 #define SelectedVolumeCellArraysString4 "SelectedVolumeCellArraysString4"
-#define SelectedVolumeFieldArraysString1 "SelectedVolumeFieldArraysString1"
-#define SelectedVolumeFieldArraysString2 "SelectedVolumeFieldArraysString2"
-#define SelectedVolumeFieldArraysString3 "SelectedVolumeFieldArraysString3"
-#define SelectedVolumeFieldArraysString4 "SelectedVolumeFieldArraysString4"
-#define SelectedVolumeEnsembleArraysString1 "SelectedVolumeEnsembleArraysString1"
-#define SelectedVolumeEnsembleArraysString2 "SelectedVolumeEnsembleArraysString2"
-#define SelectedVolumeEnsembleArraysString3 "SelectedVolumeEnsembleArraysString3"
-#define SelectedVolumeEnsembleArraysString4 "SelectedVolumeEnsembleArraysString4"
+#define SelectedVolumeCellFieldArraysString1 "SelectedVolumeCellFieldArraysString1"
+#define SelectedVolumeCellFieldArraysString2 "SelectedVolumeCellFieldArraysString2"
+#define SelectedVolumeCellFieldArraysString3 "SelectedVolumeCellFieldArraysString3"
+#define SelectedVolumeCellFieldArraysString4 "SelectedVolumeCellFieldArraysString4"
+#define SelectedVolumeCellEnsembleArraysString1 "SelectedVolumeCellEnsembleArraysString1"
+#define SelectedVolumeCellEnsembleArraysString2 "SelectedVolumeCellEnsembleArraysString2"
+#define SelectedVolumeCellEnsembleArraysString3 "SelectedVolumeCellEnsembleArraysString3"
+#define SelectedVolumeCellEnsembleArraysString4 "SelectedVolumeCellEnsembleArraysString4"
 #define SelectedSurfaceVertexArraysString1 "SelectedSurfaceVertexArraysString1"
 #define SelectedSurfaceVertexArraysString2 "SelectedSurfaceVertexArraysString2"
 #define SelectedSurfaceVertexArraysString3 "SelectedSurfaceVertexArraysString3"
@@ -147,26 +147,26 @@
 #define SelectedSurfaceEdgeArraysString2 "SelectedSurfaceEdgeArraysString2"
 #define SelectedSurfaceEdgeArraysString3 "SelectedSurfaceEdgeArraysString3"
 #define SelectedSurfaceEdgeArraysString4 "SelectedSurfaceEdgeArraysString4"
-#define SelectedSurfaceFieldArraysString1 "SelectedSurfaceFieldArraysString1"
-#define SelectedSurfaceFieldArraysString2 "SelectedSurfaceFieldArraysString2"
-#define SelectedSurfaceFieldArraysString3 "SelectedSurfaceFieldArraysString3"
-#define SelectedSurfaceFieldArraysString4 "SelectedSurfaceFieldArraysString4"
-#define SelectedSurfaceEnsembleArraysString1 "SelectedSurfaceEnsembleArraysString1"
-#define SelectedSurfaceEnsembleArraysString2 "SelectedSurfaceEnsembleArraysString2"
-#define SelectedSurfaceEnsembleArraysString3 "SelectedSurfaceEnsembleArraysString3"
-#define SelectedSurfaceEnsembleArraysString4 "SelectedSurfaceEnsembleArraysString4"
+#define SelectedSurfaceFaceFieldArraysString1 "SelectedSurfaceFaceFieldArraysString1"
+#define SelectedSurfaceFaceFieldArraysString2 "SelectedSurfaceFaceFieldArraysString2"
+#define SelectedSurfaceFaceFieldArraysString3 "SelectedSurfaceFaceFieldArraysString3"
+#define SelectedSurfaceFaceFieldArraysString4 "SelectedSurfaceFaceFieldArraysString4"
+#define SelectedSurfaceFaceEnsembleArraysString1 "SelectedSurfaceFaceEnsembleArraysString1"
+#define SelectedSurfaceFaceEnsembleArraysString2 "SelectedSurfaceFaceEnsembleArraysString2"
+#define SelectedSurfaceFaceEnsembleArraysString3 "SelectedSurfaceFaceEnsembleArraysString3"
+#define SelectedSurfaceFaceEnsembleArraysString4 "SelectedSurfaceFaceEnsembleArraysString4"
 #define SelectedVertexVertexArraysString1 "SelectedVertexVertexArraysString1"
 #define SelectedVertexVertexArraysString2 "SelectedVertexVertexArraysString2"
 #define SelectedVertexVertexArraysString3 "SelectedVertexVertexArraysString3"
 #define SelectedVertexVertexArraysString4 "SelectedVertexVertexArraysString4"
-#define SelectedVertexFieldArraysString1 "SelectedVertexFieldArraysString1"
-#define SelectedVertexFieldArraysString2 "SelectedVertexFieldArraysString2"
-#define SelectedVertexFieldArraysString3 "SelectedVertexFieldArraysString3"
-#define SelectedVertexFieldArraysString4 "SelectedVertexFieldArraysString4"
-#define SelectedVertexEnsembleArraysString1 "SelectedVertexEnsembleArraysString1"
-#define SelectedVertexEnsembleArraysString2 "SelectedVertexEnsembleArraysString2"
-#define SelectedVertexEnsembleArraysString3 "SelectedVertexEnsembleArraysString3"
-#define SelectedVertexEnsembleArraysString4 "SelectedVertexEnsembleArraysString4"
+#define SelectedVertexVertexFieldArraysString1 "SelectedVertexVertexFieldArraysString1"
+#define SelectedVertexVertexFieldArraysString2 "SelectedVertexVertexFieldArraysString2"
+#define SelectedVertexVertexFieldArraysString3 "SelectedVertexVertexFieldArraysString3"
+#define SelectedVertexVertexFieldArraysString4 "SelectedVertexVertexFieldArraysString4"
+#define SelectedVertexVertexEnsembleArraysString1 "SelectedVertexVertexEnsembleArraysString1"
+#define SelectedVertexVertexEnsembleArraysString2 "SelectedVertexVertexEnsembleArraysString2"
+#define SelectedVertexVertexEnsembleArraysString3 "SelectedVertexVertexEnsembleArraysString3"
+#define SelectedVertexVertexEnsembleArraysString4 "SelectedVertexVertexEnsembleArraysString4"
 
 enum TestCases
 {
@@ -237,13 +237,13 @@ void ArraySelectionExampleTest()
                                       SelectedVolumeCellArraysString3, SelectedVolumeCellArraysString4);
   filt->setSelectedVolumeCellArrays(set1);
 
-  QSet<QString> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
-                                      SelectedVolumeFieldArraysString3, SelectedVolumeFieldArraysString4);
-  filt->setSelectedVolumeFieldArrays(set2);
+  QSet<QString> set2 = getSet(SelectedVolumeCellFieldArraysString1, SelectedVolumeCellFieldArraysString2,
+                                      SelectedVolumeCellFieldArraysString3, SelectedVolumeCellFieldArraysString4);
+  filt->setSelectedVolumeCellFieldArrays(set2);
 
-  QSet<QString> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
-                                      SelectedVolumeEnsembleArraysString3, SelectedVolumeEnsembleArraysString4);
-  filt->setSelectedVolumeEnsembleArrays(set3);
+  QSet<QString> set3 = getSet(SelectedVolumeCellEnsembleArraysString1, SelectedVolumeCellEnsembleArraysString2,
+                                      SelectedVolumeCellEnsembleArraysString3, SelectedVolumeCellEnsembleArraysString4);
+  filt->setSelectedVolumeCellEnsembleArrays(set3);
 
   QSet<QString> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
                                       SelectedSurfaceVertexArraysString3, SelectedSurfaceVertexArraysString4);
@@ -257,25 +257,25 @@ void ArraySelectionExampleTest()
                                       SelectedSurfaceEdgeArraysString3, SelectedSurfaceEdgeArraysString4);
   filt->setSelectedSurfaceEdgeArrays(set6);
 
-  QSet<QString> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
-                                      SelectedSurfaceFieldArraysString3, SelectedSurfaceFieldArraysString4);
-  filt->setSelectedSurfaceFieldArrays(set7);
+  QSet<QString> set7 = getSet(SelectedSurfaceFaceFieldArraysString1, SelectedSurfaceFaceFieldArraysString2,
+                                      SelectedSurfaceFaceFieldArraysString3, SelectedSurfaceFaceFieldArraysString4);
+  filt->setSelectedSurfaceFaceFieldArrays(set7);
 
-  QSet<QString> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
-                                      SelectedSurfaceEnsembleArraysString3, SelectedSurfaceEnsembleArraysString4);
-  filt->setSelectedSurfaceEnsembleArrays(set8);
+  QSet<QString> set8 = getSet(SelectedSurfaceFaceEnsembleArraysString1, SelectedSurfaceFaceEnsembleArraysString2,
+                                      SelectedSurfaceFaceEnsembleArraysString3, SelectedSurfaceFaceEnsembleArraysString4);
+  filt->setSelectedSurfaceFaceEnsembleArrays(set8);
 
   QSet<QString> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
                                       SelectedVertexVertexArraysString3, SelectedVertexVertexArraysString4);
   filt->setSelectedVertexVertexArrays(set9);
 
-  QSet<QString> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
-                                       SelectedVertexFieldArraysString3, SelectedVertexFieldArraysString4);
-  filt->setSelectedVertexFieldArrays(set10);
+  QSet<QString> set10 = getSet(SelectedVertexVertexFieldArraysString1, SelectedVertexVertexFieldArraysString2,
+                                       SelectedVertexVertexFieldArraysString3, SelectedVertexVertexFieldArraysString4);
+  filt->setSelectedVertexVertexFieldArrays(set10);
 
-  QSet<QString> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
-                                       SelectedVertexEnsembleArraysString3, SelectedVertexEnsembleArraysString4);
-  filt->setSelectedVertexEnsembleArrays(set11);
+  QSet<QString> set11 = getSet(SelectedVertexVertexEnsembleArraysString1, SelectedVertexVertexEnsembleArraysString2,
+                                       SelectedVertexVertexEnsembleArraysString3, SelectedVertexVertexEnsembleArraysString4);
+  filt->setSelectedVertexVertexEnsembleArrays(set11);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
@@ -313,27 +313,27 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, ==, *iter)
 
-      QSet<QString> set2Read = filt->getSelectedVolumeFieldArrays();
+      QSet<QString> set2Read = filt->getSelectedVolumeCellFieldArrays();
   iter = set2Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeFieldArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellFieldArraysString4, ==, *iter)
 
-      QSet<QString> set3Read = filt->getSelectedVolumeEnsembleArrays();
+      QSet<QString> set3Read = filt->getSelectedVolumeCellEnsembleArrays();
   iter = set3Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVolumeCellEnsembleArraysString4, ==, *iter)
 
       QSet<QString> set4Read = filt->getSelectedSurfaceVertexArrays();
   iter = set4Read.begin();
@@ -368,27 +368,27 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, ==, *iter)
 
-      QSet<QString> set7Read = filt->getSelectedSurfaceFieldArrays();
+      QSet<QString> set7Read = filt->getSelectedSurfaceFaceFieldArrays();
   iter = set7Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceFieldArraysString4, ==, *iter)
 
-      QSet<QString> set8Read = filt->getSelectedSurfaceEnsembleArrays();
+      QSet<QString> set8Read = filt->getSelectedSurfaceFaceEnsembleArrays();
   iter = set8Read.begin();
 
-  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedSurfaceFaceEnsembleArraysString4, ==, *iter)
 
       QSet<QString> set9Read = filt->getSelectedVertexVertexArrays();
   iter = set9Read.begin();
@@ -401,27 +401,27 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, ==, *iter)
 
-      QSet<QString> set10Read = filt->getSelectedVertexFieldArrays();
+      QSet<QString> set10Read = filt->getSelectedVertexVertexFieldArrays();
   iter = set10Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVertexFieldArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexFieldArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexFieldArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexFieldArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexFieldArraysString4, ==, *iter)
 
-      QSet<QString> set11Read = filt->getSelectedVertexEnsembleArrays();
+      QSet<QString> set11Read = filt->getSelectedVertexVertexEnsembleArrays();
   iter = set11Read.begin();
 
-  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString1, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString1, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString2, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString2, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString3, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString3, ==, *iter)
       iter++;
-  DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString4, ==, *iter)
+  DREAM3D_REQUIRED(SelectedVertexVertexEnsembleArraysString4, ==, *iter)
 
 
   H5Gclose(pipelineGroupId); // Closes the "Pipeline" group

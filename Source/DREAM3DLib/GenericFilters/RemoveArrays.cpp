@@ -79,16 +79,16 @@ void RemoveArrays::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   setSelectedVolumeCellArrays( reader->readValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() ) );
-  setSelectedVolumeFieldArrays( reader->readValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() ) );
-  setSelectedVolumeEnsembleArrays( reader->readValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() ) );
+  setSelectedVolumeCellFieldArrays( reader->readValue("SelectedVolumeCellFieldArrays", getSelectedVolumeCellFieldArrays() ) );
+  setSelectedVolumeCellEnsembleArrays( reader->readValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() ) );
   setSelectedSurfaceVertexArrays( reader->readValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() ) );
   setSelectedSurfaceFaceArrays( reader->readValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() ) );
   setSelectedSurfaceEdgeArrays( reader->readValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() ) );
-  setSelectedSurfaceFieldArrays( reader->readValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() ) );
-  setSelectedSurfaceEnsembleArrays( reader->readValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() ) );
+  setSelectedSurfaceFaceFieldArrays( reader->readValue("SelectedSurfaceFaceFieldArrays", getSelectedSurfaceFaceFieldArrays() ) );
+  setSelectedSurfaceFaceEnsembleArrays( reader->readValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() ) );
   setSelectedVertexVertexArrays( reader->readValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() ) );
-  setSelectedVertexFieldArrays( reader->readValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() ) );
-  setSelectedVertexEnsembleArrays( reader->readValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() ) );
+  setSelectedVertexVertexFieldArrays( reader->readValue("SelectedVertexVertexFieldArrays", getSelectedVertexVertexFieldArrays() ) );
+  setSelectedVertexVertexEnsembleArrays( reader->readValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() ) );
   reader->closeFilterGroup();
 }
 
@@ -99,16 +99,16 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 {
   writer->openFilterGroup(this, index);
   writer->writeValue("SelectedVolumeCellArrays", getSelectedVolumeCellArrays() );
-  writer->writeValue("SelectedVolumeFieldArrays", getSelectedVolumeFieldArrays() );
-  writer->writeValue("SelectedVolumeEnsembleArrays", getSelectedVolumeEnsembleArrays() );
+  writer->writeValue("SelectedVolumeCellFieldArrays", getSelectedVolumeCellFieldArrays() );
+  writer->writeValue("SelectedVolumeCellEnsembleArrays", getSelectedVolumeCellEnsembleArrays() );
   writer->writeValue("SelectedSurfaceVertexArrays", getSelectedSurfaceVertexArrays() );
   writer->writeValue("SelectedSurfaceFaceArrays", getSelectedSurfaceFaceArrays() );
   writer->writeValue("SelectedSurfaceEdgeArrays", getSelectedSurfaceEdgeArrays() );
-  writer->writeValue("SelectedSurfaceFieldArrays", getSelectedSurfaceFieldArrays() );
-  writer->writeValue("SelectedSurfaceEnsembleArrays", getSelectedSurfaceEnsembleArrays() );
+  writer->writeValue("SelectedSurfaceFaceFieldArrays", getSelectedSurfaceFaceFieldArrays() );
+  writer->writeValue("SelectedSurfaceFaceEnsembleArrays", getSelectedSurfaceFaceEnsembleArrays() );
   writer->writeValue("SelectedVertexVertexArrays", getSelectedVertexVertexArrays() );
-  writer->writeValue("SelectedVertexFieldArrays", getSelectedVertexFieldArrays() );
-  writer->writeValue("SelectedVertexEnsembleArrays", getSelectedVertexEnsembleArrays() );
+  writer->writeValue("SelectedVertexVertexFieldArrays", getSelectedVertexVertexFieldArrays() );
+  writer->writeValue("SelectedVertexVertexEnsembleArrays", getSelectedVertexVertexEnsembleArrays() );
   writer->closeFilterGroup();
   return ++index;
 }
@@ -128,11 +128,11 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       m->removeCellData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVolumeFieldArrays.begin(); iter != m_SelectedVolumeFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeCellFieldArrays.begin(); iter != m_SelectedVolumeCellFieldArrays.end(); ++iter)
     {
       m->removeCellFieldData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedVolumeEnsembleArrays.begin(); iter != m_SelectedVolumeEnsembleArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedVolumeCellEnsembleArrays.begin(); iter != m_SelectedVolumeCellEnsembleArrays.end(); ++iter)
     {
       m->removeCellEnsembleData(*iter);
     }
@@ -155,11 +155,11 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     {
       sm->removeEdgeData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceFieldArrays.begin(); iter != m_SelectedSurfaceFieldArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFaceFieldArrays.begin(); iter != m_SelectedSurfaceFaceFieldArrays.end(); ++iter)
     {
       sm->removeFaceFieldData(*iter);
     }
-    for(NameList_t::iterator iter = m_SelectedSurfaceEnsembleArrays.begin(); iter != m_SelectedSurfaceEnsembleArrays.end(); ++iter)
+    for(NameList_t::iterator iter = m_SelectedSurfaceFaceEnsembleArrays.begin(); iter != m_SelectedSurfaceFaceEnsembleArrays.end(); ++iter)
     {
       sm->removeFaceEnsembleData(*iter);
     }
@@ -221,8 +221,8 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedFaceArrays;
   m_SelectedVolumeCellArrays = selectedCellArrays;
-  m_SelectedVolumeFieldArrays = selectedFieldArrays;
-  m_SelectedVolumeEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedVolumeCellFieldArrays = selectedFieldArrays;
+  m_SelectedVolumeCellEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------
@@ -237,8 +237,8 @@ void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArra
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
   m_SelectedSurfaceFaceArrays = selectedFaceArrays;
-  m_SelectedSurfaceFieldArrays = selectedFieldArrays;
-  m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedSurfaceFaceFieldArrays = selectedFieldArrays;
+  m_SelectedSurfaceFaceEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------
@@ -251,8 +251,8 @@ void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
-  m_SelectedEdgeFieldArrays = selectedFieldArrays;
-  m_SelectedEdgeEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedEdgeEdgeFieldArrays = selectedFieldArrays;
+  m_SelectedEdgeEdgeEnsembleArrays = selectedEnsembleArrays;
 }
 
 // -----------------------------------------------------------------------------
@@ -263,8 +263,8 @@ void RemoveArrays::setVertexSelectedArrayNames(QSet<QString> selectedVertexArray
                                                      QSet<QString> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
-  m_SelectedVertexFieldArrays = selectedFieldArrays;
-  m_SelectedVertexEnsembleArrays = selectedEnsembleArrays;
+  m_SelectedVertexVertexFieldArrays = selectedFieldArrays;
+  m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
 }
 
 

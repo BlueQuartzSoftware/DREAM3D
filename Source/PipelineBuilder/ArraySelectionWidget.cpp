@@ -329,7 +329,7 @@ void ArraySelectionWidget::on_edgeEdgeCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_edgeFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_edgeEdgeFieldCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     edgeEdgeFieldCB->setCheckState(Qt::Checked);
@@ -341,7 +341,7 @@ void ArraySelectionWidget::on_edgeFieldCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_edgeEnsembleCB_stateChanged(int state)
+void ArraySelectionWidget::on_edgeEdgeEnsembleCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     edgeEdgeEnsembleCB->setCheckState(Qt::Checked);
@@ -389,7 +389,7 @@ void ArraySelectionWidget::on_surfaceFaceArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_surfaceFieldArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_surfaceFaceFieldArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     surfaceFaceFieldArraysCB->setCheckState(Qt::Checked);
@@ -401,7 +401,7 @@ void ArraySelectionWidget::on_surfaceFieldArraysCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_surfaceEnsembleArraysCB_stateChanged(int state)
+void ArraySelectionWidget::on_surfaceFaceEnsembleArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     surfaceFaceEnsembleArraysCB->setCheckState(Qt::Checked);
@@ -461,7 +461,7 @@ void ArraySelectionWidget::on_volumeCellCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_volumeFieldCB_stateChanged(int state)
+void ArraySelectionWidget::on_volumeCellFieldCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     volumeCellFieldCB->setCheckState(Qt::Checked);
@@ -473,7 +473,7 @@ void ArraySelectionWidget::on_volumeFieldCB_stateChanged(int state)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::on_volumeEnsembleCB_stateChanged(int state)
+void ArraySelectionWidget::on_volumeCellEnsembleCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
     volumeCellEnsembleCB->setCheckState(Qt::Checked);

@@ -821,7 +821,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   reader->setReadSurfaceData(false);
   reader->setReadEdgeData(false);
   reader->setReadVertexData(false);
-  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setSelectedVolumeCellEnsembleArrays(selectedArrays);
   reader->setReadAllArrays(false);
   reader->execute();
   err = reader->getErrorCondition();
