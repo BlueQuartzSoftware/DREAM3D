@@ -39,12 +39,14 @@
 
 
 //-- C++ includes
-#include <QtCore/QString>
+#include <string>
+
+//-- MXA Includes
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class EquiaxedPreset EquiaxedPreset.h StatsGenerator/Presets/EquiaxedPreset.h
@@ -58,6 +60,7 @@ class EquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
     DREAM3D_SHARED_POINTERS(EquiaxedPreset)
+    DREAM3D_STATIC_NEW_MACRO(EquiaxedPreset)
     DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset)
     virtual ~EquiaxedPreset();
 
