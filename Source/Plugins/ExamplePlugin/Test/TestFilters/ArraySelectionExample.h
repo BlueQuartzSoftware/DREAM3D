@@ -36,7 +36,7 @@
 #ifndef _ArraySelectionExample_H_
 #define _ArraySelectionExample_H_
 
-#include <string>
+#include <QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

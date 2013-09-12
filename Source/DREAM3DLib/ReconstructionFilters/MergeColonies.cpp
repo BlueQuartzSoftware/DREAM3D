@@ -42,9 +42,10 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -224,8 +225,8 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -246,9 +247,9 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
       m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized correctly" << "\n";
+    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
     setErrorCondition(-304);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -305,7 +306,7 @@ void MergeColonies::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch()) )); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);
@@ -374,15 +375,16 @@ void MergeColonies::merge_colonies()
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
-  parentnumbers.resize(numgrains, -1);
+  m_ParentNumbers.clear();
+  m_ParentNumbers.fill(-1, numgrains);
 
-  parentnumbers[0]= 0;
+  m_ParentNumbers[0]= 0;
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (m_ParentNumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
       parentcount++;
-      parentnumbers[i] = parentcount;
+      m_ParentNumbers[i] = parentcount;
       m_Active[i] = true;
       colonylist.push_back(i);
       for (QVector<int>::size_type j = 0; j < colonylist.size(); j++)
@@ -393,7 +395,7 @@ void MergeColonies::merge_colonies()
         {
           int colony = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
             QuaternionMathF::Copy(avgQuats[firstgrain], q1);
@@ -432,7 +434,7 @@ void MergeColonies::merge_colonies()
               if(angdiff5 < m_AngleTolerance && axisdiff5 < m_AxisTolerance) colony = 1;
               if (colony == 1)
               {
-                parentnumbers[neigh] = parentcount;
+                m_ParentNumbers[neigh] = parentcount;
                 colonylist.push_back(neigh);
               }
             }
@@ -442,7 +444,7 @@ void MergeColonies::merge_colonies()
               colony = check_for_burgers(q2, q1);
               if (colony == 1)
               {
-                parentnumbers[neigh] = parentcount;
+                m_ParentNumbers[neigh] = parentcount;
                 colonylist.push_back(neigh);
               }
             }
@@ -452,7 +454,7 @@ void MergeColonies::merge_colonies()
               colony = check_for_burgers(q1, q2);
               if (colony == 1)
               {
-                parentnumbers[neigh] = parentcount;
+                m_ParentNumbers[neigh] = parentcount;
                 colonylist.push_back(neigh);
               }
             }
@@ -466,7 +468,7 @@ void MergeColonies::merge_colonies()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    if(grainname > 0) m_CellParentIds[k] = parentnumbers[grainname];
+    if(grainname > 0) m_CellParentIds[k] = m_ParentNumbers[grainname];
     else m_CellParentIds[k] = 0;
   }
   numParents = parentcount+1;

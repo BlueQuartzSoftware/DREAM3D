@@ -251,26 +251,16 @@ int SPParksWriter::writeFile()
   {
     if (totalpoints % increment == 0)
     {
-<<<<<<< HEAD
-      currentMillis = QDateTime::currentMSecsSinceEpoch());
-=======
       currentMillis = QDateTime::currentMSecsSinceEpoch();
->>>>>>> 6591ec01e0434b02fa87150cb0e0f26daaa2c3cc
       if (currentMillis - millis > 1000)
       {
         ss.reset();
         ss << static_cast<int>((float)(k)/(float)(totalpoints) * 100)<< " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
-<<<<<<< HEAD
-        ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage(ss.str());
-        millis = QDateTime::currentMSecsSinceEpoch());
-=======
         ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
         notifyStatusMessage( *(ss.string()));
         millis = QDateTime::currentMSecsSinceEpoch();
->>>>>>> 6591ec01e0434b02fa87150cb0e0f26daaa2c3cc
       }
     }
     outfile << k + 1 << " " << m_GrainIds[k] << "\n";

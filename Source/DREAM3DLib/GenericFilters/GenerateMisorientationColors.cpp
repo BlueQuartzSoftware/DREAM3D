@@ -140,14 +140,12 @@ int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParameters
 void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
 
@@ -177,13 +175,13 @@ void GenerateMisorientationColors::preflight()
 void GenerateMisorientationColors::execute()
 {
   int err = 0;
-  
+  QTextStream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -244,22 +242,6 @@ void GenerateMisorientationColors::execute()
     m_MisorientationColor[index + 1] = 0;
     m_MisorientationColor[index + 2] = 0;
     cellQuat = quats[i];
-
-    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
-    /*
-    if(
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::OrthoRhombic &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_Low &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Tetragonal_High
-       )
-       */
-    {
-        setErrorCondition(-1);
-        notifyErrorMessage("Unsupported Crystal Structure", -1);
-        return;
-    }
 
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
     if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)

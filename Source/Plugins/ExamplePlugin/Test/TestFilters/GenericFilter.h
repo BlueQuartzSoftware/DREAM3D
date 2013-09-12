@@ -5,7 +5,7 @@
 #ifndef _GenericFilter_H_
 #define _GenericFilter_H_
 
-#include <string>
+#include <QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

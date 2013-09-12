@@ -51,7 +51,7 @@ if(MSVC)
 endif()
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
-target_link_libraries(FilterWidgetCodeGen MXA EbsdLib DREAM3DLib)
+target_link_libraries(FilterWidgetCodeGen  EbsdLib DREAM3DLib)
 
 
 # Now run the code to generate the header files which will over write the place
@@ -185,7 +185,7 @@ endif()
 
 add_library(FilterWidgetsLib STATIC ${Project_SRCS})
 target_link_libraries(FilterWidgetsLib
-                    MXA
+                    
                     H5Support
                     EbsdLib
                     DREAM3DLib

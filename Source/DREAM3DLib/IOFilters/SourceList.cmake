@@ -49,7 +49,6 @@ set(_PublicFilters
   VtkRectilinearGridWriter
   WriteAbaqusSurfaceMesh
   YSChoiAbaqusReader
-
 )
 
 

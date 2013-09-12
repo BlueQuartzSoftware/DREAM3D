@@ -67,7 +67,7 @@ class UpdateVerticesImpl
     void generate(size_t start, size_t end) const
     {
 
-      VertexArray::Vert_t* nodes = m_Nodes->GetPointer(0);
+      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
         nodes[i].pos[0] = m_Min[0] + (nodes[i].pos[0] - m_Min[0])*m_ScaleFactor.x;
@@ -248,7 +248,7 @@ void ScaleVolume::execute()
     return;
   }
   setErrorCondition(0);
-  
+  QString ss;
 
 
   if (m_ApplyToVoxelVolume ==true)
@@ -279,7 +279,7 @@ void ScaleVolume::execute()
 void ScaleVolume::updateSurfaceMesh()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -297,7 +297,7 @@ void ScaleVolume::updateSurfaceMesh()
 #endif
 
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   // First get the min/max coords.
 

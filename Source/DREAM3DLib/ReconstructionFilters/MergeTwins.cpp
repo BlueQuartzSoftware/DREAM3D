@@ -41,7 +41,7 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -158,8 +158,8 @@ int MergeTwins::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -175,9 +175,9 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-    ss << "NeighborLists Array Not Initialized Correctly" << "\n";
+    QString ss = QObject::tr("NeighborLists Array Not Initialized Correctly");
     setErrorCondition(-304);
-    addErrorMessage(getHumanLabel(), ss.str(), -304);
+    addErrorMessage(getHumanLabel(), ss, -304);
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -234,7 +234,7 @@ void MergeTwins::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch()) )); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch())); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);
@@ -298,15 +298,16 @@ void MergeTwins::merge_twins()
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
-  parentnumbers.resize(numgrains, -1);
+  m_ParentNumbers.clear();
+  m_ParentNumbers.fill(-1, numgrains);
 
-  parentnumbers[0] = 0;
+  m_ParentNumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (m_ParentNumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
       parentcount++;
-      parentnumbers[i] = parentcount;
+      m_ParentNumbers[i] = parentcount;
       m_Active[i] = true;
       twinlist.push_back(i);
       for (size_t j = 0; j < twinlist.size(); j++)
@@ -317,7 +318,7 @@ void MergeTwins::merge_twins()
         {
           int twin = 0;
           size_t neigh = neighborlist[firstgrain][l];
-          if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+          if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
           {
             w = 10000.0f;
             QuaternionMathF::Copy(avgQuats[firstgrain], q1);
@@ -333,7 +334,7 @@ void MergeTwins::merge_twins()
               if (axisdiff111 < axistol && angdiff60 < angtol) twin = 1;
               if (twin == 1)
               {
-                parentnumbers[neigh] = parentcount;
+                m_ParentNumbers[neigh] = parentcount;
                 twinlist.push_back(neigh);
               }
             }
@@ -347,7 +348,7 @@ void MergeTwins::merge_twins()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    m_CellParentIds[k] = parentnumbers[grainname];
+    m_CellParentIds[k] = m_ParentNumbers[grainname];
   }
   numParents = parentcount+1;
 }

@@ -35,18 +35,16 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateSampleRefFrame.h"
 
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
-
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-
 
 
 typedef struct {
@@ -233,7 +231,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
 }
 
 // -----------------------------------------------------------------------------
@@ -244,8 +242,8 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 

@@ -120,7 +120,7 @@ if(LINUX)
 endif()
 add_library(${PROJECT_NAME} SHARED ${PipelineBuilderLib_PROJECT_SRCS})
 target_link_libraries(${PROJECT_NAME}
-                        MXA
+                        
                         DREAM3DLib
                         ${QT_QTCORE_LIBRARY}
                         ${QT_QTGUI_LIBRARY}

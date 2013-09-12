@@ -85,12 +85,12 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+  virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const QString getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterParameters();
   virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    QVector<int> parentnumbers;
+    QVector<int> m_ParentNumbers;
   int numParents;
 
     unsigned long long int Seed;

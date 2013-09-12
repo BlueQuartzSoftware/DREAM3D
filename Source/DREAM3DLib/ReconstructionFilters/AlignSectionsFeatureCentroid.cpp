@@ -36,12 +36,12 @@
 
 #include "AlignSectionsFeatureCentroid.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -158,14 +158,14 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
 void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
@@ -251,9 +251,9 @@ void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<in
     count = 0;
     xCentroid[iter] = 0;
     yCentroid[iter] = 0;
-    
-    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-    //  notifyStatusMessage(ss.str());
+
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
+    //  notifyStatusMessage(ss);
     slice = static_cast<int>( (dims[2] - 1) - iter );
     for (DimType l = 0; l < dims[1]; l++)
     {

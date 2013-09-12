@@ -193,7 +193,7 @@ void RemoveArrays::preflight()
 void RemoveArrays::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -216,8 +216,7 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
                                                            QSet<QString> selectedFaceArrays,
                                                            QSet<QString> selectedCellArrays,
                                                            QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
-{
+                                                           QSet<QString> selectedEnsembleArrays){
   m_SelectedVolumeCellArrays = selectedVertexArrays;
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedFaceArrays;
@@ -242,6 +241,9 @@ void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArra
   m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                            QSet<QString> selectedEdgeArrays,
                                                            QSet<QString> selectedFieldArrays,

@@ -36,12 +36,13 @@
 
 #include "AlignSectionsMisorientation.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
+#include <vector>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -68,6 +69,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
+  Seed = QDateTime::currentMSecsSinceEpoch();
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -156,15 +158,15 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
@@ -265,19 +267,20 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
 
   unsigned int phase1, phase2;
   int progInt = 0;
-
+#if __APPLE__
+#warning Convert this to a flat 2D array
+#endif
   QVector<QVector<float> >  misorients;
   misorients.resize(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-    misorients[a].resize(dims[1], 0.0);
+    misorients[a].fill(0.0, dims[1]);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-
     progInt = ((float)iter/dims[2])*100.0f;
-    ss << "Determining Shifts - " << progInt << "% Complete";
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
+    notifyStatusMessage(ss);
     if (getCancel() == true)
     {
       return;
@@ -323,16 +326,8 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
                     if(m_CellPhases[refposition] > 0 && m_CellPhases[curposition] > 0)
                     {
                       QuaternionMathF::Copy(quats[refposition], q1);
-//                      q1[1] = m_Quats[refposition * 5 + 1];
-//                      q1[2] = m_Quats[refposition * 5 + 2];
-//                      q1[3] = m_Quats[refposition * 5 + 3];
-//                      q1[4] = m_Quats[refposition * 5 + 4];
                       phase1 = m_CrystalStructures[m_CellPhases[refposition]];
                       QuaternionMathF::Copy(quats[curposition], q2);
-//                      q2[1] = m_Quats[curposition * 5 + 1];
-//                      q2[2] = m_Quats[curposition * 5 + 2];
-//                      q2[3] = m_Quats[curposition * 5 + 3];
-//                      q2[4] = m_Quats[curposition * 5 + 4];
                       phase2 = m_CrystalStructures[m_CellPhases[curposition]];
                       if(phase1 == phase2 && phase1 < m_OrientationOps.size())
                       {
