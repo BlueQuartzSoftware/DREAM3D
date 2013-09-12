@@ -77,11 +77,11 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param v - Optional Vistor.  You should leave this blank unless
 		 * you have a very good reason.
 		 */
-		UnlabeledValueArg( const QString& name, 
-			               const QString& desc, 
+		UnlabeledValueArg( const std::string& name, 
+			               const std::string& desc, 
 						   bool req,
 				           T value,
-				           const QString& typeDesc,
+				           const std::string& typeDesc,
 						   bool ignoreable = false,
 				           Visitor* v = NULL); 
 
@@ -107,11 +107,11 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param v - Optional Vistor.  You should leave this blank unless
 		 * you have a very good reason.
 		 */
-		UnlabeledValueArg( const QString& name, 
-			               const QString& desc, 
+		UnlabeledValueArg( const std::string& name, 
+			               const std::string& desc, 
 						   bool req,
 				           T value,
-				           const QString& typeDesc,
+				           const std::string& typeDesc,
 						   CmdLineInterface& parser,
 						   bool ignoreable = false,
 				           Visitor* v = NULL ); 					
@@ -135,8 +135,8 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param v - Optional Vistor.  You should leave this blank unless
 		 * you have a very good reason.
 		 */
-		UnlabeledValueArg( const QString& name, 
-			               const QString& desc, 
+		UnlabeledValueArg( const std::string& name, 
+			               const std::string& desc, 
 						   bool req,
 				           T value,
 				           Constraint<T>* constraint,
@@ -164,8 +164,8 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param v - Optional Vistor.  You should leave this blank unless
 		 * you have a very good reason.
 		 */
-		UnlabeledValueArg( const QString& name, 
-			               const QString& desc, 
+		UnlabeledValueArg( const std::string& name, 
+			               const std::string& desc, 
 						   bool req,
 				           T value,
 				           Constraint<T>* constraint,
@@ -181,17 +181,17 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * \param i - Pointer the the current argument in the list.
 		 * \param args - Mutable list of strings. 
 		 */
-		virtual bool processArg(int* i, QVector<QString>& args); 
+		virtual bool processArg(int* i, std::vector<std::string>& args); 
 
 		/**
 		 * Overrides shortID for specific behavior.
 		 */
-		virtual QString shortID(const QString& val="val") const;
+		virtual std::string shortID(const std::string& val="val") const;
 
 		/**
 		 * Overrides longID for specific behavior.
 		 */
-		virtual QString longID(const QString& val="val") const;
+		virtual std::string longID(const std::string& val="val") const;
 
 		/**
 		 * Overrides operator== for specific behavior.
@@ -202,7 +202,7 @@ class UnlabeledValueArg : public ValueArg<T>
 		 * Instead of pushing to the front of list, push to the back.
 		 * \param argList - The list to add this to.
 		 */
-		virtual void addToList( QList<Arg*>& argList ) const;
+		virtual void addToList( std::list<Arg*>& argList ) const;
 
 };
 
@@ -210,11 +210,11 @@ class UnlabeledValueArg : public ValueArg<T>
  * Constructor implemenation.
  */
 template<class T>
-UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name, 
-					                    const QString& desc, 
+UnlabeledValueArg<T>::UnlabeledValueArg(const std::string& name, 
+					                    const std::string& desc, 
 										bool req,
 					                    T val,
-					                    const QString& typeDesc,
+					                    const std::string& typeDesc,
 					                    bool ignoreable,
 					                    Visitor* v)
 : ValueArg<T>("", name, desc, req, val, typeDesc, v)
@@ -226,11 +226,11 @@ UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name,
 }
 
 template<class T>
-UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name, 
-					                    const QString& desc, 
+UnlabeledValueArg<T>::UnlabeledValueArg(const std::string& name, 
+					                    const std::string& desc, 
 										bool req,
 					                    T val,
-					                    const QString& typeDesc,
+					                    const std::string& typeDesc,
 					                    CmdLineInterface& parser,
 					                    bool ignoreable,
 					                    Visitor* v)
@@ -245,8 +245,8 @@ UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name,
  * Constructor implemenation.
  */
 template<class T>
-UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name, 
-                                        const QString& desc, 
+UnlabeledValueArg<T>::UnlabeledValueArg(const std::string& name, 
+                                        const std::string& desc, 
 										bool req,
                                         T val,
                                         Constraint<T>* constraint,
@@ -259,8 +259,8 @@ UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name,
 }
 
 template<class T>
-UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name, 
-					                    const QString& desc, 
+UnlabeledValueArg<T>::UnlabeledValueArg(const std::string& name, 
+					                    const std::string& desc, 
 										bool req,
 					                    T val,
 					                    Constraint<T>* constraint,
@@ -278,7 +278,7 @@ UnlabeledValueArg<T>::UnlabeledValueArg(const QString& name,
  * Implementation of processArg().
  */
 template<class T>
-bool UnlabeledValueArg<T>::processArg(int *i, QVector<QString>& args) 
+bool UnlabeledValueArg<T>::processArg(int *i, std::vector<std::string>& args) 
 {
 	
 	if ( _alreadySet )
@@ -298,24 +298,24 @@ bool UnlabeledValueArg<T>::processArg(int *i, QVector<QString>& args)
  * Overriding shortID for specific output.
  */
 template<class T>
-QString UnlabeledValueArg<T>::shortID(const QString& val) const
+std::string UnlabeledValueArg<T>::shortID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
-	return QString("<") + _typeDesc + ">";
+	return std::string("<") + _typeDesc + ">";
 }
 
 /**
  * Overriding longID for specific output.
  */
 template<class T>
-QString UnlabeledValueArg<T>::longID(const QString& val) const
+std::string UnlabeledValueArg<T>::longID(const std::string& val) const
 {
 	static_cast<void>(val); // Ignore input, don't warn
 
 	// Ideally we would like to be able to use RTTI to return the name
 	// of the type required for this argument.  However, g++ at least, 
 	// doesn't appear to return terribly useful "names" of the types.  
-	return QString("<") + _typeDesc + ">";
+	return std::string("<") + _typeDesc + ">";
 }
 
 /**
@@ -331,7 +331,7 @@ bool UnlabeledValueArg<T>::operator==(const Arg& a ) const
 }
 
 template<class T>
-void UnlabeledValueArg<T>::addToList( QList<Arg*>& argList ) const
+void UnlabeledValueArg<T>::addToList( std::list<Arg*>& argList ) const
 {
 	argList.push_back( const_cast<Arg*>(static_cast<const Arg* const>(this)) );
 }

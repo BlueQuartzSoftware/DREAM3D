@@ -75,22 +75,22 @@ class CmdLine : public CmdLineInterface
 		 * The list of arguments that will be tested against the
 		 * command line.
 		 */
-		QList<Arg*> _argList;
+		std::list<Arg*> _argList;
 
 		/**
 		 * The name of the program.  Set to argv[0].
 		 */
-		QString _progName;
+		std::string _progName;
 
 		/**
 		 * A message used to describe the program.  Used in the usage output.
 		 */
-		QString _message;
+		std::string _message;
 
 		/**
 		 * The version to be displayed with the --version switch.
 		 */
-		QString _version;
+		std::string _version;
 
 		/**
 		 * The number of arguments that are required to be present on
@@ -115,14 +115,14 @@ class CmdLine : public CmdLineInterface
 		 * is called.  At the moment, this only includes the three default
 		 * Args.
 		 */
-		QList<Arg*> _argDeleteOnExitList;
+		std::list<Arg*> _argDeleteOnExitList;
 
 		/**
 		 * A list of Visitors to be explicitly deleted when the destructor
 		 * is called.  At the moment, these are the Vistors created for the
 		 * default Args.
 		 */
-		QList<Visitor*> _visitorDeleteOnExitList;
+		std::list<Visitor*> _visitorDeleteOnExitList;
 
 		/**
 		 * Object that handles all output for the CmdLine.
@@ -145,7 +145,7 @@ class CmdLine : public CmdLineInterface
 		 * into a single argument.
 		 * \param s - The message to be used in the usage.
 		 */
-		bool _emptyCombined(const QString& s);
+		bool _emptyCombined(const std::string& s);
 
 		/**
 		 * Perform a delete ptr; operation on ptr when this object is deleted.
@@ -191,9 +191,9 @@ private:
 		 * \param helpAndVersion - Whether or not to create the Help and
 		 * Version switches. Defaults to true.
 		 */
-		CmdLine(const QString& message,
+		CmdLine(const std::string& message,
 				const char delimiter = ' ',
-				const QString& version = "none",
+				const std::string& version = "none",
 				bool helpAndVersion = true);
 
 		/**
@@ -226,7 +226,7 @@ private:
 		 * add does not need to be called.
 		 * \param xors - List of Args to be added and xor'd.
 		 */
-		void xorAdd( QVector<Arg*>& xors );
+		void xorAdd( std::vector<Arg*>& xors );
 
 		/**
 		 * Parses the command line.
@@ -240,7 +240,7 @@ private:
 		 * \param args - A vector of strings representing the args.
 		 * args[0] is still the program name.
 		 */
-		void parse(QVector<QString>& args);
+		void parse(std::vector<std::string>& args);
 
 		/**
 		 *
@@ -255,17 +255,17 @@ private:
 		/**
 		 *
 		 */
-		QString& getVersion();
+		std::string& getVersion();
 
 		/**
 		 *
 		 */
-		QString& getProgramName();
+		std::string& getProgramName();
 
 		/**
 		 *
 		 */
-		QList<Arg*>& getArgList();
+		std::list<Arg*>& getArgList();
 
 		/**
 		 *
@@ -280,7 +280,7 @@ private:
 		/**
 		 *
 		 */
-		QString& getMessage();
+		std::string& getMessage();
 
 		/**
 		 *
@@ -314,9 +314,9 @@ private:
 //Begin CmdLine.cpp
 
 
-inline CmdLine::CmdLine(const QString& m,
+inline CmdLine::CmdLine(const std::string& m,
 			char delim,
-			const QString& v,
+			const std::string& v,
 			bool help )
 : _progName("not_set_yet"),
   _message(m),
@@ -378,7 +378,7 @@ inline void CmdLine::_constructor()
 	deleteOnExit(v);
 }
 
-inline void CmdLine::xorAdd( QVector<Arg*>& ors )
+inline void CmdLine::xorAdd( std::vector<Arg*>& ors )
 {
 	_xorHandler.add( ors );
 
@@ -393,7 +393,7 @@ inline void CmdLine::xorAdd( QVector<Arg*>& ors )
 
 inline void CmdLine::xorAdd( Arg& a, Arg& b )
 {
-    QVector<Arg*> ors;
+    std::vector<Arg*> ors;
     ors.push_back( &a );
     ors.push_back( &b );
 	xorAdd( ors );
@@ -423,14 +423,14 @@ inline void CmdLine::parse(int argc, const char * const * argv)
 {
 		// this step is necessary so that we have easy access to
 		// mutable strings.
-		QVector<QString> args;
+		std::vector<std::string> args;
 		for (int i = 0; i < argc; i++)
 			args.push_back(argv[i]);
 
 		parse(args);
 }
 
-inline void CmdLine::parse(QVector<QString>& args)
+inline void CmdLine::parse(std::vector<std::string>& args)
 {
 	bool shouldExit = false;
 	int estat = 0;
@@ -496,7 +496,7 @@ inline void CmdLine::parse(QVector<QString>& args)
 		exit(estat);
 }
 
-inline bool CmdLine::_emptyCombined(const QString& s)
+inline bool CmdLine::_emptyCombined(const std::string& s)
 {
 	if ( s.length() > 0 && s[0] != Arg::flagStartChar() )
 		return false;
@@ -512,7 +512,7 @@ inline void CmdLine::missingArgsException()
 {
 		int count = 0;
 
-		QString missingArgList;
+		std::string missingArgList;
 		for (ArgListIterator it = _argList.begin(); it != _argList.end(); it++)
 		{
 			if ( (*it)->isRequired() && !(*it)->isSet() )
@@ -524,7 +524,7 @@ inline void CmdLine::missingArgsException()
 		}
 		missingArgList = missingArgList.substr(0,missingArgList.length()-2);
 
-		QString msg;
+		std::string msg;
 		if ( count > 1 )
 			msg = "Required arguments missing: ";
 		else
@@ -556,17 +556,17 @@ inline void CmdLine::setOutput(CmdLineOutput* co)
 	_output = co;
 }
 
-inline QString& CmdLine::getVersion()
+inline std::string& CmdLine::getVersion()
 {
 	return _version;
 }
 
-inline QString& CmdLine::getProgramName()
+inline std::string& CmdLine::getProgramName()
 {
 	return _progName;
 }
 
-inline QList<Arg*>& CmdLine::getArgList()
+inline std::list<Arg*>& CmdLine::getArgList()
 {
 	return _argList;
 }
@@ -581,7 +581,7 @@ inline char CmdLine::getDelimiter()
 	return _delimiter;
 }
 
-inline QString& CmdLine::getMessage()
+inline std::string& CmdLine::getMessage()
 {
 	return _message;
 }

@@ -168,12 +168,12 @@ struct ArgTraits<wchar_t> {
  * Strings have string like argument traits.
  */
 template<>
-struct ArgTraits<QString> {
+struct ArgTraits<std::string> {
     typedef StringLike ValueCategory;
 };
 
 template<typename T>
-void SetString(T &dst, const QString &src)
+void SetString(T &dst, const std::string &src)
 {
     dst = src;
 }
