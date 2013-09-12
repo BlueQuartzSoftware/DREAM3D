@@ -37,10 +37,6 @@
 #include "SurfaceMeshToNodesTrianglesEdges.h"
 
 
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-
-
  #define WRITE_EDGES_FILE 0
 // -----------------------------------------------------------------------------
 //
@@ -213,8 +209,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
 
-  DREAM3D::Mesh::VertListPointer_t nodes = sm->getVertices();
-  DREAM3D::Mesh::FaceListPointer_t triangles = sm->getFaces();
+  VertexArray::Pointer nodes = sm->getVertices();
+  FaceArray::Pointer triangles = sm->getFaces();
   IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
@@ -229,7 +225,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   notifyStatusMessage("Writing Nodes Text File");
-  QString parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
+  QString parentPath = QFileInfo::parentPath(getOutputNodesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -239,7 +235,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
   FILE* nodesFile = NULL;
-  nodesFile = fopen(getOutputNodesFile().c_str(), "wb");
+  nodesFile = fopen(getOutputNodesFile().toLatin1().data(), "wb");
   if (NULL == nodesFile)
   {
     setErrorCondition(-100);
@@ -249,7 +245,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  DREAM3D::Mesh::Vert_t* v = nodes->GetPointer(0);
+  VertexArray::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
@@ -260,7 +256,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 #if WRITE_EDGES_FILE
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Edges Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputEdgesFile());
+  parentPath = QFileInfo::parentPath(getOutputEdgesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -269,7 +265,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     setErrorCondition(-1);
     return;
   }
-  FILE* eFile = fopen(getOutputEdgesFile().c_str(), "wb");
+  FILE* eFile = fopen(getOutputEdgesFile().toLatin1().data(), "wb");
   if (NULL == eFile)
   {
     setErrorCondition(-100);
@@ -311,7 +307,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Triangles Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputTrianglesFile());
+  parentPath = QFileInfo::parentPath(getOutputTrianglesFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -320,7 +316,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     setErrorCondition(-1);
     return;
   }
-  FILE* triFile = fopen(getOutputTrianglesFile().c_str(), "wb");
+  FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");
   if (NULL == triFile)
   {
     setErrorCondition(-100);
@@ -330,8 +326,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->GetNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<DREAM3D::Mesh::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
-  DREAM3D::Mesh::Face_t* t = ts->GetPointer(0);
+  StructArray<FaceArray::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
+  FaceArray::Face_t* t = ts->GetPointer(0);
 
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);

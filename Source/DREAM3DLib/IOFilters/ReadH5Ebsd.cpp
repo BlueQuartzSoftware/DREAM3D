@@ -39,8 +39,6 @@
 #include <vector>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "EbsdLib/H5EbsdVolumeInfo.h"
 #include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -226,7 +224,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
-  else if (MXAFileInfo::exists(m_InputFile) == false)
+  else if (QFileInfo::exists(m_InputFile) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);

@@ -36,7 +36,7 @@
 #ifndef _WriteIPFStandardTriangle_H_
 #define _WriteIPFStandardTriangle_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QString>
 

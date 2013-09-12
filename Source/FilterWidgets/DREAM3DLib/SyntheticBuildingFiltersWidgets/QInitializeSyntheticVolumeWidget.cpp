@@ -77,7 +77,7 @@ QFilterWidget(parent)
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::SyntheticBuildingFilters);
+    return (DREAM3D::FilterGroups::SyntheticBuildingFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   InitializeSyntheticVolume* filter = InitializeSyntheticVolume::SafeObjectDownCast<AbstractFilter*, InitializeSyntheticVolume*>(filt);
-  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_InputFile->setText( ( filter->getInputFile() ) );
   m_XPoints->setValue( filter->getXVoxels() );
   m_YPoints->setValue( filter->getYVoxels() );
   m_ZPoints->setValue( filter->getZVoxels() );
@@ -129,7 +129,7 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setInputFile(m_InputFile->text().toStdString());
+  filter->setInputFile(m_InputFile->text()());
   filter->setXVoxels(m_XPoints->value());
   filter->setYVoxels(m_YPoints->value());
   filter->setZVoxels(m_ZPoints->value());
@@ -199,7 +199,7 @@ void QInitializeSyntheticVolumeWidget::setShapeTypes(DataArray<unsigned int>::Po
 // -----------------------------------------------------------------------------
 bool QInitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
+//  qDebug() << "outFilePath: " << outFilePath() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -275,7 +275,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
       DataContainerReader::Pointer reader = DataContainerReader::New();
-      reader->setInputFile(m_InputFile->text().toStdString());
+      reader->setInputFile(m_InputFile->text()());
       reader->setVolumeDataContainer(m_DataContainer.get());
       reader->setReadVolumeData(true);
       reader->setReadSurfaceData(false);
@@ -346,7 +346,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         cb->setObjectName(str);
         for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
         {
-          cb->addItem(QString::fromStdString(shapeTypeStrings[s]), shapeTypeEnums[s]);
+          cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
           cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
         }
         m_ShapeTypeCombos << cb;

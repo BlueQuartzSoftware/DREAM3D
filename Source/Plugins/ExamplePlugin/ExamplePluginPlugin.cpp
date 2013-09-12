@@ -42,7 +42,7 @@ ExamplePluginPlugin::~ExamplePluginPlugin()
 // -----------------------------------------------------------------------------
 QString ExamplePluginPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::ExamplePluginPluginDisplayName);
+  return (Detail::ExamplePluginPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

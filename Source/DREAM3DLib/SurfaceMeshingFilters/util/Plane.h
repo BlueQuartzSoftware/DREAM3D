@@ -50,7 +50,7 @@ private:
 public:
   Plane(VectorType& normal, double d);
   Plane(VectorType& normal, VectorType& x);
-  Plane(VectorType& normal, DREAM3D::Mesh::Vert_t &x);
+  Plane(VectorType& normal, VertexArray::Vert_t &x);
 
   //#################### PUBLIC METHODS ####################
 public:

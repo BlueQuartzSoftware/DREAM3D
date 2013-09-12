@@ -301,7 +301,7 @@ static Pointer New args \
   void set##prpty(m_msgType value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
-      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl;} }
+      std::cout << "Value for Key: " << key() << " was null." << std::endl;} }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
@@ -310,7 +310,7 @@ static Pointer New args \
   m_msgType get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_HeaderMap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
-      std::cout << "Value for Key: " << key.toStdString() << " was null." << std::endl; return 0;} }
+      std::cout << "Value for Key: " << key() << " was null." << std::endl; return 0;} }
 
 
 #define EbsdHeader_INSTANCE_PROPERTY(HeaderType, m_msgType, prpty, key)\
@@ -355,21 +355,21 @@ namespace Ebsd
   class bad_lexical_cast : public std::runtime_error {
   public:
     bad_lexical_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
+      : std::runtime_error(s())
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
     bad_any_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
+      : std::runtime_error(s())
     { }
   };
 
   template<typename T>
   T lexical_cast(const QString &s)
   {
-    std::istringstream i(s.toStdString());
+    std::istringstream i(s());
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

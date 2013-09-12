@@ -42,7 +42,7 @@ ImageImportPlugin::~ImageImportPlugin()
 // -----------------------------------------------------------------------------
 QString ImageImportPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::ImageImportPluginDisplayName);
+  return (Detail::ImageImportPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

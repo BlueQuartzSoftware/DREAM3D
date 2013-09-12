@@ -775,7 +775,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     AngleFileLoader::Pointer loader = AngleFileLoader::New();
-    loader->setInputFile(angleFilePath->text().toStdString());
+    loader->setInputFile(angleFilePath->text()());
     loader->setAngleRepresentation(angleRepresentation->currentIndex());
     loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
     loader->setOutputAnglesInDegrees(true);
@@ -804,7 +804,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
     FloatArrayType::Pointer data = loader->loadData();
     if (loader->getErrorCode() < 0)
     {
-      QMessageBox::critical(this, "Error Loading Angle data", QString::fromStdString(loader->getErrorMessage()), QMessageBox::Ok);
+      QMessageBox::critical(this, "Error Loading Angle data", (loader->getErrorMessage()), QMessageBox::Ok);
       return;
     }
 

@@ -176,7 +176,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -300,7 +300,7 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
     err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
     if (err >= 0)
     {
-      DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+      FaceArray::Pointer triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
       getSurfaceDataContainer()->setFaces(triangles);
     }
   }
@@ -566,7 +566,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
   
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)
   {
     return -154;

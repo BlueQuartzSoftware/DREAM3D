@@ -38,7 +38,7 @@
 #define ELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
   /*
    *
@@ -46,9 +46,9 @@
   class DREAM3DLib_EXPORT EllipsoidOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(EllipsoidOps)
-      MXA_TYPE_MACRO(EllipsoidOps)
-      MXA_STATIC_NEW_MACRO(EllipsoidOps)
+      DREAM3D_SHARED_POINTERS(EllipsoidOps)
+      DREAM3D_TYPE_MACRO(EllipsoidOps)
+      DREAM3D_STATIC_NEW_MACRO(EllipsoidOps)
 
       virtual ~EllipsoidOps();
 

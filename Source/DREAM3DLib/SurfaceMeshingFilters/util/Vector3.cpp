@@ -44,7 +44,7 @@ Vector3<T>::Vector3(double x_, double y_, double z_)
 {}
 
 template<typename T>
-Vector3<T>::Vector3(DREAM3D::Mesh::Vert_t& node)
+Vector3<T>::Vector3(VertexArray::Vert_t& node)
 : x(static_cast<T>(node.pos[0])),
 y(static_cast<T>(node.pos[1])),
 z(static_cast<T>(node.pos[2]))
@@ -124,7 +124,7 @@ double Vector3<T>::dot(Vector3& rhs)
 }
 
 template <typename T>
-double Vector3<T>::dot(DREAM3D::Mesh::Vert_t &rhs)
+double Vector3<T>::dot(VertexArray::Vert_t &rhs)
 {
   return x*rhs.pos[0] + y*rhs.pos[1] + z*rhs.pos[2];
 }

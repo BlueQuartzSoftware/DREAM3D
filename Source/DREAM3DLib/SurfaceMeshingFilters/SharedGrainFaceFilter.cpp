@@ -157,8 +157,8 @@ void SharedGrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
-//  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+//  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);

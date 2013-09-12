@@ -270,7 +270,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   herr_t status;
   /*  printf("CPU [%d,%d] Expanding '%s' array with additional Row \n", home->myDomain, home->cycle, dsetName);
       fflush(stdout); */
-  dataset = H5Dopen2(gid, dsetName.c_str(), H5P_DEFAULT);
+  dataset = H5Dopen2(gid, dsetName.toLatin1().data(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   rank = H5Sget_simple_extent_ndims(filespace);
   status = H5Sget_simple_extent_dims(filespace, currentDims, NULL);
@@ -280,7 +280,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   newDims[0] = currentDims[0] + 1;
   newDims[1] = currentDims[1]; // Number of columns
 
-//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.c_str(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
+//  printf("dataset '%s' rank %d, size %lu x %lu \n", dsetName.toLatin1().data(), rank, (unsigned long)(newDims[0]), (unsigned long)(newDims[1]));
   status = H5Dset_extent(dataset, newDims);
   if (status < 0)
   {
@@ -368,7 +368,7 @@ void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSi
 
   /* Create a new dataset within the file using cparms creation properties.*/
 //  dataset = H5Dcreate(gid, dsetName, H5T_NATIVE_DOUBLE, dataspace, cparms, H5P_DEFAULT, H5P_DEFAULT);
-  dataset = H5Dcreate2(gid, dsetName.c_str(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
+  dataset = H5Dcreate2(gid, dsetName.toLatin1().data(), H5T_NATIVE_DOUBLE, dataspace, H5P_DEFAULT, cparms, H5P_DEFAULT);
   /*  Extend the dataset. This call assures that dataset is at least 1 */
   size[0] = 1; // Single Row
   size[1] = chunk_dim; // N Columns - What ever the user asked for

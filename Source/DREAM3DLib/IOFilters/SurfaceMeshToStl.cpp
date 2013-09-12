@@ -38,10 +38,6 @@
 
 #include <set>
 
-#include "MXA/MXA.h"
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Common/MXAMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -189,10 +185,10 @@ void SurfaceMeshToStl::execute()
       return;
   }
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
-  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
-  DREAM3D::Mesh::FaceListPointer_t trianglePtr = sm->getFaces();
-  DREAM3D::Mesh::Face_t* triangles = trianglePtr->GetPointer(0);
+  VertexArray::Pointer nodesPtr = sm->getVertices();
+  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  FaceArray::Pointer trianglePtr = sm->getFaces();
+  FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -231,7 +227,7 @@ void SurfaceMeshToStl::execute()
     // Generate the output file name
     ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
     QString filename = ss.str();
-    FILE* f = fopen(filename.c_str(), "wb");
+    FILE* f = fopen(filename.toLatin1().data(), "wb");
 
     ss.str("");
     ss << "Writing STL for Grain Id " << spin;
@@ -347,7 +343,7 @@ int SurfaceMeshToStl::writeNumTrianglesToFile(const QString &filename, int triCo
   // We need to update the number of triangles in the file
   int err =0;
 
-  FILE* out = fopen(filename.c_str(), "r+b");
+  FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite( (char*)(&triCount), 1, 4, out);
   fclose(out);

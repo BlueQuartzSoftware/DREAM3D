@@ -42,9 +42,6 @@
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXADir.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -248,7 +245,7 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
 {
   int err = 0;
 
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + QString::number(slice);
+  QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + QString::number(slice);
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");

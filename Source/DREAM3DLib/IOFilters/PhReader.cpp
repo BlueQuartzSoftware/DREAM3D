@@ -43,8 +43,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "DREAM3DLib/Common/DataArray.hpp"
 
 #define BUF_SIZE 1024
@@ -160,7 +158,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -173,7 +171,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
 // We need to read the header of the input file to get the dimensions
-  m_InStream = fopen(getInputFile().c_str(), "r");
+  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)
   {
     setErrorCondition(-48802);
@@ -222,7 +220,7 @@ void PhReader::execute()
   
   int err = 0;
 
-  m_InStream = fopen(getInputFile().c_str(), "r");
+  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
   if(m_InStream == NULL)
   {
     setErrorCondition(-48030);

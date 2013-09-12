@@ -38,8 +38,6 @@
 #define MonoclinicOPS_H_
 
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -57,9 +55,9 @@
 class DREAM3DLib_EXPORT MonoclinicOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(MonoclinicOps)
-    MXA_TYPE_MACRO_SUPER(MonoclinicOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(MonoclinicOps)
+    DREAM3D_SHARED_POINTERS(MonoclinicOps)
+    DREAM3D_TYPE_MACRO_SUPER(MonoclinicOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(MonoclinicOps)
 
     MonoclinicOps();
     virtual ~MonoclinicOps();

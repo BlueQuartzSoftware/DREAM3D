@@ -205,7 +205,7 @@ bool SGODFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 bool SGODFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "SGODFTableModel::setData " << value.toString().toStdString() << "\n";
+  // qDebug() << "SGODFTableModel::setData " << value.toString()() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0
       || index.row() >= m_Euler1s.count()
       || index.column() < 0 || index.column()

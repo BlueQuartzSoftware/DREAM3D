@@ -36,7 +36,7 @@
 #ifndef _MovingFiniteElementSmoothing_H_
 #define _MovingFiniteElementSmoothing_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

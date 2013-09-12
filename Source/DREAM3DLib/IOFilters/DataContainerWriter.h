@@ -37,7 +37,7 @@
 #ifndef _DATACONTAINERWRITER_H_
 #define _DATACONTAINERWRITER_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 
 #include <hdf5.h>

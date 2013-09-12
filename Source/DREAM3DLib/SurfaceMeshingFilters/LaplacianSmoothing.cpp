@@ -41,10 +41,6 @@
 #include <sstream>
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
@@ -64,14 +60,14 @@
  */
 class LaplacianSmoothingImpl
 {
-    DREAM3D::Mesh::VertListPointer_t m_vertsPtr;
+    VertexArray::Pointer m_vertsPtr;
     DREAM3D::Mesh::VertList_t::Pointer m_newPositions;
     MeshLinks::Pointer m_MeshLinks;
     DREAM3D::Mesh::FaceList_t::Pointer m_facesPtr;
     DataArray<float>::Pointer m_lambdasPtr;
 
   public:
-    LaplacianSmoothingImpl(DREAM3D::Mesh::VertListPointer_t vertsPtr,
+    LaplacianSmoothingImpl(VertexArray::Pointer vertsPtr,
                            DREAM3D::Mesh::VertList_t::Pointer newPositions,
                            MeshLinks::Pointer MeshLinks,
                            DREAM3D::Mesh::FaceList_t::Pointer facesPtr,
@@ -87,22 +83,22 @@ class LaplacianSmoothingImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting DREAM3D::Mesh::Face_t Index
-     * @param end The ending DREAM3D::Mesh::Face_t Index
+     * @param start The starting FaceArray::Face_t Index
+     * @param end The ending FaceArray::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
-      DREAM3D::Mesh::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
-      DREAM3D::Mesh::Face_t* faces = m_facesPtr->GetPointer(0);
-      DREAM3D::Mesh::Vert_t* newPositions = m_newPositions->GetPointer(0);
+      VertexArray::Vert_t* vertices = m_vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+      FaceArray::Face_t* faces = m_facesPtr->GetPointer(0);
+      VertexArray::Vert_t* newPositions = m_newPositions->GetPointer(0);
 
       float* lambdas = m_lambdasPtr->GetPointer(0);
 
 
       for(size_t v = start; v < end; ++v)
       {
-        DREAM3D::Mesh::Vert_t& currentVert = vertices[v];
-        DREAM3D::Mesh::Vert_t& newVert = newPositions[v];
+        VertexArray::Vert_t& currentVert = vertices[v];
+        VertexArray::Vert_t& newVert = newPositions[v];
         // Initialize the "newPosition" with the current position
         newVert.pos[0] = currentVert.pos[0];
         newVert.pos[1] = currentVert.pos[1];
@@ -124,7 +120,7 @@ class LaplacianSmoothingImpl
         // Now that we have our connectivity iterate over the vertices generating a new position
         for(QSet<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
         {
-          DREAM3D::Mesh::Vert_t& vert = vertices[*iter];
+          VertexArray::Vert_t& vert = vertices[*iter];
 
           newVert.pos[0] += konst1 * (vert.pos[0] - currentVert.pos[0]);
           newVert.pos[1] += konst1 * (vert.pos[1] - currentVert.pos[1]);
@@ -383,7 +379,7 @@ void LaplacianSmoothing::execute()
 int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
 {
   notifyStatusMessage("Generating Lambda values");
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
   if(NULL == nodesPtr.get())
   {
     setErrorCondition(-555);
@@ -437,9 +433,9 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   int err = 0;
 
   //
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
   int nvert = nodesPtr->GetNumberOfTuples();
-  DREAM3D::Mesh::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  VertexArray::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -553,7 +549,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
         dlta = delta[in0] / ncon[i];
 
         ll = lambda[i];
-        DREAM3D::Mesh::Vert_t& node = vsm[i];
+        VertexArray::Vert_t& node = vsm[i];
         node.pos[j] += ll*dlta;
         delta[in0] = 0.0; //reset for next iteration
       }
@@ -589,9 +585,9 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
-  DREAM3D::Mesh::VertListPointer_t vertsPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer vertsPtr = getSurfaceDataContainer()->getVertices();
   int numVerts = vertsPtr->GetNumberOfTuples();
-  //  DREAM3D::Mesh::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  //  VertexArray::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
@@ -603,7 +599,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
 
   DREAM3D::Mesh::FaceList_t::Pointer facesPtr = getSurfaceDataContainer()->getFaces();
-  //  DREAM3D::Mesh::Face_t* faces = facesPtr->GetPointer(0);
+  //  FaceArray::Face_t* faces = facesPtr->GetPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
   DataArray<int8_t>* nodeTypePtr = nodeTypeSharedPtr.get();
@@ -668,7 +664,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     }
 
     // SERIAL ONLY
-    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(DREAM3D::Mesh::Vert_t) * vertsPtr->GetNumberOfTuples());
+    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(VertexArray::Vert_t) * vertsPtr->GetNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
     QTextStream testFile;
@@ -715,7 +711,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
@@ -726,7 +722,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   FILE* vtkFile = NULL;
-  vtkFile = fopen(outputVtkFile.c_str(), "wb");
+  vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     ss.str("");
@@ -753,7 +749,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
+    VertexArray::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -777,13 +773,13 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.GetNumberOfTuples();
   int grainInterest = 9;
   for(int i = 0; i < end; ++i)
   {
-    //DREAM3D::Mesh::Face_t* tri = triangles.GetPointer(i);
+    //FaceArray::Face_t* tri = triangles.GetPointer(i);
     if (faceLabels[i*2] == grainInterest || faceLabels[i*2+1] == grainInterest)
     {
       ++triangleCount;
@@ -801,7 +797,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
-    //DREAM3D::Mesh::Face_t* tri = triangles.GetPointer(tid);
+    //FaceArray::Face_t* tri = triangles.GetPointer(tid);
     if (faceLabels[tid*2] == grainInterest || faceLabels[tid*2+1] == grainInterest)
     {
       tData[1] = triangles[tid].verts[0];

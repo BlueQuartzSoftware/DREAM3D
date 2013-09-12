@@ -32,9 +32,6 @@
 
 #include <map>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "DREAM3DLib/Common/Constants.h"
 
 
@@ -130,7 +127,7 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -246,7 +243,7 @@ int VtkGrainIdReader::readHeader()
 
 
   std::ifstream instream;
-  instream.open(getInputFile().c_str(), std::ios_base::binary);
+  instream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if (!instream.is_open())
   {
     
@@ -351,7 +348,7 @@ int VtkGrainIdReader::readFile()
 
   QString filename = getInputFile();
   std::ifstream instream;
-  instream.open(filename.c_str(), std::ios_base::binary);
+  instream.open(filename.toLatin1().data(), std::ios_base::binary);
   if (!instream.is_open())
   {
     

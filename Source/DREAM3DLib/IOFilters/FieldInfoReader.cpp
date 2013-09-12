@@ -41,8 +41,6 @@
 #include <fstream>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
@@ -155,7 +153,7 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -207,7 +205,7 @@ int  FieldInfoReader::readFile()
 
 
   std::ifstream inFile;
-  inFile.open(getInputFile().c_str(), std::ios_base::binary);
+  inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if(!inFile)
   {
     

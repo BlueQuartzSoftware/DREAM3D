@@ -38,13 +38,10 @@
 #define TEXTURE_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 #include <fstream>
 
 #include <boost/shared_array.hpp>
-
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

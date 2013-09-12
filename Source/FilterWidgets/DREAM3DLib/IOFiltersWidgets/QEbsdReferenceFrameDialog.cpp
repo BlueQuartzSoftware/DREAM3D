@@ -197,7 +197,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   ReadOrientationData::Pointer reader = ReadOrientationData::New();
-  reader->setInputFile(m_EbsdFileName.toStdString());
+  reader->setInputFile(m_EbsdFileName());
   reader->setVolumeDataContainer(m.get());
   reader->execute();
   int err = reader->getErrorCondition();

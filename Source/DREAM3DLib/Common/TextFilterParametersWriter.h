@@ -36,7 +36,7 @@
 #ifndef TEXTFilterParametersWRITER_H_
 #define TEXTFilterParametersWRITER_H_
 
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

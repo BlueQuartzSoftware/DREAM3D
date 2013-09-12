@@ -82,7 +82,7 @@ class EdgeFunctions
     public:
     virtual ~EdgeFunctions(){}
 
-    static T Length(typename DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::Edge_t* e)
+    static T Length(typename VertexArray::Pointer nodes, DREAM3D::Mesh::Edge_t* e)
     {
       int nid0 = e->verts[0];
       int nid1 = e->verts[1];

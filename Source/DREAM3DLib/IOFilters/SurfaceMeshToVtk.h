@@ -36,7 +36,7 @@
 #ifndef _SurfaceMeshToVtk_H_
 #define _SurfaceMeshToVtk_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

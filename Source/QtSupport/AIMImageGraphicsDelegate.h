@@ -39,7 +39,7 @@
 
 
 //-- STL Includes
-#include <string>
+#include <QtCore/QString>
 
 
 

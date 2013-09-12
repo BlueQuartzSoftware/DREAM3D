@@ -39,7 +39,7 @@
 #define ReadH5Ebsd_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"

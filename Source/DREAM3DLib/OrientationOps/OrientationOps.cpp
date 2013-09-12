@@ -31,8 +31,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationOps.h"
 
-#include "MXA/Common/LogTime.h"
-
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"

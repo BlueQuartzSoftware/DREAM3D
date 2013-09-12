@@ -39,9 +39,6 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 
 #include "EbsdLib/EbsdImporter.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -152,7 +149,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   else
   {
     // Based on the type of file (.ang or .ctf) get the list of arrays that would be created
-    QString ext = MXAFileInfo::extension(m_EbsdFileList.front());
+    QString ext = QFileInfo::extension(m_EbsdFileList.front());
     QVector<QString> columnNames;
 //    AbstractEbsdFields* ebsdFields = NULL;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
@@ -222,7 +219,7 @@ void EbsdToH5Ebsd::execute()
   }
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       
@@ -315,7 +312,7 @@ void EbsdToH5Ebsd::execute()
 
   // Write the Manufacturer of the OIM file here
   // This list will grow to be the number of EBSD file formats we support
-  QString ext = MXAFileInfo::extension(m_EbsdFileList.front());
+  QString ext = QFileInfo::extension(m_EbsdFileList.front());
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     err = H5Lite::writeStringDataset(fileId, Ebsd::H5::Manufacturer, Ebsd::Ang::Manufacturer);
@@ -403,7 +400,7 @@ void EbsdToH5Ebsd::execute()
     QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
-    notifyStatusMessage(msg.c_str());
+    notifyStatusMessage(msg.toLatin1().data());
     err = fileImporter->importFile(fileId, z, ebsdFName);
     if (err < 0)
     {

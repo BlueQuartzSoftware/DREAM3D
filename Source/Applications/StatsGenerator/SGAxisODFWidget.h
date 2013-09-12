@@ -52,8 +52,6 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/StatsData.h"
@@ -88,7 +86,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
     void enableMDFTab(bool b);
 
-    MXA_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+    DREAM3D_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
 
     void setPhaseIndex(int value);
     int getPhaseIndex();
@@ -117,7 +115,7 @@ class SGAxisODFWidget : public QWidget, private Ui::SGAxisODFWidget
       void poleFigureGenerationComplete();
 
     protected:
-      MXA_INSTANCE_PROPERTY(bool, Initializing)
+      DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
     private:
       int      m_PhaseIndex;

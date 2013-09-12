@@ -380,9 +380,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
   distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.toLatin1().data());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.toLatin1().data());
   distributionTypeCombo->blockSignals(false);
 
 
@@ -644,16 +644,16 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
     switch(m_StatsType)
     {
       case DREAM3D::Reconstruction::Grain_SizeVBoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions.c_str());
+        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVCoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.c_str());
+        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVNeighbors:
-        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.c_str());
+        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.toLatin1().data());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVOmega3:
-        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions.c_str());
+        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions.toLatin1().data());
         break;
       default:
         msg.append("Unknown");

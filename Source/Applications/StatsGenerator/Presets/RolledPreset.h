@@ -37,14 +37,12 @@
 #define ROLLEDPRESET_H_
 
 //-- C++ includes
-#include <string>
-
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+#include <QtCore/QString>
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
@@ -58,8 +56,8 @@
 class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(RolledPreset)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
+    DREAM3D_SHARED_POINTERS(RolledPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
     virtual ~RolledPreset();
 
     void displayUserInputDialog();
@@ -71,8 +69,8 @@ class RolledPreset : public AbstractMicrostructurePreset
     void initializeAxisODFTableModel(SGAxisODFWidget* widget);
 
 
-    MXA_INSTANCE_PROPERTY(float, AspectRatio1)
-    MXA_INSTANCE_PROPERTY(float, AspectRatio2)
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
+    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
     RolledPreset();

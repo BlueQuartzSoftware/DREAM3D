@@ -36,7 +36,7 @@
 #ifndef _WritePoleFigure_H_
 #define _WritePoleFigure_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QString>
 

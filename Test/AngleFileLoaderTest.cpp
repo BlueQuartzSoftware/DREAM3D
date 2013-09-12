@@ -39,7 +39,7 @@
 #include <stdio.h>
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QDir>
 #include <QtCore/QFile>

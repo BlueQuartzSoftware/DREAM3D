@@ -215,7 +215,7 @@ void GBCDTriangleDumper::execute()
   notifyStatusMessage("Starting");
 
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
@@ -225,7 +225,7 @@ void GBCDTriangleDumper::execute()
   size_t totalFields = m->getNumCellFieldTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
-  FILE* f = fopen(getOutputFile().c_str(), "wb");
+  FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if (NULL == f)
   {
     setErrorCondition(-87000);

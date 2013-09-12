@@ -36,7 +36,7 @@
 #ifndef _GenerateRodriguesColors_H_
 #define _GenerateRodriguesColors_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

@@ -45,9 +45,6 @@
 #endif
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
@@ -420,7 +417,7 @@ void PackPrimaryPhases::execute()
   std::ofstream outFile;
   if(m_ErrorOutputFile.empty() == false)
   {
-    outFile.open(m_ErrorOutputFile.c_str(), std::ios_base::binary);
+    outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = true;
   }
 
@@ -1084,7 +1081,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
 {
   size_t grainOwnersIdx = 0;
   std::ofstream outFile;
-  outFile.open(m_VtkOutputFile.c_str(), std::ios_base::binary);
+  outFile.open(m_VtkOutputFile.toLatin1().data(), std::ios_base::binary);
   if(outFile.is_open() == false)
   {
     qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile << "\n";
@@ -2387,7 +2384,7 @@ void PackPrimaryPhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
+  QString parentPath = QFileInfo::parentPath(m_CsvOutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -2400,7 +2397,7 @@ void PackPrimaryPhases::write_goal_attributes()
   QString filename = getCsvOutputFile();
 
   std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
+  outFile.open(filename.toLatin1().data(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-firstPrimaryField << "\n";

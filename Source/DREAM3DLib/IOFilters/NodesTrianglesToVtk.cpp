@@ -36,9 +36,6 @@
 #include "NodesTrianglesToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -211,7 +208,7 @@ void NodesTrianglesToVtk::execute()
   }
 
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_NodesFile.c_str(), "rb+");
+  FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if (nodesFile == NULL)
   {
     ss.str("");
@@ -231,7 +228,7 @@ void NodesTrianglesToVtk::execute()
 
 
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
+  FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if (triFile == NULL)
   {
     ss.str("");
@@ -251,7 +248,7 @@ void NodesTrianglesToVtk::execute()
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
-  vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
+  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     ss.str("");
@@ -406,7 +403,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vt
   float pos[3] = {0.0f, 0.0f, 0.0f};
   int swapped;
   int nread = 0;
-  FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
+  FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
@@ -445,7 +442,7 @@ int NodesTrianglesToVtk::writeASCIIPointData(const QString &NodesFile, FILE* vtk
   int nread = 0;
 
 
-  FILE* nodesFile = fopen(NodesFile.c_str(), "rb");
+  FILE* nodesFile = fopen(NodesFile.toLatin1().data(), "rb");
   fprintf(vtkFile, "\n");
   fprintf(vtkFile, "POINT_DATA %d\n", nNodes);
   fprintf(vtkFile, "SCALARS Node_Type int 1\n");
@@ -481,7 +478,7 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE*
   size_t offset = 1;
   int nread = 0;
   // Open the triangles file for reading
-  FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
+  FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
   fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
   int tData[9];
 
@@ -547,7 +544,7 @@ int NodesTrianglesToVtk::writeASCIICellData(const QString &TrianglesFile, FILE* 
 {
   int nread = 0;
   // Open the triangles file for reading
-  FILE* triFile = fopen(TrianglesFile.c_str(), "rb");
+  FILE* triFile = fopen(TrianglesFile.toLatin1().data(), "rb");
   fscanf(triFile, "%d", &nread); // Read the number of triangles and throw it away
 
   // Write the GrainId Data to the file

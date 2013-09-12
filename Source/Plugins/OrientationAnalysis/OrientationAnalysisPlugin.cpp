@@ -42,7 +42,7 @@ OrientationAnalysisPlugin::~OrientationAnalysisPlugin()
 // -----------------------------------------------------------------------------
 QString OrientationAnalysisPlugin::getPluginName()
 {
-  return QString::fromStdString(Detail::OrientationAnalysisPluginDisplayName);
+  return (Detail::OrientationAnalysisPluginDisplayName);
 }
 
 // -----------------------------------------------------------------------------

@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 #include <map>
 
 

@@ -39,9 +39,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -189,7 +186,7 @@ int LosAlamosFFTWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     ss.str("");
@@ -199,7 +196,7 @@ int LosAlamosFFTWriter::writeFile()
     return -1;
   }
 
-  FILE* f = fopen(getOutputFile().c_str(), "wb");
+  FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if(NULL == f)
   {
     ss.str("");

@@ -40,8 +40,6 @@
 #include <vector>
 #include <sstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -151,7 +149,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
-  else if (MXAFileInfo::exists(m_InputFile) == false)
+  else if (QFileInfo::exists(m_InputFile) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -161,7 +159,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
   {
     int64_t dims[3];
 
-    QString ext = MXAFileInfo::extension(m_InputFile);
+    QString ext = QFileInfo::extension(m_InputFile);
     QVector<QString> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -302,7 +300,7 @@ void ReadOrientationData::execute()
   }
   setErrorCondition(0);
 
-  QString ext = MXAFileInfo::extension(m_InputFile);
+  QString ext = QFileInfo::extension(m_InputFile);
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     readAngFile();

@@ -37,7 +37,7 @@
 #define _EdgeDataContainerWriter_H_
 
 #include <sstream>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"

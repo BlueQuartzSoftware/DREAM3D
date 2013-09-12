@@ -37,8 +37,6 @@
 #ifndef TetragonalOPS_H_
 #define TetragonalOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -57,9 +55,9 @@
 class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(TetragonalOps)
-    MXA_TYPE_MACRO_SUPER(TetragonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(TetragonalOps)
+    DREAM3D_SHARED_POINTERS(TetragonalOps)
+    DREAM3D_TYPE_MACRO_SUPER(TetragonalOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(TetragonalOps)
 
 
     TetragonalOps();

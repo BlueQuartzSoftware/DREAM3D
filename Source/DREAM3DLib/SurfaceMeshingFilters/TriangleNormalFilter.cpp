@@ -53,13 +53,13 @@
  */
 class CalculateNormalsImpl
 {
-    DREAM3D::Mesh::VertListPointer_t m_Nodes;
-    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
+    VertexArray::Pointer m_Nodes;
+    FaceArray::Pointer m_Triangles;
     double* m_Normals;
 
   public:
-    CalculateNormalsImpl(DREAM3D::Mesh::VertListPointer_t nodes,
-                         DREAM3D::Mesh::FaceListPointer_t triangles,
+    CalculateNormalsImpl(VertexArray::Pointer nodes,
+                         FaceArray::Pointer triangles,
                          double* normals) :
       m_Nodes(nodes),
       m_Triangles(triangles),
@@ -69,13 +69,13 @@ class CalculateNormalsImpl
 
     /**
      * @brief generate Generates the Normals for the triangles
-     * @param start The starting DREAM3D::Mesh::Face_t Index
-     * @param end The ending DREAM3D::Mesh::Face_t Index
+     * @param start The starting FaceArray::Face_t Index
+     * @param end The ending FaceArray::Face_t Index
      */
     void generate(size_t start, size_t end) const
     {
-      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
-      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      VertexArray::Vert_t* nodes = m_Nodes->GetPointer(0);
+      FaceArray::Face_t* triangles = m_Triangles->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
         // Get the true indices of the 3 nodes
@@ -222,9 +222,9 @@ void TriangleNormalFilter::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

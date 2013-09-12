@@ -38,8 +38,7 @@
 #define MICROSTRUCTUREPRESET_H_
 
 #include "QtCore/QVector"
-
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 class StatsGenPlotWidget;
 class StatsGenODFWidget;
@@ -60,8 +59,8 @@ class StatsGenMDFWidget;
 class AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(AbstractMicrostructurePreset)
-    MXA_TYPE_MACRO(AbstractMicrostructurePreset)
+    DREAM3D_SHARED_POINTERS(AbstractMicrostructurePreset)
+    DREAM3D_TYPE_MACRO(AbstractMicrostructurePreset)
     virtual ~AbstractMicrostructurePreset();
 
 

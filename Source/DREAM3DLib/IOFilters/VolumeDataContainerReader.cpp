@@ -200,10 +200,10 @@ int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t vol
   int err = 0;
   
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
   }
   if(dcGid < 0)
   {
@@ -279,10 +279,10 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return -1;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
+    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
   }
   if(dcGid < 0)
   {
@@ -395,7 +395,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
     ss.str("");

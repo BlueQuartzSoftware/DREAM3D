@@ -35,10 +35,6 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
@@ -96,8 +92,8 @@ void FindNRingNeighbors::generate()
   m_NRingTriangles.clear();
 
   // Get the Triangle List from the Data Container
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
-  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // Make sure we have the proper connectivity built
   MeshLinks::Pointer node2TrianglePtr =sm->getMeshLinks();
@@ -138,7 +134,7 @@ void FindNRingNeighbors::generate()
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
     for(DREAM3D::Mesh::UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
-      DREAM3D::Mesh::Face_t& face = triangles[*triIter];
+      FaceArray::Face_t& face = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to
       for(int i = 0; i < 3; ++i)
       {
@@ -179,7 +175,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
@@ -187,7 +183,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 
 
   FILE* vtkFile = NULL;
-  vtkFile = fopen(outputVtkFile.c_str(), "wb");
+  vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     ss.str("");
@@ -214,7 +210,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
+    VertexArray::Vert_t& n = nodes[i]; // Get the current Node
     //  if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -238,7 +234,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = m_NRingTriangles.size();

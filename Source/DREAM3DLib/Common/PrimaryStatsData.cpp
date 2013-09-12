@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PrimaryStatsData.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "H5Support/H5Utilities.h"

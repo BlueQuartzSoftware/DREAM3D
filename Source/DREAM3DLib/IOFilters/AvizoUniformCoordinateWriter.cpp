@@ -35,12 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AvizoUniformCoordinateWriter.h"
 
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
-
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -157,7 +151,7 @@ void AvizoUniformCoordinateWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     

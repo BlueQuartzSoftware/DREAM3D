@@ -154,9 +154,9 @@ void AxisAngleWidget::on_loadData_clicked()
   else
   {
     size_t numMisorients = 0;
-    QString filename = file.toStdString();
+    QString filename = file();
     std::ifstream inFile;
-    inFile.open(filename.c_str());
+    inFile.open(filename.toLatin1().data());
 
     inFile >> numMisorients;
 

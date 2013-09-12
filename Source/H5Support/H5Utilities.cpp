@@ -57,7 +57,7 @@ hid_t H5Utilities::createFile(const std::string &filename)
 {
   // HDF_ERROR_HANDLER_OFF
   //Create the HDF File
-  hid_t fileId = H5Fcreate(filename.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
+  hid_t fileId = H5Fcreate(filename.toLatin1().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT);
   // HDF_ERROR_HANDLER_ON
   return fileId;
 }
@@ -70,9 +70,9 @@ hid_t H5Utilities::openFile(const std::string &filename, bool readOnly)
   HDF_ERROR_HANDLER_OFF
       hid_t fileId = -1;
   if ( readOnly ) {
-    fileId = H5Fopen(filename.c_str(), H5F_ACC_RDONLY, H5P_DEFAULT);
+    fileId = H5Fopen(filename.toLatin1().data(), H5F_ACC_RDONLY, H5P_DEFAULT);
   } else {
-    fileId = H5Fopen(filename.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+    fileId = H5Fopen(filename.toLatin1().data(), H5F_ACC_RDWR, H5P_DEFAULT);
   }
 
   HDF_ERROR_HANDLER_ON
@@ -154,7 +154,7 @@ herr_t H5Utilities::getObjectType(hid_t objId, const std::string &objName, int32
   herr_t err=1;
   H5O_info_t obj_info;
 
-  err = H5Oget_info_by_name(objId, objName.c_str(),  &obj_info, H5P_DEFAULT);
+  err = H5Oget_info_by_name(objId, objName.toLatin1().data(),  &obj_info, H5P_DEFAULT);
   if (err < 0) {
     return err;
   }
@@ -183,10 +183,10 @@ hid_t H5Utilities::openHDF5Object(hid_t loc_id, const std::string &objName)
 
   switch (obj_type) {
     case H5O_TYPE_GROUP:
-      obj_id = H5Gopen(loc_id, objName.c_str(), H5P_DEFAULT);
+      obj_id = H5Gopen(loc_id, objName.toLatin1().data(), H5P_DEFAULT);
       break;
     case H5O_TYPE_DATASET:
-      obj_id = H5Dopen(loc_id, objName.c_str(), H5P_DEFAULT);
+      obj_id = H5Dopen(loc_id, objName.toLatin1().data(), H5P_DEFAULT);
       break;
     default:
       std::cout << "Unknonwn HDF Type: " << obj_type << std::endl;
@@ -325,15 +325,15 @@ hid_t H5Utilities::createGroup(hid_t loc_id, const std::string &group)
   H5O_info_t obj_info;
   HDF_ERROR_HANDLER_OFF
 
-      err = H5Oget_info_by_name(loc_id, group.c_str(),  &obj_info, H5P_DEFAULT);
+      err = H5Oget_info_by_name(loc_id, group.toLatin1().data(),  &obj_info, H5P_DEFAULT);
   //  std::cout << "H5Gget_objinfo = " << err << " for " << group << std::endl;
   if (err == 0)
   {
-    grp_id = H5Gopen(loc_id, group.c_str(), H5P_DEFAULT);
+    grp_id = H5Gopen(loc_id, group.toLatin1().data(), H5P_DEFAULT);
   }
   else
   {
-    grp_id = H5Gcreate(loc_id, group.c_str(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+    grp_id = H5Gcreate(loc_id, group.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
   }
   // Turn the HDF Error handlers back on
   HDF_ERROR_HANDLER_ON
@@ -820,7 +820,7 @@ bool H5Utilities::isGroup(hid_t nodeId, const std::string &objName)   {
   bool isGroup = true;
   herr_t err = -1;
   H5O_info_t statbuf;
-  err = H5Oget_info_by_name(nodeId, objName.c_str(),  &statbuf, H5P_DEFAULT);
+  err = H5Oget_info_by_name(nodeId, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
   if (err < 0)
   {
     std::cout  << "Error in methd H5Gget_objinfo" << std::endl;

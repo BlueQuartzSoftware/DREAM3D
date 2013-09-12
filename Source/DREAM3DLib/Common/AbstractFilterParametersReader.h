@@ -37,7 +37,7 @@
 #ifndef _AbstractFilterParametersReader_H_
 #define _AbstractFilterParametersReader_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"

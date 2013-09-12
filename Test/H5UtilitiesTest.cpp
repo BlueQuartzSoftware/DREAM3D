@@ -39,7 +39,7 @@ standard C++ library."
 //-- C++ includes
 #include <iostream>
 #include <list>
-#include <string>
+#include <QtCore/QString>
 
 #include <boost/assert.hpp>
 
@@ -309,7 +309,7 @@ void QH5UtilitiesTest()
   // herr_t err = -1;
    hid_t   file_id;
    /* Create a new file using default properties. */
-   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName().toLatin1().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
    DREAM3D_REQUIRE(file_id > 0);
 
    // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------";
@@ -418,7 +418,7 @@ void StressTestCreateGroups()
   hid_t   grpId;
 
   /* Create a new file using default properties. */
-  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest().toLatin1().data(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
 
 
@@ -426,7 +426,7 @@ void StressTestCreateGroups()
     qDebug() << QDateTime::currentDateTime() << "Outer Loop: " << i;
 //    err = H5Fclose(file_id);
 //    DREAM3D_REQUIRE(err >= 0);
-//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest().toLatin1().data(), H5F_ACC_RDWR, H5P_DEFAULT);
     ::memset(path, 0, 64);
     snprintf(path, 64, "/%03d", i);
     grpId = QH5Utilities::createGroup(file_id, path);

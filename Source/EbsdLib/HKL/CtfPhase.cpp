@@ -65,7 +65,7 @@ void CtfPhase::convertEuropeanDecimals(QByteArray &line)
 {
   // Filter the line to convert European command style decimals to US/UK style points
   //  QVector<char> cLine(line.size()+1);
-  //  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
+  //  ::memcpy( &(cLine.front()), line.toLatin1().data(), line.size() + 1);
   for (int c = 0; c < line.size(); ++c)
   {
     if(line.at(c) == ',')
@@ -125,14 +125,14 @@ void CtfPhase::parsePhase(QByteArray &line)
 // -----------------------------------------------------------------------------
 void CtfPhase::printSelf(std::ostream &stream)
 {
-  stream << Ebsd::Ctf::LatticeConstants.toStdString() << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
+  stream << Ebsd::Ctf::LatticeConstants() << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
   << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
-  stream << Ebsd::Ctf::PhaseName.toStdString() << " " << m_PhaseName.toStdString() << std::endl;
-  stream << Ebsd::Ctf::LaueGroup.toStdString() << " " << m_LaueGroup << std::endl;
-  stream << Ebsd::Ctf::SpaceGroup.toStdString() << " " << m_SpaceGroup << std::endl;
-  stream << Ebsd::Ctf::Internal1.toStdString() << " " << m_Internal1.toStdString() << std::endl;
-  stream << Ebsd::Ctf::Internal2.toStdString() << " " << m_Internal2.toStdString() << std::endl;
-  stream << Ebsd::Ctf::Comment.toStdString() << " " << m_Comment.toStdString() << std::endl;
+  stream << Ebsd::Ctf::PhaseName() << " " << m_PhaseName() << std::endl;
+  stream << Ebsd::Ctf::LaueGroup() << " " << m_LaueGroup << std::endl;
+  stream << Ebsd::Ctf::SpaceGroup() << " " << m_SpaceGroup << std::endl;
+  stream << Ebsd::Ctf::Internal1() << " " << m_Internal1() << std::endl;
+  stream << Ebsd::Ctf::Internal2() << " " << m_Internal2() << std::endl;
+  stream << Ebsd::Ctf::Comment() << " " << m_Comment() << std::endl;
 }
 
 // -----------------------------------------------------------------------------

@@ -44,7 +44,7 @@
 
 #include <cstddef>
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 #include <cmath>
 #include <fstream>

@@ -36,7 +36,7 @@
 #ifndef _ReadOrientationData_H_
 #define _ReadOrientationData_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdReader.h"
 

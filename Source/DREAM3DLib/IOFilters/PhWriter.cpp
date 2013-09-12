@@ -38,12 +38,9 @@
 
 #include <iostream>
 #include <fstream>
-#include <string>
+#include <QtCore/QString>
 #include <iomanip>
 #include <map>
-
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -196,7 +193,7 @@ int PhWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
       
@@ -207,7 +204,7 @@ int PhWriter::writeFile()
   }
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().c_str(), std::ios_base::binary);
+  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
   if(!outfile)
   {
     qDebug() << "Failed to open: " << getOutputFile() << "\n";

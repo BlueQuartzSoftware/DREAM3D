@@ -107,7 +107,7 @@ static H5Support_EXPORT herr_t closeId( hid_t obj_id, int32_t obj_type );
  */
 static hid_t HDFTypeFromString(const QString &value)
 {
-  return H5Lite::HDFTypeFromString(value.toStdString());
+  return H5Lite::HDFTypeFromString(value());
 }
 
 
@@ -118,7 +118,7 @@ static hid_t HDFTypeFromString(const QString &value)
  */
 static QString StringForHDFType(hid_t type)
 {
-  return QString::fromStdString(H5Lite::StringForHDFType(type));
+  return (H5Lite::StringForHDFType(type));
 }
 
 /**
@@ -130,7 +130,7 @@ static QString StringForHDFType(hid_t type)
 template<typename T>
 static QString HDFTypeForPrimitiveAsStr(T value)
 {
-  return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
+  return (H5Lite::HDFTypeForPrimitiveAsStr(value));
 }
 
 /**
@@ -199,7 +199,7 @@ static herr_t writeVectorDataset (hid_t loc_id,
                             QVector<hsize_t> &dims,
                             QVector<T> &data)
 {
-  return H5Lite::writePointerDataset(loc_id, dsetName.toStdString(), dims.size(), dims.data(), data.data());
+  return H5Lite::writePointerDataset(loc_id, dsetName(), dims.size(), dims.data(), data.data());
 }
 
 /**
@@ -218,7 +218,7 @@ static herr_t writePointerDataset (hid_t loc_id,
                             hsize_t* dims,
                             T* data)
 {
-  return H5Lite::writePointerDataset(loc_id, dsetName.toStdString(), rank, dims, data);
+  return H5Lite::writePointerDataset(loc_id, dsetName(), rank, dims, data);
 }
 
 /**
@@ -237,7 +237,7 @@ static herr_t replacePointerDataset (hid_t loc_id,
                             hsize_t* dims,
                             T* data)
 {
-  return H5Lite::replacePointerDataset(loc_id, dsetName.toStdString(), rank, dims, data);
+  return H5Lite::replacePointerDataset(loc_id, dsetName(), rank, dims, data);
 }
 
 
@@ -271,7 +271,7 @@ static herr_t writeDataset(hid_t loc_id,
                            hsize_t* dims,
                            T* data)
 {
-  return H5Lite::writeDataset(loc_id, dsetName.toStdString(), rank, dims, data);
+  return H5Lite::writeDataset(loc_id, dsetName(), rank, dims, data);
 }
 
 
@@ -290,7 +290,7 @@ static herr_t writeScalarDataset (hid_t loc_id,
                             const QString& dsetName,
                             T &value)
 {
-  return H5Lite::writeScalarDataset(loc_id, dsetName.toStdString(), value);
+  return H5Lite::writeScalarDataset(loc_id, dsetName(), value);
 }
 
 /**
@@ -336,7 +336,7 @@ static herr_t writePointerAttribute(hid_t loc_id,
                              hsize_t* dims,
                              T* data)
 {
-  return H5Lite::writePointerAttribute(loc_id, objName.toStdString(), attrName.toStdString(), rank, dims, data);
+  return H5Lite::writePointerAttribute(loc_id, objName(), attrName(), rank, dims, data);
 }
 
 
@@ -357,7 +357,7 @@ static herr_t writeVectorAttribute(hid_t loc_id,
                              QVector<hsize_t> &dims,
                              QVector<T> &data )
 {
-  return H5Lite::writePointerAttribute(loc_id, objName.toStdString(), attrName.toStdString(), dims.size(), dims.data(), data.data());
+  return H5Lite::writePointerAttribute(loc_id, objName(), attrName(), dims.size(), dims.data(), data.data());
 }
 
 /**
@@ -416,7 +416,7 @@ static herr_t writeScalarAttribute(hid_t loc_id,
                              const QString& attrName,
                              T data )
 {
-  return H5Lite::writeScalarAttribute(loc_id, objName.toStdString(), attrName.toStdString(), data);
+  return H5Lite::writeScalarAttribute(loc_id, objName(), attrName(), data);
 }
 
 /**
@@ -431,7 +431,7 @@ static herr_t readPointerDataset(hid_t loc_id,
                                 const QString& dsetName,
                                 T* data)
 {
-  return H5Lite::readPointerDataset(loc_id, dsetName.toStdString(), data);
+  return H5Lite::readPointerDataset(loc_id, dsetName(), data);
 }
 
 

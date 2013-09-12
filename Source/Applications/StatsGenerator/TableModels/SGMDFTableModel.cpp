@@ -221,7 +221,7 @@ bool SGMDFTableModel::setHeaderData(int col, Qt::Orientation o, const QVariant& 
 // -----------------------------------------------------------------------------
 bool SGMDFTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "SGMDFTableModel::setData " << value.toString().toStdString() << "\n";
+  // qDebug() << "SGMDFTableModel::setData " << value.toString()() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -427,7 +427,7 @@ void SGMDFTableModel::setTableData(QVector<float> angles, QVector<float> axis, Q
 void SGMDFTableModel::setRowData(int row, float angle, QString axis, float weight)
 {
    m_Angles[row] = angle;
-   m_Axis[row] = QString::fromStdString(axis);
+   m_Axis[row] = (axis);
    m_Weights[row] = weight;
 }
 

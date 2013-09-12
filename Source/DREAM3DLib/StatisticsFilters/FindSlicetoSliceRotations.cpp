@@ -193,7 +193,7 @@ void FindSlicetoSliceRotations::execute()
   int inPlaneCount, outPlaneCount;
 
   std::ofstream outFile;
-  outFile.open(m_SlicetoSliceRotationsFile.c_str(), std::ios_base::binary);
+  outFile.open(m_SlicetoSliceRotationsFile.toLatin1().data(), std::ios_base::binary);
 
   for (DimType plane = 0; plane < zPoints; plane++)
   {

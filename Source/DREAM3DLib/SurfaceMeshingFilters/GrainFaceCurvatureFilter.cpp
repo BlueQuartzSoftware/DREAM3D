@@ -268,7 +268,7 @@ void GrainFaceCurvatureFilter::execute()
   }
 
   // Get our Reference counted Array of Face Structures
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);

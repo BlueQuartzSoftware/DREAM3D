@@ -38,7 +38,7 @@
 #define FINDEUCLIDEANDISTMAP_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/IDataArray.h"

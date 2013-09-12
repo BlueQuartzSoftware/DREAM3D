@@ -214,7 +214,7 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QList<QStr
   QStringList qArrayNames;
   for(QList<QString>::iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-    qArrayNames << QString::fromStdString(*iter);
+    qArrayNames << (*iter);
   }
   populateArrayList(listWidget, qArrayNames, cb);
 }
@@ -260,7 +260,7 @@ void ArraySelectionWidget::populateArrayList(QListWidget* listWidget, QStringLis
   }
 
 
-//  qDebug() << "List Widget: " << listWidget->objectName().toStdString() << " Count: " << listWidget->count() << "\n";
+//  qDebug() << "List Widget: " << listWidget->objectName()() << " Count: " << listWidget->count() << "\n";
   listWidget->blockSignals(false);
 
 }
@@ -599,7 +599,7 @@ QSet<QString> ArraySelectionWidget::getSelectedArrays(QListWidget*listWidget)
   {
     if (listWidget->item(i)->checkState() == Qt::Checked)
     {
-      selectedArrays.insert(listWidget->item(i)->text().toStdString());
+      selectedArrays.insert(listWidget->item(i)->text()());
     }
   }
   return selectedArrays;
@@ -619,7 +619,7 @@ void ArraySelectionWidget::setSelectedArrays(QSet<QString> names, QListWidget*li
   {
     for(qint32 i = 0; i < listWidget->count(); ++i)
     {
-      if (listWidget->item(i)->text().toStdString() == *iter)
+      if (listWidget->item(i)->text()() == *iter)
       {
         listWidget->item(i)->setCheckState(Qt::Checked);
       }
@@ -637,7 +637,7 @@ QSet<QString> ArraySelectionWidget::getNonSelectedArrays(QListWidget*listWidget)
   {
     if (listWidget->item(i)->checkState() == Qt::Unchecked)
     {
-      non_selectedArrays.insert(listWidget->item(i)->text().toStdString());
+      non_selectedArrays.insert(listWidget->item(i)->text()());
     }
   }
   return non_selectedArrays;
@@ -741,7 +741,7 @@ void ArraySelectionWidget::writeSelections(QSettings &prefs, QString name, QStri
   for(QSet<QString>::iterator iter = selections.begin(); iter != selections.end(); ++iter)
   {
     prefs.setArrayIndex(count++);
-    prefs.setValue(prefix, QString::fromStdString(*iter));
+    prefs.setValue(prefix, (*iter));
   }
   prefs.endArray();
 }

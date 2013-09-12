@@ -38,14 +38,12 @@
 #define RECRYSTALLIZEDPRESET_H_
 
 //-- C++ includes
-#include <string>
-
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+#include <QtCore/QString>
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
@@ -59,8 +57,8 @@
 class RecrystallizedPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(RecrystallizedPreset)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RecrystallizedPreset)
+    DREAM3D_SHARED_POINTERS(RecrystallizedPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RecrystallizedPreset)
     virtual ~RecrystallizedPreset();
 
 
@@ -71,7 +69,7 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
     void initializeNeighborTableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);
 
 
-    MXA_INSTANCE_PROPERTY(float, PercentRecrystallized)
+    DREAM3D_INSTANCE_PROPERTY(float, PercentRecrystallized)
 
   protected:
     RecrystallizedPreset();

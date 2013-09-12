@@ -39,8 +39,6 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 
 #include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
@@ -171,7 +169,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -197,8 +195,8 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     {
       H5Utilities::closeFile(fileId);
       fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
-      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT); 
       err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
       H5Utilities::closeFile(fileId);
       fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
@@ -325,8 +323,8 @@ void DataContainerReader::execute()
   {
     H5Utilities::closeFile(fileId);
     fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
-    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT); 
     err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
     H5Utilities::closeFile(fileId);
     fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
@@ -443,7 +441,7 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
   // Use H5Lite to ask how many "groups" are in the "Pipeline Group"

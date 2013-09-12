@@ -44,11 +44,8 @@
 
 #include <iostream>
 #include <limits>
-#include <string>
+#include <QtCore/QString>
 #include <vector>
-
-#include "MXA/MXA.h"
-#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DataArray.hpp"

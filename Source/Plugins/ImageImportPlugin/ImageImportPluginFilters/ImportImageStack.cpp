@@ -142,7 +142,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default
     int err = 0;
-    QImageReader reader(QString::fromStdString(m_ImageFileList[0]));
+    QImageReader reader((m_ImageFileList[0]));
     QSize imageDims = reader.size();
     int64_t dims[3] = {imageDims.width(), imageDims.height(), m_ImageFileList.size()};
     /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -236,7 +236,7 @@ void ImportImageStack::execute()
     ss << "Importing file " << imageFName;
     notifyStatusMessage(ss.str());
 
-    QImage image(QString::fromStdString(imageFName));
+    QImage image((imageFName));
     if (image.isNull() == true)
     {
       setErrorCondition(-14000);

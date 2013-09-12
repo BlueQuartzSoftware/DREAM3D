@@ -174,7 +174,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::EdgeDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -339,7 +339,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
   
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)
   {
     return -154;

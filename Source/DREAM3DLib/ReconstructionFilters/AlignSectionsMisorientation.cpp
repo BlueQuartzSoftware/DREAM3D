@@ -231,7 +231,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().c_str());
+    outFile.open(getAlignmentShiftFileName().toLatin1().data());
   }
 
   size_t udims[3] = {0,0,0};

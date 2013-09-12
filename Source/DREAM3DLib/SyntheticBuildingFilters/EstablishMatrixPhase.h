@@ -37,7 +37,7 @@
 #ifndef EstablishMatrixPhase_H_
 #define EstablishMatrixPhase_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

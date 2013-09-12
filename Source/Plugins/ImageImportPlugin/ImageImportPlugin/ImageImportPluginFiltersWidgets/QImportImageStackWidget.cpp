@@ -88,7 +88,7 @@ QFilterWidget(parent)
   yRes->setText(QString::number(resolution.y));
   zRes->setText(QString::number(resolution.z));
 
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
   checkIOFiles();
 }
 
@@ -105,7 +105,7 @@ QImportImageStackWidget::~QImportImageStackWidget()
 // -----------------------------------------------------------------------------
 QString QImportImageStackWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+    return (DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
   QVector<QString> realFileList;
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath = QString::fromStdString(fileList[i]);
+    QString filePath = (fileList[i]);
     QFileInfo fi(filePath);
     if (fi.exists())
     {
@@ -171,7 +171,7 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
-  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
+  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text())());
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -345,7 +345,7 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 bool QImportImageStackWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
+//  qDebug() << "outFilePath: " << outFilePath() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -508,7 +508,7 @@ QVector<QString> QImportImageStackWidget::generateFileList(int start, int end, b
           .arg(m_FileSuffix->text()).arg(m_FileExt->text());
       QString filePath = m_InputDir->text() + QDir::separator() + filename;
       filePath = QDir::toNativeSeparators(filePath);
-      fileList.push_back(filePath.toStdString());
+      fileList.push_back(filePath());
     }
   return fileList;
 }
@@ -538,7 +538,7 @@ void QImportImageStackWidget::m_generateExampleEbsdInputFile()
   QIcon redDot = QIcon(QString(":/red-dot.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath(fileList.at(i).c_str());
+    QString filePath(fileList.at(i).toLatin1().data());
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
     if (fi.exists() == true)
@@ -631,7 +631,7 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn.toStdString();
+      QString fns = fn();
       int length =  fn.length();
       digitEnd = length-1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')

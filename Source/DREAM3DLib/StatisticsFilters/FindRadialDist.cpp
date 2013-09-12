@@ -39,9 +39,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -140,7 +137,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
     setErrorCondition(-1);
   }
 
-  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -148,7 +145,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if (MXAFileInfo::extension(getOutputFile()).compare("") == 0)
+  if (QFileInfo::extension(getOutputFile()).compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".csv"));
   }
@@ -185,7 +182,7 @@ void FindRadialDist::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       
@@ -221,7 +218,7 @@ void FindRadialDist::find_radialdist()
   std::ofstream outFile;
   if (writeFile)
   {
-    outFile.open(m_OutputFile.c_str());
+    outFile.open(m_OutputFile.toLatin1().data());
   }
   size_t udims[3] =
   { 0, 0, 0 };

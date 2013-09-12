@@ -40,7 +40,7 @@
 
 
 #include <stdio.h>
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

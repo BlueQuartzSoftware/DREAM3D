@@ -36,7 +36,7 @@
 
 #include "VerifyTriangleWinding.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 #include <queue>
 #include <deque>
@@ -96,7 +96,7 @@ class LabelVisitorInfo
 {
   public:
     //   typedef Mesh<int32_t>::Pointer                MeshPtrType;
-    typedef DREAM3D::Mesh::Face_t                   FaceType;
+    typedef FaceArray::Face_t                   FaceType;
     typedef QVector<int32_t>      FaceListType;
 
     DREAM3D_SHARED_POINTERS(LabelVisitorInfo)
@@ -417,7 +417,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   int ntri = masterFaceList->GetNumberOfTuples();
-  //DREAM3D::Mesh::Face_t* triangles = masterFaceList->GetPointer(0);
+  //FaceArray::Face_t* triangles = masterFaceList->GetPointer(0);
 
   // Loop over all the triangles and group them according to which grain/region they are a part of
   for(int t = 0; t < ntri; ++t)
@@ -435,8 +435,8 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &triangleIndices)
 {
 
-  DREAM3D::Mesh::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
-  DREAM3D::Mesh::Face_t* triangles = getSurfaceDataContainer()->getFaces()->GetPointer(0);
+  VertexArray::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
+  FaceArray::Face_t* triangles = getSurfaceDataContainer()->getFaces()->GetPointer(0);
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -535,7 +535,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Faces", -556);
     return getErrorCondition();
   }
-  DREAM3D::Mesh::Face_t* triangles = masterFaceList->GetPointer(0);
+  FaceArray::Face_t* triangles = masterFaceList->GetPointer(0);
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -599,7 +599,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   bool firstLabel = false;
 
   // Get the first triangle in the list
-  // DREAM3D::Mesh::Face_t& triangle = triangles[triIndex];
+  // FaceArray::Face_t& triangle = triangles[triIndex];
 
 
   // Now that we have the starting Grain, lets try and get a seed triangle that is oriented in the proper direction.
@@ -666,13 +666,13 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
     STDEXT::hash_set<int> localVisited;
     std::deque<int> triangleDeque;
-    //DREAM3D::Mesh::Face_t& triangle = triangles[triIndex];
+    //FaceArray::Face_t& triangle = triangles[triIndex];
     triangleDeque.push_back(triIndex);
 
     while (triangleDeque.empty() == false)
     {
       int32_t triangleIndex = triangleDeque.front();
-      DREAM3D::Mesh::Face_t& triangle = triangles[triangleIndex];
+      FaceArray::Face_t& triangle = triangles[triangleIndex];
       int32_t* faceLabel = faceLabels + (triangleIndex * 2); // Here we are getting a new pointer offset from the start of the labels array
 
       //   qDebug() << " $ tIndex: " << triangleIndex << "\n";

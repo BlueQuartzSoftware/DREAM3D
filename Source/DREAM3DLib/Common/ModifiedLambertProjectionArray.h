@@ -37,7 +37,7 @@
 #ifndef _ModifiedLambertProjectionArray_H_
 #define _ModifiedLambertProjectionArray_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

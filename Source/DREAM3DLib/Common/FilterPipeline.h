@@ -32,7 +32,7 @@
 #define FILTERPIPELINE_H_
 
 
-#include <string>
+#include <QtCore/QString>
 #include <list>
 
 

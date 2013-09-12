@@ -551,7 +551,7 @@ void StatsGeneratorUI::openRecentFile()
   QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
-    //qDebug() << "Opening Recent file: " << action->data().toString().toStdString() << "\n";
+    //qDebug() << "Opening Recent file: " << action->data().toString()() << "\n";
     QString file = action->data().toString();
     openFile(file);
   }
@@ -699,7 +699,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setVolumeDataContainer(m.get());
-  writer->setOutputFile(m_FilePath.toStdString());
+  writer->setOutputFile(m_FilePath());
   writer->setWriteVolumeData(true);
   writer->setWriteSurfaceData(false);
   writer->setWriteEdgeData(false);
@@ -815,7 +815,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath.toStdString());
+  reader->setInputFile(m_FilePath());
   reader->setVolumeDataContainer(m.get());
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);
@@ -925,7 +925,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete().c_str());
+  msg.append(DREAM3DLib::Version::Complete().toLatin1().data());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -942,7 +942,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().c_str());
+  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
   about.setApplicationInfo(an, version);
   about.exec();
 }
@@ -1031,8 +1031,8 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
    bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-   //  qDebug() << "Could not open URL: " << url.path().toStdString() << "\n";
-       displayDialogBox(QString::fromStdString("Error Opening Help File"),
+   //  qDebug() << "Could not open URL: " << url.path()() << "\n";
+       displayDialogBox(("Error Opening Help File"),
          QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
          QMessageBox::Critical);
    }

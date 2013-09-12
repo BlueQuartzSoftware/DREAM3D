@@ -575,7 +575,7 @@ void CtfReader::parseDataLine(QByteArray &line, size_t row, size_t col, size_t o
 
   // Filter the line to convert European command style decimals to US/UK style points
   //  QVector<char> cLine(line.size()+1);
-  //  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
+  //  ::memcpy( &(cLine.front()), line.toLatin1().data(), line.size() + 1);
   for (int c = 0; c < line.size(); ++c)
   {
     if(line.at(c) == ',')
@@ -728,7 +728,7 @@ QList<QString> CtfReader::getColumnNames()
 }
 
 #define CTF_PRINT_QSTRING(var, out)\
-  out << #var << ": " << get##var().toStdString() << std::endl;
+  out << #var << ": " << get##var()() << std::endl;
 
 #define CTF_PRINT_HEADER_VALUE(var, out)\
   out << #var << ": " << get##var() << std::endl;

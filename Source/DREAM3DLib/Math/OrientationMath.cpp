@@ -38,8 +38,6 @@
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
-#include "MXA/Common/LogTime.h"
-
 
 // -----------------------------------------------------------------------------
 //
