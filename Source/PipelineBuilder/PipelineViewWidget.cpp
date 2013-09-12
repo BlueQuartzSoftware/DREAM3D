@@ -237,7 +237,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
 
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName());
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName);
   if (NULL == wf) { return NULL;}
   QFilterWidget* w = wf->createWidget();
   if (index < 0) // If the programmer wants to add it to the end of the list
@@ -495,7 +495,7 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
   PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
   if (o != NULL)
   {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName()() << "\n";
+    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName() << "\n";
   }
 #endif
 }

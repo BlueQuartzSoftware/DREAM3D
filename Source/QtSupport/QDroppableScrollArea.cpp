@@ -103,7 +103,7 @@ void QDroppableScrollArea::dragMoveEvent( QDragMoveEvent* event)
  // QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
  // if (w != NULL)
   {
- //   qDebug() << "--- Child at Pos: " << w->objectName()() << "\n";
+ //   qDebug() << "--- Child at Pos: " << w->objectName() << "\n";
   }
 }
 

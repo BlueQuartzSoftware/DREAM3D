@@ -129,7 +129,7 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setInputFile(m_InputFile->text()());
+  filter->setInputFile(m_InputFile->text());
   filter->setXVoxels(m_XPoints->value());
   filter->setYVoxels(m_YPoints->value());
   filter->setZVoxels(m_ZPoints->value());
@@ -275,7 +275,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
       DataContainerReader::Pointer reader = DataContainerReader::New();
-      reader->setInputFile(m_InputFile->text()());
+      reader->setInputFile(m_InputFile->text());
       reader->setVolumeDataContainer(m_DataContainer.get());
       reader->setReadVolumeData(true);
       reader->setReadSurfaceData(false);

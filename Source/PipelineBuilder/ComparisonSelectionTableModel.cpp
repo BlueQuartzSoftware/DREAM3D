@@ -251,7 +251,7 @@ bool ComparisonSelectionTableModel::setHeaderData(int col, Qt::Orientation o, co
 // -----------------------------------------------------------------------------
 bool ComparisonSelectionTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString()() << "\n";
+  // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
