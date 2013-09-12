@@ -196,7 +196,7 @@ void TestDataContainerReader()
       = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
-  size_t nLists = neighborlistPtr->GetNumberOfTuples();
+  size_t nLists = neighborlistPtr->getNumberOfTuples();
   DREAM3D_REQUIRE_EQUAL(nLists, 4);
   for(size_t l = 0; l < nLists; ++l)
   {
@@ -497,7 +497,7 @@ void TestDataContainer()
     if (NULL != intPtr)
     {
       std::cout << "Downcast to intPtr pointer was successful" << std::endl;
-      std::cout << "Number of Tuples:" << intPtr->GetNumberOfTuples() << std::endl;
+      std::cout << "Number of Tuples:" << intPtr->getNumberOfTuples() << std::endl;
       int32_t* p = intPtr->GetPointer(0);
       for (int i = 0; i < 5; ++i)
       {

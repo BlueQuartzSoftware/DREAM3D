@@ -221,7 +221,7 @@ void FieldDataCSVWriter::execute()
   outFile << "\n";
 
   // Get the number of tuples in the arrays
-  size_t numTuples = data[0]->GetNumberOfTuples();
+  size_t numTuples = data[0]->getNumberOfTuples();
   QString ss;
   float threshold = 0.0f;
 
@@ -260,7 +260,7 @@ void FieldDataCSVWriter::execute()
       if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) == 0)
       {
         outFile << DREAM3D::GrainData::GrainID << space << DREAM3D::GrainData::NumNeighbors << space << (*iter) << "\n";
-        size_t numTuples = p->GetNumberOfTuples();
+        size_t numTuples = p->getNumberOfTuples();
         //	  float threshold = 0.0f;
 
         // Skip the first grain

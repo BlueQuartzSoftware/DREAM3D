@@ -31,12 +31,10 @@
 #include "VtkGrainIdReader.h"
 
 #include <QtCore/QMap>
-
-
 #include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common//DREAM3DEndian.h"
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 
 #define kBufferSize 1024
 
@@ -187,7 +185,7 @@ size_t VtkGrainIdReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
+int VtkGrainIdReader::ignoreData(QFile &in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -201,7 +199,7 @@ int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, si
   char cdouble [64] = " double";
   int err = 0;
   if (strcmp(text, cunsigned_char) == 0 ) {
-    err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
+    err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);
   }
   if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
   if (strcmp(text, cunsigned_short) == 0 ) { err |= skipVolume<unsigned short>(in, byteSize, xDim, yDim, zDim);}
@@ -422,24 +420,12 @@ int VtkGrainIdReader::readFile()
 #endif
   bool ok = false;
   // Now we need to search for the 'GrainID' and
-//  char text1[kBufferSize];
-//  ::memset(text1, 0, kBufferSize);
-//  char text2[kBufferSize];
-//  ::memset(text2, 0, kBufferSize);
-//  char text3[kBufferSize];
-//  ::memset(text3, 0, kBufferSize);
-//  char text4[kBufferSize];
-//  ::memset(text4, 0, kBufferSize);
-  //int fieldNum = 0;
   bool needGrainIds = true;
 
   QString scalarName;
   int typeByteSize = 0;
 
-  //size_t index = 0;
   //Cell Data is one less in each direction
-//  getVolumeDataContainer()->setDimensions(dims[0] -1, dims[1] -1, dims[2] -1);
-//  getVolumeDataContainer()->getDimensions(dims);
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
 
@@ -450,9 +436,6 @@ int VtkGrainIdReader::readFile()
   {
      buf = instream.readLine();
      tokens = buf.split(' ');
-//    ::memset(text1, 0, kBufferSize);
-//    ::memset(text2, 0, kBufferSize);
-//    ::memset(text3, 0, kBufferSize);
 
     //int n = sscanf(buf, "%s %s %s %s", text1, text2, text3, text4);
     if (tokens.size() != 4)
@@ -469,7 +452,7 @@ int VtkGrainIdReader::readFile()
       return -1;
     }
 
-   // readLine(instream, buf, kBufferSize); // Read Line 11
+    QString text3 = tokens.at(2);
 
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
@@ -496,9 +479,10 @@ int VtkGrainIdReader::readFile()
       else // ASCII VTK File
       {
         int grain_index = -1;
+        QTextStream in(&instream);
         for (size_t i = 0; i < totalVoxels; ++i)
         {
-          instream >> grain_index;
+          in >> grain_index;
           grainIds->SetValue(i, grain_index);
        //   grainIdMap[grain_index]++;
         }
@@ -507,7 +491,7 @@ int VtkGrainIdReader::readFile()
     }
     else
     {
-        ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
+        ignoreData(instream, typeByteSize, text3.toLatin1().data(), dims[0], dims[1], dims[2]);
     }
 
   }

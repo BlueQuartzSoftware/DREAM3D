@@ -196,13 +196,13 @@ void RenumberGrains::execute()
       IDataArray::Pointer p = m->getCellFieldData(*iter);
       ss.str("");
       //ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-      //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
+      //ss << " with NumTuples: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
       QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
-      //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << "\n" << "\n";
+      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << "\n" << "\n";
     }
     m->setNumFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
     totalFields = m->getNumCellFieldTuples();

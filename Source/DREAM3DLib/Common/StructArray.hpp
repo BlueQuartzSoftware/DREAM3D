@@ -268,7 +268,7 @@ class StructArray : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      if (idxs.size() >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -282,7 +282,7 @@ class StructArray : public IDataArray
       }
 
       // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size());
+      size_t newSize = (getNumberOfTuples() - idxs.size());
       T* currentSrc = NULL;
 
       // Create a new Array to copy into
@@ -311,7 +311,7 @@ class StructArray : public IDataArray
       if(k == idxs.size()) // Only front elements are being dropped
       {
         currentSrc = Array + (j);
-        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * sizeof(T));
+        ::memcpy(currentDest, currentSrc, (getNumberOfTuples() - idxs.size()) * sizeof(T));
         _deallocate(); // We are done copying - delete the current Array
         this->Size = newSize;
         this->Array = newArray;
@@ -337,7 +337,7 @@ class StructArray : public IDataArray
         }
         else
         {
-          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1);
+          copyElements[i] = (getNumberOfTuples() - idxs[i - 1] - 1);
         }
         destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
       }
@@ -400,7 +400,7 @@ class StructArray : public IDataArray
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t GetNumberOfTuples()
+    virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
       return (this->MaxId + 1);

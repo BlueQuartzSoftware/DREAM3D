@@ -335,19 +335,19 @@ void GrainFaceCurvatureFilter::execute()
 
   SharedGrainFaceFilter::SharedGrainFaces_t& sharedGrainFaces = sharedGrainFacesFilter->getSharedGrainFaces();
 
-  DoubleArrayType::Pointer principalCurvature1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
+  DoubleArrayType::Pointer principalCurvature1 = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
   principalCurvature1->initializeWithZeros();
-  DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
+  DoubleArrayType::Pointer principalCurvature2 = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
   principalCurvature2->initializeWithZeros();
 
   DoubleArrayType::Pointer principalDirection1;
   DoubleArrayType::Pointer principalDirection2;
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    principalDirection1 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
+    principalDirection1 = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
     principalDirection1->initializeWithZeros();
 
-    principalDirection2 = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
+    principalDirection2 = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
     principalDirection2->initializeWithZeros();
   }
 
@@ -355,14 +355,14 @@ void GrainFaceCurvatureFilter::execute()
   DoubleArrayType::Pointer gaussianCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
-    gaussianCurvature = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
+    gaussianCurvature = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
     gaussianCurvature->initializeWithZeros();
   }
   // Check if the user wants to calculate the Mean Curvature
   DoubleArrayType::Pointer meanCurvature;
   if (m_ComputeGaussianCurvature == true)
   {
-    meanCurvature = DoubleArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
+    meanCurvature = DoubleArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
     meanCurvature->initializeWithZeros();
   }
 

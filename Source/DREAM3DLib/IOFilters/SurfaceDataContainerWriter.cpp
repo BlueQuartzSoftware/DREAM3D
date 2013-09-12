@@ -67,10 +67,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
-EdgeDataContainerWriter(),
-  m_HdfFileId(-1),
-  m_WriteXdmfFile(false),
-  m_XdmfPtr(NULL)
+EdgeDataContainerWriter()
 {
   setupFilterParameters();
 }
@@ -295,8 +292,8 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   std::ostream& out = *m_XdmfPtr;
   out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
 
-  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << "\n";
+  out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
@@ -307,7 +304,7 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   out << "    </Topology>" << "\n";
 
   out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "        " << hdfFileName << ":/SurfaceDataContainer/Vertices" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
@@ -355,7 +352,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
@@ -377,8 +374,8 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     //First Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr1 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr1 << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr1half << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr1half.str() <<  "\" ";
@@ -402,8 +399,8 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     //Second Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr2 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr2 << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr2half << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr2half.str() <<  "\" ";
@@ -497,7 +494,7 @@ int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
+  hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
 
   float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
 
@@ -528,7 +525,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 
   herr_t err = -1;
   size_t total = 0;
-  size_t nVerts = verticesPtr->GetNumberOfTuples();
+  size_t nVerts = verticesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nVerts; ++v)
   {
     total += links->getNumberOfFaces(v);
@@ -639,7 +636,7 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 
   herr_t err = -1;
   size_t total = 0;
-  size_t nFaces = facesPtr->GetNumberOfTuples();
+  size_t nFaces = facesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nFaces; ++v)
   {
     total += links->getNumberOfFaces(v);
@@ -688,7 +685,7 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
   }
 
   int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->GetNumberOfTuples(), DREAM3D::Mesh::k_FaceNumElements};
+  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_FaceNumElements};
 
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
 

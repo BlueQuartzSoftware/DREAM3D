@@ -95,7 +95,7 @@ int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
   }
 
   Int32ArrayType* grainIds = Int32ArrayType::SafePointerDownCast(m->getCellData(DREAM3D::CellData::GrainIds).get());
-  size_t count = grainIds->GetNumberOfTuples();
+  size_t count = grainIds->getNumberOfTuples();
 
   data.resize(count);
   for(size_t i = 0; i < count; ++i)

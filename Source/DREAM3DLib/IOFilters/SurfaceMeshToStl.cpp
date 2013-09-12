@@ -201,7 +201,7 @@ void SurfaceMeshToStl::execute()
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  int nTriangles = trianglePtr->GetNumberOfTuples();
+  int nTriangles = trianglePtr->getNumberOfTuples();
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;

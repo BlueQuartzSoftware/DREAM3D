@@ -85,7 +85,7 @@ void VertexDataContainer::addVertexData(const QString &name, IDataArray::Pointer
     data->SetName(name);
   }
   m_VertexData[name] = data;
-  m_NumVertexTuples = data->GetNumberOfTuples();
+  m_NumVertexTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -175,7 +175,7 @@ void VertexDataContainer::addVertexFieldData(const QString &name, IDataArray::Po
     data->SetName(name);
   }
   m_VertexFieldData[name] = data;
-  m_NumVertexFieldTuples = data->GetNumberOfTuples();
+  m_NumVertexFieldTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -265,7 +265,7 @@ void VertexDataContainer::addVertexEnsembleData(const QString &name, IDataArray:
     data->SetName(name);
   }
   m_VertexEnsembleData[name] = data;
-  m_NumVertexEnsembleTuples = data->GetNumberOfTuples();
+  m_NumVertexEnsembleTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------

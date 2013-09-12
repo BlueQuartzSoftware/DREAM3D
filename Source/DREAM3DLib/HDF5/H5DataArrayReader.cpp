@@ -142,7 +142,7 @@ IDataArray::Pointer H5DataArrayReader::readStringDataArray(hid_t gid, const QStr
         const char* buf = reinterpret_cast<char*>(bufferPtr->GetVoidPointer(0));
         // count the number of 0x00 characters which are the 'null termination' of each string
 
-        size_t size = bufferPtr->GetNumberOfTuples();
+        size_t size = bufferPtr->getNumberOfTuples();
         size_t count = 0;
         for(size_t i = 0; i < size; ++i)
         {

@@ -268,7 +268,7 @@ QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPt
   QSet<int32_t> uniqueLabels;
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  size_t count = faceLabelsPtr->GetNumberOfTuples();
+  size_t count = faceLabelsPtr->getNumberOfTuples();
   for (size_t i =0; i < count; ++i)
   {
     uniqueLabels.insert(faceLabels[i*2]);

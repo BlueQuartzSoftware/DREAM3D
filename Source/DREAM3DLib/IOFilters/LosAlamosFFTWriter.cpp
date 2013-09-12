@@ -36,13 +36,19 @@
 
 #include "LosAlamosFFTWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
+
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -117,13 +123,11 @@ int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -157,9 +161,9 @@ int LosAlamosFFTWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -186,12 +190,13 @@ int LosAlamosFFTWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if(!parentPath.mkpath("."))
   {
-    ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -199,9 +204,8 @@ int LosAlamosFFTWriter::writeFile()
   FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if(NULL == f)
   {
-    ss.str("");
-    ss << "Error Opening File for writing '" << getOutputFile() << "'";
-    notifyErrorMessage(ss.str(), -1);
+    QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }

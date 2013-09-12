@@ -258,7 +258,7 @@ class ManagedArrayOfArrays : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      if (idxs.size() >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -272,7 +272,7 @@ class ManagedArrayOfArrays : public IDataArray
       }
 
       // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size());
+      size_t newSize = (getNumberOfTuples() - idxs.size());
       Data_t* currentSrc = this->Array;
 
       // Create a new Array to copy into
@@ -301,7 +301,7 @@ class ManagedArrayOfArrays : public IDataArray
       if(k == idxs.size()) // Only front elements are being dropped
       {
         currentSrc = Array + (j);
-        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * sizeof(Data_t));
+        ::memcpy(currentDest, currentSrc, (getNumberOfTuples() - idxs.size()) * sizeof(Data_t));
         _deallocate(); // We are done copying - delete the current Array
         this->Size = newSize;
         this->Array = newArray;
@@ -327,7 +327,7 @@ class ManagedArrayOfArrays : public IDataArray
         }
         else
         {
-          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1);
+          copyElements[i] = (getNumberOfTuples() - idxs[i - 1] - 1);
         }
         destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
       }
@@ -389,7 +389,7 @@ class ManagedArrayOfArrays : public IDataArray
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t GetNumberOfTuples()
+    virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
       return (this->MaxId + 1);
@@ -509,7 +509,7 @@ class ManagedArrayOfArrays : public IDataArray
     {
       BOOST_ASSERT(false);
       return -1;
-      //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      //   return H5ManagedArrayOfArraysWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**

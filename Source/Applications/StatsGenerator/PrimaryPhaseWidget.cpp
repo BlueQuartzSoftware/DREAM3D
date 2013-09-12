@@ -919,10 +919,10 @@ void PrimaryPhaseWidget::extractStatsData(VolumeDataContainer::Pointer m, int in
 
   // Update the Size/Weights Plot
   updateSizeDistributionPlot();
-  m_NumberBinsGenerated->setText(QString::number(bins->GetNumberOfTuples()));
+  m_NumberBinsGenerated->setText(QString::number(bins->getNumberOfTuples()));
 
   // Now have each of the plots set it's own data
-  QVector<float> qbins (bins->GetNumberOfTuples());
+  QVector<float> qbins (bins->getNumberOfTuples());
   for(int i = 0; i < qbins.size(); ++i)
   {
     qbins[i] = bins->GetValue(i);

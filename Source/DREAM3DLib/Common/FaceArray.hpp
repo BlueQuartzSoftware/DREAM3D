@@ -76,7 +76,9 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    int64_t GetNumberOfTuples() { return m_Array->GetNumberOfTuples(); }
+    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    size_t count() { return m_Array->getNumberOfTuples(); }
+
 
     // -----------------------------------------------------------------------------
     //
@@ -107,8 +109,8 @@ class FaceArray
                                StructArray<Face_t>::Pointer Faces )
     {
 
-      size_t numPts = Verts->GetNumberOfTuples();
-      size_t numCells = Faces->GetNumberOfTuples();
+      size_t numPts = Verts->getNumberOfTuples();
+      size_t numCells = Faces->getNumberOfTuples();
 
       m_FacesContainingVert = DynamicListArray::New();
 
@@ -157,10 +159,10 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindFaceNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Face_t>::Pointer Faces)
+    void findFaceNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Face_t>::Pointer Faces)
     {
 
-      size_t nFaces = Faces->GetNumberOfTuples();
+      size_t nFaces = Faces->getNumberOfTuples();
 
       DynamicListArray::Pointer m_FaceNeighbors = DynamicListArray::New();
 
@@ -245,6 +247,26 @@ class FaceArray
         m_FaceNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
     }
+
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Face_t& operator[](size_t i)
+    {
+      return (*m_Array)[i];
+    }
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Face_t& getFace(size_t i)
+    {
+      return (*m_Array)[i];
+    }
+
 
   protected:
     FaceArray();

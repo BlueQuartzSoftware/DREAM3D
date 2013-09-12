@@ -233,7 +233,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
       return 0;
     }
 

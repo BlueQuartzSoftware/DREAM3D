@@ -99,7 +99,7 @@ void SurfaceDataContainer::addFaceData(const QString &name, IDataArray::Pointer 
     data->SetName(name);
   }
   m_FaceData[name] = data;
-  m_NumFaceTuples = data->GetNumberOfTuples();
+  m_NumFaceTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -189,7 +189,7 @@ void SurfaceDataContainer::addFaceFieldData(const QString &name, IDataArray::Poi
     data->SetName(name);
   }
   m_FaceFieldData[name] = data;
-  m_NumFaceFieldTuples = data->GetNumberOfTuples();
+  m_NumFaceFieldTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -279,7 +279,7 @@ void SurfaceDataContainer::addFaceEnsembleData(const QString &name, IDataArray::
     data->SetName(name);
   }
   m_FaceEnsembleData[name] = data;
-  m_NumFaceEnsembleTuples = data->GetNumberOfTuples();
+  m_NumFaceEnsembleTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------

@@ -99,7 +99,7 @@ void EdgeDataContainer::addEdgeData(const QString &name, IDataArray::Pointer dat
     data->SetName(name);
   }
   m_EdgeData[name] = data;
-  m_NumEdgeTuples = data->GetNumberOfTuples();
+  m_NumEdgeTuples = data->getNumberOfTuples();
 }
 
 
@@ -176,7 +176,7 @@ void EdgeDataContainer::addEdgeFieldData(const QString &name, IDataArray::Pointe
     data->SetName(name);
   }
   m_EdgeFieldData[name] = data;
-  m_NumEdgeFieldTuples = data->GetNumberOfTuples();
+  m_NumEdgeFieldTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -266,7 +266,7 @@ void EdgeDataContainer::addEdgeEnsembleData(const QString &name, IDataArray::Poi
     data->SetName(name);
   }
   m_EdgeEnsembleData[name] = data;
-  m_NumEdgeEnsembleTuples = data->GetNumberOfTuples();
+  m_NumEdgeEnsembleTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------

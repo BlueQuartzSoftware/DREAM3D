@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT IDataArray
      /**
      * @brief Returns the number of Tuples in the array.
      */
-    virtual size_t GetNumberOfTuples () = 0;
+    virtual size_t getNumberOfTuples () = 0;
 
 
     /**

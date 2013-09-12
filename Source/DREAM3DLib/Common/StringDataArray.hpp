@@ -161,7 +161,7 @@ class StringDataArray : public IDataArray
      /**
      * @brief Returns the number of Tuples in the array.
      */
-    virtual size_t GetNumberOfTuples ()
+    virtual size_t getNumberOfTuples ()
     {
     return m_Array.size();
     }
@@ -217,7 +217,7 @@ class StringDataArray : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      if (idxs.size() >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -389,7 +389,7 @@ class StringDataArray : public IDataArray
         return -1;
       }
       StringDataArray* srcPtr = StringDataArray::SafePointerDownCast(p.get());
-      size_t count = srcPtr->GetNumberOfTuples();
+      size_t count = srcPtr->getNumberOfTuples();
       for (size_t i = 0; i < count; ++i)
       {
         m_Array.push_back( srcPtr->GetValue(i) );
