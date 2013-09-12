@@ -49,6 +49,9 @@
 VertexDataContainerReader::VertexDataContainerReader() :
   AbstractFilter(),
   m_HdfFileId(-1),
+  m_ReadVertexData(true),
+  m_ReadVertexFieldData(true),
+  m_ReadVertexEnsembleData(true),
   m_ReadAllArrays(false)
 {
   setupFilterParameters();
@@ -140,10 +143,26 @@ void VertexDataContainerReader::preflight()
 void VertexDataContainerReader::execute()
 {
   int err = 0;
-  
+  VolumeDataContainer* vdc = getVolumeDataContainer();
+  if(NULL ==vdc)
+  {
+    setErrorCondition(-1);
+    
+    ss <<" DataContainer was NULL";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    return;
+  }  
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
+
+  if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
+  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexFieldData = false;
+  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexEnsembleData = false;
+
+  if(m_ReadVertexData == true) vdc->clearVertexData();
+  if(m_ReadVertexFieldData == true) vdc->clearVertexFieldData();
+  if(m_ReadVertexEnsembleData == true) vdc->clearVertexEnsembleData();
 
   err = gatherData(false);
   setErrorCondition(err);

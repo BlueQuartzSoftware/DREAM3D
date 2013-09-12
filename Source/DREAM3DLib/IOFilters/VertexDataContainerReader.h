@@ -62,6 +62,11 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public AbstractFilter
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexEnsembleData)
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
