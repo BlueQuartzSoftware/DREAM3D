@@ -107,7 +107,7 @@ AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createNewPres
 // -----------------------------------------------------------------------------
 AbstractMicrostructurePreset::Pointer MicrostructurePresetManager::createPreset(const QString &classname)
 {
-  //qDebug() << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << "\n";
+  //std::cout << "MicrostructurePresetManager::newMicrostructurePreset -> Trying to create MicrostructurePreset for '" << classname << "'" << std::endl;
   AbstractMicrostructurePreset::Pointer MicrostructurePreset;
   for (AbstractMicrostructurePresetFactory::Collection::iterator iter = _factories.begin(); iter != _factories.end(); ++iter )
   {

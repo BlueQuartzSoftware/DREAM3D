@@ -296,7 +296,7 @@ class NeighborList : public IDataArray
       {
         // The NumNeighbors Array is NOT already in the file so write it to the file
         std::vector<hsize_t> dims(1, numNeighbors.size());
-        err = QH5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName, dims, numNeighbors);
+        err = H5Lite::writeVectorDataset(parentId, m_NumNeighborsArrayName.toStdString(), dims, numNeighbors);
         if(err < 0)
         {
           return -603;

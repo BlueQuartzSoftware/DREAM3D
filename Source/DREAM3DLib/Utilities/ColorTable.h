@@ -36,7 +36,7 @@
 #ifndef _ColorTable_H_
 #define _ColorTable_H_
 
-#include <vector>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -114,7 +114,7 @@ class DREAM3DLib_EXPORT ColorTable
     * @param max
     * @param min
     */
-    static void GetColorTable(int numColors, std::vector<float> &colors);
+    static void GetColorTable(int numColors, QVector<float> &colors);
 
   private:
     ColorTable(const ColorTable&); // Copy Constructor Not Implemented
