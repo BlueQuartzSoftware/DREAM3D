@@ -575,7 +575,7 @@ void PackPrimaryPhases::execute()
 
   // Estimate the total Number of grains here
   int estNumGrains = estimate_numgrains((int)(udims[0]), (int)(udims[1]), (int)(udims[2]), xRes, yRes, zRes);
-  m->resizeFieldDataArrays(estNumGrains);
+  m->resizeCellFieldDataArrays(estNumGrains);
   dataCheck(false, totalPoints, estNumGrains, m->getNumCellEnsembleTuples());
 
   int gid = 1;
@@ -603,7 +603,7 @@ void PackPrimaryPhases::execute()
         notifyStatusMessage(ss.str());
         if (gid + 1 >= static_cast<int>(m->getNumCellFieldTuples()))
         {
-          m->resizeFieldDataArrays(gid + 1);
+          m->resizeCellFieldDataArrays(gid + 1);
           dataCheck(false, totalPoints, gid + 1, m->getNumCellEnsembleTuples());
         }
 
@@ -653,7 +653,7 @@ void PackPrimaryPhases::execute()
           notifyStatusMessage(ss.str());
           if (gid + 1 >= static_cast<int>(m->getNumCellFieldTuples()) )
           {
-            m->resizeFieldDataArrays(gid + 1);
+            m->resizeCellFieldDataArrays(gid + 1);
             dataCheck(false, totalPoints, gid + 1, m->getNumCellEnsembleTuples());
           }
 
@@ -676,7 +676,7 @@ void PackPrimaryPhases::execute()
     }
   }
 
-  m->resizeFieldDataArrays(gid);
+  m->resizeCellFieldDataArrays(gid);
   dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
 
   if (getCancel() == true)

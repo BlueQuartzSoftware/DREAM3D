@@ -68,9 +68,9 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(volumeCellArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(volumeEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(volumeCellEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
   connect(surfaceVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
@@ -79,18 +79,18 @@ void ArraySelectionWidget::setupGui()
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(surfaceEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceFaceFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(surfaceEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(surfaceFaceEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
   connect(edgeVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
   connect(edgeEdgeArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeEdgeFieldArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
-  connect(edgeEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
+  connect(edgeEdgeEnsembleArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
           this, SLOT(arrayListUpdated(QListWidgetItem*)));
 
   connect(vertexVertexArrayList, SIGNAL(	itemChanged ( QListWidgetItem*)),
@@ -332,10 +332,10 @@ void ArraySelectionWidget::on_edgeEdgeCB_stateChanged(int state)
 void ArraySelectionWidget::on_edgeFieldCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    edgeFieldCB->setCheckState(Qt::Checked);
+    edgeEdgeFieldCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(edgeFieldArrayList, state);
+  toggleListSelections(edgeEdgeFieldArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -344,10 +344,10 @@ void ArraySelectionWidget::on_edgeFieldCB_stateChanged(int state)
 void ArraySelectionWidget::on_edgeEnsembleCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    edgeEnsembleCB->setCheckState(Qt::Checked);
+    edgeEdgeEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(edgeEnsembleArrayList, state);
+  toggleListSelections(edgeEdgeEnsembleArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -392,10 +392,10 @@ void ArraySelectionWidget::on_surfaceFaceArraysCB_stateChanged(int state)
 void ArraySelectionWidget::on_surfaceFieldArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    surfaceFieldArraysCB->setCheckState(Qt::Checked);
+    surfaceFaceFieldArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(surfaceFieldArrayList, state);
+  toggleListSelections(surfaceFaceFieldArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -404,10 +404,10 @@ void ArraySelectionWidget::on_surfaceFieldArraysCB_stateChanged(int state)
 void ArraySelectionWidget::on_surfaceEnsembleArraysCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    surfaceEnsembleArraysCB->setCheckState(Qt::Checked);
+    surfaceFaceEnsembleArraysCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(surfaceEnsembleArrayList, state);
+  toggleListSelections(surfaceFaceEnsembleArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -464,10 +464,10 @@ void ArraySelectionWidget::on_volumeCellCB_stateChanged(int state)
 void ArraySelectionWidget::on_volumeFieldCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    volumeFieldCB->setCheckState(Qt::Checked);
+    volumeCellFieldCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(volumeFieldArrayList, state);
+  toggleListSelections(volumeCellFieldArrayList, state);
 }
 
 // -----------------------------------------------------------------------------
@@ -476,10 +476,10 @@ void ArraySelectionWidget::on_volumeFieldCB_stateChanged(int state)
 void ArraySelectionWidget::on_volumeEnsembleCB_stateChanged(int state)
 {
   if (state == Qt::PartiallyChecked) {
-    volumeEnsembleCB->setCheckState(Qt::Checked);
+    volumeCellEnsembleCB->setCheckState(Qt::Checked);
     state = Qt::Checked;
   }
-  toggleListSelections(volumeEnsembleArrayList, state);
+  toggleListSelections(volumeCellEnsembleArrayList, state);
 }
 
 // -----------------------------------------------------------------------------

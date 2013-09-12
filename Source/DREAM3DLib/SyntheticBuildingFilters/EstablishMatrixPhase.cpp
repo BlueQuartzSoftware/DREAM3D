@@ -197,7 +197,7 @@ void  EstablishMatrixPhase::establish_matrix()
   size_t currentnumgrains = m->getNumCellFieldTuples();
   if(currentnumgrains == 0)
   {
-	  m->resizeFieldDataArrays(1);
+	  m->resizeCellFieldDataArrays(1);
 	  dataCheck(false, totalPoints, 1, m->getNumCellEnsembleTuples());
 	  currentnumgrains = 1;
   }
@@ -239,7 +239,7 @@ void  EstablishMatrixPhase::establish_matrix()
 		}
 		if(m->getNumCellFieldTuples() <= (firstMatrixField+j))
 		{
-	      m->resizeFieldDataArrays((firstMatrixField+j) + 1);
+	      m->resizeCellFieldDataArrays((firstMatrixField+j) + 1);
 	      dataCheck(false, totalPoints, (firstMatrixField+j) + 1, m->getNumCellEnsembleTuples());
 		}
 		m_GrainIds[i] = (firstMatrixField+j);
