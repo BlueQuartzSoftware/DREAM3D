@@ -38,8 +38,6 @@
 #define CUBICOPS_H_
 
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -57,9 +55,9 @@
 class DREAM3DLib_EXPORT CubicOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(CubicOps)
-    MXA_TYPE_MACRO_SUPER(CubicOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(CubicOps)
+    DREAM3D_SHARED_POINTERS(CubicOps)
+    DREAM3D_TYPE_MACRO_SUPER(CubicOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(CubicOps)
 
     CubicOps();
     virtual ~CubicOps();

@@ -38,9 +38,6 @@
 
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
-
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
@@ -169,7 +166,7 @@ void SurfaceDataContainerWriter::execute()
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::SurfaceDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
@@ -178,7 +175,7 @@ void SurfaceDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -291,12 +288,12 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   {
     return;
   }
-  DREAM3D::Mesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
   }
-  DREAM3D::Mesh::VertListPointer_t verts = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer verts = getSurfaceDataContainer()->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -311,7 +308,7 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
   QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   out << "        " << hdfFileName << ":/SurfaceDataContainer/Faces" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
@@ -333,7 +330,7 @@ void SurfaceDataContainerWriter::writeXdmfGridFooter()
   {
     return;
   }
-  DREAM3D::Mesh::FaceListPointer_t faces = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
   if (NULL == faces.get())
   {
     return;
@@ -376,7 +373,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
     QString hdfFileName(&(nameBuffer.front()), nameSize);
-    hdfFileName = MXAFileInfo::filename(hdfFileName);
+    hdfFileName = QFileInfo::filename(hdfFileName);
 
     out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "      </DataItem>" << "\n";
@@ -403,7 +400,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     QVector<char> nameBuffer(nameSize, 0);
     nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
     QString hdfFileName(&(nameBuffer.front()), nameSize);
-    hdfFileName = MXAFileInfo::filename(hdfFileName);
+    hdfFileName = QFileInfo::filename(hdfFileName);
     out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
@@ -428,7 +425,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     QVector<char> nameBuffer2(nameSize2, 0);
     nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
     QString hdfFileName2(&(nameBuffer2.front()), nameSize2);
-    hdfFileName2 = MXAFileInfo::filename(hdfFileName2);
+    hdfFileName2 = QFileInfo::filename(hdfFileName2);
     out << "        " << hdfFileName2 << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
@@ -844,7 +841,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 

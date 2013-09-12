@@ -37,7 +37,7 @@
 #ifndef _RemoveArrays_H_
 #define _RemoveArrays_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"

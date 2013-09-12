@@ -37,8 +37,6 @@
 #ifndef HEXAGONALOPS_H_
 #define HEXAGONALOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -56,9 +54,9 @@
 class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(HexagonalOps)
-    MXA_TYPE_MACRO_SUPER(HexagonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(HexagonalOps)
+    DREAM3D_SHARED_POINTERS(HexagonalOps)
+    DREAM3D_TYPE_MACRO_SUPER(HexagonalOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(HexagonalOps)
 
     HexagonalOps();
     virtual ~HexagonalOps();

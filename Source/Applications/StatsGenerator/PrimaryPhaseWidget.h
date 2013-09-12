@@ -43,10 +43,10 @@ class PrimaryPhaseWidget : public SGWidget, private Ui::PrimaryPhaseWidget
      void setPhaseIndex(int index);
      int getPhaseIndex();
 
-     MXA_INSTANCE_PROPERTY(unsigned int, PhaseType)
-     MXA_INSTANCE_PROPERTY(float, PhaseFraction)
-     MXA_INSTANCE_PROPERTY(float, TotalPhaseFraction)
-     MXA_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
+     DREAM3D_INSTANCE_PROPERTY(unsigned int, PhaseType)
+     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
+     DREAM3D_INSTANCE_PROPERTY(float, TotalPhaseFraction)
+     DREAM3D_INSTANCE_PROPERTY(bool, DataHasBeenGenerated)
 
      void extractStatsData(VolumeDataContainer::Pointer m, int index);
 

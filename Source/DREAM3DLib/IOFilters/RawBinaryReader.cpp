@@ -37,11 +37,6 @@
 
 #include <stdio.h>
 
-
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Common/IO/MXAFileReader64.h"
-
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
 #define RBR_FILE_NOT_OPEN -1000
@@ -99,7 +94,7 @@ template<typename T>
 int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, int skipHeaderBytes)
 {
   int err = 0;
-  uint64_t fileSize = MXAFileInfo::fileSize(filename);
+  uint64_t fileSize = QFileInfo::fileSize(filename);
   size_t allocatedBytes = p->GetSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
@@ -109,7 +104,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, in
   }
 
 
-  FILE* f = fopen(filename.c_str(), "rb");
+  FILE* f = fopen(filename.toLatin1().data(), "rb");
   if (NULL == f)
   {
     return RBR_FILE_NOT_OPEN;
@@ -364,7 +359,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -459,7 +454,7 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     // Sanity Check Allocated Bytes versus size of file
-    uint64_t fileSize = MXAFileInfo::fileSize(m_InputFile);
+    uint64_t fileSize = QFileInfo::fileSize(m_InputFile);
     int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
     if (check == -1)
     {

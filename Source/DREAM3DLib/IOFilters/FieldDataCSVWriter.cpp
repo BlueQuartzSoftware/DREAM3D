@@ -37,9 +37,6 @@
 #include "FieldDataCSVWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -135,7 +132,7 @@ void FieldDataCSVWriter::preflight()
     setErrorCondition(-1);
   }
 
-  QString parentPath = MXAFileInfo::parentPath(getFieldDataFile());
+  QString parentPath = QFileInfo::parentPath(getFieldDataFile());
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -143,7 +140,7 @@ void FieldDataCSVWriter::preflight()
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if (MXAFileInfo::extension(getFieldDataFile()).compare("") == 0)
+  if (QFileInfo::extension(getFieldDataFile()).compare("") == 0)
   {
     setFieldDataFile(getFieldDataFile().append(".dx"));
   }
@@ -167,7 +164,7 @@ void FieldDataCSVWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_FieldDataFile);
+  QString parentPath = QFileInfo::parentPath(m_FieldDataFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -182,7 +179,7 @@ void FieldDataCSVWriter::execute()
   QString filename = getFieldDataFile();
 
   std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
+  outFile.open(filename.toLatin1().data(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-1 << "\n";

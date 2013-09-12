@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "QDroppableScrollArea.h"
 
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 
 
@@ -85,7 +85,7 @@ void QDroppableScrollArea::dropEvent(QDropEvent *event)
   {
     QByteArray dropData =  event->mimeData()->data("text/plain");
     QString name(dropData);
-  //  qDebug() << "name: " << name.toStdString() << "\n";
+  //  qDebug() << "name: " << name() << "\n";
     emit filterDropped(name);
   }
 
@@ -103,7 +103,7 @@ void QDroppableScrollArea::dragMoveEvent( QDragMoveEvent* event)
  // QObject* w = qobject_cast<QObject*>(childAt(event->pos()));
  // if (w != NULL)
   {
- //   qDebug() << "--- Child at Pos: " << w->objectName().toStdString() << "\n";
+ //   qDebug() << "--- Child at Pos: " << w->objectName()() << "\n";
   }
 }
 

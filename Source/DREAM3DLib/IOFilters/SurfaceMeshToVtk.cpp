@@ -37,10 +37,6 @@
 #include "SurfaceMeshToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -203,7 +199,7 @@ void SurfaceMeshToVtk::execute()
   setErrorCondition(0);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
@@ -228,7 +224,7 @@ void SurfaceMeshToVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
   if(!MXADir::mkdir(parentPath, true))
   {
       ss.str("");
@@ -241,7 +237,7 @@ void SurfaceMeshToVtk::execute()
 
 // Open the output VTK File for writing
   FILE* vtkFile = NULL;
-  vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
+  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
       ss.str("");
@@ -279,7 +275,7 @@ void SurfaceMeshToVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
+    VertexArray::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -304,7 +300,7 @@ void SurfaceMeshToVtk::execute()
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = triangles.GetNumberOfTuples();
@@ -381,7 +377,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "SCALARS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     for(int i = 0; i < nT; ++i)
     {
@@ -396,7 +392,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
       {
         ss.str("");
         ss << m[i] << " ";
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -419,7 +415,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.c_str(), dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
     {
       T s0 = 0x00;
@@ -441,7 +437,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       {
         ss.str("");
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         //if (i%50 == 0)
          { fprintf(vtkFile, "\n"); }
       }
@@ -536,7 +532,7 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     for(int i = 0; i < nT; ++i)
     {
@@ -559,7 +555,7 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss << m[i] << " ";
         }
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         if (i%50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -581,7 +577,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.c_str(), dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
     {
       T s0 = 0x00;
@@ -613,7 +609,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         }
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -634,7 +630,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "NORMALS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
     {
       T s0 = 0x00;
@@ -672,7 +668,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2] << " ";
         }
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         if (i%50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -693,7 +689,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
 
 
   // Write the triangle region ids
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -717,7 +713,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   fprintf(vtkFile, "LOOKUP_TABLE default\n");
   for(int i = 0; i < nT; ++i)
   {
-    //DREAM3D::Mesh::Face_t& t = triangles[i]; // Get the current Node
+    //FaceArray::Face_t& t = triangles[i]; // Get the current Node
 
     if(m_WriteBinaryFile == true)
     {

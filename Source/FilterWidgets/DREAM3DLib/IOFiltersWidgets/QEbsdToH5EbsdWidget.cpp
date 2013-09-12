@@ -92,7 +92,7 @@ QEbsdToH5EbsdWidget::QEbsdToH5EbsdWidget(QWidget *parent) :
   EbsdToH5Ebsd::Pointer filter = EbsdToH5Ebsd::New();
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
   checkIOFiles();
 }
 
@@ -109,7 +109,7 @@ QEbsdToH5EbsdWidget::~QEbsdToH5EbsdWidget()
 // -----------------------------------------------------------------------------
 QString QEbsdToH5EbsdWidget::getFilterGroup()
 {
-  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+  return (DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -118,12 +118,12 @@ QString QEbsdToH5EbsdWidget::getFilterGroup()
 void QEbsdToH5EbsdWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   EbsdToH5Ebsd* filter = EbsdToH5Ebsd::SafeObjectDownCast<AbstractFilter*, EbsdToH5Ebsd*>(filt);
-  m_OutputFile->setText( QString::fromStdString ( filter->getOutputFile() ) );
+  m_OutputFile->setText(  ( filter->getOutputFile() ) );
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
   
   ss << filter->getZResolution();
-  m_zSpacing->setText( QString::fromStdString(ss.str()) );
+  m_zSpacing->setText( (ss.str()) );
   m_SampleTransformationAngle = filter->getSampleTransformationAngle();
   m_SampleTransformationAxis = filter->getSampleTransformationAxis();
   m_EulerTransformationAngle = filter->getEulerTransformationAngle();
@@ -143,7 +143,7 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
+  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text())());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setZResolution(m_zSpacing->text().toFloat(&ok));
@@ -170,7 +170,7 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
   QVector<QString> realFileList;
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath = QString::fromStdString(fileList[i]);
+    QString filePath = (fileList[i]);
     QFileInfo fi(filePath);
     if (fi.exists())
     {
@@ -192,7 +192,7 @@ QFilterWidget* QEbsdToH5EbsdWidget::createDeepCopy()
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
-  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
+  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text())());
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -346,7 +346,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 bool QEbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
+  //  qDebug() << "outFilePath: " << outFilePath() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -546,7 +546,7 @@ QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool 
         .arg(m_FileSuffix->text()).arg(m_FileExt->text());
     QString filePath = m_InputDir->text() + QDir::separator() + filename;
     filePath = QDir::toNativeSeparators(filePath);
-    fileList.push_back(filePath.toStdString());
+    fileList.push_back(filePath());
   }
   return fileList;
 }
@@ -576,7 +576,7 @@ void QEbsdToH5EbsdWidget::m_generateExampleEbsdInputFile()
   QIcon redDot = QIcon(QString(":/red-dot.png"));
   for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath(fileList.at(i).c_str());
+    QString filePath(fileList.at(i).toLatin1().data());
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
     if (fi.exists() == true)
@@ -627,7 +627,7 @@ void QEbsdToH5EbsdWidget::on_m_RefFrameOptionsBtn_clicked()
   {
     return;
   }
-  QString ebsdFileName = QString::fromStdString(fileList[0]);
+  QString ebsdFileName = (fileList[0]);
 
   QEbsdReferenceFrameDialog d(ebsdFileName, this);
   d.setEbsdFileName(ebsdFileName);
@@ -713,7 +713,7 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn.toStdString();
+      QString fns = fn();
       int length =  fn.length();
       digitEnd = length-1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')

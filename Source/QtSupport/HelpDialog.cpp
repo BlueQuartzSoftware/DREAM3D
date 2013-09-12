@@ -96,7 +96,7 @@ void HelpDialog::setContentFile(QUrl sourceLocation)
 #endif
   thePath = QString("file:///").append(thePath).append("/").append(sourceLocation.toString());
 
-//  qDebug() << "Help File Path:" << thePath.toStdString() << "\n";
+//  qDebug() << "Help File Path:" << thePath() << "\n";
 
   helpBrowser->setSource(QUrl(thePath));
   // Set the Home Page File

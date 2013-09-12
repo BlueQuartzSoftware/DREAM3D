@@ -37,7 +37,7 @@
 #ifndef EbsdImportWIDGET_H_
 #define EbsdImportWIDGET_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include <QtCore/QString>

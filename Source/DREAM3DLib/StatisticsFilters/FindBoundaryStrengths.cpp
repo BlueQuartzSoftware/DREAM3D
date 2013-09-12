@@ -36,11 +36,6 @@
 
 #include "FindBoundaryStrengths.h"
 
-// MXA Includes
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 // DREAM3D includes
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"

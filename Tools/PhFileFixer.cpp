@@ -7,7 +7,7 @@
 #include <string.h>
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 
 #define BUF_SIZE 512
 
@@ -22,14 +22,14 @@ int main(int argc, char** argv)
   std::string inputFile(argv[1]);
   std::string outputFile(argv[2]);
 
-  FILE* f = fopen(inputFile.c_str(), "r");
+  FILE* f = fopen(inputFile.toLatin1().data(), "r");
   if(f == NULL)
   {
     std::cout << "Error opening input file" << std::endl;
     return EXIT_FAILURE;
   }
 
-  FILE* out = fopen(outputFile.c_str(), "wb");
+  FILE* out = fopen(outputFile.toLatin1().data(), "wb");
   if (NULL == out)
   {
     std::cout << "Error opening output file" << std::endl;

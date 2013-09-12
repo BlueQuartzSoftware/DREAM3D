@@ -37,7 +37,7 @@
 #ifndef _VolumeDataContainerWriter_H_
 #define _VolumeDataContainerWriter_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 

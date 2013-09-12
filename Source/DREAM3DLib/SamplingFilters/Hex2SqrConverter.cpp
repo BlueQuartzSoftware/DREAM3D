@@ -39,9 +39,6 @@
 #include <fstream>
 
 #include "H5Support/H5Utilities.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -185,13 +182,13 @@ void Hex2SqrConverter::execute()
     QString msg = "Converting File: " + ebsdFName;
     ss.str("");
 
-    notifyStatusMessage(msg.c_str());
+    notifyStatusMessage(msg.toLatin1().data());
 
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
-    QString ext = MXAFileInfo::extension(ebsdFName);
-    QString base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
-    QString path = MXAFileInfo::parentPath(ebsdFName);
+    QString ext = QFileInfo::extension(ebsdFName);
+    QString base = QFileInfo::fileNameWithOutExtension(ebsdFName);
+    QString path = QFileInfo::parentPath(ebsdFName);
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
         AngReader reader;
@@ -227,7 +224,7 @@ void Hex2SqrConverter::execute()
 
             QString newEbsdFName = path + "/Sqr_" + base + "." + ext;
             std::ofstream outFile;
-            outFile.open(newEbsdFName.c_str());
+            outFile.open(newEbsdFName.toLatin1().data());
 
             m_HeaderIsComplete = false;
 

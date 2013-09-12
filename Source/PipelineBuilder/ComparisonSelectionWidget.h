@@ -37,7 +37,7 @@
 #define _ComparisonSelectionWidget_H_
 
 
-#include <string>
+#include <QtCore/QString>
 #include <set>
 
 #include <QtCore/QSettings>

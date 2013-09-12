@@ -39,9 +39,6 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "EbsdLib/EbsdConstants.h"
 
 
@@ -190,7 +187,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-1);
   }
 
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if (MXADir::exists(parentPath) == false)
   {
     ss.str("");
@@ -198,7 +195,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if (MXAFileInfo::extension(m_OutputFile).compare("") == 0)
+  if (QFileInfo::extension(m_OutputFile).compare("") == 0)
   {
     m_OutputFile.append(".dream3d");
   }
@@ -235,7 +232,7 @@ void DataContainerWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -264,16 +261,16 @@ void DataContainerWriter::execute()
   std::ofstream xdmf;
   if (m_WriteXdmfFile == true)
   {
-    QString name = MXAFileInfo::fileNameWithOutExtension(m_OutputFile);
+    QString name = QFileInfo::fileNameWithOutExtension(m_OutputFile);
     if(parentPath.empty() == true)
     {
       name = name + ".xdmf";
     }
     else
     {
-      name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
+      name = parentPath + QFileInfo::Separator + name + ".xdmf";
     }
-    xdmf.open(name.c_str(), std::ios_base::binary);
+    xdmf.open(name.toLatin1().data(), std::ios_base::binary);
     if (xdmf.is_open() == true) {
       writeXdmfHeader(xdmf);
     }

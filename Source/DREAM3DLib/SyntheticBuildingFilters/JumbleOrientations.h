@@ -37,7 +37,7 @@
 #ifndef JumbleOrientations_H_
 #define JumbleOrientations_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <numeric>
 #include <limits>
 

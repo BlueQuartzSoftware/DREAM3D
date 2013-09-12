@@ -38,9 +38,6 @@
 #include <boost/shared_array.hpp>
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
@@ -230,7 +227,7 @@ void NodesTrianglesToStl::execute()
 
 
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_NodesFile.c_str(), "rb+");
+  FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if(nodesFile == NULL)
   {
     ss.str("");
@@ -249,7 +246,7 @@ void NodesTrianglesToStl::execute()
   notifyStatusMessage(ss.str());
 
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_TrianglesFile.c_str(), "rb+");
+  FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if(triFile == NULL)
   {
     ss.str("");
@@ -275,8 +272,8 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Pointer nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 //  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
@@ -301,8 +298,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  DREAM3D::Mesh::FaceListPointer_t trianglePtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  DREAM3D::Mesh::Face_t* triangles = trianglePtr->GetPointer(0);
+  FaceArray::Pointer trianglePtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
@@ -346,7 +343,7 @@ void NodesTrianglesToStl::execute()
     // Generate the output file name
     ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
     QString filename = ss.str();
-    FILE* f = fopen(filename.c_str(), "wb");
+    FILE* f = fopen(filename.toLatin1().data(), "wb");
     ScopedFileMonitor fPtr(f);
 
     ss.str("");
@@ -463,7 +460,7 @@ int NodesTrianglesToStl::writeNumTrianglesToFile(const QString &filename, int tr
   // We need to update the number of triangles in the file
   int err =0;
 
-  FILE* out = fopen(filename.c_str(), "r+b");
+  FILE* out = fopen(filename.toLatin1().data(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite( (char*)(&triCount), 1, 4, out);
   fclose(out);

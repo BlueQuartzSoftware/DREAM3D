@@ -39,10 +39,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -218,7 +214,7 @@ int INLWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputFile());
+  QString parentPath = QFileInfo::parentPath(getOutputFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     ss.str("");
@@ -228,7 +224,7 @@ int INLWriter::writeFile()
     return -1;
   }
 
-  FILE* f = fopen(getOutputFile().c_str(), "wb");
+  FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
   if(NULL == f)
   {
     ss.str("");
@@ -239,8 +235,8 @@ int INLWriter::writeFile()
   }
 
   // Write the header, Each line starts with a "#" symbol
-  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().c_str());
-  fprintf(f, "# DateTime: %s\r\n", tifDateTime().c_str());
+  fprintf(f, "# File written from %s\r\n", DREAM3DLib::Version::PackageComplete().toLatin1().data());
+  fprintf(f, "# DateTime: %s\r\n", tifDateTime().toLatin1().data());
   fprintf(f, "# X_STEP: %f\r\n", res[0]);
   fprintf(f, "# Y_STEP: %f\r\n", res[1]);
   fprintf(f, "# Z_STEP: %f\r\n", res[2]);
@@ -274,7 +270,7 @@ int INLWriter::writeFile()
   for(size_t i = 1; i < materialNamePtr->GetNumberOfTuples(); ++i)
   {
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
+    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;

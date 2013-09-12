@@ -36,9 +36,6 @@
 #include "VolumeDataContainerWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
-
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
@@ -151,7 +148,7 @@ void VolumeDataContainerWriter::execute()
 
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
@@ -160,7 +157,7 @@ void VolumeDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT );
+  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -315,7 +312,7 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
   if (err < 0)  {
     return err;
   }
-  hid_t gid = H5Gopen(m_HdfFileId, hdfPath.c_str(), H5P_DEFAULT );
+  hid_t gid = H5Gopen(m_HdfFileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
 
   int32_t rank =1;
   hsize_t dims[1] = {3};
@@ -529,7 +526,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data
@@ -595,7 +592,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 

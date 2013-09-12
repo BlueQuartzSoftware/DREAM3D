@@ -36,7 +36,7 @@
 #ifndef _VolumeDataContainerReader_H_
 #define _VolumeDataContainerReader_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 

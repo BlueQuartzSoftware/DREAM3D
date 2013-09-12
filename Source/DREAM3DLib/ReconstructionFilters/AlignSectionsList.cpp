@@ -184,7 +184,7 @@ void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts
   //int64_t totalPoints = m->totalPoints();
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

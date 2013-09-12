@@ -43,9 +43,6 @@
 
 #include <boost/shared_ptr.hpp>
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Common/MXAEndian.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 
 #define kBufferSize 1024
@@ -154,7 +151,7 @@ int VTKFileReader::readHeader()
   }
 
   std::ifstream instream;
-  instream.open(getInputFile().c_str(), std::ios_base::binary);
+  instream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if (!instream.is_open())
   {
     qDebug() << logTime() << " vtk file could not be opened: " << getInputFile() << "\n";

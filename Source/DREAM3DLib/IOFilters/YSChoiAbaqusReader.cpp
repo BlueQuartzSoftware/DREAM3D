@@ -37,13 +37,10 @@
 // C++ Includes
 #include <iomanip>
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 #include <sstream>
 
 #include <map>
-
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
 
 
 #include "DREAM3DLib/Common/Constants.h"
@@ -150,7 +147,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -161,7 +158,7 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
     const unsigned int size(1024);
     char buf[size];
     // Read header from data file to figure out how many points there are
-    std::ifstream in(getInputFile().c_str());
+    std::ifstream in(getInputFile().toLatin1().data());
     QString word;
     bool headerdone = false;
     int xpoints, ypoints, zpoints;
@@ -212,7 +209,7 @@ void YSChoiAbaqusReader::execute()
   const unsigned int size(1024);
   char buf[size];
   // Read header from data file to figure out how many points there are
-  std::ifstream in(getInputFile().c_str());
+  std::ifstream in(getInputFile().toLatin1().data());
   QString word;
   bool headerdone = false;
   while (headerdone == false)
@@ -242,7 +239,7 @@ void YSChoiAbaqusReader::execute()
     }
   }
   // Read header from grian info file to figure out how many grains there are
-  std::ifstream in2(getInputGrainInfoFile().c_str());
+  std::ifstream in2(getInputGrainInfoFile().toLatin1().data());
   int numgrains;
   in2 >> numgrains;
   in2.getline(buf, size);

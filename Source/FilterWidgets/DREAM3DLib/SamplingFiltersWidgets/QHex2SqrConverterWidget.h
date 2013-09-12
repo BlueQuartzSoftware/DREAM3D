@@ -37,7 +37,7 @@
 #ifndef Hex2SqrConverterWidget_H_
 #define Hex2SqrConverterWidget_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include <QtCore/QString>

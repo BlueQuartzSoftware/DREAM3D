@@ -32,7 +32,7 @@
 #define _QDataContainerReaderWidget_H_
 
 
-#include <string>
+#include <QtCore/QString>
 #include <set>
 
 #include <QtCore/QObject>

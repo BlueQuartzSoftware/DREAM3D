@@ -38,9 +38,6 @@
 
 #include <map>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -1873,7 +1870,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
+  QString parentPath = QFileInfo::parentPath(m_CsvOutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       
@@ -1886,7 +1883,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   QString filename = getCsvOutputFile();
 
   std::ofstream outFile;
-  outFile.open(filename.c_str(), std::ios_base::binary);
+  outFile.open(filename.toLatin1().data(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-firstPrecipitateField << "\n";

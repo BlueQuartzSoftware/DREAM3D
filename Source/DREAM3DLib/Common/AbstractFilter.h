@@ -37,7 +37,7 @@
 #define _AbstractFilter_H_
 
 #include <set>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/DREAM3DVersion.h"

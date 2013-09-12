@@ -33,7 +33,7 @@
 #define MESHSTRUCTS_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 #include <set>
 #include <map>
 

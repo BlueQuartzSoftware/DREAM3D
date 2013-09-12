@@ -37,7 +37,7 @@
 #define QFILTERWIDGETMANAGER_H_
 
 
-#include <string>
+#include <QtCore/QString>
 #include <map>
 #include <set>
 

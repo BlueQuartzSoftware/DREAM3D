@@ -663,7 +663,7 @@ void PluginMaker::on_addFilterBtn_clicked()
   }
 //  for(int i = 0;i < m_FilterBundles.count(); ++i)
 //  {
-//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0).toStdString() << "\n";
+//    std::cout  << "CPP: " << m_FilterBundles[i].getCPPGenerator()->getTreeWidgetItem()->text(0)() << "\n";
 //  }
 }
 
@@ -882,8 +882,8 @@ QString PluginMaker::generateCmakeContents() {
     PMFileGenerator* hGen = m_FilterBundles[i].getHGenerator();
     bool isPublic = m_FilterBundles[i].isPublic();
 
-    //qDebug() << cppGen->getFileName().toStdString() << "\n";
-    //qDebug() << hGen->getFileName().toStdString() << "\n";
+    //qDebug() << cppGen->getFileName()() << "\n";
+    //qDebug() << hGen->getFileName()() << "\n";
 
     //  hdrContents.append("    ").append(cmakeHdrCode).append(hGen->getFileName()).append("\n    ");
     //  srcContents.append("    ").append(cmakeHdrCode).append(cppGen->getFileName()).append("\n    ");

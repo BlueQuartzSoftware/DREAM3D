@@ -75,7 +75,7 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
   for(int i = 0; i < filterCount; ++i)
   {
     ComparisonInput_t comp;
-    comp.arrayName = fieldNames[i].toStdString();
+    comp.arrayName = fieldNames[i]();
     comp.compOperator = fieldOperators[i];
     comp.compValue = fieldValues[i];
     comps.push_back(comp);
@@ -196,7 +196,7 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
   //bool ok = false;
   for(int i = 0; i < count; ++i)
   {
-    arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);
+    arrayNames[i] = (comparisons[i].arrayName);
     compOperators[i] = comparisons[i].compOperator;
     compValues[i] = comparisons[i].compValue;
   }

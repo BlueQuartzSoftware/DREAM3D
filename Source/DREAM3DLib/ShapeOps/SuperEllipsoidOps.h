@@ -37,7 +37,7 @@
 #define SUPERELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
   /*
@@ -46,9 +46,9 @@
   class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(SuperEllipsoidOps)
-      MXA_TYPE_MACRO(SuperEllipsoidOps)
-      MXA_STATIC_NEW_MACRO(SuperEllipsoidOps)
+      DREAM3D_SHARED_POINTERS(SuperEllipsoidOps)
+      DREAM3D_TYPE_MACRO(SuperEllipsoidOps)
+      DREAM3D_STATIC_NEW_MACRO(SuperEllipsoidOps)
 
       virtual ~SuperEllipsoidOps();
 

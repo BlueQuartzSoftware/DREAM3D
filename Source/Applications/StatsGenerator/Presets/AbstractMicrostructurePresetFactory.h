@@ -36,12 +36,11 @@
 #ifndef ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
 #define ABSTRACTMICROSTRUCTUREPRESETFACTORY_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include <MXA/Common/MXASetGetMacros.h>
-
 #include "AbstractMicrostructurePreset.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
@@ -63,9 +62,9 @@
 #define DECLARE_FACTORY_CLASS(name, m_msgType, display)\
   class name : public AbstractMicrostructurePresetFactory {\
     public:\
-    MXA_SHARED_POINTERS(name)\
-    MXA_TYPE_MACRO(name)\
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
+    DREAM3D_SHARED_POINTERS(name)\
+    DREAM3D_TYPE_MACRO(name)\
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePresetFactory, name)\
     virtual ~name(){}\
     AbstractMicrostructurePreset::Pointer newMicrostructurePreset() {\
         return m_msgType::New();\
@@ -99,8 +98,8 @@
 class AbstractMicrostructurePresetFactory
 {
   public:
-    MXA_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
-    MXA_TYPE_MACRO(AbstractMicrostructurePresetFactory)
+    DREAM3D_SHARED_POINTERS(AbstractMicrostructurePresetFactory)
+    DREAM3D_TYPE_MACRO(AbstractMicrostructurePresetFactory)
 
     typedef QVector<Pointer>                        Collection;
     virtual ~AbstractMicrostructurePresetFactory(){}

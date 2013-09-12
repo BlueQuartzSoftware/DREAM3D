@@ -44,10 +44,7 @@
 
 
 #include <vector>
-#include <string>
-
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 

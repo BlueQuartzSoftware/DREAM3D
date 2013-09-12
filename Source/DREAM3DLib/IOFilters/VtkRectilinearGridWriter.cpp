@@ -38,9 +38,6 @@
 #include "VtkRectilinearGridWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
 
@@ -344,9 +341,9 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
   }
 
   // Make sure what we are checking is an actual file name and not a directory
-  if (MXAFileInfo::isDirectory(m_OutputFile) == false)
+  if (QFileInfo::isDirectory(m_OutputFile) == false)
   {
-    QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+    QString parentPath = QFileInfo::parentPath(m_OutputFile);
     if (MXADir::exists(parentPath) == false)
     {
       ss.str("");
@@ -461,7 +458,7 @@ void VtkRectilinearGridWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  QString parentPath = QFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
       
@@ -636,7 +633,7 @@ int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r,
 {
   int err = 0;
   FILE* f = NULL;
-  f = fopen(file.c_str(), "wb");
+  f = fopen(file.toLatin1().data(), "wb");
   if(NULL == f)
   {
     return -1;

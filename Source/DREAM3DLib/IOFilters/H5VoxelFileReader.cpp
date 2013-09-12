@@ -38,8 +38,6 @@
 
 #include <limits>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -121,7 +119,7 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);

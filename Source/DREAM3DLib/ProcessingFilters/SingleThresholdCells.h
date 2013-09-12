@@ -37,7 +37,7 @@
 #ifndef _SingleThresholdCells_H_
 #define _SingleThresholdCells_H_
 
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

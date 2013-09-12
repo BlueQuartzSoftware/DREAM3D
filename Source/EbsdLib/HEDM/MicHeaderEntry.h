@@ -77,7 +77,7 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
     }
 
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value << std::endl;
+      out << m_key() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -124,7 +124,7 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
     }
 
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
+      out << m_key() << "  " << m_value() << std::endl;
     }
 
     QString getValue() { return m_value; }

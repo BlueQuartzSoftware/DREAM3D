@@ -388,7 +388,7 @@ void FindTwinBoundarySchmidFactors::execute()
 
 
   std::ofstream outFile;
-  outFile.open(m_TwinBoundarySchmidFactorsFile.c_str(), std::ios_base::binary);
+  outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);
 
   outFile << "Grain1	Grain2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << "\n";
   for (size_t i = 0; i < numTriangles; i++)

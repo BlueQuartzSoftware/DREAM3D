@@ -37,8 +37,6 @@
 #ifndef ORTHORHOMBICOPS_H_
 #define ORTHORHOMBICOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -56,9 +54,9 @@
 class DREAM3DLib_EXPORT OrthoRhombicOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(OrthoRhombicOps)
-    MXA_TYPE_MACRO_SUPER(OrthoRhombicOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(OrthoRhombicOps)
+    DREAM3D_SHARED_POINTERS(OrthoRhombicOps)
+    DREAM3D_TYPE_MACRO_SUPER(OrthoRhombicOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(OrthoRhombicOps)
 
 
     OrthoRhombicOps();

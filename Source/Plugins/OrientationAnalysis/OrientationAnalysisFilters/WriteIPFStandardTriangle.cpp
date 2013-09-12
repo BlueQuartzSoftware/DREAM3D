@@ -38,7 +38,7 @@
 #include <stdio.h>
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -53,11 +53,6 @@
 
 #include "QtSupport/PoleFigureImageUtilities.h"
 
-
-#include "MXA/MXA.h"
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -189,7 +184,7 @@ void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t f
     addErrorMessage(getHumanLabel(), "Output File is Not set correctly", getErrorCondition());
   }
 
-  if (MXAFileInfo::isDirectory(m_OutputFile) == true)
+  if (QFileInfo::isDirectory(m_OutputFile) == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "The path for the output file is a directory. Please specify an output file and not a directory.", getErrorCondition());
@@ -346,14 +341,14 @@ void WriteIPFStandardTriangle::writeImage( QImage &image)
   ss << "Writing Image " << m_OutputFile;
   notifyStatusMessage(ss.str());
 
-  QFileInfo fi(QString::fromStdString(m_OutputFile));
+  QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
   if (parent.exists() == false)
   {
     parent.mkpath(fi.absolutePath());
   }
 
-  bool saved = image.save(QString::fromStdString(m_OutputFile));
+  bool saved = image.save((m_OutputFile));
   if(!saved)
   {
     setErrorCondition(-90011);

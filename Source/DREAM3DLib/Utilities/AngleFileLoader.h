@@ -38,7 +38,7 @@
 
 
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 

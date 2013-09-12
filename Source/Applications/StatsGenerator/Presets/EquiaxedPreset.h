@@ -39,14 +39,12 @@
 
 
 //-- C++ includes
-#include <string>
-
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+#include <QtCore/QString>
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 /**
  * @class EquiaxedPreset EquiaxedPreset.h StatsGenerator/Presets/EquiaxedPreset.h
@@ -59,8 +57,8 @@
 class EquiaxedPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(EquiaxedPreset)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset)
+    DREAM3D_SHARED_POINTERS(EquiaxedPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, EquiaxedPreset)
     virtual ~EquiaxedPreset();
 
     void initializeOmega3TableModel(StatsGenPlotWidget* plot, QVector<float> binNumbers);

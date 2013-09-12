@@ -36,9 +36,6 @@
 #include "VertexDataContainerWriter.h"
 
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
-
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
@@ -168,7 +165,7 @@ void VertexDataContainerWriter::execute()
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.c_str(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), m_HdfFileId);
   if (err < 0)
   {
     ss.str("");
@@ -177,7 +174,7 @@ void VertexDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.c_str(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -267,7 +264,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
@@ -325,7 +322,7 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
 
   out << "        " << hdfFileName << ":/VertexDataContainer/" << groupName << "/" << array->GetName() << "\n";
   out << "      </DataItem>" << "\n";
@@ -486,7 +483,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
+  hdfFileName = QFileInfo::filename(hdfFileName);
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 

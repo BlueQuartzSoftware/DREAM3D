@@ -333,7 +333,7 @@ void MovingFiniteElementSmoothing::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
-  DREAM3D::Mesh::VertListPointer_t floatNodesPtr = m->getVertices();
+  VertexArray::Pointer floatNodesPtr = m->getVertices();
   if(NULL == floatNodesPtr.get())
   {
     setErrorCondition(-555);
@@ -341,7 +341,7 @@ void MovingFiniteElementSmoothing::execute()
     return;
   }
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = m->getFaces();
+  FaceArray::Pointer trianglesPtr = m->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -351,9 +351,9 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  DREAM3D::Mesh::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  VertexArray::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->GetNumberOfTuples();
@@ -382,8 +382,8 @@ void MovingFiniteElementSmoothing::execute()
 //  QVector<QString> data;
 #if 0
   // read in nodes/triangles
-  std::ifstream input1(nodesFile.c_str());
-  std::ifstream input2(triangleFile.c_str());
+  std::ifstream input1(nodesFile.toLatin1().data());
+  std::ifstream input2(triangleFile.toLatin1().data());
   std::ofstream velocities;
 #endif
   QString outputNodesFile("/tmp/outputNodesFile.txt");
@@ -452,7 +452,7 @@ void MovingFiniteElementSmoothing::execute()
     //  Read the edges, if we are going to smooth them explicitly
 #if 0
     if (isVerbose) qDebug() << "reading edges " << "\n";
-    std::ifstream input3(edgesFile.c_str());
+    std::ifstream input3(edgesFile.toLatin1().data());
     if (input3.is_open() == false)
     {
       if (isVerbose)
@@ -573,7 +573,7 @@ void MovingFiniteElementSmoothing::execute()
   if(restartFile.empty() == false)
   {
     //  we have a requested re-start - node positions will be read from the INP file
-    std::ifstream restartInput(restartFile.c_str());
+    std::ifstream restartInput(restartFile.toLatin1().data());
 
     restartInput >> nnodRe >> nnTriRe;
     if (isVerbose) qDebug() << "Check number of nodes, triangles in .inp: " << nnodRe << ", " << nnTriRe << "\n";
@@ -783,7 +783,7 @@ void MovingFiniteElementSmoothing::execute()
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
-      DREAM3D::Mesh::Face_t& rtri = triangles[t];
+      FaceArray::Face_t& rtri = triangles[t];
       MFE::Vector<double> n(3);
       n = TriangleFunctionsType::normal(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]);
       A = TriangleFunctionsType::area(nodes[rtri.verts[0]], nodes[rtri.verts[1]], nodes[rtri.verts[2]]); //  current Area
@@ -1000,7 +1000,7 @@ void MovingFiniteElementSmoothing::execute()
     {
       // Open the outputfile
       std::ofstream inpfile;
-      inpfile.open(iterFileName.c_str());
+      inpfile.open(iterFileName.toLatin1().data());
       if(!inpfile)
       {
         if(isVerbose) qDebug() << "Failed to open: " << iterFileName << "\n";
@@ -1049,7 +1049,7 @@ void MovingFiniteElementSmoothing::execute()
 
 #if 0
   std::ofstream inpfile;
-  inpfile.open(outputNodesFile.c_str());
+  inpfile.open(outputNodesFile.toLatin1().data());
   if(!inpfile)
   {
     if(isVerbose) qDebug() << "Failed to open nodes output: " << outputNodesFile << "\n";

@@ -37,7 +37,7 @@
 #ifndef H5VOXELFILEREADER_H_
 #define H5VOXELFileREADER_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

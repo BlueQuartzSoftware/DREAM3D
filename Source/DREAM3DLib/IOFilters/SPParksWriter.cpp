@@ -38,14 +38,10 @@
 
 #include <iostream>
 #include <fstream>
-//#include <string>
+//#include <QtCore/QString>
 #include <sstream>
 //#include <iomanip>
 //#include <map>
-
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -164,7 +160,7 @@ int SPParksWriter::writeHeader()
 
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().c_str(), std::ios_base::binary);
+  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
   if(!outfile)
   {
     qDebug() << "Failed to open: " << getOutputFile() << "\n";
@@ -223,7 +219,7 @@ int SPParksWriter::writeFile()
 
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().c_str(), std::ios_base::binary | std::ios_base::app);
+  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary | std::ios_base::app);
   if(!outfile)
   {
     qDebug() << "Failed to open: " << getOutputFile() << "\n";

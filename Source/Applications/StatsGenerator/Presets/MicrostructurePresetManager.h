@@ -37,8 +37,6 @@
 #ifndef MICROSTRUCTUREPRESETMANAGER_H_
 #define MICROSTRUCTUREPRESETMANAGER_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
-
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
 
@@ -57,8 +55,8 @@
 class MicrostructurePresetManager
 {
   public:
-    MXA_SHARED_POINTERS(MicrostructurePresetManager)
-    MXA_TYPE_MACRO(MicrostructurePresetManager)
+    DREAM3D_SHARED_POINTERS(MicrostructurePresetManager)
+    DREAM3D_TYPE_MACRO(MicrostructurePresetManager)
 
     virtual ~MicrostructurePresetManager();
 

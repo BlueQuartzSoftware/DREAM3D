@@ -88,7 +88,7 @@ building the MXADatModel DLL on windows.
 #if 0
 #if defined (_WIN32) || defined __CYGWIN__
 
-  #if defined (MXA_BUILT_AS_DYNAMIC_LIB)
+  #if defined (DREAM3D_BUILT_AS_DYNAMIC_LIB)
     #if defined(DREAM3DLib_EXPORTS)
       #define  DREAM3DLib_EXPORT __declspec(dllexport)
     #else
@@ -100,7 +100,7 @@ building the MXADatModel DLL on windows.
 #elif __GNUC__ >= 4
  #define FLOW_DLL __attribute__ ((visibility("default")))
  #define DLL_LOCAL  __attribute__ ((visibility("hidden")
-#else /* defined (_WIN32) && defined (MXA_BUILD_SHARED_LIBS)  */
+#else /* defined (_WIN32) && defined (DREAM3D_BUILD_SHARED_LIBS)  */
  #define DREAM3DLib_EXPORT
 #endif
 #endif

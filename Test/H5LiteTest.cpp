@@ -10,7 +10,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QFile>
 #include <QtCore/QtDebug>

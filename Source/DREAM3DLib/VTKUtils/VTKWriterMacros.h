@@ -86,7 +86,7 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, grain_indicies)\
-  fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
+  fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
@@ -96,7 +96,7 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName)  \
-  fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
+  fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
   int* gn = new int[totalPoints];\
@@ -117,7 +117,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, m_msgType, var, FORMAT)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -125,7 +125,7 @@
   }fprintf(f,"\n"); \
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, m_msgType, var)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
@@ -146,7 +146,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(ptr, name, m_msgType, var)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
@@ -164,7 +164,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, grain_indicies, FORMAT)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -172,7 +172,7 @@
   } fprintf(f,"\n");
 
 #define WRITE_VTK_SCALARS_FROM_FIELD_BINARY(ptr, name, m_msgType, var, grain_indicies)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\

@@ -71,7 +71,7 @@ void writeVtkFile(FloatArrayType* xyz, const QString &filename)
 {
   
   FILE* f = NULL;
-  f = fopen(filename.c_str(), "wb");
+  f = fopen(filename.toLatin1().data(), "wb");
   if(NULL == f)
   {
 

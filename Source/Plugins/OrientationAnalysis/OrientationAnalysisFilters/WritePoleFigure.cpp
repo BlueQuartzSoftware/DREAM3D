@@ -38,7 +38,7 @@
 #include <stdio.h>
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
@@ -53,11 +53,6 @@
 
 #include "QtSupport/PoleFigureImageUtilities.h"
 
-
-#include "MXA/MXA.h"
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -319,7 +314,7 @@ void WritePoleFigure::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputPath());
+  QString parentPath = QFileInfo::parentPath(getOutputPath());
   if(!MXADir::mkdir(parentPath, true))
   {
     
@@ -464,7 +459,7 @@ void WritePoleFigure::execute()
 // -----------------------------------------------------------------------------
 QString WritePoleFigure::generateVtkPath( QString label)
 {
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+  QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + label;
 
   path.append(".vtk");
 
@@ -519,7 +514,7 @@ void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dim
   {
     setErrorCondition(-90011);
     ss.str("");
-    ss << "The Pole Figure image file '" << filename.toStdString() << "' was not saved.";
+    ss << "The Pole Figure image file '" << filename() << "' was not saved.";
     notifyErrorMessage(ss.str(), getErrorCondition());
   }
 }
@@ -530,7 +525,7 @@ void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dim
 // -----------------------------------------------------------------------------
 QString WritePoleFigure::generateImagePath( QString label)
 {
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
+  QString path = (m_OutputPath) + QDir::separator() + (m_ImagePrefix) + label;
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");

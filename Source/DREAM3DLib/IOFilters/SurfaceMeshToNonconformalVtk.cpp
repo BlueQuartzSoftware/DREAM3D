@@ -37,10 +37,6 @@
 #include "SurfaceMeshToNonconformalVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -190,7 +186,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   setErrorCondition(0);
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = m->getVertices();
+  VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
@@ -215,7 +211,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
   if(!MXADir::mkdir(parentPath, true))
   {
     ss.str("");
@@ -228,7 +224,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
-  vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
+  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     ss.str("");
@@ -269,7 +265,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   // Write the POINTS data (Vertex)
   for (int i = 0; i < nNodes; i++)
   {
-    DREAM3D::Mesh::Vert_t& n = nodes[i]; // Get the current Node
+    VertexArray::Vert_t& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0)
     {
       pos[0] = static_cast<float>(n.pos[0]);
@@ -292,7 +288,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Write the triangle indices into the vtk File
   notifyStatusMessage("Writing Faces ....");
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(m->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
 
   int tData[4];
 
@@ -426,7 +422,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "SCALARS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     for(int i = 0; i < nT; ++i)
     {
@@ -441,7 +437,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
       {
         ss.str("");
         ss << m[i] << " ";
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -464,7 +460,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.c_str(), dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < nT; ++i)
     {
       T s0 = 0x00;
@@ -486,7 +482,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       {
         ss.str("");
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -507,7 +503,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
 
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -596,7 +592,7 @@ template<typename SurfaceDataContainer, typename T>
 void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, const QString &dataType,
                          bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
 
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -612,7 +608,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     fprintf(vtkFile, "LOOKUP_TABLE default\n");
     // Loop over all the grains
     for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
@@ -642,7 +638,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
         {
           ss.str("");
           ss << s0;
-          fprintf(vtkFile, "%s\n", ss.str().c_str());
+          fprintf(vtkFile, "%s\n", ss.str().toLatin1().data());
         }
       }
 
@@ -665,7 +661,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
                          bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
 
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -680,7 +676,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
 
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "NORMALS %s %s\n", dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "NORMALS %s %s\n", dataName.toLatin1().data(), dataType.toLatin1().data());
     // Loop over all the grains
     for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
@@ -720,7 +716,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss.str("");
           ss << s0 << " " << s1 << " " << s2;
-          fprintf(vtkFile, "%s\n", ss.str().c_str());
+          fprintf(vtkFile, "%s\n", ss.str().toLatin1().data());
         }
       }
 
@@ -744,7 +740,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
                          bool writeBinaryData, const QString &vtkAttributeType,
                          FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
 
   int triangleCount = triangles.GetNumberOfTuples();
 
@@ -754,7 +750,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
     fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.c_str(), dataName.c_str(), dataType.c_str());
+    fprintf(vtkFile, "%s %s %s\n", vtkAttributeType.toLatin1().data(), dataName.toLatin1().data(), dataType.toLatin1().data());
     for(int i = 0; i < triangleCount; ++i)
     {
       T s0 = 0x00;
@@ -778,7 +774,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
         ss.str("");
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
 
-        fprintf(vtkFile, "%s ", ss.str().c_str());
+        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -796,7 +792,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     return -1;
   }
   // Write the triangle region ids
-  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
+  StructArray<FaceArray::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   if (NULL != flPtr.get())
   {

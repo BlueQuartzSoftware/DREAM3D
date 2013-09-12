@@ -37,7 +37,7 @@
 #ifndef _DXREADER_H_
 #define _DXREADER_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 #include <fstream>
 

@@ -38,10 +38,6 @@
 #include <stdio.h>
 
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Common/IO/MXAFileReader64.h"
-
 namespace Detail
 {
   enum NumType {

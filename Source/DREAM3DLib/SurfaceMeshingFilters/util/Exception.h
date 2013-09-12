@@ -13,7 +13,7 @@
 #ifndef H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
 #define H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
 
-#include <string>
+#include <QtCore/QString>
 
 namespace m3c_basics { namespace exceptions {
 

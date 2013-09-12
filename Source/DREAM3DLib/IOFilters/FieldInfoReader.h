@@ -38,7 +38,7 @@
 #ifndef _FieldInfoReader_h_
 #define _FieldInfoReader_h_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"

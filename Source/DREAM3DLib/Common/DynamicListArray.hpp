@@ -36,7 +36,7 @@
 #ifndef _DynamicListArray_H_
 #define _DynamicListArray_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
 #include <boost/shared_array.hpp>

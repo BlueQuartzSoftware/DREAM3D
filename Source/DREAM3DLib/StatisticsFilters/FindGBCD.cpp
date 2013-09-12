@@ -460,9 +460,9 @@ void FindGBCD::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = sm->getVertices();
+  VertexArray::Pointer nodesPtr = sm->getVertices();
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

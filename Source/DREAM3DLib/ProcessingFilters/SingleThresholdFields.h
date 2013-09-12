@@ -37,7 +37,7 @@
 #ifndef _SingleThresholdFields_H_
 #define _SingleThresholdFields_H_
 
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"

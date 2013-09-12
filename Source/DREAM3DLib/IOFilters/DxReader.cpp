@@ -38,8 +38,6 @@
 #include <iostream>
 #include <fstream>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -146,7 +144,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -162,7 +160,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     m_InStream.close();
   }
 // We need to read the header of the input file to get the dimensions
-  m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
+  m_InStream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if(!m_InStream)
   {
     ss.clear();
@@ -201,7 +199,7 @@ void DxReader::execute()
   
   int err = 0;
 
-  m_InStream.open(getInputFile().c_str(), std::ios_base::binary);
+  m_InStream.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if(!m_InStream)
   {
     ss.clear();
@@ -282,9 +280,9 @@ int DxReader::readHeader()
   if(pos1 != 0)
   {
     error = 0;
-    error += sscanf(tokens[pos1 + 1].c_str(), "%d", &nz);
-    error += sscanf(tokens[pos1 + 2].c_str(), "%d", &ny);
-    error += sscanf(tokens[pos1 + 3].c_str(), "%d", &nx);
+    error += sscanf(tokens[pos1 + 1].toLatin1().data(), "%d", &nz);
+    error += sscanf(tokens[pos1 + 2].toLatin1().data(), "%d", &ny);
+    error += sscanf(tokens[pos1 + 3].toLatin1().data(), "%d", &nx);
     tokens.clear();
     // The dimensions listed in the DX file are always one greater
     // than the actual dimensions
@@ -340,7 +338,7 @@ int DxReader::readHeader()
   if(pos1 != 0)
   {
     error = 0;
-    error += sscanf(tokens[pos1 + 1].c_str(), "%d", &points);
+    error += sscanf(tokens[pos1 + 1].toLatin1().data(), "%d", &points);
     tokens.clear();
   }
   m->setDimensions(nx, ny, nz);
@@ -412,7 +410,7 @@ int DxReader::readFile()
     {
       for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
       {
-        error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
+        error += sscanf(tokens[in_spins].toLatin1().data(), "%d", &spin);
         m_GrainIds[index] =  spin;
         ++index;
       }

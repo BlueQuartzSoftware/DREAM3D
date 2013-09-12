@@ -229,7 +229,7 @@ int SGBetaTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 bool SGBetaTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "SGBetaTableModel::setData " << value.toString().toStdString() << "\n";
+  // qDebug() << "SGBetaTableModel::setData " << value.toString()() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

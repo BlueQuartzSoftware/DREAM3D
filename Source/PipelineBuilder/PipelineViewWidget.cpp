@@ -237,7 +237,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
 
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName());
   if (NULL == wf) { return NULL;}
   QFilterWidget* w = wf->createWidget();
   if (index < 0) // If the programmer wants to add it to the end of the list
@@ -290,7 +290,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
   QList<QString> theList = dataContainer->get##type##ArrayNameList();\
   QList<QString> list;\
   for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-    list << QString::fromStdString(*iter);\
+    list << (*iter);\
   }\
   PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
   if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
@@ -393,8 +393,8 @@ void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStr
     #if 0
       errorTableWidget->insertRow(rc);
 
-      QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
-      QString errorDescription = QString::fromStdString(errorStream.at(i).getMessageText());
+      QString filterName = (errorStream.at(i).getFilterName());
+      QString errorDescription = (errorStream.at(i).getMessageText());
       int errorCode = errorStream.at(i).getMessageCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
@@ -495,7 +495,7 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
   PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
   if (o != NULL)
   {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName().toStdString() << "\n";
+    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName()() << "\n";
   }
 #endif
 }

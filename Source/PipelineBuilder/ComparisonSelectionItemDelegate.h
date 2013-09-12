@@ -95,9 +95,9 @@ class ComparisonSelectionItemDelegate : public QStyledItemDelegate
       QComboBox* operatorCombo = NULL;
 
       QStringList operators;
-      operators << QString::fromStdString(DREAM3D::Comparison::Strings::LessThan)
-                << QString::fromStdString(DREAM3D::Comparison::Strings::GreaterThan)
-                << QString::fromStdString(DREAM3D::Comparison::Strings::Equal);
+      operators << (DREAM3D::Comparison::Strings::LessThan)
+                << (DREAM3D::Comparison::Strings::GreaterThan)
+                << (DREAM3D::Comparison::Strings::Equal);
 
       //QComboBox* phaseCombo = NULL;
       QStringList phases;

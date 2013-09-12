@@ -37,7 +37,7 @@
 #ifndef _AdjustVolumeOrigin_H_
 #define _AdjustVolumeOrigin_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"

@@ -37,7 +37,7 @@
 #ifndef VTKRECTILINEARGRIDWRITER_H_
 #define VTKRECTILINEARGRIDWRITER_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -205,7 +205,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     {
       int err = 0;
       FILE* f = NULL;
-      f = fopen(filename.c_str(), "wb");
+      f = fopen(filename.toLatin1().data(), "wb");
       if(NULL == f)
       {
         qDebug() << "Could not open file for writing" << "\n";
@@ -232,9 +232,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int numComp = data->GetNumberOfComponents();
       fprintf(f, "CELL_DATA %d\n", (int)total);
 
-      fprintf(f, "SCALARS %s %s %d\n", data->GetName().c_str(), dataType.c_str(),numComp);
+      fprintf(f, "SCALARS %s %s %d\n", data->GetName().toLatin1().data(), dataType.toLatin1().data(),numComp);
       fprintf(f, "LOOKUP_TABLE default\n");
-#ifdef MXA_LITTLE_ENDIAN
+#ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
 #endif
       int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
@@ -244,7 +244,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         qDebug() << "  FileName: " << filename << "\n";
         qDebug() << "  Dataset Name: " << data->GetName() << "\n";
       }
-#ifdef MXA_LITTLE_ENDIAN
+#ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
 #endif
       // Close the file

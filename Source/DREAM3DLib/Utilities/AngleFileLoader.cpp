@@ -39,8 +39,6 @@
 #include <stdio.h>
 #include <string.h>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-
 
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
@@ -111,7 +109,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   }
 
   // Make sure the file exists on disk
-  if (MXAFileInfo::exists(m_InputFile) == false)
+  if (QFileInfo::exists(m_InputFile) == false)
   {
     setErrorMessage("Input File does not exist at path");
     setErrorCode(-2);
@@ -136,7 +134,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
   char buf[kBufferSize];
 
   // Open the file and read the first line
-  std::ifstream reader(getInputFile().c_str());
+  std::ifstream reader(getInputFile().toLatin1().data());
   ::memset(buf, 0, kBufferSize);
   reader.getline(buf, kBufferSize);
   QString s(buf);

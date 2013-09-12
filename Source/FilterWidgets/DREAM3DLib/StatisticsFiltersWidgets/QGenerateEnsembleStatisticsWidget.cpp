@@ -55,10 +55,10 @@ QGenerateEnsembleStatisticsWidget::QGenerateEnsembleStatisticsWidget(QWidget* pa
   this->setupUi(this);
 
   GenerateEnsembleStatistics::Pointer filter = GenerateEnsembleStatistics::New();
-  m_FilterGroup = QString::fromStdString(filter->getGroupName());
+  m_FilterGroup = (filter->getGroupName());
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -347,7 +347,7 @@ void QGenerateEnsembleStatisticsWidget::on_addPhaseType_clicked()
   QComboBox* cb = new QComboBox(phaseTypeTableWidget);
   for (size_t i = 0; i < phaseTypeStrings.size() - 1; ++i)
   {
-    cb->addItem(QString::fromStdString(phaseTypeStrings[i]), phaseTypeEnums[i]);
+    cb->addItem((phaseTypeStrings[i]), phaseTypeEnums[i]);
     cb->setItemData(i, phaseTypeEnums[i], Qt::UserRole);
   }
   cb->setMinimumHeight(25);

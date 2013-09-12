@@ -50,14 +50,14 @@ using namespace H5Support_NAMESPACE;
 // -----------------------------------------------------------------------------
 hid_t QH5Utilities::createFile(const QString &filename)
 {
-  return H5Utilities::createFile(filename.toStdString());
+  return H5Utilities::createFile(filename());
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 hid_t QH5Utilities::openFile(const QString &filename, bool readOnly)
 {
-  return H5Utilities::openFile(filename.toStdString(), readOnly);
+  return H5Utilities::openFile(filename(), readOnly);
 }
 
 // -----------------------------------------------------------------------------
@@ -73,7 +73,7 @@ herr_t QH5Utilities::closeFile(hid_t &fileId)
 // -----------------------------------------------------------------------------
 QString QH5Utilities::getObjectPath(hid_t loc_id, bool trim)
 {
-  return QString::fromStdString(H5Utilities::getObjectPath(loc_id, trim));
+  return (H5Utilities::getObjectPath(loc_id, trim));
 }
 
 
@@ -83,7 +83,7 @@ QString QH5Utilities::getObjectPath(hid_t loc_id, bool trim)
 // -----------------------------------------------------------------------------
 herr_t QH5Utilities::getObjectType(hid_t objId, const QString &objName, int32_t *objType)
 {
-  return H5Utilities::getObjectType(objId, objName.toStdString(), objType);
+  return H5Utilities::getObjectType(objId, objName(), objType);
 }
 
 
@@ -92,7 +92,7 @@ herr_t QH5Utilities::getObjectType(hid_t objId, const QString &objName, int32_t 
 //  different open and close methods for different types of objects
 hid_t QH5Utilities::openHDF5Object(hid_t loc_id, const QString &objName)
 {
-  return H5Utilities::openHDF5Object(loc_id, objName.toStdString());
+  return H5Utilities::openHDF5Object(loc_id, objName());
 }
 
 // -----------------------------------------------------------------------------
@@ -116,7 +116,7 @@ herr_t QH5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<QSt
   names.clear();
   for(std::list<std::string>::iterator name = sNames.begin(); name != sNames.end(); ++name)
   {
-    names.push_back( QString::fromStdString(*name));
+    names.push_back( (*name));
   }
 
   return err;
@@ -128,7 +128,7 @@ herr_t QH5Utilities::getGroupObjects(hid_t loc_id, int32_t typeFilter, QList<QSt
 // -----------------------------------------------------------------------------
 hid_t QH5Utilities::createGroup(hid_t loc_id, const QString &group)
 {
-  return H5Utilities::createGroup(loc_id, group.toStdString());
+  return H5Utilities::createGroup(loc_id, group());
 }
 
 // -----------------------------------------------------------------------------
@@ -136,7 +136,7 @@ hid_t QH5Utilities::createGroup(hid_t loc_id, const QString &group)
 // -----------------------------------------------------------------------------
 int32_t QH5Utilities::createGroupsForDataset(const QString &datasetPath, hid_t parent)
 {
-  return H5Utilities::createGroupsForDataset(datasetPath.toStdString(), parent);
+  return H5Utilities::createGroupsForDataset(datasetPath(), parent);
 }
 
 
@@ -145,7 +145,7 @@ int32_t QH5Utilities::createGroupsForDataset(const QString &datasetPath, hid_t p
 // -----------------------------------------------------------------------------
 int32_t QH5Utilities::createGroupsFromPath(const QString &pathToCheck, hid_t parent)
 {
-  return H5Utilities::createGroupsFromPath(pathToCheck.toStdString(), parent);
+  return H5Utilities::createGroupsFromPath(pathToCheck(), parent);
 }
 
 // -----------------------------------------------------------------------------
@@ -153,7 +153,7 @@ int32_t QH5Utilities::createGroupsFromPath(const QString &pathToCheck, hid_t par
 // -----------------------------------------------------------------------------
 QString QH5Utilities::extractObjectName(const QString &path)
 {
-  return QString::fromStdString(H5Utilities::extractObjectName(path.toStdString()));
+  return (H5Utilities::extractObjectName(path()));
 }
 
 
@@ -164,7 +164,7 @@ bool QH5Utilities::probeForAttribute(hid_t loc_id,
                                      const QString &obj_name,
                                      const QString &attr_name)
 {
-  return H5Utilities::probeForAttribute(loc_id, obj_name.toStdString(), attr_name.toStdString());
+  return H5Utilities::probeForAttribute(loc_id, obj_name(), attr_name());
 }
 
 //--------------------------------------------------------------------//
@@ -179,7 +179,7 @@ herr_t QH5Utilities::getAllAttributeNames(hid_t obj_id,
   herr_t err = H5Utilities::getAllAttributeNames(obj_id, sResults);
   for(std::list<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
   {
-    names.push_back(QString::fromStdString(*iter));
+    names.push_back((*iter));
   }
   return err;
 }
@@ -193,10 +193,10 @@ herr_t QH5Utilities::getAllAttributeNames(hid_t loc_id,
 {
   names.clear();
   std::list<std::string> sResults;
-  herr_t err = H5Utilities::getAllAttributeNames(loc_id, obj_name.toStdString(), sResults);
+  herr_t err = H5Utilities::getAllAttributeNames(loc_id, obj_name(), sResults);
   for(std::list<std::string>::iterator iter = sResults.begin(); iter != sResults.end(); ++iter)
   {
-    names.push_back(QString::fromStdString(*iter));
+    names.push_back((*iter));
   }
   return err;
 }
@@ -206,7 +206,7 @@ herr_t QH5Utilities::getAllAttributeNames(hid_t loc_id,
 // -----------------------------------------------------------------------------
 QString QH5Utilities::HDFClassTypeAsStr(hid_t class_type)
 {
-  return QString::fromStdString(H5Utilities::HDFClassTypeAsStr(class_type));
+  return (H5Utilities::HDFClassTypeAsStr(class_type));
 }
 
 // -----------------------------------------------------------------------------
@@ -215,7 +215,7 @@ QString QH5Utilities::HDFClassTypeAsStr(hid_t class_type)
 void QH5Utilities::printHDFClassType(H5T_class_t class_type)
 {
   std::string hType = H5Utilities::HDFClassTypeAsStr(class_type);
-  qDebug() << QString::fromStdString(hType);
+  qDebug() << (hType);
 }
 
 
@@ -226,7 +226,7 @@ herr_t QH5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, QString &name)
 {
   std::string sName;
   herr_t err = H5Utilities::objectNameAtIndex(fileId, idx, sName);
-  name = QString::fromStdString(sName);
+  name = (sName);
   return err;
 }
 
@@ -235,7 +235,7 @@ herr_t QH5Utilities::objectNameAtIndex(hid_t fileId, int32_t idx, QString &name)
 // -----------------------------------------------------------------------------
 bool QH5Utilities::isGroup(hid_t nodeId, const QString &objName)
 {
-  return H5Utilities::isGroup(nodeId, objName.toStdString());
+  return H5Utilities::isGroup(nodeId, objName());
 }
 
 

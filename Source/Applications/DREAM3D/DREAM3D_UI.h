@@ -38,8 +38,6 @@
 #ifndef _DREAM3D_UI_H_
 #define _DREAM3D_UI_H_
 
-#include <MXA/Common/MXASetGetMacros.h>
-
 
 //-- Qt Includes
 #include <QtCore/QObject>

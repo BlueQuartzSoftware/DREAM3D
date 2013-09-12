@@ -77,7 +77,7 @@ void TextureDialog::setupGui()
   // Now push the list into the List View
   for (TexturePreset::Container::iterator iter = m_Presets.begin(); iter != m_Presets.end(); ++iter)
   {
-    presetListWidget->addItem(QString::fromStdString((*iter)->getName()));
+    presetListWidget->addItem(((*iter)->getName()));
   }
 
   {

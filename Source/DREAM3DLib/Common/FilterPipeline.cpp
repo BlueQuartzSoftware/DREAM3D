@@ -30,10 +30,6 @@
 
 #include "FilterPipeline.h"
 
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
-
 
 // -----------------------------------------------------------------------------
 //

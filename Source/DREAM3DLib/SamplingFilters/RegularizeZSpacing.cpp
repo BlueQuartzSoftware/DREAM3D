@@ -129,7 +129,7 @@ void RegularizeZSpacing::preflight()
   VolumeDataContainer* m = getVolumeDataContainer();
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
   for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
@@ -170,7 +170,7 @@ void RegularizeZSpacing::execute()
   m->getDimensions(dims);
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
   QVector<float> zboundvalues;

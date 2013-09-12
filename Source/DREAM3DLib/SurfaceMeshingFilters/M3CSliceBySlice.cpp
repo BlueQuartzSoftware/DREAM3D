@@ -85,12 +85,6 @@
 #include <map>
 
 
-#include "MXA/Common/LogTime.h"
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-
-
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/PipelineMessage.h"
@@ -227,7 +221,7 @@ class GrainChecker
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, DREAM3D::Mesh::Vert_t* cVertex)
+    void addData(int numTriangles, int ctid, StructArray<SurfaceMesh::M3C::Face>::Pointer cTriangle, VertexArray::Vert_t* cVertex)
     {
 #if 0
       int n1, n2, n3;
@@ -406,7 +400,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
   else {
     DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    FaceArray::Pointer triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
 
     int8_t* m_SurfaceMeshNodeType;
@@ -945,7 +939,7 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   float yRes = res[1];
   float zRes = res[2];
 
-  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
   int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
@@ -2513,7 +2507,7 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
   int locale;
 
   SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->GetPointer(0);
-  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
   int32_t* voxels = voxelsPtr->GetPointer(0);
   SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
 
@@ -2780,7 +2774,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(nodesFile.c_str(), "wb");
+    f = fopen(nodesFile.toLatin1().data(), "wb");
     if (NULL == f)
     {
       return -1;
@@ -2789,7 +2783,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(nodesFile.c_str(), "ab");
+    f = fopen(nodesFile.toLatin1().data(), "ab");
     if (NULL == f)
     {
       return -1;
@@ -2798,7 +2792,7 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
   int total = (7 * 2 * NSP);
   int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
   int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
-  DREAM3D::Mesh::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
 
   for (int k = 0; k < total; k++)
   {
@@ -2861,7 +2855,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   // Create a new file if this is our first slice
   if (zID == 0)
   {
-    f = fopen(trianglesFile.c_str(), "wb");
+    f = fopen(trianglesFile.toLatin1().data(), "wb");
     if (NULL == f)
     {
       return -1;
@@ -2873,7 +2867,7 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
   // Append to existing file if we are on z>0 slice
   if (zID > 0)
   {
-    f = fopen(trianglesFile.c_str(), "ab");
+    f = fopen(trianglesFile.toLatin1().data(), "ab");
     if (NULL == f)
     {
       return -1;

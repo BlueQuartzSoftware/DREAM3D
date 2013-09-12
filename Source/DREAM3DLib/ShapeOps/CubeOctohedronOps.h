@@ -38,7 +38,7 @@
 #define CUBOCTOHEDRONOPS_H_
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 
@@ -48,9 +48,9 @@
   class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(CubeOctohedronOps)
-      MXA_TYPE_MACRO(CubeOctohedronOps)
-      MXA_STATIC_NEW_MACRO(CubeOctohedronOps)
+      DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
+      DREAM3D_TYPE_MACRO(CubeOctohedronOps)
+      DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
 
       virtual ~CubeOctohedronOps();
 

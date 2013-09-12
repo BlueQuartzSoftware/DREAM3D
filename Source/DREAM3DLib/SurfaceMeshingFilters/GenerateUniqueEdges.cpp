@@ -189,9 +189,9 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = sm->getFaces();
+  FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
-  DREAM3D::Mesh::Face_t* faces = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* faces = trianglesPtr->GetPointer(0);
 
   notifyStatusMessage("Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
@@ -202,7 +202,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   for(size_t t = 0; t < totalPoints; ++t)
   {
     //Get the Triangle
-    DREAM3D::Mesh::Face_t& tri = faces[t];
+    FaceArray::Face_t& tri = faces[t];
 
     //Edge 0
     int i = 0;
@@ -256,7 +256,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -266,7 +266,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   int ntri = trianglesPtr->GetNumberOfTuples();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
@@ -296,7 +296,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     if (getCancel() == true) { return; }
 
-    DREAM3D::Mesh::Face_t& tri = triangles[i];
+    FaceArray::Face_t& tri = triangles[i];
     // Edge 0
     edge.v0 = tri.verts[0];
     edge.v1 = tri.verts[1];

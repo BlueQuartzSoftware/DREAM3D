@@ -36,7 +36,6 @@
 
 #include "GoldfeatherReader.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -137,7 +136,7 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (QFileInfo::exists(getInputFile()) == false)
   {
     ss << "The input file does not exist.";
     setErrorCondition(-388);
@@ -145,8 +144,8 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
 
 
-  DREAM3D::Mesh::VertListPointer_t vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+  VertexArray::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  FaceArray::Pointer triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
@@ -212,7 +211,7 @@ void GoldfeatherReader::execute()
 
 
 
-  FILE* f = fopen(m_InputFile.c_str(), "r");
+  FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if (NULL == f)
   {
     setErrorCondition(-999);
@@ -227,9 +226,9 @@ void GoldfeatherReader::execute()
   dataCheck(false, nNodes, 1, 1);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Pointer nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
-  DREAM3D::Mesh::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::VertexData::SurfaceMeshNodeNormals);
@@ -290,9 +289,9 @@ void GoldfeatherReader::execute()
     return;
   }
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Pointer trianglesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
   trianglesPtr->initializeWithZeros();
-  DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   faceLabelPtr->initializeWithZeros();

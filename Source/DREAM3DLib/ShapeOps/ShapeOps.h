@@ -39,16 +39,16 @@
 
 #include <map>
 
-#include "MXA/Common/MXASetGetMacros.h"
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 class DREAM3DLib_EXPORT ShapeOps
 {
   public:
-    MXA_SHARED_POINTERS(ShapeOps)
-    MXA_TYPE_MACRO(ShapeOps)
-    MXA_STATIC_NEW_MACRO(ShapeOps)
+    DREAM3D_SHARED_POINTERS(ShapeOps)
+    DREAM3D_TYPE_MACRO(ShapeOps)
+    DREAM3D_STATIC_NEW_MACRO(ShapeOps)
 
     virtual ~ShapeOps();
 

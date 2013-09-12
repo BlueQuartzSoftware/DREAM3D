@@ -37,7 +37,7 @@
 #ifndef MATCHCRYSTALLOGRAPHY_H_
 #define MATCHCRYSTALLOGRAPHY_H_
 
-#include <string>
+#include <QtCore/QString>
 #include <numeric>
 #include <limits>
 

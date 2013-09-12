@@ -82,7 +82,7 @@ bool DREAM3DPluginFrame::verifyOutputPathParentExists(QString outFilePath, QLine
 // -----------------------------------------------------------------------------
 bool DREAM3DPluginFrame::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
+//  qDebug() << "outFilePath: " << outFilePath() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {

@@ -39,7 +39,7 @@
 #include <assert.h>
 
 // C++ Includes
-#include <string>
+#include <QtCore/QString>
 #include <iostream>
 
 // TCLAP Includes
@@ -52,10 +52,6 @@
 // Qt Includes
 #include "QtGui/QApplication"
 #include "QtCore/QSettings"
-
-
-// MXA Includes
-#include "MXA/Common/LogTime.h"
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -107,8 +103,8 @@ int main (int argc, char  *argv[])
 
   for(FilterWidgetManager::Collection::iterator iter = allFactories.begin(); iter != allFactories.end(); ++iter)
   {
-    QString filterName = QString::fromStdString((*iter).first);
-    std::cout << "Writing " << filterName.toStdString() << std::endl;
+    QString filterName = ((*iter).first);
+    std::cout << "Writing " << filterName() << std::endl;
     IFilterWidgetFactory::Pointer wf = (*iter).second;
     if (NULL == wf) { return EXIT_FAILURE;}
     QFilterWidget* w = wf->createWidget();
@@ -150,7 +146,7 @@ void readSettings(QSettings &prefs)
 
     QString filterName = prefs.value("Filter_Name", "").toString();
 
-    std::cout << "Adding Filter " << filterName.toStdString() << std::endl;
+    std::cout << "Adding Filter " << filterName() << std::endl;
 //    QFilterWidget* w = viewWidget.addFilter(filterName); // This will set the variable m_SelectedFilterWidget
 //    if(w) {
 //      w->blockSignals(true);
@@ -189,7 +185,7 @@ int main (int argc, char const *argv[])
       return EXIT_FAILURE;
     }
 
-    configFile = QString::fromStdString(inputFileArg.getValue());
+    configFile = (inputFileArg.getValue());
 
 
   }

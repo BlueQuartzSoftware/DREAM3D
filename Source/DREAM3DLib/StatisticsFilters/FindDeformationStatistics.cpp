@@ -203,7 +203,7 @@ void FindDeformationStatistics::execute()
 
   //  QString filename = m_OutputFile1;
   std::ofstream outFile;
-  outFile.open(m_DeformationStatisticsFile.c_str(), std::ios_base::binary);
+  outFile.open(m_DeformationStatisticsFile.toLatin1().data(), std::ios_base::binary);
   float w, n1, n2, n3;
   int distance;
   float kam, gbdist, tjdist, qpdist, sf, grm, mprime, F1, F1spt, F7;
@@ -513,7 +513,7 @@ void FindDeformationStatistics::execute()
 
   // QString filename2 = m_OutputFile2;
   FILE* vtkFile = NULL;
-  vtkFile = fopen(m_VtkOutputFile.c_str(), "wb");
+  vtkFile = fopen(m_VtkOutputFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
     qDebug() << "Error Creating VTK Visualization File '" << m_VtkOutputFile << "'" << "\n";

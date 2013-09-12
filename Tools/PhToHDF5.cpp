@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <iostream>
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 #include <fstream>
 #include <map>
@@ -46,7 +46,7 @@
 #include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
-#include "MXA/Common/LogTime.h"
+
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
@@ -129,7 +129,7 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
   //int nx, ny, nz;
 
   std::ifstream InFile;
-  InFile.open(FileName.c_str(), std::ios_base::binary);
+  InFile.open(FileName.toLatin1().data(), std::ios_base::binary);
   if (!InFile)
   {
     std::cout << "Failed to open: " << FileName << std::endl;
@@ -142,9 +142,9 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
 
   // Process the header information from the PH file.
   error = 0;
-  error += sscanf(tokens[0].c_str(), "%d", &nx);
-  error += sscanf(tokens[1].c_str(), "%d", &ny);
-  error += sscanf(tokens[2].c_str(), "%d", &nz);
+  error += sscanf(tokens[0].toLatin1().data(), "%d", &nx);
+  error += sscanf(tokens[1].toLatin1().data(), "%d", &ny);
+  error += sscanf(tokens[2].toLatin1().data(), "%d", &nz);
   if (error < 0)
   {
     std::cout << "Error parsing Dimensions from ph file. The line that is being parsed was \n'" <<
@@ -180,7 +180,7 @@ int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, 
 
     for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
     {
-      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
+      error += sscanf(tokens[in_spins].toLatin1().data(), "%d", &spin);
       data.push_back(spin);
     }
     //        if(error != 20)
@@ -239,7 +239,7 @@ int writeScalarData(const std::string &hdfPath,
                     const char *label,
                     int numComp, int32_t rank, hsize_t* dims)
 {
-  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
+  hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
   if (gid < 0)
   {
     std::cout << "Error opening Group " << hdfPath << std::endl;
@@ -298,10 +298,10 @@ int writePhDataToHDF5File(const std::string &h5File, std::vector<int> &data, int
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds.c_str(), numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds.toLatin1().data(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds.toLatin1().data() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -317,10 +317,10 @@ int writeEulerDataToHDF5File(const std::string &h5File, std::vector<float> &data
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles.c_str(), numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles.toLatin1().data(), numComp, rank, dims);
   if (err < 0)
   {
-    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles.toLatin1().data() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -336,7 +336,7 @@ int writeEulerDataToHDF5File(const std::string &h5File, std::vector<float> &data
 int ReadEulerFile(const std::string &filename, std::map<int, EulerSet> &gidToEulerMap)
 {
   int err = -1;
-  FILE* f = fopen(filename.c_str(), "rb");
+  FILE* f = fopen(filename.toLatin1().data(), "rb");
   if (NULL == f)
   {
     std::cout << "Could not open Euler Angle File '" << filename << "'" << std::endl;

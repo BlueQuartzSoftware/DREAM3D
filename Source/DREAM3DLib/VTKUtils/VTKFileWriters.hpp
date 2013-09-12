@@ -37,9 +37,7 @@
 #ifndef _VTKFILEWRITERS_HPP_
 #define _VTKFILEWRITERS_HPP_
 
-#include <string>
-
-#include "MXA/Common/MXAEndian.h"
+#include <QtCore/QString>
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/TSL/AngConstants.h"
@@ -253,7 +251,7 @@ class VoxelEulerAngleScalarWriter : public VtkScalarWriter
     for (int eIndex = 0; eIndex < 3; ++eIndex)
     {
       QString name = names[eIndex];
-      fprintf(f, "SCALARS %s %s 1\n", name.c_str(), "float");
+      fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), "float");
       fprintf(f, "LOOKUP_TABLE default\n");
       size_t index = 0;
       for(size_t z = 0; z < dims[2]; ++z)
@@ -512,7 +510,7 @@ class VTKRectilinearGridFileWriter : public AbstractFilter
     {
       int err = 0;
       FILE* f = NULL;
-      f = fopen(file.c_str(), "wb");
+      f = fopen(file.toLatin1().data(), "wb");
       if (NULL == f)
       {
         return -1;
@@ -577,7 +575,7 @@ class VTKStructuredPointsFileWriter
     {
       int err = 0;
       FILE* f = NULL;
-      f = fopen(file.c_str(), "wb");
+      f = fopen(file.toLatin1().data(), "wb");
       if (NULL == f)
       {
         return 1;
@@ -645,7 +643,7 @@ class VtkMiscFileWriter : public AbstractFilter
     {
 
       FILE* f = NULL;
-      f = fopen(file.c_str(), "wb");
+      f = fopen(file.toLatin1().data(), "wb");
       if (NULL == f)
       {
         return 1;
@@ -695,7 +693,7 @@ class VtkMiscFileWriter : public AbstractFilter
     int writeSchmidFactorVizFile(T* m, const QString &file)
     {
       FILE* f = NULL;
-      f = fopen(file.c_str(), "wb");
+      f = fopen(file.toLatin1().data(), "wb");
       if (NULL == f)
       {
         return 1;

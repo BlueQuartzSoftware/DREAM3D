@@ -449,7 +449,7 @@ void DREAM3D_UI::on_actionCheck_For_Updates_triggered()
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
 
-  d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
   d->setUpdateWebSite(Detail::UpdateWebSite);
   d->setApplicationName("DREAM3D");
 
@@ -578,7 +578,7 @@ void DREAM3D_UI::openRecentFile()
   QAction *action = qobject_cast<QAction *>(sender());
   if (action)
   {
-    //qDebug() << "Opening Recent file: " << action->data().toString().toStdString() << "\n";
+    //qDebug() << "Opening Recent file: " << action->data().toString()() << "\n";
     QString file = action->data().toString();
     //TODO: use the 'file' object to figure out what to open
   }
@@ -590,7 +590,7 @@ void DREAM3D_UI::openRecentFile()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::threadHasMessage(QString message)
 {
-  qDebug() << "DREAM3D_UI::threadHasMessage()" << message.toStdString() << "\n";
+  qDebug() << "DREAM3D_UI::threadHasMessage()" << message() << "\n";
   this->statusBar()->showMessage(message);
 }
 
@@ -608,7 +608,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   m_PluginDirs << qApp->applicationDirPath();
 
   QDir aPluginDir = QDir(qApp->applicationDirPath());
- // qDebug() << "aPluginDir: " << aPluginDir.absolutePath().toStdString() << "\n";
+ // qDebug() << "aPluginDir: " << aPluginDir.absolutePath()() << "\n";
   QString thePath;
 
 #if defined(Q_OS_WIN)
@@ -652,11 +652,11 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
 
   foreach (QString pluginDirString, m_PluginDirs)
   {
-    //qDebug() << "Plugin Directory being Searched: " << pluginDirString.toStdString() << "\n";
+    //qDebug() << "Plugin Directory being Searched: " << pluginDirString() << "\n";
     aPluginDir = QDir(pluginDirString);
     foreach (QString fileName, aPluginDir.entryList(QDir::Files))
     {
-      //   qDebug() << "File: " << fileName.toStdString() << "\n";
+      //   qDebug() << "File: " << fileName() << "\n";
 #ifdef QT_DEBUG
       if (fileName.endsWith("_debug.plugin", Qt::CaseSensitive))
 #else
@@ -665,7 +665,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       {
         pluginFilePaths << aPluginDir.absoluteFilePath(fileName);
         //qWarning(aPluginDir.absoluteFilePath(fileName).toAscii(), "%s");
-        //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName).toStdString() << "\n";
+        //qDebug() << "Adding " << aPluginDir.absoluteFilePath(fileName)() << "\n";
       }
     }
   }
@@ -677,7 +677,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   {
     qDebug() << "Plugin Being Loaded:" << "\n";
     qDebug() << "    File Extension: .plugin" << "\n";
-    qDebug() << "    Path: " << path.toStdString() << "\n";
+    qDebug() << "    Path: " << path() << "\n";
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();
@@ -703,7 +703,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
       QMessageBox::critical(this, "DREAM.3D Plugin Load Error",
                                 message,
                                 QMessageBox::Ok | QMessageBox::Default);
-      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString().toStdString() << "\n";
+      //qDebug() << "The plugin did not load with the following error\n   " << loader.errorString()() << "\n";
     }
   }
 #if 0
@@ -817,7 +817,7 @@ void DREAM3D_UI::setInputUI()
 void DREAM3D_UI::on_actionAbout_triggered()
 {
   QString msg ("DREAM3D Version ");
-  msg.append(DREAM3DLib::Version::Complete().c_str());
+  msg.append(DREAM3DLib::Version::Complete().toLatin1().data());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -835,7 +835,7 @@ void DREAM3D_UI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(DREAM3D::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete().c_str());
+  version.append(DREAM3DLib::Version::PackageComplete().toLatin1().data());
   about.setApplicationInfo(an, version);
   about.exec();
 }
@@ -854,7 +854,7 @@ void DREAM3D_UI::on_actionShow_User_Manual_triggered()
 void DREAM3D_UI::versionCheckReply(UpdateCheckData* dataObj)
 {
   DREAM3DUpdateCheckDialog* d = new DREAM3DUpdateCheckDialog(this);
-  d->setCurrentVersion(QString::fromStdString(DREAM3DLib::Version::Complete()));
+  d->setCurrentVersion((DREAM3DLib::Version::Complete()));
   d->setApplicationName("DREAM3D");
 
   if ( dataObj->hasUpdate() && !dataObj->hasError() )

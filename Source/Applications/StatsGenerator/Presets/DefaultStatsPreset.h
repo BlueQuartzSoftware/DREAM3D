@@ -38,14 +38,12 @@
 #define DEFAULTSTATSPRESET_H_
 
 //-- C++ includes
-#include <string>
-
-//-- MXA Includes
-#include "MXA/Common/MXASetGetMacros.h"
+#include <QtCore/QString>
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
@@ -59,8 +57,8 @@
 class DefaultStatsPreset : public AbstractMicrostructurePreset
 {
   public:
-    MXA_SHARED_POINTERS(DefaultStatsPreset)
-    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
+    DREAM3D_SHARED_POINTERS(DefaultStatsPreset)
+    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
     virtual ~DefaultStatsPreset();
 
 

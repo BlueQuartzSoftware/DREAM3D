@@ -52,12 +52,12 @@
  */
 class CalculateDihedralAnglesImpl
 {
-    DREAM3D::Mesh::VertListPointer_t m_Nodes;
-    DREAM3D::Mesh::FaceListPointer_t m_Triangles;
+    VertexArray::Pointer m_Nodes;
+    FaceArray::Pointer m_Triangles;
     double* m_DihedralAngles;
 
   public:
-    CalculateDihedralAnglesImpl(DREAM3D::Mesh::VertListPointer_t nodes, DREAM3D::Mesh::FaceListPointer_t triangles, double* DihedralAngles) :
+    CalculateDihedralAnglesImpl(VertexArray::Pointer nodes, FaceArray::Pointer triangles, double* DihedralAngles) :
       m_Nodes(nodes),
       m_Triangles(triangles),
       m_DihedralAngles(DihedralAngles)
@@ -67,8 +67,8 @@ class CalculateDihedralAnglesImpl
     void generate(size_t start, size_t end) const
     {
 
-      DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
-      DREAM3D::Mesh::Face_t* triangles = m_Triangles->GetPointer(0);
+      VertexArray::Vert_t* nodes = m_Nodes->GetPointer(0);
+      FaceArray::Face_t* triangles = m_Triangles->GetPointer(0);
 
     float radToDeg = 180.0/DREAM3D::Constants::k_Pi;
 
@@ -239,9 +239,9 @@ void TriangleDihedralAngleFilter::execute()
   bool doParallel = true;
 #endif
 
-  DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
 
-  DREAM3D::Mesh::FaceListPointer_t trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
   size_t totalPoints = trianglesPtr->GetNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
