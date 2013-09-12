@@ -64,19 +64,13 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef QList<QString> NameListType;

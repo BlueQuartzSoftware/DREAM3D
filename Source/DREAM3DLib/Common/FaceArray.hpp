@@ -164,7 +164,7 @@ class FaceArray
 
       DynamicListArray::Pointer m_FaceNeighbors = DynamicListArray::New();
 
-      m_FaceNeighbors->allocate(nFaces);
+      QVector<uint16_t> linkCount(nFaces, 0);
 
       // Allocate an array of bools that we use each iteration of triangle so that we don't put duplicates into the array
       boost::shared_array<bool> visitedPtr(new bool[nFaces]);
@@ -225,9 +225,9 @@ class FaceArray
               //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
-              loop_neighbors[m_FaceNeighbors->Array[t].ncells] = vertIdxs[vt];
-              m_FaceNeighbors->Array[t].ncells++;// Increment the count for the next time through
-              if (m_FaceNeighbors->Array[t].ncells >= loop_neighbors.size())
+              loop_neighbors[linkCount[t]] = vertIdxs[vt];
+              linkCount[t]++;// Increment the count for the next time through
+              if (linkCount[t] >= loop_neighbors.size())
               {
                 loop_neighbors.resize(loop_neighbors.size() + 10);
               }
@@ -235,16 +235,14 @@ class FaceArray
             }
           }
         }
-        BOOST_ASSERT(m_FaceNeighbors->Array[t].ncells > 2);
+        BOOST_ASSERT(linkCount[t] > 2);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < m_FaceNeighbors->Array[t].ncells; ++k)
+        for(size_t k = 0;k < linkCount[t]; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
         // Allocate the array storage for the current triangle to hold its Face list
-        m_FaceNeighbors->Array[t].cells = new int[m_FaceNeighbors->Array[t].ncells];
-        // Only copy the first "N" values from the loop_neighbors vector into the storage array
-        ::memcpy(m_FaceNeighbors->Array[t].cells, &(loop_neighbors[0]), sizeof(int) * m_FaceNeighbors->Array[t].ncells);
+        m_FaceNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
     }
 
