@@ -36,15 +36,15 @@
 #include "InitializeSyntheticVolume.h"
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond);}
+  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); addErrorMessage(getHumanLabel(), ss, errCond);}
 
 
 
@@ -127,7 +127,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
@@ -137,9 +137,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if(m_InputFile.isEmpty() == true)
   {
-    ss << "The intput file must be set before executing this filter.\n";
+    QString ss = QObject::tr("The intput file must be set before executing this filter.\n");
     setErrorCondition(-800);
-    addErrorMessage(getHumanLabel(), ss.str(), -800);
+    addErrorMessage(getHumanLabel(), ss, -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -151,9 +151,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if (m_ShapeTypes.size() ==  0)
   {
-    ss << "No ShapeTypes have been set and a shape type for each phase.\n";
+    QString ss = QObject::tr("No ShapeTypes have been set and a shape type for each phase.\n");
     setErrorCondition(-801);
-    addErrorMessage(getHumanLabel(), ss.str(), -801);
+    addErrorMessage(getHumanLabel(), ss, -801);
   }
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -166,35 +166,35 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  
-
-  VolumeDataContainer* m = getVolumeDataContainer();
+  QTextStream ss;
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
+  getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
-  QSet<QString> selectedArrays;
-  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
-  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
-  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
-
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_InputFile);
-  reader->setVolumeDataContainer(m);
-  reader->setReadVolumeData(true);
-  reader->setReadSurfaceData(false);
-  reader->setReadEdgeData(false);
-  reader->setReadVertexData(false);
-  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
-  reader->setReadAllArrays(false);
-  reader->preflight();
-  int err = reader->getErrorCondition();
-  if(err < 0)
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  if(fileId < 0)
   {
-    setErrorCondition(err);
-  }
 
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  m->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
+  read_data->setHdfFileId(fileId);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
+  read_data->preflight();
+  if (read_data->getErrorCondition() < 0)
+  {
+    setErrorCondition(read_data->getErrorCondition());
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  
+  QTextStream ss;
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -212,21 +212,26 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  QSet<QString> selectedArrays;
-  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
-  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
-  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
+  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  if(fileId < 0)
+  {
 
-  DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_InputFile);
-  reader->setVolumeDataContainer(m);
-  reader->setReadVolumeData(true);
-  reader->setReadSurfaceData(false);
-  reader->setReadEdgeData(false);
-  reader->setReadVertexData(false);
-  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
-  reader->setReadAllArrays(false);
-  reader->execute();
+    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
+  // This will make sure if we return early from this method that the HDF5 File is properly closed.
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
+
+  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
+  read_data->setHdfFileId(fileId);
+  read_data->setReadCellData(false);
+  read_data->setReadFieldData(false);
+  read_data->setReadEnsembleData(true);
+  read_data->setReadAllArrays(true);
+  read_data->setVolumeDataContainer(getVolumeDataContainer());
+  read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);

@@ -50,7 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainerReader::EdgeDataContainerReader() :
-  m_HdfFileId(-1),
+  getHdfFileId()(-1),
   m_ReadEdgeData(true),
   m_ReadEdgeFieldData(true),
   m_ReadEdgeEnsembleData(true),
@@ -105,7 +105,7 @@ int EdgeDataContainerReader::writeFilterParameters(AbstractFilterParametersWrite
 void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   EdgeDataContainer* m = getEdgeDataContainer();
 
   if(NULL == m)
@@ -114,7 +114,7 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
     addErrorMessage(getHumanLabel(), "Edge DataContainer is missing", getErrorCondition());
   }
 
-  if(m_HdfFileId < 0)
+  if(getHdfFileId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -146,7 +146,7 @@ void EdgeDataContainerReader::preflight()
 void EdgeDataContainerReader::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -163,9 +163,9 @@ void EdgeDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherData(bool preflight)
 {
-  
 
-  if(m_HdfFileId < 0)
+
+  if(getHdfFileId() < 0)
   {
     ss.str("");
     ss << ": Error opening input file";
@@ -174,7 +174,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -336,7 +336,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  
+
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
