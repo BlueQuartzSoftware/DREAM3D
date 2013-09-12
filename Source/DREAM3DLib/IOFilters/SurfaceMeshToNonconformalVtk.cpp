@@ -35,7 +35,15 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "SurfaceMeshToNonconformalVtk.h"
-#include "DREAM3DLib/Common//DREAM3DEndian.h"
+
+
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
+
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -86,10 +94,10 @@ void SurfaceMeshToNonconformalVtk::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -111,7 +119,7 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -174,7 +182,7 @@ class ScopedFileMonitor
 void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -211,12 +219,13 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputVtkFile());
+  QDir parentPath = fi.path();
+  if(!parentPath.mkpath("."))
   {
-    ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
@@ -227,9 +236,9 @@ void SurfaceMeshToNonconformalVtk::execute()
   vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
-    ss.str("");
-    ss << "Error creating file '" << getOutputVtkFile() << "'";
-    notifyErrorMessage(ss.str(), -18542);
+
+    QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
+    notifyErrorMessage(ss, -18542);
     setErrorCondition(-18542);
     return;
   }
@@ -253,7 +262,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     //  Node& n = nodes[i]; // Get the current Node
     if (m_SurfaceMeshNodeType[i] > 0) { ++numberWrittenNodes; }
-    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << "\n";}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) ;}
   }
 
   fprintf(vtkFile, "POINTS %d float\n", numberWrittenNodes);
@@ -274,9 +283,9 @@ void SurfaceMeshToNonconformalVtk::execute()
 
       if (m_WriteBinaryFile == true)
       {
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[2]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
+        DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
       }
       else {
@@ -329,7 +338,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   // Loop over all the grains
   for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
-    totalCells += (*grainIter).second;
+    totalCells += grainIter.value();
   }
   BOOST_ASSERT(totalCells == (size_t)(triangleCount * 2) );
 
@@ -337,8 +346,8 @@ void SurfaceMeshToNonconformalVtk::execute()
   // Loop over all the grains
   for(QMap<int32_t, int32_t>::iterator grainIter = grainTriangleCount.begin(); grainIter != grainTriangleCount.end(); ++grainIter)
   {
-    int32_t gid = (*grainIter).first; // The current Grain Id
-    int32_t numTriToWrite = (*grainIter).second; // The number of triangles for this grain
+    int32_t gid = grainIter.key(); // The current Grain Id
+    int32_t numTriToWrite = grainIter.value(); // The number of triangles for this grain
     uint8_t doWrite = 0;
 
     // Loop over all the triangles looking for the current grain id
@@ -372,10 +381,10 @@ void SurfaceMeshToNonconformalVtk::execute()
       if (m_WriteBinaryFile == true)
       {
 
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+        DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+        DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
       else
@@ -386,7 +395,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     }
     if (numTriToWrite != 0)
     {
-      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << (*grainIter).second << "\n";
+      qDebug() << "Not enough triangles written: " << gid << "::" << numTriToWrite << " Total Triangles to Write " << grainIter.value();
     }
 
   }
@@ -417,7 +426,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -430,14 +439,14 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
       if(writeBinaryData == true)
       {
         swapped = static_cast<T>(m[i]);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(swapped);
+        DREAM3D::Endian::FromSystemToBig::convert(swapped);
         fwrite(&swapped, sizeof(T), 1, vtkFile);
       }
       else
       {
-        ss.str("");
-        ss << m[i] << " ";
-        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
+
+        ss = QString::number(m[i]) + " ";
+        fprintf(vtkFile, "%s ", ss.toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -455,7 +464,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  
+  QTextStream ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -471,18 +480,18 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
         s0 = static_cast<T>(m[i*3+0]);
         s1 = static_cast<T>(m[i*3+1]);
         s2 = static_cast<T>(m[i*3+2]);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s0);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s1);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s2);
+        DREAM3D::Endian::FromSystemToBig::convert(s0);
+        DREAM3D::Endian::FromSystemToBig::convert(s1);
+        DREAM3D::Endian::FromSystemToBig::convert(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
       }
       else
       {
-        ss.str("");
+
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
+        fprintf(vtkFile, "%s ", ss.string()->toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -533,7 +542,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
   for (int i = 0; i < numNodes; i++)
   {
     if (m_SurfaceMeshNodeType[i] > 0) { ++nNodes; }
-    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) << "\n";}
+    else { qDebug() << "Node Type Invalid: " << i << "::" << (int)(m_SurfaceMeshNodeType[i]) ;}
   }
   // This is the section header
   fprintf(vtkFile, "\n");
@@ -550,7 +559,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
       if(m_WriteBinaryFile == true)
       {
         // swapped = m_SurfaceMeshNodeType[i];
-        // DREAM3D::Endian::FromSystemToBig::convert<int>(swapped);
+        // DREAM3D::Endian::FromSystemToBig::convert(swapped);
         fwrite(m_SurfaceMeshNodeType + i, sizeof(char), 1, vtkFile);
       }
       else
@@ -563,23 +572,23 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 #if 1
   // This is from the Goldfeather Paper
   writePointVectorData<SurfaceDataContainer, double>(getSurfaceDataContainer(), "Principal_Direction_1",
-                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
   // This is from the Goldfeather Paper
   writePointVectorData<SurfaceDataContainer, double>(getSurfaceDataContainer(), "Principal_Direction_2",
-                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), "Principal_Curvature_1",
-                                                         "double", m_WriteBinaryFile, vtkFile, numNodes);
+                                                     "double", m_WriteBinaryFile, vtkFile, numNodes);
 
   // This is from the Goldfeather Paper
   writePointScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), "Principal_Curvature_2",
-                                                         "double", m_WriteBinaryFile, vtkFile, numNodes);
+                                                     "double", m_WriteBinaryFile, vtkFile, numNodes);
 #endif
 
   // This is from the Goldfeather Paper
   writePointVectorData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::VertexData::SurfaceMeshNodeNormals,
-                                                         "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
+                                                     "double", m_WriteBinaryFile, "VECTORS", vtkFile, numNodes);
 
 
   return err;
@@ -588,11 +597,12 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-template<typename SurfaceDataContainer, typename T>
+
+    template<typename SurfaceDataContainer, typename T>
 void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, const QString &dataType,
                          bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
-  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -601,54 +611,54 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  
+  QString ss;
   if (NULL != data.get())
+{
+  int32_t totalCellsWritten = 0;
+
+  T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
+  fprintf(vtkFile, "\n");
+  fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
+  fprintf(vtkFile, "LOOKUP_TABLE default\n");
+  // Loop over all the grains
+  for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+{
+  int32_t gid = grainIter.key(); // The current Grain Id
+  size_t size = grainIter.value(); // The number of triangles for this grain id
+  std::vector<T> buffer(size, 0);
+  totalCellsWritten += size;
+  size_t index = 0;
+
+  for (int j = 0; j < triangleCount; j++)
   {
-    int32_t totalCellsWritten = 0;
+    if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
+    // Get the data
+    T s0 = static_cast<T>(m[j]);
+    if (faceLabels[j*2+1] == gid)
+    { s0 = s0 * -1; }
 
-    T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
-    fprintf(vtkFile, "\n");
-    fprintf(vtkFile, "SCALARS %s %s 1\n", dataName.toLatin1().data(), dataType.toLatin1().data());
-    fprintf(vtkFile, "LOOKUP_TABLE default\n");
-    // Loop over all the grains
-    for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
+
+    // Write the values to the buffer after an Endian swap.
+    if(writeBinaryData == true)
     {
-      int32_t gid = (*grainIter).first; // The current Grain Id
-      size_t size = (*grainIter).second; // The number of triangles for this grain id
-      QVector<T> buffer(size, 0);
-      totalCellsWritten += size;
-      size_t index = 0;
+      DREAM3D::Endian::FromSystemToBig::convert(s0);
+      buffer[index]=s0; ++index;
+    }
+    else
+    {
 
-      for (int j = 0; j < triangleCount; j++)
-      {
-        if (faceLabels[j*2] != gid && faceLabels[j*2+1] != gid) { continue; }
-        // Get the data
-        T s0 = static_cast<T>(m[j]);
-        if (faceLabels[j*2+1] == gid)
-         { s0 = s0 * -1; }
-
-
-        // Write the values to the buffer after an Endian swap.
-        if(writeBinaryData == true)
-        {
-          DREAM3D::Endian::FromSystemToBig::convert<T>(s0);
-          buffer[index]=s0; ++index;
-        }
-        else
-        {
-          ss.str("");
-          ss << s0;
-          fprintf(vtkFile, "%s\n", ss.str().toLatin1().data());
-        }
-      }
-
-      // Write the Buffer
-      if(writeBinaryData == true)
-      {
-        fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
-      }
+      ss = QString::number(s0);
+      fprintf(vtkFile, "%s\n", ss.toLatin1().data());
     }
   }
+
+  // Write the Buffer
+  if(writeBinaryData == true)
+  {
+    fwrite(&(buffer.front()), sizeof(T), size, vtkFile);
+  }
+}
+}
 
 }
 
@@ -661,7 +671,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
                          bool writeBinaryData, FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
 
-  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
@@ -669,7 +679,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  
+  QTextStream ss;
   if (NULL != data.get())
   {
     int32_t totalCellsWritten = 0;
@@ -680,9 +690,9 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
     // Loop over all the grains
     for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
-      int32_t gid = (*grainIter).first; // The current Grain Id
-      size_t size = (*grainIter).second; // The number of triangles for this grain id
-      QVector<T> buffer(size* 3, 0);
+      int32_t gid = grainIter.key(); // The current Grain Id
+      size_t size = grainIter.value(); // The number of triangles for this grain id
+      std::vector<T> buffer(size* 3, 0);
       totalCellsWritten += size*3;
       size_t index = 0;
 
@@ -703,20 +713,20 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         // Write the values to the buffer after an Endian swap.
         if(writeBinaryData == true)
         {
-          DREAM3D::Endian::FromSystemToBig::convert<T>(s0);
+          DREAM3D::Endian::FromSystemToBig::convert(s0);
           buffer[index]=s0; ++index;
 
-          DREAM3D::Endian::FromSystemToBig::convert<T>(s1);
+          DREAM3D::Endian::FromSystemToBig::convert(s1);
           buffer[index]=s1; ++index;
 
-          DREAM3D::Endian::FromSystemToBig::convert<T>(s2);
+          DREAM3D::Endian::FromSystemToBig::convert(s2);
           buffer[index]=s2; ++index;
         }
         else
         {
-          ss.str("");
+
           ss << s0 << " " << s1 << " " << s2;
-          fprintf(vtkFile, "%s\n", ss.str().toLatin1().data());
+          fprintf(vtkFile, "%s\n", ss.string()->toLatin1().data());
         }
       }
 
@@ -740,12 +750,12 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
                          bool writeBinaryData, const QString &vtkAttributeType,
                          FILE* vtkFile, QMap<int32_t, int32_t> &grainIds)
 {
-  StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(dc->getFaces());
 
   int triangleCount = triangles.GetNumberOfTuples();
 
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  
+  QString ss;
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -761,9 +771,9 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
         s0 = static_cast<T>(m[i*3+0]);
         s1 = static_cast<T>(m[i*3+1]);
         s2 = static_cast<T>(m[i*3+2]);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s0);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s1);
-        DREAM3D::Endian::FromSystemToBig::convert<T>(s2);
+        DREAM3D::Endian::FromSystemToBig::convert(s0);
+        DREAM3D::Endian::FromSystemToBig::convert(s1);
+        DREAM3D::Endian::FromSystemToBig::convert(s2);
         fwrite(&s0, sizeof(T), 1, vtkFile);
         fwrite(&s1, sizeof(T), 1, vtkFile);
         fwrite(&s2, sizeof(T), 1, vtkFile);
@@ -771,10 +781,10 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       }
       else
       {
-        ss.str("");
+
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
 
-        fprintf(vtkFile, "%s ", ss.str().toLatin1().data());
+        fprintf(vtkFile, "%s ", ss.toLatin1().data());
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -792,7 +802,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     return -1;
   }
   // Write the triangle region ids
-  StructArray<FaceArray::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
+  StructArray<DREAM3D::Mesh::Face_t>& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   if (NULL != flPtr.get())
   {
@@ -815,14 +825,14 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     // Loop over all the grains
     for(QMap<int32_t, int32_t>::iterator grainIter = grainIds.begin(); grainIter != grainIds.end(); ++grainIter)
     {
-      int32_t gid = (*grainIter).first; // The current Grain Id
-      size_t size = (*grainIter).second; // The number of triangles for this grain id
-      QVector<int32_t> buffer(size, 0);
+      int32_t gid = grainIter.key(); // The current Grain Id
+      size_t size = grainIter.value(); // The number of triangles for this grain id
+      std::vector<int32_t> buffer(size, 0);
       totalCellsWritten += size;
 
       // Endian Swap our current grain Id since we are going to write it a bunch of times.
       swapped = gid;
-      DREAM3D::Endian::FromSystemToBig::convert<int>(swapped);
+      DREAM3D::Endian::FromSystemToBig::convert(swapped);
       size_t index = 0;
 
       // Loop over all the triangles looking for the current grain id
@@ -865,7 +875,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     if(m_WriteBinaryFile == true)
     {
       swapped = i;
-      DREAM3D::Endian::FromSystemToBig::convert<int>(swapped);
+      DREAM3D::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
     }
@@ -878,35 +888,35 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
 #endif
   notifyStatusMessage("Writing Face Normals...");
   writeCellNormalData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshFaceNormals,
-                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
 
   notifyStatusMessage("Writing Principal Curvature 1");
   writeCellScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1,
-                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
   notifyStatusMessage("Writing Principal Curvature 2");
   writeCellScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2,
-                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
 
   notifyStatusMessage("Writing Grain Face Id");
   writeCellScalarData<SurfaceDataContainer, int32_t>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshGrainFaceId,
-                                                         "int", m_WriteBinaryFile, vtkFile, grainIds);
+                                                     "int", m_WriteBinaryFile, vtkFile, grainIds);
 
   notifyStatusMessage("Writing Gaussian Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshGaussianCurvatures,
-                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
 
   notifyStatusMessage("Writing Mean Curvature");
   writeCellScalarData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::FaceData::SurfaceMeshMeanCurvatures,
-                                                        "double", m_WriteBinaryFile, vtkFile, grainIds);
+                                                    "double", m_WriteBinaryFile, vtkFile, grainIds);
 #if 0
   writeCellVectorData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection1,
-                                                        "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
+                                                    "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellVectorData<SurfaceDataContainer, double>(getSurfaceDataContainer(), DREAM3D::CellData::SurfaceMeshPrincipalDirection2,
-                                                        "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
+                                                    "double", m_WriteBinaryFile, "VECTORS", vtkFile, nT);
 
   writeCellNormalData<SurfaceDataContainer, double>(getSurfaceDataContainer(), "Goldfeather_Triangle_Normals",
-                                                        "double", m_WriteBinaryFile, vtkFile, nT);
+                                                    "double", m_WriteBinaryFile, vtkFile, nT);
 #endif
 
   return err;

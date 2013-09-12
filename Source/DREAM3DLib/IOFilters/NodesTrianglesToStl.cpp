@@ -37,6 +37,8 @@
 
 #include <boost/shared_array.hpp>
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
@@ -138,14 +140,15 @@ int NodesTrianglesToStl::writeFilterParameters(AbstractFilterParametersWriter* w
 void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
+  QFileInfo fi(m_TrianglesFile);
 
   if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
   }
-  else if (MXADir::exists(m_TrianglesFile) == false)
+  else if (fi.exists() == false)
   {
 
     if (preflight == true)
@@ -156,12 +159,13 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
+  QFileInfo fii(m_NodesFile);
   if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
   }
-  else if (MXADir::exists(m_NodesFile)== false)
+  else if (fii.exists() == false)
   {
 
     if (preflight == true)
@@ -197,7 +201,7 @@ void NodesTrianglesToStl::preflight()
 void NodesTrianglesToStl::execute()
 {
   int err = 0;
-  
+
 
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -216,11 +220,12 @@ void NodesTrianglesToStl::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  if(!MXADir::mkdir(getOutputStlDirectory(), true))
+  QDir stlDir(getOutputStlDirectory());
+  if(!stlDir.mkpath("."))
   {
-      
-      ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
-      notifyErrorMessage(ss.str(), -1);
+
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -230,10 +235,10 @@ void NodesTrianglesToStl::execute()
   FILE* nodesFile = fopen(m_NodesFile.toLatin1().data(), "rb+");
   if(nodesFile == NULL)
   {
-    ss.str("");
-    ss << "Error opening nodes file '" << m_NodesFile << "'";
+
+    QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_NodesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss.str(), -666);
+    PipelineMessage em(getHumanLabel(), ss, -666);
     addErrorMessage(em);
     return;
   }
@@ -241,18 +246,18 @@ void NodesTrianglesToStl::execute()
   //  how many nodes are in the file
   int nNodes = 0;
   fscanf(nodesFile, "%d", &nNodes);
-  ss.str("");
-  ss << "Node Count from " << getNodesFile() << " File: " << nNodes;
-  notifyStatusMessage(ss.str());
-
+  {
+  QString ss = QObject::tr("Node Count from %1 File: %2").arg(getNodesFile()).arg(nNodes);
+  notifyStatusMessage(ss);
+  }
   // Open the triangles file for reading
   FILE* triFile = fopen(m_TrianglesFile.toLatin1().data(), "rb+");
   if(triFile == NULL)
   {
-    ss.str("");
-    ss << ": Error opening Triangles file '" << triFile << "'";
+
+    QString ss = QObject::tr(": Error opening Triangles file '%1'").arg(m_TrianglesFile);
     setErrorCondition(-1);
-    PipelineMessage em(getHumanLabel(), ss.str(), -666);
+    PipelineMessage em(getHumanLabel(), ss, -666);
     addErrorMessage(em);
     return;
   }
@@ -260,10 +265,11 @@ void NodesTrianglesToStl::execute()
   // how many triangles are in the file
   int nTriangles = 0;
   fscanf(triFile, "%d", &nTriangles);
-  ss.str("");
 
-  ss << "Triangle Count from " << getTrianglesFile() << " File: " << nTriangles;
-  notifyStatusMessage(ss.str());
+  {
+  QString ss = QObject::tr("Triangle Count from %1 File: %2").arg(getTrianglesFile()).arg(nTriangles);
+  notifyStatusMessage(ss);
+  }
 
   int nodeId = 0;
   int nodeKind = 0;
@@ -339,21 +345,22 @@ void NodesTrianglesToStl::execute()
   for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
-    ss.str("");
+
     // Generate the output file name
-    ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
-    QString filename = ss.str();
+
+    QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
     FILE* f = fopen(filename.toLatin1().data(), "wb");
     ScopedFileMonitor fPtr(f);
 
-    ss.str("");
-    ss << "Writing STL for Grain Id " << spin;
-    notifyStatusMessage(ss.str());
+    {
+      QString ss = QObject::tr("Writing STL for Grain Id %1").arg(spin);
+      notifyStatusMessage(ss);
+    }
 
-
-    ss.str("");
-    ss << "DREAM3D Generated For Grain ID " << spin;
-    err = writeHeader(f, ss.str(), 0);
+    {
+    QString ss = "DREAM3D Generated For Grain ID " + QString::number(spin);
+    err = writeHeader(f, ss, 0);
+    }
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
@@ -416,9 +423,9 @@ void NodesTrianglesToStl::execute()
       totalWritten = fwrite(data, 1, 50, f);
       if (totalWritten != 50)
       {
-        ss.str("");
-        ss << "Error Writing STL File. Not enough elements written for grain id " << spin << " Wrote " << totalWritten << " of 50.";
-        notifyErrorMessage(ss.str(), -1201);
+
+        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for grain id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
+        notifyErrorMessage(ss, -1201);
       }
       triCount++;
     }

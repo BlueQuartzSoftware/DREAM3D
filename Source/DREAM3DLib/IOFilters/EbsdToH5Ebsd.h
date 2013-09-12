@@ -46,6 +46,9 @@
 #include <vector>
 #include <QtCore/QString>
 
+
+
+
 #include "EbsdLib/EbsdConstants.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -86,7 +89,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     virtual void preflight();
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
 
     virtual void setupFilterParameters();
@@ -95,7 +98,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

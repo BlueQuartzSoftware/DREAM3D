@@ -73,7 +73,6 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
 
     typedef QList<QString> NameListType;
 
-    void setXdmfOStream(QTextStream *xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -187,7 +186,6 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     }
 
   private:
-    QTextStream* m_XdmfPtr;
 
     VolumeDataContainerWriter(const VolumeDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const VolumeDataContainerWriter&); // Operator '=' Not Implemented

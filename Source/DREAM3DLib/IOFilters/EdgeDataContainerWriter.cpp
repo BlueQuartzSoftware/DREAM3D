@@ -121,7 +121,7 @@ int EdgeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWrite
 void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   EdgeDataContainer* m = getEdgeDataContainer();
 
   if(NULL == m)
@@ -154,7 +154,7 @@ void EdgeDataContainerWriter::preflight()
 void EdgeDataContainerWriter::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   EdgeDataContainer* sm = getEdgeDataContainer();
   if(NULL == sm)
@@ -250,14 +250,6 @@ void EdgeDataContainerWriter::execute()
 
 
   notifyStatusMessage("Complete");
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
-{
-  m_XdmfPtr = xdmf;
 }
 
 // -----------------------------------------------------------------------------
@@ -541,7 +533,7 @@ int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
-  
+
   int err = 0;
   EdgeDataContainer* sm = getEdgeDataContainer();
 
@@ -592,7 +584,7 @@ int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 {
-  
+
   int err = 0;
   EdgeDataContainer* m = getEdgeDataContainer();
 
@@ -745,7 +737,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid)
 {
-  
+
   int err = 0;
   EdgeDataContainer* m = getEdgeDataContainer();
 

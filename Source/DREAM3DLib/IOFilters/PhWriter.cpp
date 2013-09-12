@@ -36,11 +36,15 @@
 
 #include "PhWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <QtCore/QString>
 #include <iomanip>
-#include <map>
+#include <QtCore/QMap>
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 // -----------------------------------------------------------------------------
 //
@@ -107,14 +111,14 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -143,13 +147,13 @@ int PhWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int PhWriter::writeFile()
 {
-//   QString OutputName;
+
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -2);
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return -1;
   }
@@ -193,12 +197,13 @@ int PhWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if(!parentPath.mkpath("."))
   {
-      
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return -1;
   }
@@ -207,7 +212,7 @@ int PhWriter::writeFile()
   outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
   if(!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() << "\n";
+    qDebug() << "Failed to open: " << getOutputFile() ;
     return -1;
   }
 
@@ -223,12 +228,12 @@ int PhWriter::writeFile()
   typedef QMap<int, bool>::iterator iterator;
   for (iterator i = used.begin(); i != used.end(); i++)
   {
-    if((*i).second == true)
+    if(i.value() == true)
     {
       grains++;
     }
   }
-  //std::cout<<grains<< " " << used.size() << "\n";
+  //qDebug()<<grains<< " " << used.size() ;
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -240,7 +245,7 @@ int PhWriter::writeFile()
 
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << m_GrainIds[k] << "\n";
+    outfile << m_GrainIds[k] << '\n';
   }
   outfile.close();
 

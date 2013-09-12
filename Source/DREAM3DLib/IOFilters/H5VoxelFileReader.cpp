@@ -38,6 +38,8 @@
 
 #include <limits>
 
+#include <QtCore/QFileInfo>
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -110,20 +112,20 @@ int H5VoxelFileReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
 
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (QFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
@@ -155,21 +157,19 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
+      QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      QTextStream s;
-      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
+      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
+        " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
+      addErrorMessage(getHumanLabel(), ss, -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -196,9 +196,9 @@ void H5VoxelFileReader::execute()
 {
   if(NULL == getVolumeDataContainer())
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
 
@@ -265,10 +265,10 @@ void H5VoxelFileReader::execute()
     gnum = size_t(grainIds->GetValue(i));
     if(gnum > maxId) maxId = gnum;
   }
-  getVolumeDataContainer()->resizeFieldDataArrays(maxId+1);
+  getVolumeDataContainer()->resizeCellFieldDataArrays(maxId+1);
 
-  QVector<unsigned int> crystruct;
-  QVector<unsigned int> phaseType;
+  std::vector<unsigned int> crystruct;
+  std::vector<unsigned int> phaseType;
 
   arrayname = "CrystalStructure";
   err = reader->readFieldData<unsigned int, uint32_t>(arrayname, crystruct);
