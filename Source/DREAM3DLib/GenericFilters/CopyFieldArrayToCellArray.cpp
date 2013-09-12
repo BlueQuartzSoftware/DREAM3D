@@ -110,7 +110,7 @@ void CopyFieldArrayToCellArray::dataCheck(bool preflight, size_t voxels, size_t 
 
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  if(m_SelectedFieldArrayName.isEmtpy() == true)
+  if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
