@@ -60,27 +60,28 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(RemoveArrays)
     DREAM3D_TYPE_MACRO_SUPER(RemoveArrays, AbstractFilter)
 
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeCellEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedSurfaceFaceEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedEdgeEdgeEnsembleArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexFieldArrays)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
 
     virtual ~RemoveArrays();
 

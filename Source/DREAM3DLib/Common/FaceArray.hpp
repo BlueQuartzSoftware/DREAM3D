@@ -42,9 +42,12 @@
 #include <boost/shared_array.hpp>
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include <QtCore/qset.h>
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/VertexArray.hpp"
 #include "DREAM3DLib/Common/DynamicListArray.hpp"
+
+
 
 /**
  * @brief The MeshLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
@@ -58,6 +61,8 @@ class FaceArray
     {
       size_t verts[3];
     } Face_t;
+
+    typedef QSet<int32_t> UniqueFaceIds_t;
 
     DREAM3D_SHARED_POINTERS(FaceArray)
     DREAM3D_STATIC_NEW_MACRO(FaceArray)

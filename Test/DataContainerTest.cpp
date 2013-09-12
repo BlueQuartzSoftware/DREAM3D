@@ -238,7 +238,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
   m->addCellFieldData("Test", p);
-  t = m->getCellCellFieldData("Test");
+  t = m->getCellFieldData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
@@ -424,10 +424,10 @@ void TestArrayCreation()
   nameList = m->getCellArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getFieldArrayNameList();
+  nameList = m->getCellFieldArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-  nameList = m->getEnsembleArrayNameList();
+  nameList = m->getCellEnsembleArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
   // DO NOT TEST THE BoolArrayType - we are using that as a negative test in the _arrayCreation test

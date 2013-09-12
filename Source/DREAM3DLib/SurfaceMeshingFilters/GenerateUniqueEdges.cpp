@@ -272,7 +272,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   // each triangle has three edges, made up of two pairs of vertices
   QMap<int64_t, int> uedges_id_map;
 
-  QMap<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
+  QMap<int64_t, FaceArray::UniqueFaceIds_t > edgeTriangleSet;
 
   int edge_id = 0;
   int cur_edge_id = 0;
@@ -385,14 +385,14 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 
     ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->getPointer(index));
-    DREAM3D::Mesh::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
+    FaceArray::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();
     if (entry.count > 0)
     {
       entry.data = (int*)(malloc(sizeof(int) * entry.count));
       int index = 0;
-      for(DREAM3D::Mesh::UniqueFaceIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
+      for(FaceArray::UniqueFaceIds_t::iterator tIter = triangles.begin(); tIter != triangles.end(); ++tIter)
       {
         entry.data[index++] = *tIter; // Copy the value from the triangle Ids set into the ManagedPointer
       }

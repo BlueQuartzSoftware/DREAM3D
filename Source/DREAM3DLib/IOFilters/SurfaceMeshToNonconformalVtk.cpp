@@ -194,8 +194,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   setErrorCondition(0);
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
-  VertexArray::Pointer nodesPtr = m->getVertices();
-  DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
+  VertexArray& nodes = *(m->getVertices());
   int nNodes = nodes.getNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
@@ -206,7 +205,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodes.getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }

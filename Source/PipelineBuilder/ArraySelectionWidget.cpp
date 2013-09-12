@@ -709,7 +709,7 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "VolumeFace", volumeFaceArrayList);
   writeSelections(prefs, name, "VolumeCell", volumeCellArrayList);
   writeSelections(prefs, name, "VolumeField", volumeCellFieldArrayList);
-  writeSelections(prefs, name, "VolumeEnsemble", volumecellEnsembleArrayList);
+  writeSelections(prefs, name, "VolumeEnsemble", volumeCellEnsembleArrayList);
 
   writeSelections(prefs, name, "SurfaceVertex", surfaceVertexArrayList);
   writeSelections(prefs, name, "SurfaceFace", surfaceFaceArrayList);
@@ -719,7 +719,7 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
 
   writeSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   writeSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  writeSelections(prefs, name, "EdgeField", edgeedgeFieldArrayList);
+  writeSelections(prefs, name, "EdgeField", edgeEdgeFieldArrayList);
   writeSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   writeSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
