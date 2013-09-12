@@ -121,7 +121,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    QVector<int> parentnumbers;
+    QVector<int> m_ParentNumbers;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 

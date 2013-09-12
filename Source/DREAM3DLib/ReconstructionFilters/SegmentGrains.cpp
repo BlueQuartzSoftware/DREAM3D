@@ -37,7 +37,7 @@
 #include "SegmentGrains.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
@@ -61,7 +61,7 @@
 //
 // -----------------------------------------------------------------------------
 SegmentGrains::SegmentGrains() :
-AbstractFilter()
+  AbstractFilter()
 {
 
 }
@@ -80,7 +80,7 @@ void SegmentGrains::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -100,7 +100,7 @@ int SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
 
 }
 
@@ -118,13 +118,14 @@ void SegmentGrains::preflight()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  
+
   if(NULL == m)
   {
     setErrorCondition(-1);
-    ss << " DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();
@@ -189,22 +190,28 @@ void SegmentGrains::execute()
             {
               voxelslist[size] = neighbor;
               size++;
-              if(size >= voxelslist.size()) voxelslist.resize(size + size, -1);
+              if(size >= voxelslist.size())
+              {
+                size = voxelslist.size();
+                voxelslist.resize(size + initialVoxelsListSize);
+                for(qint32 i = size; i < voxelslist.size(); ++i) { voxelslist[i] = -1; }
+              }
+
             }
           }
         }
       }
       voxelslist.clear();
-      voxelslist.resize(initialVoxelsListSize, -1);
+      voxelslist.fill(-1, initialVoxelsListSize);
       gnum++;
-      ss.str("");
-      ss << "Total Grains: " << gnum;
-      if(gnum%100 == 0) notifyStatusMessage(ss.str());
+
+      QString ss = QObject::tr("Total Grains: %1").arg(gnum);
+      if(gnum%100 == 0) notifyStatusMessage(ss);
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Completed");
+  notifyStatusMessage("Completed");
 }
 
 // -----------------------------------------------------------------------------

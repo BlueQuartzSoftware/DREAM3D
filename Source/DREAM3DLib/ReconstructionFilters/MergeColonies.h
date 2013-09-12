@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
 
     unsigned int* m_CrystalStructures;
 
-    QVector<int> parentnumbers;
+    QVector<int> m_ParentNumbers;
     int numParents;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
