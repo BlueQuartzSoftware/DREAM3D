@@ -241,22 +241,13 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::setXdmfOStream(QTextStream* xdmf)
-{
-  m_XdmfPtr = xdmf;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
     return;
   }
-  QTextStream& out = *m_XdmfPtr;
+  QTextStream& out = *(getXd);
   out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";

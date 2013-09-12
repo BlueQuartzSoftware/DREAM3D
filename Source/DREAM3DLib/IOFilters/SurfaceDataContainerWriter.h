@@ -68,7 +68,6 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
 
     typedef QList<QString> NameListType;
 
-    void setXdmfOStream(std::ostream* xdmf);
 
 
     /**
@@ -146,7 +145,6 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
   private:
-    std::ostream* m_XdmfPtr;
 
     SurfaceDataContainerWriter(const SurfaceDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const SurfaceDataContainerWriter&); // Operator '=' Not Implemented
