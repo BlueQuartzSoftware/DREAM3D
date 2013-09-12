@@ -120,12 +120,12 @@ AbstractFilter::Pointer QReadH5EbsdWidget::getFilter(bool defaultValues)
   ReadH5Ebsd::Pointer filter =  ReadH5Ebsd::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setInputFile(m_InputFile->text()());
+  filter->setInputFile(m_InputFile->text());
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setUseTransformations(m_UseTransformations->isChecked());
 
-  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text()()));
+  filter->setRefFrameZDir(Ebsd::StackingOrder::Utils::getEnumForString(m_RefFrameZDir->text()));
 
   arraySelectionWidget->getArraySelections(filter.get());
 
@@ -333,7 +333,7 @@ void QReadH5EbsdWidget::updateFileInfoWidgets()
     {
       // Read the Phase information from the .h5ang file
       H5EbsdVolumeReader::Pointer h5Reader = H5EbsdVolumeReader::New();
-      h5Reader->setFileName(m_InputFile->text()());
+      h5Reader->setFileName(m_InputFile->text());
 
       float xres = 0.0f;
       float yres = 0.0f;
