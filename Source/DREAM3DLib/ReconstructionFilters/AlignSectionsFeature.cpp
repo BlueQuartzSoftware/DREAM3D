@@ -36,12 +36,12 @@
 
 #include "AlignSectionsFeature.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -114,14 +114,14 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
-    ss << "The Alignment Shift file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
@@ -205,13 +205,13 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
   QVector<QVector<float> >  misorients(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
-    misorients[a].resize(dims[1], 0.0);
+    misorients[a].fill(0.0, dims[1]);
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    
-    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
-  //  notifyStatusMessage(ss.str());
+
+    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
+  //  notifyStatusMessage(ss);
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;
