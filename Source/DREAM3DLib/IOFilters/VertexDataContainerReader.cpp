@@ -191,7 +191,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   if (dcGid < 0)
   {
     ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VertexDataContainerName << std::endl;
+    ss << "Error opening Group " << DREAM3D::HDF5::VertexDataContainerName << "\n";
     setErrorCondition(-61);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
@@ -334,7 +334,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
 
   NameListType names;
   H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
@@ -343,7 +343,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     namesRead.push_back(*iter);
     classType.clear();
     H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
+    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
     if(classType.find("DataArray") == 0)

@@ -119,8 +119,8 @@ void FindNRingNeighbors::generate()
 #if 1
   if ( check0 == false && check1 == false)
   {
-    std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
-    std::cout << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << std::endl;
+    qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << "\n";
+    qDebug() << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << "\n";
     return;
   }
 #endif

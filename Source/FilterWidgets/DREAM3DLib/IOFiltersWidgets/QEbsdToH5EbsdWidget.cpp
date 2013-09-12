@@ -346,7 +346,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 bool QEbsdToH5EbsdWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+  //  qDebug() << "outFilePath: " << outFilePath.toStdString() << "\n";
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -390,7 +390,7 @@ void QEbsdToH5EbsdWidget::on_m_OutputFileBtn_clicked()
 // -----------------------------------------------------------------------------
 void QEbsdToH5EbsdWidget::on_m_InputDirBtn_clicked()
 {
-  // std::cout << "on_angDirBtn_clicked" << std::endl;
+  // qDebug() << "on_angDirBtn_clicked" << "\n";
   QString outputFile = this->getOpenDialogLastDirectory() + QDir::separator();
   outputFile = QFileDialog::getExistingDirectory(this, tr("Select EBSD Directory"), outputFile);
   if (!outputFile.isNull())

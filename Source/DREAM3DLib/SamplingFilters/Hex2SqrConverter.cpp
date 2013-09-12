@@ -256,7 +256,7 @@ void Hex2SqrConverter::execute()
                 ::memset(buf, 0, kBufferSize);
                 in.getline(buf, kBufferSize);
                 line = modifyAngHeaderLine(buf, kBufferSize);
-                if(m_HeaderIsComplete == false) outFile << line << std::endl;
+                if(m_HeaderIsComplete == false) outFile << line << "\n";
             }
             for(int j = 0; j < m_NumRows; j++)
             {
@@ -290,14 +290,14 @@ void Hex2SqrConverter::execute()
                     dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
                     if(dist1 <= dist2 || row1 == (HexNumRows-1)) {point = point1;}
                     else {point = point2;}
-                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
+                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << "\n";
                 }
             }
         }
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-        std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
+        qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." << "\n";
     }
     else
     {

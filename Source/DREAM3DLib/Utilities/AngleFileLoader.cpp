@@ -80,12 +80,12 @@ QVector<QString> AngleFileLoader::tokenize(char* buf, const char* delimiter)
   QString values(buf);
   QString::size_type start = 0;
   QString::size_type pos = 0;
-  //  std::cout << "-----------------------------" << std::endl;
+  //  qDebug() << "-----------------------------" << "\n";
   while(pos != QString::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
     output.push_back(values.substr(start, pos-start));
-    //   std::cout << "Adding: " << output.back() << std::endl;
+    //   qDebug() << "Adding: " << output.back() << "\n";
     if (pos != QString::npos)
     {
       start = pos + 1;
@@ -200,7 +200,7 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
     angles->SetComponent(i, 0, e1);
     angles->SetComponent(i, 1, e2);
     angles->SetComponent(i, 2, e3);
-    //   std::cout << "reading line: " << i << std::endl;
+    //   qDebug() << "reading line: " << i << "\n";
   }
 
 

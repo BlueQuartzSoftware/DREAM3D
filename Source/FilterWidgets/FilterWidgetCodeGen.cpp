@@ -191,7 +191,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   FILE* f = fopen(tempPath.c_str(), "wb");
   if (NULL == f)
   {
-    std::cout << "Could not open file '" << tempPath << "' for writing." << std::endl;
+    qDebug() << "Could not open file '" << tempPath << "' for writing." << "\n";
      return;
   }
 
@@ -341,7 +341,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   // If the file sizes are different then copy the file
   if (currentFileSize != tempFileSize)
   {
-    std::cout << "0-Creating Header File: " <<completePath << std::endl;
+    qDebug() << "0-Creating Header File: " <<completePath << "\n";
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
@@ -378,7 +378,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
-      std::cout << "0-Creating Header File: " << completePath << std::endl;
+      qDebug() << "0-Creating Header File: " << completePath << "\n";
       copyFile(tempPath, completePath);
     }
   }
@@ -437,13 +437,13 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
   {
       std::ofstream out(tempfile.c_str(), std::ios_base::binary);
 
-      std::cout << filename << std::endl;
+      qDebug() << filename << "\n";
       std::ifstream instream;
       instream.open(filename.c_str(), std::ios_base::binary);
       if (!instream.is_open())
       {
         
-        std::cout << " file could not be opened: " << filename << std::endl;
+        qDebug() << " file could not be opened: " << filename << "\n";
         return;
       }
 
@@ -463,14 +463,14 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
       }
       else
       {
-        out << QString(buf) << std::endl;
+        out << QString(buf) << "\n";
       }
     }
   }
   copyFile(tempfile, filename);
   if ( !MXADir::remove(tempfile) )
   {
-    std::cout << "FILE NOT REMOVED: " << tempfile << std::endl;
+    qDebug() << "FILE NOT REMOVED: " << tempfile << "\n";
   }
 
 }
@@ -911,10 +911,10 @@ else
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "void Q%sWidget::readOptions(QSettings &prefs)\n{\n", filter.c_str());
-  // fprintf(f, "  std::cout << \"Reading Prefs for Filter  %s \" << std::endl;\n", filter.c_str());
+  // fprintf(f, "  qDebug() << \"Reading Prefs for Filter  %s \" << "\n";\n", filter.c_str());
 
   QTextStream replaceStream;
-  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << std::endl;
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << "\n";
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
@@ -928,19 +928,19 @@ else
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
       fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
     {
@@ -948,7 +948,7 @@ else
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::InputPathWidget)
     {
@@ -956,7 +956,7 @@ else
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::OutputFileWidget)
     {
@@ -964,7 +964,7 @@ else
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
@@ -972,13 +972,13 @@ else
       fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
       fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
       fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
       fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", false) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", false) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
@@ -995,7 +995,7 @@ else
         fprintf(f, "      cb->addItem(str_%s);\n", prop.c_str() );
         fprintf(f, "      cb->setCurrentIndex(cb->count() -1 );\n");
         fprintf(f, "    }\n");
-        replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+        replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
       }
       else
       {
@@ -1003,7 +1003,7 @@ else
         fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
         fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
         fprintf(f, "     }\n");
-        replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+        replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
       }
       fprintf(f, "   }\n");
     }
@@ -1021,7 +1021,7 @@ else
       fprintf(f, "       }\n");
       fprintf(f, "     }\n");
       fprintf(f, "   }\n");
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
@@ -1053,7 +1053,7 @@ else
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
@@ -1078,7 +1078,7 @@ else
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
@@ -1086,7 +1086,7 @@ else
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
@@ -1095,7 +1095,7 @@ else
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else
     {
@@ -1108,7 +1108,7 @@ else
 
 #if 0
   ss.str("");
-  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/" << std::endl;
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/" << "\n";
   ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
   parseSourceFileForMarker(ss.str(), "////!!##", replaceStream.str());
 #endif
@@ -1182,12 +1182,12 @@ else
   // If the file sizes are different then copy the file
   if(currentFileSize != tempFileSize)
   {
-    std::cout << "0-Creating Source File: " << completePath << std::endl;
+    qDebug() << "0-Creating Source File: " << completePath << "\n";
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    //std::cout << "  Comparing Files: " << filter << std::endl;
+    //qDebug() << "  Comparing Files: " << filter << "\n";
     FILE* c = fopen(completePath.c_str(), "rb");
     unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
     size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
@@ -1219,9 +1219,9 @@ else
     // Use MD5 Checksums to figure out if the files are different
     if (tempHexDigest.compare(currentHexDigest) != 0)
     {
-      std::cout << "  0-Copying Source File: " << completePath << std::endl;
-      std::cout << "    Hex Digest:    " << currentHexDigest << std::endl;
-      std::cout << "    tempHexDigest: " << tempHexDigest << std::endl;
+      qDebug() << "  0-Copying Source File: " << completePath << "\n";
+      qDebug() << "    Hex Digest:    " << currentHexDigest << "\n";
+      qDebug() << "    tempHexDigest: " << tempHexDigest << "\n";
       copyFile(tempPath, completePath);
     }
   }

@@ -64,7 +64,7 @@ SGLogNormalTableModel::~SGLogNormalTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags SGLogNormalTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "SGLogNormalTableModel::flags" << std::endl;
+  //  qDebug() << "SGLogNormalTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -229,7 +229,7 @@ int SGLogNormalTableModel::columnCount(const QModelIndex &index) const
 // -----------------------------------------------------------------------------
 bool SGLogNormalTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "SGLogNormalTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "SGLogNormalTableModel::setData " << value.toString().toStdString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_BinNumbers.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

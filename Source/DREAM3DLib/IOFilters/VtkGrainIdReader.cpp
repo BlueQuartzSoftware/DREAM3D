@@ -355,7 +355,7 @@ int VtkGrainIdReader::readFile()
   if (!instream.is_open())
   {
     
-    ss << logTime() << " vtk file could not be opened: " << filename << std::endl;
+    ss << logTime() << " vtk file could not be opened: " << filename << "\n";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }

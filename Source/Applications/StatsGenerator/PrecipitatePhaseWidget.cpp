@@ -91,9 +91,9 @@
 
 #define CHECK_STATS_READ_ERROR(err, group, dataset)\
 if (err < 0) {\
-  std::cout << "PrecipitatePhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << std::endl;\
-  std::cout << "  File: " << __FILE__ << std::endl;\
-  std::cout << "  Line: " << __LINE__ << std::endl;\
+  qDebug() << "PrecipitatePhaseWidget::on_actionOpen_triggered Error: Could not read '" << group << "' data set '" << dataset << "'" << "\n";\
+  qDebug() << "  File: " << __FILE__ << "\n";\
+  qDebug() << "  Line: " << __LINE__ << "\n";\
   return err;\
 }
 
@@ -132,7 +132,7 @@ PrecipitatePhaseWidget::~PrecipitatePhaseWidget()
 // -----------------------------------------------------------------------------
 void PrecipitatePhaseWidget::on_microstructurePresetCombo_currentIndexChanged(int index)
 {
-  //std::cout << "on_microstructurePresetCombo_currentIndexChanged" << std::endl;
+  //qDebug() << "on_microstructurePresetCombo_currentIndexChanged" << "\n";
   QString presetName = microstructurePresetCombo->currentText();
 
   //Factory Method to get an instantiated object of the correct type?
@@ -543,7 +543,7 @@ int PrecipitatePhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
 //  float yMax = std::numeric_limits<float >::min();
   for (int i = 0; i < size; ++i)
   {
-    //   std::cout << x[i] << "  " << y[i] << std::endl;
+    //   qDebug() << x[i] << "  " << y[i] << "\n";
     if (x[i] > xMax)
     {
       xMax = x[i];

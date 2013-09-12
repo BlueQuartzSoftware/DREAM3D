@@ -207,7 +207,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     if(m_SharedSurfaceAreaList == NULL)
     {
       ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-306);
       addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
@@ -216,7 +216,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
     if(m_NeighborList == NULL)
     {
       ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      ss << "NeighborLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-305);
       addErrorMessage(getHumanLabel(), ss.str(), -305);
     }

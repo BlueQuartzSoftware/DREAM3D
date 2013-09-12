@@ -184,7 +184,7 @@ void PMDirGenerator::setPluginName(QString pluginName)
 // -----------------------------------------------------------------------------
 void PMDirGenerator::pluginNameChanged(const QString &pluginname)
 {
-//  std::cout << "PMDirGenerator::pluginNameChanged" << std::endl;
+//  qDebug() << "PMDirGenerator::pluginNameChanged" << "\n";
   if (isNameChangeable() == false)
   {
     return;
@@ -204,7 +204,7 @@ void PMDirGenerator::pluginNameChanged(const QString &pluginname)
 // -----------------------------------------------------------------------------
 void PMDirGenerator::outputDirChanged(const QString &outputDir)
 {
-//  std::cout << "PMDirGenerator::outputDirChanged" << std::endl;
+//  qDebug() << "PMDirGenerator::outputDirChanged" << "\n";
   m_OutputDir = outputDir;
 }
 
@@ -213,7 +213,7 @@ void PMDirGenerator::outputDirChanged(const QString &outputDir)
 // -----------------------------------------------------------------------------
 void PMDirGenerator::generateOutput()
 {
-//  std::cout << "PMDirGenerator::generateOutput" << std::endl;
+//  qDebug() << "PMDirGenerator::generateOutput" << "\n";
 }
 
 // -----------------------------------------------------------------------------

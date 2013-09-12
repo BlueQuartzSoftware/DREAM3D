@@ -109,7 +109,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   if (NULL == neighborListPtr.get())
   {
     ss.str("");
-    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
+    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << "\n";
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
@@ -129,7 +129,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     if (misorientationListPtr.get() == NULL)
     {
       ss.str("");
-      ss << "MisorientationLists Array Not Initialized correctly" << std::endl;
+      ss << "MisorientationLists Array Not Initialized correctly" << "\n";
       setErrorCondition(-308);
       addErrorMessage(getHumanLabel(), ss.str(), -308);
     }

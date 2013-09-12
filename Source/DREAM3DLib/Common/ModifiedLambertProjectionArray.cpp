@@ -284,7 +284,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   status = H5Dset_extent(dataset, newDims);
   if (status < 0)
   {
-    std::cout << "Error Extending Data set" << std::endl;
+    qDebug() << "Error Extending Data set" << "\n";
     BOOST_ASSERT(false);
   }
   /*// Select a hyperslab.*/
@@ -305,7 +305,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
   if (status < 0)
   {
-    std::cout << "Error appending north square" << std::endl;
+    qDebug() << "Error appending north square" << "\n";
   }
 
 
@@ -319,7 +319,7 @@ void AppendRowToH5Dataset(hid_t gid, const QString &dsetName, int lambertSize, d
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" << "\n";
   }
 
 
@@ -385,7 +385,7 @@ void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSi
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, north);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" << "\n";
   }
 
   filespace = H5Dget_space(dataset);
@@ -399,7 +399,7 @@ void Create2DExpandableDataset(hid_t gid, const QString &dsetName, int lambertSi
   status = H5Dwrite(dataset, H5T_NATIVE_DOUBLE, dataspace, filespace, H5P_DEFAULT, south);
   if (status < 0)
   {
-    std::cout << "Error Writing Chunked Data set to file" << std::endl;
+    qDebug() << "Error Writing Chunked Data set to file" << "\n";
   }
 
   H5Dclose(dataset);

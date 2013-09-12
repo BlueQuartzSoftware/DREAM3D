@@ -123,7 +123,7 @@ class AxisAngleItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "AxisAngleItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "AxisAngleItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == AxisAngleTableModel::Angle)

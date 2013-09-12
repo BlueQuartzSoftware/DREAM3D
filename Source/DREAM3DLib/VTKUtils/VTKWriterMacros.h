@@ -109,7 +109,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
     fclose(f);\
     return -1;\
   }\
@@ -138,7 +138,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
     fclose(f);\
     return -1;\
   }\
@@ -156,7 +156,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
     fclose(f);\
     return -1;\
   }\
@@ -185,7 +185,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
     fclose(f);\
     return -1;\
   }\

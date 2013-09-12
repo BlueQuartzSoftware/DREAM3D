@@ -83,7 +83,7 @@ QString PMFileGenerator::getFileName()
 // -----------------------------------------------------------------------------
 void PMFileGenerator::pluginNameChanged(const QString &pluginName)
 {
-//  std::cout << "PMFileGenerator::pluginNameChanged" << std::endl;
+//  qDebug() << "PMFileGenerator::pluginNameChanged" << "\n";
 
   QString pin = cleanName(pluginName);
 
@@ -113,7 +113,7 @@ void PMFileGenerator::pluginNameChanged(const QString &pluginName)
 // -----------------------------------------------------------------------------
 void PMFileGenerator::outputDirChanged(const QString &outputDir)
 {
-//  std::cout << "PMFileGenerator::outputDirChanged" << std::endl;
+//  qDebug() << "PMFileGenerator::outputDirChanged" << "\n";
   setOutputDir(outputDir);
 }
 
@@ -122,7 +122,7 @@ void PMFileGenerator::outputDirChanged(const QString &outputDir)
 // -----------------------------------------------------------------------------
 void PMFileGenerator::generateOutput()
 {
-//  std::cout << "PMFileGenerator::generateOutput" << std::endl;
+//  qDebug() << "PMFileGenerator::generateOutput" << "\n";
   if (doesGenerateOutput() == false)
   {
     return;

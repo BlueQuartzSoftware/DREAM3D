@@ -228,7 +228,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   }
 
   notifyStatusMessage("Stage 1 of 2");
- // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
+ // qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;

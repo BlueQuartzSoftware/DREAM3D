@@ -459,7 +459,7 @@ void SGAxisODFWidget::showPoleFigure(int imageIndex)
 // -----------------------------------------------------------------------------
 void SGAxisODFWidget::poleFigureGenerationComplete()
 {
-  //  std::cout << "ODF Pole Figure generation complete" << std::endl;
+  //  qDebug() << "ODF Pole Figure generation complete" << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -483,7 +483,7 @@ QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+  // qDebug() << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << "\n";
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;

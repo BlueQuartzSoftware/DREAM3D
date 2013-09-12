@@ -315,7 +315,7 @@ void FindRadialDist::find_radialdist()
     {
       outFile << float(i)*binSize << " ";
     }
-    outFile << std::endl;
+    outFile << "\n";
     for (size_t i = 0; i < count.size(); i++)
     {
       for (int j = 0; j < numbins; j++)
@@ -324,7 +324,7 @@ void FindRadialDist::find_radialdist()
         if(count[i][j] == 0) value = 0;
         outFile << value << " ";
       }
-      outFile << std::endl;
+      outFile << "\n";
     }
   }
 

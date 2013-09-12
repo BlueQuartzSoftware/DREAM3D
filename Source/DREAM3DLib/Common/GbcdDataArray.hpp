@@ -148,7 +148,7 @@ class GbcdDataArray : public IDataArray
      */
     virtual ~GbcdDataArray()
     {
-      //std::cout << "~GbcdDataArrayTemplate '" << m_Name << "'" << std::endl;
+      //qDebug() << "~GbcdDataArrayTemplate '" << m_Name << "'" << "\n";
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -316,7 +316,7 @@ class GbcdDataArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
         return -1;
       }
       this->Size = newSize;
@@ -574,10 +574,10 @@ class GbcdDataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) return "bool";
 
-      // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
+      // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << "\n";
       const char* name = typeid(value).name();
       if (NULL != name && name[0] == 'l' ) {
-        std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
+        qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << "\n";
       }
       return "UnknownType";
     }
@@ -769,7 +769,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
           return 0;
         }
 
@@ -782,7 +782,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
           return 0;
         }
       }
@@ -791,7 +791,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          std::cout << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << std::endl;
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
           return 0;
         }
 

@@ -210,7 +210,7 @@ int PhWriter::writeFile()
   outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    std::cout << "Failed to open: " << getOutputFile() << std::endl;
+    qDebug() << "Failed to open: " << getOutputFile() << "\n";
     return -1;
   }
 
@@ -231,7 +231,7 @@ int PhWriter::writeFile()
       grains++;
     }
   }
-  //std::cout<<grains<< " " << used.size() << std::endl;
+  //std::cout<<grains<< " " << used.size() << "\n";
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -243,7 +243,7 @@ int PhWriter::writeFile()
 
   for (int k = 0; k < totalpoints; k++)
   {
-    outfile << m_GrainIds[k] << std::endl;
+    outfile << m_GrainIds[k] << "\n";
   }
   outfile.close();
 

@@ -125,7 +125,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   IDataArray::Pointer centroidPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceCentroids);
   if (NULL == centroidPtr.get())
   {
-    std::cout << "Triangle Centroids are required for this algorithm" << std::endl;
+    qDebug() << "Triangle Centroids are required for this algorithm" << "\n";
     return;
   }
   DataArray<double>* centroids = DataArray<double>::SafePointerDownCast(centroidPtr.get());
@@ -134,7 +134,7 @@ void CalculateTriangleGroupCurvatures::operator()() const
   IDataArray::Pointer normalPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceNormals);
   if (NULL == normalPtr.get())
   {
-    std::cout << "Triangle Normals are required for this algorithm" << std::endl;
+    qDebug() << "Triangle Normals are required for this algorithm" << "\n";
     return;
   }
   DataArray<double>* normals = DataArray<double>::SafePointerDownCast(normalPtr.get());

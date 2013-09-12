@@ -238,7 +238,7 @@ void FlattenImage::execute()
 
   size_t comp = m->getCellData(m_ImageDataArrayName)->GetNumberOfComponents();
 
-  //  std::cout << "FlattenImage: " << m_ConversionFactor << std::endl;
+  //  qDebug() << "FlattenImage: " << m_ConversionFactor << "\n";
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {

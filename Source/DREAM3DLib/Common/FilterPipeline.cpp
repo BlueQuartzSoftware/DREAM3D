@@ -293,7 +293,7 @@ int FilterPipeline::preflightPipeline()
   QList<QString> cellNames = m->getCellArrayNameList();
   for (QList<QString>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
   {
-    std::cout << *name << std::endl;
+    qDebug() << *name << "\n";
   }
 #endif
   return preflightError;
@@ -349,7 +349,7 @@ void FilterPipeline::execute()
 
     ss.str("");
     ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-  //  std::cout << ss.str() << std::endl;
+  //  qDebug() << ss.str() << "\n";
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss.str());
     sendPipelineMessage(progValue);
@@ -393,10 +393,10 @@ void FilterPipeline::execute()
 // -----------------------------------------------------------------------------
 void FilterPipeline::printFilterNames(std::ostream &out)
 {
-  out << "---------------------------------------------------------------------" << std::endl;
+  out << "---------------------------------------------------------------------" << "\n";
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    out << (*iter)->getNameOfClass() << std::endl;
+    out << (*iter)->getNameOfClass() << "\n";
   }
-  out << "---------------------------------------------------------------------" << std::endl;
+  out << "---------------------------------------------------------------------" << "\n";
 }

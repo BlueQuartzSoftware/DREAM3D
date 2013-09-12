@@ -200,7 +200,7 @@ void RenumberGrains::execute()
 	  QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
-      //std::cout << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << std::endl << std::endl;
+      //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << "\n" << "\n";
     }
     m->setNumFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
     totalFields = m->getNumCellFieldTuples();

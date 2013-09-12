@@ -145,7 +145,7 @@ class SGLogNormalItemDelegate : public QStyledItemDelegate
     // -----------------------------------------------------------------------------
     void setModelData(QWidget *editor, QAbstractItemModel *model, const QModelIndex &index) const
     {
-      //  std::cout << "SGLogNormalItemDelegate::setModelData" << std::endl;
+      //  qDebug() << "SGLogNormalItemDelegate::setModelData" << "\n";
       qint32 col = index.column();
       //  bool ok = false;
       if (col == SGLogNormalTableModel::Average || col == SGLogNormalTableModel::StdDev)
