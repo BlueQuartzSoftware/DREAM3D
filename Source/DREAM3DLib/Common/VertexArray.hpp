@@ -62,29 +62,6 @@ class VertexArray
     DREAM3D_STATIC_NEW_MACRO(VertexArray)
     DREAM3D_TYPE_MACRO(VertexArray)
 
-      /**
-     * @brief Static constructor
-     * @param numElements The number of elements in the internal array.
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
-     */
-    static Pointer CreateArray(size_t numElements, const QString &name)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      VertexArray* d = new VertexArray(numElements, true);
-      if (d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
-        delete d;
-        return DataArray<T>::NullPointer();
-      }
-      d->SetName(name);
-      Pointer ptr(d);
-      return ptr;
-    }
-
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
@@ -99,7 +76,6 @@ class VertexArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
-    size_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -159,7 +135,7 @@ class VertexArray
 
 
   protected:
-    VertexArray(size_t);
+    VertexArray();
 
   private:
     StructArray<Vert_t>::Pointer  m_Array;

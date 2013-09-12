@@ -145,7 +145,7 @@ class EdgeArray
       // traverse data to determine number of uses of each point
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Edges, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 2; j++)
         {
          linkCount[pts[j]]++;
@@ -157,7 +157,7 @@ class EdgeArray
 
       for (cellId=0; cellId < numCells; cellId++)
       {
-        getVerts(Edges, cellId, pts);
+        getVerts(cellId, pts);
         for (size_t j=0; j < 2; j++)
         {
           m_EdgesContainingVert->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
