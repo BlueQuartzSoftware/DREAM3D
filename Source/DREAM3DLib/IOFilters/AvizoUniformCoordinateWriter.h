@@ -34,10 +34,12 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef AvizoUniformCoordinateWriter_H_
-#define AvizoUniformCoordinateWriter_H_
+#ifndef AvizoRectilinearCoordinateWriter_H_
+#define AvizoRectilinearCoordinateWriter_H_
 
 #include <QtCore/QString>
+#include <QtCore/QDataStream>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -46,21 +48,22 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 
+
 /**
- * @class AvizoUniformCoordinateWriter AvizoUniformCoordinateWriter.h DREAM3DLib/IOFilters/AvizoUniformCoordinateWriter.h
- * @brief Writes out a native Avizo Uniform Coordinate file
+ * @class AvizoRectilinearCoordinateWriter AvizoRectilinearCoordinateWriter.h DREAM3DLib/IOFilters/AvizoRectilinearCoordinateWriter.h
+ * @brief Writes out a native Avizo Rectilinear Coordinate file
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Aug 9, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
+class DREAM3DLib_EXPORT AvizoRectilinearCoordinateWriter : public AbstractFilter
 {
   public:
-    DREAM3D_SHARED_POINTERS(AvizoUniformCoordinateWriter);
-    DREAM3D_STATIC_NEW_MACRO(AvizoUniformCoordinateWriter);
-    DREAM3D_TYPE_MACRO_SUPER(AvizoUniformCoordinateWriter, AbstractFilter);
+    DREAM3D_SHARED_POINTERS(AvizoRectilinearCoordinateWriter);
+    DREAM3D_STATIC_NEW_MACRO(AvizoRectilinearCoordinateWriter);
+    DREAM3D_TYPE_MACRO_SUPER(AvizoRectilinearCoordinateWriter, AbstractFilter);
 
-    virtual ~AvizoUniformCoordinateWriter();
+    virtual ~AvizoRectilinearCoordinateWriter();
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
@@ -75,13 +78,13 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Avizo Uniform Coordinate Writer"; }
+    virtual const QString getHumanLabel() { return "Avizo Rectilinear Coordinate Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -94,14 +97,14 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	 /**
+   /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
@@ -113,7 +116,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
     virtual void preflight();
 
   protected:
-    AvizoUniformCoordinateWriter();
+    AvizoRectilinearCoordinateWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -129,20 +132,20 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
      * @brief Generates the Avizo Header for this file
      * @return The header as a string
      */
-    QString generateHeader();
+    void generateHeader(QDataStream &ss);
 
     /**
      * @brief Writes the data to the Avizo file
      * @param writer The MXAFileWriter object
      * @return Error code
      */
-    int writeData(MXAFileWriter64 &writer);
+    int writeData(QDataStream &out);
 
   private:
     int32_t* m_GrainIds;
 
-    AvizoUniformCoordinateWriter(const AvizoUniformCoordinateWriter&); // Copy Constructor Not Implemented
-    void operator=(const AvizoUniformCoordinateWriter&); // Operator '=' Not Implemented
+    AvizoRectilinearCoordinateWriter(const AvizoRectilinearCoordinateWriter&); // Copy Constructor Not Implemented
+    void operator=(const AvizoRectilinearCoordinateWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* AvizoUniformCoordinateWriter_H_ */
+#endif /* AvizoRectilinearCoordinateWriter_H_ */
