@@ -49,9 +49,6 @@
 
 #include "DREAM3DLib/Common/FilterParameter.h"
 
-Q_DECLARE_METATYPE(IntVec3Widget_t)
-Q_DECLARE_METATYPE(FloatVec3Widget_t)
-
 #if 1
 /**
 * @brief Creates a "setter" method to set the property.
