@@ -36,15 +36,18 @@
 
 #include "DxWriter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-    FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
+  FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -91,10 +94,10 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", getAddSurfaceLayer()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -116,25 +119,24 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
 
+  QString ss;
   if (getOutputFile().isEmpty() == true)
   {
-    ss <<  ": The output file must be set before executing this filter.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    ss = QObject::tr( ": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
-
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if (MXADir::exists(parentPath) == false)
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    ss = QObject::tr( "The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if (QFileInfo::extension(getOutputFile()).compare("") == 0)
+  if (fi.suffix().compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".dx"));
   }
@@ -166,9 +168,9 @@ int DxWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss;
+    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -193,26 +195,32 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << "\n";
+  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputFile());
+
+  QDir dir(fi.path());
+  if(!dir.mkpath("."))
   {
-    
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+    QString ss;
+    ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  std::ofstream out(getOutputFile().toLatin1().data(), std::ios_base::binary);
-  if(out.is_open() == false)
+  QFile file(getOutputFile());
+  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
   {
-    return -1;
+    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
+    setErrorCondition(-100);
+    notifyErrorMessage(ss, getErrorCondition());
+    return -100;
   }
 
+  QTextStream out(&file);
   DimType fileXDim = dims[0];
   DimType fileYDim = dims[1];
   DimType fileZDim = dims[2];
@@ -334,7 +342,7 @@ int DxWriter::writeFile()
   out << "" << "\n";
   out << "end" << "\n";
 
-  out.close();
+  file.close();
 #if 0
   out.open("/tmp/m3cmesh.raw", std::ios_base::binary);
   out.write((const char*)(&dims[0]), 4);

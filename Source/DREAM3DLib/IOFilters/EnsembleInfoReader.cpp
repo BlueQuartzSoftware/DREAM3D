@@ -37,9 +37,11 @@
 
 #include "EnsembleInfoReader.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
+
+#include <QtCore/QFileInfo>
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 
@@ -115,20 +117,20 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
 
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (QFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -148,7 +150,7 @@ void EnsembleInfoReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  EnsembleInfoReader::readHeader()
+int EnsembleInfoReader::readHeader()
 {
   return 0;
 }
@@ -156,14 +158,13 @@ int  EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int  EnsembleInfoReader::readFile()
+int EnsembleInfoReader::readFile()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -172,10 +173,9 @@ int  EnsembleInfoReader::readFile()
   inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
   if(!inFile)
   {
-    
-    ss << "Failed to open: " << getInputFile();
+    QString ss = QObject::tr("Failed to open: ").arg(getInputFile());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
   int numphases, pnum;
