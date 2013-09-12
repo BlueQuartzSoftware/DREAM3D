@@ -278,7 +278,7 @@ void NodesTrianglesToStl::execute()
   size_t nread = 0;
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
-  VertexArray::Pointer nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
@@ -304,8 +304,8 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  FaceArray::Pointer trianglePtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   int32_t* faceLabels = faceLabelPtr->GetPointer(0);
@@ -316,7 +316,7 @@ void NodesTrianglesToStl::execute()
   {
     // Read from the Input Triangles Temp File
     nread = fscanf(triFile, "%d %d %d %d %d %d %d %d %d", tData, tData + 1, tData + 2, tData + 3, tData + 4, tData + 5, tData + 6, tData + 7, tData + 8);
-    triangles[i].verts[0] = tData[1];
+    triangles->setVerts([i].verts[0] = tData[1];
     triangles[i].verts[1] = tData[2];
     triangles[i].verts[2] = tData[3];
     faceLabels[i*2] = tData[7];

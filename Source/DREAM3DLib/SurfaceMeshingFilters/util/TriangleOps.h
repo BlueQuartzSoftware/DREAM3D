@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/Common/VertexArray.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 

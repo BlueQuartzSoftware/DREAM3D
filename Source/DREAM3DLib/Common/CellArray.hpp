@@ -85,9 +85,24 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getVerts(StructArray<Cell_t>::Pointer Cells, size_t edgeId, size_t* verts)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      Cell_t& Cell = *(Cells->GetPointer(edgeId));
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      CellArray* d = new CellArray();
+      d->resizeArray(numElements);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void getVerts(size_t edgeId, size_t* verts)
+    {
+      Cell_t& Cell = *(m_Array->GetPointer(edgeId));
       verts[0] = Cell.verts[0];
       verts[1] = Cell.verts[1];
       verts[2] = Cell.verts[2];
@@ -96,9 +111,9 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setVerts(StructArray<Cell_t>::Pointer Cells, size_t edgeId, float* verts)
+    void setVerts(size_t edgeId, float* verts)
     {
-      Cell_t& Cell = *(Cells->GetPointer(edgeId));
+      Cell_t& Cell = *(m_Array->GetPointer(edgeId));
       Cell.verts[0] = verts[0];
       Cell.verts[1] = verts[1];
       Cell.verts[2] = verts[2];
@@ -257,6 +272,7 @@ class CellArray
     DynamicListArray::Pointer m_CellsContainingVert;
     DynamicListArray::Pointer m_CellNeighbors;
 
+    QString m_Name;
 
     CellArray(const CellArray&); // Copy Constructor Not Implemented
     void operator=(const CellArray&); // Operator '=' Not Implemented

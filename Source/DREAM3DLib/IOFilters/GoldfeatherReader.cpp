@@ -144,8 +144,8 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   }
 
 
-  VertexArray::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
 
   sm->setVertices(vertices);
   sm->setFaces(triangles);
@@ -226,7 +226,7 @@ void GoldfeatherReader::execute()
   dataCheck(false, nNodes, 1, 1);
 
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
-  VertexArray::Pointer nodesPtr = DREAM3D::Mesh::VertList_t::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
+  VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
   VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
 
@@ -289,7 +289,7 @@ void GoldfeatherReader::execute()
     return;
   }
 
-  FaceArray::Pointer trianglesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Pointer trianglesPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
   trianglesPtr->initializeWithZeros();
   FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
 

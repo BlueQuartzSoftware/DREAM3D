@@ -63,6 +63,8 @@ class FaceArray
     DREAM3D_STATIC_NEW_MACRO(FaceArray)
     DREAM3D_TYPE_MACRO(FaceArray)
 
+
+
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
@@ -81,9 +83,24 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getVerts(StructArray<Face_t>::Pointer Faces, size_t edgeId, size_t* verts)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      Face_t& Face = *(Faces->GetPointer(edgeId));
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      FaceArray* d = new FaceArray();
+      d->resizeArray(numElements);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void getVerts(size_t edgeId, size_t* verts)
+    {
+      Face_t& Face = *(m_Array->GetPointer(edgeId));
       verts[0] = Face.verts[0];
       verts[1] = Face.verts[1];
       verts[2] = Face.verts[2];
@@ -92,9 +109,9 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setVerts(StructArray<Face_t>::Pointer Faces, size_t edgeId, float* verts)
+    void setVerts(size_t edgeId, float* verts)
     {
-      Face_t& Face = *(Faces->GetPointer(edgeId));
+      Face_t& Face = *(m_Array->GetPointer(edgeId));
       Face.verts[0] = verts[0];
       Face.verts[1] = verts[1];
       Face.verts[2] = verts[2];
@@ -254,6 +271,7 @@ class FaceArray
     DynamicListArray::Pointer m_FacesContainingVert;
     DynamicListArray::Pointer m_FaceNeighbors;
 
+    QString m_Name;
 
     FaceArray(const FaceArray&); // Copy Constructor Not Implemented
     void operator=(const FaceArray&); // Operator '=' Not Implemented

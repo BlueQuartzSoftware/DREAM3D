@@ -234,7 +234,7 @@ void MergeTwins::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch()) )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
     int32_t* pid = rndNumbers->GetPointer(0);

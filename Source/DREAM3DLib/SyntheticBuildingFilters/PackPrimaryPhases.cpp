@@ -277,7 +277,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
   m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
 
-  Seed = MXA::getMilliSeconds();
+  Seed = QDateTime::currentMSecsSinceEpoch());
   setupFilterParameters();
 }
 
@@ -423,7 +423,7 @@ void PackPrimaryPhases::execute()
 
   int err = 0;
   setErrorCondition(err);
-  unsigned long long int Seed = MXA::getMilliSeconds();
+  unsigned long long int Seed = QDateTime::currentMSecsSinceEpoch());
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed);
 
   int64_t totalPoints = m->getTotalPoints();
@@ -824,7 +824,7 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Determining Neighbors");
   progGrain = 0;
   progGrainInc = numgrains * .01;
-  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch());
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
@@ -833,7 +833,7 @@ void PackPrimaryPhases::execute()
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
   {
-    currentMillis = MXA::getMilliSeconds();
+    currentMillis = QDateTime::currentMSecsSinceEpoch());
     if (currentMillis - millis > 1000)
     {
       ss.str("");
@@ -842,7 +842,7 @@ void PackPrimaryPhases::execute()
       estimatedTime = (float)(numgrains - i) / timeDiff;
       ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
       notifyStatusMessage(ss.str());
-      millis = MXA::getMilliSeconds();
+      millis = QDateTime::currentMSecsSinceEpoch());
     }
     determine_neighbors(i, 1);
   }
@@ -850,7 +850,7 @@ void PackPrimaryPhases::execute()
   // begin swaping/moving/adding/removing grains to try to improve packing
   int totalAdjustments = static_cast<int>(10 * (numgrains-1));
 
-  millis = MXA::getMilliSeconds();
+  millis = QDateTime::currentMSecsSinceEpoch());
   startMillis = millis;
   bool good;
   float xshift, yshift, zshift;
@@ -858,7 +858,7 @@ void PackPrimaryPhases::execute()
   int numIterationsPerTime = 0;
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    currentMillis = MXA::getMilliSeconds();
+    currentMillis = QDateTime::currentMSecsSinceEpoch());
     if (currentMillis - millis > 1000)
     {
       ss.str("");
@@ -870,7 +870,7 @@ void PackPrimaryPhases::execute()
       ss << " || Iterations/Sec: " << timeDiff * 1000;
       notifyStatusMessage(ss.str());
 
-      millis = MXA::getMilliSeconds();
+      millis = QDateTime::currentMSecsSinceEpoch());
 
       numIterationsPerTime = iteration - lastIteration;
       lastIteration = iteration;
@@ -1839,13 +1839,13 @@ void PackPrimaryPhases::assign_voxels()
   ellipfuncsPtr->initializeWithValues(-1);
 
   float grainsPerTime = 0;
-  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch());
   uint64_t currentMillis = millis;
 
   for (size_t i = firstPrimaryField; i < m->getNumCellFieldTuples(); i++)
   {
     grainsPerTime++;
-    currentMillis = MXA::getMilliSeconds();
+    currentMillis = QDateTime::currentMSecsSinceEpoch());
     if (currentMillis - millis > 1000)
     {
       float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
@@ -1853,7 +1853,7 @@ void PackPrimaryPhases::assign_voxels()
       ss << "Assign Voxels & Gaps|| Grains Checked: " << i << " || Grains/Second: " << (int)rate;
       notifyStatusMessage(ss.str());
       grainsPerTime = 0;
-      millis = MXA::getMilliSeconds();
+      millis = QDateTime::currentMSecsSinceEpoch());
     }
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -2024,7 +2024,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighborsPtr->initializeWithValues(-1);
 
   QVector<int > n(m->getNumCellFieldTuples() + 1,0);
-  uint64_t millis = MXA::getMilliSeconds();
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch());
   uint64_t currentMillis = millis;
 
   while (count != 0)
@@ -2044,13 +2044,13 @@ void PackPrimaryPhases::assign_gaps_only()
           if (grainname < 0)
           {
             count++;
-            currentMillis = MXA::getMilliSeconds();
+            currentMillis = QDateTime::currentMSecsSinceEpoch());
             if (currentMillis - millis > 1000)
             {
               ss.str("");
               ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
               notifyStatusMessage(ss.str());
-              millis = MXA::getMilliSeconds();
+              millis = QDateTime::currentMSecsSinceEpoch());
             }
             current = 0;
             most = 0;

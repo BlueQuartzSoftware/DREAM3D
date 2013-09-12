@@ -111,7 +111,7 @@ void CalculateTriangleGroupCurvatures::operator() const
 {
 
   // Get the Triangles Array
-//  DREAM3D::Mesh::FaceList_t::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
+//  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   IDataArray::Pointer flPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);

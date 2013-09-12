@@ -62,7 +62,7 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
 {
   QVector<int32_t> adjacentTris;
   // Get the master list of triangles for the mesh
-  DREAM3D::Mesh::FaceList_t::Pointer facesPtr = sm->getFaces();
+  FaceArray::Pointer facesPtr = sm->getFaces();
 //  FaceArray::Face_t* faces = facesPtr->GetPointer(0);
   IDataArray::Pointer flPtr = sm->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());

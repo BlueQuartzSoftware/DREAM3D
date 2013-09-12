@@ -80,9 +80,24 @@ class VertexArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void getCoords(StructArray<Vert_t>::Pointer Verts, size_t vertId, float* coords)
+    static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      Vert_t& Vert = *(Verts->GetPointer(vertId));
+      if (name.isEmpty() == true)
+      {
+        return NullPointer();
+      }
+      VertexArray* d = new VertexArray();
+      d->resizeArray(numElements);
+      Pointer ptr(d);
+      return ptr;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void getCoords(size_t vertId, float* coords)
+    {
+      Vert_t& Vert = *(m_Array->GetPointer(vertId));
       coords[0] = Vert.pos[0];
       coords[1] = Vert.pos[1];
       coords[2] = Vert.pos[2];
@@ -91,9 +106,9 @@ class VertexArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void setCoords(StructArray<Vert_t>::Pointer Verts, size_t vertId, float* coords)
+    void setCoords(size_t vertId, float* coords)
     {
-      Vert_t& Vert = *(Verts->GetPointer(vertId));
+      Vert_t& Vert = *(m_Array->GetPointer(vertId));
       Vert.pos[0] = coords[0];
       Vert.pos[1] = coords[1];
       Vert.pos[2] = coords[2];
@@ -104,6 +119,8 @@ class VertexArray
 
   private:
     StructArray<Vert_t>::Pointer  m_Array;
+
+    QString m_Name;
 
     VertexArray(const VertexArray&); // Copy Constructor Not Implemented
     void operator=(const VertexArray&); // Operator '=' Not Implemented

@@ -214,8 +214,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
 
-  DREAM3D::Mesh::VertListPointer_t nodes = sm->getVertices();
-  DREAM3D::Mesh::FaceListPointer_t triangles = sm->getFaces();
+  VertexArray::Pointer nodes = sm->getVertices();
+  FaceArray::Pointer triangles = sm->getFaces();
   IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
 
 #if WRITE_EDGES_FILE
@@ -252,7 +252,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   int numNodes = nodes->GetNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
-  DREAM3D::Mesh::Vert_t* v = nodes->GetPointer(0);
+  VertexArray::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
   for (int i = 0; i < numNodes; i++)
   {
@@ -335,8 +335,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->GetNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<DREAM3D::Mesh::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
-  DREAM3D::Mesh::Face_t* t = ts->GetPointer(0);
+  StructArray<FaceArray::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
+  FaceArray::Face_t* t = ts->GetPointer(0);
 
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
