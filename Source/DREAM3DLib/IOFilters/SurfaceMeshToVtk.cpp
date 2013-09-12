@@ -217,7 +217,7 @@ void SurfaceMeshToVtk::execute()
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodes.count(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodes.getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -311,7 +311,7 @@ void SurfaceMeshToVtk::execute()
   FaceArray& triangles = *(m->getFaces().get());
 
   int tData[4];
-  int nT = triangles.count();
+  int nT = triangles.getNumberOfTuples();
   int triangleCount = nT;
   //  int tn1, tn2, tn3;
   if (false == m_WriteConformalMesh)
@@ -701,7 +701,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
 
-  int nT = triangles.count();
+  int nT = triangles.getNumberOfTuples();
   int triangleCount = nT;
   int swapped;
   if (false == m_WriteConformalMesh)
