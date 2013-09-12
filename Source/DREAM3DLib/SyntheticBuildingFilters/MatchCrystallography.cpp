@@ -254,7 +254,7 @@ void MatchCrystallography::execute()
   determine_boundary_areas();
 
 
-  size_t size = m->getNumEnsembleTuples();
+  size_t size = m->getNumCellEnsembleTuples();
   for (size_t i = 1; i < size; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
@@ -373,7 +373,7 @@ void MatchCrystallography::determine_boundary_areas()
   size_t totalFields = m->getNumCellFieldTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
 
-  totalSurfaceArea.resize(totalEnsembles,0.0);
+  m_TotalSurfaceArea.fill(0.0, totalEnsembles);
 
   int phase1, phase2;
   for (size_t i = 1; i < totalFields; i++)
@@ -392,7 +392,7 @@ void MatchCrystallography::determine_boundary_areas()
       phase2 = m_FieldPhases[nname];
       if(phase1 == phase2)
       {
-        totalSurfaceArea[phase1] = totalSurfaceArea[phase1] + neighsurfarea;
+        m_TotalSurfaceArea[phase1] = m_TotalSurfaceArea[phase1] + neighsurfarea;
       }
     }
   }
@@ -475,12 +475,12 @@ void MatchCrystallography::MC_LoopBody1(int grain, int ensem, int j, float neigh
   newmisobin = m_OrientationOps[sym]->getMisoBin(n1, n2, n3);
   mdfchange = mdfchange
       + (((actualmdf->GetValue(curmisobin) - simmdf->GetValue(curmisobin)) * (actualmdf->GetValue(curmisobin) - simmdf->GetValue(curmisobin)))
-         - ((actualmdf->GetValue(curmisobin) - (simmdf->GetValue(curmisobin) - (neighsurfarea / totalSurfaceArea[ensem])))
-            * (actualmdf->GetValue(curmisobin) - (simmdf->GetValue(curmisobin) - (neighsurfarea / totalSurfaceArea[ensem])))));
+         - ((actualmdf->GetValue(curmisobin) - (simmdf->GetValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))
+            * (actualmdf->GetValue(curmisobin) - (simmdf->GetValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])))));
   mdfchange = mdfchange
       + (((actualmdf->GetValue(newmisobin) - simmdf->GetValue(newmisobin)) * (actualmdf->GetValue(newmisobin) - simmdf->GetValue(newmisobin)))
-         - ((actualmdf->GetValue(newmisobin) - (simmdf->GetValue(newmisobin) + (neighsurfarea / totalSurfaceArea[ensem])))
-            * (actualmdf->GetValue(newmisobin) - (simmdf->GetValue(newmisobin) + (neighsurfarea / totalSurfaceArea[ensem])))));
+         - ((actualmdf->GetValue(newmisobin) - (simmdf->GetValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))
+            * (actualmdf->GetValue(newmisobin) - (simmdf->GetValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])))));
 }
 
 // -----------------------------------------------------------------------------
@@ -505,8 +505,8 @@ void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neigh
   m_MisorientationLists[grain][3 * j] = miso1;
   m_MisorientationLists[grain][3 * j + 1] = miso2;
   m_MisorientationLists[grain][3 * j + 2] = miso3;
-  simmdf->SetValue(curmisobin, (simmdf->GetValue(curmisobin) - (neighsurfarea / totalSurfaceArea[ensem])));
-  simmdf->SetValue(newmisobin, (simmdf->GetValue(newmisobin) + (neighsurfarea / totalSurfaceArea[ensem])));
+  simmdf->SetValue(curmisobin, (simmdf->GetValue(curmisobin) - (neighsurfarea / m_TotalSurfaceArea[ensem])));
+  simmdf->SetValue(newmisobin, (simmdf->GetValue(newmisobin) + (neighsurfarea / m_TotalSurfaceArea[ensem])));
 }
 
 // -----------------------------------------------------------------------------
@@ -899,7 +899,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
           mbin = m_OrientationOps[crys1]->getMisoBin(m_MisorientationLists[i][3 * j], m_MisorientationLists[i][3 * j + 1], m_MisorientationLists[i][3 * j + 2]);
           if(m_SurfaceFields[i] == false && (nname > static_cast<int>(i) || m_SurfaceFields[nname] == true))
           {
-            simmdf->SetValue(mbin, (simmdf->GetValue(mbin)+(neighsurfarea/totalSurfaceArea[m_FieldPhases[i]])));
+            simmdf->SetValue(mbin, (simmdf->GetValue(mbin)+(neighsurfarea/m_TotalSurfaceArea[m_FieldPhases[i]])));
           }
         }
         else

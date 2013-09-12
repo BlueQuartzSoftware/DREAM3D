@@ -160,7 +160,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     float odfchange;
 
     QVector<float> unbiasedvol;
-    QVector<float> totalSurfaceArea;
+    QVector<float> m_TotalSurfaceArea;
 
 
     FloatArrayType::Pointer actualodf;
