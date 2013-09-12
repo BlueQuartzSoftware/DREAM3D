@@ -2957,7 +2957,7 @@ void M3CSliceBySlice::analyzeWinding()
     std::deque<int> triangleDeque;
     triangleDeque.push_back(t->tIndex);
 
-    while (triangleDeque.empty() == false)
+    while (triangleDeque.isEmpty() == false)
     {
       SurfaceMesh::M3C::Patch::Pointer currentTri = cTriangle[triangleDeque.front()];
       //    qDebug() << "tIndex = " << t->tIndex << "\n";

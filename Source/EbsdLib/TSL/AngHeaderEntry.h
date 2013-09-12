@@ -68,7 +68,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
     QString getKey() { return m_key; }
     QString getHDFType() {
       T value = static_cast<T>(0);
-      return (H5Lite::HDFTypeForPrimitiveAsStr(value));
+      return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
     }
     void parseValue(QByteArray &value)
     {
@@ -77,7 +77,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key() << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -125,7 +125,7 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
       m_value = QString(value);
     }
     void print(std::ostream &out) {
-      out << m_key() << "  " << m_value() << std::endl;
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }

@@ -147,14 +147,14 @@ herr_t H5Lite::openId( hid_t loc_id, const std::string& obj_name, H5O_type_t obj
   case H5O_TYPE_DATASET:
 
     /* Open the dataset. */
-    if ( (obj_id = H5Dopen( loc_id, obj_name.toLatin1().data(), H5P_DEFAULT )) < 0 )
+    if ( (obj_id = H5Dopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
      return -1;
     break;
 
    case H5O_TYPE_GROUP:
 
     /* Open the group. */
-    if ( (obj_id = H5Gopen( loc_id, obj_name.toLatin1().data(), H5P_DEFAULT )) < 0 )
+    if ( (obj_id = H5Gopen( loc_id, obj_name.c_str(), H5P_DEFAULT )) < 0 )
      return -1;
     break;
 
@@ -203,7 +203,7 @@ herr_t H5Lite::findAttribute( hid_t loc_id, const std::string& attrName )
  herr_t ret = 0;
 
  attr_num = 0;
- ret = H5Aiterate( loc_id, H5_INDEX_NAME, H5_ITER_INC, &attr_num, find_attr, (void *)(attrName.toLatin1().data()) );
+ ret = H5Aiterate( loc_id, H5_INDEX_NAME, H5_ITER_INC, &attr_num, find_attr, (void *)(attrName.c_str()) );
 
  return ret;
 }
@@ -215,7 +215,7 @@ bool H5Lite::datasetExists( hid_t loc_id, const std::string& dsetName )
 {
   H5O_info_t ginfo;
   HDF_ERROR_HANDLER_OFF
-  herr_t err = H5Oget_info_by_name(loc_id, dsetName.toLatin1().data(), &ginfo, H5P_DEFAULT);
+  herr_t err = H5Oget_info_by_name(loc_id, dsetName.c_str(), &ginfo, H5P_DEFAULT);
   HDF_ERROR_HANDLER_ON
   return (err < 0) ? false : true;
 }
@@ -246,7 +246,7 @@ herr_t  H5Lite::writeStringDataset (hid_t loc_id,
         if ( (sid = H5Screate( H5S_SCALAR )) >= 0 )
         {
           /* Create the dataset. */
-          if ( (did = H5Dcreate(loc_id, dsetName.toLatin1().data(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
+          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
           {
              if ( NULL != data )
               {
@@ -293,11 +293,11 @@ herr_t H5Lite::writeStringDataset (hid_t loc_id, const std::string& dsetName, co
         if ( (sid = H5Screate( H5S_SCALAR )) >= 0 )
         {
           /* Create the dataset. */
-          if ( (did = H5Dcreate(loc_id, dsetName.toLatin1().data(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
+          if ( (did = H5Dcreate(loc_id, dsetName.c_str(), tid, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT)) >= 0 )
           {
              if ( !data.empty() )
               {
-                  err = H5Dwrite(did, tid, H5S_ALL, H5S_ALL,H5P_DEFAULT, data.toLatin1().data() );
+                  err = H5Dwrite(did, tid, H5S_ALL, H5S_ALL,H5P_DEFAULT, data.c_str() );
                   if (err<0 ) {
                     std::cout << "Error Writing String Data" << std::endl;
                     retErr = err;
@@ -369,7 +369,7 @@ herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
    herr_t     retErr = 0;
 
    /* Get the type of object */
-   retErr = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
+   retErr = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
    if (retErr >= 0) {
      /* Open the object */
      obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
@@ -397,7 +397,7 @@ herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
                /* The attribute already exists, delete it */
                if ( has_attr == 1 )
                {
-                 err = H5Adelete( obj_id, attrName.toLatin1().data() );
+                 err = H5Adelete( obj_id, attrName.c_str() );
                  if (err<0) {
                    std::cout << "Error Deleting Attribute '" << attrName << "' from Object '" <<  objName << "'" << std::endl;
                    retErr = err;
@@ -405,7 +405,7 @@ herr_t  H5Lite::writeStringAttribute(hid_t loc_id,
                }
                if (err >= 0) {
                  /* Create and write the attribute */
-                 attr_id = H5Acreate( obj_id, attrName.toLatin1().data(), attr_type, attr_space_id, H5P_DEFAULT, H5P_DEFAULT);
+                 attr_id = H5Acreate( obj_id, attrName.c_str(), attr_type, attr_space_id, H5P_DEFAULT, H5P_DEFAULT);
                  if ( attr_id >= 0 ) {
                    err = H5Awrite( attr_id, attr_type, data );
                    if ( err < 0 ) {
@@ -459,7 +459,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std:
   herr_t retErr = 0;
   hsize_t size;
   data.clear();
-  did = H5Dopen(loc_id, dsetName.toLatin1().data(), H5P_DEFAULT );
+  did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
     std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
@@ -494,7 +494,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id,
   herr_t err = 0;
   herr_t retErr = 0;
 
-  did = H5Dopen(loc_id, dsetName.toLatin1().data(), H5P_DEFAULT );
+  did = H5Dopen(loc_id, dsetName.c_str(), H5P_DEFAULT );
   if (did < 0) {
     std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return -1;
@@ -534,7 +534,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
  HDF_ERROR_HANDLER_OFF;
 
   /* Get the type of object */
-  err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -543,7 +543,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       size = H5Aget_storage_size(attr_id);
@@ -600,7 +600,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
  HDF_ERROR_HANDLER_OFF;
 
   /* Get the type of object */
-  err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -609,7 +609,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       attr_type = H5Aget_type( attr_id );
@@ -650,7 +650,7 @@ herr_t H5Lite::getDatasetNDims( hid_t loc_id, const std::string& dsetName, hid_t
  rank = 0;
 
  /* Open the dataset. */
- if ( (did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT )) < 0 )
+ if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   return -1;
 
  /* Get the dataspace handle */
@@ -697,7 +697,7 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
    hid_t sid;
    rank = -1;
     /* Get the type of object */
-  err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -705,7 +705,7 @@ herr_t H5Lite::getAttributeNDims(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       sid = H5Aget_space( attr_id );
@@ -740,7 +740,7 @@ hid_t H5Lite::getDatasetType(hid_t loc_id, const std::string &dsetName)
   herr_t retErr = 0;
   hid_t did = -1;
   /* Open the dataset. */
-  if ( (did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT )) < 0 )
+  if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   {
      return -1;
   }
@@ -772,7 +772,7 @@ herr_t H5Lite::getDatasetInfo( hid_t loc_id,
 
 
   /* Open the dataset. */
-  if ( (did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT )) < 0 )
+  if ( (did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT )) < 0 )
   return -1;
 
   /* Get an identifier for the datatype. */
@@ -852,7 +852,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
    hid_t sid;
    hid_t rank = -1;
 
-  err = H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT);
+  err = H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT);
   if (err<0) {
     return err;
   }
@@ -861,7 +861,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
   obj_id = H5Lite::openId( loc_id, objName, statbuf.type );
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_by_name( loc_id, objName.toLatin1().data(), attrName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT );
+    attr_id = H5Aopen_by_name( loc_id, objName.c_str(), attrName.c_str(), H5P_DEFAULT, H5P_DEFAULT );
     if ( attr_id >= 0 )
     {
       /* Get an identifier for the datatype. */
@@ -959,7 +959,7 @@ herr_t H5Lite::writeMXAArray(hid_t loc_id,
     return sid;
   }
   // Create the Dataset
-  did = H5Dcreate (loc_id, dsetName.toLatin1().data(), dataType, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
+  did = H5Dcreate (loc_id, dsetName.c_str(), dataType, sid, H5P_DEFAULT, H5P_DEFAULT, H5P_DEFAULT);
   if ( did >= 0 )
   {
     err = H5Dwrite( did, dataType, H5S_ALL, H5S_ALL, H5P_DEFAULT, data );
@@ -1015,7 +1015,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
    }
 
    /* Get the type of object */
-   if (H5Oget_info_by_name(loc_id, objName.toLatin1().data(),  &statbuf, H5P_DEFAULT) < 0) {
+   if (H5Oget_info_by_name(loc_id, objName.c_str(),  &statbuf, H5P_DEFAULT) < 0) {
      std::cout << "Error getting object info." << std::endl;
      return -1;
    }
@@ -1043,7 +1043,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
      /* The attribute already exists, delete it */
      if ( has_attr == 1 ) {
-       err = H5Adelete( obj_id, attrName.toLatin1().data() );
+       err = H5Adelete( obj_id, attrName.c_str() );
        if (err < 0) {
          std::cout << "Error Deleting Existing Attribute" << std::endl;
          retErr = err;
@@ -1052,7 +1052,7 @@ herr_t H5Lite::writeMXAAttribute(hid_t loc_id,
 
      if ( err >= 0 ) {
        /* Create the attribute. */
-       attr_id = H5Acreate( obj_id, attrName.toLatin1().data() , dataType, sid, H5P_DEFAULT, H5P_DEFAULT );
+       attr_id = H5Acreate( obj_id, attrName.c_str() , dataType, sid, H5P_DEFAULT, H5P_DEFAULT );
        if ( attr_id >= 0 ) {
          /* Write the attribute data. */
          err = H5Awrite( attr_id, dataType, data );
@@ -1102,7 +1102,7 @@ IMXAArray* H5Lite::readMXAArray(hid_t loc_id,
   std::string sData;
 
  /* Open the dataset. */
-  did = H5Dopen( loc_id, dsetName.toLatin1().data(), H5P_DEFAULT );
+  did = H5Dopen( loc_id, dsetName.c_str(), H5P_DEFAULT );
   if ( did < 0 ) {
     std::cout << "Error opening Dataset at loc_id (" << loc_id << ") with object name (" << dsetName << ")" << std::endl;
     return NULL;
@@ -1224,14 +1224,14 @@ IMXAArray* H5Lite::readMXAAttribute(hid_t loc_id,
   std::string sData;
   //std::cout << "   Reading Vector Attribute at Path '" << objName << "' with Key: '" << attrName << "'" << std::endl;
   /* Get the type of object */
-  err = H5Gget_objinfo(loc_id, dsetName.toLatin1().data(), 1, &statbuf);
+  err = H5Gget_objinfo(loc_id, dsetName.c_str(), 1, &statbuf);
   if (err<0)
     return data;
   /* Open the object */
   obj_id = H5Lite::openId( loc_id, dsetName, statbuf.type);
   if ( obj_id >= 0)
   {
-    attr_id = H5Aopen_name( obj_id, attributeKey.toLatin1().data() );
+    attr_id = H5Aopen_name( obj_id, attributeKey.c_str() );
     if ( attr_id >= 0 )
     {
       //Need to allocate the array size

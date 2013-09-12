@@ -89,10 +89,10 @@ void RenameFieldArray::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedFieldArrayName( reader->readValue( "SelectedFieldArrayName", getSelectedFieldArrayName() ) );
   setNewFieldArrayName( reader->readValue( "NewFieldArrayName", getNewFieldArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -114,13 +114,14 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
 
-  if(m_SelectedFieldArrayName.empty() == true)
+
+  if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
-     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+    addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
+
 }
 
 
@@ -148,11 +149,14 @@ void RenameFieldArray::execute()
     return;
   }
   setErrorCondition(0);
-  
 
-  bool check = m->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 
-  if(check == false) ss << "Array to be renamed could not be found in DataContainer";
+  bool check = m->renameCellFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
+
+  if(check == false) {
+    setErrorCondition(-9999);
+    notifyErrorMessage("Array to be renamed could not be found in DataContainer", -9999);
+  }
 
   notifyStatusMessage("Complete");
 }

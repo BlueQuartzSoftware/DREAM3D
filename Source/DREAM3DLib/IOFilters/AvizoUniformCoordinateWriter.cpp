@@ -111,7 +111,7 @@ void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size
   
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     ss << "The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);

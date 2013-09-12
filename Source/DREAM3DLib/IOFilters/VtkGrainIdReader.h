@@ -141,8 +141,8 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
            T t = buffer[totalSize-1];
            T t1 = buffer[totalSize-2];
            // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
-           MXA::Endian::FromBigToSystem::convert<T>(t);
-           MXA::Endian::FromBigToSystem::convert<T>(t1);
+           DREAM3D::Endian::FromBigToSystem::convert<T>(t);
+           DREAM3D::Endian::FromBigToSystem::convert<T>(t1);
            diff =t-t1;
          }
          else

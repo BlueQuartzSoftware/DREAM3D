@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          MXA::Endian::FromSystemToBig::convert<T>(d);
+          DREAM3D::Endian::FromSystemToBig::convert<T>(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);

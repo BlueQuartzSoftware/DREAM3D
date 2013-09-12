@@ -83,7 +83,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -114,7 +114,7 @@ IDataArray::Pointer EdgeDataContainer::removeEdgeData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EdgeData.erase(it);
   return p;
 }
@@ -136,7 +136,7 @@ QList<QString> EdgeDataContainer::getEdgeArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeData.begin(); iter != m_EdgeData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -160,7 +160,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeFieldData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -190,7 +190,7 @@ IDataArray::Pointer EdgeDataContainer::removeEdgeFieldData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EdgeFieldData.erase(it);
   return p;
 }
@@ -211,7 +211,7 @@ QList<QString> EdgeDataContainer::getEdgeFieldArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -232,8 +232,8 @@ void EdgeDataContainer::resizeEdgeFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeFieldData.begin(); iter != m_EdgeFieldData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumEdgeFieldTuples = size;
@@ -250,7 +250,7 @@ IDataArray::Pointer EdgeDataContainer::getEdgeEnsembleData(const QString &name)
   {
     return IDataArray::NullPointer();
   }
-  return (*it).second;
+  return it.value();
 }
 
 // -----------------------------------------------------------------------------
@@ -280,7 +280,7 @@ IDataArray::Pointer EdgeDataContainer::removeEdgeEnsembleData(const QString &nam
   {
     return IDataArray::NullPointer();
   }
-  IDataArray::Pointer p = (*it).second;
+  IDataArray::Pointer p = it.value();
   m_EdgeEnsembleData.erase(it);
   return p;
 }
@@ -301,7 +301,7 @@ QList<QString> EdgeDataContainer::getEdgeEnsembleArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeEnsembleData.begin(); iter != m_EdgeEnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -322,8 +322,8 @@ void EdgeDataContainer::resizeEdgeEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_EdgeEnsembleData.begin(); iter != m_EdgeEnsembleData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumEdgeEnsembleTuples = size;

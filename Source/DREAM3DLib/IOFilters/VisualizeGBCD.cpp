@@ -160,7 +160,7 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
   
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";
@@ -539,7 +539,7 @@ void VisualizeGBCD::execute()
         for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
-          MXA::Endian::FromSystemToBig::convert<float>(t);
+          DREAM3D::Endian::FromSystemToBig::convert<float>(t);
           gn[count] = t;
           count++;
         }

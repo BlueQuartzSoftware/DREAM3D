@@ -127,19 +127,19 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
 
-  if(true == m_OutputNodesFile.empty())
+  if(true == m_OutputNodesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
   }
   #if WRITE_EDGES_FILE
-  if(true == m_OutputEdgesFile.empty())
+  if(true == m_OutputEdgesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
   }
   #endif
-  if(true == m_OutputTrianglesFile.empty())
+  if(true == m_OutputTrianglesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
     setErrorCondition(-382);

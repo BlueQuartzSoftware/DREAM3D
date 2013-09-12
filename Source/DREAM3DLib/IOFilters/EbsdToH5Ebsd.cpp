@@ -179,7 +179,7 @@ void EbsdToH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 //    }
   }
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     ss.str("");
     ss << "The output file must be set before executing this filter.";
@@ -207,7 +207,7 @@ void EbsdToH5Ebsd::execute()
   herr_t err = 0;
   hid_t fileId = -1;
 
-  if(m_OutputFile.empty() == true)
+  if(m_OutputFile.isEmpty() == true)
   {
     QString s("EbsdToH5Ebsd Error: The output file was not set correctly or is empty. The current value is '");
     s.append("'. Please set the output file before running the importer. ");

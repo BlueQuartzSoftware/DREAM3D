@@ -140,7 +140,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   
 
-  if (m_TrianglesFile.empty() == true)
+  if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file path or name is emtpy", -1001);
@@ -156,7 +156,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_NodesFile.empty() == true)
+  if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
@@ -172,7 +172,7 @@ void NodesTrianglesToStl::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_OutputStlDirectory.empty() == true)
+  if (m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);

@@ -62,21 +62,7 @@ public:
   PoleFigureUtilities();
   virtual ~PoleFigureUtilities();
 
-#if 0
-  /**
-   * @brief GenerateCubicPoleFigures
-   * @param eulers
-   * @param lambertDimension
-   * @param poleFigureDim
-   * @param intensity001 [output]
-   * @param intensity011 [output]
-   * @param intensity111 [output]
-   */
-  static void GenerateCubicPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity001,
-                                              DoubleArrayType::Pointer &intensity011,
-                                              DoubleArrayType::Pointer &intensity111);
-#endif
+
   /**
    * @brief GenerateHexPoleFigures
    * @param eulers

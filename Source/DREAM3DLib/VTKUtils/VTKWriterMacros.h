@@ -36,6 +36,10 @@
 #ifndef VTKWRITER_H_
 #define VTKWRITER_H_
 
+#include <QtCore/QtEndian>
+
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
+
 /**@file VTKWriterMacros.h
  * @brief This file contains various macros to write out consistent VTK legacy
  * style files.
@@ -103,13 +107,13 @@
   int t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
-    MXA::Endian::FromSystemToBig::convert<int>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -132,13 +136,13 @@
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[i];\
-    MXA::Endian::FromSystemToBig::convert<m_msgType>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -156,7 +160,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -179,35 +183,17 @@
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[grain_indicies[i]];\
-    MXA::Endian::FromSystemToBig::convert<m_msgType>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t); \
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    qDebug() << "Error Writing Binary VTK Data into file " << file << "\n";\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
   }
-
-#define VTK_IPF_COLOR_REFDIRECTION(var)\
-    float var[3] = {0.0f, 0.0f, 1.0f};
-
-#define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
-if (r->crystruct[phase] == Ebsd::CrystalStructure::Cubic) {\
-  OIMColoring::GenerateCubicIPFColor(var->euler1,\
-                              var->euler2,\
-                              var->euler3,\
-                              RefDirection[0], RefDirection[1], RefDirection[2],\
-                              &rgba[i * 4], hkl);\
-} else if (r->crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)   { \
-  q1[1] = var->quat[1];\
-  q1[2] = var->quat[2];\
-  q1[3] = var->quat[3];\
-  q1[4] = var->quat[4];\
-  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]); \
-}
 
 
 #endif /* VTKWRITER_H_ */

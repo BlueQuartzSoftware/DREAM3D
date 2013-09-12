@@ -278,7 +278,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  if(m_SelectedCellArrayName.empty() == true)
+  if(m_SelectedCellArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
@@ -286,7 +286,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if(m_OutputArrayName.empty() == true)
+  if(m_OutputArrayName.isEmpty() == true)
   {
     ss.str("");
     ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";

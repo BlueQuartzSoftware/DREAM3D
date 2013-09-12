@@ -135,7 +135,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType, true, voxels, 1)
 
-  if(m_InputFile.empty() == true)
+  if(m_InputFile.isEmpty() == true)
   {
     ss << "The intput file must be set before executing this filter.\n";
     setErrorCondition(-800);
