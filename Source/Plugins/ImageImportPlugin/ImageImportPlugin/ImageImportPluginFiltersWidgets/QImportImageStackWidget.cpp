@@ -508,7 +508,7 @@ QVector<QString> QImportImageStackWidget::generateFileList(int start, int end, b
           .arg(m_FileSuffix->text()).arg(m_FileExt->text());
       QString filePath = m_InputDir->text() + QDir::separator() + filename;
       filePath = QDir::toNativeSeparators(filePath);
-      fileList.push_back(filePath());
+      fileList.push_back(filePath);
     }
   return fileList;
 }
@@ -631,7 +631,7 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn();
+      QString fns = fn;
       int length =  fn.length();
       digitEnd = length-1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')

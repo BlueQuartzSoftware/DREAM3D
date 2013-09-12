@@ -590,7 +590,7 @@ void DREAM3D_UI::openRecentFile()
 // -----------------------------------------------------------------------------
 void DREAM3D_UI::threadHasMessage(QString message)
 {
-  qDebug() << "DREAM3D_UI::threadHasMessage()" << message() << "\n";
+  qDebug() << "DREAM3D_UI::threadHasMessage()" << message << "\n";
   this->statusBar()->showMessage(message);
 }
 
@@ -677,7 +677,7 @@ void DREAM3D_UI::loadPlugins(FilterManager *fm)
   {
     qDebug() << "Plugin Being Loaded:" << "\n";
     qDebug() << "    File Extension: .plugin" << "\n";
-    qDebug() << "    Path: " << path() << "\n";
+    qDebug() << "    Path: " << path << "\n";
     QPluginLoader loader(path);
     QFileInfo fi(path);
     QString fileName = fi.fileName();

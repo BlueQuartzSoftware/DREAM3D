@@ -58,8 +58,6 @@
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Plane.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/ReverseTriangleWinding.h"
 
 // -----------------------------------------------------------------------------
