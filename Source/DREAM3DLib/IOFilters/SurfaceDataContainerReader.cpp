@@ -50,6 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerReader::SurfaceDataContainerReader() :
+EdgeDataContainerReader(),
   m_HdfFileId(-1),
   m_ReadVertexData(true),
   m_ReadEdgeData(true),
@@ -107,7 +108,7 @@ int SurfaceDataContainerReader::writeFilterParameters(AbstractFilterParametersWr
 void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
@@ -148,7 +149,7 @@ void SurfaceDataContainerReader::preflight()
 void SurfaceDataContainerReader::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -165,7 +166,7 @@ void SurfaceDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherData(bool preflight)
 {
-  
+
 
   if(m_HdfFileId < 0)
   {
@@ -563,7 +564,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  
+
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);

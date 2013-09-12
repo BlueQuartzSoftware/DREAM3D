@@ -38,12 +38,14 @@
 #define RECRYSTALLIZEDPRESET_H_
 
 //-- C++ includes
-#include <QtCore/QString>
+#include <string>
+
+//-- MXA Includes
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
 /**
@@ -58,6 +60,7 @@ class RecrystallizedPreset : public AbstractMicrostructurePreset
 {
   public:
     DREAM3D_SHARED_POINTERS(RecrystallizedPreset)
+    DREAM3D_STATIC_NEW_MACRO(RecrystallizedPreset)
     DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RecrystallizedPreset)
     virtual ~RecrystallizedPreset();
 

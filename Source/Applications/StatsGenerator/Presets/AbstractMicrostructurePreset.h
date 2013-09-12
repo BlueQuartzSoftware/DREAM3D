@@ -61,6 +61,7 @@ class AbstractMicrostructurePreset
   public:
     DREAM3D_SHARED_POINTERS(AbstractMicrostructurePreset)
     DREAM3D_TYPE_MACRO(AbstractMicrostructurePreset)
+
     virtual ~AbstractMicrostructurePreset();
 
 
