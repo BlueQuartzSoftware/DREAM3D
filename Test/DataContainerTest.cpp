@@ -187,8 +187,8 @@ void TestDataContainerReader()
   m->getDimensions(nx, ny, nz);
 
   DREAM3D_REQUIRE_EQUAL(m->getNumCellArrays(), 2);
-  DREAM3D_REQUIRE_EQUAL(m->getNumFieldArrays(), 3);
-  DREAM3D_REQUIRE_EQUAL(m->getNumEnsembleArrays(), 1);
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellFieldArrays(), 3);
+  DREAM3D_REQUIRE_EQUAL(m->getNumCellEnsembleArrays(), 1);
 
 
   // Validate the NeighborList Data
