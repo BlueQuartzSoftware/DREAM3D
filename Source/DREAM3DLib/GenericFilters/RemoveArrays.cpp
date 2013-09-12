@@ -157,11 +157,11 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceFieldArrays.begin(); iter != m_SelectedSurfaceFieldArrays.end(); ++iter)
     {
-      sm->removeCellFieldData(*iter);
+      sm->removeFaceFieldData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedSurfaceEnsembleArrays.begin(); iter != m_SelectedSurfaceEnsembleArrays.end(); ++iter)
     {
-      sm->removeCellEnsembleData(*iter);
+      sm->removeFaceEnsembleData(*iter);
     }
   }
 

@@ -130,7 +130,7 @@ void RenumberGrains::preflight()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  QList<QString> headers = m->getFieldArrayNameList();
+  QList<QString> headers = m->getCellFieldArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     IDataArray::Pointer p = m->getCellFieldData(*iter);
@@ -190,7 +190,7 @@ void RenumberGrains::execute()
 
   if(RemoveList.size() > 0)
   {
-    QList<QString> headers = m->getFieldArrayNameList();
+    QList<QString> headers = m->getCellFieldArrayNameList();
     for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       IDataArray::Pointer p = m->getCellFieldData(*iter);

@@ -869,10 +869,10 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getFieldArrayNameList();
+  NameListType names = m->getFaceFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getCellFieldData(names.front());
+    IDataArray::Pointer array = m->getFaceFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -1003,10 +1003,10 @@ int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getEnsembleArrayNameList();
+  NameListType names = m->getFaceEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getEnsembleData(*iter);
+    IDataArray::Pointer array = m->getFaceEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {

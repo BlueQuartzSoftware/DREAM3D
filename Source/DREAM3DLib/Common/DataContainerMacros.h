@@ -406,7 +406,7 @@ bool Class::does##DType##Exist(const QString &name) {\
 
  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+                                          (m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
     ss << "NeighborLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;
@@ -415,7 +415,7 @@ bool Class::does##DType##Exist(const QString &name) {\
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
+                                 (m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     ss << "SurfaceAreaLists Array Not Initialized At Beginning of MatchCrystallography Filter" ;
