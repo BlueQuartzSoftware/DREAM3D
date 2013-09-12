@@ -250,7 +250,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  int numNodes = nodes->GetNumberOfTuples();
+  int numNodes = nodes->getNumberOfTuples();
   fprintf(nodesFile, "%d\n", numNodes);
   VertexArray::Vert_t* v = nodes->GetPointer(0);
   int8_t* nodeKind = reinterpret_cast<int8_t*>(nodeKinds->GetVoidPointer(0));
@@ -281,8 +281,8 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  size_t nfe = edges->GetNumberOfTuples();
-  size_t nie = iEdges->GetNumberOfTuples();
+  size_t nfe = edges->getNumberOfTuples();
+  size_t nie = iEdges->getNumberOfTuples();
   int kind = 0;
   int newnid1 = 0, newnid2 = 0;
   StructArray<SurfaceMesh::M3C::Segment>* faceEdges = StructArray<SurfaceMesh::M3C::Segment>::SafePointerDownCast(edges.get());
@@ -333,7 +333,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
-  size_t numTriangles = triangles->GetNumberOfTuples();
+  size_t numTriangles = triangles->getNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
   StructArray<FaceArray::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
   FaceArray::Face_t* t = ts->GetPointer(0);

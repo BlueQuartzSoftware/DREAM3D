@@ -196,7 +196,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
-  int nNodes = nodes.GetNumberOfTuples();
+  int nNodes = nodes.getNumberOfTuples();
 
   // Make sure we have a node type array or create a default one.
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();
@@ -206,7 +206,7 @@ void SurfaceMeshToNonconformalVtk::execute()
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -301,7 +301,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   int tData[4];
 
-  int triangleCount = triangles.GetNumberOfTuples();
+  int triangleCount = triangles.getNumberOfTuples();
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
@@ -330,7 +330,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     }
   }
 
-  triangleCount = triangles.GetNumberOfTuples();
+  triangleCount = triangles.getNumberOfTuples();
   // Write the POLYGONS
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount*2, (triangleCount*2*4));
 
@@ -522,7 +522,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -536,7 +536,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 
   //Get the Number of Vertex points in the mesh with a valid node type
   DREAM3D::Mesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
-  int numNodes = nodes.GetNumberOfTuples();
+  int numNodes = nodes.getNumberOfTuples();
   int nNodes = 0;
   // int swapped;
   for (int i = 0; i < numNodes; i++)
@@ -609,7 +609,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
 
-  int triangleCount = triangles.GetNumberOfTuples();
+  int triangleCount = triangles.getNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
   QString ss;
   if (NULL != data.get())
@@ -677,7 +677,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
 
-  int triangleCount = triangles.GetNumberOfTuples();
+  int triangleCount = triangles.getNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
   QTextStream ss;
   if (NULL != data.get())
@@ -752,7 +752,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
 {
   StructArray<FaceArray::Face_t>& triangles = *(dc->getFaces());
 
-  int triangleCount = triangles.GetNumberOfTuples();
+  int triangleCount = triangles.getNumberOfTuples();
 
   IDataArray::Pointer data = dc->getFaceData(dataName);
   QString ss;
@@ -809,7 +809,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
     DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
     int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-    int triangleCount = triangles.GetNumberOfTuples();
+    int triangleCount = triangles.getNumberOfTuples();
     int swapped;
 
     // This is like a "section header"

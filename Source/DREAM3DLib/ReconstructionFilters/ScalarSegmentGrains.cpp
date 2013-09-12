@@ -292,47 +292,47 @@ void ScalarSegmentGrains::execute()
   }
   else if (dType.compare("int8_t") == 0)
   {
-    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare = new TSpecificCompareFunctor<int8_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("uint8_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<uint8_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("bool") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<bool>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("int16_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<int16_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("uint16_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<uint16_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("int32_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<int32_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("uint32_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<uint32_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("int64_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<int64_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("uint64_t") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<uint64_t>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("float") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<float>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
   else if (dType.compare("double") == 0)
   {
-    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->GetVoidPointer(0), m_InputData->GetNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
+    m_Compare =  new TSpecificCompareFunctor<double>(m_InputData->GetVoidPointer(0), m_InputData->getNumberOfTuples(), m_ScalarTolerance, m_GrainIds);
   }
 
   SegmentGrains::execute();

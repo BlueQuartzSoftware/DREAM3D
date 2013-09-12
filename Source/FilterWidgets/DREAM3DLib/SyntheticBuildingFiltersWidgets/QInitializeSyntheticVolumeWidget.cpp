@@ -302,7 +302,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       // Get the Phases
       DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
-      int size = static_cast<int>(phases->GetNumberOfTuples());
+      int size = static_cast<int>(phases->getNumberOfTuples());
       QVector<QString> shapeTypeStrings;
       ShapeType::getShapeTypeStrings(shapeTypeStrings);
       QVector<unsigned int> shapeTypeEnums;
@@ -475,7 +475,7 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases
-  for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
+  for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
     if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {

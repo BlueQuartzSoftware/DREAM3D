@@ -93,7 +93,7 @@ void VolumeDataContainer::addCellData(const QString &name, IDataArray::Pointer d
     data->SetName(name);
   }
   m_CellData[name] = data;
-  m_NumCellTuples = data->GetNumberOfTuples();
+  m_NumCellTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +202,7 @@ void VolumeDataContainer::addCellFieldData(const QString &name, IDataArray::Poin
     data->SetName(name);
   }
   m_CellFieldData[name] = data;
-  m_NumCellFieldTuples = data->GetNumberOfTuples();
+  m_NumCellFieldTuples = data->getNumberOfTuples();
 }
 
 // -----------------------------------------------------------------------------
@@ -310,7 +310,7 @@ void VolumeDataContainer::addCellEnsembleData(const QString &name, IDataArray::P
     data->SetName(name);
   }
   m_CellEnsembleData[name] = data;
-  m_NumCellEnsembleTuples = data->GetNumberOfTuples();
+  m_NumCellEnsembleTuples = data->getNumberOfTuples();
 }
 
 

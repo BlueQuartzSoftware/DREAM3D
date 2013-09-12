@@ -84,8 +84,8 @@ int writeVtkFile(FloatArrayType* xyz, const QString &filename)
   ss << "ASCII";
   ss << "\n";
 
-  ss << "DATASET UNSTRUCTURED_GRID\nPOINTS " << xyz->GetNumberOfTuples() << " float\n";
-  size_t count = xyz->GetNumberOfTuples();
+  ss << "DATASET UNSTRUCTURED_GRID\nPOINTS " << xyz->getNumberOfTuples() << " float\n";
+  size_t count = xyz->getNumberOfTuples();
   for(int i = 0; i < count; ++i)
   {
     ss << xyz->GetComponent(i, 0) << " " << xyz->GetComponent(i, 1) << " " << xyz->GetComponent(i, 2) << "\n";
@@ -101,7 +101,7 @@ void PoleFigureUtilities::GenerateHexPoleFigures(FloatArrayType* eulers, int lam
                                               DoubleArrayType::Pointer &intensity1010,
                                               DoubleArrayType::Pointer &intensity1120)
 {
-  int numOrientations = eulers->GetNumberOfTuples();
+  int numOrientations = eulers->getNumberOfTuples();
 
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
@@ -163,7 +163,7 @@ void PoleFigureUtilities::GenerateOrthoPoleFigures(FloatArrayType* eulers, int l
                                               DoubleArrayType::Pointer &intensity010,
                                               DoubleArrayType::Pointer &intensity001)
 {
-  int numOrientations = eulers->GetNumberOfTuples();
+  int numOrientations = eulers->getNumberOfTuples();
 
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.

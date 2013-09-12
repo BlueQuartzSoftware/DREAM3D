@@ -162,7 +162,7 @@ class DataArray : public IDataArray
     return UnknownNumType;
     }
 
-  /**
+    /**
      * @brief Static constructor
      * @param numElements The number of elements in the internal array.
      * @param name The name of the array
@@ -396,7 +396,7 @@ class DataArray : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      if (idxs.size() >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -410,7 +410,7 @@ class DataArray : public IDataArray
       }
 
       // Calculate the new size of the array to copy into
-      size_t newSize = (GetNumberOfTuples() - idxs.size()) * NumberOfComponents ;
+      size_t newSize = (getNumberOfTuples() - idxs.size()) * NumberOfComponents ;
 
       // Create a new Array to copy into
       T* newArray = (T*)malloc(newSize * sizeof(T));
@@ -438,7 +438,7 @@ class DataArray : public IDataArray
       if(k == idxs.size()) // Only front elements are being dropped
       {
         T* currentSrc = Array + (j * NumberOfComponents);
-        ::memcpy(currentDest, currentSrc, (GetNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
+        ::memcpy(currentDest, currentSrc, (getNumberOfTuples() - idxs.size()) * NumberOfComponents * sizeof(T));
         _deallocate(); // We are done copying - delete the current Array
         this->Size = newSize;
         this->Array = newArray;
@@ -464,7 +464,7 @@ class DataArray : public IDataArray
         }
         else
         {
-          copyElements[i] = (GetNumberOfTuples() - idxs[i - 1] - 1) * NumberOfComponents;
+          copyElements[i] = (getNumberOfTuples() - idxs[i - 1] - 1) * NumberOfComponents;
         }
         destIdx[i] = copyElements[i - 1] + destIdx[i - 1];
       }
@@ -527,7 +527,7 @@ class DataArray : public IDataArray
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t GetNumberOfTuples()
+    virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
       return (this->MaxId + 1)/this->NumberOfComponents;
@@ -771,7 +771,7 @@ class DataArray : public IDataArray
     virtual int writeH5Data(hid_t parentId)
     {
       if (Array == NULL) { return -85648; }
-      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), GetNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
+      return H5DataArrayWriter<T>::writeArray(parentId, GetName(), getNumberOfTuples(), GetNumberOfComponents(), Array, getFullNameOfClass());
     }
 
     /**

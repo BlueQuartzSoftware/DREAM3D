@@ -216,7 +216,7 @@ void GBCDTriangleDumper::execute()
 
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalFaces = trianglesPtr->GetNumberOfTuples();
+  size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
   // Note the use of the voxel datacontainer num ensembles to set the gbcd size

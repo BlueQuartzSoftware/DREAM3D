@@ -281,7 +281,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     if (getErrorCondition() >= 0)
     {
       // Check for Node Type Array
-      int size = sm->getVertices()->GetNumberOfTuples();
+      int size = sm->getVertices()->getNumberOfTuples();
       GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, 1)
     }
 
@@ -356,8 +356,8 @@ void MovingFiniteElementSmoothing::execute()
   FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
-  int numberNodes = floatNodesPtr->GetNumberOfTuples();
-  int ntri = trianglesPtr->GetNumberOfTuples();
+  int numberNodes = floatNodesPtr->getNumberOfTuples();
+  int ntri = trianglesPtr->getNumberOfTuples();
 
 
   StructArray<DREAM3D::Mesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::Mesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
@@ -462,8 +462,8 @@ void MovingFiniteElementSmoothing::execute()
       return -1;
     }
 #endif
-    int edgeCount = edgesStructArray->GetNumberOfTuples();
-    int iEdgeCount = internalEdgesStructArray->GetNumberOfTuples();
+    int edgeCount = edgesStructArray->getNumberOfTuples();
+    int iEdgeCount = internalEdgesStructArray->getNumberOfTuples();
     int nedges = edgeCount + iEdgeCount;
     //  input3 >> nedges;
     //  don't actually need the structure. just the information
@@ -770,7 +770,7 @@ void MovingFiniteElementSmoothing::execute()
     //    leads to UNsmoothing of the mesh!
 
     // compute triangle contributions to K and F
-    ntri = trianglesPtr->GetNumberOfTuples();
+    ntri = trianglesPtr->getNumberOfTuples();
     Q_max = 0.;
     Q_sum = 0.;
     Dihedral_sum = 0.;

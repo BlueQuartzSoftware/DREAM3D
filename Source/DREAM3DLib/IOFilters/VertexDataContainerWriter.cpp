@@ -69,7 +69,7 @@ VertexDataContainerWriter::VertexDataContainerWriter() :
   AbstractFilter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
-  m_XdmfPtr(NULL)
+  m_XdmfOStream(NULL)
 {
   setupFilterParameters();
 }
@@ -258,8 +258,8 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   std::ostream& out = *m_XdmfPtr;
   out << "  <Grid Name=\"Vertex DataContainer\">" << "\n";
 
-  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->GetNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->GetNumberOfTuples() << " 1\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 1\">" << "\n";
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
@@ -270,7 +270,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   out << "    </Topology>" << "\n";
 
   out << "    <Geometry Type=\"XYZ\">" << "\n";
-  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
@@ -311,7 +311,7 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
 
   out << "    <Attribute Name=\"" << array->GetName() << "\" ";
   out << "AttributeType=\"" << attrType << "\" ";
-  dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+  dimStr << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
   out << "Center=\"" << centering << "\">" << "\n";
   // Open the <DataItem> Tag
   out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
@@ -401,7 +401,7 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->GetNumberOfTuples(), 3};
+  hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
 
   float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
 

@@ -93,7 +93,7 @@ CalculateTriangleGroupCurvatures::~CalculateTriangleGroupCurvatures()
 void subtractVector3d(DataArray<double>::Pointer data, double* v)
 {
 
-  size_t count = data->GetNumberOfTuples();
+  size_t count = data->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     double* ptr = data->GetPointer(i*3);
@@ -205,7 +205,7 @@ void CalculateTriangleGroupCurvatures::operator() const
                         {np[0], np[1], np[2]} };
     double out[3];
     // Transform all centroids and normals to new coordinate system
-    for(size_t m = 0; m < patchCentroids->GetNumberOfTuples(); ++m)
+    for(size_t m = 0; m < patchCentroids->getNumberOfTuples(); ++m)
     {
       ::memcpy(out, patchCentroids->GetPointer(m*3), 3*sizeof(double));
       MatrixMath::Multiply3x3with3x1(rot, patchCentroids->GetPointer(m*3), out);
@@ -226,7 +226,7 @@ void CalculateTriangleGroupCurvatures::operator() const
       int cols = NO_NORMALS;
       if (m_UseNormalsForCurveFitting == true)
       { cols = USE_NORMALS; }
-      int rows = patchCentroids->GetNumberOfTuples();
+      int rows = patchCentroids->getNumberOfTuples();
       Eigen::MatrixXd A(rows, cols);
       Eigen::VectorXd b(rows);
       double x, y, z;

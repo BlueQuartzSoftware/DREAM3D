@@ -164,7 +164,7 @@ int PhWriter::writeFile()
 //    if (iDataArray.get() == 0) {
 //      return -10;
 //    }
-//    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->GetNumberOfTuples()) {
+//    if (static_cast<size_t>(m->getTotalPoints()) != iDataArray->getNumberOfTuples()) {
 //      return -20;
 //    }
 //    grain_indicies =

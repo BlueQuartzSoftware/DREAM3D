@@ -36,6 +36,7 @@
 
 #include "GoldfeatherReader.h"
 
+#include <QtCore/QFileInfo>
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -127,20 +128,21 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
+  QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (QFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
@@ -198,7 +200,7 @@ void GoldfeatherReader::preflight()
 void GoldfeatherReader::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

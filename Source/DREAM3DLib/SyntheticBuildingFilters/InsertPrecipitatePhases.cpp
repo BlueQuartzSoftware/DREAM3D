@@ -1921,7 +1921,7 @@ void InsertPrecipitatePhases::write_goal_attributes()
   outFile << "\n";
 
   // Get the number of tuples in the arrays
-  size_t numTuples = data[0]->GetNumberOfTuples();
+  size_t numTuples = data[0]->getNumberOfTuples();
   
   float threshold = 0.0f;
 
