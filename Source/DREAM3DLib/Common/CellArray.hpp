@@ -81,6 +81,7 @@ class CellArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int64_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -262,6 +263,33 @@ class CellArray
         // Allocate the array storage for the current triangle to hold its Cell list
         m_CellNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    Cell_t* getPointer(size_t i)
+    {
+      return m_Array->GetPointer(i);
+    }
+
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Cell_t& operator[](size_t i)
+    {
+      return (*m_Array)[i];
+    }
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Cell_t& getcell(size_t i)
+    {
+      return (*m_Array)[i];
     }
 
   protected:

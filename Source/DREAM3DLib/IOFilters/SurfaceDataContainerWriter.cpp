@@ -685,7 +685,7 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
   }
 
   int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_FaceNumElements};
+  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
 
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
 
