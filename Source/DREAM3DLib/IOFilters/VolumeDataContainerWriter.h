@@ -48,6 +48,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/IOFilters/SurfaceDataContainerWriter.h"
 
 
 /**
@@ -62,7 +63,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
   public:
     DREAM3D_SHARED_POINTERS(VolumeDataContainerWriter)
     DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerWriter, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerWriter, SurfaceDataContainerWriter)
 
     virtual ~VolumeDataContainerWriter();
 

@@ -67,6 +67,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
+EdgeDataContainerWriter(),
   m_HdfFileId(-1),
   m_WriteXdmfFile(false),
   m_XdmfPtr(NULL)
@@ -121,7 +122,7 @@ int SurfaceDataContainerWriter::writeFilterParameters(AbstractFilterParametersWr
 void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
@@ -154,7 +155,7 @@ void SurfaceDataContainerWriter::preflight()
 void SurfaceDataContainerWriter::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -577,7 +578,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
-  
+
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -713,7 +714,7 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid)
 {
-  
+
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -779,7 +780,7 @@ int SurfaceDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
-  
+
   int err = 0;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
@@ -830,7 +831,7 @@ int SurfaceDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  
+
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
@@ -983,7 +984,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  
+
   int err = 0;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
