@@ -103,8 +103,13 @@ int LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWrite
 void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
   VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    return;
+  }
 
   IDataArray::Pointer data = m->getCellData(m_SelectedCellDataArrayName);
   if (NULL == data.get())
@@ -170,12 +175,12 @@ void LinkFieldMapToCellArray::execute()
     return;
   }
   //int err = 0;
-
+  QString ss;
 
   m->clearCellFieldData();
 
   int maxIndex = 0;
-  QVector<bool> active;
+  std::vector<bool> active;
   for(int64_t i=0;i<voxels;i++)
   {
     int index = m_SelectedCellData[i];

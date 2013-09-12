@@ -275,23 +275,21 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
-    ss.str("");
-    ss << "The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
+    ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_OutputArrayName.isEmpty() == true)
   {
-    ss.str("");
-    ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
+    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
@@ -367,13 +365,13 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-  
+  QTextStream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);

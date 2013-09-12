@@ -131,14 +131,13 @@ int GenerateIPFColors::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
-  VolumeDataContainer* m = getVolumeDataContainer();
+
+  QString ss;
+    VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
 
@@ -168,13 +167,13 @@ void GenerateIPFColors::preflight()
 void GenerateIPFColors::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   int64_t totalPoints = m->getTotalPoints();

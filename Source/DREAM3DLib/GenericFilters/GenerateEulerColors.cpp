@@ -37,8 +37,9 @@
 
 #include <limits>
 
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -81,7 +82,7 @@ void GenerateEulerColors::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -103,12 +104,12 @@ int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
 
@@ -119,7 +120,7 @@ void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerColors, uint8_t, UInt8ArrayType, 0, voxels, 3)
-}
+  }
 
 
 // -----------------------------------------------------------------------------
@@ -138,13 +139,13 @@ void GenerateEulerColors::preflight()
 void GenerateEulerColors::execute()
 {
   int err = 0;
-
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
@@ -170,24 +171,24 @@ void GenerateEulerColors::execute()
     phase = m_CellPhases[i];
     index = i * 3;
 
-  if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
-  }
-  else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
-  {
-    m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
-    m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
-    m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
-  }
+    if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Cubic_High) // m3m Symmetry Cubic
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/halfPi * 255.0f);
+    }
+    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Hexagonal_High)
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/thirdPi * 255.0f);
+    }
+    else if(m_CrystalStructures[phase] == Ebsd::CrystalStructure::Trigonal_High)
+    {
+      m_CellEulerColors[index] =    static_cast<unsigned char>(m_CellEulerAngles[index] / twoPi  * 255.0f);
+      m_CellEulerColors[index + 1] = static_cast<unsigned char>(m_CellEulerAngles[index+1]/halfPi * 255.0f);
+      m_CellEulerColors[index + 2] = static_cast<unsigned char>(m_CellEulerAngles[index+2]/twoThirdPi * 255.0f);
+    }
 
 
 

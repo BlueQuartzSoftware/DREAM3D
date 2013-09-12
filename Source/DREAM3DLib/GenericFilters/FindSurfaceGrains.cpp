@@ -82,7 +82,7 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
@@ -105,20 +105,20 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
-
+  QString ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumCellFieldTuples();
-  ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
-  notifyStatusMessage(ss.str());
+  ss = QObject::tr("FSG Points - %1, Fields - %2").arg(totalPoints).arg(totalFields);
+  notifyStatusMessage(ss);
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {

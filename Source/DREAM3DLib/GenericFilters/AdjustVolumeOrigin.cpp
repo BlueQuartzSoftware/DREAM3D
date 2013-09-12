@@ -70,7 +70,7 @@ class UpdateVerticesImpl
     void generate(size_t start, size_t end) const
     {
 
-      VertexArray::Vert_t* nodes = m_Nodes->GetPointer(0);
+      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
         nodes[i].pos[0] = nodes[i].pos[0] - m_Delta[0];
@@ -195,7 +195,7 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
 void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   if (m_ApplyToVoxelVolume == true)
   {
     VolumeDataContainer* m = getVolumeDataContainer();
@@ -252,7 +252,7 @@ void AdjustVolumeOrigin::execute()
     return;
   }
   setErrorCondition(0);
-  
+
 
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume ==true)
@@ -278,7 +278,7 @@ void AdjustVolumeOrigin::execute()
 void AdjustVolumeOrigin::updateSurfaceMesh()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -296,7 +296,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
 #endif
 
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   // First get the min/max coords.
 

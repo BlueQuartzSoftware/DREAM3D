@@ -19,23 +19,23 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Generic
 
 set(_PublicFilters
   AdjustVolumeOrigin
+  ConvertData
   CopyFieldArrayToCellArray
   FindBoundingBoxGrains
   FindCellQuats
-  UpdateCellQuats
   FindGrainCentroids
   FindGrainPhases
   FindSurfaceCells
   FindSurfaceGrains
   GenerateIPFColors
+  GenerateMisorientationColors
   GenerateRodriguesColors
   LinkFieldMapToCellArray
   RemoveArrays
   RenameCellArray
   RenameFieldArray
   ScaleVolume
-  ConvertData
-  GenerateMisorientationColors
+  UpdateCellQuats
 )
 
 
