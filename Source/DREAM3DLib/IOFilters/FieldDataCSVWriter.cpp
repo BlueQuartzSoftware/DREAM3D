@@ -184,7 +184,7 @@ void FieldDataCSVWriter::execute()
   // Write the total number of grains
   outFile << m->getNumCellFieldTuples()-1 << "\n";
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getFieldArrayNameList();
+  QList<QString> headers = m->getCellFieldArrayNameList();
 
   QVector<IDataArray::Pointer> data;
 

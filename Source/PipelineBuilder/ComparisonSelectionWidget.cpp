@@ -228,11 +228,11 @@ void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Po
   }
   else if (m_ArrayListType == FieldListType)
   {
-    cellNames = vldc->getFieldArrayNameList();
+    cellNames = vldc->getCellFieldArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
-    cellNames = vldc->getEnsembleArrayNameList();
+    cellNames = vldc->getCellEnsembleArrayNameList();
   }
   m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }
@@ -257,11 +257,11 @@ void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::
   }
   else if (m_ArrayListType == FieldListType)
   {
-    cellNames = sdc->getFieldArrayNameList();
+    cellNames = sdc->getFaceFieldArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
-    cellNames = sdc->getEnsembleArrayNameList();
+    cellNames = sdc->getFaceEnsembleArrayNameList();
   }
   m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }
@@ -282,11 +282,11 @@ void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointe
   }
   else if (m_ArrayListType == FieldListType)
   {
-    cellNames = edc->getFieldArrayNameList();
+    cellNames = edc->getEdgeFieldArrayNameList();
   }
   else if (m_ArrayListType == EnsembleListType)
   {
-    cellNames = edc->getEnsembleArrayNameList();
+    cellNames = edc->getEdgeEnsembleArrayNameList();
   }
   m_ComparisonSelectionTableModel->setPossibleFields(cellNames);
 }
