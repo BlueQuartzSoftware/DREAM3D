@@ -36,8 +36,9 @@
 
 #include "FindNeighborhoods.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
@@ -117,11 +118,11 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
 
+
   // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
+  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
   // because we are just creating an empty NeighborList object.
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -133,8 +134,9 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     neighborhoodlistPtr->Resize(fields);
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addCellFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
+
     if (neighborhoodlistPtr.get() == NULL) {
-      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << "\n";
+      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -198,8 +200,8 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   float x, y, z;
   float xn, yn, zn;
@@ -237,13 +239,13 @@ void FindNeighborhoods::find_neighborhoods()
 
   size_t xP = dims[0];
   size_t yP = dims[1];
-  size_t zP = dims[2];
+  //size_t zP = dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
-  float zRes = m->getZRes();
+ // float zRes = m->getZRes();
   float sizeX = float(xP)*xRes;
   float sizeY = float(yP)*yRes;
-  float sizeZ = float(zP)*zRes;
+  //float sizeZ = float(zP)*zRes;
   int numXBins = int(sizeX/criticalDistance);
   int numYBins = int(sizeY/criticalDistance);
 //  int numZBins = int(sizeZ/criticalDistance);
@@ -265,9 +267,9 @@ void FindNeighborhoods::find_neighborhoods()
   {
     if (i%1000 == 0)
     {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+
+      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      notifyStatusMessage(ss);
     }
     x = m_Centroids[3*i];
     y = m_Centroids[3*i+1];
@@ -304,7 +306,7 @@ void FindNeighborhoods::find_neighborhoods()
   for (size_t i = 1; i < totalFields; i++)
   {
       // Set the vector for each list into the NeighborhoodList Object
-      NeighborList<int>::SharedVectorType sharedNeiLst(new QVector<int>);
+      NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
       sharedNeiLst->assign(neighborhoodlist[i].begin(), neighborhoodlist[i].end());
       m_NeighborhoodList->setList(static_cast<int>(i), sharedNeiLst);
   }
