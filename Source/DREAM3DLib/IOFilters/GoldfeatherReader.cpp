@@ -292,8 +292,7 @@ void GoldfeatherReader::execute()
   }
 
   FaceArray::Pointer trianglesPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  trianglesPtr->initializeWithZeros();
-  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray& triangles = *(trianglesPtr);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   faceLabelPtr->initializeWithZeros();
