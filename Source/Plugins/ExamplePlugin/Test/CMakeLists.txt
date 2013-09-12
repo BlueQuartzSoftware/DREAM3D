@@ -14,7 +14,7 @@ project(ExamplePluginTest)
 set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
 
 # --------------------------------------------------------------------------
-macro (ConvertPathToHeaderCompatible INPUT)
+macro(ConvertPathToHeaderCompatible INPUT)
     if(WIN32)
       STRING(REPLACE "\\" "\\\\" ${INPUT} ${${INPUT}} )
       STRING(REPLACE "/" "\\\\" ${INPUT} ${${INPUT}}  )
@@ -22,31 +22,30 @@ macro (ConvertPathToHeaderCompatible INPUT)
 endmacro()
 
 include_directories(${DREAM3DTest_BINARY_DIR})
-set(DREAM3D_TEMP_DIR ${DREAM3DProj_BINARY_DIR}/Testing/)
 
-GET_FILENAME_COMPONENT(DREAM3D_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
-FILE(TO_NATIVE_PATH "${CMAKE_BINARY_DIR}/DataImportTest.xml" DATAIMPORT_TEST_IMPORT_XML_FILE)
-file(TO_NATIVE_PATH "${DREAM3DTest_BINARY_DIR}" DREAM3DTest_BINARY_DIR_NATIVE)
-file(TO_NATIVE_PATH "${DREAM3DProj_BINARY_DIR}" DREAM3D_BINARY_DIR_NATIVE)
+
+
+
+#GET_FILENAME_COMPONENT(ExamplePluginTest_TEST_SRC_DIR ${CMAKE_CURRENT_LIST_FILE} PATH)
 #-- Convert all '\' to '\\' so that they are properly escaped in the header file
-set(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE "${DREAM3D_TEMP_DIR}DataImportTest_XMLH5Tiff.h5")
-ConvertPathToHeaderCompatible(DREAM3D_TEMP_DIR)
-ConvertPathToHeaderCompatible(DATAIMPORT_TEST_XMLH5TIFF_OUTPUT_FILE)
-ConvertPathToHeaderCompatible(DATAIMPORT_TEST_IMPORT_XML_FILE)
-ConvertPathToHeaderCompatible(DREAM3DTest_BINARY_DIR_NATIVE)
-ConvertPathToHeaderCompatible(DREAM3D_BINARY_DIR_NATIVE)
+FILE(TO_NATIVE_PATH "${ExamplePluginTest_BINARY_DIR}/" ExamplePluginTest_BINARY_DIR_NATIVE)
+FILE(TO_NATIVE_PATH "${ExamplePluginTest_SOURCE_DIR}/" ExamplePluginTest_SOURCE_DIR_NATIVE)
+FILE(TO_NATIVE_PATH "${ExamplePluginTest_SOURCE_DIR}/Pipelines/" ExamplePluginTest_PIPELINE_DIR_NATIVE)
 
-configure_file(${PROJECT_RESOURCES_DIR}/EbsdTestFiles/EbsdTestFileLocation.h.in
-               ${DREAM3DTest_BINARY_DIR}/EbsdTestFileLocation.h @ONLY IMMEDIATE)
-configure_file(${DREAM3DTest_SOURCE_DIR}/TestFileLocations.h.in
-               ${DREAM3DTest_BINARY_DIR}/TestFileLocations.h @ONLY IMMEDIATE)
+ConvertPathToHeaderCompatible(ExamplePluginTest_BINARY_DIR_NATIVE)
+ConvertPathToHeaderCompatible(ExamplePluginTest_SOURCE_DIR_NATIVE)
+ConvertPathToHeaderCompatible(ExamplePluginTest_PIPELINE_DIR_NATIVE)
 
-include_directories(${DREAM3DTest_BINARY_DIR})
+configure_file(${ExamplePluginTest_SOURCE_DIR}/TestFileLocation.h.in
+               ${ExamplePluginTest_BINARY_DIR_NATIVE}/ExamplePluginTestFileLocation.h @ONLY IMMEDIATE)
+
+
+include_directories(${ExamplePluginTest_BINARY_DIR})
 include_directories(${DREAM3DTest_SOURCE_DIR})
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Applications)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
-include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
+include_directories(${DREAM3DProj_SOURCE_DIR})
+#include_directories(${DREAM3DProj_SOURCE_DIR}/Source/Plugins)
+#include_directories(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport)
+#include_directories(${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets)
 # --------------------------------------------------------------------------
 #
 # --------------------------------------------------------------------------
@@ -84,3 +83,11 @@ target_link_libraries(FilterParametersRWTest DREAM3DLib )
 set_target_properties(FilterParametersRWTest PROPERTIES FOLDER Test)
 add_test(FilterParametersRWTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/FilterParametersRWTest)
 
+
+# --------------------------------------------------------------------------
+# QSettings Based Filter Parameters Reader and Writer Tests
+# --------------------------------------------------------------------------
+add_executable(QFilterParametersIOTest QFilterParametersIOTest.cpp )
+target_link_libraries(QFilterParametersIOTest ${QT_QTCORE_LIBRARY} DREAM3DLib )
+set_target_properties(QFilterParametersIOTest PROPERTIES FOLDER Test)
+add_test(QFilterParametersIOTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/QFilterParametersIOTest)
