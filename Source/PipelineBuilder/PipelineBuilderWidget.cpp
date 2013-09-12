@@ -1182,7 +1182,7 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 {
-  qDebug() << item->text()().toLatin1().data() << "\n";
+  qDebug() << item->text().toLatin1().data() << "\n";
 }
 
 // -----------------------------------------------------------------------------

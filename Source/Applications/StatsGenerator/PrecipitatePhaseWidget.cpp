@@ -137,7 +137,7 @@ void PrecipitatePhaseWidget::on_microstructurePresetCombo_currentIndexChanged(in
 
   //Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName());
+  m_MicroPreset = manager->createNewPreset(presetName);
   m_MicroPreset->displayUserInputDialog();
 }
 
@@ -174,7 +174,7 @@ void PrecipitatePhaseWidget::setupGui()
   presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
   QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName());
+  m_MicroPreset = manager->createNewPreset(presetName);
 
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);

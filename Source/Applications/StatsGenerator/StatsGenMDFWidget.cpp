@@ -308,7 +308,7 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   else
   {
     size_t numMisorients = 0;
-    QString filename = file();
+    QString filename = file;
     std::ifstream inFile;
     inFile.open(filename.toLatin1().data());
 
