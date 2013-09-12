@@ -65,9 +65,9 @@ class SwitchArg : public Arg
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		SwitchArg(const QString& flag, 
-			      const QString& name, 
-			      const QString& desc,
+		SwitchArg(const std::string& flag, 
+			      const std::string& name, 
+			      const std::string& desc,
 			      bool def = false,
 				  Visitor* v = NULL);
 
@@ -85,9 +85,9 @@ class SwitchArg : public Arg
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		SwitchArg(const QString& flag, 
-			      const QString& name, 
-			      const QString& desc,
+		SwitchArg(const std::string& flag, 
+			      const std::string& name, 
+			      const std::string& desc,
 				  CmdLineInterface& parser,
 			      bool def = false,
 				  Visitor* v = NULL);
@@ -101,13 +101,13 @@ class SwitchArg : public Arg
 		 * \param args - Mutable list of strings. Passed
 		 * in from main().
 		 */
-		virtual bool processArg(int* i, QVector<QString>& args); 
+		virtual bool processArg(int* i, std::vector<std::string>& args); 
 
 		/**
 		 * Checks a string to see if any of the chars in the string
 		 * match the flag for this Switch.
 		 */
-		bool combinedSwitchesMatch(QString& combined);
+		bool combinedSwitchesMatch(std::string& combined);
 
 		/**
 		 * Returns bool, whether or not the switch has been set.
@@ -121,9 +121,9 @@ class SwitchArg : public Arg
 //////////////////////////////////////////////////////////////////////
 //BEGIN SwitchArg.cpp
 //////////////////////////////////////////////////////////////////////
-inline SwitchArg::SwitchArg(const QString& flag, 
-	 		         const QString& name, 
-     		   		 const QString& desc, 
+inline SwitchArg::SwitchArg(const std::string& flag, 
+	 		         const std::string& name, 
+     		   		 const std::string& desc, 
 	     	    	 bool default_val,
 					 Visitor* v )
 : Arg(flag, name, desc, false, false, v),
@@ -131,9 +131,9 @@ inline SwitchArg::SwitchArg(const QString& flag,
   _default( default_val )
 { }
 
-inline SwitchArg::SwitchArg(const QString& flag, 
-					const QString& name, 
-					const QString& desc, 
+inline SwitchArg::SwitchArg(const std::string& flag, 
+					const std::string& name, 
+					const std::string& desc, 
 					CmdLineInterface& parser,
 					bool default_val,
 					Visitor* v )
@@ -146,7 +146,7 @@ inline SwitchArg::SwitchArg(const QString& flag,
 
 inline bool SwitchArg::getValue() { return _value; }
 
-inline bool SwitchArg::combinedSwitchesMatch(QString& combinedSwitches )
+inline bool SwitchArg::combinedSwitchesMatch(std::string& combinedSwitches )
 {
 	// make sure this is actually a combined switch
 	if ( combinedSwitches.length() > 0 &&
@@ -159,7 +159,7 @@ inline bool SwitchArg::combinedSwitchesMatch(QString& combinedSwitches )
 		return false;
 
 	// make sure the delimiter isn't in the string 
-	if ( combinedSwitches.find_first_of( Arg::delimiter() ) != QString::npos )
+	if ( combinedSwitches.find_first_of( Arg::delimiter() ) != std::string::npos )
 		return false;
 
 	// ok, we're not specifying a ValueArg, so we know that we have
@@ -182,7 +182,7 @@ inline bool SwitchArg::combinedSwitchesMatch(QString& combinedSwitches )
 }
 
 
-inline bool SwitchArg::processArg(int *i, QVector<QString>& args)
+inline bool SwitchArg::processArg(int *i, std::vector<std::string>& args)
 {
 	if ( _ignoreable && Arg::ignoreRest() )
 		return false;
