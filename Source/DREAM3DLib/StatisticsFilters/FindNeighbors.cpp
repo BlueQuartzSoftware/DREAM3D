@@ -38,7 +38,7 @@
 
 #include <sstream>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/Common/IDataArray.h"
@@ -47,19 +47,19 @@
 //
 // -----------------------------------------------------------------------------
 FindNeighbors::FindNeighbors() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
-m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_SharedSurfaceAreaListArrayName(DREAM3D::FieldData::SharedSurfaceAreaList),
-m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
-m_GrainIds(NULL),
-m_SurfaceVoxels(NULL),
-m_SurfaceFields(NULL),
-m_NumNeighbors(NULL),
-m_NeighborList(NULL),
-m_SharedSurfaceAreaList(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
+  m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_SharedSurfaceAreaListArrayName(DREAM3D::FieldData::SharedSurfaceAreaList),
+  m_NeighborListArrayName(DREAM3D::FieldData::NeighborList),
+  m_GrainIds(NULL),
+  m_SurfaceVoxels(NULL),
+  m_SurfaceFields(NULL),
+  m_NumNeighbors(NULL),
+  m_NeighborList(NULL),
+  m_SharedSurfaceAreaList(NULL)
 {
 }
 
@@ -74,8 +74,8 @@ void FindNeighbors::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -95,19 +95,19 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, 1)
 
-  // Field Data
-  // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
-  // because we are just creating an empty NeighborList object.
-  // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-  m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getCellFieldData(m_NeighborListArrayName).get());
+      // Field Data
+      // Do this whole block FIRST otherwise the side effect is that a call to m->getNumCellFieldTuples will = 0
+      // because we are just creating an empty NeighborList object.
+      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+      m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
+      (m->getCellFieldData(m_NeighborListArrayName).get());
   if(m_NeighborList == NULL)
   {
     NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
@@ -116,11 +116,11 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->addCellFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
-      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << "\n";
+      QString ss = QObject::tr("NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
-                                          (m->getCellFieldData(m_NeighborListArrayName).get());
+        (m->getCellFieldData(m_NeighborListArrayName).get());
 
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
@@ -136,7 +136,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   // And we do the same for the SharedSurfaceArea list
   m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
+      (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
   if(m_SharedSurfaceAreaList == NULL)
   {
     NeighborList<float>::Pointer sharedSurfaceAreaListPtr = NeighborList<float>::New();
@@ -146,13 +146,13 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     m->addCellFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
-      ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << "\n";
+
+      QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter");
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss.str(), -308);
+      addErrorMessage(getHumanLabel(), ss, -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
-                                 (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
+        (m->getCellFieldData(m_SharedSurfaceAreaListArrayName).get());
     CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();
     e->setFilterName(this->getNameOfClass());
     e->setFilterHumanLabel(this->getHumanLabel());
@@ -166,7 +166,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
   }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -184,8 +184,8 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -232,30 +232,28 @@ void FindNeighbors::execute()
 
   //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->getNumberOfTuples();
 
-    QVector<QVector<int> > neighborlist;
-    QVector<QVector<float> > neighborsurfacearealist;
+  QVector<QVector<int> > neighborlist;
+  QVector<QVector<float> > neighborsurfacearealist;
 
   int nListSize = 100;
   neighborlist.resize(totalFields);
   neighborsurfacearealist.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    
-    ss << "Finding Neighbors - Initializing Neighbor Lists - " << (static_cast<float>(i)/totalFields)*100 << " Percent Complete";
- //   notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i)/totalFields)*100);
+    //   notifyStatusMessage(ss);
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
-    neighborsurfacearealist[i].resize(nListSize, -1.0);
-  m_SurfaceFields[i] = false;
+    neighborsurfacearealist[i].fill(-1.0, nListSize);
+    m_SurfaceFields[i] = false;
   }
 
   totalPoints = m->getTotalPoints();
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    
-    ss << "Finding Neighbors - Determining Neighbor Lists - " << (static_cast<float>(j)/totalPoints)*100 << " Percent Complete";
- //   notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j)/totalPoints)*100);
+    //   notifyStatusMessage(ss);
     onsurf = 0;
     grain = m_GrainIds[j];
     if(grain > 0)
@@ -299,9 +297,9 @@ void FindNeighbors::execute()
 
   for (size_t i = 1; i < m->getNumCellFieldTuples(); i++)
   {
-    
-    ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
-  //  notifyStatusMessage(ss.str());
+
+    QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i/totalFields)*100);
+    //  notifyStatusMessage(ss);
 
     QMap<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
@@ -312,16 +310,19 @@ void FindNeighbors::execute()
       neighToCount[neighborlist[i][j]]++;
     }
 
-    neighToCount.erase(0);
-    neighToCount.erase(-1);
+
+    QMap<int, int>::Iterator iter = neighToCount.find(0);
+    neighToCount.erase(iter);
+    iter = neighToCount.find(-1);
+    neighToCount.erase(iter);
     //Resize the grains neighbor list to zero
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
     for (QMap<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
-      int neigh = iter->first; // get the neighbor grain
-      int number = iter->second; // get the number of voxels
+      int neigh = iter.key(); // get the neighbor grain
+      int number = iter.value(); // get the number of voxels
       float area = number * m->getXRes() * m->getYRes();
 
       // Push the neighbor grain id back onto the list so we stay synced up
@@ -331,15 +332,15 @@ void FindNeighbors::execute()
     m_NumNeighbors[i] = int32_t( neighborlist[i].size() );
 
     // Set the vector for each list into the NeighborList Object
-    NeighborList<int>::SharedVectorType sharedNeiLst(new QVector<int>);
+    NeighborList<int>::SharedVectorType sharedNeiLst(new std::vector<int>);
     sharedNeiLst->assign(neighborlist[i].begin(), neighborlist[i].end());
     m_NeighborList->setList(static_cast<int>(i), sharedNeiLst);
 
-    NeighborList<float>::SharedVectorType sharedSAL(new QVector<float>);
+    NeighborList<float>::SharedVectorType sharedSAL(new std::vector<float>);
     sharedSAL->assign(neighborsurfacearealist[i].begin(), neighborsurfacearealist[i].end());
     m_SharedSurfaceAreaList->setList(static_cast<int>(i), sharedSAL);
   }
 
- notifyStatusMessage("Finding Neighbors Complete");
+  notifyStatusMessage("Finding Neighbors Complete");
 }
 

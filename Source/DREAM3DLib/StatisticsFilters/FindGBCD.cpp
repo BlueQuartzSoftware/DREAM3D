@@ -36,16 +36,18 @@
 #include "FindGBCD.h"
 
 
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+
+
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
-
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-
 
 /**
  * @brief The CalculateAreasImpl class
@@ -362,8 +364,9 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
+
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -403,8 +406,8 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
   if(NULL == m)
   {
     addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
@@ -436,7 +439,6 @@ void FindGBCD::preflight()
 void FindGBCD::execute()
 {
   int err = 0;
-  
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -549,20 +551,19 @@ void FindGBCD::execute()
     m_GBCDdimensions[5*i+4] = m_GBCDsizes[4];
   }
 
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch());
+  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  millis = QDateTime::currentMSecsSinceEpoch());
+  millis =  QDateTime::currentMSecsSinceEpoch();
   startMillis = millis;
   int lastIteration = 0;
   int numIterationsPerTime = 0;
   int hemisphere = 0;
 
   double totalFaceArea[2] = {0.0,0.0};
-  ss.str("");
-  ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
+  QString ss = QObject::tr("Calculating GBCD: 0/%1 Completed").arg(totalFaces);
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
   {
 
@@ -586,19 +587,18 @@ void FindGBCD::execute()
       serial.generate(i, i+faceChunkSize);
     }
 
-    ss.str("");
-    ss << "Calculating GBCD: Triangles " << i << "/" << totalFaces << " Completed";
-    currentMillis = QDateTime::currentMSecsSinceEpoch());
+    QString ss = QObject::tr("Calculating GBCD: Triangles %1/%2 Completed").arg(i).arg(totalFaces);
+    currentMillis = QDateTime::currentMSecsSinceEpoch();
     if (currentMillis - millis > 1000)
     {
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFaces - i) / timeDiff;
-      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
-      millis = QDateTime::currentMSecsSinceEpoch());
+      QString ss = QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
+      millis = QDateTime::currentMSecsSinceEpoch();
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
-    notifyStatusMessage(ss.str());
+    notifyStatusMessage(ss);
 
     for(int j=0;j<faceChunkSize;j++)
     {
@@ -612,9 +612,8 @@ void FindGBCD::execute()
     }
   }
 
-  ss.str("");
-  ss << "Starting GBCD Normalization";
-  notifyStatusMessage(ss.str());
+  ss = QObject::tr("Starting GBCD Normalization");
+  notifyStatusMessage(ss);
 
   int totalBins = m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4];
   double MRDfactor[2] = {double(totalBins)/totalFaceArea[0],double(totalBins)/totalFaceArea[1]};
