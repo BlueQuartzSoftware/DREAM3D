@@ -190,7 +190,7 @@ void WriteAbaqusSurfaceMesh::execute()
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
@@ -236,7 +236,7 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
 int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 {
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
   size_t numNodes = nodesPtr->getNumberOfTuples();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
@@ -292,7 +292,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
 

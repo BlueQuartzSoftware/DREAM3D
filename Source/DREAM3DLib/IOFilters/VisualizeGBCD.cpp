@@ -269,9 +269,9 @@ void VisualizeGBCD::execute()
   Int32ArrayType::Pointer gbcdSizesArray = Int32ArrayType::CreateArray(5, "GBCDSizes");
   gbcdSizesArray->initializeWithZeros();
 
-  float* gbcdDeltas = gbcdDeltasArray->GetPointer(0);
-  int* gbcdSizes = gbcdSizesArray->GetPointer(0);
-  float* gbcdLimits = gbcdLimitsArray->GetPointer(0);
+  float* gbcdDeltas = gbcdDeltasArray->getPointer(0);
+  int* gbcdSizes = gbcdSizesArray->getPointer(0);
+  float* gbcdLimits = gbcdLimitsArray->getPointer(0);
 
   gbcdLimits[0] = 0.0;
   gbcdLimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);
@@ -339,15 +339,15 @@ void VisualizeGBCD::execute()
   DoubleArrayType::Pointer poleFigureArray = DoubleArrayType::NullPointer();
   poleFigureArray = DoubleArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigure");
   poleFigureArray->initializeWithValues(0);
-  double* poleFigure = poleFigureArray->GetPointer(0);
+  double* poleFigure = poleFigureArray->getPointer(0);
   FloatArrayType::Pointer poleFigureCountsArray = FloatArrayType::NullPointer();
   poleFigureCountsArray = FloatArrayType::CreateArray(xpoints*ypoints, 1, "PoleFigureCounts");
   poleFigureCountsArray->initializeWithValues(0);
-  float* poleFigureCounts = poleFigureCountsArray->GetPointer(0);
+  float* poleFigureCounts = poleFigureCountsArray->getPointer(0);
   FloatArrayType::Pointer vecsArray = FloatArrayType::NullPointer();
   vecsArray = FloatArrayType::CreateArray(xpoints*ypoints, 3, "Vecs");
   vecsArray->initializeWithValues(-1000);
-  float* vecs = vecsArray->GetPointer(0);
+  float* vecs = vecsArray->getPointer(0);
 
   int count = 0;
   for (int64_t k = 0; k < (xpoints); k++)

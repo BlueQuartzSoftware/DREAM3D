@@ -306,7 +306,7 @@ int VertexDataContainerReader::readVertices(hid_t dcGid)
   VertexArray::Pointer verticesPtr = VertexArray::New();
   verticesPtr->resizeArray(dims[0]);
   // Read the data
-  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);

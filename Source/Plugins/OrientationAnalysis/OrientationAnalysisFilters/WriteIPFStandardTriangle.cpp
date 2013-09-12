@@ -234,7 +234,7 @@ QImage WriteIPFStandardTriangle::generateCubicHighTriangle()
 
   CubicOps ops;
   UInt8ArrayType::Pointer rgbaImage = ops.generateIPFTriangleLegend(getImageSize());
-  QRgb* rgba = reinterpret_cast<QRgb*>(rgbaImage->GetPointer(0));
+  QRgb* rgba = reinterpret_cast<QRgb*>(rgbaImage->getPointer(0));
 
   QImage image(getImageSize(), getImageSize(), QImage::Format_ARGB32_Premultiplied);
 

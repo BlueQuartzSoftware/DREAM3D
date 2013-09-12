@@ -302,7 +302,7 @@ void __TestEraseElements()
         eraseElements.resize(20);
     err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , 0)
-        size_t nTuples = array->GetNumberOfTuples();
+        size_t nTuples = array->getNumberOfTuples();
     DREAM3D_REQUIRE_EQUAL(nTuples, 0)
   }
 
@@ -336,20 +336,20 @@ void TestDataArray()
   {
     Int32ArrayType::Pointer d = Int32ArrayType::CreateArray(0, "Test7");
     DREAM3D_REQUIRE_EQUAL(0, d->GetSize());
-    DREAM3D_REQUIRE_EQUAL(0, d->GetNumberOfTuples());
-    ptr = d->GetPointer(0);
+    DREAM3D_REQUIRE_EQUAL(0, d->getNumberOfTuples());
+    ptr = d->getPointer(0);
     DREAM3D_REQUIRE_EQUAL(ptr, 0);
     DREAM3D_REQUIRE_EQUAL(d->isAllocated(), false);
   }
 
   {
     Int32ArrayType::Pointer int32Array = Int32ArrayType::CreateArray(NUM_ELEMENTS, "Test8");
-    ptr = int32Array->GetPointer(0);
+    ptr = int32Array->getPointer(0);
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
-    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
     int32Array->SetNumberOfComponents(NUM_COMPONENTS);
-    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS, int32Array->GetSize());
 
     for (int i = 0; i < NUM_TUPLES; ++i)
@@ -362,7 +362,7 @@ void TestDataArray()
 
     // Resize Larger
     int32Array->Resize(NUM_TUPLES_2);
-    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_2, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_2, int32Array->GetSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
@@ -377,7 +377,7 @@ void TestDataArray()
 
     // Resize Smaller - Which should have still save some of our data
     int32Array->Resize(NUM_TUPLES_3);
-    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_3, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_3, int32Array->GetSize());
     DREAM3D_REQUIRE_EQUAL(int32Array->isAllocated(), true);
 
@@ -392,7 +392,7 @@ void TestDataArray()
 
     // Change number of components
     int32Array->SetNumberOfComponents(NUM_COMPONENTS_4);
-    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->GetNumberOfTuples());
+    DREAM3D_REQUIRE_EQUAL(NUM_TUPLES_4, int32Array->getNumberOfTuples());
     DREAM3D_REQUIRE_EQUAL(NUM_ELEMENTS_4, int32Array->GetSize());
 
     double temp = 9999;
@@ -403,7 +403,7 @@ void TestDataArray()
     }
 
 
-    ptr = int32Array->GetPointer(0);
+    ptr = int32Array->getPointer(0);
   }
 
 }
@@ -546,7 +546,7 @@ void TestGbcdDataArray()
   // Now allocate all the memory we need
   m_GBCD->Allocate();
   DREAM3D_REQUIRE_EQUAL(true, m_GBCD->isAllocated())
-      float* ptr = m_GBCD->GetPointer(0);
+      float* ptr = m_GBCD->getPointer(0);
   size_t idx = 0;
   // Now dump some actual data in the arrays
   for(size_t i = 0; i < dims[0]; ++i)
@@ -585,7 +585,7 @@ void TestGbcdDataArray()
     int err = m_GBCD->readH5Data(fid);
     DREAM3D_REQUIRE(err >= 0)
         QH5Utilities::closeFile(fid);
-    ptr = m_GBCD->GetPointer(0);
+    ptr = m_GBCD->getPointer(0);
     idx = 0;
     // Now dump some actual data in the arrays
     for(size_t i = 0; i < dims[0]; ++i)

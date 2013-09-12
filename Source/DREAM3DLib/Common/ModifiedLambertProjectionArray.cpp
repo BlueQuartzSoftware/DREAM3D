@@ -432,7 +432,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
   hsize_t lambertElements =  tmp->getDimension() * tmp->getDimension();
   float sphereRadius = tmp->getSphereRadius();
 
-  Create2DExpandableDataset(gid, dsetName, lambertElements, lambertElements * 2, tmp->getNorthSquare()->GetPointer(0), tmp->getSouthSquare()->GetPointer(0) );
+  Create2DExpandableDataset(gid, dsetName, lambertElements, lambertElements * 2, tmp->getNorthSquare()->getPointer(0), tmp->getSouthSquare()->getPointer(0) );
 
 
   DoubleArrayType* north = NULL;
@@ -446,7 +446,7 @@ int ModifiedLambertProjectionArray::writeH5Data(hid_t parentId)
     {
       north = m_ModifiedLambertProjectionArray[i]->getNorthSquare().get();
       south = m_ModifiedLambertProjectionArray[i]->getSouthSquare().get();
-      AppendRowToH5Dataset(gid, dsetName, lambertElements, north->GetPointer(0), south->GetPointer(0));
+      AppendRowToH5Dataset(gid, dsetName, lambertElements, north->getPointer(0), south->getPointer(0));
     }
   }
 

@@ -151,9 +151,9 @@ void FindSurfaceVoxelFractions::find_surface_voxel_fractions()
   size_t numgrains = m->getNumCellFieldTuples();
 
   DataArray<float>::Pointer m_SurfVoxCounts = DataArray<float>::CreateArray(numgrains, "SurfVoxCounts");
-  float* surfvoxcounts = m_SurfVoxCounts->GetPointer(0);
+  float* surfvoxcounts = m_SurfVoxCounts->getPointer(0);
   DataArray<float>::Pointer m_VoxCounts = DataArray<float>::CreateArray(numgrains, "VoxCounts");
-  float* voxcounts = m_VoxCounts->GetPointer(0);
+  float* voxcounts = m_VoxCounts->getPointer(0);
 
   // Initialize every element to 0.0
   for (size_t i = 0; i < numgrains * 1; i++)

@@ -279,10 +279,10 @@ void NodesTrianglesToStl::execute()
   // Read the POINTS data (Vertex)
   QMap<int, int> nodeIdToIndex;
   VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
 //  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(nNodes, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
-//  int8_t* nodeKindArray = nodeKindPtr->GetPointer(0);
+//  int8_t* nodeKindArray = nodeKindPtr->getPointer(0);
 
   for (int i = 0; i < nNodes; i++)
   {
@@ -308,7 +308,7 @@ void NodesTrianglesToStl::execute()
   FaceArray& triangles = *(trianglePtr.get());
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelPtr->getPointer(0);
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;

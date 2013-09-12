@@ -518,7 +518,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
                                         weights.data(), sigmas.data(), true,
                                         odf.data(), numEntries);
 
-  err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+  err = StatsGen::GenAxisODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
   OrthoRhombicOps ops;
   PoleFigureConfiguration_t config;

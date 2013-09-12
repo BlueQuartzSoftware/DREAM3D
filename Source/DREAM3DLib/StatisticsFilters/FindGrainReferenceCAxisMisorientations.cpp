@@ -171,7 +171,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   int avgMisoComps = 2;
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
-  float* avgmiso = avgmisoPtr->GetPointer(0);
+  float* avgmiso = avgmisoPtr->getPointer(0);
 
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);

@@ -927,7 +927,7 @@ class GenerateSphereCoordsImpl
 
       for(size_t i = start; i < end; ++i)
       {
-        currentEuler = eulers->GetPointer(i * 3);
+        currentEuler = eulers->getPointer(i * 3);
 
         OrientationMath::EulertoMat(currentEuler[0], currentEuler[1], currentEuler[2], g);
         MatrixMath::Transpose3x3(g, gTranpose);
@@ -935,25 +935,25 @@ class GenerateSphereCoordsImpl
             // -----------------------------------------------------------------------------
             // 001 Family
             direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*6),m_xyz001->GetPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*6 + 3),-1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->getPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz001->getPointer(i*6),m_xyz001->getPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->getPointer(i*6 + 3),-1);
 
 
             // -----------------------------------------------------------------------------
             // 011 Family
             direction[0] = -0.5; direction[1] = DREAM3D::Constants::k_Root3Over2; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*6),m_xyz011->GetPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*6 + 3),-1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->getPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz011->getPointer(i*6),m_xyz011->getPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->getPointer(i*6 + 3),-1);
 
 
             // -----------------------------------------------------------------------------
             // 111 Family
             direction[0] = 1; direction[1] = 0; direction[2] = 0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*6));
-            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*6),m_xyz111->GetPointer(i*6 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*6 + 3),-1);
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->getPointer(i*6));
+            MatrixMath::Copy3x1(m_xyz111->getPointer(i*6),m_xyz111->getPointer(i*6 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->getPointer(i*6 + 3),-1);
       }
 
     }
@@ -1183,7 +1183,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   double max = std::numeric_limits<double>::min();
   double min = std::numeric_limits<double>::max();
 
-  double* dPtr = intensity001->GetPointer(0);
+  double* dPtr = intensity001->getPointer(0);
   size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
@@ -1192,7 +1192,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   }
 
 
-  dPtr = intensity011->GetPointer(0);
+  dPtr = intensity011->getPointer(0);
   count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
@@ -1200,7 +1200,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
     if (dPtr[i] < min) { min = dPtr[i]; }
   }
 
-  dPtr = intensity111->GetPointer(0);
+  dPtr = intensity111->getPointer(0);
   count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {

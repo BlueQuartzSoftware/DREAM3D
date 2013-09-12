@@ -230,23 +230,23 @@ void GoldfeatherReader::execute()
   // Allocate the Nodes, Normals, curvatures and principal direction vectors
   VertexArray::Pointer nodesPtr = VertexArray::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
+  VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
 
   DoubleArrayType::Pointer normalsPtr = DoubleArrayType::CreateArray(nNodes, 3, DREAM3D::VertexData::SurfaceMeshNodeNormals);
-  double* normals = normalsPtr->GetPointer(0);
+  double* normals = normalsPtr->getPointer(0);
 
   DoubleArrayType::Pointer pcurv1Ptr = DoubleArrayType::CreateArray(nNodes, 1, "Principal_Curvature_1");
-  double* pcurv1 = pcurv1Ptr->GetPointer(0);
+  double* pcurv1 = pcurv1Ptr->getPointer(0);
 
   DoubleArrayType::Pointer pcurv2Ptr = DoubleArrayType::CreateArray(nNodes, 1, "Principal_Curvature_2");
-  double* pcurv2 = pcurv2Ptr->GetPointer(0);
+  double* pcurv2 = pcurv2Ptr->getPointer(0);
 
   DoubleArrayType::Pointer pDirection1Ptr = DoubleArrayType::CreateArray(nNodes, 3, "Principal_Direction_1");
-  double* pDirection1 = pDirection1Ptr->GetPointer(0);
+  double* pDirection1 = pDirection1Ptr->getPointer(0);
 
   DoubleArrayType::Pointer pDirection2Ptr = DoubleArrayType::CreateArray(nNodes, 3, "Principal_Direction_2");
-  double* pDirection2 = pDirection2Ptr->GetPointer(0);
+  double* pDirection2 = pDirection2Ptr->getPointer(0);
 
   float x, y, z, n0, n1, n2, p1, p2;
   for(int n = 0; n < nNodes; ++n)
@@ -292,15 +292,14 @@ void GoldfeatherReader::execute()
   }
 
   FaceArray::Pointer trianglesPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
-  trianglesPtr->initializeWithZeros();
-  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray& triangles = *(trianglesPtr);
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   faceLabelPtr->initializeWithZeros();
-  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelPtr->getPointer(0);
 
   DoubleArrayType::Pointer triNormalsPtr = DoubleArrayType::CreateArray(nTriangles, 3, DREAM3D::FaceData::SurfaceMeshFaceNormals);
-  double* triNormals = triNormalsPtr->GetPointer(0);
+  double* triNormals = triNormalsPtr->getPointer(0);
 
   for(int t = 0; t < nTriangles; ++t)
   {

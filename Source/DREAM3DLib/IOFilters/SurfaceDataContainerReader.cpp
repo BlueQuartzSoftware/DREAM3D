@@ -381,7 +381,7 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
   // Allocate the data
   VertexArray::Pointer verticesPtr = VertexArray::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
   // Read the data
-  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);
@@ -470,7 +470,7 @@ int SurfaceDataContainerReader::readFaces(hid_t dcGid)
   // Allocate the Face_t structures
   FaceArray::Pointer facesPtr = FaceArray::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces);
   // We need this to properly use H5Lite because the data is stored as int32_t in 5 columns
-  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
+  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
   // Read the data from the file
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
   if (err < 0) {

@@ -226,7 +226,7 @@ void SurfaceMeshToVtk::execute()
     // The node type array does exist so use that one.
     nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
   }
-  m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
+  m_SurfaceMeshNodeType = nodeTypePtr->getPointer(0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -698,7 +698,7 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   FaceArray& triangles = *(getSurfaceDataContainer()->getFaces());
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   int nT = triangles.getNumberOfTuples();

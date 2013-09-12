@@ -285,7 +285,7 @@ int  PhReader::readFile()
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
   m_GrainIdData->initializeWithValues(-1);
-  int32_t* grainIds = m_GrainIdData->GetPointer(0);
+  int32_t* grainIds = m_GrainIdData->getPointer(0);
   for(size_t n = 0; n < totalPoints; ++n)
   {
     if (fscanf(m_InStream, "%d", grainIds+n) == 0)

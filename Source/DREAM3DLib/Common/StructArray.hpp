@@ -454,7 +454,7 @@ class StructArray : public IDataArray
      * @param i The index to return the pointer to.
      * @return The pointer to the index
      */
-    virtual T* GetPointer(size_t i)
+    virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}

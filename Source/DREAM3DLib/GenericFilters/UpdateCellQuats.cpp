@@ -133,7 +133,7 @@ void UpdateCellQuats::execute()
     return;
   }
   DataArray<float>* quats5 = DataArray<float>::SafePointerDownCast(Quats5.get());
-  float* quats5ptr = quats5->GetPointer(0);
+  float* quats5ptr = quats5->getPointer(0);
   //creating the 4 component quaternions in the data container
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, totalPoints, 4)
 
