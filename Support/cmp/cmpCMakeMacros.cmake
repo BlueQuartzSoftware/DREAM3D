@@ -770,7 +770,7 @@ endmacro()
 
 # --------------------------------------------------------------------
 # This macro generates install rules for Visual Studio builds so that
-# dependent DLL libraries (HDF5, Tiff, Expat, MXADataModel) will be
+# dependent DLL libraries (HDF5, Tiff, Expat, DataModel) will be
 # properly installed with your project.
 # --------------------------------------------------------------------
 MACRO (CMP_LIBRARIES_INSTALL_RULES _libraryList destination)

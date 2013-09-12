@@ -120,7 +120,7 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
@@ -264,7 +264,7 @@ void MinSize::assign_badpoints()
         for (int i = 0; i < dims[0]; i++)
         {
           count = kstride+jstride+i;
-          
+
           grainname = m_GrainIds[count];
           if (grainname < 0)
           {
@@ -352,8 +352,8 @@ void MinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  QVector<int> voxcounts;
-  voxcounts.resize(numgrains,0);
+  QVector<int> voxcounts(numgrains,0);
+
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
@@ -361,7 +361,7 @@ void MinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	m_Active[i] = true;
+  m_Active[i] = true;
     if(voxcounts[i] >= m_MinAllowedGrainSize ) good = true;
   }
   if(good == false)
@@ -374,9 +374,9 @@ void MinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < m_MinAllowedGrainSize && gnum > 0)
-	{
-		m_GrainIds[i] = -1;
-		m_Active[gnum] = false;
-	}
+  {
+    m_GrainIds[i] = -1;
+    m_Active[gnum] = false;
+  }
   }
 }

@@ -100,7 +100,7 @@ int IdentifySample::writeFilterParameters(AbstractFilterParametersWriter* writer
 void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, 1)
@@ -163,12 +163,9 @@ void IdentifySample::execute()
   neighpoints[4] = xp;
   neighpoints[5] = (xp * yp);
   QVector<int> currentvlist;
-  QVector<bool> checked;
-  checked.resize(totalPoints,false);
-  QVector<bool> Sample;
-  Sample.resize(totalPoints,false);
-  QVector<bool> notSample;
-  notSample.resize(totalPoints,false);
+  QVector<bool> checked(totalPoints,false);
+  QVector<bool> Sample(totalPoints,false);
+  QVector<bool> notSample(totalPoints,false);
   int biggestBlock = 0;
   size_t count;
   int good;
@@ -227,10 +224,9 @@ void IdentifySample::execute()
     else if (notSample[i] == true && m_GoodVoxels[i] == true) m_GoodVoxels[i] = false;
   }
   notSample.clear();
-  checked.clear();
+  checked.fill(false, totalPoints);
 
   biggestBlock = 0;
-  checked.resize(totalPoints,false);
   for (int i = 0; i < totalPoints; i++)
   {
     if(checked[i] == false && m_GoodVoxels[i] == true)
