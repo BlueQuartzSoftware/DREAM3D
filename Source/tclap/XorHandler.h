@@ -42,7 +42,7 @@ class XorHandler
 		/**
 		 * The list of of lists of Arg's to be or'd together.
 		 */
-		QVector< QVector<Arg*> > _orList;
+		std::vector< std::vector<Arg*> > _orList;
 
 	public:
 
@@ -55,7 +55,7 @@ class XorHandler
 		 * Add a list of Arg*'s that will be orred together.
 		 * \param ors - list of Arg* that will be xor'd.
 		 */
-		void add( QVector<Arg*>& ors );
+		void add( std::vector<Arg*>& ors );
 			
 		/**
 		 * Checks whether the specified Arg is in one of the xor lists and
@@ -69,7 +69,7 @@ class XorHandler
 		/**
 		 * Returns the XOR specific short usage.
 		 */
-		QString shortUsage();
+		std::string shortUsage();
 
 		/**
 		 * Prints the XOR specific long usage.
@@ -84,7 +84,7 @@ class XorHandler
 		 */
 		bool contains( const Arg* a );
 
-		QVector< QVector<Arg*> >& getXorList(); 
+		std::vector< std::vector<Arg*> >& getXorList(); 
 
 };
 
@@ -92,7 +92,7 @@ class XorHandler
 //////////////////////////////////////////////////////////////////////
 //BEGIN XOR.cpp
 //////////////////////////////////////////////////////////////////////
-inline void XorHandler::add( QVector<Arg*>& ors )
+inline void XorHandler::add( std::vector<Arg*>& ors )
 { 
 	_orList.push_back( ors );
 }
@@ -140,7 +140,7 @@ inline bool XorHandler::contains( const Arg* a )
 	return false;
 }
 
-inline QVector< QVector<Arg*> >& XorHandler::getXorList() 
+inline std::vector< std::vector<Arg*> >& XorHandler::getXorList() 
 {
 	return _orList;
 }

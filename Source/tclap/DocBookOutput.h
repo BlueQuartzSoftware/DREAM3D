@@ -76,9 +76,9 @@ class DocBookOutput : public CmdLineOutput
 		 * \param r - The char to replace. 
 		 * \param x - What to replace r with. 
 		 */
-		void substituteSpecialChars( QString& s, char r, QString& x );
-		void removeChar( QString& s, char r);
-		void basename( QString& s );
+		void substituteSpecialChars( std::string& s, char r, std::string& x );
+		void removeChar( std::string& s, char r);
+		void basename( std::string& s );
 
 		void printShortArg(Arg* it);
 		void printLongArg(Arg* it);
@@ -89,49 +89,49 @@ class DocBookOutput : public CmdLineOutput
 
 inline void DocBookOutput::version(CmdLineInterface& _cmd) 
 { 
-	qDebug() << _cmd.getVersion() << "\n";
+	std::cout << _cmd.getVersion() << std::endl;
 }
 
 inline void DocBookOutput::usage(CmdLineInterface& _cmd ) 
 {
-	QList<Arg*> argList = _cmd.getArgList();
-	QString progName = _cmd.getProgramName();
-	QString version = _cmd.getVersion();
+	std::list<Arg*> argList = _cmd.getArgList();
+	std::string progName = _cmd.getProgramName();
+	std::string version = _cmd.getVersion();
 	theDelimiter = _cmd.getDelimiter();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
+	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
 	basename(progName);
 
-	qDebug() << "<?xml version='1.0'?>" << "\n";
-	qDebug() << "<!DOCTYPE refentry PUBLIC \"-//OASIS//DTD DocBook XML V4.2//EN\"" << "\n";
-	qDebug() << "\t\"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\">" << "\n" << "\n";
+	std::cout << "<?xml version='1.0'?>" << std::endl;
+	std::cout << "<!DOCTYPE refentry PUBLIC \"-//OASIS//DTD DocBook XML V4.2//EN\"" << std::endl;
+	std::cout << "\t\"http://www.oasis-open.org/docbook/xml/4.2/docbookx.dtd\">" << std::endl << std::endl;
 
-	qDebug() << "<refentry>" << "\n";
+	std::cout << "<refentry>" << std::endl;
 
-	qDebug() << "<refmeta>" << "\n";
-	qDebug() << "<refentrytitle>" << progName << "</refentrytitle>" << "\n";
-	qDebug() << "<manvolnum>1</manvolnum>" << "\n";
-	qDebug() << "</refmeta>" << "\n";
+	std::cout << "<refmeta>" << std::endl;
+	std::cout << "<refentrytitle>" << progName << "</refentrytitle>" << std::endl;
+	std::cout << "<manvolnum>1</manvolnum>" << std::endl;
+	std::cout << "</refmeta>" << std::endl;
 
-	qDebug() << "<refnamediv>" << "\n";
-	qDebug() << "<refname>" << progName << "</refname>" << "\n";
-	qDebug() << "<refpurpose>" << _cmd.getMessage() << "</refpurpose>" << "\n";
-	qDebug() << "</refnamediv>" << "\n";
+	std::cout << "<refnamediv>" << std::endl;
+	std::cout << "<refname>" << progName << "</refname>" << std::endl;
+	std::cout << "<refpurpose>" << _cmd.getMessage() << "</refpurpose>" << std::endl;
+	std::cout << "</refnamediv>" << std::endl;
 
-	qDebug() << "<refsynopsisdiv>" << "\n";
-	qDebug() << "<cmdsynopsis>" << "\n";
+	std::cout << "<refsynopsisdiv>" << std::endl;
+	std::cout << "<cmdsynopsis>" << std::endl;
 
-	qDebug() << "<command>" << progName << "</command>" << "\n";
+	std::cout << "<command>" << progName << "</command>" << std::endl;
 
 	// xor
 	for ( int i = 0; (unsigned int)i < xorList.size(); i++ )
 	{
-		qDebug() << "<group choice='req'>" << "\n";
+		std::cout << "<group choice='req'>" << std::endl;
 		for ( ArgVectorIterator it = xorList[i].begin(); 
 						it != xorList[i].end(); it++ )
 			printShortArg((*it));
 
-		qDebug() << "</group>" << "\n";
+		std::cout << "</group>" << std::endl;
 	}
 	
 	// rest of args
@@ -139,35 +139,35 @@ inline void DocBookOutput::usage(CmdLineInterface& _cmd )
 		if ( !xorHandler.contains( (*it) ) )
 			printShortArg((*it));
 
- 	qDebug() << "</cmdsynopsis>" << "\n";
-	qDebug() << "</refsynopsisdiv>" << "\n";
+ 	std::cout << "</cmdsynopsis>" << std::endl;
+	std::cout << "</refsynopsisdiv>" << std::endl;
 
-	qDebug() << "<refsect1>" << "\n";
-	qDebug() << "<title>Description</title>" << "\n";
-	qDebug() << "<para>" << "\n";
-	qDebug() << _cmd.getMessage() << "\n"; 
-	qDebug() << "</para>" << "\n";
-	qDebug() << "</refsect1>" << "\n";
+	std::cout << "<refsect1>" << std::endl;
+	std::cout << "<title>Description</title>" << std::endl;
+	std::cout << "<para>" << std::endl;
+	std::cout << _cmd.getMessage() << std::endl; 
+	std::cout << "</para>" << std::endl;
+	std::cout << "</refsect1>" << std::endl;
 
-	qDebug() << "<refsect1>" << "\n";
-	qDebug() << "<title>Options</title>" << "\n";
+	std::cout << "<refsect1>" << std::endl;
+	std::cout << "<title>Options</title>" << std::endl;
 
-	qDebug() << "<variablelist>" << "\n";
+	std::cout << "<variablelist>" << std::endl;
 	
 	for (ArgListIterator it = argList.begin(); it != argList.end(); it++)
 		printLongArg((*it));
 
-	qDebug() << "</variablelist>" << "\n";
-	qDebug() << "</refsect1>" << "\n";
+	std::cout << "</variablelist>" << std::endl;
+	std::cout << "</refsect1>" << std::endl;
 
-	qDebug() << "<refsect1>" << "\n";
-	qDebug() << "<title>Version</title>" << "\n";
-	qDebug() << "<para>" << "\n";
-	qDebug() << version << "\n"; 
-	qDebug() << "</para>" << "\n";
-	qDebug() << "</refsect1>" << "\n";
+	std::cout << "<refsect1>" << std::endl;
+	std::cout << "<title>Version</title>" << std::endl;
+	std::cout << "<para>" << std::endl;
+	std::cout << version << std::endl; 
+	std::cout << "</para>" << std::endl;
+	std::cout << "</refsect1>" << std::endl;
 	
-	qDebug() << "</refentry>" << "\n";
+	std::cout << "</refentry>" << std::endl;
 
 }
 
@@ -175,35 +175,35 @@ inline void DocBookOutput::failure( CmdLineInterface& _cmd,
 				    ArgException& e ) 
 { 
 	static_cast<void>(_cmd); // unused
-	qDebug() << e.what() << "\n";
+	std::cout << e.what() << std::endl;
 	throw ExitException(1);
 }
 
-inline void DocBookOutput::substituteSpecialChars( QString& s,
+inline void DocBookOutput::substituteSpecialChars( std::string& s,
 				                                   char r,
-												   QString& x )
+												   std::string& x )
 {
 	size_t p;
-	while ( (p = s.find_first_of(r)) != QString::npos )
+	while ( (p = s.find_first_of(r)) != std::string::npos )
 	{
 		s.erase(p,1);
 		s.insert(p,x);
 	}
 }
 
-inline void DocBookOutput::removeChar( QString& s, char r)
+inline void DocBookOutput::removeChar( std::string& s, char r)
 {
 	size_t p;
-	while ( (p = s.find_first_of(r)) != QString::npos )
+	while ( (p = s.find_first_of(r)) != std::string::npos )
 	{
 		s.erase(p,1);
 	}
 }
 
-inline void DocBookOutput::basename( QString& s )
+inline void DocBookOutput::basename( std::string& s )
 {
 	size_t p = s.find_last_of('/');
-	if ( p != QString::npos )
+	if ( p != std::string::npos )
 	{
 		s.erase(0, p + 1);
 	}
@@ -211,88 +211,88 @@ inline void DocBookOutput::basename( QString& s )
 
 inline void DocBookOutput::printShortArg(Arg* a)
 {
-	QString lt = "&lt;"; 
-	QString gt = "&gt;"; 
+	std::string lt = "&lt;"; 
+	std::string gt = "&gt;"; 
 
-	QString id = a->shortID();
+	std::string id = a->shortID();
 	substituteSpecialChars(id,'<',lt);
 	substituteSpecialChars(id,'>',gt);
 	removeChar(id,'[');
 	removeChar(id,']');
 	
-	QString choice = "opt";
+	std::string choice = "opt";
 	if ( a->isRequired() )
 		choice = "plain";
 
-	qDebug() << "<arg choice='" << choice << '\'';
+	std::cout << "<arg choice='" << choice << '\'';
 	if ( a->acceptsMultipleValues() )
-		qDebug() << " rep='repeat'";
+		std::cout << " rep='repeat'";
 
 
-	qDebug() << '>';
+	std::cout << '>';
 	if ( !a->getFlag().empty() )
-		qDebug() << a->flagStartChar() << a->getFlag();
+		std::cout << a->flagStartChar() << a->getFlag();
 	else
-		qDebug() << a->nameStartString() << a->getName();
+		std::cout << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
-		QString arg = a->shortID();
+		std::string arg = a->shortID();
 		removeChar(arg,'[');
 		removeChar(arg,']');
 		removeChar(arg,'<');
 		removeChar(arg,'>');
 		arg.erase(0, arg.find_last_of(theDelimiter) + 1);
-		qDebug() << theDelimiter;
-		qDebug() << "<replaceable>" << arg << "</replaceable>";
+		std::cout << theDelimiter;
+		std::cout << "<replaceable>" << arg << "</replaceable>";
 	}
-	qDebug() << "</arg>" << "\n";
+	std::cout << "</arg>" << std::endl;
 
 }
 
 inline void DocBookOutput::printLongArg(Arg* a)
 {
-	QString lt = "&lt;"; 
-	QString gt = "&gt;"; 
+	std::string lt = "&lt;"; 
+	std::string gt = "&gt;"; 
 
-	QString desc = a->getDescription();
+	std::string desc = a->getDescription();
 	substituteSpecialChars(desc,'<',lt);
 	substituteSpecialChars(desc,'>',gt);
 
-	qDebug() << "<varlistentry>" << "\n";
+	std::cout << "<varlistentry>" << std::endl;
 
 	if ( !a->getFlag().empty() )
 	{
-		qDebug() << "<term>" << "\n";
-		qDebug() << "<option>";
-		qDebug() << a->flagStartChar() << a->getFlag();
-		qDebug() << "</option>" << "\n";
-		qDebug() << "</term>" << "\n";
+		std::cout << "<term>" << std::endl;
+		std::cout << "<option>";
+		std::cout << a->flagStartChar() << a->getFlag();
+		std::cout << "</option>" << std::endl;
+		std::cout << "</term>" << std::endl;
 	}
 
-	qDebug() << "<term>" << "\n";
-	qDebug() << "<option>";
-	qDebug() << a->nameStartString() << a->getName();
+	std::cout << "<term>" << std::endl;
+	std::cout << "<option>";
+	std::cout << a->nameStartString() << a->getName();
 	if ( a->isValueRequired() )
 	{
-		QString arg = a->shortID();
+		std::string arg = a->shortID();
 		removeChar(arg,'[');
 		removeChar(arg,']');
 		removeChar(arg,'<');
 		removeChar(arg,'>');
 		arg.erase(0, arg.find_last_of(theDelimiter) + 1);
-		qDebug() << theDelimiter;
-		qDebug() << "<replaceable>" << arg << "</replaceable>";
+		std::cout << theDelimiter;
+		std::cout << "<replaceable>" << arg << "</replaceable>";
 	}
-	qDebug() << "</option>" << "\n";
-	qDebug() << "</term>" << "\n";
+	std::cout << "</option>" << std::endl;
+	std::cout << "</term>" << std::endl;
 
-	qDebug() << "<listitem>" << "\n";
-	qDebug() << "<para>" << "\n";
-	qDebug() << desc << "\n";
-	qDebug() << "</para>" << "\n";
-	qDebug() << "</listitem>" << "\n";
+	std::cout << "<listitem>" << std::endl;
+	std::cout << "<para>" << std::endl;
+	std::cout << desc << std::endl;
+	std::cout << "</para>" << std::endl;
+	std::cout << "</listitem>" << std::endl;
 
-	qDebug() << "</varlistentry>" << "\n";
+	std::cout << "</varlistentry>" << std::endl;
 }
 
 } //namespace TCLAP

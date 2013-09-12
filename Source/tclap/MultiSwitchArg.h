@@ -66,9 +66,9 @@ class MultiSwitchArg : public SwitchArg
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		MultiSwitchArg(const QString& flag, 
-				const QString& name,
-				const QString& desc,
+		MultiSwitchArg(const std::string& flag, 
+				const std::string& name,
+				const std::string& desc,
 				int init = 0,
 				Visitor* v = NULL);
 
@@ -87,9 +87,9 @@ class MultiSwitchArg : public SwitchArg
 		 * \param v - An optional visitor.  You probably should not
 		 * use this unless you have a very good reason.
 		 */
-		MultiSwitchArg(const QString& flag, 
-				const QString& name,
-				const QString& desc,
+		MultiSwitchArg(const std::string& flag, 
+				const std::string& name,
+				const std::string& desc,
 				CmdLineInterface& parser,
 				int init = 0,
 				Visitor* v = NULL);
@@ -103,7 +103,7 @@ class MultiSwitchArg : public SwitchArg
 		 * \param args - Mutable list of strings. Passed
 		 * in from main().
 		 */
-		virtual bool processArg(int* i, QVector<QString>& args); 
+		virtual bool processArg(int* i, std::vector<std::string>& args); 
 
 		/**
 		 * Returns int, the number of times the switch has been set.
@@ -113,12 +113,12 @@ class MultiSwitchArg : public SwitchArg
 		/**
 		 * Returns the shortID for this Arg.
 		 */
-		QString shortID(const QString& val) const;
+		std::string shortID(const std::string& val) const;
 
 		/**
 		 * Returns the longID for this Arg.
 		 */
-		QString longID(const QString& val) const;
+		std::string longID(const std::string& val) const;
 		
 		void reset();
 
@@ -127,9 +127,9 @@ class MultiSwitchArg : public SwitchArg
 //////////////////////////////////////////////////////////////////////
 //BEGIN MultiSwitchArg.cpp
 //////////////////////////////////////////////////////////////////////
-inline MultiSwitchArg::MultiSwitchArg(const QString& flag,
-					const QString& name,
-					const QString& desc,
+inline MultiSwitchArg::MultiSwitchArg(const std::string& flag,
+					const std::string& name,
+					const std::string& desc,
 					int init,
 					Visitor* v )
 : SwitchArg(flag, name, desc, false, v),
@@ -137,9 +137,9 @@ _value( init ),
 _default( init )
 { }
 
-inline MultiSwitchArg::MultiSwitchArg(const QString& flag,
-					const QString& name, 
-					const QString& desc, 
+inline MultiSwitchArg::MultiSwitchArg(const std::string& flag,
+					const std::string& name, 
+					const std::string& desc, 
 					CmdLineInterface& parser,
 					int init,
 					Visitor* v )
@@ -152,7 +152,7 @@ _default( init )
 
 inline int MultiSwitchArg::getValue() { return _value; }
 
-inline bool MultiSwitchArg::processArg(int *i, QVector<QString>& args)
+inline bool MultiSwitchArg::processArg(int *i, std::vector<std::string>& args)
 {
 	if ( _ignoreable && Arg::ignoreRest() )
 		return false;
@@ -189,14 +189,14 @@ inline bool MultiSwitchArg::processArg(int *i, QVector<QString>& args)
 		return false;
 }
 
-inline QString 
-MultiSwitchArg::shortID(const QString& val) const
+inline std::string 
+MultiSwitchArg::shortID(const std::string& val) const
 {
 	return Arg::shortID(val) + " ... ";
 }
 
-inline QString 
-MultiSwitchArg::longID(const QString& val) const
+inline std::string 
+MultiSwitchArg::longID(const std::string& val) const
 {
 	return Arg::longID(val) + "  (accepted multiple times)";
 }
