@@ -76,6 +76,7 @@ class VertexArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int64_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -112,6 +113,14 @@ class VertexArray
       Vert.pos[0] = coords[0];
       Vert.pos[1] = coords[1];
       Vert.pos[2] = coords[2];
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    Vert_t* getPointer(size_t i)
+    {
+      return m_Array->GetPointer(i);
     }
 
      /**

@@ -36,13 +36,13 @@
 
 #include "RegularizeZSpacing.h"
 
-#include <map>
-#include <iostream>
+#include <QtCore/QMap>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 using namespace std;
@@ -173,8 +173,7 @@ void RegularizeZSpacing::execute()
   inFile.open(m_InputFile.toLatin1().data());
 
   float zval;
-  QVector<float> zboundvalues;
-  zboundvalues.resize(dims[2] + 1, 0.0);
+  QVector<float> zboundvalues(dims[2] + 1, 0.0);
   for (size_t iter = 0; iter < dims[2] + 1; iter++)
   {
     inFile >> zval;

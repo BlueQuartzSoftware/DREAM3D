@@ -36,12 +36,12 @@
 
 #include "AlignSectionsList.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
@@ -124,14 +124,14 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  QString ss;
 
 
   if(true == m_InputFile.isEmpty())
   {
-    ss << "The Input file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 
 
@@ -203,7 +203,7 @@ void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts
   int newxshift, newyshift;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	inFile >> slice >> newxshift >> newyshift;
+  inFile >> slice >> newxshift >> newyshift;
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
   }

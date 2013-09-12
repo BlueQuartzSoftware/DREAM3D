@@ -32,6 +32,9 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 #include "DREAM3DLib/Common/IFilterFactory.hpp"
@@ -41,9 +44,9 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
-#include "UnitTestSupport.hpp"
+#include "Test/UnitTestSupport.hpp"
 #include "TestFileLocations.h"
 
 #include "ExamplePluginFilters/GenericExample.h"
@@ -180,7 +183,7 @@ FilterPipeline::Pointer m_PipelineFromFile;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::FilterParametersRWTest::OutputFile);
+  QFile::remove(UnitTest::FilterParametersRWTest::OutputFile);
 #endif
 }
 
@@ -287,7 +290,7 @@ void ArraySelectionExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ArraySelectionExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -509,7 +512,7 @@ void GenericExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = GenericExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -639,7 +642,7 @@ void ThresholdExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ThresholdExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -737,17 +740,16 @@ int readPipelineFromFile(hid_t fileId)
   hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    
-    ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     FilterManager::Pointer fm = FilterManager::Instance();
@@ -947,11 +949,11 @@ int main(int argc, char **argv)
   FilterManager::Instance()->addFilterFactory("Filt1",Filt1Factory);
 
   int err = EXIT_SUCCESS;
-#if 1
+
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
-#endif
+
 
 
 
@@ -968,11 +970,11 @@ int main(int argc, char **argv)
 
       //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
 
-#if 1
+
     #if REMOVE_TEST_FILES
       DREAM3D_REGISTER_TEST( RemoveTestFiles() )
     #endif
-#endif
+
 
 
       PRINT_TEST_SUMMARY();

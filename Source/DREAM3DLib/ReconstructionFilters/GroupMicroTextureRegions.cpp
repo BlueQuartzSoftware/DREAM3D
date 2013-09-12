@@ -37,7 +37,7 @@
 #include "GroupMicroTextureRegions.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -155,8 +155,8 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
+
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -177,9 +177,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
       if(m_ContiguousNeighborList == NULL)
       {
-        ss << "NeighborLists Array Not Initialized correctly" << "\n";
+        QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
         setErrorCondition(-304);
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
+        addErrorMessage(getHumanLabel(), ss, -1);
       }
   }
   else
@@ -189,9 +189,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborhoodList).get());
       if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
       {
-        ss << "NeighborhoodLists Array Not Initialized correctly" << "\n";
+        QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
         setErrorCondition(-305);
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
+        addErrorMessage(getHumanLabel(), ss, -1);
       }
   }
   typedef DataArray<unsigned int> XTalStructArrayType;
@@ -268,15 +268,16 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   size_t numgrains = m->getNumCellFieldTuples();
   unsigned int phase1, phase2;
   int parentcount = 0;
-  parentnumbers.resize(numgrains, -1);
+  m_ParentNumbers.clear();
+  m_ParentNumbers.fill(-1, numgrains);
   int size1 = 0, size2 = 0, size = 0;
-  parentnumbers[0] = 0;
+  m_ParentNumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
   {
-    if (parentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    if (m_ParentNumbers[i] == -1 && m_FieldPhases[i] > 0)
     {
       parentcount++;
-      parentnumbers[i] = parentcount;
+      m_ParentNumbers[i] = parentcount;
       m_Active[i] = true;
       microtexturelist.push_back(i);
       for (QVector<int>::size_type j = 0; j < microtexturelist.size(); j++)
@@ -306,7 +307,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
             angcur = 180.0f;
             if (k == 0) neigh = neighborlist[firstgrain][l];
             else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
-            if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+            if (neigh != i && m_ParentNumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
             {
               phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
               if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
@@ -330,7 +331,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 w = acosf(w);
                 if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
                 {
-                  parentnumbers[neigh] = parentcount;
+                  m_ParentNumbers[neigh] = parentcount;
                   microtexturelist.push_back(neigh);
                 }
               }
@@ -345,7 +346,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    m_CellParentIds[k] = parentnumbers[grainname];
+    m_CellParentIds[k] = m_ParentNumbers[grainname];
     m_FieldParentIds[grainname] = m_CellParentIds[k];
   }
 }

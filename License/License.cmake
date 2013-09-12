@@ -9,7 +9,6 @@ set(LICENSE_FILES
                    ${DREAM3DProj_SOURCE_DIR}/License.txt
                 #   ${DREAM3DProj_SOURCE_DIR}/ReadMe.txt
                    ${DREAM3DProj_SOURCE_DIR}/License/Boost.license
-                   ${DREAM3DProj_SOURCE_DIR}/License/MXA.license
                    ${DREAM3DProj_SOURCE_DIR}/License/Qt.license
                    ${DREAM3DProj_SOURCE_DIR}/License/Qwt.license
                    ${DREAM3DProj_SOURCE_DIR}/License/HDF5.license

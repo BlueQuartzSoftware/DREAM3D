@@ -38,6 +38,8 @@
 
 #include <sstream>
 
+#include <QtCore/QVector>
+
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 
@@ -162,8 +164,6 @@ void RenumberGrains::execute()
     return;
   }
 
-
-  size_t goodcount = 1;
   QString ss;
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
@@ -194,24 +194,26 @@ void RenumberGrains::execute()
     for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
     {
       IDataArray::Pointer p = m->getCellFieldData(*iter);
-      ss.str("");
-      //ss << " erasing " << RemoveList.size() << " tuples from array '" << *iter << "'";
-      //ss << " with NumTuples: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
-      ss << "Updating Field Array '" << *iter << "'";
-      notifyStatusMessage(ss.str());
+
+      ss = QObject::tr("Updating Field Array '%1'").arg(*iter);
+      notifyStatusMessage(ss);
       QString type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
-      else {p->EraseTuples(RemoveList);}
-      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << "\n" << "\n";
+      if(type.compare("NeighborList<T>") == 0)
+      {
+        m->removeCellFieldData(*iter);
+      }
+      else {
+        p->EraseTuples(RemoveList);
+      }
+      //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
-    m->setNumFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
+    m->setNumCellFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
     totalFields = m->getNumCellFieldTuples();
     dataCheck(false, totalPoints, totalFields, m->getNumCellEnsembleTuples());
 
     // Loop over all the points and correct all the grain names
-    ss.str("");
-    ss << "Renumbering Cell Region Ids";
-    notifyStatusMessage(ss.str());
+    ss = QObject::tr("Renumbering Cell Region Ids");
+    notifyStatusMessage(ss);
     for (int i = 0; i < totalPoints; i++)
     {
       //  notify(ss.str(), 0, Observable::UpdateProgressMessage);

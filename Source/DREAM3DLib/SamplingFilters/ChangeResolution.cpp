@@ -36,11 +36,11 @@
 
 #include "ChangeResolution.h"
 
-#include <map>
+#include <QtCore/QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 //#include "DREAM3DLib/HDF5/H5VoxelReader.h"
@@ -180,9 +180,8 @@ void ChangeResolution::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    
-    ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i/m->getZPoints())*100);
+    notifyStatusMessage(ss);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)

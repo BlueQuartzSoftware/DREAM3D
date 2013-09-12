@@ -139,8 +139,8 @@ void PerPhaseMinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  QVector<int> voxcounts;
-  voxcounts.resize(numgrains,0);
+  QVector<int> voxcounts(numgrains,0);
+
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];

@@ -1548,8 +1548,7 @@ void QFilterWidget::updateQCheckBoxValue(int v)
 void QFilterWidget::updateLineEdit(const QString &v)
 {
   QObject* whoSent = sender();
-  qDebug() << "Filter: " << title() << "->Property: " << whoSent->objectName()
-            << " via QLineEdit." <<  std::endl;
+  qDebug() << "Filter: " << title() << "->Property: " << whoSent->objectName() << " via QLineEdit.";
   BOOST_ASSERT(false);
 }
 
