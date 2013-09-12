@@ -112,17 +112,17 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
                                                 getSelectedArrays(volumeFaceArrayList),
                                                 getSelectedArrays(volumeEdgeArrayList),
                                                 getSelectedArrays(volumeCellArrayList),
-                                                getSelectedArrays(volumeFieldArrayList),
-                                                getSelectedArrays(volumeEnsembleArrayList));
+                                                getSelectedArrays(volumeCellFieldArrayList),
+                                                getSelectedArrays(volumeCellEnsembleArrayList));
       filter->setSurfaceSelectedArrayNames( getSelectedArrays(surfaceVertexArrayList),
                                                 getSelectedArrays(surfaceFaceArrayList),
                                                 getSelectedArrays(surfaceEdgeArrayList),
-                                                getSelectedArrays(surfaceFieldArrayList),
-                                                getSelectedArrays(surfaceEnsembleArrayList));
+                                                getSelectedArrays(surfaceFaceFieldArrayList),
+                                                getSelectedArrays(surfaceFaceEnsembleArrayList));
       filter->setEdgeSelectedArrayNames( getSelectedArrays(edgeVertexArrayList),
                                                 getSelectedArrays(edgeEdgeArrayList),
-                                                getSelectedArrays(edgeFieldArrayList),
-                                                getSelectedArrays(edgeEnsembleArrayList));
+                                                getSelectedArrays(edgeEdgeFieldArrayList),
+                                                getSelectedArrays(edgeEdgeEnsembleArrayList));
       filter->setVertexSelectedArrayNames( getSelectedArrays(vertexVertexArrayList),
                                                 getSelectedArrays(vertexVertexFieldArrayList),
                                                 getSelectedArrays(vertexVertexEnsembleArrayList));
@@ -135,17 +135,17 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       setSelectedArrays( filter->getSelectedVolumeEdgeArrays(), volumeEdgeArrayList );
       setSelectedArrays( filter->getSelectedVolumeFaceArrays(), volumeFaceArrayList );
       setSelectedArrays( filter->getSelectedVolumeCellArrays(), volumeCellArrayList );
-      setSelectedArrays( filter->getSelectedVolumeFieldArrays(), volumeFieldArrayList );
-      setSelectedArrays( filter->getSelectedVolumeEnsembleArrays(), volumeEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedVolumeCellFieldArrays(), volumeCellFieldArrayList );
+      setSelectedArrays( filter->getSelectedVolumeCellEnsembleArrays(), volumeCellEnsembleArrayList );
       setSelectedArrays( filter->getSelectedSurfaceVertexArrays(), surfaceVertexArrayList );
       setSelectedArrays( filter->getSelectedSurfaceFaceArrays(), surfaceFaceArrayList );
       setSelectedArrays( filter->getSelectedSurfaceEdgeArrays(), surfaceEdgeArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceFieldArrays(), surfaceFieldArrayList );
-      setSelectedArrays( filter->getSelectedSurfaceEnsembleArrays(), surfaceEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceFaceFieldArrays(), surfaceFaceFieldArrayList );
+      setSelectedArrays( filter->getSelectedSurfaceFaceEnsembleArrays(), surfaceFaceEnsembleArrayList );
       setSelectedArrays( filter->getSelectedEdgeVertexArrays(), edgeVertexArrayList );
       setSelectedArrays( filter->getSelectedEdgeEdgeArrays(), edgeEdgeArrayList );
-      setSelectedArrays( filter->getSelectedEdgeFieldArrays(), edgeFieldArrayList );
-      setSelectedArrays( filter->getSelectedEdgeEnsembleArrays(), edgeEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedEdgeEdgeFieldArrays(), edgeEdgeFieldArrayList );
+      setSelectedArrays( filter->getSelectedEdgeEdgeEnsembleArrays(), edgeEdgeEnsembleArrayList );
       setSelectedArrays( filter->getSelectedVertexVertexArrays(), vertexVertexArrayList );
       setSelectedArrays( filter->getSelectedVertexFieldArrays(), vertexVertexFieldArrayList );
       setSelectedArrays( filter->getSelectedVertexEnsembleArrays(), vertexVertexEnsembleArrayList );
@@ -221,19 +221,19 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
     void on_volumeEdgeCB_stateChanged(int state);
     void on_volumeFaceCB_stateChanged(int state);
     void on_volumeCellCB_stateChanged(int state);
-    void on_volumeFieldCB_stateChanged(int state);
-    void on_volumeEnsembleCB_stateChanged(int state);
+    void on_volumeCellFieldCB_stateChanged(int state);
+    void on_volumeCellEnsembleCB_stateChanged(int state);
 
     void on_surfaceVertexArraysCB_stateChanged(int state);
     void on_surfaceFaceArraysCB_stateChanged(int state);
     void on_surfaceEdgeArraysCB_stateChanged(int state);
-    void on_surfaceFieldArraysCB_stateChanged(int state);
-    void on_surfaceEnsembleArraysCB_stateChanged(int state);
+    void on_surfaceFaceFieldArraysCB_stateChanged(int state);
+    void on_surfaceFaceEnsembleArraysCB_stateChanged(int state);
 
     void on_edgeVertexCB_stateChanged(int state);
     void on_edgeEdgeCB_stateChanged(int state);
-    void on_edgeFieldCB_stateChanged(int state);
-    void on_edgeEnsembleCB_stateChanged(int state);
+    void on_edgeEdgeFieldCB_stateChanged(int state);
+    void on_edgeEdgeEnsembleCB_stateChanged(int state);
 
     void on_vertexVertexCB_stateChanged(int state);
     void on_vertexVertexFieldCB_stateChanged(int state);

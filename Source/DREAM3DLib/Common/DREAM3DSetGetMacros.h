@@ -101,10 +101,10 @@
 
 #define DEFINE_CLOCK unsigned long long int millis;
 
-#define START_CLOCK millis = QDateTime::currentMSecsSinceEpoch());
+#define START_CLOCK millis = QDateTime::currentMSecsSinceEpoch();
 
 #define END_CLOCK(message)\
-  qDebug() << message << " Finish Time(ms): " << (QDateTime::currentMSecsSinceEpoch()) - millis) ;
+  qDebug() << message << " Finish Time(ms): " << (QDateTime::currentMSecsSinceEpoch() - millis) ;
 
 
 #else

@@ -719,7 +719,7 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
 
   writeSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   writeSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  writeSelections(prefs, name, "EdgeField", edgeedgeFieldArrayList);
+  writeSelections(prefs, name, "EdgeField", edgeEdgeFieldArrayList);
   writeSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   writeSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
