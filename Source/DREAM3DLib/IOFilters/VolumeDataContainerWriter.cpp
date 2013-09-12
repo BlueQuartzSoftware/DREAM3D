@@ -108,7 +108,7 @@ void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
-  if(m_HdfFileId < 0)
+  if(getHdfFileId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -148,7 +148,7 @@ void VolumeDataContainerWriter::execute()
 
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), getHdfFileId());
   if (err < 0)
   {
 
@@ -157,7 +157,7 @@ void VolumeDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VolumeDataContainerName);
@@ -240,7 +240,7 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
+  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -260,12 +260,12 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
+  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
 
-  QTextStream& out = *m_XdmfPtr;
+  QTextStream& out = *getXdmfOStream();
   out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" << "\n";
   out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" << "\n";
   out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
@@ -281,11 +281,11 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
-  if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
+  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
-  QTextStream& out = *m_XdmfPtr;
+  QTextStream& out = *getXdmfOStream();
   out << "  </Grid>" << "\n";
   out << "    <!-- *************** END OF " << label << " *************** -->" << "\n";
   out << "\n";
@@ -301,7 +301,7 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
   if (err < 0)  {
     return err;
   }
-  hid_t gid = H5Gopen(m_HdfFileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
+  hid_t gid = H5Gopen(getHdfFileId(), hdfPath.toLatin1().data(), H5P_DEFAULT );
 
   int32_t rank =1;
   hsize_t dims[1] = {3};
@@ -321,7 +321,7 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
     qDebug() << "Error Writing H5_SPACING array for " << hdfPath << "\n";
   }
   int64_t nPoints = volDims[0] * volDims[1] * volDims[2];
-  err = QH5Lite::writeScalarAttribute(m_HdfFileId, hdfPath, H5_NUMBER_OF_POINTS, nPoints);
+  err = QH5Lite::writeScalarAttribute(getHdfFileId(), hdfPath, H5_NUMBER_OF_POINTS, nPoints);
   if (err < 0)
   {
     qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << hdfPath << "\n";
@@ -505,9 +505,9 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 
 
   // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
   QByteArray nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(m_HdfFileId, nameBuffer.data(), nameSize);
+  nameSize = H5Fget_name(getHdfFileId(), nameBuffer.data(), nameSize);
 
   QString hdfFileName(nameBuffer);
   QFileInfo fi(hdfFileName);
@@ -553,7 +553,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
-    array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Cell)");
+    array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Cell)");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   writeXdmfGridFooter("Cell Data");
@@ -572,9 +572,9 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
   std::vector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
 
 <<<<<<< HEAD:Source/DREAM3DLib/IOFilters/VoxelDataContainerWriter.cpp
   QString hdfFileName(&(nameBuffer.front()), nameSize);
@@ -654,7 +654,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
         return err;
       }
 #if WRITE_FIELD_XDMF
-      array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Field)");
+      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Field)");
 #endif
     }
   }
@@ -706,7 +706,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
         return err;
       }
 #if WRITE_FIELD_XDMF
-      (*iter)->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
+      (*iter)->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
 #endif
     }
 #if WRITE_FIELD_XDMF
@@ -781,12 +781,12 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 int VolumeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
+  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
   if (err < 0)
   {
     qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
   }
-  err = QH5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  err = QH5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
     qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
