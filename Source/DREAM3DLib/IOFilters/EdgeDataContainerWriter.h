@@ -67,8 +67,6 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
 
     typedef QList<QString> NameListType;
 
-    void setXdmfOStream(std::ostream* xdmf);
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -95,7 +93,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -141,7 +139,6 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
   private:
-    std::ostream* m_XdmfPtr;
 
     EdgeDataContainerWriter(const EdgeDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const EdgeDataContainerWriter&); // Operator '=' Not Implemented

@@ -275,14 +275,6 @@ void SurfaceDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
-{
-  m_XdmfPtr = xdmf;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void SurfaceDataContainerWriter::writeXdmfGridHeader()
 {
   if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)

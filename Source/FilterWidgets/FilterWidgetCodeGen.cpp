@@ -35,12 +35,15 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <stdio.h>
 
+
 #include <QtCore/QString>
-#include <map>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QCryptographicHash>
+
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
@@ -52,7 +55,7 @@
 // Enabling this will create a pair of files that can be used to update
 // the "PreflightTest.cpp" unit test
 #define GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT 0
-#define GENERATE_FILTER_PARAMTERS_READER_CODE 1
+#define GENERATE_FILTER_PARAMTERS_READER_CODE 0
 
 
 
@@ -79,26 +82,43 @@ QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 // -----------------------------------------------------------------------------
 void copyFile(const QString &src, const QString &dest)
 {
-  size_t tempFileSize = QFileInfo::fileSize(src);
-
-  unsigned char* contents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-  FILE* f = fopen(src.toLatin1().data(), "rb");
-  size_t itemsRead = fread(contents, tempFileSize, 1, f);
-  if(itemsRead != 1)
+  if (src.isEmpty() == true | dest.isEmpty() == true)
   {
-
+    BOOST_ASSERT(false);
   }
-  fclose(f);
-  f = NULL;
 
-  f = fopen(dest.toLatin1().data(), "wb");
-  fwrite(contents, tempFileSize, 1, f);
-  fclose(f);
+  QFile srcFile(src);
 
-  free(contents);
+  QFile dstFile(dest);
+  if(dstFile.exists() == true)
+  {
+    dstFile.remove();
+  }
+
+  srcFile.copy(dest);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString Md5OfFile(QString filePath)
+{
+  if (filePath.isEmpty() == true)
+  {
+    BOOST_ASSERT(false);
+  }
+  QFile file(filePath);
+  if(!file.open(QFile::ReadOnly | QFile::Text))
+  {
+    qDebug() << "Could not open file '" << filePath << "' to compute MD5 Checksum";
+    return QString("");
+  }
 
+  QByteArray contents = file.readAll();
+  QByteArray hash = QCryptographicHash::hash(contents, QCryptographicHash::Md5).toHex();
+
+  return QString(hash);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -133,7 +153,7 @@ void createMarkdownCreatedArrayIndex()
 {
 
   QString path = DREAM3D_BINARY_DIR();
-  path = path + MXADir::Separator + "createdarrayindex.md";
+  path = path + "/" + "createdarrayindex.md";
 
   FILE* f = fopen(path.toLatin1().data(), "wb");
 
@@ -141,16 +161,16 @@ void createMarkdownCreatedArrayIndex()
 
   for(IndexMap_t::iterator entry = helpIndex.begin(); entry != helpIndex.end(); ++entry)
   {
-    QString name = (*entry).first;
-    fprintf (f, "## %s ##\n\n", (*entry).first.toLatin1().data());
+    QString name = entry.key();
+    fprintf (f, "## %s ##\n\n", entry.key().toLatin1().data());
 
-    CreatedArrayHelpIndexEntry::VectorType& filters = (*entry).second;
+    CreatedArrayHelpIndexEntry::VectorType& filters = entry.value();
 
 
     for(CreatedArrayHelpIndexEntry::VectorType::iterator indexEntry = filters.begin(); indexEntry != filters.end(); ++indexEntry)
     {
       QString lower = (*indexEntry)->getFilterName();
-      std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+      lower = lower.toLower();
       fprintf(f, "+ [%s](%s.html) (%s->%s)\n", (*indexEntry)->getFilterHumanLabel().toLatin1().data(), lower.toLatin1().data(), (*indexEntry)->getFilterGroup().toLatin1().data(), (*indexEntry)->getFilterSubGroup().toLatin1().data());
     }
 
@@ -165,29 +185,27 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
 {
-  
-
   extractHelpIndexEntries(filterPtr);
 
-  QString completePath = MXADir::toNativeSeparators(outputPath);
+
+  QString completePath = QDir::toNativeSeparators(outputPath);
   // Make sure the output path exists
-  QString parentPath = MXADir::parentPath(completePath);
-  if (MXADir::exists(parentPath) == false)
+  QDir parentPath(completePath);
+  //QString parentPath = MXADir::parentPath(completePath);
+  if (parentPath.exists() == false)
   {
-    MXADir::mkdir(parentPath, true);
+    parentPath.mkpath(".");
   }
 
   QVector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
 
-  ss.str("");
-  ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
-  QString tempPath = ss.str();
+  QString tempPath = FILTER_WIDGETS_TEMP_DIR() + "/" + group + "_" + filterName + ".h";
 
   FILE* f = fopen(tempPath.toLatin1().data(), "wb");
   if (NULL == f)
   {
     qDebug() << "Could not open file '" << tempPath << "' for writing." << "\n";
-     return;
+    return;
   }
 
   fprintf(f, "/*\n");
@@ -330,51 +348,43 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
 
   fclose(f);
 
+  qint64 currentFileSize = 0;
   // Now compare the file just generated with any possible existing file
-  size_t currentFileSize = QFileInfo::fileSize(completePath);
-  size_t tempFileSize = QFileInfo::fileSize(tempPath);
+  {
+    QFileInfo fi(completePath);
+    currentFileSize = fi.size();
+  }
+
+  qint64 tempFileSize = 0;
+  {
+    QFileInfo fi(tempPath);
+    tempFileSize = fi.size();
+  }
   // If the file sizes are different then copy the file
   if (currentFileSize != tempFileSize)
   {
-    qDebug() << "0-Creating Header File: " <<completePath << "\n";
+    qDebug() << "0-Creating Header File: " << completePath;
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    FILE* c = fopen(completePath.toLatin1().data(), "rb");
-    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
-    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
-    if(itemsRead != 1)
-    {
 
-    }
-    fclose(c);
-
-    MD5 md5_current;
-    md5_current.update(currentContents, currentFileSize);
-    md5_current.finalize();
-    QString currentHexDigest = md5_current.hexdigest();
-
-
-    FILE* t = fopen(tempPath.toLatin1().data(), "rb");
-    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-    itemsRead = fread(tempContents, tempFileSize, 1, t);
-    if(itemsRead != 1)
-    {
-
-    }
-    fclose(t);
-
-    MD5 md5;
-    md5.update(tempContents, tempFileSize);
-    md5.finalize();
-    QString tempHexDigest = md5.hexdigest();
+    QString currentHash = Md5OfFile(completePath);
+    QString tempHash = Md5OfFile(tempPath);
 
     // Use MD5 Checksums to figure out if the files are different
-    if (tempHexDigest.compare(currentHexDigest) != 0)
+    if (tempHash != currentHash)
     {
-      qDebug() << "0-Creating Header File: " << completePath << "\n";
+      qDebug() << "0-Copying Header File: " << completePath;
+      qDebug() << "    Hex Digest:    " << QString(currentHash);
+      qDebug() << "    tempHexDigest: " << QString(tempHash);
       copyFile(tempPath, completePath);
+    }
+
+    QFile tempFile(tempPath);
+    if(tempFile.remove() == false)
+    {
+      qDebug() << "Could not remove temp header file " << tempPath;
     }
   }
 
@@ -430,17 +440,16 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
 
   QString tempfile = filename + "_tmp";
   {
-      std::ofstream out(tempfile.toLatin1().data(), std::ios_base::binary);
+    std::ofstream out(tempfile.toLatin1().data(), std::ios_base::binary);
 
-      qDebug() << filename << "\n";
-      std::ifstream instream;
-      instream.open(filename.toLatin1().data(), std::ios_base::binary);
-      if (!instream.is_open())
-      {
-        
-        qDebug() << " file could not be opened: " << filename << "\n";
-        return;
-      }
+    qDebug() << filename << "\n";
+    std::ifstream instream;
+    instream.open(filename.toLatin1().data(), std::ios_base::binary);
+    if (!instream.is_open())
+    {
+      qDebug() << " file could not be opened: " << filename << "\n";
+      return;
+    }
 
     char buf[kBufferSize];
     ::memset(buf, 0, kBufferSize);
@@ -463,7 +472,7 @@ void parseSourceFileForMarker(const QString filename, const QString marker, cons
     }
   }
   copyFile(tempfile, filename);
-  if ( !MXADir::remove(tempfile) )
+  if ( !QFile::remove(tempfile) )
   {
     qDebug() << "FILE NOT REMOVED: " << tempfile << "\n";
   }
@@ -482,21 +491,17 @@ void createSourceFile( const QString &group,
                        QVector<FilterParameter::Pointer> options,
                        const QString &outputPath)
 {
-  
 
-  QString completePath = MXADir::toNativeSeparators(outputPath);
+  QString completePath = QDir::toNativeSeparators(outputPath);
+  QFileInfo fi(completePath);
   // Make sure the output path exists
-  QString parentPath = MXADir::parentPath(completePath);
-  if (MXADir::exists(parentPath) == false)
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
   {
-    MXADir::mkdir(ss.str(), true);
+    parentPath.mkpath(".");
   }
 
-  //QString headerFile = parentPath + MXADir::Separator + QFileInfo::fileNameWithOutExtension(completePath) + ".h";
-
-  ss.str("");
-  ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.cpp";
-  QString tempPath = ss.str();
+  QString tempPath = FILTER_WIDGETS_TEMP_DIR() + "/" + group + "_" + filter + ".cpp";
 
   FILE* f = fopen(tempPath.toLatin1().data(), "wb");
 
@@ -532,7 +537,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "#include \"ArraySelectionWidget.h\"\n");
     }
     if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+        && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "#include \"ComparisonSelectionWidget.h\"\n");
     }
@@ -551,11 +556,11 @@ void createSourceFile( const QString &group,
   fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "{\n");
   fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.toLatin1().data(), filter.toLatin1().data());
-  fprintf(f, "     m_FilterGroup = (filter->getGroupName());\n");
-  fprintf(f, "     m_FilterSubGroup = (filter->getSubGroupName());\n");
+  fprintf(f, "     m_FilterGroup = filter->getGroupName();\n");
+  fprintf(f, "     m_FilterSubGroup = filter->getSubGroupName();\n");
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     getGuiParametersFromFilter( filter.get() );\n");
-  fprintf(f, "     setTitle((filter->getHumanLabel()));\n");
+  fprintf(f, "     setTitle(filter->getHumanLabel());\n");
   fprintf(f, "}\n\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
@@ -576,14 +581,14 @@ void createSourceFile( const QString &group,
     QString prop = opt->getPropertyName();
     QString typ = opt->getValueType();
 
-      if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
-        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
-        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
+    if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
+       || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
+       || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
-      fprintf(f, "     {\n");
+      fprintf(f, "     { \n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           w->setText( (filter->get%s()) );\n", prop.toLatin1().data());
+      fprintf(f, "           w->setText( filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -592,9 +597,9 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           \n");
-      fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
-      fprintf(f, "           w->setText( (ss.str()) );\n");
+    //  fprintf(f, "           QTextStream ss;\n");
+    //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
+      fprintf(f, "           w->setText( QString::number(filter->get%s()) );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -616,16 +621,16 @@ void createSourceFile( const QString &group,
       fprintf(f, "        if (w) {\n");
       if (opt->getValueType().compare("string") == 0)
       {
-          fprintf(f, "           int index = w->findText( (filter->get%s()) );\n", prop.toLatin1().data());
-          fprintf(f, "           if (index >= 0)\n");
-          fprintf(f, "           {\n");
-          fprintf(f, "              w->setCurrentIndex(index);\n");
-          fprintf(f, "           }\n");
-          fprintf(f, "           else if (%d) {\n", (int)(ptr->getEditable()) );
-          fprintf(f, "             w->setEditable(true);\n");
-          fprintf(f, "             w->addItem( ( filter->get%s() ) );\n", prop.toLatin1().data());
-          fprintf(f, "             w->setCurrentIndex( w->findText( (filter->get%s()) ) );\n", prop.toLatin1().data());
-          fprintf(f, "           }\n");
+        fprintf(f, "           int index = w->findText( filter->get%s() );\n", prop.toLatin1().data());
+        fprintf(f, "           if (index >= 0)\n");
+        fprintf(f, "           {\n");
+        fprintf(f, "              w->setCurrentIndex(index);\n");
+        fprintf(f, "           }\n");
+        fprintf(f, "           else if (%d) {\n", (int)(ptr->getEditable()) );
+        fprintf(f, "             w->setEditable(true);\n");
+        fprintf(f, "             w->addItem( filter->get%s() );\n", prop.toLatin1().data());
+        fprintf(f, "             w->setCurrentIndex( w->findText(filter->get%s()) );\n", prop.toLatin1().data());
+        fprintf(f, "           }\n");
       }
       else
       {
@@ -636,20 +641,20 @@ void createSourceFile( const QString &group,
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget || opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
+      QString wType = "IntVec3Widget_t";
+      if(opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+      {
+        wType = "FloatVec3Widget_t";
+      }
       fprintf(f, "     {\n");
+      fprintf(f, "        %s value = filter->get%s();\n", wType.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w1 = qFindChild<QLineEdit*>(this, \"0_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w1 && w2 && w3) {\n");
-      fprintf(f, "           \n\n");
-      fprintf(f, "           ss << filter->get%s().x;\n", prop.toLatin1().data());
-      fprintf(f, "           w1->setText( (ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().y;\n", prop.toLatin1().data());
-      fprintf(f, "           w2->setText( (ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().z;\n", prop.toLatin1().data());
-      fprintf(f, "           w3->setText( (ss.str()) );\n");
+      fprintf(f, "           w1->setText(QString::number(value.x));\n");
+      fprintf(f, "           w2->setText(QString::number(value.y));\n");
+      fprintf(f, "           w3->setText(QString::number(value.z));\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -673,22 +678,22 @@ void createSourceFile( const QString &group,
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
-      fprintf(f, "              \n");
+      fprintf(f, "              QString buf;\n");
+      fprintf(f, "              QTextStream ss(&buf);\n");
       fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
       fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
-      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");
-      fprintf(f, "              ss.str(\"\");\n");
+      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, buf );\n");
       fprintf(f, "           }\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-      && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
+             && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
     {
       fprintf(f, "     {\n");
       fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           int index = w->findText( (filter->get%s()) );\n", prop.toLatin1().data());
+      fprintf(f, "           int index = w->findText(filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "           if (index >= 0)\n");
       fprintf(f, "           {\n");
       fprintf(f, "              w->setCurrentIndex(index);\n");
@@ -697,19 +702,19 @@ void createSourceFile( const QString &group,
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-      && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-     // fprintf(f, "     {\n");
+      // fprintf(f, "     {\n");
       fprintf(f, "     ComparisonSelectionWidget* w_%s = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "     if (w_%s) {\n", prop.toLatin1().data());
       fprintf(f, "       w_%s->setComparisons(filter->get%s());\n", prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "     }\n");
-     // fprintf(f, "     }\n");
+      // fprintf(f, "     }\n");
       implementComparisonSelectionWidget = true;
     }
 
-    #if 0
-else
+#if 0
+    else
     {
       fprintf(f, "     set%s( filter->get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
@@ -751,7 +756,7 @@ else
     {
       fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-    //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
+      //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
       fprintf(f, "      filter->set%s(w->getAxisAngleRotations());\n    }\n  }\n", prop.toLatin1().data());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
@@ -759,7 +764,7 @@ else
     {
       fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-     // fprintf(f, "//      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
+      // fprintf(f, "//      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
       fprintf(f, "        filter->set%s(w->getComparisonInputs());\n    }\n  }\n", prop.toLatin1().data());
     }
     else
@@ -906,9 +911,10 @@ else
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "void Q%sWidget::readOptions(QSettings &prefs)\n{\n", filter.toLatin1().data());
-  // fprintf(f, "  qDebug() << \"Reading Prefs for Filter  %s \" << "\n";\n", filter.toLatin1().data());
+  // fprintf(f, "  qDebug()\"Reading Prefs for Filter  %s \" << "\n";\n", filter.toLatin1().data());
 
-  QTextStream replaceStream;
+  QString replaceString;
+  QTextStream replaceStream(&replaceString);
   replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << "\n";
   for (size_t i = 0; i < options.size(); ++i)
   {
@@ -1145,7 +1151,7 @@ else
         fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+          && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
         fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
@@ -1158,8 +1164,8 @@ else
 
 
   /* Implement the htmlHelpIndexFile() method */
-  QString lower = filter;
-  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+  QString lower = filter.toLower();
+
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "void Q%sWidget::openHtmlHelpFile()\n{\n", filter.toLatin1().data());
   fprintf(f, "\tDREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(\"%s\", this);\n", lower.toLatin1().data());
@@ -1171,53 +1177,37 @@ else
   fclose(f);
 
   // Now compare the file just generated with any possible existing file
-  size_t currentFileSize = QFileInfo::fileSize(completePath);
-  size_t tempFileSize = QFileInfo::fileSize(tempPath);
+  QFileInfo curFi(completePath);
+  QFileInfo tmpFi(tempPath);
+
+  qint64 currentFileSize = curFi.size();
+  qint64 tempFileSize = tmpFi.size();
 
   // If the file sizes are different then copy the file
   if(currentFileSize != tempFileSize)
   {
-    qDebug() << "0-Creating Source File: " << completePath << "\n";
+    qDebug() << "0-Creating Source File: " << completePath;
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    //qDebug() << "  Comparing Files: " << filter << "\n";
-    FILE* c = fopen(completePath.toLatin1().data(), "rb");
-    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
-    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
-    if(itemsRead != 1)
-    {
 
-    }
-    fclose(c);
-
-    MD5 md5_current;
-    md5_current.update(currentContents, currentFileSize);
-    md5_current.finalize();
-    QString currentHexDigest = md5_current.hexdigest();
-
-    FILE* t = fopen(tempPath.toLatin1().data(), "rb");
-    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-    itemsRead = fread(tempContents, tempFileSize, 1, t);
-    if(itemsRead != 1)
-    {
-
-    }
-    fclose(t);
-
-    MD5 md5;
-    md5.update(tempContents, tempFileSize);
-    md5.finalize();
-    QString tempHexDigest = md5.hexdigest();
+    QString currentHash = Md5OfFile(completePath);
+    QString tempHash = Md5OfFile(tempPath);
 
     // Use MD5 Checksums to figure out if the files are different
-    if (tempHexDigest.compare(currentHexDigest) != 0)
+    if (tempHash != currentHash)
     {
-      qDebug() << "  0-Copying Source File: " << completePath << "\n";
-      qDebug() << "    Hex Digest:    " << currentHexDigest << "\n";
-      qDebug() << "    tempHexDigest: " << tempHexDigest << "\n";
+      qDebug() << "0-Copying Source File: " << completePath;
+      qDebug() << "    Hex Digest:    " << QString(currentHash);
+      qDebug() << "    tempHexDigest: " << QString(tempHash);
       copyFile(tempPath, completePath);
+    }
+
+    QFile tempFile(tempPath);
+    if(tempFile.remove() == false)
+    {
+      qDebug() << "Could not remove temp Source file " << tempPath;
     }
   }
 
