@@ -193,7 +193,7 @@ void CAxisSegmentGrains::execute()
   }
 
   int64_t totalPoints = m->getTotalPoints();
-  m->resizeFieldDataArrays(1);
+  m->resizeCellFieldDataArrays(1);
   dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
@@ -307,7 +307,7 @@ int64_t CAxisSegmentGrains::getSeed(size_t gnum)
   if (seed >= 0)
   {
     m_GrainIds[seed] = gnum;
-    m->resizeFieldDataArrays(gnum+1);
+    m->resizeCellFieldDataArrays(gnum+1);
     dataCheck(false, totalPoints, m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   }
   return seed;

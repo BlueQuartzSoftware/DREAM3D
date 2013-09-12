@@ -368,7 +368,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   size_t currentnumgrains = m->getNumCellFieldTuples();
   if(currentnumgrains == 0)
   {
-    m->resizeFieldDataArrays(1);
+    m->resizeCellFieldDataArrays(1);
     dataCheck(false, totalPoints, 1, m->getNumCellEnsembleTuples());
     currentnumgrains = 1;
   }
@@ -458,7 +458,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
         ss << "Packing Precipitates - Generating Grain #" << currentnumgrains;
         notifyStatusMessage(ss.str());
 
-        m->resizeFieldDataArrays(currentnumgrains + 1);
+        m->resizeCellFieldDataArrays(currentnumgrains + 1);
         dataCheck(false, totalPoints, currentnumgrains + 1, m->getNumCellEnsembleTuples());
         m_Active[currentnumgrains] = true;
         transfer_attributes(currentnumgrains, &precip);
