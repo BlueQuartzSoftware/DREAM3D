@@ -268,8 +268,8 @@ void QDataContainerReaderWidget::on_InputFileBtn_clicked()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName());
-  QString ext = getFileExtension(propName());
+  QString Ftype = getFileType(propName);
+  QString ext = getFileExtension(propName);
   QString s = Ftype + QString("DREAM3D Files (*.dream3d *.h5 *.hdf5);;All Files(*.*)");
   QString defaultName = getOpenDialogLastDirectory();
   QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);

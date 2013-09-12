@@ -143,7 +143,7 @@ AbstractFilter::Pointer QEbsdToH5EbsdWidget::getFilter(bool defaultValues)
   EbsdToH5Ebsd::Pointer filter =  EbsdToH5Ebsd::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text())());
+  filter->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()));
   filter->setZStartIndex(m_ZStartIndex->value());
   filter->setZEndIndex(m_ZEndIndex->value());
   filter->setZResolution(m_zSpacing->text().toFloat(&ok));
@@ -546,7 +546,7 @@ QVector<QString> QEbsdToH5EbsdWidget::generateFileList(int start, int end, bool 
         .arg(m_FileSuffix->text()).arg(m_FileExt->text());
     QString filePath = m_InputDir->text() + QDir::separator() + filename;
     filePath = QDir::toNativeSeparators(filePath);
-    fileList.push_back(filePath());
+    fileList.push_back(filePath);
   }
   return fileList;
 }
@@ -713,7 +713,7 @@ void QEbsdToH5EbsdWidget::m_findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn();
+      QString fns = fn;
       int length =  fn.length();
       digitEnd = length-1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')

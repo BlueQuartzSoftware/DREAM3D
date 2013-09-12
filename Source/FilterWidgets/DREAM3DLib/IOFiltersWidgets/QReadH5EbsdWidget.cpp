@@ -247,8 +247,8 @@ void QReadH5EbsdWidget::on_m_InputFileBtn_clicked()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName());
-  QString ext = getFileExtension(propName());
+  QString Ftype = getFileType(propName);
+  QString ext = getFileExtension(propName);
   QString s = Ftype + QString("HDF5 EBSD Files (*.h5 *.hdf5 *.h5ang *.h5ebsd)");
   QString defaultName = getOpenDialogLastDirectory();
   QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
