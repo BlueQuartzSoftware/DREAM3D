@@ -338,7 +338,7 @@ void WritePoleFigure::execute()
   // Find how many phases we have by getting the number of Crystal Structures
   IDataArray::Pointer crystalStructures = m->getCellEnsembleData(m_CrystalStructuresArrayName);
   int64_t numPoints = m->getTotalPoints();
-  int numPhases = crystalStructures->GetNumberOfTuples();
+  int numPhases = crystalStructures->getNumberOfTuples();
   size_t count = 0;
   // Loop over all the voxels gathering the Eulers for a specific phase into an array
   for(int phase = 1; phase < numPhases; ++phase)
@@ -378,7 +378,7 @@ void WritePoleFigure::execute()
         }
       }
     }
-    if (subEulers->GetNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
+    if (subEulers->getNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
 
     QVector<UInt8ArrayType::Pointer> figures;
 

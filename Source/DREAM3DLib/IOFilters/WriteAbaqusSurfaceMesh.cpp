@@ -258,9 +258,8 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 {
   int err = 0;
-  FaceArray::Pointer trianglePtr = getSurfaceDataContainer()->getFaces();
-  FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
-  size_t numTri = trianglePtr->getNumberOfTuples();
+  FaceArray::Pointer triangles = getSurfaceDataContainer()->getFaces();
+  size_t numTri = triangles->getNumberOfTuples();
 
   fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
   for(size_t i = 1; i <= numTri; ++i)

@@ -639,7 +639,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   DataArray<float>::Pointer lambdasPtr = getLambdaArray();
 
   // We need an array to store the new positions
-  VertexArray::Pointer newPositionsPtr = VertexArray::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
+  VertexArray::Pointer newPositionsPtr = VertexArray::CreateArray(vertsPtr->getNumberOfTuples(), "New Vertex Positions");
   newPositionsPtr->initializeWithZeros();
 
 

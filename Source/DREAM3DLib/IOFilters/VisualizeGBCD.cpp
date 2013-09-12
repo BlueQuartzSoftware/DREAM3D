@@ -251,7 +251,7 @@ void VisualizeGBCD::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalFaces = trianglesPtr->count();
+  size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array
   dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumFaceEnsembleTuples());
