@@ -584,7 +584,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                    weights.data(), sigmas.data(), true,
                                    odf.data(), numEntries);
 
-    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenCubicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     CubicOps ops;
     PoleFigureConfiguration_t config;
@@ -619,7 +619,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
 
-    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenHexODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     HexagonalOps ops;
     PoleFigureConfiguration_t config;
@@ -653,7 +653,7 @@ void StatsGenODFWidget::on_m_CalculateODFBtn_clicked()
                                  weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
 
-    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->GetPointer(0), npoints);
+    err = StatsGen::GenOrthoRhombicODFPlotData(odf.data(), eulers->getPointer(0), npoints);
 
     OrthoRhombicOps ops;
     PoleFigureConfiguration_t config;

@@ -93,7 +93,7 @@ void FindNRingNeighbors::generate()
 
   // Get the Triangle List from the Data Container
   FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
-  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   // Make sure we have the proper connectivity built
   MeshLinks::Pointer node2TrianglePtr =sm->getMeshLinks();
@@ -105,7 +105,7 @@ void FindNRingNeighbors::generate()
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   // Figure out these boolean values for a sanity check

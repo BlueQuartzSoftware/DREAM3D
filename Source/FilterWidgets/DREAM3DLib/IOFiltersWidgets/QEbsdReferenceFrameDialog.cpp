@@ -275,7 +275,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   }
 
   UInt8ArrayType* rgbArray = UInt8ArrayType::SafePointerDownCast(arrayPtr.get());
-  uint8_t* ipfColors = rgbArray->GetPointer(0);
+  uint8_t* ipfColors = rgbArray->getPointer(0);
 
   for(size_t y = 0; y < dims[1]; ++y)
   {

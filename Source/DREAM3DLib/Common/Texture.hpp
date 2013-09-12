@@ -93,7 +93,7 @@ class Texture
       DREAM3D_RANDOMNG_NEW()
           CubicOps ops;
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-      int32_t* TextureBins = textureBins->GetPointer(0);
+      int32_t* TextureBins = textureBins->getPointer(0);
 
       float addweight = 0;
       float totaladdweight = 0;
@@ -220,7 +220,7 @@ class Texture
     {
       DREAM3D_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-      int32_t* TextureBins = textureBins->GetPointer(0);
+      int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
       float totalweight = 3 * HexagonalOps::k_OdfSize;
@@ -347,7 +347,7 @@ class Texture
     {
       DREAM3D_RANDOMNG_NEW()
       Int32ArrayType::Pointer textureBins = Int32ArrayType::CreateArray(numEntries, "TextureBins");
-      int32_t* TextureBins = textureBins->GetPointer(0);
+      int32_t* TextureBins = textureBins->getPointer(0);
       float addweight = 0;
       float totaladdweight = 0;
       float totalweight = 3*OrthoRhombicOps::k_OdfSize;

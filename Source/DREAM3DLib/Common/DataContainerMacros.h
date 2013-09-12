@@ -149,7 +149,7 @@
       }\
       addErrorMessage(getHumanLabel(), ss, -50001);\
     } \
-    else if (p->GetPointer(0) == NULL)\
+    else if (p->getPointer(0) == NULL)\
     {\
       setErrorCondition(-11000);\
       QString ss = QObject::tr("'%1' was sized to Zero which may cause the program to crash in filters that use this array, including the current filter."\
@@ -161,7 +161,7 @@
       p->SetNumberOfComponents(NumComp);\
       p->SetName(m_##Name##ArrayName);\
       dc->add##DType(m_##Name##ArrayName, p);\
-      m_##Name = p->GetPointer(0);\
+      m_##Name = p->getPointer(0);\
       CreatedArrayHelpIndexEntry::Pointer e = CreatedArrayHelpIndexEntry::New();\
       e->setFilterName(this->getNameOfClass());\
       e->setFilterHumanLabel(this->getHumanLabel());\

@@ -435,7 +435,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param i The index to return the pointer to.
      * @return The pointer to the index
      */
-    virtual Data_t* GetPointer(size_t i)
+    virtual Data_t* getPointer(size_t i)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}

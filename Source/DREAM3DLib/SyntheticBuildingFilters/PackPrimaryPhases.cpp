@@ -148,8 +148,8 @@ class AssignVoxelsGapsImpl
    //   float dist = 0.0f;
    //   float radcur1squared = 1.0/(Invradcur[0]*Invradcur[0]);
       float coordsRotated[3] = {0.0f, 0.0f, 0.0f};
-      int32_t* newowners = newownersPtr->GetPointer(0);
-      float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+      int32_t* newowners = newownersPtr->getPointer(0);
+      float* ellipfuncs = ellipfuncsPtr->getPointer(0);
       DimType dim0_dim_1 = dims[0] * dims[1];
       for (DimType iter1 = xStart; iter1 < xEnd; iter1++)
       {
@@ -524,8 +524,8 @@ void PackPrimaryPhases::execute()
   exclusionZonesPtr->initializeWithValues(false);
 
   // Get a pointer to the Grain Owners that was just initialized in the initialize_packinggrid() method
-  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
-  bool* exclusionZones = exclusionZonesPtr->GetPointer(0);
+  int32_t* grainOwners = grainOwnersPtr->getPointer(0);
+  bool* exclusionZones = exclusionZonesPtr->getPointer(0);
   size_t grainOwnersIdx = 0;
 
   // initialize the sim and goal size distributions for the primary phases
@@ -1025,7 +1025,7 @@ void PackPrimaryPhases::execute()
 
   if(m_VtkOutputFile.isEmpty() == false)
   {
-    err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
+    err = writeVtkFile(grainOwnersPtr->getPointer(0), exclusionZonesPtr->getPointer(0));
     if(err < 0)
     {
       return;
@@ -1597,8 +1597,8 @@ float PackPrimaryPhases::check_sizedisterror(Field* field)
 float PackPrimaryPhases::check_fillingerror(int gadd, int gremove, Int32ArrayType::Pointer grainOwnersPtr, BoolArrayType::Pointer exclusionZonesPtr)
 {
   size_t grainOwnersIdx = 0;
-  int32_t* grainOwners = grainOwnersPtr->GetPointer(0);
-  bool* exclusionZones = exclusionZonesPtr->GetPointer(0);
+  int32_t* grainOwners = grainOwnersPtr->getPointer(0);
+  bool* exclusionZones = exclusionZonesPtr->getPointer(0);
 
   fillingerror = fillingerror * float(m_TotalPackingPoints);
   int col, row, plane;
@@ -1831,11 +1831,11 @@ void PackPrimaryPhases::assign_voxels()
   float res[3] = {xRes, yRes, zRes};
 
   Int32ArrayType::Pointer newownersPtr = Int32ArrayType::CreateArray(totpoints, "newowners");
-  int32_t* newowners = newownersPtr->GetPointer(0);
+  int32_t* newowners = newownersPtr->getPointer(0);
   newownersPtr->initializeWithValues(-1);
 
   FloatArrayType::Pointer ellipfuncsPtr = FloatArrayType::CreateArray(totpoints, "ellipfuncs");
-  float* ellipfuncs = ellipfuncsPtr->GetPointer(0);
+  float* ellipfuncs = ellipfuncsPtr->getPointer(0);
   ellipfuncsPtr->initializeWithValues(-1);
 
   float grainsPerTime = 0;
@@ -2020,7 +2020,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighpoints[5] = xPoints*yPoints;
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(m->getTotalPoints(), "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
+  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
   QVector<int > n(m->getNumCellFieldTuples() + 1,0);

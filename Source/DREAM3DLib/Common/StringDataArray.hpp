@@ -348,7 +348,7 @@ class StringDataArray : public IDataArray
       }
       DataArray<int8_t>::Pointer strPtr = DataArray<int8_t>::CreateArray(totalSize, "Strings");
       strPtr->initializeWithZeros();
-      int8_t* str = strPtr->GetPointer(0);
+      int8_t* str = strPtr->getPointer(0);
 
       for(size_t i = 0; i < m_Array.size(); ++i)
       {
@@ -356,7 +356,7 @@ class StringDataArray : public IDataArray
         str = str + m_Array[i].size() + 1;
       }
 
-      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->GetPointer(0), getFullNameOfClass());
+      return H5DataArrayWriter<int8_t>::writeArray(parentId, GetName(), totalSize, 1, strPtr->getPointer(0), getFullNameOfClass());
     }
 
     /**

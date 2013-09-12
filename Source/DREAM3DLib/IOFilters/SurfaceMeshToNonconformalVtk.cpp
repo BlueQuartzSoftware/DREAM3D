@@ -215,7 +215,7 @@ void SurfaceMeshToNonconformalVtk::execute()
     // The node type array does exist so use that one.
     nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
   }
-  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
+  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->getPointer(0);
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
@@ -305,7 +305,7 @@ void SurfaceMeshToNonconformalVtk::execute()
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   // Store all the unique Spins
@@ -531,7 +531,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
     // The node type array does exist so use that one.
     nodeTypePtr = DataArray<int8_t>::SafeObjectDownCast<IDataArray*, DataArray<int8_t>* >(iNodeTypePtr.get());
   }
-  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->GetPointer(0);
+  int8_t* m_SurfaceMeshNodeType = nodeTypePtr->getPointer(0);
 
 
   //Get the Number of Vertex points in the mesh with a valid node type
@@ -606,7 +606,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   int triangleCount = triangles.getNumberOfTuples();
@@ -674,7 +674,7 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
   FaceArray& triangles = *(dc->getFaces());
   IDataArray::Pointer flPtr = dc->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
 
   int triangleCount = triangles.getNumberOfTuples();
@@ -807,7 +807,7 @@ int SurfaceMeshToNonconformalVtk::writeCellData(FILE* vtkFile, QMap<int32_t, int
   if (NULL != flPtr.get())
   {
     DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-    int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+    int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
     int triangleCount = triangles.getNumberOfTuples();
     int swapped;

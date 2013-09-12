@@ -86,7 +86,7 @@ class EdgeFunctions
     {
       int nid0 = e->verts[0];
       int nid1 = e->verts[1];
-      return NodeFunctions<Node, T>::Distance( *(nodes->GetPointer(nid0)), *(nodes->GetPointer(nid1)) );
+      return NodeFunctions<Node, T>::Distance( *(nodes->getPointer(nid0)), *(nodes->getPointer(nid1)) );
     }
 
   protected:

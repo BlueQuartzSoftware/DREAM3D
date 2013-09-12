@@ -175,7 +175,7 @@ void FindLargestCrossSections::find_crosssections()
   size_t numgrains = m->getNumCellFieldTuples();
 
   DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
-  double* graincounts = m_GrainCounts->GetPointer(0);
+  double* graincounts = m_GrainCounts->getPointer(0);
 
   int outPlane, inPlane1, inPlane2;
   float res_scalar, area;

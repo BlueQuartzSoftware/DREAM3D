@@ -237,7 +237,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
 #ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
 #endif
-      int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
+      int64_t totalWritten = fwrite(data->getPointer(0), sizeof(T), (total * numComp), f);
       if (totalWritten != (total))
       {
         qDebug() << "Error Writing Binary VTK Data:" ;

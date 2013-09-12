@@ -196,7 +196,7 @@ void AlignSectionsMutualInformation::execute()
   }
 
   Int32ArrayType::Pointer p = Int32ArrayType::CreateArray((totalPoints * 1), "MI GrainIds");
-  m_GrainIds = p->GetPointer(0);
+  m_GrainIds = p->getPointer(0);
 
   //Converting the user defined tolerance to radians.
   m_MisorientationTolerance = m_MisorientationTolerance*DREAM3D::Constants::k_Pi/180.0f;
@@ -457,7 +457,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
 
   m_GrainCounts->SetNumberOfComponents(1);
   m_GrainCounts->Resize(dims[2]);
-  graincounts = m_GrainCounts->GetPointer(0);
+  graincounts = m_GrainCounts->getPointer(0);
 
   QVector<int> voxelslist(initialVoxelsListSize, -1);
   DimType neighpoints[4];

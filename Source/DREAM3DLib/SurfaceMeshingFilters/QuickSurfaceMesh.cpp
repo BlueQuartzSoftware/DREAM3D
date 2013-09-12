@@ -468,10 +468,10 @@ void QuickSurfaceMesh::execute()
   FaceArray::Pointer triangles = FaceArray::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces);
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(triangleCount, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(nodeCount, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
-  VertexArray::Vert_t* vertex = vertices.get()->GetPointer(0);
-  FaceArray::Face_t* triangle = triangles.get()->GetPointer(0);
-  int32_t* faceLabels = faceLabelPtr->GetPointer(0);
-  int8_t* nodeTypes = nodeTypePtr->GetPointer(0);
+  VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
+  FaceArray::Face_t* triangle = triangles.get()->getPointer(0);
+  int32_t* faceLabels = faceLabelPtr->getPointer(0);
+  int8_t* nodeTypes = nodeTypePtr->getPointer(0);
 
   ownerLists.resize(nodeCount);
 

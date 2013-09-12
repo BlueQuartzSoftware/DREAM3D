@@ -72,7 +72,7 @@ void __TestManagedArray()
   // Allocate some memory for each array
   for(size_t i = 0; i < NUM_ELEMENTS; ++i)
   {
-    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
+    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->getPointer(i));
     // First make sure we have a properly initialized Data structure
     DREAM3D_REQUIRE_EQUAL(ptr.count, 0)
     DREAM3D_REQUIRE_EQUAL(ptr.data, NULL)
@@ -83,7 +83,7 @@ void __TestManagedArray()
 
   for(size_t i = 0; i < NUM_ELEMENTS; ++i)
   {
-    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->GetPointer(i));
+    typename ManagedArrayOfArrays<T>::Data_t& ptr = *(mArray->getPointer(i));
     DREAM3D_REQUIRE_EQUAL(ptr.count, i)
     DREAM3D_REQUIRE_NE(ptr.data, NULL)
   }

@@ -157,7 +157,7 @@ void FindSizes::find_sizes()
   size_t numgrains = m->getNumCellFieldTuples();
 
   DataArray<double>::Pointer m_GrainCounts = DataArray<double>::CreateArray(numgrains, "GrainCounts");
-  double* graincounts = m_GrainCounts->GetPointer(0);
+  double* graincounts = m_GrainCounts->getPointer(0);
 
   // Initialize every element to 0.0
   for (size_t i = 0; i < numgrains * 1; i++)
@@ -192,7 +192,7 @@ void FindSizes::find_sizes2D()
   size_t numgrains = m->getNumCellFieldTuples();
 
   DataArray<float>::Pointer m_GrainCounts = DataArray<float>::CreateArray(numgrains, "GrainCounts");
-  float* graincounts = m_GrainCounts->GetPointer(0);
+  float* graincounts = m_GrainCounts->getPointer(0);
 
   for (size_t i = 0; i < numgrains; i++)
   {

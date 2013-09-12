@@ -47,8 +47,6 @@
 #include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
-#include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/BinaryNodesTrianglesReader.h"
 

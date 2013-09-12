@@ -191,7 +191,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
-  FaceArray::Face_t* faces = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* faces = trianglesPtr->getPointer(0);
 
   notifyStatusMessage("Stage 1 of 2");
   struct  { int32_t v0; int32_t v1; } edge;
@@ -230,7 +230,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   notifyStatusMessage("Stage 1 of 2");
  // qDebug() << "uedges_id_set size: " << uedges_id_set.size() << "\n";
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
-  int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
+  int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
   int index = 0;
   for(EdgeSet_t::iterator iter = uedges_id_set.begin(); iter != uedges_id_set.end(); ++iter)
   {
@@ -266,7 +266,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   int ntri = trianglesPtr->getNumberOfTuples();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
+  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
@@ -357,7 +357,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_map.size(), 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
-  m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
+  m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
 
   ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::EdgeData::SurfaceMeshEdgeFaces);
 
@@ -384,7 +384,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 
-    ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->GetPointer(index));
+    ManagedArrayOfArrays<int>::Data_t& entry = *(edgeTriangleArray->getPointer(index));
     DREAM3D::Mesh::UniqueFaceIds_t& triangles = edgeTriangleSet[*u64Edge];
     // Allocate enough memory to hold the list of triangles
     entry.count = triangles.size();

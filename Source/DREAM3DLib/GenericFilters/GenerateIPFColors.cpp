@@ -197,7 +197,7 @@ void GenerateIPFColors::execute()
   else
   {
     goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->GetPointer(0);
+    m_GoodVoxels = goodVoxels->getPointer(0);
   }
 
   int phase;

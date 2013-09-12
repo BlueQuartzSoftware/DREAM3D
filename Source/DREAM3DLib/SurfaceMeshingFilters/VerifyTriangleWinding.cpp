@@ -139,7 +139,7 @@ class LabelVisitorInfo
       size_t triangleIndex = *(m_Faces.begin());
       int32_t newLabel = mesh->getMaxLabel() + 1;
       mesh->incrementMaxLabel();
-      int32_t* masterFaceList = masterFaceListPtr->GetPointer(0);
+      int32_t* masterFaceList = masterFaceListPtr->getPointer(0);
       LabelVisitorInfo::Pointer p = LabelVisitorInfo::New(m_Label, triangleIndex);
 
       p->setPrimed(false);
@@ -167,7 +167,7 @@ class LabelVisitorInfo
      */
     void revertFaceLabels(DataArray<int32_t>* masterFaceListPtr)
     {
-      int32_t* masterFaceList = masterFaceListPtr->GetPointer(0);
+      int32_t* masterFaceList = masterFaceListPtr->getPointer(0);
 
       if (m_Relabeled == true)
       {
@@ -412,10 +412,10 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int ntri = masterFaceList->getNumberOfTuples();
-  //FaceArray::Face_t* triangles = masterFaceList->GetPointer(0);
+  //FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
 
   // Loop over all the triangles and group them according to which grain/region they are a part of
   for(int t = 0; t < ntri; ++t)
@@ -433,12 +433,12 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &triangleIndices)
 {
 
-  VertexArray::Vert_t* verts = getSurfaceDataContainer()->getVertices()->GetPointer(0);
-  FaceArray::Face_t* triangles = getSurfaceDataContainer()->getFaces()->GetPointer(0);
+  VertexArray::Vert_t* verts = getSurfaceDataContainer()->getVertices()->getPointer(0);
+  FaceArray::Face_t* triangles = getSurfaceDataContainer()->getFaces()->getPointer(0);
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   float xMax = std::numeric_limits<float>::min();
   float avgX = 0.0f;
@@ -533,10 +533,10 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Faces", -556);
     return getErrorCondition();
   }
-  FaceArray::Face_t* triangles = masterFaceList->GetPointer(0);
+  FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int numFaces = masterFaceList->getNumberOfTuples();
 

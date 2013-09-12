@@ -183,7 +183,7 @@ void MultiThresholdFields::execute()
     notifyErrorMessage("Could not properly cast the output array to a BoolArrayType", getErrorCondition());
     return;
   }
-  m_Output = outputArray->GetPointer(0);
+  m_Output = outputArray->getPointer(0);
 
   // Prime our output array with the result of the first comparison
   {
@@ -207,7 +207,7 @@ void MultiThresholdFields::execute()
 
     BoolArrayType::Pointer currentArrayPtr = BoolArrayType::CreateArray(m->getTotalPoints(), "TEMP");
     currentArrayPtr->initializeWithZeros();
-    bool* currentArray = currentArrayPtr->GetPointer(0);
+    bool* currentArray = currentArrayPtr->getPointer(0);
 
     ComparisonInput_t& compRef = m_ComparisonInputs[i];
 
