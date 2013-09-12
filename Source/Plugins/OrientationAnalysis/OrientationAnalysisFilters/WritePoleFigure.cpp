@@ -238,7 +238,7 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, si
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
 
-  if (m_OutputPath.empty() == true)
+  if (m_OutputPath.IsEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
@@ -251,7 +251,7 @@ void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, si
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if(m_CellEulerAnglesArrayName.empty() == true)
+  if(m_CellEulerAnglesArrayName.IsEmpty() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
