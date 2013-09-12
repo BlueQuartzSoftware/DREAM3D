@@ -238,7 +238,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_EQUAL(t.get(), NULL);
 
   m->addCellFieldData("Test", p);
-  t = m->getCellCellFieldData("Test");
+  t = m->getCellFieldData("Test");
   DREAM3D_REQUIRE_NE(t.get(), NULL);
   t = m->removeCellFieldData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);

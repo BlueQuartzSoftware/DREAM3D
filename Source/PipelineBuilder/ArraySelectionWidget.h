@@ -147,8 +147,8 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
       setSelectedArrays( filter->getSelectedEdgeEdgeFieldArrays(), edgeEdgeFieldArrayList );
       setSelectedArrays( filter->getSelectedEdgeEdgeEnsembleArrays(), edgeEdgeEnsembleArrayList );
       setSelectedArrays( filter->getSelectedVertexVertexArrays(), vertexVertexArrayList );
-      setSelectedArrays( filter->getSelectedVertexFieldArrays(), vertexVertexFieldArrayList );
-      setSelectedArrays( filter->getSelectedVertexEnsembleArrays(), vertexVertexEnsembleArrayList );
+      setSelectedArrays( filter->getSelectedVertexVertexFieldArrays(), vertexVertexFieldArrayList );
+      setSelectedArrays( filter->getSelectedVertexVertexEnsembleArrays(), vertexVertexEnsembleArrayList );
     }
 
     /**
