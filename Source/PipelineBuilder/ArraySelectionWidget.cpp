@@ -143,11 +143,11 @@ void ArraySelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer
   QList<QString> cellNames = vldc->getCellArrayNameList();
   populateArrayList(volumeCellArrayList, cellNames, volumeCellCB);
 
-  QList<QString> fieldNames = vldc->getFieldArrayNameList();
-  populateArrayList(volumeFieldArrayList, fieldNames, volumeFieldCB);
+  QList<QString> fieldNames = vldc->getCellFieldArrayNameList();
+  populateArrayList(volumeCellFieldArrayList, fieldNames, volumeCellFieldCB);
 
-  QList<QString> ensembleNames = vldc->getEnsembleArrayNameList();
-  populateArrayList(volumeEnsembleArrayList, ensembleNames, volumeEnsembleCB);
+  QList<QString> ensembleNames = vldc->getCellEnsembleArrayNameList();
+  populateArrayList(volumeCellEnsembleArrayList, ensembleNames, volumeCellEnsembleCB);
 }
 
 // -----------------------------------------------------------------------------
@@ -164,11 +164,11 @@ void ArraySelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Point
   QList<QString> faceNames = sdc->getFaceArrayNameList();
   populateArrayList(surfaceFaceArrayList, faceNames, surfaceFaceArraysCB);
 
-  QList<QString> fieldNames = sdc->getFieldArrayNameList();
-  populateArrayList(surfaceFieldArrayList, fieldNames, surfaceFieldArraysCB);
+  QList<QString> fieldNames = sdc->getFaceFieldArrayNameList();
+  populateArrayList(surfaceFaceFieldArrayList, fieldNames, surfaceFaceFieldArraysCB);
 
-  QList<QString> ensembleNames = sdc->getEnsembleArrayNameList();
-  populateArrayList(surfaceEnsembleArrayList, ensembleNames, surfaceEnsembleArraysCB);
+  QList<QString> ensembleNames = sdc->getFaceEnsembleArrayNameList();
+  populateArrayList(surfaceFaceEnsembleArrayList, ensembleNames, surfaceFaceEnsembleArraysCB);
 }
 
 // -----------------------------------------------------------------------------
@@ -182,11 +182,11 @@ void ArraySelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc
   QList<QString> edgeNames = edc->getEdgeArrayNameList();
   populateArrayList(edgeEdgeArrayList, edgeNames, edgeEdgeCB);
 
-  QList<QString> fieldNames = edc->getFieldArrayNameList();
-  populateArrayList(edgeFieldArrayList, fieldNames, edgeFieldCB);
+  QList<QString> fieldNames = edc->getEdgeFieldArrayNameList();
+  populateArrayList(edgeEdgeFieldArrayList, fieldNames, edgeEdgeFieldCB);
 
-  QList<QString> ensembleNames = edc->getEnsembleArrayNameList();
-  populateArrayList(edgeEnsembleArrayList, ensembleNames, edgeEnsembleCB);
+  QList<QString> ensembleNames = edc->getEdgeEnsembleArrayNameList();
+  populateArrayList(edgeEdgeEnsembleArrayList, ensembleNames, edgeEdgeEnsembleCB);
 }
 
 // -----------------------------------------------------------------------------

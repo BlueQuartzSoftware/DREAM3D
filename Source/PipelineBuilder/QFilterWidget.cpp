@@ -1756,10 +1756,10 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
         updateArrayNameComboBox(vldc->getCellArrayNameList(), propertyName);
         break;
       case FilterParameter::VolumeFieldArrayNameSelectionWidget:
-        updateArrayNameComboBox(vldc->getFieldArrayNameList(), propertyName);
+        updateArrayNameComboBox(vldc->getCellFieldArrayNameList(), propertyName);
         break;
       case FilterParameter::VolumeEnsembleArrayNameSelectionWidget:
-        updateArrayNameComboBox(vldc->getEnsembleArrayNameList(), propertyName);
+        updateArrayNameComboBox(vldc->getCellEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(sdc->getVertexArrayNameList(), propertyName);
@@ -1771,10 +1771,10 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
         updateArrayNameComboBox(sdc->getFaceArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceFieldArrayNameSelectionWidget:
-        updateArrayNameComboBox(sdc->getFieldArrayNameList(), propertyName);
+        updateArrayNameComboBox(sdc->getFaceFieldArrayNameList(), propertyName);
         break;
       case FilterParameter::SurfaceEnsembleArrayNameSelectionWidget:
-        updateArrayNameComboBox(sdc->getEnsembleArrayNameList(), propertyName);
+        updateArrayNameComboBox(sdc->getFaceEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::EdgeVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(edc->getVertexArrayNameList(), propertyName);
@@ -1783,10 +1783,10 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
         updateArrayNameComboBox(edc->getEdgeArrayNameList(), propertyName);
         break;
       case FilterParameter::EdgeFieldArrayNameSelectionWidget:
-        updateArrayNameComboBox(edc->getFieldArrayNameList(), propertyName);
+        updateArrayNameComboBox(edc->getEdgeFieldArrayNameList(), propertyName);
         break;
       case FilterParameter::EdgeEnsembleArrayNameSelectionWidget:
-        updateArrayNameComboBox(edc->getEnsembleArrayNameList(), propertyName);
+        updateArrayNameComboBox(edc->getEdgeEnsembleArrayNameList(), propertyName);
         break;
       case FilterParameter::VertexVertexArrayNameSelectionWidget:
         updateArrayNameComboBox(vdc->getVertexArrayNameList(), propertyName);

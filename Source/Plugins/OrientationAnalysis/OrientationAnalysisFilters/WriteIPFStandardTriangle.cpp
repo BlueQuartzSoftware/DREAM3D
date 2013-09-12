@@ -178,7 +178,7 @@ void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t f
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
 
-  if (m_OutputFile.empty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output File is Not set correctly", getErrorCondition());

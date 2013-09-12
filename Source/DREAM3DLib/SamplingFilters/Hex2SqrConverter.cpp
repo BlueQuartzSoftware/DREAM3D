@@ -201,7 +201,7 @@ void Hex2SqrConverter::execute()
             setErrorCondition(reader.getErrorCode());
             return;
         }
-        else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
+        else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
         {
             ss.str("");
             ss << "Ang File is already a square grid: " << ebsdFName;
