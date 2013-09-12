@@ -405,7 +405,7 @@ int SurfaceDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 
   MeshLinks::Pointer MeshLinks = MeshLinks::New();
 
-  size_t nVerts = verticesPtr->GetNumberOfTuples();
+  size_t nVerts = verticesPtr->getNumberOfTuples();
   herr_t err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
@@ -498,7 +498,7 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
 
   MeshFaceNeighbors::Pointer meshTriangleNeighbors = MeshFaceNeighbors::New();
 
-  size_t nFaces= facesPtr->GetNumberOfTuples();
+  size_t nFaces= facesPtr->getNumberOfTuples();
   herr_t err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;

@@ -71,7 +71,7 @@ ModifiedLambertProjection::~ModifiedLambertProjection()
 ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFromXYZCoords(FloatArrayType* coords, int dimension, float sphereRadius)
 {
 
-  size_t npoints = coords->GetNumberOfTuples();
+  size_t npoints = coords->getNumberOfTuples();
   bool nhCheck = false;
   float sqCoord[2];
   int sqIndex = 0;
@@ -98,7 +98,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   fprintf(f, "ASCII");
   fprintf(f, "\n");
 
-  fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", coords->GetNumberOfTuples() );
+  fprintf(f, "DATASET UNSTRUCTURED_GRID\nPOINTS %lu float\n", coords->getNumberOfTuples() );
 #endif
 
   for(int i = 0; i < npoints; ++i)
@@ -343,7 +343,7 @@ int ModifiedLambertProjection::getSquareIndex(float* sqCoord)
 void ModifiedLambertProjection::normalizeSquares()
 {
 
-  size_t npoints = m_NorthSquare->GetNumberOfTuples();
+  size_t npoints = m_NorthSquare->getNumberOfTuples();
   double nTotal = 0;
   double sTotal = 0;
 
@@ -375,7 +375,7 @@ void ModifiedLambertProjection::normalizeSquaresToMRD()
 {
   // First Normalize the squares
   normalizeSquares();
-  size_t npoints = m_NorthSquare->GetNumberOfTuples();
+  size_t npoints = m_NorthSquare->getNumberOfTuples();
   double* north = m_NorthSquare->GetPointer(0);
   double* south = m_SouthSquare->GetPointer(0);
   int dimSqrd = m_Dimension * m_Dimension;

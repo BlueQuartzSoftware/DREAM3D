@@ -286,7 +286,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 
   MeshLinks::Pointer MeshLinks = MeshLinks::New();
 
-  size_t nVerts = verticesPtr->GetNumberOfTuples();
+  size_t nVerts = verticesPtr->getNumberOfTuples();
   herr_t err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;

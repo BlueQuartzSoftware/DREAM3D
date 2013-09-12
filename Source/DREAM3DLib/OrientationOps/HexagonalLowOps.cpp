@@ -973,19 +973,19 @@ class GenerateSphereCoordsImpl
 // -----------------------------------------------------------------------------
 void HexagonalLowOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz0001, FloatArrayType *xyz1010, FloatArrayType *xyz1120)
 {
-  size_t nOrientations = eulers->GetNumberOfTuples();
+  size_t nOrientations = eulers->getNumberOfTuples();
 
 
   // Sanity Check the size of the arrays
-  if (xyz0001->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize0)
+  if (xyz0001->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize0)
   {
     xyz0001->Resize(nOrientations * Detail::HexagonalLow::symSize0 * 3);
   }
-  if (xyz1010->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize1)
+  if (xyz1010->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize1)
   {
     xyz1010->Resize(nOrientations * Detail::HexagonalLow::symSize1 * 3);
   }
-  if (xyz1120->GetNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize2)
+  if (xyz1120->getNumberOfTuples() < nOrientations * Detail::HexagonalLow::symSize2)
   {
     xyz1120->Resize(nOrientations * Detail::HexagonalLow::symSize2 * 3);
   }
@@ -1133,7 +1133,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   QString label2("Hex Low <2-1-10>");
 
 
-  int numOrientations = config.eulers->GetNumberOfTuples();
+  int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
@@ -1184,7 +1184,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   double min = std::numeric_limits<double>::max();
 
   double* dPtr = intensity001->GetPointer(0);
-  size_t count = intensity001->GetNumberOfTuples();
+  size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -1193,7 +1193,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
 
 
   dPtr = intensity011->GetPointer(0);
-  count = intensity011->GetNumberOfTuples();
+  count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -1201,7 +1201,7 @@ QVector<UInt8ArrayType::Pointer> HexagonalLowOps::generatePoleFigure(PoleFigureC
   }
 
   dPtr = intensity111->GetPointer(0);
-  count = intensity111->GetNumberOfTuples();
+  count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }

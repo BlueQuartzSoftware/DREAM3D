@@ -159,13 +159,13 @@ void SharedGrainFaceFilter::execute()
 
   FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
-  size_t totalPoints = trianglesPtr->GetNumberOfTuples();
+  size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->GetNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGrainFaceId);
+  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(trianglesPtr->getNumberOfTuples(), DREAM3D::FaceData::SurfaceMeshGrainFaceId);
   grainFaceId->initializeWithZeros();
 
 

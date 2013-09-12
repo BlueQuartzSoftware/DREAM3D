@@ -369,7 +369,7 @@ void drawScaleBar(QPainter &painter, int imageWidth, int imageHeight, PoleFigure
   QString label("Upper & Lower");
   painter.drawText(statsPoint, label);
 
-  label = QString("Samples: ") + QString::number(config.eulers->GetNumberOfTuples());
+  label = QString("Samples: ") + QString::number(config.eulers->getNumberOfTuples());
   statsPoint.setY( statsPoint.y() + fontHigh*1.5);
   painter.drawText(statsPoint, label);
 

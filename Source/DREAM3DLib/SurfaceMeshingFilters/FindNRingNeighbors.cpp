@@ -177,7 +177,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   /* Place all your code to execute your filter here. */
   VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
-  int nNodes = nodes.GetNumberOfTuples();
+  int nNodes = nodes.getNumberOfTuples();
 
   
 

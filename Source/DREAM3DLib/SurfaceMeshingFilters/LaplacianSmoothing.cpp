@@ -386,7 +386,7 @@ int LaplacianSmoothing::generateLambdaArray(DataArray<int8_t>* nodeTypePtr)
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Nodes", -555);
     return -1;
   }
-  int numNodes = nodesPtr->GetNumberOfTuples();
+  int numNodes = nodesPtr->getNumberOfTuples();
   int8_t* nodeType = nodeTypePtr->GetPointer(0);
 
   DataArray<float>::Pointer lambdas = DataArray<float>::CreateArray(numNodes, "Laplacian_Smoothing_Lambda_Array");
@@ -434,7 +434,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
   //
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
-  int nvert = nodesPtr->GetNumberOfTuples();
+  int nvert = nodesPtr->getNumberOfTuples();
   VertexArray::Vert_t* vsm = nodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
 
@@ -445,7 +445,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(nodesPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -502,7 +502,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   }
   // Get a pointer to the Unique Edges
   int* uedges = uniqueEdges->GetPointer(0);
-  int nedges = uniqueEdges->GetNumberOfTuples();
+  int nedges = uniqueEdges->getNumberOfTuples();
 
 
   DataArray<int>::Pointer numConnections = DataArray<int>::CreateArray(nvert, "Laplacian_Smoothing_NumberConnections_Array");
@@ -586,7 +586,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   // Convert the 32 bit float Nodes into 64 bit floating point nodes.
   VertexArray::Pointer vertsPtr = getSurfaceDataContainer()->getVertices();
-  int numVerts = vertsPtr->GetNumberOfTuples();
+  int numVerts = vertsPtr->getNumberOfTuples();
   //  VertexArray::Vert_t* vertices = vertsPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
@@ -608,7 +608,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   if (NULL == iNodeTypePtr.get() )
   {
     // The node type array does not exist so create one with the default node type populated
-    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->GetNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
+    nodeTypeSharedPtr = DataArray<int8_t>::CreateArray(vertsPtr->getNumberOfTuples(), DREAM3D::VertexData::SurfaceMeshNodeType);
     nodeTypeSharedPtr->initializeWithValues(DREAM3D::SurfaceMesh::NodeType::Default);
     nodeTypePtr = nodeTypeSharedPtr.get();
   }
@@ -638,7 +638,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   DataArray<float>::Pointer lambdasPtr = getLambdaArray();
 
   // We need an array to store the new positions
-  DREAM3D::Mesh::VertList_t::Pointer newPositionsPtr = DREAM3D::Mesh::VertList_t::CreateArray(vertsPtr->GetNumberOfTuples(), "New Vertex Positions");
+  DREAM3D::Mesh::VertList_t::Pointer newPositionsPtr = DREAM3D::Mesh::VertList_t::CreateArray(vertsPtr->getNumberOfTuples(), "New Vertex Positions");
   newPositionsPtr->initializeWithZeros();
 
 
@@ -664,7 +664,7 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     }
 
     // SERIAL ONLY
-    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(VertexArray::Vert_t) * vertsPtr->GetNumberOfTuples());
+    ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(VertexArray::Vert_t) * vertsPtr->getNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
     QTextStream testFile;
@@ -713,7 +713,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   /* Place all your code to execute your filter here. */
   VertexArray::Pointer nodesPtr = m->getVertices();
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
-  int nNodes = nodes.GetNumberOfTuples();
+  int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;
   
 
@@ -775,7 +775,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   // Write the triangle indices into the vtk File
   StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
   int triangleCount = 0;
-  int end = triangles.GetNumberOfTuples();
+  int end = triangles.getNumberOfTuples();
   int grainInterest = 9;
   for(int i = 0; i < end; ++i)
   {

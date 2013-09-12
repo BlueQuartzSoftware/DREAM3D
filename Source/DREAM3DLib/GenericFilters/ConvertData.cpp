@@ -64,7 +64,7 @@ namespace Detail
   void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const QString &name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
-    int voxels = ptr->GetNumberOfTuples();
+    int voxels = ptr->getNumberOfTuples();
     size_t size = ptr->GetSize();
 
 

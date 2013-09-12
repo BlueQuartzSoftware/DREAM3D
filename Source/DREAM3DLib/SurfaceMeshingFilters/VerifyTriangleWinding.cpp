@@ -414,7 +414,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  int ntri = masterFaceList->GetNumberOfTuples();
+  int ntri = masterFaceList->getNumberOfTuples();
   //FaceArray::Face_t* triangles = masterFaceList->GetPointer(0);
 
   // Loop over all the triangles and group them according to which grain/region they are a part of
@@ -538,7 +538,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  int numFaces = masterFaceList->GetNumberOfTuples();
+  int numFaces = masterFaceList->getNumberOfTuples();
 
   DREAM3D::Mesh::VertList_t::Pointer masterNodeListPtr = getSurfaceDataContainer()->getVertices();
   if(NULL == masterNodeListPtr.get())
@@ -588,7 +588,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   std::deque<LabelVisitorInfo::Pointer> labelObjectsToVisit;
 
   // Keeps a list of all the triangles that have been visited.
-  QVector<bool> masterVisited(masterFaceList->GetNumberOfTuples(), false);
+  QVector<bool> masterVisited(masterFaceList->getNumberOfTuples(), false);
 
   STDEXT::hash_set<int32_t> labelsVisitedSet;
   STDEXT::hash_set<int32_t> labelsToVisitSet;

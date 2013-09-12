@@ -98,7 +98,7 @@ void* StatsDataArray::GetVoidPointer(size_t i)
     BOOST_ASSERT(i < m_StatsDataArray.size());
   }
 #endif
-  if(i >= this->GetNumberOfTuples())
+  if(i >= this->getNumberOfTuples())
   {
     return 0x0;
   }
@@ -108,7 +108,7 @@ void* StatsDataArray::GetVoidPointer(size_t i)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-size_t StatsDataArray::GetNumberOfTuples()
+size_t StatsDataArray::getNumberOfTuples()
 {
   return m_StatsDataArray.size();
 }
@@ -161,7 +161,7 @@ int StatsDataArray::EraseTuples(QVector<size_t> &idxs)
     return 0;
   }
 
-  if (idxs.size() >= GetNumberOfTuples() )
+  if (idxs.size() >= getNumberOfTuples() )
   {
     Resize(0);
     return 0;

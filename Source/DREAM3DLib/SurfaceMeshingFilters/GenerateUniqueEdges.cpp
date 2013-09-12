@@ -190,7 +190,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalPoints = trianglesPtr->GetNumberOfTuples();
+  size_t totalPoints = trianglesPtr->getNumberOfTuples();
   FaceArray::Face_t* faces = trianglesPtr->GetPointer(0);
 
   notifyStatusMessage("Stage 1 of 2");
@@ -263,7 +263,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     notifyErrorMessage("The SurfaceMesh DataContainer Does NOT contain Triangles", -556);
     return;
   }
-  int ntri = trianglesPtr->GetNumberOfTuples();
+  int ntri = trianglesPtr->getNumberOfTuples();
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
   FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);

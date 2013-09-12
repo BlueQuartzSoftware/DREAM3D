@@ -39,9 +39,9 @@
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common//DREAM3DEndian.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/DREAM3DEndian.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -160,14 +160,14 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          DREAM3D::Endian::FromSystemToBig::convert<float>(d);
+          DREAM3D::Endian::FromSystemToBig::convert(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          qDebug() << "Error Writing Binary VTK Data into file " << "\n";
+          qDebug() << "Error Writing Binary VTK Data into file " ;
           fclose(f);
           return -1;
         }

@@ -303,7 +303,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   float min[3] = { std::numeric_limits<float>::max(), std::numeric_limits<float>::max(), std::numeric_limits<float>::max() };
 //  float max[3] = { std::numeric_limits<float>::min(), std::numeric_limits<float>::min(), std::numeric_limits<float>::min() };
 
-  size_t count = nodesPtr->GetNumberOfTuples();
+  size_t count = nodesPtr->getNumberOfTuples();
   for (size_t i = 0; i < count; i++)
   {
 //    if (nodes[i].pos[0] > max[0]) { max[0] = nodes[i].pos[0]; }

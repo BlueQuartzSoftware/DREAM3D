@@ -80,7 +80,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    int64_t GetNumberOfTuples() { return m_Array->GetNumberOfTuples(); }
+    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -111,8 +111,8 @@ class CellArray
                                StructArray<Cell_t>::Pointer Cells )
     {
 
-      size_t numPts = Verts->GetNumberOfTuples();
-      size_t numCells = Cells->GetNumberOfTuples();
+      size_t numPts = Verts->getNumberOfTuples();
+      size_t numCells = Cells->getNumberOfTuples();
 
       m_CellsContainingVert = DynamicListArray::New();
 
@@ -163,7 +163,7 @@ class CellArray
     void FindCellNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Cell_t>::Pointer Cells)
     {
 
-      size_t nCells = Cells->GetNumberOfTuples();
+      size_t nCells = Cells->getNumberOfTuples();
 
       DynamicListArray::Pointer m_CellNeighbors = DynamicListArray::New();
 

@@ -161,14 +161,14 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          DREAM3D::Endian::FromSystemToBig::convert<T>(d);
+          DREAM3D::Endian::FromSystemToBig::convert(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(T), static_cast<size_t>(npoints), f);
         delete[] data;
         if (totalWritten != static_cast<size_t>(npoints) )
         {
-          qDebug() << "Error Writing Binary VTK Data into file " << "\n";
+          qDebug() << "Error Writing Binary VTK Data into file " ;
           fclose(f);
           return -1;
         }
@@ -208,9 +208,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       f = fopen(filename.toLatin1().data(), "wb");
       if(NULL == f)
       {
-        qDebug() << "Could not open file for writing" << "\n";
-        qDebug() << "  FileName: " << filename << "\n";
-        qDebug() << "  Dataset Name: " << data->GetName() << "\n";
+        qDebug() << "Could not open file for writing" ;
+        qDebug() << "  FileName: " << filename ;
+        qDebug() << "  Dataset Name: " << data->GetName() ;
         return -1;
       }
       // Write the correct header
@@ -240,9 +240,9 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
       int64_t totalWritten = fwrite(data->GetPointer(0), sizeof(T), (total * numComp), f);
       if (totalWritten != (total))
       {
-        qDebug() << "Error Writing Binary VTK Data:" << "\n";
-        qDebug() << "  FileName: " << filename << "\n";
-        qDebug() << "  Dataset Name: " << data->GetName() << "\n";
+        qDebug() << "Error Writing Binary VTK Data:" ;
+        qDebug() << "  FileName: " << filename ;
+        qDebug() << "  Dataset Name: " << data->GetName() ;
       }
 #ifdef DREAM3D_LITTLE_ENDIAN
       data->byteSwapElements();
@@ -283,9 +283,8 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     VtkRectilinearGridWriter(const VtkRectilinearGridWriter&); // Copy Constructor Not Implemented
     void operator=(const VtkRectilinearGridWriter&); // Operator '=' Not Implemented
 
-    int write(const QString &file, VolumeDataContainer* r, QVector<VtkScalarWriter*> &scalars);
 
-
+    int write(const QString &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars);
 
 };
 

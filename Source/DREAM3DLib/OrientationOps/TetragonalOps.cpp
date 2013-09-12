@@ -451,18 +451,18 @@ class GenerateSphereCoordsImpl
 void TetragonalOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
   BOOST_ASSERT(false);
-  size_t nOrientations = eulers->GetNumberOfTuples();
+  size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize0)
+  if (xyz001->getNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize0)
   {
     xyz001->Resize(nOrientations * Detail::TetragonalHigh::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize1)
+  if (xyz011->getNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize1)
   {
     xyz011->Resize(nOrientations * Detail::TetragonalHigh::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize2)
+  if (xyz111->getNumberOfTuples() < nOrientations * Detail::TetragonalHigh::symSize2)
   {
     xyz111->Resize(nOrientations * Detail::TetragonalHigh::symSize2 * 3);
   }
@@ -607,7 +607,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
   QString label2("Tetragonal <110>");
 
 
-  int numOrientations = config.eulers->GetNumberOfTuples();
+  int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
@@ -658,7 +658,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
   double min = std::numeric_limits<double>::max();
 
   double* dPtr = intensity001->GetPointer(0);
-  size_t count = intensity001->GetNumberOfTuples();
+  size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -667,7 +667,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
 
 
   dPtr = intensity011->GetPointer(0);
-  count = intensity011->GetNumberOfTuples();
+  count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -675,7 +675,7 @@ QVector<UInt8ArrayType::Pointer> TetragonalOps::generatePoleFigure(PoleFigureCon
   }
 
   dPtr = intensity111->GetPointer(0);
-  count = intensity111->GetNumberOfTuples();
+  count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }

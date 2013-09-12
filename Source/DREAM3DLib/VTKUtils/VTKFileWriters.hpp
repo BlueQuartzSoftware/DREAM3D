@@ -163,8 +163,8 @@ class name : public VtkScalarWriter\
     int writeScalars(FILE* f)  {\
       int err = 0;\
       QString file;\
-      int64_t totalFields = r->getNumFieldTuples();\
-      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, field, arrayName, arrayType, m_msgType, totalFields, var);\
+      int64_t totalFields = r->getNumCellFieldTuples();\
+      GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell##field, arrayName, arrayType, m_msgType, totalFields, var);\
       int64_t totalPoints = r->getTotalPoints();\
       GET_NAMED_ARRAY_SIZE_CHK_RETVALUE(r, Cell, DREAM3D::CellData::GrainIds, Int32ArrayType, int32_t, (totalPoints), grain_indicies);\
       if (m_WriteBinaryFiles == true) {\

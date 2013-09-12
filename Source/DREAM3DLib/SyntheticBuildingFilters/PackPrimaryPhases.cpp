@@ -2318,7 +2318,7 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases
-  for (size_t i = 1; i < phaseType->GetNumberOfTuples(); ++i)
+  for (size_t i = 1; i < phaseType->getNumberOfTuples(); ++i)
   {
     if(phaseType->GetValue(i) == DREAM3D::PhaseType::PrimaryPhase)
     {
@@ -2435,7 +2435,7 @@ void PackPrimaryPhases::write_goal_attributes()
   outFile << "\n";
 
   // Get the number of tuples in the arrays
-  size_t numTuples = data[0]->GetNumberOfTuples();
+  size_t numTuples = data[0]->getNumberOfTuples();
   
   float threshold = 0.0f;
 

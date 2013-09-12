@@ -150,7 +150,7 @@ class NeighborList : public IDataArray
         return 0;
       }
 
-      if (idxs.size() >= GetNumberOfTuples() )
+      if (idxs.size() >= getNumberOfTuples() )
       {
         Resize(0);
         return 0;
@@ -202,7 +202,7 @@ class NeighborList : public IDataArray
 
 
 
-    size_t GetNumberOfTuples() {   return _data.size(); }
+    size_t getNumberOfTuples() {   return _data.size(); }
 
     /**
      * @brief GetSize Returns the total number of data items that are being stored. This is the sum of all the sizes

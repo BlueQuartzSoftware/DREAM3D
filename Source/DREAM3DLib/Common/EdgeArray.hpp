@@ -76,7 +76,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    int64_t GetNumberOfTuples() { return m_Array->GetNumberOfTuples(); }
+    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -106,8 +106,8 @@ class EdgeArray
                                StructArray<Edge_t>::Pointer Edges )
     {
 
-      size_t numPts = Verts->GetNumberOfTuples();
-      size_t numCells = Edges->GetNumberOfTuples();
+      size_t numPts = Verts->getNumberOfTuples();
+      size_t numCells = Edges->getNumberOfTuples();
 
       m_EdgesContainingVert = DynamicListArray::New();
 
@@ -157,7 +157,7 @@ class EdgeArray
     void FindEdgeNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Edge_t>::Pointer Edges)
     {
 
-      size_t nEdges = Edges->GetNumberOfTuples();
+      size_t nEdges = Edges->getNumberOfTuples();
 
       DynamicListArray::Pointer m_EdgeNeighbors = DynamicListArray::New();
 

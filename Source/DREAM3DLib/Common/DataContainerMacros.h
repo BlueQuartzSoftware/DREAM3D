@@ -312,7 +312,7 @@ m_msgType* valuePtr = NULL;\
     return -10;\
   } \
   if (static_cast<size_t>(size) != iDataArray->GetSize()) {\
-    qDebug() << name << " Size did not match." << size << " vs " << iDataArray->GetNumberOfTuples() ;\
+    qDebug() << name << " Size did not match." << size << " vs " << iDataArray->getNumberOfTuples() ;\
     return -20;\
   }\
   valuePtr =\
