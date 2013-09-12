@@ -33,7 +33,7 @@ class OptionalUnlabeledTracker
 
 	public:
 
-		static void check( bool req, const QString& argName );
+		static void check( bool req, const std::string& argName );
 
 		static void gotOptional() { alreadyOptionalRef() = true; }
 
@@ -45,7 +45,7 @@ class OptionalUnlabeledTracker
 };
 
 
-inline void OptionalUnlabeledTracker::check( bool req, const QString& argName )
+inline void OptionalUnlabeledTracker::check( bool req, const std::string& argName )
 {
     if ( OptionalUnlabeledTracker::alreadyOptional() )
         throw( SpecificationException(

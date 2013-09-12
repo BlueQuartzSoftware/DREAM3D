@@ -75,7 +75,7 @@ class CmdLineInterface
 		 * add does not need to be called.
 		 * \param xors - List of Args to be added and xor'd. 
 		 */
-		virtual void xorAdd( QVector<Arg*>& xors )=0;
+		virtual void xorAdd( std::vector<Arg*>& xors )=0;
 
 		/**
 		 * Parses the command line.
@@ -89,7 +89,7 @@ class CmdLineInterface
          * \param args - A vector of strings representing the args. 
          * args[0] is still the program name.
          */
-        void parse(QVector<QString>& args);
+        void parse(std::vector<std::string>& args);
 
 		/**
 		 * Returns the CmdLineOutput object.
@@ -104,17 +104,17 @@ class CmdLineInterface
 		/**
 		 * Returns the version string.
 		 */
-		virtual QString& getVersion()=0;
+		virtual std::string& getVersion()=0;
 
 		/**
 		 * Returns the program name string.
 		 */
-		virtual QString& getProgramName()=0;
+		virtual std::string& getProgramName()=0;
 
 		/**
 		 * Returns the argList. 
 		 */
-		virtual QList<Arg*>& getArgList()=0;
+		virtual std::list<Arg*>& getArgList()=0;
 
 		/**
 		 * Returns the XorHandler. 
@@ -129,7 +129,7 @@ class CmdLineInterface
 		/**
 		 * Returns the message string.
 		 */
-		virtual QString& getMessage()=0;
+		virtual std::string& getMessage()=0;
 
 		/**
 		 * Indicates whether or not the help and version switches were created

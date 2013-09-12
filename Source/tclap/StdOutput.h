@@ -97,7 +97,7 @@ class StdOutput : public CmdLineOutput
 		 * and all subsequent lines in addition to indentSpaces.
 		 */
 		void spacePrint( std::ostream& os, 
-						 const QString& s, 
+						 const std::string& s, 
 						 int maxWidth, 
 						 int indentSpaces, 
 						 int secondLineOffset ) const;
@@ -107,44 +107,44 @@ class StdOutput : public CmdLineOutput
 
 inline void StdOutput::version(CmdLineInterface& _cmd) 
 {
-	QString progName = _cmd.getProgramName();
-	QString version = _cmd.getVersion();
+	std::string progName = _cmd.getProgramName();
+	std::string version = _cmd.getVersion();
 
-	qDebug() << "\n" << progName << "  version: " 
-			  << version << "\n" << "\n";
+	std::cout << std::endl << progName << "  version: " 
+			  << version << std::endl << std::endl;
 }
 
 inline void StdOutput::usage(CmdLineInterface& _cmd ) 
 {
-	qDebug() << "\n" << "USAGE: " << "\n" << "\n"; 
+	std::cout << std::endl << "USAGE: " << std::endl << std::endl; 
 
 	_shortUsage( _cmd, std::cout );
 
-	qDebug() << "\n" << "\n" << "Where: " << "\n" << "\n";
+	std::cout << std::endl << std::endl << "Where: " << std::endl << std::endl;
 
 	_longUsage( _cmd, std::cout );
 
-	qDebug() << "\n"; 
+	std::cout << std::endl; 
 
 }
 
 inline void StdOutput::failure( CmdLineInterface& _cmd,
 								ArgException& e ) 
 {
-	QString progName = _cmd.getProgramName();
+	std::string progName = _cmd.getProgramName();
 
-	std::cerr << "PARSE ERROR: " << e.argId() << "\n"
-		      << "             " << e.error() << "\n" << "\n";
+	std::cerr << "PARSE ERROR: " << e.argId() << std::endl
+		      << "             " << e.error() << std::endl << std::endl;
 
 	if ( _cmd.hasHelpAndVersion() )
 		{
-			std::cerr << "Brief USAGE: " << "\n";
+			std::cerr << "Brief USAGE: " << std::endl;
 
 			_shortUsage( _cmd, std::cerr );	
 
-			std::cerr << "\n" << "For complete USAGE and HELP type: " 
-					  << "\n" << "   " << progName << " --help" 
-					  << "\n" << "\n";
+			std::cerr << std::endl << "For complete USAGE and HELP type: " 
+					  << std::endl << "   " << progName << " --help" 
+					  << std::endl << std::endl;
 		}
 	else
 		usage(_cmd);
@@ -156,12 +156,12 @@ inline void
 StdOutput::_shortUsage( CmdLineInterface& _cmd, 
 						std::ostream& os ) const
 {
-	QList<Arg*> argList = _cmd.getArgList();
-	QString progName = _cmd.getProgramName();
+	std::list<Arg*> argList = _cmd.getArgList();
+	std::string progName = _cmd.getProgramName();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
+	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
 
-	QString s = progName + " ";
+	std::string s = progName + " ";
 
 	// first the xor
 	for ( int i = 0; static_cast<unsigned int>(i) < xorList.size(); i++ )
@@ -191,10 +191,10 @@ inline void
 StdOutput::_longUsage( CmdLineInterface& _cmd, 
 					   std::ostream& os ) const
 {
-	QList<Arg*> argList = _cmd.getArgList();
-	QString message = _cmd.getMessage();
+	std::list<Arg*> argList = _cmd.getArgList();
+	std::string message = _cmd.getMessage();
 	XorHandler xorHandler = _cmd.getXorHandler();
-	QVector< QVector<Arg*> > xorList = xorHandler.getXorList();
+	std::vector< std::vector<Arg*> > xorList = xorHandler.getXorList();
 
 	// first the xor 
 	for ( int i = 0; static_cast<unsigned int>(i) < xorList.size(); i++ )
@@ -209,7 +209,7 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 					if ( it+1 != xorList[i].end() )
 						spacePrint(os, "-- OR --", 75, 9, 0);
 				}
-			os << "\n" << "\n";
+			os << std::endl << std::endl;
 		}
 
 	// then the rest
@@ -218,16 +218,16 @@ StdOutput::_longUsage( CmdLineInterface& _cmd,
 			{
 				spacePrint( os, (*it)->longID(), 75, 3, 3 ); 
 				spacePrint( os, (*it)->getDescription(), 75, 5, 0 ); 
-				os << "\n";
+				os << std::endl;
 			}
 
-	os << "\n";
+	os << std::endl;
 
 	spacePrint( os, message, 75, 3, 0 );
 }
 
 inline void StdOutput::spacePrint( std::ostream& os, 
-						           const QString& s, 
+						           const std::string& s, 
 						           int maxWidth, 
 						           int indentSpaces, 
 						           int secondLineOffset ) const
@@ -277,7 +277,7 @@ inline void StdOutput::spacePrint( std::ostream& os,
 							allowedLen -= secondLineOffset;
 						}
 
-					os << s.substr(start,stringLen) << "\n";
+					os << s.substr(start,stringLen) << std::endl;
 
 					// so we don't start a line with a space
 					while ( s[stringLen+start] == ' ' && start < len )
@@ -290,7 +290,7 @@ inline void StdOutput::spacePrint( std::ostream& os,
 		{
 			for ( int i = 0; i < indentSpaces; i++ )
 				os << " ";
-			os << s << "\n";
+			os << s << std::endl;
 		}
 }
 

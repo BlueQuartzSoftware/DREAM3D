@@ -86,7 +86,7 @@ class Arg
 		 * override appropriate functions to get correct handling. Note
 		 * that the _flag does NOT include the dash as part of the flag.
 		 */
-		QString _flag;
+		std::string _flag;
 
 		/**
 		 * A single work namd indentifying the argument.
@@ -95,12 +95,12 @@ class Arg
 		 * _name does NOT include the two dashes as part of the _name. The
 		 * _name cannot be blank.
 		 */
-		QString _name;
+		std::string _name;
 
 		/**
 		 * Description of the argument.
 		 */
-		QString _description;
+		std::string _description;
 
 		/**
 		 * Indicating whether the argument is required.
@@ -111,7 +111,7 @@ class Arg
 		 * Label to be used in usage description.  Normally set to
 		 * "required", but can be changed when necessary.
 		 */
-		QString _requireLabel;
+		std::string _requireLabel;
 
 		/**
 		 * Indicates whether a value is required for the argument.
@@ -166,9 +166,9 @@ class Arg
 		 * \param valreq - Whether the a value is required for the argument.
 		 * \param v - The visitor checked by the argument. Defaults to NULL.
 		 */
- 		Arg( const QString& flag,
-			 const QString& name,
-			 const QString& desc,
+ 		Arg( const std::string& flag,
+			 const std::string& name,
+			 const std::string& desc,
 			 bool req,
 			 bool valreq,
 			 Visitor* v = NULL );
@@ -183,7 +183,7 @@ class Arg
 		 * Adds this to the specified list of Args.
 		 * \param argList - The list to add this to.
 		 */
-		virtual void addToList( QList<Arg*>& argList ) const;
+		virtual void addToList( std::list<Arg*>& argList ) const;
 
 		/**
 		 * Begin ignoring arguments since the "--" argument was specified.
@@ -216,18 +216,18 @@ class Arg
 		 * The sting that indicates the beginning of a flag.  Currently "-".
 		 * Should be identical to flagStartChar.
 		 */
-		static const QString flagStartString() { return "-"; }
+		static const std::string flagStartString() { return "-"; }
 
 		/**
 		 * The sting that indicates the beginning of a name.  Currently "--".
 		 * Should be flagStartChar twice.
 		 */
-		static const QString nameStartString() { return "--"; }
+		static const std::string nameStartString() { return "--"; }
 
 		/**
 		 * The name used to identify the ignore rest argument.
 		 */
-		static const QString ignoreNameString() { return "ignore_rest"; }
+		static const std::string ignoreNameString() { return "ignore_rest"; }
 
 		/**
 		 * Sets the delimiter for all arguments.
@@ -242,7 +242,7 @@ class Arg
 		 * \param args - Mutable list of strings. What is
 		 * passed in from main.
 		 */
-		virtual bool processArg(int *i, QVector<QString>& args) = 0;
+		virtual bool processArg(int *i, std::vector<std::string>& args) = 0;
 
 		/**
 		 * Operator ==.
@@ -254,17 +254,17 @@ class Arg
 		/**
 		 * Returns the argument flag.
 		 */
-		const QString& getFlag() const;
+		const std::string& getFlag() const;
 
 		/**
 		 * Returns the argument name.
 		 */
-		const QString& getName() const;
+		const std::string& getName() const;
 
 		/**
 		 * Returns the argument description.
 		 */
-		QString getDescription() const;
+		std::string getDescription() const;
 
 		/**
 		 * Indicates whether the argument is required.
@@ -307,25 +307,25 @@ class Arg
 		 * \param s - The string to be compared to the flag/name to determine
 		 * whether the arg matches.
 		 */
-		virtual bool argMatches( const QString& s ) const;
+		virtual bool argMatches( const std::string& s ) const;
 
 		/**
 		 * Returns a simple string representation of the argument.
 		 * Primarily for debugging.
 		 */
-		virtual QString toString() const;
+		virtual std::string toString() const;
 
 		/**
 		 * Returns a short ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual QString shortID( const QString& valueId = "val" ) const;
+		virtual std::string shortID( const std::string& valueId = "val" ) const;
 
 		/**
 		 * Returns a long ID for the usage.
 		 * \param valueId - The value used in the id.
 		 */
-		virtual QString longID( const QString& valueId = "val" ) const;
+		virtual std::string longID( const std::string& valueId = "val" ) const;
 
 		/**
 		 * Trims a value off of the flag.
@@ -334,7 +334,7 @@ class Arg
 		 * \param value - Where the value trimmed from the string will
 		 * be stored.
 		 */
-		virtual void trimFlag( QString& flag, QString& value ) const;
+		virtual void trimFlag( std::string& flag, std::string& value ) const;
 
 		/**
 		 * Checks whether a given string has blank chars, indicating that
@@ -342,14 +342,14 @@ class Arg
 		 * false.
 		 * \param s - string to be checked.
 		 */
-		bool _hasBlanks( const QString& s ) const;
+		bool _hasBlanks( const std::string& s ) const;
 
 		/**
 		 * Sets the requireLabel. Used by XorHandler.  You shouldn't ever
 		 * use this.
 		 * \param s - Set the requireLabel to this value.
 		 */
-		void setRequireLabel( const QString& s );
+		void setRequireLabel( const std::string& s );
 
 		/**
 		 * Used for MultiArgs and XorHandler to determine whether args
@@ -373,17 +373,17 @@ class Arg
 /**
  * Typedef of an Arg list iterator.
  */
-typedef QList<Arg*>::iterator ArgListIterator;
+typedef std::list<Arg*>::iterator ArgListIterator;
 
 /**
  * Typedef of an Arg vector iterator.
  */
-typedef QVector<Arg*>::iterator ArgVectorIterator;
+typedef std::vector<Arg*>::iterator ArgVectorIterator;
 
 /**
  * Typedef of a Visitor list iterator.
  */
-typedef QList<Visitor*>::iterator VisitorListIterator;
+typedef std::list<Visitor*>::iterator VisitorListIterator;
 
 /*
  * Extract a value of type T from it's string representation contained
@@ -392,7 +392,7 @@ typedef QList<Visitor*>::iterator VisitorListIterator;
  * ValueLike traits use operator>> to assign the value from strVal.
  */
 template<typename T> void
-ExtractValue(T &destVal, const QString& strVal, ValueLike vl)
+ExtractValue(T &destVal, const std::string& strVal, ValueLike vl)
 {
     static_cast<void>(vl); // Avoid warning about unused vl
     std::istringstream is(strVal);
@@ -401,7 +401,7 @@ ExtractValue(T &destVal, const QString& strVal, ValueLike vl)
     while ( is.good() ) {
 	if ( is.peek() != EOF )
 #ifdef TCLAP_SETBASE_ZERO
-	    is >> QSetbase(0) >> destVal;
+	    is >> std::setbase(0) >> destVal;
 #else
 	    is >> destVal;
 #endif
@@ -429,7 +429,7 @@ ExtractValue(T &destVal, const QString& strVal, ValueLike vl)
  * StringLike uses assignment (operator=) to assign from strVal.
  */
 template<typename T> void
-ExtractValue(T &destVal, const QString& strVal, StringLike sl)
+ExtractValue(T &destVal, const std::string& strVal, StringLike sl)
 {
     static_cast<void>(sl); // Avoid warning about unused sl
     SetString(destVal, strVal);
@@ -439,9 +439,9 @@ ExtractValue(T &destVal, const QString& strVal, StringLike sl)
 //BEGIN Arg.cpp
 //////////////////////////////////////////////////////////////////////
 
-inline Arg::Arg(const QString& flag,
-         const QString& name,
-         const QString& desc,
+inline Arg::Arg(const std::string& flag,
+         const std::string& name,
+         const std::string& desc,
          bool req,
          bool valreq,
          Visitor* v) :
@@ -472,7 +472,7 @@ inline Arg::Arg(const QString& flag,
 
 	if ( ( _name.substr( 0, Arg::flagStartString().length() ) == Arg::flagStartString() ) ||
 		 ( _name.substr( 0, Arg::nameStartString().length() ) == Arg::nameStartString() ) ||
-		 ( _name.find( " ", 0 ) != QString::npos ) )
+		 ( _name.find( " ", 0 ) != std::string::npos ) )
 		throw(SpecificationException("Argument name begin with either '" +
 							Arg::flagStartString() + "' or '" +
 							Arg::nameStartString() + "' or space.",
@@ -482,9 +482,9 @@ inline Arg::Arg(const QString& flag,
 
 inline Arg::~Arg() { }
 
-inline QString Arg::shortID( const QString& valueId ) const
+inline std::string Arg::shortID( const std::string& valueId ) const
 {
-	QString id = "";
+	std::string id = "";
 
 	if ( _flag != "" )
 		id = Arg::flagStartString() + _flag;
@@ -492,7 +492,7 @@ inline QString Arg::shortID( const QString& valueId ) const
 		id = Arg::nameStartString() + _name;
 
 	if ( _valueRequired )
-		id += QString( 1, Arg::delimiter() ) + "<" + valueId  + ">";
+		id += std::string( 1, Arg::delimiter() ) + "<" + valueId  + ">";
 
 	if ( !_required )
 		id = "[" + id + "]";
@@ -500,16 +500,16 @@ inline QString Arg::shortID( const QString& valueId ) const
 	return id;
 }
 
-inline QString Arg::longID( const QString& valueId ) const
+inline std::string Arg::longID( const std::string& valueId ) const
 {
-	QString id = "";
+	std::string id = "";
 
 	if ( _flag != "" )
 	{
 		id += Arg::flagStartString() + _flag;
 
 		if ( _valueRequired )
-			id += QString( 1, Arg::delimiter() ) + "<" + valueId + ">";
+			id += std::string( 1, Arg::delimiter() ) + "<" + valueId + ">";
 
 		id += ",  ";
 	}
@@ -517,7 +517,7 @@ inline QString Arg::longID( const QString& valueId ) const
 	id += Arg::nameStartString() + _name;
 
 	if ( _valueRequired )
-		id += QString( 1, Arg::delimiter() ) + "<" + valueId + ">";
+		id += std::string( 1, Arg::delimiter() ) + "<" + valueId + ">";
 
 	return id;
 
@@ -531,9 +531,9 @@ inline bool Arg::operator==(const Arg& a) const
 		return false;
 }
 
-inline QString Arg::getDescription() const
+inline std::string Arg::getDescription() const
 {
-	QString desc = "";
+	std::string desc = "";
 	if ( _required )
 		desc = "(" + _requireLabel + ")  ";
 
@@ -544,9 +544,9 @@ inline QString Arg::getDescription() const
 	return desc;
 }
 
-inline const QString& Arg::getFlag() const { return _flag; }
+inline const std::string& Arg::getFlag() const { return _flag; }
 
-inline const QString& Arg::getName() const { return _name; }
+inline const std::string& Arg::getName() const { return _name; }
 
 inline bool Arg::isRequired() const { return _required; }
 
@@ -562,12 +562,12 @@ inline bool Arg::isSet() const
 
 inline bool Arg::isIgnoreable() const { return _ignoreable; }
 
-inline void Arg::setRequireLabel( const QString& s)
+inline void Arg::setRequireLabel( const std::string& s)
 {
 	_requireLabel = s;
 }
 
-inline bool Arg::argMatches( const QString& argFlag ) const
+inline bool Arg::argMatches( const std::string& argFlag ) const
 {
 	if ( ( argFlag == Arg::flagStartString() + _flag && _flag != "" ) ||
 		 argFlag == Arg::nameStartString() + _name )
@@ -576,9 +576,9 @@ inline bool Arg::argMatches( const QString& argFlag ) const
 		return false;
 }
 
-inline QString Arg::toString() const
+inline std::string Arg::toString() const
 {
-	QString s = "";
+	std::string s = "";
 
 	if ( _flag != "" )
 		s += Arg::flagStartString() + _flag + " ";
@@ -597,7 +597,7 @@ inline void Arg::_checkWithVisitor() const
 /**
  * Implementation of trimFlag.
  */
-inline void Arg::trimFlag(QString& flag, QString& value) const
+inline void Arg::trimFlag(std::string& flag, std::string& value) const
 {
 	int stop = 0;
 	for ( int i = 0; static_cast<unsigned int>(i) < flag.length(); i++ )
@@ -618,7 +618,7 @@ inline void Arg::trimFlag(QString& flag, QString& value) const
 /**
  * Implementation of _hasBlanks.
  */
-inline bool Arg::_hasBlanks( const QString& s ) const
+inline bool Arg::_hasBlanks( const std::string& s ) const
 {
 	for ( int i = 1; static_cast<unsigned int>(i) < s.length(); i++ )
 		if ( s[i] == Arg::blankChar() )
@@ -641,7 +641,7 @@ inline void Arg::xorSet()
 /**
  * Overridden by Args that need to added to the end of the list.
  */
-inline void Arg::addToList( QList<Arg*>& argList ) const
+inline void Arg::addToList( std::list<Arg*>& argList ) const
 {
 	argList.push_back( const_cast<Arg*>(this) );
 }
