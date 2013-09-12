@@ -176,8 +176,8 @@ void AvizoRectilinearCoordinateWriter::execute()
 
 
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumFieldTuples();
-  size_t totalEnsembleTuples = m->getNumEnsembleTuples();
+  size_t totalFields = m->getNumCellFieldTuples();
+  size_t totalEnsembleTuples = m->getNumCellEnsembleTuples();
 
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
 

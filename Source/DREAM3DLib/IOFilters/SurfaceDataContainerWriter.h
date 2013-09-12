@@ -43,6 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
+#include "DREAM3DLib/IOFilters/EdgeDataContainerWriter.h"
 
 
 /**
@@ -57,7 +58,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
   public:
     DREAM3D_SHARED_POINTERS(SurfaceDataContainerWriter)
     DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerWriter, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerWriter, EdgeDataContainerWriter)
 
     virtual ~SurfaceDataContainerWriter();
 
@@ -95,7 +96,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
