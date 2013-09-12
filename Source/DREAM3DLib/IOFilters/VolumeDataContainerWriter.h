@@ -38,6 +38,7 @@
 #define _VolumeDataContainerWriter_H_
 
 #include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include <hdf5.h>
 
@@ -47,7 +48,6 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
-#include "DREAM3DLib/IOFilters/SurfaceDataContainerWriter.h"
 
 
 /**
@@ -72,7 +72,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
 
     typedef QList<QString> NameListType;
 
-    void setXdmfOStream(std::ostream* xdmf);
+    void setXdmfOStream(QTextStream *xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -80,7 +80,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -152,11 +152,11 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const QVector<T> &v, const QString &label)
+    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const QString &label)
      {
       herr_t err = 0;
       int numComp = 1;
-      QVector<int> eData(v.size());
+      std::vector<int> eData(v.size());
       for (size_t i = 0; i < v.size(); ++i)
       {
         eData[i] = v[i];
@@ -170,15 +170,15 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
         hsize_t dims[1] =
         { (hsize_t)num * (hsize_t)numComp };
 
-        err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= H5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);
-        err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
+        err |= QH5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
+        err |= QH5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);
+        err |= QH5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
 
         if(err < 0)
         {
           setErrorCondition(err);
-          
-          ss << "Error writing Ensemble data set '" << label << "'";
+          QString ss = QObject::tr("Error writing Ensemble data set '%1'").arg(label);
+          notifyErrorMessage(ss, getErrorCondition());
         }
       }
 
@@ -186,7 +186,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     }
 
   private:
-    std::ostream* m_XdmfPtr;
+    QTextStream* m_XdmfPtr;
 
     VolumeDataContainerWriter(const VolumeDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const VolumeDataContainerWriter&); // Operator '=' Not Implemented
