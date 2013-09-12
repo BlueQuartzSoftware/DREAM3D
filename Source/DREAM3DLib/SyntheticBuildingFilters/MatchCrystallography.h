@@ -169,7 +169,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
     FloatArrayType::Pointer simmdf;
 
 
-    QVector<QVector<float> > misorientationlists;
+    QVector<QVector<float> > m_MisorientationLists;
 
     QVector<OrientationOps::Pointer> m_OrientationOps;
 
