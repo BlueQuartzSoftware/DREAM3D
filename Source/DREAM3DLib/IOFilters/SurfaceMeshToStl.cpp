@@ -192,16 +192,14 @@ void SurfaceMeshToStl::execute()
       return;
   }
 
-  VertexArray::Pointer nodesPtr = sm->getVertices();
-  VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
-  FaceArray::Pointer trianglePtr = sm->getFaces();
-  FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
+  VertexArray& nodes = *(sm->getVertices());
+  FaceArray& triangles = *(sm->getFaces());
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
-  int nTriangles = trianglePtr->getNumberOfTuples();
+  int nTriangles = triangles.getNumberOfTuples();
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
