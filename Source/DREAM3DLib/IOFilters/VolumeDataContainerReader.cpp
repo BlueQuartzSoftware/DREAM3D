@@ -171,19 +171,19 @@ void VolumeDataContainerReader::execute()
   m->setResolution(spacing);
   m->setOrigin(origin);
 
-  if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
-  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadEdgeData = false;
-  if(m_FaceArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadFaceData = false;
+  if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadVertexData(false);
+  if(getEdgeArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadEdgeData(false);
+  if(getFaceArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadFaceData(false);
   if(m_CellArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellData = false;
   if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellFieldData = false;
   if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellEnsembleData = false;
 
-  if(m_ReadVertexData == true) m->clearVertexData();
-  if(m_ReadEdgeData == true) m->clearEdgeData();
-  if(m_ReadFaceData == true) m->clearFaceData();
+  if(getReadVertexData() == true) m->clearVertexData();
+  if(getReadEdgeData() == true) m->clearEdgeData();
+  if(getReadFaceData() == true) m->clearFaceData();
   if(m_ReadCellData == true) m->clearCellData();
-  if(m_ReadFieldData == true) m->clearCellFieldData();
-  if(m_ReadEnsembleData == true) m->clearCellEnsembleData();
+  if(m_ReadCellFieldData == true) m->clearCellFieldData();
+  if(m_ReadCellEnsembleData == true) m->clearCellEnsembleData();
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);

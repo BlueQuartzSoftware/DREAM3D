@@ -653,19 +653,19 @@ void ArraySelectionWidget::clearArraySelectionLists()
   volumeEdgeArrayList->clear();
   volumeFaceArrayList->clear();
   volumeCellArrayList->clear();
-  volumeFieldArrayList->clear();
-  volumeEnsembleArrayList->clear();
+  volumeCellFieldArrayList->clear();
+  volumeCellEnsembleArrayList->clear();
 
   surfaceVertexArrayList->clear();
   surfaceFaceArrayList->clear();
   surfaceEdgeArrayList->clear();
-  surfaceFieldArrayList->clear();
-  surfaceEnsembleArrayList->clear();
+  surfaceFaceFieldArrayList->clear();
+  surfaceFaceEnsembleArrayList->clear();
 
   edgeVertexArrayList->clear();
   edgeEdgeArrayList->clear();
-  edgeFieldArrayList->clear();
-  edgeEnsembleArrayList->clear();
+  edgeEdgeFieldArrayList->clear();
+  edgeEdgeEnsembleArrayList->clear();
 
   vertexVertexArrayList->clear();
   vertexVertexFieldArrayList->clear();
@@ -681,19 +681,19 @@ void ArraySelectionWidget::readOptions(QSettings &prefs, QString name)
   readSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
   readSelections(prefs, name, "VolumeFace", volumeFaceArrayList);
   readSelections(prefs, name, "VolumeCell", volumeCellArrayList);
-  readSelections(prefs, name, "VolumeField", volumeFieldArrayList);
-  readSelections(prefs, name, "VolumeEnsemble", volumeEnsembleArrayList);
+  readSelections(prefs, name, "VolumeField", volumeCellFieldArrayList);
+  readSelections(prefs, name, "VolumeEnsemble", volumeCellEnsembleArrayList);
 
   readSelections(prefs, name, "SurfaceVertex", surfaceVertexArrayList);
   readSelections(prefs, name, "SurfaceFace", surfaceFaceArrayList);
   readSelections(prefs, name, "SurfaceEdge", surfaceEdgeArrayList);
-  readSelections(prefs, name, "SurfaceField", surfaceFieldArrayList);
-  readSelections(prefs, name, "SurfaceEnsemble", surfaceEnsembleArrayList);
+  readSelections(prefs, name, "SurfaceField", surfaceFaceFieldArrayList);
+  readSelections(prefs, name, "SurfaceEnsemble", surfaceFaceEnsembleArrayList);
 
   readSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   readSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  readSelections(prefs, name, "EdgeField", edgeFieldArrayList);
-  readSelections(prefs, name, "EdgeEnsemble", edgeEnsembleArrayList);
+  readSelections(prefs, name, "EdgeField", edgeEdgeFieldArrayList);
+  readSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   readSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
   readSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);
@@ -708,19 +708,19 @@ void ArraySelectionWidget::writeOptions(QSettings &prefs, QString name)
   writeSelections(prefs, name, "VolumeEdge", volumeEdgeArrayList);
   writeSelections(prefs, name, "VolumeFace", volumeFaceArrayList);
   writeSelections(prefs, name, "VolumeCell", volumeCellArrayList);
-  writeSelections(prefs, name, "VolumeField", volumeFieldArrayList);
-  writeSelections(prefs, name, "VolumeEnsemble", volumeEnsembleArrayList);
+  writeSelections(prefs, name, "VolumeField", volumeCellFieldArrayList);
+  writeSelections(prefs, name, "VolumeEnsemble", volumecellEnsembleArrayList);
 
   writeSelections(prefs, name, "SurfaceVertex", surfaceVertexArrayList);
   writeSelections(prefs, name, "SurfaceFace", surfaceFaceArrayList);
   writeSelections(prefs, name, "SurfaceEdge", surfaceEdgeArrayList);
-  writeSelections(prefs, name, "SurfaceField", surfaceFieldArrayList);
-  writeSelections(prefs, name, "SurfaceEnsemble", surfaceEnsembleArrayList);
+  writeSelections(prefs, name, "SurfaceField", surfaceFaceFieldArrayList);
+  writeSelections(prefs, name, "SurfaceEnsemble", surfaceFaceEnsembleArrayList);
 
   writeSelections(prefs, name, "EdgeVertex", edgeVertexArrayList);
   writeSelections(prefs, name, "EdgeEdge", edgeEdgeArrayList);
-  writeSelections(prefs, name, "EdgeField", edgeFieldArrayList);
-  writeSelections(prefs, name, "EdgeEnsemble", edgeEnsembleArrayList);
+  writeSelections(prefs, name, "EdgeField", edgeedgeFieldArrayList);
+  writeSelections(prefs, name, "EdgeEnsemble", edgeEdgeEnsembleArrayList);
 
   writeSelections(prefs, name, "VertexVertex", vertexVertexArrayList);
   writeSelections(prefs, name, "VertexField", vertexVertexFieldArrayList);

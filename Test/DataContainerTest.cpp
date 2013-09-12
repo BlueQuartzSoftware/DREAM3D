@@ -325,7 +325,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
   /********************************* Field Data Tests *********************************************/
-  ptr = m->createFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
@@ -362,7 +362,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 
 
   /********************************* Ensemble Data Tests *********************************************/
-  ptr = m->createEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
+  ptr = m->createCellEnsembleData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
   absFilt->setErrorCondition(0);
