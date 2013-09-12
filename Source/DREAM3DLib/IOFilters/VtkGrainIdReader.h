@@ -35,19 +35,24 @@
 
 #include <QtCore/QString>
 #include <QtCore/QtEndian>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/FileReader.h"
 #include "DREAM3DLib/Common/DataArray.hpp"
 
-
+/**
+ * @brief The VtkGrainIdReader class
+ * @author
+ * @version
+ */
 class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
 {
   public:
-  DREAM3D_SHARED_POINTERS(VtkGrainIdReader)
-  DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader)
-  DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, FileReader)
+    DREAM3D_SHARED_POINTERS(VtkGrainIdReader)
+    DREAM3D_STATIC_NEW_MACRO(VtkGrainIdReader)
+    DREAM3D_TYPE_MACRO_SUPER(VtkGrainIdReader, FileReader)
 
 
     virtual ~VtkGrainIdReader();
@@ -63,7 +68,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const QString getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Grain Ids Only"; }
 
     virtual void setupFilterParameters();
@@ -113,100 +118,101 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
       * @param text
       * @return
       */
-     size_t parseByteSize(char text[256]);
+    size_t parseByteSize(char text[256]);
 
-     /**
+    /**
       *
       */
-     int ignoreData(std::ifstream &in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
+    int ignoreData(QFile &in, int byteSize, char* type, size_t xDim, size_t yDim, size_t zDim);
 
-     /**
+    /**
       *
       */
-     template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T &diff)
-     {
-       int err = 0;
-       int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
-       if (getFileIsBinary() == true)
-       {
-         T* buffer = new T[totalSize];
-         // Read all the xpoints in one shot into a buffer
-         inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
-         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
-         {
-           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-               << " vs " << (totalSize * sizeof(T)) ;
-           return -1;
-         }
-         if (totalSize > 1) {
-           T t = buffer[totalSize-1];
-           T t1 = buffer[totalSize-2];
-           // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
-           t = qFromBigEndian(t);
-           t1 = qFromBigEndian(t1);
-           diff =t-t1;
-         }
-         else
-         {
-           diff = buffer[totalSize];
-         }
-         delete buffer;
-       }
-       else
-       {
-         T tmp;
-         T t2;
-         for (int64_t x = 0; x < totalSize; ++x)
-         {
-           if(x == 1)
-           {
-             t2 = tmp;
-           }
-           inStream >> tmp;
-           if(x == 1)
-           {
-             diff = tmp - t2;
-           }
-         }
-       }
-       return err;
-     }
+    template<typename T>
+    int skipVolume(QFile &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim, T &diff)
+    {
+      int err = 0;
+      int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
+      if (getFileIsBinary() == true)
+      {
+        T* buffer = new T[totalSize];
+        // Read all the xpoints in one shot into a buffer
+        qint64 bytesRead = inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
+        if(bytesRead != (totalSize * sizeof(T)))
+        {
+          qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << bytesRead
+                   << " vs " << (totalSize * sizeof(T)) ;
+          return -1;
+        }
+        if (totalSize > 1) {
+          T t = buffer[totalSize-1];
+          T t1 = buffer[totalSize-2];
+          // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
+          t = qFromBigEndian(t);
+          t1 = qFromBigEndian(t1);
+          diff =t-t1;
+        }
+        else
+        {
+          diff = buffer[totalSize];
+        }
+        delete buffer;
+      }
+      else
+      {
+        T tmp;
+        T t2;
+        for (int64_t x = 0; x < totalSize; ++x)
+        {
+          if(x == 1)
+          {
+            t2 = tmp;
+          }
+          inStream >> tmp;
+          if(x == 1)
+          {
+            diff = tmp - t2;
+          }
+        }
+      }
+      return err;
+    }
 
-     template<typename T>
-     int skipVolume(std::ifstream &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
-     {
-       int err = 0;
-       if(getFileIsBinary() == true)
-       {
-         int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
-         T* buffer = new T[totalSize];
-         // Read all the xpoints in one shot into a buffer
-         inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
-         if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
-         {
-           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
-               << (totalSize * sizeof(T)) ;
-           return -1;
-         }
-         delete buffer;
-       }
-       else
-       {
-         T tmp;
-         for (size_t z = 0; z < zDim; ++z)
-         {
-           for (size_t y = 0; y < yDim; ++y)
-           {
-             for (size_t x = 0; x < xDim; ++x)
-             {
-               inStream >> tmp;
-             }
-           }
-         }
-       }
-       return err;
-     }
+    template<typename T>
+    int skipVolume(QFile &inStream, int byteSize, size_t xDim, size_t yDim, size_t zDim)
+    {
+      int err = 0;
+      if(getFileIsBinary() == true)
+      {
+        int64_t totalSize = (int64_t)xDim * (int64_t)yDim * (int64_t)zDim;
+        T* buffer = new T[totalSize];
+        // Read all the xpoints in one shot into a buffer
+        qint64 bytesRead = inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
+        if(bytesRead != (totalSize * sizeof(T)))
+        {
+          qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << bytesRead << " vs "
+                   << (totalSize * sizeof(T)) ;
+          return -1;
+        }
+        delete buffer;
+      }
+      else
+      {
+        T tmp;
+        QTextStream in(&inStream);
+        for (size_t z = 0; z < zDim; ++z)
+        {
+          for (size_t y = 0; y < yDim; ++y)
+          {
+            for (size_t x = 0; x < xDim; ++x)
+            {
+              in >> tmp;
+            }
+          }
+        }
+      }
+      return err;
+    }
 
 
 

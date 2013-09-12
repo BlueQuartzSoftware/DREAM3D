@@ -273,7 +273,7 @@ int INLWriter::writeFile()
     return -1;
   }
   uint32_t symmetry = 0;
-  for(size_t i = 1; i < materialNamePtr->GetNumberOfTuples(); ++i)
+  for(size_t i = 1; i < materialNamePtr->getNumberOfTuples(); ++i)
   {
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());

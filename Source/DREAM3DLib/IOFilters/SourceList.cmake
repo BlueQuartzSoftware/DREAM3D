@@ -31,25 +31,26 @@ set(_PublicFilters
   FieldInfoReader
   H5VoxelFileReader
   INLWriter
-  NodesTrianglesToStl
+  LosAlamosFFTWriter
+#  NodesTrianglesToStl
   NodesTrianglesToVtk
   PhReader
   PhWriter
-  ReadH5Ebsd
-  SurfaceMeshToNodesTrianglesEdges
-  SurfaceMeshToStl
-  SurfaceMeshToVtk
-  SurfaceMeshToNonconformalVtk
-  VtkRectilinearGridWriter
-  YSChoiAbaqusReader
   RawBinaryReader
-  VtkGrainIdReader
-#  SolidMeshToVtk
-  SPParksWriter
-  VisualizeGBCD
+  ReadH5Ebsd
   ReadOrientationData
-  LosAlamosFFTWriter
+  SPParksWriter
+#  SurfaceMeshToNodesTrianglesEdges
+#  SurfaceMeshToNonconformalVtk
+#  SurfaceMeshToStl
+  SurfaceMeshToVtk
+  VisualizeGBCD
+  VtkGrainIdReader
+  VtkRectilinearGridWriter
   WriteAbaqusSurfaceMesh
+  YSChoiAbaqusReader
+#  SolidMeshToVtk
+
 )
 
 

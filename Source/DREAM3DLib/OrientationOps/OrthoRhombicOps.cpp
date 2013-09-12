@@ -417,18 +417,18 @@ class GenerateSphereCoordsImpl
 // -----------------------------------------------------------------------------
 void OrthoRhombicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
 {
-  size_t nOrientations = eulers->GetNumberOfTuples();
+  size_t nOrientations = eulers->getNumberOfTuples();
 
   // Sanity Check the size of the arrays
-  if (xyz001->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize0)
+  if (xyz001->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize0)
   {
     xyz001->Resize(nOrientations * Detail::Orthorhombic::symSize0 * 3);
   }
-  if (xyz011->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize1)
+  if (xyz011->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize1)
   {
     xyz011->Resize(nOrientations * Detail::Orthorhombic::symSize1 * 3);
   }
-  if (xyz111->GetNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize2)
+  if (xyz111->getNumberOfTuples() < nOrientations * Detail::Orthorhombic::symSize2)
   {
     xyz111->Resize(nOrientations * Detail::Orthorhombic::symSize2 * 3);
   }
@@ -575,7 +575,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   QString label2("Orthorhombic <010>");
 
 
-  int numOrientations = config.eulers->GetNumberOfTuples();
+  int numOrientations = config.eulers->getNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
@@ -626,7 +626,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   double min = std::numeric_limits<double>::max();
 
   double* dPtr = intensity001->GetPointer(0);
-  size_t count = intensity001->GetNumberOfTuples();
+  size_t count = intensity001->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -635,7 +635,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
 
 
   dPtr = intensity011->GetPointer(0);
-  count = intensity011->GetNumberOfTuples();
+  count = intensity011->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }
@@ -643,7 +643,7 @@ QVector<UInt8ArrayType::Pointer> OrthoRhombicOps::generatePoleFigure(PoleFigureC
   }
 
   dPtr = intensity111->GetPointer(0);
-  count = intensity111->GetNumberOfTuples();
+  count = intensity111->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
     if (dPtr[i] > max) { max = dPtr[i]; }

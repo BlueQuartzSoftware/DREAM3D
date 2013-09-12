@@ -38,6 +38,11 @@
 
 #include <stdio.h>
 
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+
+
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 
 
@@ -149,7 +154,7 @@ void WriteAbaqusSurfaceMesh::preflight()
 void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
-  
+
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -168,12 +173,13 @@ void WriteAbaqusSurfaceMesh::execute()
 
    // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  if(!parentPath.mkpath("."))
   {
-      
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
+
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+      notifyErrorMessage(ss, -1);
       setErrorCondition(-1);
       return;
   }
@@ -188,7 +194,7 @@ void WriteAbaqusSurfaceMesh::execute()
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
-  for (int i = 0; i < trianglePtr->GetNumberOfTuples(); i++)
+  for (int i = 0; i < trianglePtr->getNumberOfTuples(); i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
     uniqueSpins.insert(faceLabels[i*2+1]);
@@ -197,7 +203,7 @@ void WriteAbaqusSurfaceMesh::execute()
   FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
-  err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size()-1);
+  err = writeHeader(f, nodesPtr->getNumberOfTuples(), trianglePtr->getNumberOfTuples(), uniqueSpins.size()-1);
   err = writeNodes(f);
   err = writeTriangles(f);
   err = writeGrains(f);
@@ -231,7 +237,7 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 {
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->GetPointer(0);
-  size_t numNodes = nodesPtr->GetNumberOfTuples();
+  size_t numNodes = nodesPtr->getNumberOfTuples();
   int err = 0;
   fprintf(f, "*Node,NSET=NALL\n");
 //1, 72.520433763730, 70.306420652241, 100.000000000000
@@ -254,7 +260,7 @@ int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
   int err = 0;
   FaceArray::Pointer trianglePtr = getSurfaceDataContainer()->getFaces();
   FaceArray::Face_t* triangles = trianglePtr->GetPointer(0);
-  size_t numTri = trianglePtr->GetNumberOfTuples();
+  size_t numTri = trianglePtr->getNumberOfTuples();
 
   fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
   for(size_t i = 1; i <= numTri; ++i)
@@ -280,7 +286,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   int err = 0;
 
-  
+
 
   VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
   FaceArray::Pointer trianglePtr = getSurfaceDataContainer()->getFaces();
@@ -292,7 +298,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
 
 
-  int nTriangles = trianglePtr->GetNumberOfTuples();
+  int nTriangles = trianglePtr->getNumberOfTuples();
 
   // Store all the unique Spins
   QSet<int> uniqueSpins;
@@ -312,10 +318,10 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
     fprintf(f, "*ELSET, ELSET=Grain%d\n", spin);
 
-    ss.str("");
-    ss << "Writing ELSET for Grain Id " << spin;
-    notifyStatusMessage(ss.str());
-
+    {
+      QString ss = QObject::tr("Writing ELSET for Grain Id %1").arg(spin);
+      notifyStatusMessage(ss);
+    }
 
     // Loop over all the triangles for this spin
     int lineCount = 0;

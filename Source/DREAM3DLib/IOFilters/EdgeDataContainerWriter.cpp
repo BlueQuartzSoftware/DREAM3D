@@ -67,9 +67,7 @@ public:
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainerWriter::EdgeDataContainerWriter() :
-  m_HdfFileId(-1),
-  m_WriteXdmfFile(false),
-  m_XdmfPtr(NULL)
+VertexDataContainerWriter()
 {
   setupFilterParameters();
 }
@@ -275,8 +273,8 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
   //std::ostream& out = *m_XdmfPtr;
   //out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
 
-  //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->GetNumberOfTuples() << "\">" << "\n";
-  //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->GetNumberOfTuples() << " 3\">" << "\n";
+  //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
+  //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
   //ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
   //QVector<char> nameBuffer(nameSize, 0);
   //nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
@@ -287,7 +285,7 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
   //out << "    </Topology>" << "\n";
 
   //out << "    <Geometry Type=\"XYZ\">" << "\n";
-  //out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->GetNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  //out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
   //out << "        " << hdfFileName << ":/EdgeDataContainer/Vertices" << "\n";
   //out << "      </DataItem>" << "\n";
   //out << "    </Geometry>" << "\n";
@@ -335,7 +333,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
@@ -357,8 +355,8 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     //First Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr1 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr1 << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr1half << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr1half.str() <<  "\" ";
@@ -382,8 +380,8 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     //Second Slab
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
-    dimStr2 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr2 << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
+    dimStr2half << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr2half.str() <<  "\" ";
@@ -482,7 +480,7 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
 
   herr_t err = -1;
   size_t total = 0;
-  size_t nVerts = verticesPtr->GetNumberOfTuples();
+  size_t nVerts = verticesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nVerts; ++v)
   {
     total += links->getNumberOfFaces(v);

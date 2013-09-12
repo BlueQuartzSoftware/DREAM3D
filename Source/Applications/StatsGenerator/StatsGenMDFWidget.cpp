@@ -357,10 +357,10 @@ void StatsGenMDFWidget::extractStatsData(VolumeDataContainer::Pointer m, int ind
     arrays = tp->getMDF_Weights();
   }
   if (arrays.size() > 0 ) {
-    QVector<float> angle(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    QVector<float> angle(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(angle.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*angle.size() );
 
-    QVector<float> weights(static_cast<int>(arrays[0]->GetNumberOfTuples()));
+    QVector<float> weights(static_cast<int>(arrays[0]->getNumberOfTuples()));
     ::memcpy( &(weights.front()), arrays[0]->GetVoidPointer(0), sizeof(float)*weights.size() );
 
     QVector<float> axis(static_cast<int>(arrays[0]->GetSize())); // This one is 3xn in size

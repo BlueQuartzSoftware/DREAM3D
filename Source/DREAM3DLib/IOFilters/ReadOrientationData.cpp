@@ -40,6 +40,8 @@
 #include <vector>
 #include <sstream>
 
+#include <QtCore/QFileInfo>
+
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -131,35 +133,33 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
 
+  QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
-    ss.str("");
-    ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
+
+    QString ss = QObject::tr("%1: Either the H5Ebsd file must exist or the Manufacturer must be set").arg(getHumanLabel());
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
-  else if (QFileInfo::exists(m_InputFile) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (m_InputFile.isEmpty() == false)
   {
     int64_t dims[3];
 
-    QString ext = QFileInfo::extension(m_InputFile);
+    QString ext = fi.suffix();
     QVector<QString> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
@@ -251,9 +251,8 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     else
     {
       setErrorCondition(-997);
-      ss.str("");
-      ss << "The File extension '" << ext << "' was not recognized. Currently .ang or .ctf are the only recognized file extensions";
-      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+      QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
 
       return;
     }
@@ -289,18 +288,18 @@ void ReadOrientationData::preflight()
 void ReadOrientationData::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);
-
-  QString ext = QFileInfo::extension(m_InputFile);
+  QFileInfo fi(getInputFile());
+  QString ext = fi.suffix();
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     readAngFile();

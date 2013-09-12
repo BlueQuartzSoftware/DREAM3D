@@ -230,7 +230,7 @@ void FindNeighbors::execute()
   int good = 0;
   int neighbor = 0;
 
-  //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->GetNumberOfTuples();
+  //size_t xtalCount = m->getCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures)->getNumberOfTuples();
 
     QVector<QVector<int> > neighborlist;
     QVector<QVector<float> > neighborsurfacearealist;

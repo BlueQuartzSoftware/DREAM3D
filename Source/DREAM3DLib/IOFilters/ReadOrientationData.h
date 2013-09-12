@@ -217,7 +217,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
       getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstants = latticeConstants->GetPointer(0);
-      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->GetNumberOfTuples());
+      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
       return 0;
     }
 

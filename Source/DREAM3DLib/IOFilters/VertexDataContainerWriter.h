@@ -64,10 +64,10 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
+    DREAM3D_INSTANCE_PROPERTY(QTextStream*, XdmfOStream)
 
     typedef QList<QString> NameListType;
 
-    DREAM3D_INSTANCE_PROPERTY(QTextStream*, XdmfOStream)
 
     /**
     * @brief This returns the group that the filter belonds to. You can select

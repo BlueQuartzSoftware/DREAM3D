@@ -728,7 +728,7 @@ int32_t M3CSliceBySlice::volumeHasGrainValuesOfZero()
   getVolumeDataContainer()->getDimensions(fileDim);
 
   IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
-  int32_t count = grainIdsPtr->GetNumberOfTuples();
+  int32_t count = grainIdsPtr->getNumberOfTuples();
 
   bool renumber = false;
   int32_t maxGrainId = 0;
@@ -767,7 +767,7 @@ void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
   getVolumeDataContainer()->getDimensions(fileDim);
 
   IDataArray::Pointer grainIdsPtr = getVolumeDataContainer()->getCellData(getGrainIdsArrayName());
-  int32_t count = grainIdsPtr->GetNumberOfTuples();
+  int32_t count = grainIdsPtr->getNumberOfTuples();
 
   for (int i = 0; i < count; ++i) {
     if (m_GrainIds[i] == gid){
@@ -1148,7 +1148,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
               get_grainnames(cubeOrigin, sqOrder, pixIndex, pixgrainname, NSP, wrappedDims, voxelsPtr);
               if (pixgrainname[0] > 0 || pixgrainname[1] > 0)
               {
-                size_t currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
+                size_t currentEdgeArraySize = cEdgePtr->getNumberOfTuples();
                 if (currentEdgeArraySize < eid+1)
                 {
                   edgeResizeCount++;
@@ -1157,7 +1157,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                     edgeResize *= 10; // Increment the resize factor by an order of magnitude
                   }
                   cEdgePtr->Resize(currentEdgeArraySize + edgeResize); // Allocate Edges in 100,000 packs
-                  currentEdgeArraySize = cEdgePtr->GetNumberOfTuples();
+                  currentEdgeArraySize = cEdgePtr->getNumberOfTuples();
                   //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
                 }
 
@@ -1652,15 +1652,15 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   //  qDebug() << "cTrianglePtr->Resize(" << tidIn << ")" << "\n";
   cTrianglePtr->Resize(tidIn);
 
-  //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->GetNumberOfTuples() << " - Clearing Array" << "\n";
+  //  qDebug() << "cEdgePtr numTuples: " << cEdgePtr->getNumberOfTuples() << " - Clearing Array" << "\n";
   cEdgePtr->Resize(0);
 
-  return cTrianglePtr->GetNumberOfTuples();
+  return cTrianglePtr->getNumberOfTuples();
 }
 
 #define ADD_TRIANGLE(cTrianglePtr, ctid, n0, n1, n2, label0, label1)\
   {\
-    size_t current_##cTrianglePtr##_size = cTrianglePtr->GetNumberOfTuples();\
+    size_t current_##cTrianglePtr##_size = cTrianglePtr->getNumberOfTuples();\
     if (current_##cTrianglePtr##_size < static_cast<size_t>(ctid + 1) ) {\
       Detail::triangleResizeCount++; \
       if (Detail::triangleResizeCount == 10) { \
@@ -2703,7 +2703,7 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
   SurfaceMesh::M3C::Triangle* t = cTrianglePtr->GetPointer(0);
   int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
   //  SurfaceMesh::M3C::Segment* fe = cEdgePtr->GetPointer(0);
-  //  int nfedge = cEdgePtr->GetNumberOfTuples();
+  //  int nfedge = cEdgePtr->getNumberOfTuples();
   for (int j = 0; j < nT; j++)
   {
     tspin1 = t[j].nSpin[0];

@@ -62,7 +62,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
     template<typename T>
     void filterDataLessThan(IDataArray* m_Input)
     {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
+      size_t m_NumValues = m_Input->getNumberOfTuples();
       T v = static_cast<T>(comparisonValue);
       T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)
@@ -78,7 +78,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
     template<typename T>
     void filterDataGreaterThan(IDataArray* m_Input)
     {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
+      size_t m_NumValues = m_Input->getNumberOfTuples();
       T v = static_cast<T>(comparisonValue);
       T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)
@@ -94,7 +94,7 @@ class ThresholdFilterHelper : public IDataArrayFilter
     template<typename T>
     void filterDataEqualTo(IDataArray* m_Input)
     {
-      size_t m_NumValues = m_Input->GetNumberOfTuples();
+      size_t m_NumValues = m_Input->getNumberOfTuples();
       T v = static_cast<T>(comparisonValue);
       T* data = IDataArray::SafeReinterpretCast<IDataArray*, DataArray<T>*, T*>(m_Input);
       for (size_t i = 0; i < m_NumValues; ++i)

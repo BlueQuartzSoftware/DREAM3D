@@ -40,8 +40,12 @@
 #include <algorithm>
 #include <limits>
 
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 
 
@@ -157,14 +161,15 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getSurfaceDataContainer();
+
 
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -224,7 +229,7 @@ void VisualizeGBCD::preflight()
 void VisualizeGBCD::execute()
 {
   int err = 0;
-  
+  QString ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -246,10 +251,10 @@ void VisualizeGBCD::execute()
   VertexArray::Pointer nodesPtr = sm->getVertices();
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
-  size_t totalFaces = trianglesPtr->GetNumberOfTuples();
+  size_t totalFaces = trianglesPtr->count();
 
   // Run the data check to allocate the memory for the centroid array
-  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumCellEnsembleTuples());
+  dataCheckSurfaceMesh(false, 0, totalFaces, sm->getNumFaceEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -489,13 +494,15 @@ void VisualizeGBCD::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QString parentPath = QFileInfo::parentPath(getOutputFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+
+  if(!parentPath.mkpath("."))
   {
-    ss.str("");
-    ss << "Error creating parent path '" << parentPath << "'";
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
     setErrorCondition(-998);
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -505,9 +512,8 @@ void VisualizeGBCD::execute()
     if(NULL == f)
     {
 
-      ss.str("");
-      ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
-      notifyErrorMessage(ss.str(), getErrorCondition());
+      QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
+      notifyErrorMessage(ss, getErrorCondition());
       return;
     }
 
@@ -539,7 +545,7 @@ void VisualizeGBCD::execute()
         for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
-          DREAM3D::Endian::FromSystemToBig::convert<float>(t);
+          DREAM3D::Endian::FromSystemToBig::convert(t);
           gn[count] = t;
           count++;
         }
@@ -547,7 +553,7 @@ void VisualizeGBCD::execute()
       int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
       delete[] gn;
       if (totalWritten != (total))  {
-        qDebug() << "Error Writing Binary VTK Data into file " << m_OutputFile << "\n";
+        qDebug() << "Error Writing Binary VTK Data into file " << m_OutputFile ;
         fclose(f);
       }
     }

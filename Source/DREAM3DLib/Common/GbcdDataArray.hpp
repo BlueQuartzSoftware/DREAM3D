@@ -404,7 +404,7 @@ class GbcdDataArray : public IDataArray
     /**
      * @brief Returns the number of elements in the internal array.
      */
-    virtual size_t GetNumberOfTuples()
+    virtual size_t getNumberOfTuples()
     {
       if (Size == 0) { return 0; }
       return 1;
