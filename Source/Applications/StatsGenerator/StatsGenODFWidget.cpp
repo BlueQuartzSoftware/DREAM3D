@@ -774,7 +774,7 @@ void StatsGenODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     AngleFileLoader::Pointer loader = AngleFileLoader::New();
-    loader->setInputFile(angleFilePath->text()());
+    loader->setInputFile(angleFilePath->text());
     loader->setAngleRepresentation(angleRepresentation->currentIndex());
     loader->setFileAnglesInDegrees(anglesInDegrees->isChecked());
     loader->setOutputAnglesInDegrees(true);
