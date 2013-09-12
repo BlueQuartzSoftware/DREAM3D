@@ -164,7 +164,7 @@ void JumbleOrientations::execute()
   NumberDistribution distribution(rangeMin, rangeMax);
   RandomNumberGenerator generator;
   Generator numberGenerator(generator, distribution);
-  generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch()) )); // seed with the current time
+  generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
 
 
   int r;

@@ -80,7 +80,7 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(int, Ring)
 
 
-    DREAM3D::Mesh::UniqueFaceIds_t &getNRingTriangles();
+    FaceArray::UniqueFaceIds_t &getNRingTriangles();
 
     /**
      * @brief generate
@@ -105,7 +105,7 @@ class FindNRingNeighbors
       FindNRingNeighbors();
 
   private:
-    DREAM3D::Mesh::UniqueFaceIds_t  m_NRingTriangles;
+    FaceArray::UniqueFaceIds_t  m_NRingTriangles;
 
     FindNRingNeighbors(const FindNRingNeighbors&); // Copy Constructor Not Implemented
     void operator=(const FindNRingNeighbors&); // Operator '=' Not Implemented

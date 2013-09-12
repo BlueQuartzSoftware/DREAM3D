@@ -443,11 +443,11 @@ void MovingFiniteElementSmoothing::execute()
       return;
     }
 
-    StructArray<DREAM3D::Mesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
-    DREAM3D::Mesh::Edge_t* edges = edgesStructArray->getPointer(0);
+    StructArray<EdgeArray::Edge_t> *edgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(edgesDataArray.get());
+    EdgeArray::Edge_t* edges = edgesStructArray->getPointer(0);
 
-    StructArray<DREAM3D::Mesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
-    DREAM3D::Mesh::Edge_t* iEdges = internalEdgesStructArray->getPointer(0);
+    StructArray<EdgeArray::Edge_t> *internalEdgesStructArray = StructArray<EdgeArray::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
+    EdgeArray::Edge_t* iEdges = internalEdgesStructArray->getPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0

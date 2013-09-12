@@ -75,7 +75,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Mesh::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
+FaceArray::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -129,10 +129,10 @@ void FindNRingNeighbors::generate()
   {
     // Make a copy of the 1 Ring Triangles that we just found so that we can use those triangles as the
     // seed triangles for the 2 Ring triangles
-    DREAM3D::Mesh::UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
+    FaceArray::UniqueFaceIds_t lcvTriangles(m_NRingTriangles);
 
     // Now that we have the 1 ring triangles, get the 2 Ring neighbors from that list
-    for(DREAM3D::Mesh::UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
+    for(FaceArray::UniqueFaceIds_t::iterator triIter = lcvTriangles.begin(); triIter != lcvTriangles.end(); ++triIter)
     {
       FaceArray::Face_t& face = triangles[*triIter];
       // For each node, get the triangle ids that the node belongs to

@@ -253,7 +253,7 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 //    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
 //    if (err >= 0)
 //    {
-//      StructArray<DREAM3D::Mesh::Edge_t>::Pointer edges = StructArray<DREAM3D::Mesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
+//      StructArray<EdgeArray::Edge_t>::Pointer edges = StructArray<EdgeArray::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
 //      getEdgeDataContainer()->setEdges(edges);
 //    }
 //  }
