@@ -570,7 +570,7 @@ void MovingFiniteElementSmoothing::execute()
 
 #if ENABLE_MFE_SMOOTHING_RESTART_FILE
   int nnodRe, nnTriRe, stepsRe;
-  if(restartFile.empty() == false)
+  if(restartFile.isEmpty() == false)
   {
     //  we have a requested re-start - node positions will be read from the INP file
     std::ifstream restartInput(restartFile.toLatin1().data());

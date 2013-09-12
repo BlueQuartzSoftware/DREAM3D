@@ -420,7 +420,7 @@ int main(int argc, char **argv)
 
 
     std::map<int, EulerSet> gidToEulerMap;
-    if (angleFileArg.getValue().empty() == false)
+    if (angleFileArg.getValue().isEmpty() == false)
     {
       std::cout << "Reading the Euler Angle Data...." << std::endl;
       err = ReadEulerFile(angleFileArg.getValue(), gidToEulerMap);

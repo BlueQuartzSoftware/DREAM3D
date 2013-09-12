@@ -15,7 +15,7 @@
 // C++ Includes
 #include <map>
 #include <list>
-#include <QtCore/QString>
+#include <string>
 
 //-- HDF Headers
 #include <hdf5.h>

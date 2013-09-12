@@ -67,6 +67,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.h
   ${DREAM3DLib_SOURCE_DIR}/Common/IFilterFactory.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterFactory.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DEndian.h
 )
 
 set(DREAM3DLib_Common_SRCS

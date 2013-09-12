@@ -93,7 +93,7 @@ class GbcdDataArray : public IDataArray
      */
     static Pointer CreateArray(size_t* dims, const QString &name, bool allocateArray = true)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }
@@ -148,7 +148,7 @@ class GbcdDataArray : public IDataArray
      */
     virtual ~GbcdDataArray()
     {
-      //qDebug() << "~GbcdDataArrayTemplate '" << m_Name << "'" << "\n";
+      //qDebug() << "~GbcdDataArrayTemplate '" << m_Name << "'" ;
       if ((NULL != this->Array) && (true == this->_ownsData))
       {
         _deallocate();
@@ -316,7 +316,7 @@ class GbcdDataArray : public IDataArray
 #endif
       if (!this->Array)
       {
-        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
+        qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
         return -1;
       }
       this->Size = newSize;
@@ -493,12 +493,12 @@ class GbcdDataArray : public IDataArray
       return RawResize(numElements);
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
     }
 
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -574,10 +574,10 @@ class GbcdDataArray : public IDataArray
 
       if (typeid(value) == typeid(bool)) return "bool";
 
-      // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << "\n";
+      // qDebug()  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) ;
       const char* name = typeid(value).name();
       if (NULL != name && name[0] == 'l' ) {
-        qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << "\n";
+        qDebug() << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." ;
       }
       return "UnknownType";
     }
@@ -600,7 +600,7 @@ class GbcdDataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName, const QString &groupPath,
     const QString &label)
     {
       int err = -1;
@@ -769,7 +769,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 
@@ -782,7 +782,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)realloc(this->Array, newSize * sizeof(T));
         if (!newArray)
         {
-          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
       }
@@ -791,7 +791,7 @@ class GbcdDataArray : public IDataArray
         newArray = (T*)malloc(newSize * sizeof(T));
         if (!newArray)
         {
-          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " << "\n";
+          qDebug() << "Unable to allocate " << newSize << " elements of size " << sizeof(T) << " bytes. " ;
           return 0;
         }
 

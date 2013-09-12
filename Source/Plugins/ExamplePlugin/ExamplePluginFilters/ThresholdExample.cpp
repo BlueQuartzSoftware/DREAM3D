@@ -179,7 +179,7 @@ void ThresholdExample::dataCheck(bool preflight, size_t voxels, size_t fields, s
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
   /*
-  if (m_OutputFile.empty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     ss << "The output file must be set before executing this filter.";
     PipelineMessage em(getNameOfClass(), "There was an error", -666);

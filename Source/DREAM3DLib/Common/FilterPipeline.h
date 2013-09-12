@@ -33,7 +33,8 @@
 
 
 #include <QtCore/QString>
-#include <list>
+#include <QtCore/QList>
+#include <QtCore/QTextStream>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -115,7 +116,7 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     virtual AbstractFilter::Pointer removeFirstFilterByName(const QString &name);
 
 
-    virtual void printFilterNames(std::ostream &out);
+    virtual void printFilterNames(QTextStream &out);
 
 
 

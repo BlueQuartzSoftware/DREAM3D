@@ -46,7 +46,7 @@
 
 
 #define EBSD_VOLREADER_READ_HEADER(fileId, path, var)\
-  err = H5Lite::readScalarDataset(fileId, path(), var);\
+  err = H5Lite::readScalarDataset(fileId, path.toStdString(), var);\
   if (err < 0) {\
   qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
   err = H5Utilities::closeFile(fileId);\
@@ -56,7 +56,7 @@
 #define EBSD_VOLREADER_READ_VECTOR_HEADER(fileId, path, var, type)\
   {\
   std::vector<type> data;\
-  err = H5Lite::readVectorDataset(fileId, path(), data);\
+  err = H5Lite::readVectorDataset(fileId, path.toStdString(), data);\
   if (err < 0) {\
   qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
   err = H5Utilities::closeFile(fileId);\
@@ -70,7 +70,7 @@
 
 #define EBSD_VOLREADER_READ_HEADER_CAST(fileId, path, var, m_msgType, cast)\
 { cast t;\
-  err = H5Lite::readScalarDataset(fileId, path(), t);\
+  err = H5Lite::readScalarDataset(fileId, path.toStdString(), t);\
   if (err < 0) {\
   qDebug() << "H5EbsdVolumeInfo Error: Could not load header value for " << path ;\
   err = H5Utilities::closeFile(fileId);\
@@ -151,7 +151,7 @@ int H5EbsdVolumeInfo::updateToLatestVersion()
 {
   invalidateCache();
   // Open the file with Read/Write access
-  hid_t fileId = H5Utilities::openFile(m_FileName(), false);
+  hid_t fileId = H5Utilities::openFile(m_FileName.toStdString(), false);
   if (fileId < 0)
   {
     //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
@@ -174,7 +174,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   int err = -1;
   m_ValuesAreCached = false;
   int retErr = 0;
-  hid_t fileId = H5Utilities::openFile(m_FileName(), true);
+  hid_t fileId = H5Utilities::openFile(m_FileName.toStdString(), true);
   if (fileId < 0)
   {
     //std::cout << "Error Opening file '" << m_FileName << "'" << std::endl;
@@ -185,7 +185,7 @@ int H5EbsdVolumeInfo::readVolumeInfo()
   m_FileVersion = 0;
   // Attempt to read the file version number. If it is not there that is OK as early h5ebsd
   // files did not have this information written.
-  err = H5Lite::readScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr(), m_FileVersion);
+  err = H5Lite::readScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr.toStdString(), m_FileVersion);
 
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZStartIndex, m_ZStart);
   EBSD_VOLREADER_READ_HEADER(fileId, Ebsd::H5::ZEndIndex, m_ZEnd);
@@ -205,26 +205,26 @@ int H5EbsdVolumeInfo::readVolumeInfo()
 
   m_Manufacturer = "";
   std::string data;
-  err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer(), data);
+  err = H5Lite::readStringDataset(fileId, Ebsd::H5::Manufacturer.toStdString(), data);
   if (err < 0)
   {
-    std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << Ebsd::H5::Manufacturer() << std::endl;
+    std::cout << "H5EbsdVolumeInfo Error: Could not load header value for " << Ebsd::H5::Manufacturer.toStdString() << std::endl;
     err = H5Utilities::closeFile(fileId);
     return err;
   }
-  m_Manufacturer = (data);
+  m_Manufacturer = QString::fromStdString(data);
 
   // Get the Number of Phases in the Material
   // DO NOT Use the accessor methods below to get variables. Directly access them otherwise you
   // will cause an infinite recursion to occur.
   QString index = QString::number(m_ZStart);
-  hid_t gid = H5Gopen(fileId, index().toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, index.toStdString().c_str(), H5P_DEFAULT);
   if (gid > 0)
   {
-    hid_t headerId = H5Gopen(gid, Ebsd::H5::Header().toLatin1().data(), H5P_DEFAULT);
+    hid_t headerId = H5Gopen(gid, Ebsd::H5::Header.toStdString().c_str(), H5P_DEFAULT);
     if (headerId > 0)
     {
-      hid_t phasesGid = H5Gopen(headerId, Ebsd::H5::Phases().toLatin1().data(), H5P_DEFAULT);
+      hid_t phasesGid = H5Gopen(headerId, Ebsd::H5::Phases.toStdString().c_str(), H5P_DEFAULT);
       if (phasesGid > 0)
       {
         std::list<std::string> names;

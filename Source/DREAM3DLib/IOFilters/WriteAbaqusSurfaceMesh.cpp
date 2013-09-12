@@ -106,7 +106,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  if (m_OutputFile.empty() == true)
+  if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);

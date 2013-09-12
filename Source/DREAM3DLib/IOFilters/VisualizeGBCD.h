@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
         for (int idx = 0; idx < npoints; ++idx)
         {
           d = idx * step + min;
-          MXA::Endian::FromSystemToBig::convert<float>(d);
+          DREAM3D::Endian::FromSystemToBig::convert<float>(d);
           data[idx] = d;
         }
         size_t totalWritten = fwrite(static_cast<void*>(data), sizeof(float), static_cast<size_t>(npoints), f);

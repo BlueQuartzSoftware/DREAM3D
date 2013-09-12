@@ -214,8 +214,8 @@ void SharedGrainFaceFilter::execute()
   for(QMap<uint64_t, int>::iterator iter = faceSizeMap.begin(); iter != faceSizeMap.end(); ++iter)
   {
     FaceIds_t v;
-    v.reserve((*iter).second);
-    index = faceIdMap[(*iter).first];
+    v.reserve(iter.value());
+    index = faceIdMap[iter.key()];
     faces[index] = v;
   }
 

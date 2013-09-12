@@ -36,7 +36,7 @@
 #include <H5Support/QH5Lite.h>
 
 #include <string.h>
-#include <QtCore/QString>
+#include <string>
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
@@ -69,7 +69,7 @@ void QH5Lite::disableErrorHandlers()
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::openId( hid_t loc_id, const QString& obj_name, H5O_type_t obj_type)
 {
-  return H5Lite::openId(loc_id, obj_name(), obj_type);
+  return H5Lite::openId(loc_id, obj_name.toStdString(), obj_type);
 
 }
 
@@ -86,7 +86,7 @@ herr_t QH5Lite::closeId( hid_t obj_id, int32_t obj_type )
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::findAttribute( hid_t loc_id, const QString& attrName )
 {
-  return H5Lite::findAttribute(loc_id, attrName());
+  return H5Lite::findAttribute(loc_id, attrName.toStdString());
 }
 
 // -----------------------------------------------------------------------------
@@ -94,7 +94,7 @@ herr_t QH5Lite::findAttribute( hid_t loc_id, const QString& attrName )
 // -----------------------------------------------------------------------------
 bool QH5Lite::datasetExists( hid_t loc_id, const QString& name )
 {
-  return H5Lite::datasetExists(loc_id, name());
+  return H5Lite::datasetExists(loc_id, name.toStdString());
 }
 
 // -----------------------------------------------------------------------------
@@ -105,7 +105,7 @@ herr_t  QH5Lite::writeStringDataset (hid_t loc_id,
                                      size_t size,
                                      const char* data)
 {
-  return H5Lite::writeStringDataset(loc_id, dsetName(), size, data);
+  return H5Lite::writeStringDataset(loc_id, dsetName.toStdString(), size, data);
 }
 
 // -----------------------------------------------------------------------------
@@ -113,7 +113,7 @@ herr_t  QH5Lite::writeStringDataset (hid_t loc_id,
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::writeStringDataset(hid_t loc_id, const QString& dsetName, const QString &data)
 {
-  return H5Lite::writeStringDataset(loc_id, dsetName(), data());
+  return H5Lite::writeStringDataset(loc_id, dsetName.toStdString(), data.toStdString());
 }
 
 // -----------------------------------------------------------------------------
@@ -128,7 +128,7 @@ herr_t QH5Lite::writeStringAttributes(hid_t loc_id,
   while (i.hasNext())
   {
     i.next();
-    err = H5Lite::writeStringAttribute(loc_id, objName(), i.key()(), i.value()());
+    err = H5Lite::writeStringAttribute(loc_id, objName.toStdString(), i.key().toStdString(), i.value().toStdString());
     if (err < 0)
     {
       return err;
@@ -146,7 +146,7 @@ herr_t  QH5Lite::writeStringAttribute(hid_t loc_id,
                                       hsize_t size,
                                       const char* data)
 {
-  return H5Lite::writeStringAttribute(loc_id, objName(), attrName(), size, data);
+  return H5Lite::writeStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), size, data);
 }
 
 
@@ -158,7 +158,7 @@ herr_t QH5Lite::writeStringAttribute(hid_t loc_id,
                                       const QString& attrName,
                                       const QString& data )
 {
-  return H5Lite::writeStringAttribute(loc_id, objName(), attrName(), data.size()+ 1, data.toAscii().data() );
+  return H5Lite::writeStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), data.size()+ 1, data.toAscii().data() );
 }
 
 // -----------------------------------------------------------------------------
@@ -167,8 +167,8 @@ herr_t QH5Lite::writeStringAttribute(hid_t loc_id,
 herr_t QH5Lite::readStringDataset(hid_t loc_id, const QString& dsetName, QString &data)
 {
   std::string readValue;
-  herr_t err = H5Lite::readStringDataset(loc_id, dsetName(), readValue);
-  data = (readValue);
+  herr_t err = H5Lite::readStringDataset(loc_id, dsetName.toStdString(), readValue);
+  data = QString::fromStdString(readValue);
   return err;
 }
 
@@ -179,7 +179,7 @@ herr_t QH5Lite::readStringDataset(hid_t loc_id,
                                   const QString &dsetName,
                                   char *data)
 {
-  return H5Lite::readStringDataset(loc_id, dsetName(), data);
+  return H5Lite::readStringDataset(loc_id, dsetName.toStdString(), data);
 }
 
 
@@ -191,8 +191,8 @@ herr_t QH5Lite::readStringAttribute(hid_t loc_id, const QString& objName, const 
                                     QString &data)
 {
   std::string sValue;
-  herr_t err = H5Lite::readStringAttribute(loc_id, objName(), attrName(), sValue);
-  data = (sValue);
+  herr_t err = H5Lite::readStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), sValue);
+  data = QString::fromStdString(sValue);
   return err;
 }
 
@@ -204,7 +204,7 @@ herr_t QH5Lite::readStringAttribute(hid_t loc_id,
                                     const QString& attrName,
                                     char *data)
 {
-  return H5Lite::readStringAttribute(loc_id, objName(), attrName(), data);
+  return H5Lite::readStringAttribute(loc_id, objName.toStdString(), attrName.toStdString(), data);
 }
 
 // -----------------------------------------------------------------------------
@@ -212,7 +212,7 @@ herr_t QH5Lite::readStringAttribute(hid_t loc_id,
 // -----------------------------------------------------------------------------
 herr_t QH5Lite::getDatasetNDims( hid_t loc_id, const QString& dsetName, hid_t &rank)
 {
-  return H5Lite::getDatasetNDims(loc_id, dsetName(), rank);
+  return H5Lite::getDatasetNDims(loc_id, dsetName.toStdString(), rank);
 }
 
 // -----------------------------------------------------------------------------
@@ -220,7 +220,7 @@ herr_t QH5Lite::getDatasetNDims( hid_t loc_id, const QString& dsetName, hid_t &r
 // -----------------------------------------------------------------------------
 hid_t QH5Lite::getAttributeNDims(hid_t loc_id, const QString& objName, const QString& attrName, hid_t &rank)
 {
-  return H5Lite::getAttributeNDims(loc_id, objName(), attrName(), rank);
+  return H5Lite::getAttributeNDims(loc_id, objName.toStdString(), attrName.toStdString(), rank);
 }
 
 
@@ -230,7 +230,7 @@ hid_t QH5Lite::getAttributeNDims(hid_t loc_id, const QString& objName, const QSt
 // -----------------------------------------------------------------------------
 hid_t QH5Lite::getDatasetType(hid_t loc_id, const QString &dsetName)
 {
-  return H5Lite::getDatasetType(loc_id, dsetName());
+  return H5Lite::getDatasetType(loc_id, dsetName.toStdString());
 }
 
 // -----------------------------------------------------------------------------
@@ -244,7 +244,7 @@ herr_t QH5Lite::getDatasetInfo( hid_t loc_id,
 {
   // Since this is a wrapper we need to pass a std::vector() then copy the values from that into our 'dims' argument
   std::vector<hsize_t> rDims;
-  herr_t err = H5Lite::getDatasetInfo(loc_id, dsetName(), rDims, classType, sizeType);
+  herr_t err = H5Lite::getDatasetInfo(loc_id, dsetName.toStdString(), rDims, classType, sizeType);
   dims.resize(rDims.size());
   for(std::vector<hsize_t>::size_type i = 0; i < rDims.size(); ++i)
   {
@@ -268,7 +268,7 @@ herr_t QH5Lite::getAttributeInfo(hid_t loc_id,
                                  hid_t &tid)
 {
   std::vector<hsize_t> rDims = dims.toStdVector();
-  herr_t err = H5Lite::getAttributeInfo(loc_id, objName(), attrName(), rDims,
+  herr_t err = H5Lite::getAttributeInfo(loc_id, objName.toStdString(), attrName.toStdString(), rDims,
                                          type_class, type_size, tid);
   dims.resize(rDims.size());
   for(std::vector<hsize_t>::size_type i = 0; i < rDims.size(); ++i)

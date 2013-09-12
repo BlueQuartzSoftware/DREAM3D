@@ -128,7 +128,7 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";

@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 
-#include <QtCore/QString>
+#include <string>
 
 #include <QtCore/QString>
 #include <QtCore/QDir>

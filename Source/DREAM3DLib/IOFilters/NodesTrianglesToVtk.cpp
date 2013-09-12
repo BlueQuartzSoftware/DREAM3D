@@ -146,7 +146,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   
 
-  if (m_TrianglesFile.empty() == true)
+  if (m_TrianglesFile.isEmpty() == true)
   {
     setErrorCondition(-1001);
     addErrorMessage(getHumanLabel(), "Triangles file is not set correctly", -1001);
@@ -162,7 +162,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_NodesFile.empty() == true)
+  if (m_NodesFile.isEmpty() == true)
   {
     setErrorCondition(-1002);
     addErrorMessage(getHumanLabel(), "Nodes file path or name is emtpy", -1002);
@@ -178,7 +178,7 @@ void NodesTrianglesToVtk::dataCheck(bool preflight, size_t voxels, size_t fields
     }
   }
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -285,9 +285,9 @@ void NodesTrianglesToVtk::execute()
         break;
     }
     if (m_WriteBinaryFile == true) {
-      MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
-      MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
-      MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
+      DREAM3D::Endian::FromSystemToBig::convert<float>(pos[0]);
+      DREAM3D::Endian::FromSystemToBig::convert<float>(pos[1]);
+      DREAM3D::Endian::FromSystemToBig::convert<float>(pos[2]);
       totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
       if (totalWritten != sizeof(float) * 3)
       {
@@ -320,10 +320,10 @@ void NodesTrianglesToVtk::execute()
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-      MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-      MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-      MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -331,7 +331,7 @@ void NodesTrianglesToVtk::execute()
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }
@@ -418,7 +418,7 @@ int NodesTrianglesToVtk::writeBinaryPointData(const QString &NodesFile, FILE* vt
         break;
     }
     swapped = nodeKind;
-    MXA::Endian::FromSystemToBig::convert<int>( swapped );
+    DREAM3D::Endian::FromSystemToBig::convert<int>( swapped );
     data[i] = swapped;
   }
   int totalWritten = fwrite( &(data.front()), sizeof(int), nNodes, vtkFile);
@@ -503,13 +503,13 @@ int NodesTrianglesToVtk::writeBinaryCellData(const QString &TrianglesFile, FILE*
     if (nread != 9) {
       return -1;
     }
-    MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+    DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
     tri_ids[i*offset] = tData[0];
-    MXA::Endian::FromSystemToBig::convert<int>(tData[7]);
+    DREAM3D::Endian::FromSystemToBig::convert<int>(tData[7]);
     cell_data[i*offset] = tData[7];
     if (false == conformalMesh)
     {
-      MXA::Endian::FromSystemToBig::convert<int>(tData[8]);
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[8]);
       cell_data[i*offset + 1] = tData[8];
       tri_ids[i*offset + 1] = tData[0];
     }

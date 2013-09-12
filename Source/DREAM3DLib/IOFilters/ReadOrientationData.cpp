@@ -142,7 +142,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     return;
   }
 
-  if (m_InputFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
     ss.str("");
     ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
@@ -155,7 +155,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (m_InputFile.empty() == false)
+  else if (m_InputFile.isEmpty() == false)
   {
     int64_t dims[3];
 

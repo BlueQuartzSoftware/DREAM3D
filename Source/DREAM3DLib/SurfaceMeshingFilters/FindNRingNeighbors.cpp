@@ -218,9 +218,9 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
       pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
-        MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
-        MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
-        MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
+        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[0]);
+        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[1]);
+        DREAM3D::Endian::FromSystemToBig::convert<float>(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -255,10 +255,10 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-      MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-      MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-      MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+      DREAM3D::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -266,7 +266,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert<int>(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }

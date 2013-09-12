@@ -61,7 +61,7 @@ class ManagedArrayOfArrays : public IDataArray
      */
     static Pointer CreateArray(size_t numElements, const QString &name)
     {
-      if (name.empty() == true)
+      if (name.isEmpty() == true)
       {
         return NullPointer();
       }

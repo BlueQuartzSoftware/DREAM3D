@@ -83,7 +83,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key() << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
@@ -130,7 +130,7 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     }
 
     void print(std::ostream &out) {
-      out << m_key() << "  " << m_value() << std::endl;
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
     }
 
     QString getValue() { return m_value; }

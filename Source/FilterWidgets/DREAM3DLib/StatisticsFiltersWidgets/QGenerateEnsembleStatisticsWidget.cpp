@@ -90,7 +90,7 @@ void QGenerateEnsembleStatisticsWidget::getGuiParametersFromFilter(AbstractFilte
   m_SizeCorrRes->setValue( filter->getSizeCorrelationResolution() );
 
   QVector<unsigned int> phaseTypes = filter->getPhaseTypeArray();
-  if (phaseTypes.empty() == true)
+  if (phaseTypes.isEmpty() == true)
   {
     m_DefinePhaseTypes->setChecked(false);
   }

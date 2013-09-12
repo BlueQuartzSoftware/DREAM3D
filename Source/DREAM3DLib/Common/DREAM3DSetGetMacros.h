@@ -459,7 +459,7 @@ void set##name##Pointer(type* f)\
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    QString outpath = m_OutputDirectory + QDir::Separator + m_OutputFilePrefix + filename;
+    QString outpath = m_OutputDirectory + "/" + m_OutputFilePrefix + filename;
 
 
 // -----------------------------------------------------------------------------
@@ -473,21 +473,21 @@ namespace DREAM3D
   class bad_lexical_cast : public std::runtime_error {
   public:
     bad_lexical_cast(const QString& s)
-      : std::runtime_error(s())
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
     bad_any_cast(const QString& s)
-      : std::runtime_error(s())
+      : std::runtime_error(s.toStdString())
     { }
   };
 
   template<typename T>
   T lexical_cast(const QString &s)
   {
-    std::istringstream i(s());
+    std::istringstream i(s.toStdString());
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

@@ -223,7 +223,7 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
 
-  if(m_ScalarArrayName.empty() == true)
+  if(m_ScalarArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());

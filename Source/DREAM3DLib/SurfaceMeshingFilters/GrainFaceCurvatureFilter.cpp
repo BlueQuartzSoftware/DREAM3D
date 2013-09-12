@@ -394,7 +394,7 @@ void GrainFaceCurvatureFilter::execute()
 
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
-    SharedGrainFaceFilter::FaceIds_t& triangleIds = (*iter).second;
+    SharedGrainFaceFilter::FaceIds_t& triangleIds = iter.value();
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {

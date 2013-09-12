@@ -571,7 +571,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   getLabelTriangelMap(trianglesToLabelMap);
   //  for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
   //  {
-  //    qDebug() << "Grain: " << (*iter).first << "   Face Count: " << (*iter).second.size() << "\n";
+  //    qDebug() << "Grain: " << iter.key() << "   Face Count: " << iter.value().size() << "\n";
   //  }
 
 
@@ -580,9 +580,9 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   // Find the first Non Zero Grain Id (Label). This is going to be our starting grain.
   for(LabelFaceMap_t::iterator iter = trianglesToLabelMap.begin(); iter != trianglesToLabelMap.end(); ++iter)
   {
-    if ( (*iter).first > 0)
+    if ( iter.key() > 0)
     {
-      currentLabel = (*iter).first;
+      currentLabel = iter.key();
       break;
     }
   }
@@ -621,7 +621,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   
 
   // Start looping on all the Face Labels (Grain Ids) values
-  while (labelObjectsToVisit.empty() == false)
+  while (labelObjectsToVisit.isEmpty() == false)
   {
     if (getCancel() == true) { return -1; }
     if ( (progressIndex/total * 100.0f) > (curPercent) )
@@ -669,7 +669,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     //FaceArray::Face_t& triangle = triangles[triIndex];
     triangleDeque.push_back(triIndex);
 
-    while (triangleDeque.empty() == false)
+    while (triangleDeque.isEmpty() == false)
     {
       int32_t triangleIndex = triangleDeque.front();
       FaceArray::Face_t& triangle = triangles[triangleIndex];

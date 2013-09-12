@@ -125,7 +125,7 @@ void FieldDataCSVWriter::preflight()
   setErrorCondition(0);
   
 
-  if (getFieldDataFile().empty() == true)
+  if (getFieldDataFile().isEmpty() == true)
   {
     ss <<  ": The output file must be set before executing this filter.";
     addErrorMessage(getHumanLabel(), ss.str(), -1);

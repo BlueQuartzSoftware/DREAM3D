@@ -149,7 +149,7 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
   VolumeDataContainer* m = getVolumeDataContainer();
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 
-  if(m_SelectedFieldArrayName.empty() == true)
+  if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     notifyErrorMessage("An array from the Voxel Data Container must be selected.", getErrorCondition());

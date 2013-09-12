@@ -130,7 +130,7 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  if (getInputFile().empty() == true)
+  if (getInputFile().isEmpty() == true)
   {
     ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
