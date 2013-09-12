@@ -1,4 +1,4 @@
- /* ============================================================================
+/* ============================================================================
  * Copyright (c) 2011 Michael A. Jackson (BlueQuartz Software)
  * Copyright (c) 2011 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
@@ -45,13 +45,13 @@
 //
 // -----------------------------------------------------------------------------
 RenumberGrains::RenumberGrains() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_GrainIds(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_GrainIds(NULL),
+  m_Active(NULL)
 {
-//  setupFilterParameters();
+  //  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void RenumberGrains::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-////!!##
+  ////!!##
   reader->closeFilterGroup();
 }
 
@@ -106,12 +106,12 @@ void RenumberGrains::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
 
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, -306, bool, BoolArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, -306, bool, BoolArrayType, fields, 1)
 }
 
 
@@ -133,9 +133,9 @@ void RenumberGrains::preflight()
   QList<QString> headers = m->getFieldArrayNameList();
   for (QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
-      IDataArray::Pointer p = m->getCellFieldData(*iter);
-	  QString type = p->getTypeAsString();
-      if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
+    IDataArray::Pointer p = m->getCellFieldData(*iter);
+    QString type = p->getTypeAsString();
+    if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
   }
 }
 
@@ -162,14 +162,16 @@ void RenumberGrains::execute()
     return;
   }
 
-  
+
   size_t goodcount = 1;
-  QVector<size_t> NewNames;
+  QString ss;
+  size_t goodcount = 1;
+  std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);
 
-  ss.str("");
-  ss << " - Generating Active Grain List";
-  notifyStatusMessage(ss.str());
+
+  ss = QObject::tr(" - Generating Active Grain List");
+  notifyStatusMessage(ss);
   QVector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
   {
@@ -197,7 +199,7 @@ void RenumberGrains::execute()
       //ss << " with NumTuples: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents();
       ss << "Updating Field Array '" << *iter << "'";
       notifyStatusMessage(ss.str());
-	  QString type = p->getTypeAsString();
+      QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0) { m->removeCellFieldData(*iter);}
       else {p->EraseTuples(RemoveList);}
       //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents() << "\n" << "\n";
