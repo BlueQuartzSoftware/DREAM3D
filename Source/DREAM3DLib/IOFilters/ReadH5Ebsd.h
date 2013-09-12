@@ -86,6 +86,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseNameArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MaterialNameArrayName)
 
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeFaceArrays)
@@ -108,7 +109,6 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexEnsembleArrays)
 
-
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
     DREAM3D_INSTANCE_PROPERTY(int, ZStartIndex)
@@ -130,7 +130,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -142,6 +142,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
      */
     virtual void execute();
     virtual void preflight();
+
 
     virtual void setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
                                                              QSet<QString> selectedEdgeArrays,
