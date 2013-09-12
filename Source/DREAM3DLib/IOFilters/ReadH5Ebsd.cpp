@@ -40,7 +40,6 @@
 #include <sstream>
 
 #include "EbsdLib/H5EbsdVolumeInfo.h"
-#include "EbsdLib/TSL/AngDirectoryPatterns.h"
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
 #include "EbsdLib/HEDM/MicFields.h"

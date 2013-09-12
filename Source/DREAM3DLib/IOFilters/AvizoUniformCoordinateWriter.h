@@ -136,7 +136,7 @@ class DREAM3DLib_EXPORT AvizoUniformCoordinateWriter : public AbstractFilter
      * @param writer The MXAFileWriter object
      * @return Error code
      */
-    int writeData(MXAFileWriter64 &writer);
+    int writeData(QDataStream &writer);
 
   private:
     int32_t* m_GrainIds;
