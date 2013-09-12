@@ -135,7 +135,7 @@ bool VolumeDataContainer::renameCellData(const QString &oldname, const QString &
   it =  m_CellData.find(oldname);
   if ( it == m_CellData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = it.value();
   p->SetName(newname);
@@ -160,7 +160,7 @@ QList<QString> VolumeDataContainer::getCellArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellData.begin(); iter != m_CellData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key() );
   }
   return keys;
 }
@@ -230,7 +230,7 @@ bool VolumeDataContainer::renameCellFieldData(const QString &oldname, const QStr
   it =  m_CellFieldData.find(oldname);
   if ( it == m_CellFieldData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = it.value();
   p->SetName(newname);
@@ -255,7 +255,7 @@ QList<QString> VolumeDataContainer::getCellFieldArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back(iter.key());
   }
   return keys;
 }
@@ -276,8 +276,8 @@ void VolumeDataContainer::resizeCellFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellFieldData.begin(); iter != m_CellFieldData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumCellFieldTuples = size;
@@ -347,7 +347,7 @@ QList<QString> VolumeDataContainer::getCellEnsembleArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_CellEnsembleData.begin(); iter != m_CellEnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back(iter.key());
   }
   return keys;
 }

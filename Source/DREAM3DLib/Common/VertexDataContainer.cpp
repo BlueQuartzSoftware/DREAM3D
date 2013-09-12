@@ -135,7 +135,7 @@ QList<QString> VertexDataContainer::getVertexArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexData.begin(); iter != m_VertexData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -210,7 +210,7 @@ QList<QString> VertexDataContainer::getVertexFieldArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -231,8 +231,8 @@ void VertexDataContainer::resizeVertexFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexFieldData.begin(); iter != m_VertexFieldData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumVertexFieldTuples = size;
@@ -300,7 +300,7 @@ QList<QString> VertexDataContainer::getVertexEnsembleArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -321,8 +321,8 @@ void VertexDataContainer::resizeVertexEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_VertexEnsembleData.begin(); iter != m_VertexEnsembleData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumVertexEnsembleTuples = size;

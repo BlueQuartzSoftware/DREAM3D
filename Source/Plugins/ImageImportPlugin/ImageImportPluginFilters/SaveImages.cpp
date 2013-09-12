@@ -156,7 +156,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
 
-  if (m_OutputPath.empty() == true)
+  if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
@@ -169,7 +169,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if(m_ColorsArrayName.empty() == true)
+  if(m_ColorsArrayName.isEmpty() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "Input  Color Array name is empty", getErrorCondition());

@@ -62,7 +62,7 @@
        * and readFile methods unless special setups are needed.
        */
       virtual void execute();
-
+#if 0
       /**
       * @brief This function parses 3 floating point values from a comma delimited string
       * @param input
@@ -117,6 +117,7 @@
       * @param delimiters
       */
      void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ");
+#endif
 
     protected:
      FileReader();

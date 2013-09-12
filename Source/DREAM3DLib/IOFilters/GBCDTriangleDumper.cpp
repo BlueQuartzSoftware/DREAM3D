@@ -116,7 +116,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   setErrorCondition(0);
   
 
-  if(getOutputFile().empty() == true)
+  if(getOutputFile().isEmpty() == true)
   {
     ss.str("");
     ss << ClassName() << " needs the Output File Set and it was not.";

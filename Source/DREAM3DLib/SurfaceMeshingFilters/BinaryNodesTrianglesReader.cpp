@@ -129,7 +129,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
-  if (getBinaryNodesFile().empty() == true)
+  if (getBinaryNodesFile().isEmpty() == true)
   {
     
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
@@ -137,7 +137,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if (getBinaryNodesFile().empty() == true)
+  if (getBinaryNodesFile().isEmpty() == true)
   {
     
     ss << ClassName() << " needs the Binary Nodes File path set and it was not.";

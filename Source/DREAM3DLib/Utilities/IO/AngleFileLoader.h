@@ -77,13 +77,11 @@ class DREAM3DLib_EXPORT AngleFileLoader
     DREAM3D_INSTANCE_PROPERTY(bool, OutputAnglesInDegrees)
     DREAM3D_INSTANCE_PROPERTY(uint32_t, AngleRepresentation)
     DREAM3D_INSTANCE_STRING_PROPERTY(Delimiter)
-
-
-
+    DREAM3D_INSTANCE_PROPERTY(bool, IgnoreMultipleDelimiters)
 
 
     FloatArrayType::Pointer loadData();
-    QVector<QString> tokenize(char* buf, const char* delimiter);
+
 
   protected:
     AngleFileLoader();

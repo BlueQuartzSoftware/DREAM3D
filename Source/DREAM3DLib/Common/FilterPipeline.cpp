@@ -169,7 +169,7 @@ size_t FilterPipeline::size()
 // -----------------------------------------------------------------------------
 bool FilterPipeline::empty()
 {
-  return m_Pipeline.empty();
+  return m_Pipeline.isEmpty();
 }
 
 // -----------------------------------------------------------------------------
@@ -247,7 +247,7 @@ int FilterPipeline::preflightPipeline()
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-  
+
   int err = 0;
 
   // Start looping through the Pipeline and preflight everything
@@ -329,27 +329,26 @@ void FilterPipeline::execute()
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-  
+
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   DEFINE_CLOCK;
   START_CLOCK;
   PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
+  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
     progValue.setMessageType(PipelineMessage::StatusValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     sendPipelineMessage(progValue);
-    //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
 
-    ss.str("");
-    ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
-  //  qDebug() << ss.str() << "\n";
+    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
+
     progValue.setMessageType(PipelineMessage::StatusMessage);
-    progValue.setMessageText(ss.str());
+    progValue.setMessageText(ss);
     sendPipelineMessage(progValue);
-    (*iter)->setMessagePrefix(ss.str());
+    (*iter)->setMessagePrefix(ss);
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setVolumeDataContainer(dataContainer.get());
     (*iter)->setSurfaceDataContainer(sm.get());
@@ -375,9 +374,8 @@ void FilterPipeline::execute()
     {
       break;
     }
-    ss.str("");
-     ss << (*iter)->getNameOfClass() << " Filter Complete";
-    END_CLOCK(ss.str());
+    ss = QObject::tr("%1 Filter Complete").arg((*iter)->getNameOfClass());
+    END_CLOCK(ss);
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
@@ -387,12 +385,12 @@ void FilterPipeline::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterPipeline::printFilterNames(std::ostream &out)
+void FilterPipeline::printFilterNames(QTextStream &out)
 {
-  out << "---------------------------------------------------------------------" << "\n";
+  out << "---------------------------------------------------------------------" ;
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    out << (*iter)->getNameOfClass() << "\n";
+    out << (*iter)->getNameOfClass() ;
   }
-  out << "---------------------------------------------------------------------" << "\n";
+  out << "---------------------------------------------------------------------" ;
 }

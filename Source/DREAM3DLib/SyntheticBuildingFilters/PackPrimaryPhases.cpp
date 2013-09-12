@@ -396,7 +396,7 @@ void PackPrimaryPhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
   {
     
     ss << ClassName() << " needs the Csv Output File Set and it was not.";
@@ -415,7 +415,7 @@ void PackPrimaryPhases::execute()
 
   bool writeErrorFile = true;
   std::ofstream outFile;
-  if(m_ErrorOutputFile.empty() == false)
+  if(m_ErrorOutputFile.isEmpty() == false)
   {
     outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
     writeErrorFile = true;
@@ -1023,7 +1023,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
-  if(m_VtkOutputFile.empty() == false)
+  if(m_VtkOutputFile.isEmpty() == false)
   {
     err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
     if(err < 0)

@@ -193,7 +193,7 @@ int main(int argc, char **argv)
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete()());
+    TCLAP::CmdLine cmd("ResFixer", ' ', DREAM3DLib::Version::Complete().toStdString());
 
     TCLAP::ValueArg<float> xres( "x", "xres", "New X Resolution", true, 0.0f, "New X Resolution");
     cmd.add(xres);
@@ -222,25 +222,25 @@ int main(int argc, char **argv)
     std::cout << "New X Step: " << xres.getValue() << std::endl;
     std::cout << "New Y Step: " << yres.getValue() << std::endl;
 
-    QDir dir((outputDir.getValue()));
+    QDir dir(QString::fromStdString(outputDir.getValue()));
     if (dir.exists() == false)
     {
       dir.mkpath(".");
     }
 
-    QDir inputD( (inputDir.getValue()));
+    QDir inputD( QString::fromStdString(inputDir.getValue()));
     QStringList entryList = inputD.entryList();
     foreach(QString file, entryList)
     {
       QFileInfo fi(file);
       if (fi.suffix().compare("ang") == 0 )
       {
-        std::cout << "Fixing file " << file() << std::endl;
+        std::cout << "Fixing file " << file.toStdString() << std::endl;
         AngResFixer fixer;
-        fixer.setFileName( (inputDir.getValue()) + "/" + fi.fileName() );
+        fixer.setFileName( QString::fromStdString(inputDir.getValue()) + "/" + fi.fileName() );
         fixer.setXStepFix(xres.getValue());
         fixer.setYStepFix(yres.getValue());
-        QString outFile = (outputDir.getValue()) + "/" + fi.fileName();
+        QString outFile = QString::fromStdString(outputDir.getValue()) + "/" + fi.fileName();
         fixer.setOutputFileName(outFile);
         fixer.fixFile();
         std::cout << "   + Complete" << std::endl;

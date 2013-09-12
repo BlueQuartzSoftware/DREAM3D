@@ -161,7 +161,7 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
   VolumeDataContainer* m = getVolumeDataContainer();
 
 
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);

@@ -114,7 +114,7 @@ int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  if (m_OutputStlDirectory.empty() == true)
+  if (m_OutputStlDirectory.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);

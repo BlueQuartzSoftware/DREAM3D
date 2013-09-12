@@ -212,7 +212,7 @@ void Hex2SqrConverter::execute()
         else
         {
             QString origHeader = reader.getOriginalHeader();
-            if (origHeader.empty() == true)
+            if (origHeader.isEmpty() == true)
             {
               ss.str();
               ss << "Header could not be retrieved: " << ebsdFName;

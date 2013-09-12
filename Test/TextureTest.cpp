@@ -37,7 +37,7 @@
 
 #include <iostream>
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 

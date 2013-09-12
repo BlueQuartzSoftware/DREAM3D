@@ -103,14 +103,12 @@ int GenerateEulerColors::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateEulerColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
-    ss.str("");
-    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
 
@@ -140,7 +138,7 @@ void GenerateEulerColors::preflight()
 void GenerateEulerColors::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)

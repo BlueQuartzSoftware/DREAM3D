@@ -155,8 +155,8 @@ void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFaceTuples = size;
@@ -224,7 +224,7 @@ QList<QString> SurfaceDataContainer::getFaceFieldArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -245,8 +245,8 @@ void SurfaceDataContainer::resizeFaceFieldDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceFieldData.begin(); iter != m_FaceFieldData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFaceFieldTuples = size;
@@ -314,7 +314,7 @@ QList<QString> SurfaceDataContainer::getFaceEnsembleArrayNameList()
   QList<QString> keys;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceEnsembleData.begin(); iter != m_FaceEnsembleData.end(); ++iter)
   {
-    keys.push_back( (*iter).first);
+    keys.push_back( iter.key());
   }
   return keys;
 }
@@ -335,8 +335,8 @@ void SurfaceDataContainer::resizeFaceEnsembleDataArrays(size_t size)
  // int success = 0;
   for(QMap<QString, IDataArray::Pointer>::iterator iter = m_FaceEnsembleData.begin(); iter != m_FaceEnsembleData.end(); ++iter)
   {
-    //qDebug() << "Resizing Array '" << (*iter).first << "' : " << success << "\n";
-    IDataArray::Pointer d = (*iter).second;
+    //qDebug() << "Resizing Array '" << iter.key() << "' : " << success << "\n";
+    IDataArray::Pointer d = iter.value();
     d->Resize(size);
   }
   m_NumFaceEnsembleTuples = size;

@@ -194,7 +194,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
-  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
     fprintf(f, "  %s/%s.h\n*/\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
@@ -212,7 +212,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
-  if (FILTER_INCLUDE_PREFIX().empty() == true) {
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
     fprintf(f, "#include \"%s/%s.h\"\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
@@ -243,7 +243,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
     QString prop = opt->getPropertyName();
     QString typ = opt->getValueType();
 
-    if (opt->getCastableValueType().empty() == false)
+    if (opt->getCastableValueType().isEmpty() == false)
     {
       QString cType = opt->getCastableValueType();
       fprintf(f, "  private:\n");
@@ -508,7 +508,7 @@ void createSourceFile( const QString &group,
   fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "* If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "* The code generated is based off values from the filter located at\n");
-  if(FILTER_INCLUDE_PREFIX().empty() == true)
+  if(FILTER_INCLUDE_PREFIX().isEmpty() == true)
   {
     fprintf(f, "* %s/%s.h\n*/\n", group.toLatin1().data(), filter.toLatin1().data());
   }
@@ -787,7 +787,7 @@ else
     QString prop = opt->getPropertyName();
     QString typ = opt->getValueType();
 
-    if(opt->getCastableValueType().empty() == false)
+    if(opt->getCastableValueType().isEmpty() == false)
     {
       QString cType = opt->getCastableValueType();
 
