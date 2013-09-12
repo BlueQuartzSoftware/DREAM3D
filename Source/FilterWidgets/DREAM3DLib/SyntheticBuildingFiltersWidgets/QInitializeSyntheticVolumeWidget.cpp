@@ -281,7 +281,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       reader->setReadSurfaceData(false);
       reader->setReadEdgeData(false);
       reader->setReadVertexData(false);
-      reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+      reader->setSelectedVolumeCellEnsembleArrays(selectedArrays);
       reader->setReadAllArrays(false);
       reader->execute();
       int err = reader->getErrorCondition();

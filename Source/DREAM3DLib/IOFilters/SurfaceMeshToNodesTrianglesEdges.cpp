@@ -335,8 +335,7 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   size_t numTriangles = triangles->getNumberOfTuples();
   fprintf(triFile, "%lu\n", numTriangles);
-  StructArray<FaceArray::Face_t>* ts = DREAM3D::Mesh::FaceList_t::SafePointerDownCast(triangles.get());
-  FaceArray::Face_t* t = ts->getPointer(0);
+  FaceArray::Face_t* t = triangles->getPointer(0);
 
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);

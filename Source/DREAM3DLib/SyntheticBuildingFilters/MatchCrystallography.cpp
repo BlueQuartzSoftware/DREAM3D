@@ -254,7 +254,7 @@ void MatchCrystallography::execute()
   determine_boundary_areas();
 
 
-  size_t size = m->getNumEnsembleTuples();
+  size_t size = m->getNumCellEnsembleTuples();
   for (size_t i = 1; i < size; ++i)
   {
     if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase ||  m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
