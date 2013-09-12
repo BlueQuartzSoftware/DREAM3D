@@ -105,7 +105,7 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
   {
     sqCoord[0] = 0.0; sqCoord[1] = 0.0;
     //get coordinates in square projection of crystal normal parallel to boundary normal
-    nhCheck = squareProj->getSquareCoord(coords->GetPointer(i * 3), sqCoord);
+    nhCheck = squareProj->getSquareCoord(coords->getPointer(i * 3), sqCoord);
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
     fprintf(f, "%f %f 0\n", sqCoord[0], sqCoord[1]);
 #endif
@@ -347,8 +347,8 @@ void ModifiedLambertProjection::normalizeSquares()
   double nTotal = 0;
   double sTotal = 0;
 
-  double* north = m_NorthSquare->GetPointer(0);
-  double* south = m_SouthSquare->GetPointer(0);
+  double* north = m_NorthSquare->getPointer(0);
+  double* south = m_SouthSquare->getPointer(0);
 
   // Get the Sum of all the bins
   for(size_t i = 0; i < npoints; ++i)
@@ -376,8 +376,8 @@ void ModifiedLambertProjection::normalizeSquaresToMRD()
   // First Normalize the squares
   normalizeSquares();
   size_t npoints = m_NorthSquare->getNumberOfTuples();
-  double* north = m_NorthSquare->GetPointer(0);
-  double* south = m_SouthSquare->GetPointer(0);
+  double* north = m_NorthSquare->getPointer(0);
+  double* south = m_SouthSquare->getPointer(0);
   int dimSqrd = m_Dimension * m_Dimension;
 
   // Multiply Each Bin by the total number of bins
@@ -408,7 +408,7 @@ void ModifiedLambertProjection::createStereographicProjection(int dim, DoubleArr
   bool nhCheck = false;
 
   stereoIntensity->initializeWithZeros();
-  double* intensity = stereoIntensity->GetPointer(0);
+  double* intensity = stereoIntensity->getPointer(0);
   int sqIndex = 0;
 
   for (int64_t y = 0; y < ypoints; y++)

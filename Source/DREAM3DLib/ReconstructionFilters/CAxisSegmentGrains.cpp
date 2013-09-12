@@ -234,7 +234,7 @@ void CAxisSegmentGrains::execute()
     generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
-    int32_t* gid = rndNumbers->GetPointer(0);
+    int32_t* gid = rndNumbers->getPointer(0);
     gid[0] = 0;
     QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);

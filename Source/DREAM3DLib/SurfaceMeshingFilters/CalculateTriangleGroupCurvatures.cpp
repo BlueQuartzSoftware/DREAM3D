@@ -96,7 +96,7 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
   size_t count = data->getNumberOfTuples();
   for(size_t i = 0; i < count; ++i)
   {
-    double* ptr = data->GetPointer(i*3);
+    double* ptr = data->getPointer(i*3);
     ptr[0] = ptr[0] - v[0];
     ptr[1] = ptr[1] - v[1];
     ptr[2] = ptr[2] - v[2];
@@ -112,11 +112,11 @@ void CalculateTriangleGroupCurvatures::operator() const
 
   // Get the Triangles Array
 //  FaceArray::Pointer trianglesPtr = m_SurfaceDataContainer->getFaces();
-//  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0);
+//  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   IDataArray::Pointer flPtr = m_SurfaceDataContainer->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
-  int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
+  int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Instantiate a FindNRingNeighbors class to use during the loop
   FindNRingNeighbors::Pointer nRingNeighborAlg = FindNRingNeighbors::New();
@@ -175,8 +175,8 @@ void CalculateTriangleGroupCurvatures::operator() const
     DREAM3D::Mesh::UniqueFaceIds_t triPatch = nRingNeighborAlg->getNRingTriangles();
     BOOST_ASSERT(triPatch.size() > 1);
 
-    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->GetPointer(0), QString("Patch_Centroids"));
-    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->GetPointer(0), QString("Patch_Normals"));
+    DataArray<double>::Pointer patchCentroids = extractPatchData(triId, triPatch, centroids->getPointer(0), QString("Patch_Centroids"));
+    DataArray<double>::Pointer patchNormals = extractPatchData(triId, triPatch, normals->getPointer(0), QString("Patch_Normals"));
 
     // Translate the patch to the 0,0,0 origin
     double sub[3] = {patchCentroids->GetComponent(0,0),patchCentroids->GetComponent(0,1), patchCentroids->GetComponent(0,2)};
@@ -207,13 +207,13 @@ void CalculateTriangleGroupCurvatures::operator() const
     // Transform all centroids and normals to new coordinate system
     for(size_t m = 0; m < patchCentroids->getNumberOfTuples(); ++m)
     {
-      ::memcpy(out, patchCentroids->GetPointer(m*3), 3*sizeof(double));
-      MatrixMath::Multiply3x3with3x1(rot, patchCentroids->GetPointer(m*3), out);
-      ::memcpy(patchCentroids->GetPointer(m*3), out, 3*sizeof(double));
+      ::memcpy(out, patchCentroids->getPointer(m*3), 3*sizeof(double));
+      MatrixMath::Multiply3x3with3x1(rot, patchCentroids->getPointer(m*3), out);
+      ::memcpy(patchCentroids->getPointer(m*3), out, 3*sizeof(double));
 
-      ::memcpy(out, patchNormals->GetPointer(m*3), 3*sizeof(double));
-      MatrixMath::Multiply3x3with3x1(rot, patchNormals->GetPointer(m*3), out);
-      ::memcpy(patchNormals->GetPointer(m*3), out, 3*sizeof(double));
+      ::memcpy(out, patchNormals->getPointer(m*3), 3*sizeof(double));
+      MatrixMath::Multiply3x3with3x1(rot, patchNormals->getPointer(m*3), out);
+      ::memcpy(patchNormals->getPointer(m*3), out, 3*sizeof(double));
 
       // We rotate the normals now but we dont use them yet. If we start using part 3 of Goldfeathers paper then we
       // will need the normals.
@@ -298,11 +298,11 @@ void CalculateTriangleGroupCurvatures::operator() const
         // Rotate our principal directions back into the original coordinate system
         Eigen::Vector3d dir1 ( eVectors.col(0)(0),  eVectors.col(0)(1), 0.0 );
         dir1 = e_rot_T * dir1;
-        ::memcpy(m_PrincipleDirection1->GetPointer(triId * 3), dir1.data(), 3*sizeof(double) );
+        ::memcpy(m_PrincipleDirection1->getPointer(triId * 3), dir1.data(), 3*sizeof(double) );
 
         Eigen::Vector3d dir2 ( eVectors.col(1)(0),  eVectors.col(1)(1), 0.0 );
         dir2 = e_rot_T * dir2;
-        ::memcpy(m_PrincipleDirection2->GetPointer(triId * 3), dir2.data(), 3*sizeof(double) );
+        ::memcpy(m_PrincipleDirection2->getPointer(triId * 3), dir2.data(), 3*sizeof(double) );
       }
     }
 

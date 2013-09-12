@@ -503,7 +503,7 @@ void M3CSliceBySlice::execute()
 
   DataArray<int32_t>::Pointer voxelsPtr = DataArray<int32_t>::CreateArray( 2 * NSP + 1, 1, "M3CSliceBySlice_Working_Voxels");
   voxelsPtr->initializeWithValues(-3);
-  int32_t* voxels = voxelsPtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
 
   StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr = StructArray<SurfaceMesh::M3C::Neighbor>::CreateArray(2*NSP+1, "M3CSliceBySlice_SurfaceMesh::M3C::Neighbor_Array");
   neighborsPtr->initializeWithZeros();
@@ -834,8 +834,8 @@ void M3CSliceBySlice::get_neighbor_list(int NSP, int NS, int wrappedDims[],
   int i, j, k, r; // position indices...
   int site_id; // id number for each site...
 
-  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
-  int32_t* csiteid = neighborCSiteIdPtr->GetPointer(0);
+  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
+  int32_t* csiteid = neighborCSiteIdPtr->getPointer(0);
   int xDim = wrappedDims[0];
 
 
@@ -939,10 +939,10 @@ void M3CSliceBySlice::initialize_nodes(int NSP, int zID, int* wrappedDims, float
   float yRes = res[1];
   float zRes = res[2];
 
-  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
-  int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
-  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->getPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
+  int8_t* nodeKind = cVertexNodeTypePtr->getPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
 
   // Node id starts with 0....
   if (zID > 0)
@@ -1022,8 +1022,8 @@ void M3CSliceBySlice::initialize_squares(int zID, int NSP,
   int i, j;
   int csite;
 
-  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->GetPointer(0);
-  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
+  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->getPointer(0);
+  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
 
   // square id starts with 0....
   // notice that point at the surface will have the wrong values of Node at the other end...
@@ -1097,9 +1097,9 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
   int    edgeResizeCount = 0;
 
 
-  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->GetPointer(0);
-  int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
+  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->getPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
 
   for (k = 0; k < 3 * 2 * NSP; k++)
   { // for each square...
@@ -1161,7 +1161,7 @@ size_t M3CSliceBySlice::get_nodes_Edges(int NSP, int zID, int* wrappedDims,
                   //qDebug() << "cEdgePtr->Resize(" <<currentEdgeArraySize << ")" << "\n";
                 }
 
-                SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+                SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
                 cEdge[eid].node_id[0] = NodeID[0]; // actual Node ids for each edge...
                 cEdge[eid].node_id[1] = NodeID[1];
                 cEdge[eid].nSpin[0] = pixgrainname[0];
@@ -1269,8 +1269,8 @@ StructArray<SurfaceMesh::M3C::Neighbor>::Pointer neighborsPtr)
   min = 1000;
   minid = -1;
 
-  int32_t* voxels = voxelsPtr->GetPointer(0);
-  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
+  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
 
   for (k = 0; k < 4; k++)
   {
@@ -1396,7 +1396,7 @@ DataArray<int32_t>::Pointer voxelsPtr)
 {
   int i;
   int pixTemp, tempgrainname;
-  int32_t* voxels = voxelsPtr->GetPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
   for (i = 0; i < 2; i++)
   {
     pixTemp = pID[i];
@@ -1502,9 +1502,9 @@ int M3CSliceBySlice::get_triangles(int NSP, int* wrappedDims,
   int tidIn, tidOut;
   int arrayFC[6];
 
-  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->GetPointer(0);
-  int32_t* voxels = voxelsPtr->GetPointer(0);
-  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
+  SurfaceMesh::M3C::Face* cSquare = cSquarePtr->getPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
   // Reset these variables each time into this loop.
   Detail::triangleResize = 1000;
   Detail::triangleResizeCount = 0;
@@ -1723,7 +1723,7 @@ void M3CSliceBySlice::get_case0_triangles(int site, int *ae, int nedge,
   SharedIntArray_t burnt_list_ptr(new int[nedge]);
   burnt_list = burnt_list_ptr.get();
 
-  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   // initialize burn flags for SurfaceMesh::M3C::Face edges...
   for (ii = 0; ii < nedge; ii++)
@@ -1921,7 +1921,7 @@ void M3CSliceBySlice::get_case_triangles_helper(int nedge, int* burnt, int* burn
   int chaser;
   int cnode1, cnode2;
   int ce;
-  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   // initialize burn flags for SurfaceMesh::M3C::Face edges...
   for (int ii = 0; ii < nedge; ii++)
@@ -2047,7 +2047,7 @@ void M3CSliceBySlice::get_case_triangles_helper_2(int* burnt_loop, int* burnt_li
   int tnode;
   int tgrainname;
 
-  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   int startEdge = burnt_list[from];
   burnt_loop[0] = startEdge;
@@ -2181,7 +2181,7 @@ void M3CSliceBySlice::get_case2_triangles(int site, int* ae, int nedge, int* afc
   SharedIntArray_t burnt_list_ptr(new int[nedge]);
   burnt_list = burnt_list_ptr.get();
 
-  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   get_case_triangles_helper(nedge, burnt, burnt_list, loopID, ae, cEdgePtr, countVec);
   count = &(countVec.front());
@@ -2375,7 +2375,7 @@ void M3CSliceBySlice::get_caseM_triangles(int site, int *ae, int nedge, int *afc
   SharedIntArray_t burnt_list_ptr(new int[nedge]);
   burnt_list = burnt_list_ptr.get();
 
-  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Segment* cEdge = cEdgePtr->getPointer(0);
 
   get_case_triangles_helper(nedge, burnt, burnt_list, loopID, ae, cEdgePtr, countVec);
   count = &(countVec.front());
@@ -2506,10 +2506,10 @@ void M3CSliceBySlice::arrange_grainnames(int numT, int zID, int NSP, int* wrappe
   int shift = (zID * NSP);
   int locale;
 
-  SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->GetPointer(0);
-  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
-  int32_t* voxels = voxelsPtr->GetPointer(0);
-  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->GetPointer(0);
+  SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->getPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->getPointer(0);
+  int32_t* voxels = voxelsPtr->getPointer(0);
+  SurfaceMesh::M3C::Neighbor* neigh = neighborsPtr->getPointer(0);
 
   int nSpin1 = 0;
   int nSpin2 = 0;
@@ -2669,8 +2669,8 @@ int M3CSliceBySlice::assign_nodeID(int nN, int NSP,
   //  int nkind = 0;
   //  int cnid = 0;
 
-  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
-  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
   nid = nN;
   for (int i = 0; i < (7 * 2 * NSP); i++)
   {
@@ -2700,9 +2700,9 @@ void M3CSliceBySlice::update_node_edge_kind(int nT,
   //  int tekind;
   int tspin1, tspin2;
 
-  SurfaceMesh::M3C::Triangle* t = cTrianglePtr->GetPointer(0);
-  int8_t* nodeType = cVertexNodeTypePtr->GetPointer(0);
-  //  SurfaceMesh::M3C::Segment* fe = cEdgePtr->GetPointer(0);
+  SurfaceMesh::M3C::Triangle* t = cTrianglePtr->getPointer(0);
+  int8_t* nodeType = cVertexNodeTypePtr->getPointer(0);
+  //  SurfaceMesh::M3C::Segment* fe = cEdgePtr->getPointer(0);
   //  int nfedge = cEdgePtr->getNumberOfTuples();
   for (int j = 0; j < nT; j++)
   {
@@ -2790,9 +2790,9 @@ int M3CSliceBySlice::writeNodesFile(int zID, int cNodeID, int NSP,
     }
   }
   int total = (7 * 2 * NSP);
-  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
-  int8_t* nodeKind = cVertexNodeTypePtr->GetPointer(0);
-  VertexArray::Vert_t* cVertex = cVertexPtr->GetPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
+  int8_t* nodeKind = cVertexNodeTypePtr->getPointer(0);
+  VertexArray::Vert_t* cVertex = cVertexPtr->getPointer(0);
 
   for (int k = 0; k < total; k++)
   {
@@ -2847,8 +2847,8 @@ int M3CSliceBySlice::writeTrianglesFile(int zID, int ctid,
 
   FILE* f = NULL;
 
-  int32_t* nodeID = cVertexNodeIdPtr->GetPointer(0);
-  SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->GetPointer(0);
+  int32_t* nodeID = cVertexNodeIdPtr->getPointer(0);
+  SurfaceMesh::M3C::Patch* cTriangle = cTrianglePtr->getPointer(0);
 
 
 

@@ -498,11 +498,11 @@ void FindGBCD::execute()
   gbcdBinsArray->initializeWithZeros();
   gbcdHemiCheckArray = BoolArrayType::CreateArray(faceChunkSize, numMisoReps, "GBCDHemiCheck");
   gbcdHemiCheckArray->initializeWithValues(false);
-  float* m_GBCDdeltas = gbcdDeltasArray->GetPointer(0);
-  int32_t* m_GBCDsizes = gbcdSizesArray->GetPointer(0);
-  float* m_GBCDlimits = gbcdLimitsArray->GetPointer(0);
-  int32_t* m_Bins = gbcdBinsArray->GetPointer(0);
-  bool* m_HemiCheck = gbcdHemiCheckArray->GetPointer(0);
+  float* m_GBCDdeltas = gbcdDeltasArray->getPointer(0);
+  int32_t* m_GBCDsizes = gbcdSizesArray->getPointer(0);
+  float* m_GBCDlimits = gbcdLimitsArray->getPointer(0);
+  int32_t* m_Bins = gbcdBinsArray->getPointer(0);
+  bool* m_HemiCheck = gbcdHemiCheckArray->getPointer(0);
 
   m_GBCDlimits[0] = 0.0;
   m_GBCDlimits[1] = cosf(1.0*DREAM3D::Constants::k_Pi);

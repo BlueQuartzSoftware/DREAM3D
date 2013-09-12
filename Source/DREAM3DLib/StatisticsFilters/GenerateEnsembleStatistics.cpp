@@ -314,7 +314,7 @@ void GenerateEnsembleStatistics::execute()
       phaseTypes->SetValue(r, m_PhaseTypeArray[r]);
     }
     m->addCellEnsembleData(phaseTypes->GetName(), phaseTypes);
-    m_PhaseTypes = phaseTypes->GetPointer(0);
+    m_PhaseTypes = phaseTypes->getPointer(0);
   }
 
   StatsDataArray::Pointer p = StatsDataArray::New();

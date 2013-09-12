@@ -81,6 +81,7 @@ class CellArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int64_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -102,7 +103,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     void getVerts(size_t edgeId, size_t* verts)
     {
-      Cell_t& Cell = *(m_Array->GetPointer(edgeId));
+      Cell_t& Cell = *(m_Array->getPointer(edgeId));
       verts[0] = Cell.verts[0];
       verts[1] = Cell.verts[1];
       verts[2] = Cell.verts[2];
@@ -113,7 +114,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     void setVerts(size_t edgeId, float* verts)
     {
-      Cell_t& Cell = *(m_Array->GetPointer(edgeId));
+      Cell_t& Cell = *(m_Array->getPointer(edgeId));
       Cell.verts[0] = verts[0];
       Cell.verts[1] = verts[1];
       Cell.verts[2] = verts[2];
@@ -196,7 +197,7 @@ class CellArray
       for(size_t t = 0; t < nCells; ++t)
       {
         //   qDebug() << "Analyzing Cell " << t << "\n";
-        Cell_t& seedCell = *(Cells->GetPointer(t));
+        Cell_t& seedCell = *(Cells->getPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
@@ -208,7 +209,7 @@ class CellArray
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      qDebug() << "   Comparing Cell " << vertIdxs[vt] << "\n";
-            Cell_t& vertCell = *(Cells->GetPointer(vertIdxs[vt]));
+            Cell_t& vertCell = *(Cells->getPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
@@ -262,6 +263,33 @@ class CellArray
         // Allocate the array storage for the current triangle to hold its Cell list
         m_CellNeighbors->setElementList(t, linkCount[t], &(loop_neighbors[0]));
       }
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    Cell_t* getPointer(size_t i)
+    {
+      return m_Array->getPointer(i);
+    }
+
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Cell_t& operator[](size_t i)
+    {
+      return (*m_Array)[i];
+    }
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Cell_t& getcell(size_t i)
+    {
+      return (*m_Array)[i];
     }
 
   protected:

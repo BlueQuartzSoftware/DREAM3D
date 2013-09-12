@@ -227,7 +227,7 @@ void H5VoxelFileReader::execute()
   eulers->SetNumberOfComponents(3);
 
   QString arrayname = "GrainID";
-  err = reader->readScalarData<int>(arrayname, grainIds->GetPointer(0));
+  err = reader->readScalarData<int>(arrayname, grainIds->getPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
@@ -236,7 +236,7 @@ void H5VoxelFileReader::execute()
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "PhaseID";
-  err = reader->readScalarData<int>(arrayname, phases->GetPointer(0));
+  err = reader->readScalarData<int>(arrayname, phases->getPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);
@@ -245,7 +245,7 @@ void H5VoxelFileReader::execute()
     grainIds = DataArray<int>::NullPointer();
   }
   arrayname = "Euler Angles";
-  err = reader->readScalarData<float>(arrayname, eulers->GetPointer(0));
+  err = reader->readScalarData<float>(arrayname, eulers->getPointer(0));
   if(err < 0)
   {
     setErrorCondition(err);

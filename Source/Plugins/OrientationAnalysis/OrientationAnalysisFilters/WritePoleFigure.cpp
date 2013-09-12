@@ -332,7 +332,7 @@ void WritePoleFigure::execute()
   else
   {
     goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->GetPointer(0);
+    m_GoodVoxels = goodVoxels->getPointer(0);
   }
 
   // Find how many phases we have by getting the number of Crystal Structures
@@ -357,7 +357,7 @@ void WritePoleFigure::execute()
 
     FloatArrayType::Pointer subEulers = FloatArrayType::CreateArray(count, 3, "Eulers_Per_Phase");
     subEulers->initializeWithValues(-1);
-    float* eu = subEulers->GetPointer(0);
+    float* eu = subEulers->getPointer(0);
     //  std::cout << count << std::endl;
 
     // Now loop through the eulers again and this time add them to the subEulers Array

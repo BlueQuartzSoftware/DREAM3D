@@ -150,7 +150,7 @@ void FindGrainCentroids::find_centroids()
   m_GrainCenters->SetNumberOfComponents(5);
   m_GrainCenters->Resize(numgrains);
   
-  graincenters = m_GrainCenters->GetPointer(0);
+  graincenters = m_GrainCenters->getPointer(0);
 
   int xPoints = static_cast<int>(m->getXPoints());
   int yPoints = static_cast<int>(m->getYPoints());

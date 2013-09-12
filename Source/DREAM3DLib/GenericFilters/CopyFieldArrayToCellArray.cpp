@@ -148,8 +148,8 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
   }
   typename DataArray<T>::Pointer cell = DataArray<T>::CreateArray(voxels, inputData->GetNumberOfComponents(), cellArrayName);
 
-  T* fPtr = field->GetPointer(0);
-  T* cPtr = cell->GetPointer(0);
+  T* fPtr = field->getPointer(0);
+  T* cPtr = cell->getPointer(0);
 
   int32_t numComp = field->GetNumberOfComponents();
   int32_t grainIdx = 0;

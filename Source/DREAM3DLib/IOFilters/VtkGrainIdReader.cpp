@@ -464,8 +464,8 @@ int VtkGrainIdReader::readFile()
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
         //  can more easily diagnose the problem.
-        ::memset(grainIds->GetPointer(0), 0xAB, sizeof(int) * totalVoxels);
-        instream.read(reinterpret_cast<char*> (grainIds->GetPointer(0)), sizeof(int) * totalVoxels);
+        ::memset(grainIds->getPointer(0), 0xAB, sizeof(int) * totalVoxels);
+        instream.read(reinterpret_cast<char*> (grainIds->getPointer(0)), sizeof(int) * totalVoxels);
         int t;
         // We need to Byte Swap (Possibly) from the Big Endian format stored by
         // the vtk binary file into what ever system we are running.

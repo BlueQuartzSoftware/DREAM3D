@@ -237,7 +237,7 @@ void MergeTwins::execute()
     generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(numParents, "New ParentIds");
-    int32_t* pid = rndNumbers->GetPointer(0);
+    int32_t* pid = rndNumbers->getPointer(0);
     pid[0] = 0;
     QSet<int32_t> parentIdSet;
     parentIdSet.insert(0);

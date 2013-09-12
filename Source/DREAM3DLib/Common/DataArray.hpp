@@ -216,7 +216,7 @@ class DataArray : public IDataArray
     static Pointer FromStdVector(QVector<T> &vec, const QString &name)
     {
       Pointer p = CreateArray(vec.size(), name);
-      ::memcpy(p->GetPointer(0), &(vec.front()), vec.size() * sizeof(T));
+      ::memcpy(p->getPointer(0), &(vec.front()), vec.size() * sizeof(T));
       return p;
     }
 
@@ -230,7 +230,7 @@ class DataArray : public IDataArray
     static Pointer FromPointer(T* data, size_t size, const QString &name)
     {
       Pointer p = CreateArray(size, name);
-      ::memcpy(p->GetPointer(0), data, size * sizeof(T));
+      ::memcpy(p->getPointer(0), data, size * sizeof(T));
       return p;
     }
 
@@ -573,7 +573,7 @@ class DataArray : public IDataArray
      * @param i The index to return the pointer to.
      * @return The pointer to the index
      */
-    virtual T* GetPointer(size_t i)
+    virtual T* getPointer(size_t i)
     {
 #ifndef NDEBUG
       if (Size > 0) { BOOST_ASSERT(i < Size);}

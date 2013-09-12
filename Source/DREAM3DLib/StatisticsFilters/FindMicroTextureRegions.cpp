@@ -124,13 +124,13 @@ void FindMicroTextureRegions::find_microtextureregions()
   DataArray<double>::Pointer m_MicroTextureRegionYMins = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
   DataArray<double>::Pointer m_MicroTextureRegionZMins = DataArray<double>::CreateArray(nummicrotextureregions, "MicroTextureRegionCounts");
 
-  double* microtextureregioncounts = m_MicroTextureRegionCounts->GetPointer(0);
-  double* microtextureregionxmins = m_MicroTextureRegionXMins->GetPointer(0);
-  double* microtextureregionxmaxs = m_MicroTextureRegionXMaxs->GetPointer(0);
-  double* microtextureregionymins = m_MicroTextureRegionYMins->GetPointer(0);
-  double* microtextureregionymaxs = m_MicroTextureRegionYMaxs->GetPointer(0);
-  double* microtextureregionzmins = m_MicroTextureRegionZMins->GetPointer(0);
-  double* microtextureregionzmaxs = m_MicroTextureRegionZMaxs->GetPointer(0);
+  double* microtextureregioncounts = m_MicroTextureRegionCounts->getPointer(0);
+  double* microtextureregionxmins = m_MicroTextureRegionXMins->getPointer(0);
+  double* microtextureregionxmaxs = m_MicroTextureRegionXMaxs->getPointer(0);
+  double* microtextureregionymins = m_MicroTextureRegionYMins->getPointer(0);
+  double* microtextureregionymaxs = m_MicroTextureRegionYMaxs->getPointer(0);
+  double* microtextureregionzmins = m_MicroTextureRegionZMins->getPointer(0);
+  double* microtextureregionzmaxs = m_MicroTextureRegionZMaxs->getPointer(0);
 
   float xPoints = m->getXPoints();
   float yPoints = m->getYPoints();

@@ -351,9 +351,9 @@ void MovingFiniteElementSmoothing::execute()
 
   setErrorCondition(0);
   /* Place all your code to execute your filter here. */
-  VertexArray::Vert_t* nodesF = floatNodesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  VertexArray::Vert_t* nodesF = floatNodesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
-  FaceArray::Face_t* triangles = trianglesPtr->GetPointer(0); // Get the pointer to the from of the array so we can use [] notation
+  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
 
   // Data variables
   int numberNodes = floatNodesPtr->getNumberOfTuples();
@@ -362,7 +362,7 @@ void MovingFiniteElementSmoothing::execute()
 
   StructArray<DREAM3D::Mesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::Mesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  DREAM3D::Mesh::VertD_t* nodes = nodesDPtr->GetPointer(0);
+  DREAM3D::Mesh::VertD_t* nodes = nodesDPtr->getPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -377,7 +377,7 @@ void MovingFiniteElementSmoothing::execute()
   // We need a few more arrays to support the code from CMU:
   StructArray<TripleNN>::Pointer triplennPtr = StructArray<TripleNN>::CreateArray(numberNodes, "TripleLine_Neighbors_Or_IDS");
   triplennPtr->initializeWithZeros();
-  TripleNN* triplenn = triplennPtr->GetPointer(0);
+  TripleNN* triplenn = triplennPtr->getPointer(0);
 
 //  QVector<QString> data;
 #if 0
@@ -444,10 +444,10 @@ void MovingFiniteElementSmoothing::execute()
     }
 
     StructArray<DREAM3D::Mesh::Edge_t> *edgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(edgesDataArray.get());
-    DREAM3D::Mesh::Edge_t* edges = edgesStructArray->GetPointer(0);
+    DREAM3D::Mesh::Edge_t* edges = edgesStructArray->getPointer(0);
 
     StructArray<DREAM3D::Mesh::Edge_t> *internalEdgesStructArray = StructArray<DREAM3D::Mesh::Edge_t>::SafePointerDownCast(iEdgesDataArray.get());
-    DREAM3D::Mesh::Edge_t* iEdges = internalEdgesStructArray->GetPointer(0);
+    DREAM3D::Mesh::Edge_t* iEdges = internalEdgesStructArray->getPointer(0);
 
     //  Read the edges, if we are going to smooth them explicitly
 #if 0

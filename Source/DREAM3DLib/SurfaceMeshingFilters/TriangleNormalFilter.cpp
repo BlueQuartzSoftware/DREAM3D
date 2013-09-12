@@ -74,8 +74,8 @@ class CalculateNormalsImpl
      */
     void generate(size_t start, size_t end) const
     {
-      VertexArray::Vert_t* nodes = m_Nodes->GetPointer(0);
-      FaceArray::Face_t* triangles = m_Triangles->GetPointer(0);
+      VertexArray::Vert_t* nodes = m_Nodes->getPointer(0);
+      FaceArray::Face_t* triangles = m_Triangles->getPointer(0);
       for (size_t i = start; i < end; i++)
       {
         // Get the true indices of the 3 nodes

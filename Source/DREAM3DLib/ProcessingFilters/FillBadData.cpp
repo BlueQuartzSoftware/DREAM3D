@@ -156,11 +156,11 @@ void FillBadData::execute()
   setErrorCondition(0);
 
   Int32ArrayType::Pointer neighborsPtr = Int32ArrayType::CreateArray(totalPoints, "Neighbors");
-  m_Neighbors = neighborsPtr->GetPointer(0);
+  m_Neighbors = neighborsPtr->getPointer(0);
   neighborsPtr->initializeWithValues(-1);
 
   BoolArrayType::Pointer alreadCheckedPtr = BoolArrayType::CreateArray(totalPoints, "AlreadyChecked");
-  m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
+  m_AlreadyChecked = alreadCheckedPtr->getPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
   size_t udims[3] = {0,0,0};

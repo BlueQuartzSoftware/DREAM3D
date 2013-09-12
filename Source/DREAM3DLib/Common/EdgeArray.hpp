@@ -77,6 +77,7 @@ class EdgeArray
     //
     // -----------------------------------------------------------------------------
     int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
+    int64_t count() { return m_Array->getNumberOfTuples(); }
 
     // -----------------------------------------------------------------------------
     //
@@ -98,7 +99,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     void getVerts(size_t edgeId, size_t* verts)
     {
-      Edge_t& Edge = *(m_Array->GetPointer(edgeId));
+      Edge_t& Edge = *(m_Array->getPointer(edgeId));
       verts[0] = Edge.verts[0];
       verts[1] = Edge.verts[1];
     }
@@ -108,7 +109,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     void setVerts(size_t edgeId, float* verts)
     {
-      Edge_t& Edge = *(m_Array->GetPointer(edgeId));
+      Edge_t& Edge = *(m_Array->getPointer(edgeId));
       Edge.verts[0] = verts[0];
       Edge.verts[1] = verts[1];
 
@@ -190,7 +191,7 @@ class EdgeArray
       for(size_t t = 0; t < nEdges; ++t)
       {
         //   qDebug() << "Analyzing Face " << t << "\n";
-        Edge_t& seedEdge = *(Edges->GetPointer(t));
+        Edge_t& seedEdge = *(Edges->getPointer(t));
         for(size_t v = 0; v < 2; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
@@ -202,7 +203,7 @@ class EdgeArray
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      qDebug() << "   Comparing Face " << vertIdxs[vt] << "\n";
-            Edge_t& vertEdge = *(Edges->GetPointer(vertIdxs[vt]));
+            Edge_t& vertEdge = *(Edges->getPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
@@ -252,6 +253,32 @@ class EdgeArray
       }
     }
 
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    Edge_t* getPointer(size_t i)
+    {
+      return m_Array->getPointer(i);
+    }
+
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Edge_t& operator[](size_t i)
+    {
+      return (*m_Array)[i];
+    }
+     /**
+     * @brief Returns reference to the Face_t at the index i
+     * @param i
+     * @return
+     */
+    inline Edge_t& getEdge(size_t i)
+    {
+      return (*m_Array)[i];
+    }
   protected:
     EdgeArray();
 

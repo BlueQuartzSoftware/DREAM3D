@@ -496,7 +496,7 @@ int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
   int32_t rank = 2;
   hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
 
-  float* data = reinterpret_cast<float*>(verticesPtr->GetPointer(0));
+  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {
@@ -685,9 +685,9 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
   }
 
   int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_FaceNumElements};
+  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
 
-  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
+  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
   if (err < 0) {

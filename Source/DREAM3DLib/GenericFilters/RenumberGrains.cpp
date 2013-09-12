@@ -205,7 +205,7 @@ void RenumberGrains::execute()
       else {
         p->EraseTuples(RemoveList);
       }
-      //qDebug() << "  Tuples Remain: " << p->GetNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
+      //qDebug() << "  Tuples Remain: " << p->getNumberOfTuples() << " NumComp:" << p->GetNumberOfComponents()  ;
     }
     m->setNumCellFieldTuples(m->getNumCellFieldTuples() - RemoveList.size());
     totalFields = m->getNumCellFieldTuples();

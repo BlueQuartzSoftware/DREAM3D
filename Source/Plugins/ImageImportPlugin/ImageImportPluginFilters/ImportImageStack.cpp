@@ -266,7 +266,7 @@ void ImportImageStack::execute()
     zSpot = (z-m_ZStartIndex);
     for(qint32 i = 0; i < height; ++i)
     {
-      imagePtr = data->GetPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
+      imagePtr = data->getPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));
       uint8_t* source = image.scanLine(i);
       ::memcpy(imagePtr, source, width * pixelBytes);
     }

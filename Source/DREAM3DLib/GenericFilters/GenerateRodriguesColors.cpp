@@ -180,7 +180,7 @@ void GenerateRodriguesColors::execute()
   else
   {
     goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->GetPointer(0);
+    m_GoodVoxels = goodVoxels->getPointer(0);
   }
 
   // Create 1 of every type of Ops class. This condenses the code below
