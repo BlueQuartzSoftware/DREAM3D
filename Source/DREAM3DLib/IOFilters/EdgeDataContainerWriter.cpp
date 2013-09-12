@@ -127,7 +127,7 @@ void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fi
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
   }
-  if(m_HdfFileId < 0)
+  if(getHdfFileId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -164,7 +164,7 @@ void EdgeDataContainerWriter::execute()
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), m_HdfFileId);
+  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), getHdfFileId());
   if (err < 0)
   {
     ss.str("");
@@ -173,7 +173,7 @@ void EdgeDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     ss.str("");
@@ -255,7 +255,7 @@ void EdgeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::writeXdmfGridHeader()
 {
-  //if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
   //{
   //  return;
   //}
@@ -270,14 +270,14 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
   //  return;
   //}
 
-  //std::ostream& out = *m_XdmfPtr;
+  //std::ostream& out = *getXdmfOStream();
   //out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
 
   //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
   //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
-  //ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  //ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
   //QVector<char> nameBuffer(nameSize, 0);
-  //nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  //nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
   //QString hdfFileName(&(nameBuffer.front()), nameSize);
   //hdfFileName = QFileInfo::filename(hdfFileName);
   //out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << "\n";
@@ -297,7 +297,7 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::writeXdmfGridFooter()
 {
-  //if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
   //{
   //  return;
   //}
@@ -306,7 +306,7 @@ void EdgeDataContainerWriter::writeXdmfGridFooter()
   //{
   //  return;
   //}
-  //std::ostream& out = *m_XdmfPtr;
+  //std::ostream& out = *getXdmfOStream();
   //out << "  </Grid>" << "\n";
   //out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << "\n";
   //out << "\n";
@@ -339,9 +339,9 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
-    ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+    ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
     QVector<char> nameBuffer(nameSize, 0);
-    nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+    nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
 
     QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = QFileInfo::filename(hdfFileName);
@@ -367,9 +367,9 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "          " << dimStr1half.str() << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr1.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+    ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
     QVector<char> nameBuffer(nameSize, 0);
-    nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+    nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
     QString hdfFileName(&(nameBuffer.front()), nameSize);
     hdfFileName = QFileInfo::filename(hdfFileName);
     out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << "\n";
@@ -392,9 +392,9 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "          " << dimStr2half.str() << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr2.str() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    ssize_t nameSize2 = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+    ssize_t nameSize2 = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
     QVector<char> nameBuffer2(nameSize2, 0);
-    nameSize2 = H5Fget_name(m_HdfFileId, &(nameBuffer2.front()), nameSize2);
+    nameSize2 = H5Fget_name(getHdfFileId(), &(nameBuffer2.front()), nameSize2);
     QString hdfFileName2(&(nameBuffer2.front()), nameSize2);
     hdfFileName2 = QFileInfo::filename(hdfFileName2);
     out << "        " << hdfFileName2 << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << "\n";
@@ -417,13 +417,12 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
       </DataItem>
     </Attribute>
 #endif
-  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+  if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
   { return; }
 
 
 
-  std::ostream& out = *m_XdmfPtr;
-  QTextStream dimStr;
+  QTextStream& out = *getXdmfOStream();
   int precision = 0;
   QString xdmfTypeName;
   array->GetXdmfTypeAndSize(xdmfTypeName, precision);
@@ -448,12 +447,12 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 int EdgeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
+  herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
   if (err < 0)
   {
     qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
   }
-  err = H5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  err = H5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
     qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
@@ -588,9 +587,9 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
+  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(m_HdfFileId, &(nameBuffer.front()), nameSize);
+  nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = QFileInfo::filename(hdfFileName);
@@ -664,7 +663,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
         return err;
       }
 #if WRITE_FIELD_XDMF
-      array->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Field)");
+      array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Field)");
 #endif
     }
   }
@@ -716,7 +715,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
         return err;
       }
 #if WRITE_FIELD_XDMF
-      (*iter)->writeXdmfAttribute( *m_XdmfPtr, volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
+      (*iter)->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Neighbor Data)");
 #endif
     }
 #if WRITE_FIELD_XDMF
