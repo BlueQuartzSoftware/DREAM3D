@@ -47,6 +47,7 @@
 #include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/IOFilters/SurfaceDataContainerWriter.h"
 
 
 /**

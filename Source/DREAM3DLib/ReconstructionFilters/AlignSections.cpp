@@ -135,7 +135,7 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   
 
-  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
+  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
   {
     ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
