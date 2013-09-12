@@ -89,7 +89,7 @@ int FindAvgCAxes::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType,  voxels, 1)
 
@@ -136,8 +136,7 @@ void FindAvgCAxes::execute()
   float caxis[3] = {0,0,1};
   float c1[3];
 
-  QVector<int> counter;
-  counter.resize(numgrains,0);
+  QVector<int> counter(numgrains,0);
 
   for (size_t i = 1; i < numgrains; i++)
   {

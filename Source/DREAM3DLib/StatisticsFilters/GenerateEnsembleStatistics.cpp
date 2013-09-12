@@ -159,17 +159,17 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-   if(m_SizeDistribution == true || m_Omega3Distribution == true
+      if(m_SizeDistribution == true || m_Omega3Distribution == true
          || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
+        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {
@@ -206,19 +206,19 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
         m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getCellFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
-      ss.str("");
-      ss << "SurfaceAreaLists Array Not Initialized correctly" << "\n";
+
+      QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly");
       setErrorCondition(-306);
-      addErrorMessage(getHumanLabel(), ss.str(), -306);
+      addErrorMessage(getHumanLabel(), ss, -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-      ss.str("");
-      ss << "NeighborLists Array Not Initialized correctly" << "\n";
+
+      QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
       setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss.str(), -305);
+      addErrorMessage(getHumanLabel(), ss, -305);
     }
   }
 
@@ -280,7 +280,7 @@ void GenerateEnsembleStatistics::execute()
     return;
   }
   setErrorCondition(0);
-  
+
 
   //  int totalPoints = m->getTotalPoints();
   //  int totalFields = m->getNumCellFieldTuples();
@@ -304,9 +304,9 @@ void GenerateEnsembleStatistics::execute()
     }
     if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
     {
-      ss.str("");
-      ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
-      notifyWarningMessage(ss.str(), -999);
+
+      QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles-1);
+      notifyWarningMessage(ss, -999);
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)
@@ -371,14 +371,15 @@ void GenerateEnsembleStatistics::gatherSizeStats()
   float totalUnbiasedVolume = 0.0;
   QVector<VectorOfFloatArray> sizedist;
   QVector<QVector<QVector<float > > > values;
-  QVector<float> fractions;
+
   FloatArrayType::Pointer binnumbers;
   size_t numgrains = m->getNumCellFieldTuples();
   size_t numensembles = m->getNumCellEnsembleTuples();
 
+  QVector<float> fractions(numensembles,0.0);
   sizedist.resize(numensembles);
   values.resize(numensembles);
-  fractions.resize(numensembles,0.0);
+
   for(size_t i = 1; i < numensembles; i++)
   {
     sizedist[i] = statsDataArray[i]->CreateCorrelatedDistributionArrays(m_SizeDistributionFitType, 1);
