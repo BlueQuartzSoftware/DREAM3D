@@ -1204,7 +1204,7 @@ void QFilterWidget::updateQLineEditIntValue()
       value = 0;
       le->setText("0");
     }
-    setProperty(whoSent->objectName()().toLatin1().data(), value);
+    setProperty(whoSent->objectName().toLatin1().data(), value);
   }
 }
 
@@ -1224,7 +1224,7 @@ void QFilterWidget::updateQLineEditDoubleValue()
       value = 0;
       le->setText("0");
     }
-    setProperty(whoSent->objectName()().toLatin1().data(), value);
+    setProperty(whoSent->objectName().toLatin1().data(), value);
   }
 }
 
@@ -1444,7 +1444,7 @@ void QFilterWidget::updateComboBoxValue(int v)
   if(cb)
   {
     bool ok = false;
-    ok = setProperty(whoSent->objectName()().toLatin1().data(), v);
+    ok = setProperty(whoSent->objectName().toLatin1().data(), v);
     if (true == ok) { }
     else
     {
@@ -1466,7 +1466,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
   {
     bool ok = false;
     QString text = cb->itemText(v);
-    ok = setProperty(whoSent->objectName()().toLatin1().data(), text);
+    ok = setProperty(whoSent->objectName().toLatin1().data(), text);
     if (true == ok) { }
     else
     {
@@ -1486,7 +1486,7 @@ void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
   if(cb)
   {
     bool ok = false;
-    ok = setProperty(whoSent->objectName()().toLatin1().data(), text);
+    ok = setProperty(whoSent->objectName().toLatin1().data(), text);
     if (true == ok) { }
     else
     {
@@ -1506,7 +1506,7 @@ void QFilterWidget::updateQLineEditStringValue(const QString &v)
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le)
   {
-    setProperty(whoSent->objectName()().toLatin1().data(), le->text());
+    setProperty(whoSent->objectName().toLatin1().data(), le->text());
   }
 }
 
@@ -1538,7 +1538,7 @@ void QFilterWidget::updateQCheckBoxValue(int v)
   QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
   if(le)
   {
-    setProperty(whoSent->objectName()().toLatin1().data(), le->isChecked());
+    setProperty(whoSent->objectName().toLatin1().data(), le->isChecked());
   }
 }
 
