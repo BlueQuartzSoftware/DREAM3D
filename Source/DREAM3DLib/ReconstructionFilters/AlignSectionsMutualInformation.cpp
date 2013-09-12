@@ -75,7 +75,6 @@ m_CellPhases(NULL),
 m_GoodVoxels(NULL),
 m_CrystalStructures(NULL)
 {
-  Seed = MXA::getMilliSeconds();
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 

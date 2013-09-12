@@ -202,8 +202,7 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
   int refposition = 0;
   int curposition = 0;
 
-  QVector<QVector<float> >  misorients;
-  misorients.resize(dims[0]);
+  QVector<QVector<float> >  misorients(dims[0]);
   for (DimType a = 0; a < dims[0]; a++)
   {
     misorients[a].resize(dims[1], 0.0);
