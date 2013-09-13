@@ -16,7 +16,7 @@
 #include <ostream>
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/Common/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.hpp"
 
 
 

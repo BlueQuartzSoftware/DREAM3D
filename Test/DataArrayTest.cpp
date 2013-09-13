@@ -42,8 +42,8 @@
 #include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Common/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"

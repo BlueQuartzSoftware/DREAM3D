@@ -38,7 +38,7 @@
 
 #include <QtCore/QtEndian>
 
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 /**@file VTKWriterMacros.h
  * @brief This file contains various macros to write out consistent VTK legacy

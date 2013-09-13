@@ -42,7 +42,7 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #define WRITE_FIELD_XDMF 0
 
@@ -767,22 +767,3 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
   return err;
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
-{
-  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
-  if (err < 0)
-  {
-    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
-  }
-  err = QH5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
-  }
-  return err;
-}

@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 
 // -----------------------------------------------------------------------------

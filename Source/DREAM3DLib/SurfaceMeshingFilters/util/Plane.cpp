@@ -12,7 +12,7 @@
 
 #include "Plane.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/InvalidParameterException.h"
 

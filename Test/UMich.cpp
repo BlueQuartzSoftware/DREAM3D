@@ -39,7 +39,7 @@
 
 #include <iostream>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 static const float CubicQuatSym[24][4] = {
   { 0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f},

@@ -47,7 +47,7 @@
 
 #include "PipelineBuilderDLLExport.h"
 
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
 #if 1

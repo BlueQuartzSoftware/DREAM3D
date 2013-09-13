@@ -41,7 +41,7 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //

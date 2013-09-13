@@ -45,7 +45,7 @@
 
 #include <Eigen/Dense>
 
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/FindNRingNeighbors.h"
 
