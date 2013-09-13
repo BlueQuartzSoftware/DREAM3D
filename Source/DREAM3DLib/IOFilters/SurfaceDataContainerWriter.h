@@ -124,23 +124,24 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
 
-    int writeVertices(hid_t dcGid);
-    int writeFaces(hid_t dcGid);
-    int writeEdges(hid_t dcGid);
-    int writeMeshLinks(hid_t dcGid);
-    int writeMeshFaceNeighborLists(hid_t dcGid);
-    int writeVertexAttributeData(hid_t dcGid);
-    int writeFaceAttributeData(hid_t dcGid);
-    int writeEdgeAttributeData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
+    virtual int writeVertices(hid_t dcGid);
+    virtual int writeFaces(hid_t dcGid);
+    virtual int writeEdges(hid_t dcGid);
 
-    void writeXdmfGridHeader();
-    void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
-    QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
+    virtual int writeMeshLinks(hid_t dcGid);
+    virtual int writeMeshFaceNeighborLists(hid_t dcGid);
+
+    virtual int writeVertexAttributeData(hid_t dcGid, QString groupName);
+    virtual int writeFaceAttributeData(hid_t dcGid, QString groupName);
+    virtual int writeEdgeData(hid_t dcGid);
+    virtual int writeFieldData(hid_t dcGid);
+    virtual int writeEnsembleData(hid_t dcGid);
+
+    virtual void writeXdmfGridHeader();
+    virtual void writeXdmfGridFooter();
+    virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
+    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
   private:
 
