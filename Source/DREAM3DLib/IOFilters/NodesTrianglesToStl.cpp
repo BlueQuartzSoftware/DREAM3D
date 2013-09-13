@@ -304,7 +304,7 @@ void NodesTrianglesToStl::execute()
   // column 8 and 9 = neighboring spins of individual triangles, column 8 = spins on the left side when following winding order using right hand.
   int tData[9];
 
-  FaceArray::Pointer trianglePtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Pointer trianglePtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, nodesPtr.get());
   FaceArray& triangles = *(trianglePtr.get());
 
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaceLabels);

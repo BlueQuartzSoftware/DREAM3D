@@ -291,7 +291,7 @@ int BinaryNodesTrianglesReader::read()
   }
 
   // Allocate all the Triangle Objects
-  FaceArray::Pointer m_TriangleListPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Pointer m_TriangleListPtr = FaceArray::CreateArray(nTriangles, DREAM3D::FaceData::SurfaceMeshFaces, m_NodeListPtr.get());
 
   FaceArray::Face_t* m_TriangleList = m_TriangleListPtr->getPointer(0);
   ::memset(m_TriangleList, 0xAB, sizeof(FaceArray::Face_t) * nTriangles);

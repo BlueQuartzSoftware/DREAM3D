@@ -96,11 +96,11 @@ void FindNRingNeighbors::generate()
   FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   // Make sure we have the proper connectivity built
-  MeshLinks::Pointer node2TrianglePtr =sm->getMeshLinks();
+  Int32DynamicListArray::Pointer node2TrianglePtr =sm->getFaces()->getFacesContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
-    sm->buildMeshLinks();
-    node2TrianglePtr =sm->getMeshLinks();
+    sm->getFaces()->findFacesContainingVert();
+    node2TrianglePtr = sm->getFaces()->getFacesContainingVert();
   }
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
@@ -139,8 +139,8 @@ void FindNRingNeighbors::generate()
       for(int i = 0; i < 3; ++i)
       {
         // Get all the triangles for this Node id
-        uint16_t tCount = node2TrianglePtr->getNumberOfFaces(face.verts[i]);
-        int32_t* data = node2TrianglePtr->getFaceListPointer(face.verts[i]);
+        uint16_t tCount = node2TrianglePtr->getNumberOfElements(face.verts[i]);
+        int32_t* data = node2TrianglePtr->getElementListPointer(face.verts[i]);
 
         // Copy all the triangles into our "2Ring" set which will be the unique set of triangle ids
         for(uint16_t t = 0; t < tCount; ++t)
@@ -175,8 +175,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  VertexArray::Pointer nodesPtr = m->getVertices();
-  DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
+  VertexArray& nodes = *(m->getVertices());
   int nNodes = nodes.getNumberOfTuples();
 
   
