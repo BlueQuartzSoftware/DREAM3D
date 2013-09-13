@@ -233,7 +233,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
+  FaceArray& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = m_NRingTriangles.size();

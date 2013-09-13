@@ -102,7 +102,7 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
   else
   {
     VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
     DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
     DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(1, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
 
@@ -464,7 +464,7 @@ void QuickSurfaceMesh::execute()
 
   //now create node and triangle arrays knowing the number that will be needed
   VertexArray::Pointer vertices = VertexArray::CreateArray(nodeCount, DREAM3D::VertexData::SurfaceMeshNodes);
-  FaceArray::Pointer triangles = FaceArray::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(triangleCount, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
   DataArray<int32_t>::Pointer faceLabelPtr = DataArray<int32_t>::CreateArray(triangleCount, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int8_t>::Pointer nodeTypePtr = DataArray<int8_t>::CreateArray(nodeCount, 1, DREAM3D::VertexData::SurfaceMeshNodeType);
   VertexArray::Vert_t* vertex = vertices.get()->getPointer(0);
