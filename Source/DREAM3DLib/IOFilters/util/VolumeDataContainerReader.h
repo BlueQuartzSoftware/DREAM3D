@@ -33,50 +33,48 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceDataContainerReader_H_
-#define _SurfaceDataContainerReader_H_
+#ifndef _VolumeDataContainerReader_H_
+#define _VolumeDataContainerReader_H_
 
 #include <QtCore/QString>
+
+#include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/IOFilters/EdgeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/util/SurfaceDataContainerReader.h"
+
 
 /**
- * @class SurfaceDataContainerReader SurfaceDataContainerReader.h DREAM3DLib/IOFilters/SurfaceDataContainerReader.h
+ * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerReader
+class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerReader, EdgeDataContainerReader)
+    DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, SurfaceDataContainerReader)
 
-    virtual ~SurfaceDataContainerReader();
+    virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef QList<QString> NameListType;
+
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -90,7 +88,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
+    virtual const QString getHumanLabel() { return "Voxel DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -121,9 +119,10 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     */
     virtual void preflight();
 
+    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   protected:
-    SurfaceDataContainerReader();
+    VolumeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -136,31 +135,15 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int gatherVertexData(hid_t dcGid, bool preflight);
-    int gatherFaceData(hid_t dcGid, bool preflight);
-    int gatherEdgeData(hid_t dcGid, bool preflight);
-    int gatherFieldData(hid_t dcGid, bool preflight);
-    int gatherEnsembleData(hid_t dcGid, bool preflight);
-    int readVertices(hid_t dcGid);
-    int readFaces(hid_t dcGid);
-    int readEdges(hid_t dcGid);
-    int readMeshLinks(hid_t dcGid, bool preflight);
-    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
-    int readVertexAttributeData(hid_t dcGid);
-    int readFaceAttributeData(hid_t dcGid);
-    int readFieldData(hid_t dcGid);
-    int readEnsembleData(hid_t dcGid);
-
-
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead);
-
+                       QVector<QString> &namesRead,
+                       QSet<QString> &namesToRead);
+    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
 
-    SurfaceDataContainerReader(const SurfaceDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceDataContainerReader&); // Operator '=' Not Implemented
+    VolumeDataContainerReader(const VolumeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const VolumeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceDataContainerReader_H_ */
+#endif /* _VolumeDataContainerReader_H_ */

@@ -36,19 +36,20 @@
 
 #include "DataContainerReader.h"
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
-
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/VertexDataContainerReader.h"
-#include "DREAM3DLib/IOFilters/EdgeDataContainerReader.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
+#include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/util/SurfaceDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/util/VertexDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/util/EdgeDataContainerReader.h"
 #include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
 #include "DREAM3DLib/Common/FilterManager.h"
 
-#include "H5Support/HDF5ScopedFileSentinel.h"
+
 
 // -----------------------------------------------------------------------------
 //
@@ -210,7 +211,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     {
       VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
       volumeReader->setHdfFileId(fileId);
-      volumeReader->setVolumeDataContainer(getVolumeDataContainer());
+      volumeReader->setDataContainer(getVolumeDataContainer());
       volumeReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Volume Data ";
       volumeReader->setMessagePrefix(ss);
@@ -228,7 +229,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     {
       SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-      smReader->setSurfaceDataContainer(getSurfaceDataContainer());
+      smReader->setDataContainer(getSurfaceDataContainer());
       smReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Surface Data ";
       smReader->setMessagePrefix(ss);
@@ -246,7 +247,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     {
       EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
       eReader->setHdfFileId(fileId);
-      eReader->setEdgeDataContainer(getEdgeDataContainer());
+      eReader->setDataContainer(getEdgeDataContainer());
       eReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Surface Data ";
       eReader->setMessagePrefix(ss);
@@ -264,7 +265,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     {
       VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
       smReader->setHdfFileId(fileId);
-      smReader->setVertexDataContainer(getVertexDataContainer());
+      smReader->setDataContainer(getVertexDataContainer());
       smReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
       smReader->setMessagePrefix(ss);
@@ -327,7 +328,7 @@ void DataContainerReader::execute()
     volumeReader->setFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
     volumeReader->setEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
     volumeReader->setReadAllArrays(m_ReadAllArrays);
-    volumeReader->setVolumeDataContainer(getVolumeDataContainer());
+    volumeReader->setDataContainer(getVolumeDataContainer());
     volumeReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Volume Data ";
     volumeReader->setMessagePrefix(ss);
@@ -350,7 +351,7 @@ void DataContainerReader::execute()
     smReader->setFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
     smReader->setEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setSurfaceDataContainer(getSurfaceDataContainer());
+    smReader->setDataContainer(getSurfaceDataContainer());
     smReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Surface Data ";
     smReader->setMessagePrefix(ss);
@@ -373,7 +374,7 @@ void DataContainerReader::execute()
     eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
     eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
     eReader->setReadAllArrays(m_ReadAllArrays);
-    eReader->setEdgeDataContainer(getEdgeDataContainer());
+    eReader->setDataContainer(getEdgeDataContainer());
     eReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Surface Data ";
     eReader->setMessagePrefix(ss);
@@ -394,7 +395,7 @@ void DataContainerReader::execute()
     vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
     vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
     vReader->setReadAllArrays(m_ReadAllArrays);
-    vReader->setVertexDataContainer(getVertexDataContainer());
+    vReader->setDataContainer(getVertexDataContainer());
     vReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Edge Data ";
     vReader->setMessagePrefix(ss);

@@ -33,41 +33,46 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VertexDataContainerWriter_H_
-#define _VertexDataContainerWriter_H_
+#ifndef _EdgeDataContainerReader_H_
+#define _EdgeDataContainerReader_H_
 
-#include <sstream>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-
+#include "DREAM3DLib/IOFilters/util/VertexDataContainerReader.h"
 
 /**
- * @class VertexDataContainerWriter VertexDataContainerWriter.h /IOFilters/VertexDataContainerWriter.h
+ * @class EdgeDataContainerReader EdgeDataContainerReader.h DREAM3DLib/IOFilters/EdgeDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
+class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerReader
 {
   public:
-    DREAM3D_SHARED_POINTERS(VertexDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(VertexDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(VertexDataContainerWriter, AbstractFilter)
+    DREAM3D_SHARED_POINTERS(EdgeDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(EdgeDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerReader, VertexDataContainerReader)
 
-    virtual ~VertexDataContainerWriter();
+    virtual ~EdgeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
-    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
-    DREAM3D_INSTANCE_PROPERTY(QTextStream*, XdmfOStream)
+
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeEnsembleData)
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef QList<QString> NameListType;
-
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
@@ -75,13 +80,13 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Vertex DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -112,8 +117,9 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     */
     virtual void preflight();
 
+
   protected:
-    VertexDataContainerWriter();
+    EdgeDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -125,24 +131,25 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    virtual int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
+    int gatherData(bool preflight);
+    int gatherEdgeData(hid_t dcGid, bool preflight);
+    int gatherEdgeFieldData(hid_t dcGid, bool preflight);
+    int gatherEdgeEnsembleData(hid_t dcGid, bool preflight);
+    int readEdges(hid_t dcGid);
+    int readMeshLinks(hid_t dcGid, bool preflight);
+    int readEdgeFieldData(hid_t dcGid);
+    int readEdgeEnsembleData(hid_t dcGid);
 
-    virtual int writeVertices(hid_t dcGid);
 
-    virtual int writeVertexData(hid_t dcGid, QString groupName);
-    virtual int writeVertexFieldData(hid_t dcGid);
-    virtual int writeVertexEnsembleData(hid_t dcGid);
-
-    virtual void writeXdmfGridHeader();
-    virtual void writeXdmfGridFooter();
-    virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
-    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
+    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead);
 
 
   private:
 
-    VertexDataContainerWriter(const VertexDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const VertexDataContainerWriter&); // Operator '=' Not Implemented
+    EdgeDataContainerReader(const EdgeDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const EdgeDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _VertexDataContainerWriter_H_ */
+#endif /* _EdgeDataContainerReader_H_ */

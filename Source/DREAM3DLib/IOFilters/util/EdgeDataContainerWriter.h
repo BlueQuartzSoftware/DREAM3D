@@ -43,7 +43,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/IOFilters/VertexDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/util/VertexDataContainerWriter.h"
 
 /**
  * @class EdgeDataContainerWriter EdgeDataContainerWriter.h DREAm3DLib/IOFilters/EdgeDataContainerWriter.h

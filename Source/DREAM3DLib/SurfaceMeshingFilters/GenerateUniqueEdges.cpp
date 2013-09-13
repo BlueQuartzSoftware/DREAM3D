@@ -356,7 +356,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   notifyStatusMessage("Generating edge list for mesh. Stage 2 of 2");
   // Now copy the unique Edges out of the map and into an array at the proper index (which is the "value" that goes with the "key" to the map.
   int index = 0;
-  DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_map.size(), 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
+  Int32ArrayType::Pointer uniqueEdgesArrayPtr = Int32ArrayType::CreateArray(uedges_id_map.size(), 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
   m_SurfaceMeshUniqueEdges = uniqueEdgesArrayPtr->getPointer(0);
 
   ManagedArrayOfArrays<int>::Pointer edgeTriangleArray = ManagedArrayOfArrays<int>::CreateArray(edgeTriangleSet.size(), DREAM3D::EdgeData::SurfaceMeshEdgeFaces);

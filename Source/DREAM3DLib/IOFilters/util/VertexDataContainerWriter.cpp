@@ -39,8 +39,11 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 #include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #define WRITE_FIELD_XDMF 0
 
@@ -66,12 +69,10 @@ public:
 //
 // -----------------------------------------------------------------------------
 VertexDataContainerWriter::VertexDataContainerWriter() :
-  AbstractFilter(),
-  m_HdfFileId(-1),
+  IOSupport(),
   m_WriteXdmfFile(false),
   m_XdmfOStream(NULL)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -84,81 +85,14 @@ VertexDataContainerWriter::~VertexDataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  setErrorCondition(0);
-
-  VertexDataContainer* m = getVertexDataContainer();
-
-  if (NULL == m)
-  {
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
-    setErrorCondition(-1);
-    return -1;
-  }
-  if(m_HdfFileId < 0)
-  {
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerWriter::preflight()
-{
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  dataCheck(true, 1, 1, 1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VertexDataContainerWriter::execute()
 {
   int err = 0;
 
   setErrorCondition(err);
-  VertexDataContainer* m = getVertexDataContainer();
-  if(NULL == m)
+
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SolidMesh DataContainer Object was NULL", -999);
@@ -167,15 +101,15 @@ void VertexDataContainerWriter::execute()
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
-  err = QH5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), m_HdfFileId);
+  err = QH5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), getHdfFileId());
   if (err < 0)
   {
     QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
     setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
@@ -207,14 +141,14 @@ void VertexDataContainerWriter::execute()
     return;
   }
 
-  err = writeVertexFieldData(dcGid);
+  err = writeVertexFieldData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeVertexEnsembleData(dcGid);
+  err = writeVertexEnsembleData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -241,7 +175,11 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
   {
     return;
   }
-  VertexArray::Pointer verts = getVertexDataContainer()->getVertices();
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  VertexArray::Pointer verts = dc->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -301,13 +239,10 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
 
   out << "    <Attribute Name=\"" << array->GetName() << "\" ";
   out << "AttributeType=\"" << attrType << "\" ";
-  dimStr << array->getNumberOfTuples() << " " << array->GetNumberOfComponents();
   out << "Center=\"" << centering << "\">" << "\n";
   // Open the <DataItem> Tag
-  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr.str() <<  "\" ";
+  out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
   out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-
-
   out << "        " << hdfFileName << ":/VertexDataContainer/" << groupName << "/" << array->GetName() << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Attribute>" << "\n" << "\n";
@@ -355,39 +290,23 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
-{
-  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
-  if (err < 0)
-  {
-    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
-  }
-  err = QH5Lite::writeStringAttribute(m_HdfFileId, hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
-  }
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertices(hid_t dcGid)
 {
-  VertexDataContainer* sm = getVertexDataContainer();
-  VertexArray::Pointer verticesPtr = sm->getVertices();
-  if (NULL == verticesPtr.get())
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
+  VertexArray::Pointer verts = dc->getVertices();
+  if(NULL == verts.get())
   {
     return -1;
   }
 
   int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
+  hsize_t dims[2] = {verts->getNumberOfTuples(), 3};
 
-  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
+  float* data = reinterpret_cast<float*>(verts->getPointer(0));
 
   herr_t err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
   if (err < 0) {
@@ -404,7 +323,9 @@ int VertexDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  VertexDataContainer* dc = getVertexDataContainer();
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
 
 //  QString groupName(H5_VERTEX_DATA_GROUP_NAME);
 
@@ -452,12 +373,15 @@ int VertexDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  VertexDataContainer* vdc = getVertexDataContainer();
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
 
+  // QString groupName(H5_VERTEX_FIELD_DATA_GROUP_NAME);
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(m_HdfFileId, NULL, 0) + 1;
@@ -473,25 +397,24 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 
 
   // Write the Field Data
-  err = QH5Utilities::createGroupsFromPath(H5_VERTEX_FIELD_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_VERTEX_FIELD_DATA_GROUP_NAME << "\n";
+    qDebug() << "Error creating HDF Group " << groupName << "\n";
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, H5_NAME, H5_VERTEX_FIELD_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_VERTEX_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
   }
 
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t fieldGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening field Group " << H5_VERTEX_FIELD_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error opening field Group ").arg(groupName);
     setErrorCondition(-65);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
@@ -500,10 +423,10 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
   typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = vdc->getVertexFieldArrayNameList();
+  NameListType names = dc->getVertexFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = vdc->getVertexFieldData(names.front());
+    IDataArray::Pointer array = dc->getVertexFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -511,13 +434,13 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 #if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Field Data (" << total << ")";
-    writeFieldXdmfGridHeader(total, ss.str());
+    writeFieldXdmfGridHeader(total, ss);
 #endif
   }
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = vdc->getVertexFieldData(*iter);
+    IDataArray::Pointer array = dc->getVertexFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -527,9 +450,8 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
       err = array->writeH5Data(fieldGroupId);
       if(err < 0)
       {
-        ss.str("");
-        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-        addErrorMessage(getHumanLabel(), ss.str(), err);
+        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg(*iter);
+        addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
         H5Gclose(fieldGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
@@ -564,24 +486,23 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
   // Now loop over each pair in the map creating a section in the XDMF and also writing the data to the HDF5 file
   for(SizeToIDataArrays_t::iterator pair = sizeToDataArrays.begin(); pair != sizeToDataArrays.end(); ++pair)
   {
-    total = (*pair).first;
-    VectorOfIDataArrays_t& arrays = (*pair).second;
+    total = pair.key();
+    VectorOfIDataArrays_t& arrays = pair.value();
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
     #if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
-    writeFieldXdmfGridHeader(total, ss.str());
+    writeFieldXdmfGridHeader(total, ss);
     #endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);
       if(err < 0)
       {
-        ss.str("");
-        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
-        addErrorMessage(getHumanLabel(), ss.str(), err);
+        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg( (*iter)->GetName());
+        addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
         H5Gclose(fieldGroupId); // Close the Cell Group
         H5Gclose(dcGid); // Close the Data Container Group
@@ -592,7 +513,7 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 #endif
     }
 #if WRITE_FIELD_XDMF
-    writeXdmfGridFooter(ss.str());
+    writeXdmfGridFooter(ss);
 #endif
 
   }
@@ -605,45 +526,44 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeVertexEnsembleData(hid_t dcGid)
+int VertexDataContainerWriter::writeVertexEnsembleData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  VertexDataContainer* vdc = getVertexDataContainer();
-
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  //QString groupName(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME);
   // Write the Ensemble data
-  err = QH5Utilities::createGroupsFromPath(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME << "\n";
-    setErrorCondition(-66);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
+    setErrorCondition(-63);
+    addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_VERTEX_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_VERTEX_ENSEMBLE_DATA_DEFAULT);
 
-  hid_t ensembleGid = H5Gopen(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t ensembleGid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening ensemble Group " << H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error opening ensemble Group %1").arg(groupName);
     setErrorCondition(-67);
-    addErrorMessage(getHumanLabel(), ss.str(), err);
+    addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = vdc->getVertexEnsembleArrayNameList();
+  NameListType names = dc->getVertexEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = vdc->getVertexEnsembleData(*iter);
+    IDataArray::Pointer array = dc->getVertexEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {
-      ss.str("");
-      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss.str(), err);
+      QString ss = QObject::tr("Error writing Ensemble array '%1' to the HDF5 File").arg(*iter);
+      addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(err);
       H5Gclose(ensembleGid); // Close the Cell Group
       H5Gclose(dcGid); // Close the Data Container Group

@@ -67,20 +67,7 @@ endforeach()
 # be able to use them from the DREAM3D user interface.
 set(_PrivateFilters
   GoldfeatherReader
-
-  VolumeDataContainerWriter
-  VolumeDataContainerReader
-
-  EdgeDataContainerWriter
-  EdgeDataContainerReader
-
-  SurfaceDataContainerWriter
-  SurfaceDataContainerReader
-
-  VertexDataContainerWriter
-  VertexDataContainerReader
   GBCDTriangleDumper
-
 )
 
 #-----------------
@@ -92,6 +79,34 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
+set(UTIL_FILES 
+  util/VolumeDataContainerWriter.h
+  util/VolumeDataContainerWriter.cpp
+  util/VolumeDataContainerReader.h
+  util/VolumeDataContainerReader.cpp
+
+  util/EdgeDataContainerWriter.h
+  util/EdgeDataContainerWriter.cpp
+  util/EdgeDataContainerReader.h
+  util/EdgeDataContainerReader.cpp
+
+  util/SurfaceDataContainerWriter.h
+  util/SurfaceDataContainerWriter.cpp
+  util/SurfaceDataContainerReader.h
+  util/SurfaceDataContainerReader.cpp
+
+  util/VertexDataContainerWriter.h
+  util/VertexDataContainerWriter.cpp
+  util/VertexDataContainerReader.h
+  util/VertexDataContainerReader.cpp
+  
+  util/IOSupport.h
+  util/IOSupport.cpp
+)
+
+foreach(file  ${UTIL_FILES})
+  ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} ${file})
+endforeach()
 
 
 

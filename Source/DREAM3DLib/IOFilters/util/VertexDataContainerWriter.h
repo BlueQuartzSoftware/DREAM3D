@@ -33,72 +33,39 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _SurfaceDataContainerWriter_H_
-#define _SurfaceDataContainerWriter_H_
+#ifndef _VertexDataContainerWriter_H_
+#define _VertexDataContainerWriter_H_
 
-#include <sstream>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IOFilters/util/IOSupport.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/IOFilters/EdgeDataContainerWriter.h"
-
 
 /**
- * @class SurfaceDataContainerWriter SurfaceDataContainerWriter.h DREAm3DLib/IOFilters/SurfaceDataContainerWriter.h
+ * @class VertexDataContainerWriter VertexDataContainerWriter.h /IOFilters/VertexDataContainerWriter.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWriter
+class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
 {
   public:
-    DREAM3D_SHARED_POINTERS(SurfaceDataContainerWriter)
-    DREAM3D_STATIC_NEW_MACRO(SurfaceDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(SurfaceDataContainerWriter, EdgeDataContainerWriter)
+    DREAM3D_SHARED_POINTERS(VertexDataContainerWriter)
+    DREAM3D_STATIC_NEW_MACRO(VertexDataContainerWriter)
+    DREAM3D_TYPE_MACRO_SUPER(VertexDataContainerWriter, IOSupport)
 
-    virtual ~SurfaceDataContainerWriter();
+    virtual ~VertexDataContainerWriter();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
+    DREAM3D_INSTANCE_PROPERTY(QTextStream*, XdmfOStream)
 
     typedef QList<QString> NameListType;
 
 
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Writer"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -112,7 +79,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     virtual void preflight();
 
   protected:
-    SurfaceDataContainerWriter();
+    VertexDataContainerWriter();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -126,27 +93,21 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
 
 
     virtual int writeVertices(hid_t dcGid);
-    virtual int writeFaces(hid_t dcGid);
-    virtual int writeEdges(hid_t dcGid);
 
-    virtual int writeMeshLinks(hid_t dcGid);
-    virtual int writeMeshFaceNeighborLists(hid_t dcGid);
-
-    virtual int writeVertexAttributeData(hid_t dcGid, QString groupName);
-    virtual int writeFaceAttributeData(hid_t dcGid, QString groupName);
-    virtual int writeEdgeData(hid_t dcGid);
-    virtual int writeFieldData(hid_t dcGid);
-    virtual int writeEnsembleData(hid_t dcGid);
+    virtual int writeVertexData(hid_t dcGid, QString groupName);
+    virtual int writeVertexFieldData(hid_t dcGid, QString groupName);
+    virtual int writeVertexEnsembleData(hid_t dcGid, QString groupName);
 
     virtual void writeXdmfGridHeader();
     virtual void writeXdmfGridFooter();
     virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
+
   private:
 
-    SurfaceDataContainerWriter(const SurfaceDataContainerWriter&); // Copy Constructor Not Implemented
-    void operator=(const SurfaceDataContainerWriter&); // Operator '=' Not Implemented
+    VertexDataContainerWriter(const VertexDataContainerWriter&); // Copy Constructor Not Implemented
+    void operator=(const VertexDataContainerWriter&); // Operator '=' Not Implemented
 };
 
-#endif /* _SurfaceDataContainerWriter_H_ */
+#endif /* _VertexDataContainerWriter_H_ */

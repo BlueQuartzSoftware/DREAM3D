@@ -36,7 +36,7 @@
 #ifndef _AbstractFilter_H_
 #define _AbstractFilter_H_
 
-#include <set>
+#include <QtCore/QSet>
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"

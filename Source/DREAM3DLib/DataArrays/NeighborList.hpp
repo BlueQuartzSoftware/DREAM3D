@@ -50,6 +50,7 @@
 #include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
