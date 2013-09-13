@@ -26,6 +26,7 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/EdgeArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FaceArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/CellArray.hpp
+  ${DREAM3DLib_SOURCE_DIR}/Common/ManagedArrayOfArrays.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DynamicListArray.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/DataContainerMacros.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
