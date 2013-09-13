@@ -62,7 +62,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_MicroTextureIntensityArrayName(DREAM3D::CellData::MicroTextureIntensity),
+  m_MicroTexVolFracArrayName(DREAM3D::CellData::MicroTexVolFrac),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -80,7 +80,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_AvgQuats(NULL),
   m_Active(NULL),
   m_FieldPhases(NULL),
-  m_MicroTextureIntensity(NULL),
+  m_MicroTexVolFrac(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -163,7 +163,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MicroTextureIntensity, ss, float, FloatArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MicroTexVolFrac, ss, float, FloatArrayType, 0, voxels, 1)
 
   // Field Data
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 4)
@@ -380,7 +380,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     int grainname = m_GrainIds[k];
     m_CellParentIds[k] = parentnumbers[grainname];
     m_FieldParentIds[grainname] = m_CellParentIds[k];
-    m_MicroTextureIntensity[k] = intensities[parentnumbers[grainname]];
+    m_MicroTexVolFrac[k] = intensities[parentnumbers[grainname]];
   }
 
 }
@@ -449,8 +449,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
-    m_MicroTextureIntensity[k] = grandparentnumbers[grainname];
-    outFile << m_MicroTextureIntensity[k] << " ";
+    m_MicroTexVolFrac[k] = grandparentnumbers[grainname];
+    outFile << m_MicroTexVolFrac[k] << " ";
   }
   outFile.close();
 }*/

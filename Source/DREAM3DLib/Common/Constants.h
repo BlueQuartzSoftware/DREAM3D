@@ -104,7 +104,7 @@ namespace DREAM3D
     const std::string FarFieldZoneIds("FarFieldZoneIds");
     const std::string FarFieldQuats("FarFieldQuats");
     const std::string ParentIds("ParentIds");
-    const std::string MicroTextureIntensity("MicroTextureIntensity");
+    const std::string MicroTexVolFrac("MicroTexVolFrac");
     const std::string Phases("Phases");
     const std::string CellPhases("Phases");
     const std::string BandContrast("BandContrast");
