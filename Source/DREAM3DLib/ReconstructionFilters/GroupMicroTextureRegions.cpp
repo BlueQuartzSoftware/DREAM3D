@@ -67,6 +67,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
+  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
   m_ContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborList),
   m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborhoodList),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -75,6 +76,7 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
+  m_Volumes(NULL),
   m_AvgQuats(NULL),
   m_Active(NULL),
   m_FieldPhases(NULL),
@@ -171,6 +173,7 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
 
   if(m_UseNonContiguousNeighbors == false)
   {
@@ -227,14 +230,14 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
-  //Convert user defined tolerance to radians.
+  // Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi/180.0f;
 
   notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
   notifyStatusMessage("Characterizing MicroTexture Regions");
-//  characterize_micro_texture_regions();
+  // characterize_micro_texture_regions();
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("GroupMicroTextureRegions Completed");
@@ -256,6 +259,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float angcur = 180.0f;
   std::vector<int> microtexturelist;
   std::vector<int> totalCheckList;
+  float microtexturevolume = 0.0f;
+  float totalCheckVolume = 0.0f;
   float w;
   float g1[3][3];
   float g2[3][3];
@@ -291,6 +296,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       m_Active[i] = true;
       microtexturelist.push_back(i);
       totalCheckList.push_back(i);
+      microtexturevolume = m_Volumes[i];
+      totalCheckVolume = m_Volumes[i];
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
@@ -318,7 +325,11 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
             angcur = 180.0f;
             if (k == 0) neigh = neighborlist[firstgrain][l];
             else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
-            if (beenChecked[neigh] == false) totalCheckList.push_back(neigh);
+            if (beenChecked[neigh] == false)
+            {
+              totalCheckList.push_back(neigh);
+              totalCheckVolume += m_Volumes[neigh];
+            }
             beenChecked[neigh] = true;
             if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
             {
@@ -326,11 +337,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
               {
                 QuaternionMathF::Copy(avgQuats[neigh], q2);
-//                q2[0] = 1;
-//                q2[1] = m_AvgQuats[5*neigh+1];
-//                q2[2] = m_AvgQuats[5*neigh+2];
-//                q2[3] = m_AvgQuats[5*neigh+3];
-//                q2[4] = m_AvgQuats[5*neigh+4];
                 OrientationMath::QuattoMat(q2, g2);
                 //transpose the g matrix so when caxis is multiplied by it
                 //it will give the sample direction that the caxis is along
@@ -346,13 +352,15 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 {
                   parentnumbers[neigh] = parentcount;
                   microtexturelist.push_back(neigh);
+                  microtexturevolume += m_Volumes[neigh];
                 }
               }
             }
           }
         }
       }
-      float fraction = (float)microtexturelist.size()/(float)totalCheckList.size();
+      //float fraction = (float)microtexturelist.size()/(float)totalCheckList.size();
+      float fraction = microtexturevolume / totalCheckVolume;
       intensities[parentcount] = fraction;
       int checkedSize = totalCheckList.size();
       for (size_t j = 0 ; j < checkedSize ; j++)
@@ -362,6 +370,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     }
     microtexturelist.clear();
     totalCheckList.clear();
+    microtexturevolume = 0.0f;
+    totalCheckVolume = 0.0f;
   }
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
 

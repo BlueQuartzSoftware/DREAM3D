@@ -79,6 +79,8 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(ContiguousNeighborListArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NonContiguousNeighborListArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -118,6 +120,7 @@ class DREAM3DLib_EXPORT GroupMicroTextureRegions : public AbstractFilter
     float* m_AvgQuats;
     bool* m_Active;
     int32_t* m_FieldPhases;
+    float* m_Volumes;
     NeighborList<int>* m_ContiguousNeighborList;
     NeighborList<int>* m_NonContiguousNeighborList;
 
