@@ -82,7 +82,7 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name)
+    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -90,6 +90,7 @@ class EdgeArray
       }
       EdgeArray* d = new EdgeArray();
       d->resizeArray(numElements);
+      d->m_Verts = verts;
       Pointer ptr(d);
       return ptr;
     }
@@ -118,12 +119,11 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void findEdgesContainingVert(StructArray<VertexArray::Vert_t>::Pointer Verts,
-                               StructArray<Edge_t>::Pointer Edges )
+    void findEdgesContainingVert()
     {
 
-      size_t numPts = Verts->getNumberOfTuples();
-      size_t numCells = Edges->getNumberOfTuples();
+      size_t numPts = m_Verts->getNumberOfTuples();
+      size_t numCells = m_Array->getNumberOfTuples();
 
       m_EdgesContainingVert = DynamicListArray::New();
 
@@ -170,10 +170,10 @@ class EdgeArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindEdgeNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Edge_t>::Pointer Edges)
+    void FindEdgeNeighbors()
     {
 
-      size_t nEdges = Edges->getNumberOfTuples();
+      size_t nEdges = m_Array->getNumberOfTuples();
 
       DynamicListArray::Pointer m_EdgeNeighbors = DynamicListArray::New();
 
@@ -191,7 +191,7 @@ class EdgeArray
       for(size_t t = 0; t < nEdges; ++t)
       {
         //   qDebug() << "Analyzing Face " << t << "\n";
-        Edge_t& seedEdge = *(Edges->getPointer(t));
+        Edge_t& seedEdge = *(m_Array->getPointer(t));
         for(size_t v = 0; v < 2; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
@@ -203,7 +203,7 @@ class EdgeArray
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      qDebug() << "   Comparing Face " << vertIdxs[vt] << "\n";
-            Edge_t& vertEdge = *(Edges->getPointer(vertIdxs[vt]));
+            Edge_t& vertEdge = *(m_Array->getPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
@@ -284,6 +284,7 @@ class EdgeArray
 
   private:
     StructArray<Edge_t>::Pointer  m_Array;
+    VertexArray* m_Verts;
     DynamicListArray::Pointer m_EdgesContainingVert;
     DynamicListArray::Pointer m_EdgeNeighbors;
 
