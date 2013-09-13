@@ -128,13 +128,21 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    Int32DynamicListArray::Pointer getFacesContainingVert()
+    {
+      return m_FacesContainingVert;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void findFacesContainingVert()
     {
 
       size_t numPts = m_Verts->getNumberOfTuples();
       size_t numCells = m_Array->getNumberOfTuples();
 
-      m_FacesContainingVert = DynamicListArray::New();
+      m_FacesContainingVert = Int32DynamicListArray::New();
 
       // Allocate the basic structures
       //m_FacesContainingVert->allocate(numCells);
@@ -181,12 +189,20 @@ class FaceArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    Int32DynamicListArray::Pointer getFaceNeighbors()
+    {
+      return m_FaceNeighbors;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void findFaceNeighbors()
     {
 
       size_t nFaces = m_Array->getNumberOfTuples();
 
-      DynamicListArray::Pointer m_FaceNeighbors = DynamicListArray::New();
+      Int32DynamicListArray::Pointer m_FaceNeighbors = Int32DynamicListArray::New();
 
       QVector<uint16_t> linkCount(nFaces, 0);
 
@@ -304,8 +320,8 @@ class FaceArray
   private:
     StructArray<Face_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    DynamicListArray::Pointer m_FacesContainingVert;
-    DynamicListArray::Pointer m_FaceNeighbors;
+    Int32DynamicListArray::Pointer m_FacesContainingVert;
+    Int32DynamicListArray::Pointer m_FaceNeighbors;
 
     QString m_Name;
 
