@@ -504,37 +504,38 @@ int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  EdgeDataContainer* sm = getEdgeDataContainer();
+  EdgeDataContainer* dc = getEdgeDataContainer();
+  //QString groupName(H5_EDGE_DATA_GROUP_NAME);
 
-  // Write the Face Data
-  err = H5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
+  // Write the Edge Data
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group ").arg(H5_EDGE_DATA_GROUP_NAME);
+    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_EDGE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t cellGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(H5_EDGE_DATA_GROUP_NAME);
+    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(groupName);
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = sm->getEdgeArrayNameList();
+  NameListType names = dc->getEdgeArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     QString ss = QObject::tr("Writing Edge Data '%1' to HDF5 File").arg(*iter);
     notifyStatusMessage(ss);
-    IDataArray::Pointer array = sm->getVertexData(*iter);
+    IDataArray::Pointer array = dc->getEdgeData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {

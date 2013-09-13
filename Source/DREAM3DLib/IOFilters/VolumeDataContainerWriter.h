@@ -132,18 +132,17 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
                               float spacing[3], float origin[3]);
 
-    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
-    int writeVertexData(hid_t dcGid);
-    int writeEdgeData(hid_t dcGid);
-    int writeFaceData(hid_t dcGid);
-    int writeCellData(hid_t dcGid);
-    int writeFieldData(hid_t dcGid);
-    int writeEnsembleData(hid_t dcGid);
+    virtual int writeVertexData(hid_t dcGid, QString groupName);
+    virtual int writeEdgeData(hid_t dcGid, QString groupName);
+    virtual int writeFaceData(hid_t dcGid, QString groupName);
 
-    void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeFieldXdmfGridHeader(size_t numElements, const QString &label);
-    //void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeXdmfGridFooter(const QString &label);
+    virtual int writeCellData(hid_t dcGid);
+    virtual int writeFieldData(hid_t dcGid);
+    virtual int writeEnsembleData(hid_t dcGid);
+
+    virtual void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
+    virtual void writeFieldXdmfGridHeader(size_t numElements, const QString &label);
+    virtual void writeXdmfGridFooter(const QString &label);
 
 
     // -----------------------------------------------------------------------------

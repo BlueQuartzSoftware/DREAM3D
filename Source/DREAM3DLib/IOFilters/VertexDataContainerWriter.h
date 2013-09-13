@@ -125,17 +125,18 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
+    virtual int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
 
-    int writeVertices(hid_t dcGid);
-    int writeVertexData(hid_t dcGid);
-    int writeVertexFieldData(hid_t dcGid);
-    int writeVertexEnsembleData(hid_t dcGid);
+    virtual int writeVertices(hid_t dcGid);
 
-    void writeXdmfGridHeader();
-    void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
-    QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
+    virtual int writeVertexData(hid_t dcGid, QString groupName);
+    virtual int writeVertexFieldData(hid_t dcGid);
+    virtual int writeVertexEnsembleData(hid_t dcGid);
+
+    virtual void writeXdmfGridHeader();
+    virtual void writeXdmfGridFooter();
+    virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
+    virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
 
   private:
