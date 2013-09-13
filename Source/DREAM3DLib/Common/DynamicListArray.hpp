@@ -153,7 +153,7 @@ class DynamicListArray
     // structure is initialized to Zero Entries and a NULL Pointer
     void allocate(size_t sz, size_t ext=1000)
     {
-      static DynamicListArray::ElementList linkInit = {0,NULL};
+      static DynamicListArray<T>::ElementList linkInit = {0,NULL};
 
       // This makes sure we deallocate any lists that have been created
       for (size_t i=0; i<this->Size; i++)
@@ -171,7 +171,7 @@ class DynamicListArray
 
       this->Size = sz;
       // Allocate a whole new set of structures
-      this->Array = new DynamicListArray::ElementList[sz];
+      this->Array = new DynamicListArray<T>::ElementList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
