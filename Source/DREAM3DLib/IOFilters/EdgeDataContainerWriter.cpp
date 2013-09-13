@@ -441,7 +441,7 @@ int EdgeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, c
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  MeshLinks::Pointer links = getEdgeDataContainer()->getMeshLinks();
+  Int32DynamicListArray::Pointer links = getEdgeDataContainer()->getEdges()->getEdgesContainingVert();
   if (NULL == links.get())
   {
     return 0;
@@ -458,7 +458,7 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
   size_t nVerts = verticesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nVerts; ++v)
   {
-    total += links->getNumberOfFaces(v);
+    total += links->getNumberOfElements(v);
   }
 
   size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
@@ -470,8 +470,8 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
 
   for(size_t v = 0; v < nVerts; ++v)
   {
-    uint16_t ncells = links->getNumberOfFaces(v);
-    int32_t* cells = links->getFaceListPointer(v);
+    uint16_t ncells = links->getNumberOfElements(v);
+    int32_t* cells = links->getElementListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
     ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
