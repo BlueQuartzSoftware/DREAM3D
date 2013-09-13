@@ -35,7 +35,6 @@
 #include <stdio.h>
 #include <sstream>
 
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
 #include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
@@ -233,7 +232,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
+  FaceArray& triangles = *(m->getFaces());
 
   int tData[4];
   int nT = m_NRingTriangles.size();

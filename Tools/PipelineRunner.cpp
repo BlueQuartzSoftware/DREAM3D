@@ -103,9 +103,9 @@ int main (int argc, char  *argv[])
 
   for(FilterWidgetManager::Collection::iterator iter = allFactories.begin(); iter != allFactories.end(); ++iter)
   {
-    QString filterName = ((*iter).first);
+    QString filterName = (iter.key());
     std::cout << "Writing " << filterName() << std::endl;
-    IFilterWidgetFactory::Pointer wf = (*iter).second;
+    IFilterWidgetFactory::Pointer wf = iter.value();
     if (NULL == wf) { return EXIT_FAILURE;}
     QFilterWidget* w = wf->createWidget();
     QString filePath = QString("/tmp/") + filterName + QString(".ini");

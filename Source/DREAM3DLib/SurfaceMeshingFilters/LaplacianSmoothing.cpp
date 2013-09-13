@@ -88,9 +88,10 @@ class LaplacianSmoothingImpl
      */
     void generate(size_t start, size_t end) const
     {
-      VertexArray::Vert_t* vertices = m_vertsPtr->getPointer(0); // Get the pointer to the from of the array so we can use [] notation
-      FaceArray::Face_t* faces = m_facesPtr->getPointer(0);
-      VertexArray::Vert_t* newPositions = m_newPositions->getPointer(0);
+      VertexArray& vertices = *(m_vertsPtr); // Get the pointer to the from of the array so we can use [] notation
+      FaceArray& faces = *(m_facesPtr);
+      VertexArray& newPositions = *(m_newPositions);
+      Int32DynamicListArray::Pointer vertLinks = faces.getFacesContainingVert();
 
       float* lambdas = m_lambdasPtr->getPointer(0);
 
@@ -104,7 +105,7 @@ class LaplacianSmoothingImpl
         newVert.pos[1] = currentVert.pos[1];
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
-        Int32DynamicListArray::Pointer list = m_MeshLinks->getFaceList(v);
+        DynamicListArray<int32_t>::ElementList& list = vertLinks->getElementList(v);
         QSet<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
@@ -711,8 +712,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
-  VertexArray::Pointer nodesPtr = m->getVertices();
-  VertexArray::VertList_t& nodes = *(nodesPtr);
+  VertexArray& nodes = *(m->getVertices());
   int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;
   
@@ -773,7 +773,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   }
 
   // Write the triangle indices into the vtk File
-  StructArray<FaceArray::Face_t>& triangles = *(m->getFaces());
+  FaceArray& triangles = *(m->getFaces());
   int triangleCount = 0;
   int end = triangles.getNumberOfTuples();
   int grainInterest = 9;
