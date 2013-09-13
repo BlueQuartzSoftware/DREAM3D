@@ -41,8 +41,10 @@
 
 #include <boost/shared_array.hpp>
 
+#include <QtCore/QSet>
+
 #include "DREAM3DLib/DREAM3DLib.h"
-#include <QtCore/qset.h>
+
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/VertexArray.hpp"
 #include "DREAM3DLib/Common/DynamicListArray.hpp"
