@@ -46,6 +46,28 @@
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
+
+namespace Detail {
+class H5GroupAutoCloser
+{
+public:
+  H5GroupAutoCloser(hid_t* groupId) :
+  gid(groupId)
+  {}
+
+  virtual ~H5GroupAutoCloser()
+  {
+    if (*gid > 0)
+    {
+      H5Gclose(*gid);
+    }
+  }
+  private:
+   hid_t* gid;
+};
+
+}
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -56,7 +78,6 @@ EdgeDataContainerReader::EdgeDataContainerReader() :
   m_ReadEdgeEnsembleData(true),
   m_ReadAllArrays(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -66,38 +87,6 @@ EdgeDataContainerReader::~EdgeDataContainerReader()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerReader::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -106,12 +95,12 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
 
-  EdgeDataContainer* m = getEdgeDataContainer();
-
-  if(NULL == m)
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "Edge DataContainer is missing", getErrorCondition());
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
   }
 
   if(getHdfFileId() < 0)
@@ -147,9 +136,16 @@ void EdgeDataContainerReader::execute()
 {
   int err = 0;
 
-  setErrorCondition(err);
-
-  dataCheck(false, 1, 1, 1);
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+  setErrorCondition(0);
 
   err = gatherData(false);
   setErrorCondition(err);
@@ -182,24 +178,35 @@ int EdgeDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  HDF_ERROR_HANDLER_OFF
+  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+
   int err = 0;
 
   err = gatherVertexData(dcGid, preflight);
-
+  if (err < 0)
+  {
+    return err;
+  }
 
   err = gatherEdgeData(dcGid, preflight);
-
+  if (err < 0)
+  {
+    return err;
+  }
 
   err = gatherEdgeFieldData(dcGid, preflight);
-
+  if (err < 0)
+  {
+    return err;
+  }
 
   err = gatherEdgeEnsembleData(dcGid, preflight);
-
+  if (err < 0)
+  {
+    return err;
+  }
   // Now finally close the group
   H5Gclose(dcGid); // Close the Data Container Group
-
-  HDF_ERROR_HANDLER_ON
 
   return err;
 }
@@ -275,14 +282,14 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 {
-  EdgeDataContainer* sm = getEdgeDataContainer();
-  VertexArray::Pointer verticesPtr = sm->getVertices();
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  VertexArray::Pointer verticesPtr = dc->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
   }
 
-  Int32DynamicListArray::Pointer MeshLinks = MeshLinks::New();
+  Int32DynamicListArray::Pointer MeshLinks = Int32DynamicListArray::New();
 
   size_t nVerts = verticesPtr->getNumberOfTuples();
   herr_t err = 0;
@@ -296,13 +303,13 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   }
   else
   {
-    sm->setMeshLinks(MeshLinks);
+    dc->setMeshLinks(MeshLinks);
   }
 
   if (false == preflight && type_size > 0)
   {
     //Read the array into the buffer
-    std::vector<uint8_t> buffer;
+    QVector<uint8_t> buffer;
     err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {
@@ -311,7 +318,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
       return err;
     }
     MeshLinks->deserializeLinks(buffer, nVerts);
-    sm->setMeshLinks(MeshLinks);
+    dc->setMeshLinks(MeshLinks);
   }
 
   return err;
@@ -336,6 +343,9 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
 {
 
   int err = 0;
+
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(gid < 0)
@@ -385,19 +395,19 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
     {
       if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addVertexData(dPtr->GetName(), dPtr);
+        dc->addVertexData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addEdgeData(dPtr->GetName(), dPtr);
+        dc->addEdgeData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addEdgeFieldData(dPtr->GetName(), dPtr);
+        dc->addEdgeFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getEdgeDataContainer()->addEdgeEnsembleData(dPtr->GetName(), dPtr);
+        dc->addEdgeEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

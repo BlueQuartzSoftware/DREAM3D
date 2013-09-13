@@ -206,7 +206,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-    /* READ THE VOXEL DATA TO THE HDF5 FILE */
+    /* READ THE VOXEL DATA From THE HDF5 FILE */
     if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
     {
       VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
@@ -224,7 +224,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       }
     }
 
-    /* READ THE Surface DATA TO THE HDF5 FILE */
+    /* READ THE Surface DATA From THE HDF5 FILE */
     if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
     {
       SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
@@ -242,7 +242,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       }
     }
 
-    /* READ THE Edge DATA TO THE HDF5 FILE */
+    /* READ THE Edge DATA From THE HDF5 FILE */
     if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
     {
       EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
@@ -316,7 +316,7 @@ void DataContainerReader::execute()
 
   err = readExistingPipelineFromFile(fileId);
 
-  /* READ THE VOXEL DATA TO THE HDF5 FILE */
+  /* READ THE VOXEL DATA FROM THE HDF5 FILE */
   if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
   {
     VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
@@ -340,7 +340,7 @@ void DataContainerReader::execute()
     }
   }
 
-  /* READ THE Surface DATA TO THE HDF5 FILE */
+  /* READ THE Surface DATA FROM THE HDF5 FILE */
   if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
   {
     SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
@@ -364,7 +364,7 @@ void DataContainerReader::execute()
   }
 
 
-  /* READ THE Surface DATA TO THE HDF5 FILE */
+  /* READ THE Surface DATA FROM THE HDF5 FILE */
   if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
   {
     EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
@@ -386,7 +386,7 @@ void DataContainerReader::execute()
     }
   }
 
-  /* READ THE Vertex DATA TO THE HDF5 FILE */
+  /* READ THE Vertex DATA FROM THE HDF5 FILE */
   if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
   {
     VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();

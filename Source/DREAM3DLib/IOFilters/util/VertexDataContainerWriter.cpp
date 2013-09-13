@@ -89,8 +89,6 @@ void VertexDataContainerWriter::execute()
 {
   int err = 0;
 
-  setErrorCondition(err);
-
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());

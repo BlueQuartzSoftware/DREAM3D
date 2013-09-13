@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _VertexDataContainerReader_H_
 #define _VertexDataContainerReader_H_
-
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -78,20 +77,20 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
 
     typedef QList<QString> NameListType;
 
+    virtual void preflight();
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
-    virtual void preflight();
+
+
 
   protected:
     VertexDataContainerReader();
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     virtual int gatherData(bool preflight);
 

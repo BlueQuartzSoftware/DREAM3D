@@ -61,7 +61,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     virtual ~EdgeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+
+
+    typedef QList<QString> NameListType;
 
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
@@ -72,54 +74,18 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef QList<QString> NameListType;
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
     */
     virtual void execute();
 
-    /**
-    * @brief This function runs some sanity checks on the DataContainer and inputs
-    * in an attempt to ensure the filter can process the inputs.
-    */
     virtual void preflight();
-
 
   protected:
     EdgeDataContainerReader();
+
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -129,12 +95,13 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     * @param fields The number of fields
     * @param ensembles The number of ensembles
     */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
+
     int gatherEdgeData(hid_t dcGid, bool preflight);
     int gatherEdgeFieldData(hid_t dcGid, bool preflight);
     int gatherEdgeEnsembleData(hid_t dcGid, bool preflight);
+
     int readEdges(hid_t dcGid);
     int readMeshLinks(hid_t dcGid, bool preflight);
     int readEdgeFieldData(hid_t dcGid);

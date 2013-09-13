@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _VolumeDataContainerReader_H_
 #define _VolumeDataContainerReader_H_
+#error NOT DONE YET
 
 #include <QtCore/QString>
 

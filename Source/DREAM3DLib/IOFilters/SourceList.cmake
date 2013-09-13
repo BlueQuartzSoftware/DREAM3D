@@ -80,6 +80,8 @@ endforeach()
 
 
 set(UTIL_FILES
+  util/IOSupport.h
+  util/IOSupport.cpp
 
   util/VertexDataContainerWriter.h
   util/VertexDataContainerWriter.cpp
@@ -88,33 +90,23 @@ set(UTIL_FILES
 
   util/EdgeDataContainerWriter.h
   util/EdgeDataContainerWriter.cpp
-#  util/EdgeDataContainerReader.h
-#  util/EdgeDataContainerReader.cpp
+  util/EdgeDataContainerReader.h
+  util/EdgeDataContainerReader.cpp
 
-#  util/VolumeDataContainerWriter.h
-#  util/VolumeDataContainerWriter.cpp
-#  util/VolumeDataContainerReader.h
-#  util/VolumeDataContainerReader.cpp
+  util/SurfaceDataContainerWriter.h
+  util/SurfaceDataContainerWriter.cpp
+  util/SurfaceDataContainerReader.h
+  util/SurfaceDataContainerReader.cpp
 
-
-
-#  util/SurfaceDataContainerWriter.h
-#  util/SurfaceDataContainerWriter.cpp
-#  util/SurfaceDataContainerReader.h
-#  util/SurfaceDataContainerReader.cpp
-
-
-  util/IOSupport.h
-  util/IOSupport.cpp
+  util/VolumeDataContainerWriter.h
+  util/VolumeDataContainerWriter.cpp
+  util/VolumeDataContainerReader.h
+  util/VolumeDataContainerReader.cpp
 )
 
 foreach(file  ${UTIL_FILES})
   ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} ${file})
 endforeach()
-
-
-
-
 
 
 END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Filters")
