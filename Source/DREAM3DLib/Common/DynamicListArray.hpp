@@ -49,18 +49,19 @@
  * @brief The MeshFaceNeighbors class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
+template<typename T>
 class DynamicListArray
 {
   public:
 
-    DREAM3D_SHARED_POINTERS(DynamicListArray)
-    DREAM3D_STATIC_NEW_MACRO(DynamicListArray)
-    DREAM3D_TYPE_MACRO(DynamicListArray)
+    DREAM3D_SHARED_POINTERS(DynamicListArray<T>)
+    DREAM3D_STATIC_NEW_MACRO(DynamicListArray<T>)
+    DREAM3D_TYPE_MACRO(DynamicListArray<T>)
 
     class ElementList {
       public:
-      unsigned short ncells;
-      int* cells;
+      uint16_t ncells;
+      T* cells;
     };
 
 
@@ -80,7 +81,14 @@ class DynamicListArray
     // Get a link structure given a point id.
     ElementList& getElementList(size_t ptId) {return this->Array[ptId];}
 
-    bool setElementList(size_t ptId, uint16_t nCells, int32_t* data)
+    /**
+     * @brief setElementList
+     * @param ptId
+     * @param nCells
+     * @param data
+     * @return
+     */
+    bool setElementList(size_t ptId, uint16_t nCells, T* data)
     {
       if(ptId >= Size) return false;
       if(NULL != Array[ptId].cells && Array[ptId].ncells > 0)
@@ -90,7 +98,7 @@ class DynamicListArray
       }
       Array[ptId].ncells = nCells;
       //If nCells is huge then there could be problems with this
-      this->Array[ptId].cells = new int[nCells];    
+      this->Array[ptId].cells = new int[nCells];
       ::memcpy(Array[ptId].cells, data, sizeof(int) * nCells);
       return true;
     }
@@ -120,9 +128,9 @@ class DynamicListArray
         ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
         this->Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->Array[i].cells = new int32_t[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->Array[i].cells, bufPtr + offset, (*ncells)*sizeof(int32_t) ); // Copy from teh buffer into the new list memory
-        offset += (*ncells) * sizeof(int32_t); // Increment the offset
+        this->Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
+        offset += (*ncells) * sizeof(T); // Increment the offset
       }
     }
 
@@ -179,5 +187,8 @@ class DynamicListArray
 
 
 };
+
+
+typedef DynamicListArray<int32_t> Int32DynamicListArray;
 
 #endif /* _DynamicListArray_H_ */

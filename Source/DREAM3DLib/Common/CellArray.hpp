@@ -130,7 +130,7 @@ class CellArray
       size_t numPts = Verts->getNumberOfTuples();
       size_t numCells = Cells->getNumberOfTuples();
 
-      m_CellsContainingVert = DynamicListArray::New();
+      m_CellsContainingVert = Int32DynamicListArray::New();
 
       // Allocate the basic structures
       QVector<uint16_t> linkCount(numCells, 0);
@@ -181,7 +181,7 @@ class CellArray
 
       size_t nCells = Cells->getNumberOfTuples();
 
-      DynamicListArray::Pointer m_CellNeighbors = DynamicListArray::New();
+      Int32DynamicListArray::Pointer m_CellNeighbors = Int32DynamicListArray::New();
 
       std::vector<uint16_t> linkCount(nCells, 0);
 
@@ -297,8 +297,8 @@ class CellArray
 
   private:
     StructArray<Cell_t>::Pointer  m_Array;
-    DynamicListArray::Pointer m_CellsContainingVert;
-    DynamicListArray::Pointer m_CellNeighbors;
+    Int32DynamicListArray::Pointer m_CellsContainingVert;
+    Int32DynamicListArray::Pointer m_CellNeighbors;
 
     QString m_Name;
 

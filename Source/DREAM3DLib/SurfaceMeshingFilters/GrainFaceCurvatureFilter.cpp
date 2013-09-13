@@ -174,7 +174,7 @@ int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWrit
 void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -249,7 +249,7 @@ void GrainFaceCurvatureFilter::preflight()
 void GrainFaceCurvatureFilter::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -462,9 +462,9 @@ void GrainFaceCurvatureFilter::execute()
 void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
-  
-  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << "\n";
-  notifyStatusMessage(ss.str());
+
+  QString ss = QObject::tr("%1/%2 Complete").arg(m_CompletedGrainFaces).arg(m_TotalGrainFaces);
+  notifyStatusMessage(ss);
 }
 
 #endif

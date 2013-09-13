@@ -125,7 +125,7 @@ class EdgeArray
       size_t numPts = Verts->getNumberOfTuples();
       size_t numCells = Edges->getNumberOfTuples();
 
-      m_EdgesContainingVert = DynamicListArray::New();
+      m_EdgesContainingVert = Int32DynamicListArray::New();
 
       // Allocate the basic structures
       QVector<uint16_t> linkCount(numCells, 0);
@@ -175,7 +175,7 @@ class EdgeArray
 
       size_t nEdges = Edges->getNumberOfTuples();
 
-      DynamicListArray::Pointer m_EdgeNeighbors = DynamicListArray::New();
+      Int32DynamicListArray::Pointer m_EdgeNeighbors = Int32DynamicListArray::New();
 
       QVector<uint16_t> linkCount(nEdges, 0);
 
@@ -284,8 +284,8 @@ class EdgeArray
 
   private:
     StructArray<Edge_t>::Pointer  m_Array;
-    DynamicListArray::Pointer m_EdgesContainingVert;
-    DynamicListArray::Pointer m_EdgeNeighbors;
+    Int32DynamicListArray::Pointer m_EdgesContainingVert;
+    Int32DynamicListArray::Pointer m_EdgeNeighbors;
 
     QString m_Name;
 

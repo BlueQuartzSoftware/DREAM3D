@@ -264,7 +264,7 @@ int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter*
 void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -320,7 +320,7 @@ void VerifyTriangleWinding::preflight()
 void VerifyTriangleWinding::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -337,9 +337,8 @@ void VerifyTriangleWinding::execute()
   {
     // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    ss.str("");
-    ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
-    conn->setMessagePrefix(ss.str());
+    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
+    conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
     conn->setVolumeDataContainer(getVolumeDataContainer());
@@ -616,7 +615,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   float total = (float)(trianglesToLabelMap.size());
   float curPercent = 0.0;
   int progressIndex = 0;
-  
+
 
   // Start looping on all the Face Labels (Grain Ids) values
   while (labelObjectsToVisit.isEmpty() == false)
@@ -626,7 +625,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     {
       ss.str("");
       ss << static_cast<int>(progressIndex/total * 100.0f) << "% Complete";
-      notifyStatusMessage(ss.str());
+      notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
     ++progressIndex;

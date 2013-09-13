@@ -108,7 +108,7 @@ int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -155,7 +155,7 @@ void GenerateUniqueEdges::preflight()
 void GenerateUniqueEdges::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -283,7 +283,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   typedef QMap<int64_t, int>::iterator EdgesIdMapIterator_t;
 
   float curPercent = 0.0;
-  
+
 
   for(int i = 0; i < ntri; ++i)
   {
@@ -371,16 +371,15 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
     if ( progIndex/total * 100.0f > (curPercent) )
     {
-      ss.str("");
-      ss << "Stage 2/2: " << (progIndex/total * 100.0f) << "% Complete";
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Stage 2/2: %1% Complete").arg(progIndex/total * 100.0f);
+      notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
     progIndex++;
     if (getCancel() == true) { return; }
 
-    *u64Edge = iter->first;
-    index = iter->second;
+    *u64Edge = iter->key();
+    index = iter->value();
     m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 

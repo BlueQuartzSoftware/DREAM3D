@@ -133,7 +133,7 @@ int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParamet
 void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -175,7 +175,7 @@ void GenerateSurfaceMeshConnectivity::preflight()
 void GenerateSurfaceMeshConnectivity::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -197,7 +197,7 @@ void GenerateSurfaceMeshConnectivity::execute()
     notifyStatusMessage("Generating Vertex Triangle List");
     VertexArray::Pointer verts = getSurfaceDataContainer()->getVertices();
     FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
-    faces->findFacesContainingVert(faces->getPointer(0), verts->getPointer(0)); 
+    faces->findFacesContainingVert(faces->getPointer(0), verts->getPointer(0));
   }
   if (m_GenerateTriangleNeighbors == true)
   {
@@ -209,9 +209,8 @@ void GenerateSurfaceMeshConnectivity::execute()
   {
     // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-    ss.str("");
-    ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
-    conn->setMessagePrefix(ss.str());
+    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
+    conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
     conn->setVolumeDataContainer(getVolumeDataContainer());
     conn->setSurfaceDataContainer(getSurfaceDataContainer());
