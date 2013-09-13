@@ -651,7 +651,7 @@ void M3CSliceBySlice::execute()
   neighborsPtr = StructArray<SurfaceMesh::M3C::Neighbor>::NullPointer();
   neighCSiteIdPtr = DataArray<int32_t>::NullPointer();
   cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::NullPointer();
-  cVertexPtr = VertexArray::VertList_t::NullPointer();
+  cVertexPtr = VertexArray::NullPointer();
   cVertexNodeIdPtr = DataArray<int32_t>::NullPointer();
   cVertexNodeTypePtr = DataArray<int8_t>::NullPointer();
   cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::NullPointer();
