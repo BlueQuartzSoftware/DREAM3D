@@ -44,8 +44,8 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 /**
  * @class FindNeighborhoods FindNeighborhoods.h DREAM3DLib/GenericFilters/FindNeighborhoods.h

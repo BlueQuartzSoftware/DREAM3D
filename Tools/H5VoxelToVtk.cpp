@@ -48,7 +48,7 @@
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"

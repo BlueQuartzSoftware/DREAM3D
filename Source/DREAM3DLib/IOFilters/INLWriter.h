@@ -41,9 +41,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FileWriter.h"
-#include "DREAM3DLib/Common/StringDataArray.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 /**
  * @class INLWriter INLWriter.h DREAM3DLib/IOFilters/INLWriter.h

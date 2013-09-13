@@ -42,10 +42,9 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
-#include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"#include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

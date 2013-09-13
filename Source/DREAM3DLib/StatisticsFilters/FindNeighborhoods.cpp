@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"

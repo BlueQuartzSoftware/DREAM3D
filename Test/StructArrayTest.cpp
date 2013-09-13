@@ -40,7 +40,7 @@
 #include "DREAM3DLib/Common/SurfaceDataContainer.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"

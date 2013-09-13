@@ -9,7 +9,7 @@
 
 #include <iostream>
 
-#include "DREAM3DLib/Common/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.hpp"
 
 template <typename T>
 struct Vector3

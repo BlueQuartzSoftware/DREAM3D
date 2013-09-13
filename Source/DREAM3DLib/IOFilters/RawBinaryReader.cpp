@@ -43,7 +43,7 @@
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 
 #define RBR_FILE_NOT_OPEN -1000

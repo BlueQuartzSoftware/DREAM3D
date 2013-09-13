@@ -39,7 +39,7 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #define QSM_GETCOORD(index, res, coord, origin)\
   coord = float((float(index)*float(res)) + float(origin));\
