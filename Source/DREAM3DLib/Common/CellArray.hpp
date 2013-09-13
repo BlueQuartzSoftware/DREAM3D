@@ -86,7 +86,7 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name)
+    static Pointer CreateArray(size_t numElements, const QString &name, VertexArray* verts)
     {
       if (name.isEmpty() == true)
       {
@@ -94,6 +94,7 @@ class CellArray
       }
       CellArray* d = new CellArray();
       d->resizeArray(numElements);
+      d->m_Verts = verts;
       Pointer ptr(d);
       return ptr;
     }
@@ -123,12 +124,19 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void findCellsContainingVert(StructArray<VertexArray::Vert_t>::Pointer Verts,
-                               StructArray<Cell_t>::Pointer Cells )
+    Int32DynamicListArray::Pointer getCellsContainingVert()
+    {
+      return m_CellsContainingVert;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void findCellsContainingVert()
     {
 
-      size_t numPts = Verts->getNumberOfTuples();
-      size_t numCells = Cells->getNumberOfTuples();
+      size_t numPts = m_Verts->getNumberOfTuples();
+      size_t numCells = m_Array->getNumberOfTuples();
 
       m_CellsContainingVert = Int32DynamicListArray::New();
 
@@ -176,10 +184,18 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindCellNeighbors(StructArray<VertexArray::Vert_t>::Pointer Verts, StructArray<Cell_t>::Pointer Cells)
+    Int32DynamicListArray::Pointer getCellNeighbors()
+    {
+      return m_CellNeighbors;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void findCellNeighbors()
     {
 
-      size_t nCells = Cells->getNumberOfTuples();
+      size_t nCells = m_Array->getNumberOfTuples();
 
       Int32DynamicListArray::Pointer m_CellNeighbors = Int32DynamicListArray::New();
 
@@ -197,7 +213,7 @@ class CellArray
       for(size_t t = 0; t < nCells; ++t)
       {
         //   qDebug() << "Analyzing Cell " << t << "\n";
-        Cell_t& seedCell = *(Cells->getPointer(t));
+        Cell_t& seedCell = *(m_Array->getPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
           //   qDebug() << " vert " << v << "\n";
@@ -209,7 +225,7 @@ class CellArray
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
             //      qDebug() << "   Comparing Cell " << vertIdxs[vt] << "\n";
-            Cell_t& vertCell = *(Cells->getPointer(vertIdxs[vt]));
+            Cell_t& vertCell = *(m_Array->getPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
             // If there are 2 matches then that triangle is a neighbor of this triangle. if there are more than 2 matches
@@ -297,6 +313,7 @@ class CellArray
 
   private:
     StructArray<Cell_t>::Pointer  m_Array;
+    VertexArray* m_Verts;
     Int32DynamicListArray::Pointer m_CellsContainingVert;
     Int32DynamicListArray::Pointer m_CellNeighbors;
 

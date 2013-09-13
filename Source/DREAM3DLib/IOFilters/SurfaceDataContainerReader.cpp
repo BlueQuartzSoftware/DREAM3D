@@ -401,7 +401,7 @@ int SurfaceDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
     return -1;
   }
 
-  MeshLinks::Pointer MeshLinks = MeshLinks::New();
+  Int32DynamicListArray::Pointer MeshLinks = MeshLinks::New();
 
   size_t nVerts = verticesPtr->getNumberOfTuples();
   herr_t err = 0;
@@ -494,7 +494,7 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
     return -1;
   }
 
-  MeshFaceNeighbors::Pointer meshTriangleNeighbors = MeshFaceNeighbors::New();
+  Int32DynamicListArray::Pointer meshTriangleNeighbors = MeshFaceNeighbors::New();
 
   size_t nFaces= facesPtr->getNumberOfTuples();
   herr_t err = 0;

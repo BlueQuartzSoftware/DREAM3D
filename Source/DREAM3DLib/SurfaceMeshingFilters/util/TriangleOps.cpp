@@ -69,11 +69,11 @@ QVector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm,
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   // Get the Triangle Neighbor Structure
-  MeshFaceNeighbors::Pointer triNeighbors = sm->getMeshFaceNeighborLists();
+  Int32DynamicListArray::Pointer triNeighbors = sm->getFaces()->getFaceNeighbors();
 
   // For the specific triangle that was passed, get its neighbor list
-  uint16_t count = triNeighbors->getNumberOfFaces(triangleIndex);
-  int32_t* nList = triNeighbors->getNeighborListPointer(triangleIndex);
+  uint16_t count = triNeighbors->getNumberOfElements(triangleIndex);
+  int32_t* nList = triNeighbors->getElementListPointer(triangleIndex);
 
   if (count < 3)
   {

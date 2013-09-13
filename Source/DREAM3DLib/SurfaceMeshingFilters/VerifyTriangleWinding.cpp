@@ -357,19 +357,17 @@ void VerifyTriangleWinding::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  MeshLinks::Pointer vertLinks = getSurfaceDataContainer()->getMeshLinks();
-  if (NULL == vertLinks.get())
+  if (NULL == getSurfaceDataContainer()->getFaces()->getFacesContainingVert())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceDataContainer()->buildMeshLinks();
+    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
   }
   if (getCancel() == true) { return; }
   bool clearFaceNeighbors = false;
-  MeshFaceNeighbors::Pointer triangleNeighbors = getSurfaceDataContainer()->getMeshFaceNeighborLists();
-  if (NULL == triangleNeighbors)
+  if (NULL == getSurfaceDataContainer()->getFaces()->getFaceNeighbors())
   {
     clearFaceNeighbors = true;
-    getSurfaceDataContainer()->buildMeshFaceNeighborLists();
+    getSurfaceDataContainer()->getFaces()->findFaceNeighbors();
   }
 
   // Execute the actual verification step.

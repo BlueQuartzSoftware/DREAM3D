@@ -195,14 +195,12 @@ void GenerateSurfaceMeshConnectivity::execute()
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Vertex Triangle List");
-    VertexArray::Pointer verts = getSurfaceDataContainer()->getVertices();
-    FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
-    faces->findFacesContainingVert(faces->getPointer(0), verts->getPointer(0));
+    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Face Neighbors List");
-    getSurfaceDataContainer()->buildMeshFaceNeighborLists();
+    getSurfaceDataContainer()->getFaces()->findFaceNeighbors();
   }
 
   if (m_GenerateEdgeIdList == true)

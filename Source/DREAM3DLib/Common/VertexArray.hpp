@@ -58,6 +58,11 @@ class VertexArray
         float pos[3];
     } Vert_t;
 
+    typedef struct
+    {
+        double pos[3];
+    } VertD_t;
+
     DREAM3D_SHARED_POINTERS(VertexArray)
     DREAM3D_STATIC_NEW_MACRO(VertexArray)
     DREAM3D_TYPE_MACRO(VertexArray)
