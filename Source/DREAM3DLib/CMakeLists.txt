@@ -140,7 +140,7 @@ file(WRITE ${FilterWidget_GEN_SRCS_File})
 
 # Add in our Filter classes
 include(${DREAM3DLib_SOURCE_DIR}/GenericFilters/SourceList.cmake)
-include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
+#include(${DREAM3DLib_SOURCE_DIR}/IOFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ProcessingFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/ReconstructionFilters/SourceList.cmake)
 include(${DREAM3DLib_SOURCE_DIR}/SamplingFilters/SourceList.cmake)
