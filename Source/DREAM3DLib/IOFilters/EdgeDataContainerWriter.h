@@ -132,6 +132,8 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     int writeEdgeFieldData(hid_t dcGid);
     int writeEdgeEnsembleData(hid_t dcGid);
 
+    int writeVertexAttributeData(hid_t dcGid);
+
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();
     void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);

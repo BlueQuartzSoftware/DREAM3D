@@ -124,10 +124,12 @@ void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t 
 
   VertexDataContainer* m = getVertexDataContainer();
 
-  if(NULL == m)
+  if (NULL == m)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "Vertex DataContainer is missing", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
+    setErrorCondition(-1);
+    return -1;
   }
   if(m_HdfFileId < 0)
   {

@@ -240,11 +240,11 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
 {
-  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
-  QTextStream& out = *(getXd);
+  QTextStream& out = *(getXdmfOStream());
   out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
@@ -260,7 +260,7 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
 {
-  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -281,7 +281,7 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
-  if (false == m_WriteXdmfFile || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
   {
     return;
   }
@@ -503,15 +503,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 
   writeCellXdmfGridHeader(origin, spacing, volDims);
 
-
-  // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
-  QByteArray nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(getHdfFileId(), nameBuffer.data(), nameSize);
-
-  QString hdfFileName(nameBuffer);
-  QFileInfo fi(hdfFileName);
-  hdfFileName = fi.fileName();
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
   QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
   // Write the Voxel Data

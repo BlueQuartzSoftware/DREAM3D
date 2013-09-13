@@ -534,7 +534,7 @@ int SurfaceMeshToNonconformalVtk::writePointData(FILE* vtkFile)
 
 
   //Get the Number of Vertex points in the mesh with a valid node type
-  DREAM3D::Mesh::VertList_t& nodes = *(getSurfaceDataContainer()->getVertices());
+  VertexArray& nodes = *(getSurfaceDataContainer()->getVertices());
   int numNodes = nodes.getNumberOfTuples();
   int nNodes = 0;
   // int swapped;

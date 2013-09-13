@@ -59,12 +59,11 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
   public:
     DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
     DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, SurfaceDataContainerReader)
 
     virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
@@ -102,7 +101,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

@@ -56,7 +56,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
   public:
     DREAM3D_SHARED_POINTERS(EdgeDataContainerReader)
     DREAM3D_STATIC_NEW_MACRO(EdgeDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerReader, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerReader, VertexDataContainerReader)
 
     virtual ~EdgeDataContainerReader();
 
@@ -99,7 +99,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

@@ -39,8 +39,8 @@
 
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
@@ -50,7 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 EdgeDataContainerReader::EdgeDataContainerReader() :
-  getHdfFileId()(-1),
+  VertexDataContainerReader(),
   m_ReadEdgeData(true),
   m_ReadEdgeFieldData(true),
   m_ReadEdgeEnsembleData(true),
@@ -167,21 +167,19 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 
   if(getHdfFileId() < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file";
+    QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
   hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
-  if (dcGid < 0)
+  if(dcGid < 0)
   {
-    ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::EdgeDataContainerName << "\n";
-    setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return getErrorCondition();
+    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::EdgeDataContainerName);
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -1;
   }
 
   HDF_ERROR_HANDLER_OFF
@@ -250,7 +248,7 @@ int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 
 //  if (true == preflight)
 //  {
-//    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+//    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
 //    if (err >= 0)
 //    {
 //      StructArray<EdgeArray::Edge_t>::Pointer edges = StructArray<EdgeArray::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
@@ -291,7 +289,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size = 0;
-  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
+  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
   if (err < 0)
   {
     return err;
@@ -304,8 +302,8 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   if (false == preflight && type_size > 0)
   {
     //Read the array into the buffer
-    QVector<uint8_t> buffer;
-    err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
+    std::vector<uint8_t> buffer;
+    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {
       setErrorCondition(err);
@@ -346,7 +344,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
   }
 
   NameListType names;
-  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
   //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
@@ -355,7 +353,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
-    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
