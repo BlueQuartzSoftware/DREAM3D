@@ -92,11 +92,11 @@ int main(int argc, char** argv)
 
 
   START_CLOCK;
-  sm->buildMeshLinks();
+  sm->getFaces()->findFacesContainingVert();
   // END_CLOCK("Building Cell Links");
 
   START_CLOCK;
-  sm->buildMeshFaceNeighborLists();
+  sm->getFaces()->findFaceNeighbors();
   // END_CLOCK("Building Triangle Neighbor Lists");
 
   START_CLOCK;

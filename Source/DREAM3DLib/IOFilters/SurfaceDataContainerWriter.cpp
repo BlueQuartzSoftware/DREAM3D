@@ -488,7 +488,7 @@ int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  MeshLinks::Pointer links = getSurfaceDataContainer()->getMeshLinks();
+  Int32DynamicListArray::Pointer links = getSurfaceDataContainer()->getFaces()->getFacesContainingVert;
   if (NULL == links.get())
   {
     return 0;
@@ -505,7 +505,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
   size_t nVerts = verticesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nVerts; ++v)
   {
-    total += links->getNumberOfFaces(v);
+    total += links->getNumberOfElements(v);
   }
 
   size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
@@ -517,7 +517,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 
   for(size_t v = 0; v < nVerts; ++v)
   {
-    uint16_t ncells = links->getNumberOfFaces(v);
+    uint16_t ncells = links->getNumberOfElements(v);
     int32_t* cells = links->getFaceListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
@@ -595,7 +595,7 @@ int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 {
-  MeshFaceNeighbors::Pointer links = getSurfaceDataContainer()->getMeshFaceNeighborLists();
+  Int32DynamicListArray::Pointer links = getSurfaceDataContainer()->getFaces()->getFaceNeighbors();
   if (NULL == links.get())
   {
     return 0;
@@ -612,7 +612,7 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
   size_t nFaces = facesPtr->getNumberOfTuples();
   for(size_t v = 0; v < nFaces; ++v)
   {
-    total += links->getNumberOfFaces(v);
+    total += links->getNumberOfElements(v);
   }
 
   size_t totalBytes = nFaces * sizeof(uint16_t) + total * sizeof(int32_t);
@@ -624,8 +624,8 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 
   for(size_t v = 0; v < nFaces; ++v)
   {
-    uint16_t ncells = links->getNumberOfFaces(v);
-    int32_t* cells = links->getNeighborListPointer(v);
+    uint16_t ncells = links->getNumberOfElements(v);
+    int32_t* cells = links->getElementListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
     ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );

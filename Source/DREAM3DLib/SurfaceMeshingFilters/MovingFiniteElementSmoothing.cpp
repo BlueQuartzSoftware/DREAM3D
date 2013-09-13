@@ -57,6 +57,7 @@
 #include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Common/VertexArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -340,9 +341,9 @@ void MovingFiniteElementSmoothing::execute()
   int ntri = trianglesPtr->getNumberOfTuples();
 
 
-  StructArray<DREAM3D::Mesh::VertD_t>::Pointer nodesDPtr = StructArray<DREAM3D::Mesh::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
+  StructArray<VertexArray::VertD_t>::Pointer nodesDPtr = StructArray<VertexArray::VertD_t>::CreateArray(numberNodes, "MFE_Double_Nodes");
   nodesDPtr->initializeWithZeros();
-  DREAM3D::Mesh::VertD_t* nodes = nodesDPtr->getPointer(0);
+  VertexArray::VertD_t* nodes = nodesDPtr->getPointer(0);
 
   // Copy the nodes from the 32 bit floating point to the 64 bit floating point
   for(int n = 0; n < numberNodes; ++n)
@@ -758,8 +759,8 @@ void MovingFiniteElementSmoothing::execute()
     Dihedral_max = -1.; //  added may 10, ADR
     double LDistance, deltaLDistance;
 
-    typedef NodeFunctions<DREAM3D::Mesh::VertD_t, double> NodeFunctionsType;
-    typedef TriangleFunctions<DREAM3D::Mesh::VertD_t, double> TriangleFunctionsType;
+    typedef NodeFunctions<VertexArray::VertD_t, double> NodeFunctionsType;
+    typedef TriangleFunctions<VertexArray::VertD_t, double> TriangleFunctionsType;
     // Loop through each of the triangles
     for (int t = 0; t < ntri; t++)
     {
@@ -787,7 +788,7 @@ void MovingFiniteElementSmoothing::execute()
       for (int n0 = 0; n0 < 3; n0++)
       { // for each of 3 nodes on the t^th triangle
         int i = rtri.verts[n0];
-        DREAM3D::Mesh::VertD_t& node_i = nodes[i];
+        VertexArray::VertD_t& node_i = nodes[i];
         for (int j = 0; j < 3; j++)
         { //  for each of the three coordinates of the node
           if(m_SmoothTripleLines == true && (m_SurfaceMeshNodeType[i] == 3 || m_SurfaceMeshNodeType[i] == 13))

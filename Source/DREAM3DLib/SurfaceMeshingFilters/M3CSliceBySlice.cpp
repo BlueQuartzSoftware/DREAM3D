@@ -402,7 +402,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   }
   else {
     VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
+    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
 
     int8_t* m_SurfaceMeshNodeType;
@@ -651,7 +651,7 @@ void M3CSliceBySlice::execute()
   neighborsPtr = StructArray<SurfaceMesh::M3C::Neighbor>::NullPointer();
   neighCSiteIdPtr = DataArray<int32_t>::NullPointer();
   cSquarePtr = StructArray<SurfaceMesh::M3C::Face>::NullPointer();
-  cVertexPtr = DREAM3D::Mesh::VertList_t::NullPointer();
+  cVertexPtr = VertexArray::VertList_t::NullPointer();
   cVertexNodeIdPtr = DataArray<int32_t>::NullPointer();
   cVertexNodeTypePtr = DataArray<int8_t>::NullPointer();
   cTrianglePtr = StructArray<SurfaceMesh::M3C::Patch>::NullPointer();

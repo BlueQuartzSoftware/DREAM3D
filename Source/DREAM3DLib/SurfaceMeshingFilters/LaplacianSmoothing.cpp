@@ -63,14 +63,14 @@ class LaplacianSmoothingImpl
 {
     VertexArray::Pointer m_vertsPtr;
     VertexArray::Pointer m_newPositions;
-    MeshLinks::Pointer m_MeshLinks;
+    Int32DynamicListArray::Pointer m_MeshLinks;
     FaceArray::Pointer m_facesPtr;
     DataArray<float>::Pointer m_lambdasPtr;
 
   public:
     LaplacianSmoothingImpl(VertexArray::Pointer vertsPtr,
                            VertexArray::Pointer newPositions,
-                           MeshLinks::Pointer MeshLinks,
+                           Int32DynamicListArray::Pointer MeshLinks,
                            FaceArray::Pointer facesPtr,
                            DataArray<float>::Pointer lambdasPtr) :
       m_vertsPtr(vertsPtr),
@@ -105,7 +105,7 @@ class LaplacianSmoothingImpl
         newVert.pos[1] = currentVert.pos[1];
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
-        MeshLinks::FaceList& list = m_MeshLinks->getFaceList(v);
+        Int32DynamicListArray::Pointer list = m_MeshLinks->getFaceList(v);
         QSet<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
@@ -592,10 +592,10 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  MeshLinks::Pointer MeshLinks = getSurfaceDataContainer()->getMeshLinks();
+  Int32DynamicListArray::Pointer MeshLinks = getSurfaceDataContainer()->getFaces()->getFacesContainingVert();
   if (NULL == MeshLinks.get())
   {
-    getSurfaceDataContainer()->buildMeshLinks();
+    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
   }
 
 
@@ -713,7 +713,7 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   SurfaceDataContainer* m = getSurfaceDataContainer();
   /* Place all your code to execute your filter here. */
   VertexArray::Pointer nodesPtr = m->getVertices();
-  DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
+  VertexArray::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.getNumberOfTuples();
   bool m_WriteBinaryFile = true;
   
