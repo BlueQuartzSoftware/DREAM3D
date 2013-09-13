@@ -384,11 +384,11 @@ void VerifyTriangleWinding::execute()
   }
   if (clearMeshLinks == true)
   {
-    getSurfaceDataContainer()->removeMeshLinks();
+    getSurfaceDataContainer()->getFaces()->deleteFacesContainingVert();
   }
   if (clearFaceNeighbors == true)
   {
-    getSurfaceDataContainer()->removeMeshFaceNeighborLists();
+    getSurfaceDataContainer()->getFaces()->deleteFaceNeighbors();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

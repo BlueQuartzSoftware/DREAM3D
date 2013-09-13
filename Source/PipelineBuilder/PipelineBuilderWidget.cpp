@@ -1058,7 +1058,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    IFilterWidgetFactory::Pointer wigFactory = factory.value();
     if (NULL == wigFactory.get() ) {
       continue;
     }
@@ -1080,7 +1080,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
     // Set an "internal" QString that is the name of the filter. We need this value
     // when the item is clicked in order to retreive the Filter Widget from the
     // filter widget manager.
-    QString filterName = ((*factory).first);
+    QString filterName = (factory.key());
     filterItem->setData( Qt::UserRole, filterName);
   }
 }
@@ -1127,7 +1127,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   filterList->clear();
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    IFilterWidgetFactory::Pointer wigFactory = factory.value();
     if (NULL == wigFactory.get() ) {
       continue;
     }
@@ -1137,7 +1137,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
     {
       match = true;
     }
-    QString filterName = ((*factory).first);
+    QString filterName = (factory.key());
     if (filterName.contains(text, Qt::CaseInsensitive) == true)
     {
       match = true;
