@@ -137,7 +137,6 @@ int SPParksWriter::writeHeader()
     VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);

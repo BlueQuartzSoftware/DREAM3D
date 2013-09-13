@@ -35,7 +35,7 @@
 #include <H5Support/QH5Utilities.h>
 
 #include <QtCore/QtDebug>
-
+#include <QtCore/QFileInfo>
 
 #define CheckValidLocId(locId)\
   if (locId < 0 ) {qDebug() << "Invalid HDF Location ID: " << locId;return -1;}
@@ -238,5 +238,33 @@ bool QH5Utilities::isGroup(hid_t nodeId, const QString &objName)
   return H5Utilities::isGroup(nodeId, objName.toStdString());
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QH5Utilities::fileNameFromFileId(hid_t fileId)
+{
+// Get the name of the .dream3d file that we are writing to:
+  ssize_t nameSize = H5Fget_name(fileId, NULL, 0) + 1;
+  QByteArray nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(fileId, nameBuffer.data(), nameSize);
 
+  QString hdfFileName(nameBuffer);
+  QFileInfo fi(hdfFileName);
+  hdfFileName = fi.fileName();
+  return hdfFileName;
+}
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString QH5Utilities::absoluteFilePathFromFileId(hid_t fileId)
+{
+// Get the name of the .dream3d file that we are writing to:
+  ssize_t nameSize = H5Fget_name(fileId, NULL, 0) + 1;
+  QByteArray nameBuffer(nameSize, 0);
+  nameSize = H5Fget_name(fileId, nameBuffer.data(), nameSize);
+
+  QString hdfFileName(nameBuffer);
+  QFileInfo fi(hdfFileName);
+  return fi.absoluteFilePath();
+}

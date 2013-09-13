@@ -206,6 +206,10 @@ public:
                                                   QList<QString> &names);
 
 
+  static H5Support_EXPORT QString fileNameFromFileId(hid_t fileId);
+  static H5Support_EXPORT QString absoluteFilePathFromFileId(hid_t fileId);
+
+
 protected:
   QH5Utilities() {} //This is just a bunch of Static methods
 
