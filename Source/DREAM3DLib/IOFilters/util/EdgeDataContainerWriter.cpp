@@ -69,7 +69,6 @@ class H5GroupAutoCloser
 EdgeDataContainerWriter::EdgeDataContainerWriter() :
   VertexDataContainerWriter()
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -82,80 +81,15 @@ EdgeDataContainerWriter::~EdgeDataContainerWriter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-  ////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  setErrorCondition(0);
-
-  EdgeDataContainer* m = getEdgeDataContainer();
-
-  if(NULL == m)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
-  }
-  if(getHdfFileId() < 0)
-  {
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
-  }
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::preflight()
-{
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  dataCheck(true, 1, 1, 1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void EdgeDataContainerWriter::execute()
 {
   int err = 0;
 
   setErrorCondition(err);
-  EdgeDataContainer* sm = getEdgeDataContainer();
-  if (NULL == sm)
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -2);
@@ -205,11 +139,11 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeVertexAttributeData(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
+//  err = writeVertexData(dcGid);
+//  if (err < 0)
+//  {
+//    return;
+//  }
 
   err = writeEdges(dcGid);
   if (err < 0)
@@ -217,21 +151,21 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeEdgeAttributeData(dcGid);
+  err = writeEdgeData(dcGid, H5_EDGE_DATA_GROUP_NAME);
   if (err < 0)
   {
     return;
   }
 
 
-  err = writeEdgeFieldData(dcGid);
+  err = writeEdgeFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEdgeEnsembleData(dcGid);
+  err = writeEdgeEnsembleData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -416,38 +350,26 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
   out << block << "\n";
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
-{
-  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
-  if (err < 0)
-  {
-    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
-  }
-  err = QH5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
-  if(err < 0)
-  {
-    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
-  }
-  return err;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  Int32DynamicListArray::Pointer links = getEdgeDataContainer()->getEdges()->getEdgesContainingVert();
+
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+
+  Int32DynamicListArray::Pointer links = dc->getEdges()->getEdgesContainingVert();
   if (NULL == links.get())
   {
     return 0;
   }
-  EdgeDataContainer* sm = getEdgeDataContainer();
-  VertexArray::Pointer verticesPtr = sm->getVertices();
+
+
+
+  VertexArray::Pointer verticesPtr = dc->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -504,11 +426,15 @@ int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid, QString groupName)
+int EdgeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  EdgeDataContainer* dc = getEdgeDataContainer();
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+
   //QString groupName(H5_EDGE_DATA_GROUP_NAME);
 
   // Write the Edge Data
@@ -555,11 +481,14 @@ int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid, QString groupNa
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  EdgeDataContainer* m = getEdgeDataContainer();
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
 
 #if WRITE_FIELD_XDMF
   // Get the name of the .dream3d file that we are writing to:
@@ -602,10 +531,10 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
   typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getEdgeFieldArrayNameList();
+  NameListType names = dc->getEdgeFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getEdgeFieldData(names.front());
+    IDataArray::Pointer array = dc->getEdgeFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -619,7 +548,7 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getEdgeFieldData(*iter);
+    IDataArray::Pointer array = dc->getEdgeFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -705,25 +634,26 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupName)
 {
-
   int err = 0;
-  EdgeDataContainer* m = getEdgeDataContainer();
-
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  //QString groupName(H5_ENSEMBLE_DATA_GROUP_NAME);
   // Write the Ensemble data
-  err = H5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+   err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error creating HDF Group ").arg(H5_ENSEMBLE_DATA_GROUP_NAME);
-    setErrorCondition(-66);
+    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
+    setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
 
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t ensembleGid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
     QString ss = QObject::tr("Error opening ensemble Group ").arg(H5_ENSEMBLE_DATA_GROUP_NAME);
@@ -732,10 +662,10 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getEdgeEnsembleArrayNameList();
+  NameListType names = dc->getEdgeEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getEdgeEnsembleData(*iter);
+    IDataArray::Pointer array = dc->getEdgeEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {
