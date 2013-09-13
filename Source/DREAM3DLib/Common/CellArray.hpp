@@ -124,13 +124,21 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
+    Int32DynamicListArray::Pointer getCellsContainingVert()
+    {
+      return m_CellsContainingVert;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
     void findCellsContainingVert()
     {
 
       size_t numPts = m_Verts->getNumberOfTuples();
       size_t numCells = m_Array->getNumberOfTuples();
 
-      m_CellsContainingVert = DynamicListArray::New();
+      m_CellsContainingVert = Int32DynamicListArray::New();
 
       // Allocate the basic structures
       QVector<uint16_t> linkCount(numCells, 0);
@@ -176,12 +184,20 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void FindCellNeighbors()
+    Int32DynamicListArray::Pointer getCellNeighbors()
+    {
+      return m_CellNeighbors;
+    }
+
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void findCellNeighbors()
     {
 
       size_t nCells = m_Array->getNumberOfTuples();
 
-      DynamicListArray::Pointer m_CellNeighbors = DynamicListArray::New();
+      Int32DynamicListArray::Pointer m_CellNeighbors = Int32DynamicListArray::New();
 
       std::vector<uint16_t> linkCount(nCells, 0);
 
@@ -298,8 +314,8 @@ class CellArray
   private:
     StructArray<Cell_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    DynamicListArray::Pointer m_CellsContainingVert;
-    DynamicListArray::Pointer m_CellNeighbors;
+    Int32DynamicListArray::Pointer m_CellsContainingVert;
+    Int32DynamicListArray::Pointer m_CellNeighbors;
 
     QString m_Name;
 
