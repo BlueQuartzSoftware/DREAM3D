@@ -36,22 +36,25 @@
 
 #include "DataContainerWriter.h"
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
 
 #include <QtCore/QFileInfo>
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
+
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
+
 #include "EbsdLib/EbsdConstants.h"
 
 
 #include "DREAM3DLib/HDF5/H5FilterParametersWriter.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/SurfaceDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/VertexDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/EdgeDataContainerWriter.h"
-#include "H5Support/HDF5ScopedFileSentinel.h"
+#include "DREAM3DLib/IOFilters/util/VolumeDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/util/SurfaceDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/util/VertexDataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/util/EdgeDataContainerWriter.h"
+
 
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0

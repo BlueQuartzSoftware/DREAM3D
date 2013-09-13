@@ -33,80 +33,60 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _VolumeDataContainerReader_H_
-#define _VolumeDataContainerReader_H_
+#ifndef _VertexDataContainerReader_H_
+#define _VertexDataContainerReader_H_
 
 #include <QtCore/QString>
 
-#include <hdf5.h>
-
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "DREAM3DLib/IOFilters/util/IOSupport.h"
+
 #include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
+
+#include "DREAM3DLib/DataContainers/DataContainer.h"
 
 
 /**
- * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
+ * @class VertexDataContainerReader VertexDataContainerReader.h /IOFilters/VertexDataContainerReader.h
  * @brief
  * @author
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerReader
+class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
 {
   public:
-    DREAM3D_SHARED_POINTERS(VolumeDataContainerReader)
-    DREAM3D_STATIC_NEW_MACRO(VolumeDataContainerReader)
-    DREAM3D_TYPE_MACRO_SUPER(VolumeDataContainerReader, SurfaceDataContainerReader)
+    DREAM3D_SHARED_POINTERS(VertexDataContainerReader)
+    DREAM3D_STATIC_NEW_MACRO(VertexDataContainerReader)
+    DREAM3D_TYPE_MACRO_SUPER(VertexDataContainerReader, IOSupport)
 
-    virtual ~VolumeDataContainerReader();
+    virtual ~VertexDataContainerReader();
+
+
+
+
+
+
+
+
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellEnsembleArraysToRead)
+
+
+
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexEnsembleData)
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef QList<QString> NameListType;
 
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Voxel DataContainer Reader"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -119,10 +99,8 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     */
     virtual void preflight();
 
-    int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
-
   protected:
-    VolumeDataContainerReader();
+    VertexDataContainerReader();
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -135,15 +113,20 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
+    int gatherVertexData(hid_t dcGid, bool preflight);
+    int gatherVertexFieldData(hid_t dcGid, bool preflight);
+    int gatherVertexEnsembleData(hid_t dcGid, bool preflight);
+    int readVertices(hid_t dcGid);
+
+
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                        QVector<QString> &namesRead,
                        QSet<QString> &namesToRead);
-    int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
 
-    VolumeDataContainerReader(const VolumeDataContainerReader&); // Copy Constructor Not Implemented
-    void operator=(const VolumeDataContainerReader&); // Operator '=' Not Implemented
+    VertexDataContainerReader(const VertexDataContainerReader&); // Copy Constructor Not Implemented
+    void operator=(const VertexDataContainerReader&); // Operator '=' Not Implemented
 };
 
-#endif /* _VolumeDataContainerReader_H_ */
+#endif /* _VertexDataContainerReader_H_ */

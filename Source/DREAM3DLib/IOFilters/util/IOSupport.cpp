@@ -1,5 +1,6 @@
 /* ============================================================================
- * Copyright (c) 2011, Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Michael A. Jackson (BlueQuartz Software)
+ * Copyright (c) 2012 Dr. Michael A. Groeber (US Air Force Research Laboratories)
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without modification,
@@ -12,9 +13,10 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Jackson nor the names of its contributors may
- * be used to endorse or promote products derived from this software without
- * specific prior written permission.
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * or promote products derived from this software without specific prior written
+ * permission.
  *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
@@ -26,28 +28,27 @@
  * CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY,
  * OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE
  * USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ *
+ *  This code was written under United States Air Force Contract number
+ *                           FA8650-10-D-5210
+ *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+ #include "IOSupport.h"
 
-#include "AbstractFilter.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+
+#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::AbstractFilter() :
+IOSupport::IOSupport() :
 Observable(),
-m_VolumeDataContainer(NULL),
-m_SurfaceDataContainer(NULL),
-m_VertexDataContainer(NULL),
 m_ErrorCondition(0),
-m_Cancel(false)
-{
-  setupFilterParameters();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-AbstractFilter::~AbstractFilter()
+m_Cancel(false),
+  m_DataContainer(NULL),
+  m_HdfFileId(-1)
 {
 
 }
@@ -55,101 +56,23 @@ AbstractFilter::~AbstractFilter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::setupFilterParameters()
+IOSupport::~IOSupport()
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::execute()
+QString IOSupport::getHumanLabel()
 {
-  setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement an execute method. Please use a subclass instead.", -999);
+  return QString("IOSupport");
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::preflight()
-{
-  setErrorCondition(-999);
-  notifyErrorMessage("AbstractFilter does not implement a preflight method. Please use a subclass instead.", -999);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterBeforeThis(const QString &name)
-{
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer prev = getPreviousFilter();
-  while(prev.get() != NULL)
-  {
-    if (prev->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    prev = prev->getPreviousFilter();
-  }
-  return contains;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-bool AbstractFilter::doesPipelineContainFilterAfterThis(const QString &name)
-{
-  bool contains = false;
-  // Check the previous filter
-  AbstractFilter::Pointer next = getNextFilter();
-  while(next.get() != NULL)
-  {
-    if (next->getNameOfClass().compare(name) == 0)
-    {
-      contains = true;
-      break;
-    }
-    next = next->getNextFilter();
-  }
-  return contains;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry)
-{
-  m_CreatedArrayHelpIndexEntries.push_back(entry);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int AbstractFilter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  BOOST_ASSERT(writer != NULL);
-  qDebug() << "AbstractFilter::writeFilterParameters() -> Writing Filter Options" << "\n";
-  return -1;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(PipelineMessage &msg)
+void IOSupport::addErrorMessage(PipelineMessage &msg)
 {
   m_PipelineMessages.push_back(msg);
 }
@@ -157,7 +80,7 @@ void AbstractFilter::addErrorMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QString &errorDescription, int errorCode)
+void IOSupport::addErrorMessage(const QString &filterHumanLabel, const QString &errorDescription, int errorCode)
 {
   PipelineMessage em(getNameOfClass(), errorDescription, errorCode, PipelineMessage::Error);
   em.setFilterHumanLabel(getHumanLabel());
@@ -167,7 +90,7 @@ void AbstractFilter::addErrorMessage(const QString &filterHumanLabel, const QStr
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector) {
+void IOSupport::addErrorMessages(QVector<PipelineMessage> msgVector) {
   for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
     m_PipelineMessages.push_back(msgVector[i]);
   }
@@ -176,7 +99,7 @@ void AbstractFilter::addErrorMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(PipelineMessage &msg)
+void IOSupport::addWarningMessage(PipelineMessage &msg)
 {
   msg.setFilterHumanLabel(getHumanLabel());
   msg.setFilterClassName(getNameOfClass());
@@ -186,7 +109,7 @@ void AbstractFilter::addWarningMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode)
+void IOSupport::addWarningMessage(const QString &filterName, const QString &warnDescription, int warnCode)
 {
   PipelineMessage em(getNameOfClass(), warnDescription, warnCode, PipelineMessage::Warning);
   em.setFilterHumanLabel(getHumanLabel());
@@ -197,7 +120,7 @@ void AbstractFilter::addWarningMessage(const QString &filterName, const QString 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector) {
+void IOSupport::addWarningMessages(QVector<PipelineMessage> msgVector) {
   for (QVector<PipelineMessage>::size_type i=0; i < msgVector.size(); ++i) {
     m_PipelineMessages.push_back(msgVector[i]);
   }
@@ -207,7 +130,7 @@ void AbstractFilter::addWarningMessages(QVector<PipelineMessage> msgVector) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
+void IOSupport::removeErrorMessage(PipelineMessage msg) {
   for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
     if (*iter == msg) {
       m_PipelineMessages.erase(iter);
@@ -219,7 +142,7 @@ void AbstractFilter::removeErrorMessage(PipelineMessage msg) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessage(int index) {
+void IOSupport::removeErrorMessage(int index) {
   int count = 0;
 
   for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
@@ -234,7 +157,7 @@ void AbstractFilter::removeErrorMessage(int index) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::removeErrorMessages(int start, int end) {
+void IOSupport::removeErrorMessages(int start, int end) {
   int count = 0;
 
   for (QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin(); iter!=m_PipelineMessages.end(); ++iter) {
@@ -252,7 +175,7 @@ void AbstractFilter::removeErrorMessages(int start, int end) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::clearErrorMessages() {
+void IOSupport::clearErrorMessages() {
   QVector<PipelineMessage>::iterator iter = m_PipelineMessages.begin();
 
   while ( iter != m_PipelineMessages.end() ) {
@@ -260,12 +183,24 @@ void AbstractFilter::clearErrorMessages() {
   }
 }
 
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AbstractFilter::tbbTaskProgress()
+int IOSupport::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
-
+  // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
+  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
+  if (err < 0)
+  {
+    qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
+  }
+  err = QH5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  if(err < 0)
+  {
+    qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";
+  }
+  return err;
 }
-
 

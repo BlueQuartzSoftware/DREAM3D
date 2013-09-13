@@ -32,7 +32,7 @@
 #define OBSERVABLE_H_
 
 #include <QtCore/QString>
-#include <vector>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -88,22 +88,22 @@ class DREAM3DLib_EXPORT Observable
 
     void notifyStatusAndProgress(QString statusDesc, int statusVal);
 
-    virtual std::vector<Observer*> getObservers();
+    virtual QVector<Observer*> getObservers();
 
-    virtual void setObservers(std::vector<Observer*> obs);
+    virtual void setObservers(QVector<Observer*> obs);
 
     virtual void setMessagePrefix(const QString &str);
     virtual QString getMessagePrefix();
 
   private:
-    std::vector<Observer*> m_Observers;
+    QVector<Observer*> m_Observers;
     QString m_Prefix;
 
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented
 };
 
-//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT std::vector<Observer*>;
+//EXPIMP_TEMPLATE template class DREAM3DLib_EXPORT QVector<Observer*>;
 
 
 #endif /* OBSERVABLE_H_ */

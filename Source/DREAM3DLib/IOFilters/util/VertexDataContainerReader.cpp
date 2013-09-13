@@ -47,14 +47,13 @@
 //
 // -----------------------------------------------------------------------------
 VertexDataContainerReader::VertexDataContainerReader() :
-  AbstractFilter(),
+  IOSupport(),
   m_HdfFileId(-1),
   m_ReadVertexData(true),
   m_ReadVertexFieldData(true),
   m_ReadVertexEnsembleData(true),
   m_ReadAllArrays(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -67,79 +66,6 @@ VertexDataContainerReader::~VertexDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerReader::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
-{
-  setErrorCondition(0);
-  
-  VertexDataContainer* m = getVertexDataContainer();
-
-  if(NULL == m)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "Vertex DataContainer is missing", getErrorCondition());
-  }
-  if(m_HdfFileId < 0)
-  {
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
-  }
-  else if (preflight == true)
-  {
-    int err = gatherData(preflight);
-    if (err < 0)
-    {
-
-    }
-  }
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerReader::preflight()
-{
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  dataCheck(true, 1, 1, 1);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VertexDataContainerReader::execute()
 {
   int err = 0;
@@ -147,11 +73,11 @@ void VertexDataContainerReader::execute()
   if(NULL ==vdc)
   {
     setErrorCondition(-1);
-    
+
     ss <<" DataContainer was NULL";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
-  }  
+  }
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -176,7 +102,7 @@ void VertexDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::gatherData(bool preflight)
 {
-  
+
 
   if(m_HdfFileId < 0)
   {
@@ -323,7 +249,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
-  
+
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
