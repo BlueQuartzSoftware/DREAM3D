@@ -107,7 +107,7 @@ void subtractVector3d(DataArray<double>::Pointer data, double* v)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CalculateTriangleGroupCurvatures::operator() const
+void CalculateTriangleGroupCurvatures::operator()() const
 {
 
   // Get the Triangles Array
@@ -158,7 +158,7 @@ void CalculateTriangleGroupCurvatures::operator() const
   bool computeMean = (m_MeanCurvature.get() != NULL);
   bool computeDirection = (m_PrincipleDirection1.get() != NULL);
 
-  
+
   QVector<int>::size_type tCount = m_TriangleIds.size();
   // For each triangle in the group
   for(QVector<int>::size_type i = 0; i < tCount; ++i)
@@ -327,7 +327,7 @@ DataArray<double>::Pointer CalculateTriangleGroupCurvatures::extractPatchData(in
   extractedData->SetComponent(i, 1, data[triId*3 + 1]);
   extractedData->SetComponent(i, 2, data[triId*3 + 2]);
   ++i;
-  triPatch.erase(triId);
+  triPatch.remove(triId);
 
   for(QSet<int32_t>::iterator iter = triPatch.begin(); iter != triPatch.end(); ++iter)
   {

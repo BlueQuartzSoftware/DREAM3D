@@ -134,7 +134,7 @@ class FaceArray
       size_t numPts = Verts->getNumberOfTuples();
       size_t numCells = Faces->getNumberOfTuples();
 
-      m_FacesContainingVert = DynamicListArray::New();
+      m_FacesContainingVert = Int32DynamicListArray::New();
 
       // Allocate the basic structures
       //m_FacesContainingVert->allocate(numCells);
@@ -186,7 +186,7 @@ class FaceArray
 
       size_t nFaces = Faces->getNumberOfTuples();
 
-      DynamicListArray::Pointer m_FaceNeighbors = DynamicListArray::New();
+      Int32DynamicListArray::Pointer m_FaceNeighbors = Int32DynamicListArray::New();
 
       QVector<uint16_t> linkCount(nFaces, 0);
 
@@ -303,8 +303,8 @@ class FaceArray
 
   private:
     StructArray<Face_t>::Pointer  m_Array;
-    DynamicListArray::Pointer m_FacesContainingVert;
-    DynamicListArray::Pointer m_FaceNeighbors;
+    Int32DynamicListArray::Pointer m_FacesContainingVert;
+    Int32DynamicListArray::Pointer m_FaceNeighbors;
 
     QString m_Name;
 
