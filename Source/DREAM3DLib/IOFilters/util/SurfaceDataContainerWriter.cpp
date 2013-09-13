@@ -69,7 +69,6 @@ public:
 SurfaceDataContainerWriter::SurfaceDataContainerWriter() :
 EdgeDataContainerWriter()
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -79,39 +78,6 @@ SurfaceDataContainerWriter::~SurfaceDataContainerWriter()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -120,12 +86,15 @@ void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-
-  if(NULL == m)
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer is missing", getErrorCondition());
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
+    setErrorCondition(-1);
+    return;
   }
   if(getHdfFileId() < 0)
   {
@@ -153,15 +122,15 @@ void SurfaceDataContainerWriter::execute()
 {
   int err = 0;
 
-  setErrorCondition(err);
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  if (NULL == sm)
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -2);
     setErrorCondition(-1);
     return;
   }
+
   setErrorCondition(0);
 
   // Create the HDF5 Group for the Data Container
@@ -182,6 +151,7 @@ void SurfaceDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
+  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(DREAM3D::HDF5::SurfaceDataContainerName, H5_VTK_POLYDATA);
@@ -192,28 +162,7 @@ void SurfaceDataContainerWriter::execute()
   writeXdmfGridHeader();
 
 
-  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
-
-  err = writeVertices(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
   err = writeMeshLinks(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-  err = writeVertexAttributeData(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-
-  err = writeFaces(dcGid);
   if (err < 0)
   {
     return;
@@ -225,36 +174,27 @@ void SurfaceDataContainerWriter::execute()
     return;
   }
 
-  err = writeFaceAttributeData(dcGid);
+  err = writeFaces(dcGid);
   if (err < 0)
   {
     return;
   }
 
-  err = writeEdges(dcGid);
+  err = writeFaceData(dcGid, H5_FACE_DATA_GROUP_NAME);
   if (err < 0)
   {
     return;
   }
 
-  err = writeEdgeData(dcGid);
+  err = writeFaceFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     return;
   }
 
-
-  err = writeFieldData(dcGid);
+  err = writeFaceEnsembleData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeEnsembleData(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -274,16 +214,19 @@ void SurfaceDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainerWriter::writeXdmfGridHeader()
 {
+
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   {
     return;
   }
-  FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer faces = dc->getFaces();
   if (NULL == faces.get())
   {
     return;
   }
-  VertexArray::Pointer verts = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer verts = dc->getVertices();
   if(NULL == verts.get())
   {
     return;
@@ -313,11 +256,13 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainerWriter::writeXdmfGridFooter()
 {
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   {
     return;
   }
-  FaceArray::Pointer faces = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer faces = dc->getFaces();
   if (NULL == faces.get())
   {
     return;
@@ -352,7 +297,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "AttributeType=\"" << attrType << "\" ";
     out << "Center=\"" << centering << "\">" << "\n";
     // Open the <DataItem> Tag
-    out << "      <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() <<  "\" ";
+    out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
     out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "      </DataItem>" << "\n";
@@ -437,44 +382,19 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
   out << block << "\n";
 }
 
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeVertices(hid_t dcGid)
-{
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  VertexArray::Pointer verticesPtr = sm->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
-
-  int32_t rank = 2;
-  hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), DREAM3D::Mesh::k_VertexNumElements};
-
-  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
-
-  herr_t err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
-  }
-  return err;
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
-  Int32DynamicListArray::Pointer links = getSurfaceDataContainer()->getFaces()->getFacesContainingVert;
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
+  Int32DynamicListArray::Pointer links = dc->getFaces()->getFacesContainingVert;
   if (NULL == links.get())
   {
     return 0;
   }
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  VertexArray::Pointer verticesPtr = sm->getVertices();
+  VertexArray::Pointer verticesPtr = dc->getVertices();
   if (NULL == verticesPtr.get())
   {
     return -1;
@@ -515,59 +435,6 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
     return err;
   }
 
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeVertexAttributeData(hid_t dcGid, QString groupName)
-{
-
-  int err = 0;
-  SurfaceDataContainer* dc = getSurfaceDataContainer();
-
-  //QString groupName(H5_VERTEX_DATA_GROUP_NAME);
-
-  // Write the Vertex Data
-  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(groupName);
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = dc->getVertexArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
-    notifyStatusMessage(ss);
-    IDataArray::Pointer array = dc->getVertexData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-      addErrorMessage(getHumanLabel(), ss, err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-    writeXdmfAttributeData(groupName, array, "Node");
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
   return err;
 }
 
@@ -632,8 +499,9 @@ int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 {
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  FaceArray::Pointer facesPtr = sm->getFaces();
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
+  FaceArray::Pointer facesPtr = dc->getFaces();
   if (facesPtr.get() == NULL)
   {
     return -1;
@@ -656,28 +524,28 @@ int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid, QString groupName)
+int SurfaceDataContainerWriter::writeFaceData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  SurfaceDataContainer* dc = getSurfaceDataContainer();
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
+  //QString groupName(H5_FACE_DATA_GROUP_NAME)
 
   // Write the Face Data
-  err = QH5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
+ err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_FACE_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
     setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t cellGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_FACE_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(groupName);
     setErrorCondition(-64);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
@@ -686,15 +554,13 @@ int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid, QString grou
   NameListType names = dc->getFaceArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    ss.str("");
-    ss << "Writing Face Data '" << *iter << "' to HDF5 File" << "\n";
+    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
     notifyStatusMessage(ss);
     IDataArray::Pointer array = dc->getFaceData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
-      ss.str("");
-      ss << "Error writing array '" << *iter << "' to the HDF5 File";
+      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
       addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(err);
       H5Gclose(cellGroupId); // Close the Cell Group
@@ -708,77 +574,16 @@ int SurfaceDataContainerWriter::writeFaceAttributeData(hid_t dcGid, QString grou
 }
 
 
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeEdges(hid_t dcGid)
-{
-  herr_t err = 0;
- // notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeEdgeData(hid_t dcGid)
+int SurfaceDataContainerWriter::writeFaceFieldData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
-  // Write the Face Data
-  err = QH5Utilities::createGroupsFromPath(H5_EDGE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_EDGE_DATA_GROUP_NAME << "\n";
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, H5_EDGE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-    ss.str("");
-    ss << "Error writing string attribute to HDF Group " << H5_EDGE_DATA_GROUP_NAME << "\n";
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return err;
-  }
-  NameListType names = sm->getEdgeArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    ss.str("");
-    ss << "Writing Edge Data '" << *iter << "' to HDF5 File" << "\n";
-    notifyStatusMessage(ss);
-    IDataArray::Pointer array = sm->getEdgeData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      ss.str("");
-      ss << "Error writing Edge array '" << *iter << "' to the HDF5 File";
-      addErrorMessage(getHumanLabel(), ss, err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      return err;
-    }
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
-{
-
-  int err = 0;
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-
+  //QString groupName(H5_FIELD_DATA_GROUP_NAME)
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
   ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
@@ -792,39 +597,38 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 
   int64_t volDims[3] = { 0,0,0 };
 
-
   // Write the Field Data
-  err = QH5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  // Write the Field Data
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
+    qDebug() << "Error creating HDF Group " << groupName << "\n";
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
   }
-
-  hid_t fieldGroupId = H5Gopen(dcGid, H5_FIELD_DATA_GROUP_NAME, H5P_DEFAULT);
+ hid_t fieldGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening field Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error opening field Group ").arg(groupName);
     setErrorCondition(-65);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
+
 
   size_t total = 0;
   typedef QVector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getFaceFieldArrayNameList();
+  NameListType names = dc->getFaceFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getFaceFieldData(names.front());
+    IDataArray::Pointer array = dc->getFaceFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -838,7 +642,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getFaceFieldData(*iter);
+    IDataArray::Pointer array = dc->getFaceFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -848,8 +652,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
       err = array->writeH5Data(fieldGroupId);
       if(err < 0)
       {
-        ss.str("");
-        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
+        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg(*iter);
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
         H5Gclose(fieldGroupId); // Close the Cell Group
@@ -885,8 +688,8 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over each pair in the map creating a section in the XDMF and also writing the data to the HDF5 file
   for(SizeToIDataArrays_t::iterator pair = sizeToDataArrays.begin(); pair != sizeToDataArrays.end(); ++pair)
   {
-    total = (*pair).first;
-    VectorOfIDataArrays_t& arrays = (*pair).second;
+    total = pair.key();
+    VectorOfIDataArrays_t& arrays = pair.value();
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
@@ -900,8 +703,7 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
       err = (*iter)->writeH5Data(fieldGroupId);
       if(err < 0)
       {
-        ss.str("");
-        ss << "Error writing field array '" << *iter << "' to the HDF5 File";
+        QString ss = QObject::tr("Error writing field array '%1' to the HDF5 File").arg( (*iter)->GetName());
         addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(err);
         H5Gclose(fieldGroupId); // Close the Cell Group
@@ -926,44 +728,44 @@ int SurfaceDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int SurfaceDataContainerWriter::writeFaceEnsembleData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-  SurfaceDataContainer* m = getSurfaceDataContainer();
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+
+  // QString groupName(H5_ENSEMBLE_DATA_GROUP_NAME)
+  //H5_ENSEMBLE_DATA_DEFAULT
 
   // Write the Ensemble data
-  err = QH5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error creating HDF Group " << H5_ENSEMBLE_DATA_GROUP_NAME << "\n";
-    setErrorCondition(-66);
+    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
+    setErrorCondition(-63);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
 
-  hid_t ensembleGid = H5Gopen(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, H5P_DEFAULT);
+  hid_t ensembleGid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    ss.str("");
-    ss << "Error opening ensemble Group " << H5_ENSEMBLE_DATA_GROUP_NAME << "\n";
+    QString ss = QObject::tr("Error opening ensemble Group %1").arg(groupName);
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getFaceEnsembleArrayNameList();
+  NameListType names = dc->getFaceEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getFaceEnsembleData(*iter);
+    IDataArray::Pointer array = dc->getFaceEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {
-      ss.str("");
-      ss << "Error writing Ensemble array '" << *iter << "' to the HDF5 File";
+      QString ss = QObject::tr("Error writing Ensemble array '%1' to the HDF5 File").arg(*iter);
       addErrorMessage(getHumanLabel(), ss, err);
       setErrorCondition(err);
       H5Gclose(ensembleGid); // Close the Cell Group

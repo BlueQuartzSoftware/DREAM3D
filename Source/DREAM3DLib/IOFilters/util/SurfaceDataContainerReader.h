@@ -35,6 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _SurfaceDataContainerReader_H_
 #define _SurfaceDataContainerReader_H_
+#error NOT DONE YET
 
 #include <QtCore/QString>
 

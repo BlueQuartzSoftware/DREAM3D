@@ -67,6 +67,49 @@ VertexDataContainerReader::~VertexDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
+  if(NULL == dc)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition());
+  }
+  if(getHdfFileId() < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+  }
+  else if (preflight == true)
+  {
+    int err = gatherData(preflight);
+    if (err < 0)
+    {
+
+    }
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainerReader::preflight()
+{
+  /* Place code here that sanity checks input arrays and input values. Look at some
+  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  dataCheck(true, 1, 1, 1);
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void VertexDataContainerReader::execute()
 {
   int err = 0;
