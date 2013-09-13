@@ -86,15 +86,17 @@ set(UTIL_FILES
   util/VertexDataContainerReader.h
   util/VertexDataContainerReader.cpp
 
+  util/EdgeDataContainerWriter.h
+  util/EdgeDataContainerWriter.cpp
+#  util/EdgeDataContainerReader.h
+#  util/EdgeDataContainerReader.cpp
+
 #  util/VolumeDataContainerWriter.h
 #  util/VolumeDataContainerWriter.cpp
 #  util/VolumeDataContainerReader.h
 #  util/VolumeDataContainerReader.cpp
 
-#  util/EdgeDataContainerWriter.h
-#  util/EdgeDataContainerWriter.cpp
-#  util/EdgeDataContainerReader.h
-#  util/EdgeDataContainerReader.cpp
+
 
 #  util/SurfaceDataContainerWriter.h
 #  util/SurfaceDataContainerWriter.cpp

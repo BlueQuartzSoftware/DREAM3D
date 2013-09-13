@@ -91,6 +91,8 @@ void VertexDataContainerWriter::execute()
 
   setErrorCondition(err);
 
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
   if(NULL == dc)
   {
@@ -528,7 +530,6 @@ int VertexDataContainerWriter::writeVertexFieldData(hid_t dcGid, QString groupNa
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertexEnsembleData(hid_t dcGid, QString groupName)
 {
-
   int err = 0;
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
