@@ -95,7 +95,7 @@ void VertexDataContainerWriter::execute()
   if(NULL == dc)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The SolidMesh DataContainer Object was NULL", -999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -114,7 +114,7 @@ void VertexDataContainerWriter::execute()
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
     setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
 

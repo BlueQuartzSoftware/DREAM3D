@@ -69,7 +69,22 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    virtual ~DynamicListArray(){ }
+    virtual ~DynamicListArray(){
+     // This makes sure we deallocate any lists that have been created
+      for (size_t i=0; i<this->Size; i++)
+      {
+        if ( this->Array[i].cells != NULL )
+        {
+          delete [] this->Array[i].cells;
+        }
+      }
+      // Now delete all the "NeighborLists" structures
+      if ( this->Array != NULL )
+      {
+        delete [] this->Array;
+      }
+
+     }
 
     //----------------------------------------------------------------------------
     inline void insertCellReference(size_t ptId, unsigned short pos, size_t cellId)
@@ -98,8 +113,8 @@ class DynamicListArray
       }
       Array[ptId].ncells = nCells;
       //If nCells is huge then there could be problems with this
-      this->Array[ptId].cells = new int[nCells];
-      ::memcpy(Array[ptId].cells, data, sizeof(int) * nCells);
+      this->Array[ptId].cells = new T[nCells];
+      ::memcpy(Array[ptId].cells, data, sizeof(T) * nCells);
       return true;
     }
 
@@ -109,7 +124,7 @@ class DynamicListArray
 
     // Description:
     // Return a list of cell ids using the point.
-    int* getElementListPointer(size_t ptId) {return this->Array[ptId].cells;}
+    T* getElementListPointer(size_t ptId) {return this->Array[ptId].cells;}
 
     // -----------------------------------------------------------------------------
     //

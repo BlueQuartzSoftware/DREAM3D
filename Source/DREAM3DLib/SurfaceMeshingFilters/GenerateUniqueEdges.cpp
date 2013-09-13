@@ -37,11 +37,9 @@
 #include "GenerateUniqueEdges.h"
 
 
-#include <set>
+#include <QSet>
 
-
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
-
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 
 
 typedef QSet<int64_t>  EdgeSet_t;
@@ -289,9 +287,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   {
     if ( static_cast<float>(i)/static_cast<float>(ntri) * 100.0f > (curPercent) )
     {
-      ss.str("");
-      ss << "Stage 1/2: " << (static_cast<float>(i)/static_cast<float>(ntri) * 100.0f) << "% Complete";
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Stage 1/2: %1% Complete").arg(static_cast<float>(i)/static_cast<float>(ntri) * 100.0f);
+      notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
     if (getCancel() == true) { return; }
@@ -378,8 +375,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     progIndex++;
     if (getCancel() == true) { return; }
 
-    *u64Edge = iter->key();
-    index = iter->value();
+    *u64Edge = iter.key();
+    index = iter.value();
     m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 

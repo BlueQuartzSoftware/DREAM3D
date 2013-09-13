@@ -484,7 +484,7 @@ class ManagedArrayOfArrays : public IDataArray
       return RawResize(numTuples );
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(QTextStream &out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
       //        for(int j = 0; j < NumberOfComponents; ++j)
@@ -493,7 +493,7 @@ class ManagedArrayOfArrays : public IDataArray
       //          out << Array[i + j];
       //        }
     }
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(QTextStream &out, size_t i, int j)
     {
       BOOST_ASSERT(false);
       //        out << Array[i + j];
@@ -520,7 +520,7 @@ class ManagedArrayOfArrays : public IDataArray
      * @param groupPath
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const QString &hdfFileName,
+    virtual int writeXdmfAttribute(QTextStream &out, int64_t* volDims, const QString &hdfFileName,
                                     const QString &groupPath, const QString &labelb)
     {
       out << "<!-- Xdmf is not supported for " << getNameOfClass() << " with type " << getTypeAsString() << " --> ";

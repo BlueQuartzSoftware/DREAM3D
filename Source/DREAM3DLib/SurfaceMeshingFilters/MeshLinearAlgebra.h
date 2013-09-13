@@ -80,7 +80,7 @@ class Vector
       return x.size();
     }
   private:
-    QVector<type> x;
+    std::vector<type> x;
 };
 
 template<typename type>
@@ -223,7 +223,7 @@ class Matrix
       return x[0].dimension();
     }
   private:
-    QVector<Vector<type> > x;
+    std::vector<Vector<type> > x;
 };
 
 template<typename type>
@@ -244,7 +244,7 @@ type inorm(const Matrix<type>& A)
 {
   int m = A.dimension1();
   type norm = 0.0;
-  QVector<type> x;
+  std::vector<type> x;
   for (int i = 0; i < m; i++)
   {
     type value = inorm(A[i]);
@@ -285,7 +285,7 @@ class SVector
       return d;
     }
   private:
-    QVector<Sitem> data;
+    std::vector<Sitem> data;
     int d;
 };
 
@@ -364,7 +364,7 @@ class SMatrix
       return data[0].dimension();
     }
   private:
-    QVector<SVector<vtype, itype> > data;
+    std::vector<SVector<vtype, itype> > data;
 };
 
 template<typename vtype, typename itype>
@@ -392,7 +392,7 @@ type inorm(const SMatrix<type>& A)
 {
   int m = A.dimension1();
   type norm = 0.0;
-  QVector<type> x;
+  std::vector<type> x;
   for (int i = 0; i < m; i++)
   {
     type value = inorm(A[i]);
@@ -494,7 +494,7 @@ int GMRES(const matrix& A, vector& x, const vector& b, int m, int max, type tole
   int n = x.dimension();
   Vector<type> w(n), r(n), cs(m + 1), sn(m + 1), s(m + 1), y(m);
   Matrix<type> H(m + 1, m);
-  QVector<Vector<type> > v(m + 1, Vector<type>(n));
+  std::vector<Vector<type> > v(m + 1, Vector<type>(n));
 
   r = b - A * x;
   type bnorm = norm(b);

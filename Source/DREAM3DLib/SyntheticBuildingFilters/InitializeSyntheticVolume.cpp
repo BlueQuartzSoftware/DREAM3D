@@ -38,9 +38,10 @@
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
-
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+
+
+#include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -189,7 +190,7 @@ void InitializeSyntheticVolume::preflight()
   read_data->setReadCellData(false);
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
+  read_data->setDataContainer(getVolumeDataContainer());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -230,7 +231,7 @@ void InitializeSyntheticVolume::execute()
   read_data->setReadFieldData(false);
   read_data->setReadEnsembleData(true);
   read_data->setReadAllArrays(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
+  read_data->setDataContainer(getVolumeDataContainer());
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);

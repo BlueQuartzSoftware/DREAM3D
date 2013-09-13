@@ -616,13 +616,12 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
 
   // Start looping on all the Face Labels (Grain Ids) values
-  while (labelObjectsToVisit.isEmpty() == false)
+  while (labelObjectsToVisit.empty() == false)
   {
     if (getCancel() == true) { return -1; }
     if ( (progressIndex/total * 100.0f) > (curPercent) )
     {
-      ss.str("");
-      ss << static_cast<int>(progressIndex/total * 100.0f) << "% Complete";
+      QString ss = QObject::tr("%1% Complete").arg(static_cast<int>(progressIndex/total * 100.0f));
       notifyStatusMessage(ss);
       curPercent += 5.0f;
     }
@@ -664,7 +663,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     //FaceArray::Face_t& triangle = triangles[triIndex];
     triangleDeque.push_back(triIndex);
 
-    while (triangleDeque.isEmpty() == false)
+    while (triangleDeque.empty() == false)
     {
       int32_t triangleIndex = triangleDeque.front();
       FaceArray::Face_t& triangle = triangles[triangleIndex];
@@ -698,16 +697,16 @@ int VerifyTriangleWinding::verifyTriangleWinding()
       // Just add the neighbor label to a set so we end up with a list of unique
       // labels that are neighbors to the current label
       if (currentLabel != faceLabel[0]) {
-        neighborlabels.insert(std::pair<int32_t, int32_t>(faceLabel[0], triangleIndex));
+        neighborlabels.insert(faceLabel[0], triangleIndex);
       }
       if (currentLabel != faceLabel[1]) {
-        neighborlabels.insert(std::pair<int32_t, int32_t>(faceLabel[1], triangleIndex));
+        neighborlabels.insert(faceLabel[1], triangleIndex);
       }
 
 
       localVisited.insert(triangleIndex);
       masterVisited[triangleIndex] = true;
-      curLdo->m_Faces.erase(triangleIndex);
+      curLdo->m_Faces.remove(triangleIndex);
       triangleDeque.pop_front();
     }  // End of loop to visit all triangles in the 'currentLabel'
 
@@ -715,7 +714,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     // currently on the list and NOT currently on the label visited list.
     for (QMap<int32_t, int32_t>::iterator neigh = neighborlabels.begin(); neigh != neighborlabels.end(); ++neigh )
     {
-      int32_t triangleIndex = (*neigh).second;
+      int32_t triangleIndex = neigh.value();
       int32_t* triangleLabel = faceLabels + triangleIndex*2;
 
       if ( labelsToVisitSet.find(triangleLabel[0]) == labelsToVisitSet.end()
@@ -784,7 +783,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   QSet<int32_t> thelabels = TriangleOps::generateUniqueLabels(faceLabelsPtr);
   for (STDEXT::hash_set<int32_t>::iterator iter = labelsVisitedSet.begin(); iter != labelsVisitedSet.end(); ++iter )
   {
-    thelabels.erase(*iter);
+    thelabels.remove(*iter);
   }
 
   //qDebug() << "labels NOT visited:" << "\n";
