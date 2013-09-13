@@ -57,7 +57,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
   public:
     DREAM3D_SHARED_POINTERS(EdgeDataContainerWriter)
     DREAM3D_STATIC_NEW_MACRO(EdgeDataContainerWriter)
-    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerWriter, AbstractFilter)
+    DREAM3D_TYPE_MACRO_SUPER(EdgeDataContainerWriter, VertexDataContainerWriter)
 
     virtual ~EdgeDataContainerWriter();
 

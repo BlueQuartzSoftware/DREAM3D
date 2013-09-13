@@ -733,9 +733,8 @@ void MovingFiniteElementSmoothing::execute()
     {
       qDebug() << "Update loop: " << updates << "\n";
     }
-    ss.str("");
-    ss << "Iteration: " << updates;
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Iteration: %1").arg(updates);
+    notifyStatusMessage(ss);
 
     Dihedral_min = 180.;
     Dihedral_max = 0.;
@@ -909,7 +908,7 @@ void MovingFiniteElementSmoothing::execute()
 
     // write the iteration to a string
     iter_stream << updates;
-    iter_string = iter_stream.str();
+    iter_string = iter_stream;
 
     // extract the basename from the provided filename
     QString infile = outputNodesFile;

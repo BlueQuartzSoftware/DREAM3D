@@ -293,7 +293,7 @@ void DataContainerWriter::execute()
   {
     VolumeDataContainerWriter::Pointer writer = VolumeDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setVolumeDataContainer(getVolumeDataContainer());
+    writer->setDataContainer(getVolumeDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
@@ -313,7 +313,7 @@ void DataContainerWriter::execute()
   {
     SurfaceDataContainerWriter::Pointer writer = SurfaceDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setSurfaceDataContainer(getSurfaceDataContainer());
+    writer->setDataContainer(getSurfaceDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
@@ -332,7 +332,7 @@ void DataContainerWriter::execute()
   {
     VertexDataContainerWriter::Pointer writer = VertexDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setVertexDataContainer(getVertexDataContainer());
+    writer->setDataContainer(getVertexDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
@@ -351,7 +351,7 @@ void DataContainerWriter::execute()
   {
     EdgeDataContainerWriter::Pointer writer = EdgeDataContainerWriter::New();
     writer->setHdfFileId(m_FileId);
-    writer->setEdgeDataContainer(getEdgeDataContainer());
+    writer->setDataContainer(getEdgeDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);

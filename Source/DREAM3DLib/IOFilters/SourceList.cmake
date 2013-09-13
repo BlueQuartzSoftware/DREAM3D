@@ -79,27 +79,29 @@ foreach(f ${_PrivateFilters} )
 endforeach()
 
 
-set(UTIL_FILES 
-  util/VolumeDataContainerWriter.h
-  util/VolumeDataContainerWriter.cpp
-  util/VolumeDataContainerReader.h
-  util/VolumeDataContainerReader.cpp
-
-  util/EdgeDataContainerWriter.h
-  util/EdgeDataContainerWriter.cpp
-  util/EdgeDataContainerReader.h
-  util/EdgeDataContainerReader.cpp
-
-  util/SurfaceDataContainerWriter.h
-  util/SurfaceDataContainerWriter.cpp
-  util/SurfaceDataContainerReader.h
-  util/SurfaceDataContainerReader.cpp
+set(UTIL_FILES
 
   util/VertexDataContainerWriter.h
   util/VertexDataContainerWriter.cpp
   util/VertexDataContainerReader.h
   util/VertexDataContainerReader.cpp
-  
+
+#  util/VolumeDataContainerWriter.h
+#  util/VolumeDataContainerWriter.cpp
+#  util/VolumeDataContainerReader.h
+#  util/VolumeDataContainerReader.cpp
+
+#  util/EdgeDataContainerWriter.h
+#  util/EdgeDataContainerWriter.cpp
+#  util/EdgeDataContainerReader.h
+#  util/EdgeDataContainerReader.cpp
+
+#  util/SurfaceDataContainerWriter.h
+#  util/SurfaceDataContainerWriter.cpp
+#  util/SurfaceDataContainerReader.h
+#  util/SurfaceDataContainerReader.cpp
+
+
   util/IOSupport.h
   util/IOSupport.cpp
 )

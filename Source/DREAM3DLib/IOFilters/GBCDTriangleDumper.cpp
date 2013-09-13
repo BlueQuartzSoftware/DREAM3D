@@ -114,13 +114,12 @@ int GBCDTriangleDumper::writeFilterParameters(AbstractFilterParametersWriter* wr
 void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
 
   if(getOutputFile().isEmpty() == true)
   {
-    ss.str("");
-    ss << ClassName() << " needs the Output File Set and it was not.";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
+    addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
 
@@ -162,7 +161,7 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -195,7 +194,7 @@ void GBCDTriangleDumper::preflight()
 void GBCDTriangleDumper::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)

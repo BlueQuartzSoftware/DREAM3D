@@ -156,20 +156,13 @@ void FindNRingNeighbors::generate()
     }
   }
 
-//  if (m_TriangleId == 1000)
-//  {
-//    
-//    ss << "/tmp/" << m_Ring << "_RingNeighborhood.vtk";
-//    writeVTKFile(ss.str());
-//  }
-
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
+int FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -177,16 +170,12 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   VertexArray& nodes = *(m->getVertices());
   int nNodes = nodes.getNumberOfTuples();
 
-  
-
-
   FILE* vtkFile = NULL;
   vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
   if (NULL == vtkFile)
   {
-    ss.str("");
-    ss << "Error creating file '" << outputVtkFile << "'";
-    return;
+   // QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
+    return -100;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
 

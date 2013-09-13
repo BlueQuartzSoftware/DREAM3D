@@ -36,11 +36,13 @@
 #include "VertexDataContainerReader.h"
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
+
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 #include "DREAM3DLib/DataContainers/VertexArray.hpp"
 
 // -----------------------------------------------------------------------------
@@ -48,7 +50,6 @@
 // -----------------------------------------------------------------------------
 VertexDataContainerReader::VertexDataContainerReader() :
   IOSupport(),
-  m_HdfFileId(-1),
   m_ReadVertexData(true),
   m_ReadVertexFieldData(true),
   m_ReadVertexEnsembleData(true),
@@ -69,26 +70,26 @@ VertexDataContainerReader::~VertexDataContainerReader()
 void VertexDataContainerReader::execute()
 {
   int err = 0;
-  VolumeDataContainer* vdc = getVolumeDataContainer();
-  if(NULL ==vdc)
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
   {
-    setErrorCondition(-1);
-
-    ss <<" DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
+
   setErrorCondition(err);
 
-  dataCheck(false, 1, 1, 1);
 
   if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
   if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexFieldData = false;
   if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexEnsembleData = false;
 
-  if(m_ReadVertexData == true) vdc->clearVertexData();
-  if(m_ReadVertexFieldData == true) vdc->clearVertexFieldData();
-  if(m_ReadVertexEnsembleData == true) vdc->clearVertexEnsembleData();
+  if(m_ReadVertexData == true) dc->clearVertexData();
+  if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
+  if(m_ReadVertexEnsembleData == true) dc->clearVertexEnsembleData();
 
   err = gatherData(false);
   setErrorCondition(err);
@@ -104,23 +105,21 @@ int VertexDataContainerReader::gatherData(bool preflight)
 {
 
 
-  if(m_HdfFileId < 0)
+  if(getHdfFileId() < 0)
   {
-    ss.str("");
-    ss << ": Error opening input file";
+    QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
-    ss.str("");
-    ss << "Error opening Group " << DREAM3D::HDF5::VertexDataContainerName << "\n";
+    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
     setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return getErrorCondition();
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return -61;
   }
 
   HDF_ERROR_HANDLER_OFF
@@ -150,14 +149,18 @@ int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
   H5T_class_t type_class;
   size_t type_size;
 
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
   if (true == preflight)
   {
-    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
       VertexArray::Pointer vertices = VertexArray::New();
       vertices->resizeArray(1);
-      getVertexDataContainer()->setVertices(vertices);
+      dc->setVertices(vertices);
     }
   }
   else
@@ -216,12 +219,15 @@ int VertexDataContainerReader::gatherVertexEnsembleData(hid_t dcGid, bool prefli
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::readVertices(hid_t dcGid)
 {
-  VertexDataContainer* vdc = getVertexDataContainer();
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
   herr_t err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
-  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
   if (err < 0)
   {
     setErrorCondition(err);
@@ -233,12 +239,12 @@ int VertexDataContainerReader::readVertices(hid_t dcGid)
   verticesPtr->resizeArray(dims[0]);
   // Read the data
   float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
-  err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
+  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);
     notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
   }
-  vdc->setVertices(verticesPtr);
+  dc->setVertices(verticesPtr);
   return err;
 }
 
@@ -249,6 +255,9 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead)
 {
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
 
   int err = 0;
   //Read the Cell Data
@@ -259,7 +268,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   }
 
   NameListType names;
-  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
   //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() << "\n";
   QString classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
@@ -268,7 +277,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
-    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
     //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << "\n";
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
@@ -300,15 +309,15 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     {
       if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
       {
-        getVertexDataContainer()->addVertexData(dPtr->GetName(), dPtr);
+        dc->addVertexData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getVertexDataContainer()->addVertexFieldData(dPtr->GetName(), dPtr);
+        dc->addVertexFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getVertexDataContainer()->addVertexEnsembleData(dPtr->GetName(), dPtr);
+        dc->addVertexEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

@@ -63,27 +63,18 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
 
     virtual ~VertexDataContainerReader();
 
-
-
-
-
-
-
-
-
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-
-
-
-
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexEnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
+
 
     typedef QList<QString> NameListType;
 
@@ -102,21 +93,13 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
   protected:
     VertexDataContainerReader();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    virtual int gatherData(bool preflight);
 
-    int gatherData(bool preflight);
-    int gatherVertexData(hid_t dcGid, bool preflight);
-    int gatherVertexFieldData(hid_t dcGid, bool preflight);
-    int gatherVertexEnsembleData(hid_t dcGid, bool preflight);
-    int readVertices(hid_t dcGid);
+    virtual int gatherVertexData(hid_t dcGid, bool preflight);
+    virtual int gatherVertexFieldData(hid_t dcGid, bool preflight);
+    virtual int gatherVertexEnsembleData(hid_t dcGid, bool preflight);
+
+    virtual int readVertices(hid_t dcGid);
 
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,

@@ -99,7 +99,7 @@ class FindNRingNeighbors
      * @param node2Triangle
      * @param twoRingNeighbors
      */
-    void writeVTKFile(const QString &outputFile);
+    int writeVTKFile(const QString &outputFile);
 
   protected:
       FindNRingNeighbors();
