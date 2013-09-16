@@ -83,7 +83,7 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  //std::stringstream ss;
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
@@ -125,7 +125,7 @@ void FindBasalLoadingFactor::execute()
     return;
   }
 
-  int ss = 0;
+  //int ss = 0;
   QuatF q1;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
 
