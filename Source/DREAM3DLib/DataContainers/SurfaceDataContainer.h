@@ -93,8 +93,6 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     DOES_DATASET_EXIST_DECL(FaceFieldData)
     DOES_DATASET_EXIST_DECL(FaceEnsembleData)
 
-/** *********************************** NOT SURE ABOUT THIS ONE EITHER ***********************  */
-    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshFaceNeighborLists)
 
     /**
      * @brief Adds/overwrites the data for a named array

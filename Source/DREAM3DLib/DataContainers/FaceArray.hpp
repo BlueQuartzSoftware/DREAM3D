@@ -70,12 +70,14 @@ class FaceArray
     DREAM3D_STATIC_NEW_MACRO(FaceArray)
     DREAM3D_TYPE_MACRO(FaceArray)
 
-
-
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     virtual ~FaceArray(){ }
+
+
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FacesContainingVert)
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FaceNeighbors)
 
     // -----------------------------------------------------------------------------
     //
@@ -133,15 +135,6 @@ class FaceArray
     void deleteFacesContainingVert()
     {
       m_FacesContainingVert = Int32DynamicListArray::NullPointer();
-    }
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getFacesContainingVert()
-    {
-      return m_FacesContainingVert;
     }
 
     // -----------------------------------------------------------------------------
@@ -205,13 +198,6 @@ class FaceArray
       m_FaceNeighbors = Int32DynamicListArray::NullPointer();
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getFaceNeighbors()
-    {
-      return m_FaceNeighbors;
-    }
 
     // -----------------------------------------------------------------------------
     //
@@ -339,8 +325,8 @@ class FaceArray
   private:
     StructArray<Face_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    Int32DynamicListArray::Pointer m_FacesContainingVert;
-    Int32DynamicListArray::Pointer m_FaceNeighbors;
+//    Int32DynamicListArray::Pointer m_FacesContainingVert;
+//    Int32DynamicListArray::Pointer m_FaceNeighbors;
 
     QString m_Name;
 

@@ -188,8 +188,8 @@ void InitializeSyntheticVolume::preflight()
   VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
+  read_data->setReadCellFieldData(false);
+  read_data->setReadCellEnsembleData(true);
   read_data->setDataContainer(getVolumeDataContainer());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
@@ -228,8 +228,8 @@ void InitializeSyntheticVolume::execute()
   VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
   read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
+  read_data->setReadCellFieldData(false);
+  read_data->setReadCellEnsembleData(true);
   read_data->setReadAllArrays(true);
   read_data->setDataContainer(getVolumeDataContainer());
   read_data->execute();
