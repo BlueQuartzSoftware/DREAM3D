@@ -315,12 +315,12 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
     inFile >> numMisorients;
 
     float angle, weight;
-    QString axis, n1, n2, n3;
+    std::string n1, n2, n3;
     for(size_t i = 0; i < numMisorients; i++)
     {
       inFile >> angle >> n1 >> n2 >> n3 >> weight;
 
-      axis = QString("<" + n1 + "," + n2 + "," + n3 + ">");
+      QString axis = QString("<" + QString::fromStdString(n1) + "," + QString::fromStdString(n2) + "," + QString::fromStdString(n3) + ">");
 
       if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
       int row = m_MDFTableModel->rowCount() - 1;
