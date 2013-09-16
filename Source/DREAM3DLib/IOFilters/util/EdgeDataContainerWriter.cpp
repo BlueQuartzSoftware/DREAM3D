@@ -390,7 +390,9 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 {
+    int err = -1;
     BOOST_ASSERT(false);
+    return err;
 }
 
 
