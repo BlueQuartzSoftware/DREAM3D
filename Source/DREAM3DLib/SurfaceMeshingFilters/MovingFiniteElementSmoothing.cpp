@@ -55,8 +55,9 @@
 #include <limits>
 
 #include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"

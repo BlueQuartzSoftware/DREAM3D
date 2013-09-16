@@ -100,8 +100,8 @@ set(UTIL_FILES
 
   util/VolumeDataContainerWriter.h
   util/VolumeDataContainerWriter.cpp
-#  util/VolumeDataContainerReader.h
-#  util/VolumeDataContainerReader.cpp
+  util/VolumeDataContainerReader.h
+  util/VolumeDataContainerReader.cpp
 )
 
 foreach(file  ${UTIL_FILES})

@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
 
@@ -320,14 +320,15 @@ class FaceArray
 
 
   protected:
-    FaceArray();
+    FaceArray() :
+    m_Verts(NULL)
+    {
+      m_Array = StructArray<Face_t>::NullPointer();
+    }
 
   private:
     StructArray<Face_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-//    Int32DynamicListArray::Pointer m_FacesContainingVert;
-//    Int32DynamicListArray::Pointer m_FaceNeighbors;
-
     QString m_Name;
 
     FaceArray(const FaceArray&); // Copy Constructor Not Implemented

@@ -71,17 +71,17 @@ class DynamicListArray
     // -----------------------------------------------------------------------------
     virtual ~DynamicListArray(){
      // This makes sure we deallocate any lists that have been created
-      for (size_t i=0; i<this->Size; i++)
+      for (size_t i=0; i<this->m_Size; i++)
       {
-        if ( this->Array[i].cells != NULL )
+        if ( this->m_Array[i].cells != NULL )
         {
-          delete [] this->Array[i].cells;
+          delete [] this->m_Array[i].cells;
         }
       }
       // Now delete all the "NeighborLists" structures
-      if ( this->Array != NULL )
+      if ( this->m_Array != NULL )
       {
-        delete [] this->Array;
+        delete [] this->m_Array;
       }
 
      }
@@ -89,12 +89,12 @@ class DynamicListArray
     //----------------------------------------------------------------------------
     inline void insertCellReference(size_t ptId, unsigned short pos, size_t cellId)
     {
-      this->Array[ptId].cells[pos] = cellId;
+      this->m_Array[ptId].cells[pos] = cellId;
     }
 
     // Description:
     // Get a link structure given a point id.
-    ElementList& getElementList(size_t ptId) {return this->Array[ptId];}
+    ElementList& getElementList(size_t ptId) {return this->m_Array[ptId];}
 
     /**
      * @brief setElementList
@@ -105,26 +105,26 @@ class DynamicListArray
      */
     bool setElementList(size_t ptId, uint16_t nCells, T* data)
     {
-      if(ptId >= Size) return false;
-      if(NULL != Array[ptId].cells && Array[ptId].ncells > 0)
+      if(ptId >= m_Size) return false;
+      if(NULL != m_Array[ptId].cells && m_Array[ptId].ncells > 0)
       {
-        Array[ptId].cells = NULL;
-        Array[ptId].ncells = 0;
+        m_Array[ptId].cells = NULL;
+        m_Array[ptId].ncells = 0;
       }
-      Array[ptId].ncells = nCells;
+      m_Array[ptId].ncells = nCells;
       //If nCells is huge then there could be problems with this
-      this->Array[ptId].cells = new T[nCells];
-      ::memcpy(Array[ptId].cells, data, sizeof(T) * nCells);
+      this->m_Array[ptId].cells = new T[nCells];
+      ::memcpy(m_Array[ptId].cells, data, sizeof(T) * nCells);
       return true;
     }
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short getNumberOfElements(size_t ptId) {return this->Array[ptId].ncells;}
+    unsigned short getNumberOfElements(size_t ptId) {return this->m_Array[ptId].ncells;}
 
     // Description:
     // Return a list of cell ids using the point.
-    T* getElementListPointer(size_t ptId) {return this->Array[ptId].cells;}
+    T* getElementListPointer(size_t ptId) {return this->m_Array[ptId].cells;}
 
     // -----------------------------------------------------------------------------
     //
@@ -141,10 +141,10 @@ class DynamicListArray
       for(size_t i = 0; i < nElements; ++i)
       {
         ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
-        this->Array[i].ncells = *ncells; // Set the number of cells in this link
+        this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
+        this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
         offset += (*ncells) * sizeof(T); // Increment the offset
       }
     }
@@ -164,10 +164,10 @@ class DynamicListArray
       for(size_t i = 0; i < nElements; ++i)
       {
         ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
-        this->Array[i].ncells = *ncells; // Set the number of cells in this link
+        this->m_Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
-        this->Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
+        this->m_Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->m_Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
         offset += (*ncells) * sizeof(T); // Increment the offset
       }
     }
@@ -177,13 +177,16 @@ class DynamicListArray
       allocate(linkCounts.size());
       for (size_t i=0; i < linkCounts.size(); i++)
       {
-        this->Array[i].cells = new int[this->Array[i].ncells];
-        this->Array[i].ncells = linkCounts[i];
+        this->m_Array[i].cells = new int[this->m_Array[i].ncells];
+        this->m_Array[i].ncells = linkCounts[i];
       }
     }
 
   protected:
-    DynamicListArray();
+    DynamicListArray() :
+    m_Array(NULL),
+    m_Size(0)
+    {}
 
     //----------------------------------------------------------------------------
     // This will allocate memory to hold all the NeighborList structures where each
@@ -193,34 +196,34 @@ class DynamicListArray
       static DynamicListArray<T>::ElementList linkInit = {0,NULL};
 
       // This makes sure we deallocate any lists that have been created
-      for (size_t i=0; i<this->Size; i++)
+      for (size_t i=0; i<this->m_Size; i++)
       {
-        if ( this->Array[i].cells != NULL )
+        if ( this->m_Array[i].cells != NULL )
         {
-          delete [] this->Array[i].cells;
+          delete [] this->m_Array[i].cells;
         }
       }
       // Now delete all the "NeighborLists" structures
-      if ( this->Array != NULL )
+      if ( this->m_Array != NULL )
       {
-        delete [] this->Array;
+        delete [] this->m_Array;
       }
 
-      this->Size = sz;
+      this->m_Size = sz;
       // Allocate a whole new set of structures
-      this->Array = new DynamicListArray<T>::ElementList[sz];
+      this->m_Array = new DynamicListArray<T>::ElementList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
       for (size_t i=0; i < sz; i++)
       {
-        this->Array[i] = linkInit;
+        this->m_Array[i] = linkInit;
       }
     }
 
 
   private:
-    ElementList* Array;   // pointer to data
-    size_t Size;
+    ElementList* m_Array;   // pointer to data
+    size_t m_Size;
 
 
 };

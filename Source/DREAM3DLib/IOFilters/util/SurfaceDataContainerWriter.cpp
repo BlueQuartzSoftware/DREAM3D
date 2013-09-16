@@ -45,6 +45,8 @@
 
 #define WRITE_FIELD_XDMF 0
 
+namespace Detail
+{
 class H5GroupAutoCloser
 {
 public:
@@ -62,6 +64,7 @@ public:
   private:
    hid_t* gid;
 };
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -149,7 +152,7 @@ void SurfaceDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(DREAM3D::HDF5::SurfaceDataContainerName, H5_VTK_POLYDATA);

@@ -67,37 +67,6 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     typedef QList<QString> NameListType;
 
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Edge DataContainer Writer"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -113,6 +82,15 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
   protected:
     EdgeDataContainerWriter();
 
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     virtual int writeEdges(hid_t dcGid);
 

@@ -88,9 +88,8 @@ D3DCompileDir(Math)
 D3DCompileDir(OrientationOps)
 D3DCompileDir(ShapeOps)
 D3DCompileDir(StatsData)
-D3DCompileDir(VTKUtils)
 D3DCompileDir(Utilities)
-
+D3DCompileDir(VTKUtils)
 
 
 
