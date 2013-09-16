@@ -238,25 +238,25 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   switch(m_DistributionType)
   {
   case DREAM3D::DistributionType::Beta:
-    v0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
-    v1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
+    v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
+    v1 = m_TableModel->getData(SGBetaTableModel::Beta);
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Beta);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::LogNormal:
-    v0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
-    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
+    v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
+    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Average);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::StandardDeviation);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::Power:
-    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
-    v1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
-    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
+    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
+    v1 = m_TableModel->getData(SGPowerLawTableModel::K);
+    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Exp_k);
     col2 = FloatArrayType::FromStdVector(v2, DREAM3D::HDF5::Beta);
