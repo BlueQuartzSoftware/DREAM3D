@@ -303,7 +303,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   }
   else
   {
-    dc->getEdges()->setMeshLinks(MeshLinks);
+    dc->getEdges()->setEdgeNeighbors(MeshLinks);
   }
 
   if (false == preflight && type_size > 0)

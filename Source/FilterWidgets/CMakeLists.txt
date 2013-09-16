@@ -49,6 +49,7 @@ if(MSVC)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.h PROPERTIES COMPILE_FLAGS /bigobj)
   set_source_files_properties(${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp PROPERTIES COMPILE_FLAGS /bigobj)
 endif()
+
 add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetCodeGen.cpp
                                     ${FilterWidgetsLib_BINARY_DIR}/FilterWidgetCodeGen.h)
 target_link_libraries(FilterWidgetCodeGen  EbsdLib DREAM3DLib)
@@ -185,7 +186,7 @@ endif()
 
 add_library(FilterWidgetsLib STATIC ${Project_SRCS})
 target_link_libraries(FilterWidgetsLib
-                    
+
                     H5Support
                     EbsdLib
                     DREAM3DLib

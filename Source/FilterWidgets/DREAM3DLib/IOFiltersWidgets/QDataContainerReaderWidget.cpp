@@ -41,8 +41,8 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
 #include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
@@ -356,7 +356,7 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Poi
   {
 
     hid_t fileId = -1;
-    fileId = H5Utilities::openFile(InputFile->text(), true);
+    fileId = QH5Utilities::openFile(InputFile->text(), true);
     if (fileId < 0) {
       return;
     }
@@ -369,10 +369,10 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Poi
     int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
 
     if (err < 0) {
-      err = H5Utilities::closeFile(fileId);
+      err = QH5Utilities::closeFile(fileId);
       return;
     }
-    err = H5Utilities::closeFile(fileId);
+    err = QH5Utilities::closeFile(fileId);
 
     m_XDim->setText(QString::number(dims[0]));
     m_YDim->setText(QString::number(dims[1]));

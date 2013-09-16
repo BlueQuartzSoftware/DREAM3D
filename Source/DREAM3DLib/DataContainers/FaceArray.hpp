@@ -46,7 +46,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
 
@@ -65,17 +65,20 @@ class FaceArray
     } Face_t;
 
     typedef QSet<int32_t> UniqueFaceIds_t;
+    typedef StructArray<Face_t> FaceContainerType;
 
     DREAM3D_SHARED_POINTERS(FaceArray)
     DREAM3D_STATIC_NEW_MACRO(FaceArray)
     DREAM3D_TYPE_MACRO(FaceArray)
 
-
-
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     virtual ~FaceArray(){ }
+
+
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FacesContainingVert)
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, FaceNeighbors)
 
     // -----------------------------------------------------------------------------
     //
@@ -133,15 +136,6 @@ class FaceArray
     void deleteFacesContainingVert()
     {
       m_FacesContainingVert = Int32DynamicListArray::NullPointer();
-    }
-
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getFacesContainingVert()
-    {
-      return m_FacesContainingVert;
     }
 
     // -----------------------------------------------------------------------------
@@ -205,13 +199,6 @@ class FaceArray
       m_FaceNeighbors = Int32DynamicListArray::NullPointer();
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getFaceNeighbors()
-    {
-      return m_FaceNeighbors;
-    }
 
     // -----------------------------------------------------------------------------
     //
@@ -334,14 +321,15 @@ class FaceArray
 
 
   protected:
-    FaceArray();
+    FaceArray() :
+    m_Verts(NULL)
+    {
+      m_Array = FaceContainerType::CreateArray(0, "FaceArray_Internal_Use_Only");
+    }
 
   private:
     StructArray<Face_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    Int32DynamicListArray::Pointer m_FacesContainingVert;
-    Int32DynamicListArray::Pointer m_FaceNeighbors;
-
     QString m_Name;
 
     FaceArray(const FaceArray&); // Copy Constructor Not Implemented

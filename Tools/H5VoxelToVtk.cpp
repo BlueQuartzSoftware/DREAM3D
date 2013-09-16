@@ -126,7 +126,7 @@ int main(int argc, char **argv)
   }
 
 
-  std::string iFile = argv[1];
+  QString iFile = argv[1];
 
   int err = 0;
 

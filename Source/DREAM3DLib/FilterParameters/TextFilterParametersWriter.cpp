@@ -296,6 +296,15 @@ int TextFilterParametersWriter::writeValue(const QString name, ComparisonInput_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int TextFilterParametersWriter::writeValue(const QString name, QVector<ComparisonInput_t> v)
+{
+  int err = -1;
+  return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int TextFilterParametersWriter::writeValue(const QString name, QVector<AxisAngleInput_t> v)
 {
   int err = -1;

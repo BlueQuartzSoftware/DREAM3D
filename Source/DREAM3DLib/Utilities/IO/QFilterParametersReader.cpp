@@ -607,5 +607,7 @@ QSet<QString> QFilterParametersReader::readValue(const QString name, QSet<QStrin
   BOOST_ASSERT(m_Prefs != NULL);
 
   BOOST_ASSERT(false);
+  QSet<QString> empty;
+  return empty;
 }
 

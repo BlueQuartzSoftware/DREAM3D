@@ -48,7 +48,7 @@
  * @brief The MeshLinks class contains arrays of Faces for each Node in the mesh. This allows quick query to the node
  * to determine what Cells the node is a part of.
  */
-class VertexArray
+class DREAM3DLib_EXPORT VertexArray
 {
   public:
 
@@ -62,94 +62,79 @@ class VertexArray
         double pos[3];
     } VertD_t;
 
+    typedef StructArray<Vert_t> VertexContainerType;
+
     DREAM3D_SHARED_POINTERS(VertexArray)
     DREAM3D_STATIC_NEW_MACRO(VertexArray)
     DREAM3D_TYPE_MACRO(VertexArray)
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    virtual ~VertexArray(){ }
+    virtual ~VertexArray();
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void resizeArray(size_t newSize) { m_Array->Resize(newSize); }
+    /**
+     * @brief CreateArray
+     * @param numElements
+     * @param name
+     * @return
+     */
+    static Pointer CreateArray(size_t numElements, const QString &name);
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    int64_t getNumberOfTuples() { return m_Array->getNumberOfTuples(); }
-    int64_t count() { return m_Array->getNumberOfTuples(); }
+    /**
+     * @brief resizeArray
+     * @param newSize
+     */
+    void resizeArray(size_t newSize);
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    static Pointer CreateArray(size_t numElements, const QString &name)
-    {
-      if (name.isEmpty() == true)
-      {
-        return NullPointer();
-      }
-      VertexArray* d = new VertexArray();
-      d->resizeArray(numElements);
-      Pointer ptr(d);
-      return ptr;
-    }
+    /**
+     * @brief getNumberOfTuples
+     * @return
+     */
+    int64_t getNumberOfTuples();
 
-    void initializeWithZeros()
-    {
-      m_Array->initializeWithZeros();
-    }
+    /**
+     * @brief count
+     * @return
+     */
+    int64_t count();
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void getCoords(size_t vertId, float* coords)
-    {
-      Vert_t& Vert = *(m_Array->getPointer(vertId));
-      coords[0] = Vert.pos[0];
-      coords[1] = Vert.pos[1];
-      coords[2] = Vert.pos[2];
-    }
+    /**
+     * @brief initializeWithZeros
+     */
+    void initializeWithZeros();
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void setCoords(size_t vertId, float* coords)
-    {
-      Vert_t& Vert = *(m_Array->getPointer(vertId));
-      Vert.pos[0] = coords[0];
-      Vert.pos[1] = coords[1];
-      Vert.pos[2] = coords[2];
-    }
+    /**
+     * @brief getCoords
+     * @param vertId
+     * @param coords
+     */
+    void getCoords(size_t vertId, float* coords);
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Vert_t* getPointer(size_t i)
-    {
-      return m_Array->getPointer(i);
-    }
+    /**
+     * @brief setCoords
+     * @param vertId
+     * @param coords
+     */
+    void setCoords(size_t vertId, float* coords);
+
+    /**
+     * @brief getPointer
+     * @param i
+     * @return
+     */
+    Vert_t* getPointer(size_t i);
 
      /**
      * @brief Returns reference to the Face_t at the index i
      * @param i
      * @return
      */
-    inline Vert_t& operator[](size_t i)
-    {
-      return (*m_Array)[i];
-    }
+    Vert_t& operator[](size_t i);
+
      /**
      * @brief Returns reference to the Face_t at the index i
      * @param i
      * @return
      */
-    inline Vert_t& getVert(size_t i)
-    {
-      return (*m_Array)[i];
-    }
+    Vert_t& getVert(size_t i);
 
 
   protected:

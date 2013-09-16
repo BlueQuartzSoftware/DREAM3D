@@ -31,15 +31,10 @@
 #ifndef PipelineBuilderWIDGET_H_
 #define PipelineBuilderWIDGET_H_
 
-#include <QtCore/QString>
-#include <QtCore/QSettings>
-#include <QtCore/QEvent>
-#include <QtCore/QMap>
-#include <QtCore/QStringList>
-#include <QtCore/QUrl>
-#include <QtCore/QFileInfo>
-#include <QtGui/QDropEvent>
-#include <QInputDialog>
+#include <QtCore/QPoint>
+#include <QtCore/QList>
+#include <QtCore/QDir>
+#include <QtGui/QMenu>
 
 #include "ui_PipelineBuilderWidget.h"
 
