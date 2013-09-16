@@ -76,16 +76,18 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
 
 
     /**
-    * @brief Reimplemented from @see AbstractFilter class
+    * @brief
     */
     virtual void execute();
 
+    /**
+    * @brief This function runs some sanity checks on the DataContainer and inputs
+    * in an attempt to ensure the filter can process the inputs.
+    */
     virtual void preflight();
 
   protected:
     EdgeDataContainerReader();
-
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     /**
     * @brief Checks for the appropriate parameter values and availability of
@@ -95,6 +97,8 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     * @param fields The number of fields
     * @param ensembles The number of ensembles
     */
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
 
     int gatherData(bool preflight);
 

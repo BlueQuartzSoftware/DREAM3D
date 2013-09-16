@@ -35,7 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #ifndef _SurfaceDataContainerReader_H_
 #define _SurfaceDataContainerReader_H_
-#error NOT DONE YET
 
 #include <QtCore/QString>
 
@@ -62,57 +61,23 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     virtual ~SurfaceDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
-    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
 
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
-
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     typedef QList<QString> NameListType;
 
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceFieldData)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceEnsembleData)
+
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceEnsembleArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
 
     /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
-
-    /**
-    * @brief Reimplemented from @see AbstractFilter class
+    * @brief
     */
     virtual void execute();
 
@@ -137,25 +102,25 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
-    int gatherVertexData(hid_t dcGid, bool preflight);
-    int gatherFaceData(hid_t dcGid, bool preflight);
-    int gatherEdgeData(hid_t dcGid, bool preflight);
-    int gatherFieldData(hid_t dcGid, bool preflight);
-    int gatherEnsembleData(hid_t dcGid, bool preflight);
-    int readVertices(hid_t dcGid);
-    int readFaces(hid_t dcGid);
-    int readEdges(hid_t dcGid);
-    int readMeshLinks(hid_t dcGid, bool preflight);
-    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
-    int readVertexAttributeData(hid_t dcGid);
-    int readFaceAttributeData(hid_t dcGid);
-    int readFieldData(hid_t dcGid);
-    int readEnsembleData(hid_t dcGid);
 
+    int gatherFaceData(hid_t dcGid, bool preflight);
+    int gatherFaceFieldData(hid_t dcGid, bool preflight);
+    int gatherFaceEnsembleData(hid_t dcGid, bool preflight);
+
+    int readFaces(hid_t dcGid);
+    int readMeshLinks(hid_t dcGid, bool preflight);
+    int readFaceFieldData(hid_t dcGid);
+    int readFaceEnsembleData(hid_t dcGid);
+
+    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead);
+
+    /* ********** NOT SURE IF THIS IS NEEDED ****************** */
+    int readVertices(hid_t dcGid);
+
 
 
   private:

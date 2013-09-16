@@ -133,7 +133,7 @@ class DynamicListArray
     {
       size_t offset = 0;
       allocate(nElements); // Allocate all the links with 0 and NULL;
-      uint8_t* bufPtr = &(buffer.front());
+      uint8_t* bufPtr = buffer.data();
 
       // Walk the array and allocate all the array links to Zero and NULL
       uint16_t* ncells = NULL;
@@ -149,6 +149,28 @@ class DynamicListArray
       }
     }
 
+    // -----------------------------------------------------------------------------
+    //
+    // -----------------------------------------------------------------------------
+    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nElements)
+    {
+      size_t offset = 0;
+      allocate(nElements); // Allocate all the links with 0 and NULL;
+      uint8_t* bufPtr = &(buffer.front());
+
+      // Walk the array and allocate all the array links to Zero and NULL
+      uint16_t* ncells = NULL;
+      //int32_t* cells = NULL;
+      for(size_t i = 0; i < nElements; ++i)
+      {
+        ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
+        this->Array[i].ncells = *ncells; // Set the number of cells in this link
+        offset += 2;
+        this->Array[i].cells = new T[(*ncells)]; // Allocate a new chunk of memory to store the list
+        ::memcpy(this->Array[i].cells, bufPtr + offset, (*ncells)*sizeof(T) ); // Copy from teh buffer into the new list memory
+        offset += (*ncells) * sizeof(T); // Increment the offset
+      }
+    }
 
     void allocateLists(QVector<uint16_t> &linkCounts)
     {
