@@ -64,7 +64,7 @@
 
 
 /**
- * @class SurfaceDataContainer SurfaceDataContainer.h DREAM3DLib/Common/SurfaceDataContainer.h
+ * @class SurfaceDataContainer SurfaceDataContainer.h DREAM3DLib/DataContainers/SurfaceDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 28, 2012

@@ -65,7 +65,7 @@
 
 
 /**
- * @class EdgeDataContainer EdgeDataContainer.h DREAM3DLib/Common/EdgeDataContainer.h
+ * @class EdgeDataContainer EdgeDataContainer.h DREAM3DLib/DataContainers/EdgeDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 28, 2012
