@@ -103,13 +103,10 @@ void QHex2SqrConverterWidget::getGuiParametersFromFilter(AbstractFilter* filt)
   Hex2SqrConverter* filter = Hex2SqrConverter::SafeObjectDownCast<AbstractFilter*, Hex2SqrConverter*>(filt);
   m_ZStartIndex->setValue( filter->getZStartIndex() );
   m_ZEndIndex->setValue( filter->getZEndIndex() );
-  
-  ss << filter->getXResolution();
-  m_xSpacing->setText((ss.str()));
-  ss.clear();
-  ss << filter->getYResolution();
-  m_ySpacing->setText((ss.str()));
-  ss.clear();
+
+  m_xSpacing->setText(QString::number(filter->getXResolution()));
+  m_ySpacing->setText(QString::number(filter->getYResolution()));
+
   setEbsdFileList( filter->getEbsdFileList() );
 }
 

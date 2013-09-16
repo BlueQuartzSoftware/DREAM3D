@@ -31,13 +31,10 @@
 #ifndef _QDataContainerReaderWidget_H_
 #define _QDataContainerReaderWidget_H_
 
-
-#include <QtCore/QString>
-#include <set>
-
 #include <QtCore/QObject>
+#include <QtCore/QString>
+
 #include <QtCore/QSettings>
-#include <QtCore/QUrl>
 
 #include "PipelineBuilder/QFilterWidget.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -48,6 +45,9 @@
 
 class QListWidget;
 
+/**
+ * @brief The QDataContainerReaderWidget class
+ */
 class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContainerReaderWidget
 {
     Q_OBJECT

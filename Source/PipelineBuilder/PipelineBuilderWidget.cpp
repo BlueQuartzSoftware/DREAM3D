@@ -29,18 +29,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "PipelineBuilderWidget.h"
 
-#include <QtCore/QString>
-#include <set>
+
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 //-- Qt Includes
+#include <QtCore/QString>
+#include <QtCore/QSet>
 #include <QtCore/QDebug>
 #include <QtCore/QTime>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
-#include <QtCore/QString>
 #include <QtCore/QUrl>
 #include <QtCore/QThread>
 #include <QtCore/QFileInfoList>
@@ -280,7 +280,7 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
 {
-  hid_t fid = H5Utilities::openFile( filePath );
+  hid_t fid = QH5Utilities::openFile( filePath );
   if (fid <= 0)
   {
     //Present a error dialog
@@ -364,17 +364,17 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
   QList<QString> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    
-    ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+
+    QString iStr = QString::number(i);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, iStr, "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);

@@ -1506,7 +1506,7 @@ void QFilterWidget::updateQLineEditStringValue(const QString &v)
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le)
   {
-    setProperty(whoSent->objectName.toLatin1().data(), le->text());
+    setProperty(whoSent->objectName().toLatin1().data(), le->text());
   }
 }
 
