@@ -73,9 +73,9 @@
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"

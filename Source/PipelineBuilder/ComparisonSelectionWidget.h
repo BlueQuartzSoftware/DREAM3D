@@ -46,10 +46,10 @@
 
 #include "ui_ComparisonSelectionWidget.h"
 
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
-#include "DREAM3DLib/Common/EdgeDataContainer.h"
-#include "DREAM3DLib/Common/VertexDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 

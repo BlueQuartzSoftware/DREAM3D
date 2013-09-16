@@ -45,7 +45,7 @@
 #include "DREAM3DLib/IOFilters/util/VertexDataContainerReader.h"
 
 /**
- * @class EdgeDataContainerReader EdgeDataContainerReader.h DREAM3DLib/IOFilters/EdgeDataContainerReader.h
+ * @class EdgeDataContainerReader EdgeDataContainerReader.h DREAM3DLib/IOFilters/util/EdgeDataContainerReader.h
  * @brief
  * @author
  * @date

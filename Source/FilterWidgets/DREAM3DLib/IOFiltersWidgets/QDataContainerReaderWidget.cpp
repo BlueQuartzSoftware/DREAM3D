@@ -45,7 +45,7 @@
 #include "H5Support/H5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h"
 
 
 #include "DREAM3DLib/IOFiltersWidgets/moc_QDataContainerReaderWidget.cxx"
