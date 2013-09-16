@@ -81,6 +81,16 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
   protected:
     VertexDataContainerWriter();
 
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     virtual int writeVertices(hid_t dcGid);
 
     virtual int writeVertexData(hid_t dcGid, QString groupName);

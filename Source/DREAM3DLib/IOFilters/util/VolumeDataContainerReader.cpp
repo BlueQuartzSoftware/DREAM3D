@@ -55,7 +55,6 @@ VolumeDataContainerReader::VolumeDataContainerReader() :
   m_ReadCellEnsembleData(true),
   m_ReadAllArrays(false)
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -68,52 +67,16 @@ VolumeDataContainerReader::~VolumeDataContainerReader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerReader::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerReader::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
-
-  if(NULL == m)
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
   {
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
-
   if(getHdfFileId() < 0)
   {
     setErrorCondition(-150);
@@ -146,8 +109,9 @@ void VolumeDataContainerReader::preflight()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerReader::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -2);
@@ -166,9 +130,9 @@ void VolumeDataContainerReader::execute()
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  m->setDimensions(volDims[0], volDims[1], volDims[2]);
-  m->setResolution(spacing);
-  m->setOrigin(origin);
+  dc->setDimensions(volDims[0], volDims[1], volDims[2]);
+  dc->setResolution(spacing);
+  dc->setOrigin(origin);
 
   if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadVertexData(false);
   if(getEdgeArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadEdgeData(false);
@@ -177,12 +141,12 @@ void VolumeDataContainerReader::execute()
   if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellFieldData = false;
   if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellEnsembleData = false;
 
-  if(getReadVertexData() == true) m->clearVertexData();
-  if(getReadEdgeData() == true) m->clearEdgeData();
-  if(getReadFaceData() == true) m->clearFaceData();
-  if(m_ReadCellData == true) m->clearCellData();
-  if(m_ReadCellFieldData == true) m->clearCellFieldData();
-  if(m_ReadCellEnsembleData == true) m->clearCellEnsembleData();
+  if(getReadVertexData() == true) dc->clearVertexData();
+  if(getReadEdgeData() == true) dc->clearEdgeData();
+  if(getReadFaceData() == true) dc->clearFaceData();
+  if(m_ReadCellData == true) dc->clearCellData();
+  if(m_ReadCellFieldData == true) dc->clearCellFieldData();
+  if(m_ReadCellEnsembleData == true) dc->clearCellEnsembleData();
 
   // We are actually wanting to read the file so set preflight to false
   err = gatherData(false);
@@ -267,7 +231,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   { 1.0f, 1.0f, 1.0f };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
   if(getHdfFileId() < 0)
   {
@@ -298,9 +262,9 @@ int VolumeDataContainerReader::gatherData(bool preflight)
       setErrorCondition(err);
       return -1;
     }
-    m->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
-    m->setResolution(spacing);
-    m->setOrigin(origin);
+    dc->setDimensions(volDims[0], volDims[1], volDims[2]); // We use this signature so the compiler will cast the value to the proper int type
+    dc->setResolution(spacing);
+    dc->setOrigin(origin);
   }
 
   if(getReadVertexData() == true)
@@ -395,6 +359,8 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
                                                 QSet<QString> &namesToRead)
 {
 
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+
   int err = 0;
   //Read the Cell Data
   hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
@@ -448,15 +414,15 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     {
       if(groupName.compare(H5_CELL_DATA_GROUP_NAME) == 0)
       {
-        getVolumeDataContainer()->addCellData(dPtr->GetName(), dPtr);
+        dc->addCellData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
       {
-        getVolumeDataContainer()->addCellFieldData(dPtr->GetName(), dPtr);
+        dc->addCellFieldData(dPtr->GetName(), dPtr);
       }
       else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
-        getVolumeDataContainer()->addCellEnsembleData(dPtr->GetName(), dPtr);
+        dc->addCellEnsembleData(dPtr->GetName(), dPtr);
       }
     }
 

@@ -270,6 +270,7 @@ int FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
 
 
   fprintf(vtkFile, "\n");
+  return 0;
 }
 
 

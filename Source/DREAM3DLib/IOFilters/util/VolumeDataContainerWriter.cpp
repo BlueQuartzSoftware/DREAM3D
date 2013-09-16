@@ -46,6 +46,28 @@
 
 #define WRITE_FIELD_XDMF 0
 
+namespace Detail
+{
+class H5GroupAutoCloser
+{
+public:
+  H5GroupAutoCloser(hid_t* groupId) :
+  gid(groupId)
+  {}
+
+  virtual ~H5GroupAutoCloser()
+  {
+    if (*gid > 0)
+    {
+      H5Gclose(*gid);
+    }
+  }
+  private:
+   hid_t* gid;
+};
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -99,20 +121,17 @@ void VolumeDataContainerWriter::preflight()
 void VolumeDataContainerWriter::execute()
 {
   int err = 0;
-  QString ss;
-  setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+  if (NULL == dc)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    addErrorMessage(getHumanLabel(), ss, -2);
+    setErrorCondition(-1);
     return;
   }
+
   setErrorCondition(0);
-  dataCheck(false, 1, 1, 1);
-  hid_t dcGid = -1;
-
-
 
   // Create the HDF5 Group for the Data Container
   err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), getHdfFileId());
@@ -124,7 +143,7 @@ void VolumeDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VolumeDataContainerName);
@@ -132,15 +151,16 @@ void VolumeDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
+  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   // This just writes the header information
   int64_t volDims[3] =
-  { m->getXPoints(), m->getYPoints(), m->getZPoints() };
+  { dc->getXPoints(), dc->getYPoints(), dc->getZPoints() };
   float spacing[3] =
-  { m->getXRes(), m->getYRes(), m->getZRes() };
+  { dc->getXRes(), dc->getYRes(), dc->getZRes() };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  m->getOrigin(origin);
+  dc->getOrigin(origin);
   err = writeMetaInfo(DREAM3D::HDF5::VolumeDataContainerName, volDims, spacing, origin);
   if (err < 0)
   {
@@ -151,21 +171,21 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
-  err = writeVertexData(dcGid);
+  err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEdgeData(dcGid);
+  err = writeEdgeData(dcGid, H5_EDGE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeFaceData(dcGid);
+  err = writeFaceData(dcGid, H5_FACE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -207,7 +227,8 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
 {
-  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
   {
     return;
   }
@@ -227,7 +248,8 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
 {
-  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
   {
     return;
   }
@@ -248,7 +270,7 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
-  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getVolumeDataContainer())
+  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
   {
     return;
   }
@@ -305,7 +327,7 @@ int VolumeDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
 {
   QString ss;
   int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
   //QString groupName(H5_VERTEX_DATA_GROUP_NAME);
 
   // Write the Voxel Data
@@ -355,7 +377,8 @@ int VolumeDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
 int VolumeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
 {
   int err = 0;
-  VolumeDataContainer* dc = getVolumeDataContainer();
+    VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+
   //QString groupName(H5_EDGE_DATA_GROUP_NAME);
 
   // Write the Edge Data
@@ -405,9 +428,10 @@ int VolumeDataContainerWriter::writeFaceData(hid_t dcGid, QString groupName)
 {
   QString ss;
   int err = 0;
-  VolumeDataContainer* dc = getVolumeDataContainer();
+    VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
-  QString groupName(H5_FACE_DATA_GROUP_NAME);
+
+  //QString groupName(H5_FACE_DATA_GROUP_NAME);
 
   // Write the Face Data
   err = QH5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
@@ -460,14 +484,14 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 {
   QString ss;
   int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
   int64_t volDims[3] =
-  { m->getXPoints(), m->getYPoints(), m->getZPoints() };
+  { dc->getXPoints(), dc->getYPoints(), dc->getZPoints() };
   float spacing[3] =
-  { m->getXRes(), m->getYRes(), m->getZRes() };
+  { dc->getXRes(), dc->getYRes(), dc->getZRes() };
   float origin[3] =
   { 0.0f, 0.0f, 0.0f };
-  m->getOrigin(origin);
+  dc->getOrigin(origin);
 
   writeCellXdmfGridHeader(origin, spacing, volDims);
 
@@ -495,13 +519,13 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getCellArrayNameList();
+  NameListType names = dc->getCellArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
 
     QString ss = QObject::tr("Writing Cell Data '%1' to HDF5 File").arg(*iter);
     notifyStatusMessage(ss);
-    IDataArray::Pointer array = m->getCellData(*iter);
+    IDataArray::Pointer array = dc->getCellData(*iter);
     err = array->writeH5Data(cellGroupId);
     if(err < 0)
     {
@@ -528,7 +552,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 {
   QString ss;
   int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
@@ -536,15 +560,9 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   std::vector<char> nameBuffer(nameSize, 0);
   nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
 
-<<<<<<< HEAD:Source/DREAM3DLib/IOFilters/VoxelDataContainerWriter.cpp
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = QFileInfo::filename(hdfFileName);
   QString xdmfGroupPath = QString(":/") + VoxelDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
-=======
-  QString hdfFileName(&(nameBuffer.front()), nameSize);
-  hdfFileName = MXAFileInfo::filename(hdfFileName);
-  QString xdmfGroupPath = QString(":/") + VolumeDataContainer::ClassName() + QString("/") + H5_FIELD_DATA_GROUP_NAME;
->>>>>>> develop:Source/DREAM3DLib/IOFilters/VolumeDataContainerWriter.cpp
 #endif
 
   int64_t volDims[3] = { 0,0,0 };
@@ -578,10 +596,10 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   typedef std::vector<IDataArray*> VectorOfIDataArrays_t;
   VectorOfIDataArrays_t neighborListArrays;
 
-  NameListType names = m->getCellFieldArrayNameList();
+  NameListType names = dc->getCellFieldArrayNameList();
   if (names.size() > 0)
   {
-    IDataArray::Pointer array = m->getCellFieldData(names.front());
+    IDataArray::Pointer array = dc->getCellFieldData(names.front());
     total = array->GetSize();
     volDims[0] = total;
     volDims[1] = 1;
@@ -595,7 +613,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   // Now loop over all the field data and write it out, possibly wrapping it with XDMF code also.
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getCellFieldData(*iter);
+    IDataArray::Pointer array = dc->getCellFieldData(*iter);
     if (array->getTypeAsString().compare(NeighborList<int>::ClassName()) == 0)
     {
       neighborListArrays.push_back(array.get());
@@ -687,7 +705,7 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
   QString ss;
   int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
   // Write the Ensemble data
   err = QH5Utilities::createGroupsFromPath(H5_ENSEMBLE_DATA_GROUP_NAME, dcGid);
@@ -712,10 +730,10 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  NameListType names = m->getCellEnsembleArrayNameList();
+  NameListType names = dc->getCellEnsembleArrayNameList();
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    IDataArray::Pointer array = m->getCellEnsembleData(*iter);
+    IDataArray::Pointer array = dc->getCellEnsembleData(*iter);
     err = array->writeH5Data(ensembleGid);
     if(err < 0)
     {

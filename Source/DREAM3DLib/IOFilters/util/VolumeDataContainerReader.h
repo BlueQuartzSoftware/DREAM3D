@@ -64,6 +64,8 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     virtual ~VolumeDataContainerReader();
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    typedef QList<QString> NameListType;
+
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
@@ -72,41 +74,6 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellEnsembleArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
-
-    typedef QList<QString> NameListType;
-
-
-    /**
-    * @brief This returns the group that the filter belonds to. You can select
-    * a different group if you want. The string returned here will be displayed
-    * in the GUI for the filter
-    */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-
-    /**
-    * @brief This returns a string that is displayed in the GUI. It should be readable
-    * and understandable by humans.
-    */
-    virtual const QString getHumanLabel() { return "Voxel DataContainer Reader"; }
-
-    /**
-    * @brief This method will instantiate all the end user settable options/parameters
-    * for this filter
-    */
-    virtual void setupFilterParameters();
-
-    /**
-    * @brief This method will write the options to a file
-    * @param writer The writer that is used to write the options to a file
-    */
-    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
-    /**
-    * @brief This method will read the options from a file
-    * @param reader The reader that is used to read the options from a file
-    */
-    virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
     * @brief Reimplemented from @see AbstractFilter class
@@ -135,9 +102,11 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
+
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                        QVector<QString> &namesRead,
                        QSet<QString> &namesToRead);
+
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 
   private:
