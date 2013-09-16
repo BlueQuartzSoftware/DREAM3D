@@ -62,6 +62,8 @@ class DREAM3DLib_EXPORT VertexArray
         double pos[3];
     } VertD_t;
 
+    typedef StructArray<Vert_t> VertexContainerType;
+
     DREAM3D_SHARED_POINTERS(VertexArray)
     DREAM3D_STATIC_NEW_MACRO(VertexArray)
     DREAM3D_TYPE_MACRO(VertexArray)

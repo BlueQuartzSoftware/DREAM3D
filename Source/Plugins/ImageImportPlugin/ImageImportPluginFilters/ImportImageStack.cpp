@@ -159,7 +159,6 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), ss, err);
-    return err;
   }
 
   if(dims[0] > max || dims[1] > max || dims[2] > max)
@@ -169,7 +168,6 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), ss, err);
-    return err;
   }
     /* ************ End Sanity Check *************************** */
 

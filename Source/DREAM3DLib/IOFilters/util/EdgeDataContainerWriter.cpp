@@ -212,7 +212,7 @@ void EdgeDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Edge Data"));
 
 
   notifyStatusMessage("Complete");
@@ -263,7 +263,7 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfGridFooter()
+void EdgeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
   //{

@@ -204,7 +204,7 @@ void SurfaceDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Surface Data"));
 
 
   notifyStatusMessage("Complete");
@@ -255,7 +255,7 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::writeXdmfGridFooter()
+void SurfaceDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
@@ -270,7 +270,7 @@ void SurfaceDataContainerWriter::writeXdmfGridFooter()
   }
   QTextStream& out = *getXdmfOStream();
   out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << "\n";
+  out << "    <!-- *************** END OF SurfaceMesh DataContainer " << label << " *************** -->" << "\n";
   out << "\n";
 }
 
