@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     virtual int writeMeshFaceNeighborLists(hid_t dcGid);
 
     virtual void writeXdmfGridHeader();
-    virtual void writeXdmfGridFooter();
+    virtual void writeXdmfGridFooter(const QString &label);
     virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 

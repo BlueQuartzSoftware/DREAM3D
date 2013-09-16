@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------
 VertexArray::VertexArray()
 {
-
+  m_Array = VertexContainerType::CreateArray(0, "VertexArray_Internal_Use_Only");
 }
 
 // -----------------------------------------------------------------------------

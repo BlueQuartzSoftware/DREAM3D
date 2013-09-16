@@ -195,7 +195,7 @@ void VertexDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Vertex Data"));
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -243,7 +243,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfGridFooter()
+void VertexDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   {
@@ -252,7 +252,7 @@ void VertexDataContainerWriter::writeXdmfGridFooter()
 
   QTextStream& out = *getXdmfOStream();
   out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF Vertex DataContainer *************** -->" << "\n";
+  out << "    <!-- *************** END OF Vertex DataContainer " << label << " *************** -->" << "\n";
   out << "\n";
 }
 

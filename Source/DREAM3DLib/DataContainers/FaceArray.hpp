@@ -65,6 +65,7 @@ class FaceArray
     } Face_t;
 
     typedef QSet<int32_t> UniqueFaceIds_t;
+    typedef StructArray<Face_t> FaceContainerType;
 
     DREAM3D_SHARED_POINTERS(FaceArray)
     DREAM3D_STATIC_NEW_MACRO(FaceArray)
@@ -323,7 +324,7 @@ class FaceArray
     FaceArray() :
     m_Verts(NULL)
     {
-      m_Array = StructArray<Face_t>::NullPointer();
+      m_Array = FaceContainerType::CreateArray(0, "FaceArray_Internal_Use_Only");
     }
 
   private:
