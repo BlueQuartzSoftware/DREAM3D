@@ -39,9 +39,15 @@ if(NOT "$ENV{TBB_ARCH_TYPE}" STREQUAL "" AND "${TBB_ARCH_TYPE}" STREQUAL "")
 	set(TBB_ARCH_TYPE $ENV{TBB_ARCH_TYPE} )
 endif()
 
+if(TBB_DEBUG)
+	message(STATUS "TBB Environment Variables")
+	message(STATUS "TBB_ARCH_TYPE: ${TBB_ARCH_TYPE}")
+	message(STATUS "TBB_ARCH_PLATFORM: ${TBB_ARCH_PLATFORM}")
+endif()
+
 # Figure out the TBB_ARCH_PLATFORM on Windows. Note that we only support
 # visual studio 9, 10, 11
-if(MSVC AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
+if(WIN32 AND "${TBB_ARCH_PLATFORM}" STREQUAL "" )
 	
 	set(TBB_ARCH_TYPE "ia32")
 	if( "${CMAKE_SIZEOF_VOID_P}" EQUAL "8" )

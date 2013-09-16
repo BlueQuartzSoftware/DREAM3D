@@ -105,7 +105,7 @@ set(UTIL_FILES
 )
 
 foreach(file  ${UTIL_FILES})
-  ADD_DREAM3D_SUPPORT_HEADER(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} ${file})
+  ADD_DREAM3D_SUPPORT_HEADER_SUBDIR(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} ${file} "util")
 endforeach()
 
 
