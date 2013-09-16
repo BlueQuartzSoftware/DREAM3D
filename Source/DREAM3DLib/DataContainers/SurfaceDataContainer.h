@@ -53,12 +53,13 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
+#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/Observable.h"
 #include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 #include "DREAM3DLib/DataContainers/FaceArray.hpp"
 
 
@@ -91,6 +92,9 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public EdgeDataContainer
     DOES_DATASET_EXIST_DECL(FaceData)
     DOES_DATASET_EXIST_DECL(FaceFieldData)
     DOES_DATASET_EXIST_DECL(FaceEnsembleData)
+
+/** *********************************** NOT SURE ABOUT THIS ONE EITHER ***********************  */
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshFaceNeighborLists)
 
     /**
      * @brief Adds/overwrites the data for a named array

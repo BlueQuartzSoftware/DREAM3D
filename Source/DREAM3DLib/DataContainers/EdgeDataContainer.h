@@ -94,6 +94,10 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public VertexDataContainer
     DOES_DATASET_EXIST_DECL(EdgeFieldData)
     DOES_DATASET_EXIST_DECL(EdgeEnsembleData)
 
+/* ************ THESE ARE GOING TO GO AWAY I THINK. THEY ARE HERE TO GET THINGS TO COMPILE ******* */
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, MeshLinks)
+/* ************************************************************************************************* */
+
 
     /**
      * @brief Adds/overwrites the data for a named array

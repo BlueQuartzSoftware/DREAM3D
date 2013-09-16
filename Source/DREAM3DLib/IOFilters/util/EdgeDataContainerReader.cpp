@@ -309,7 +309,7 @@ int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   if (false == preflight && type_size > 0)
   {
     //Read the array into the buffer
-    QVector<uint8_t> buffer;
+    std::vector<uint8_t> buffer;
     err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {

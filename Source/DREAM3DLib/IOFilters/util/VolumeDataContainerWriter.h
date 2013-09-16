@@ -36,7 +36,6 @@
 
 #ifndef _VolumeDataContainerWriter_H_
 #define _VolumeDataContainerWriter_H_
-#error NOT DONE YET
 
 #include <QtCore/QString>
 #include <QtCore/QTextStream>

@@ -325,8 +325,8 @@ void DataContainerReader::execute()
     volumeReader->setFaceArraysToRead(m_SelectedVolumeFaceArrays);
     volumeReader->setEdgeArraysToRead(m_SelectedVolumeEdgeArrays);
     volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-    volumeReader->setFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
-    volumeReader->setEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
+    volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
+    volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
     volumeReader->setReadAllArrays(m_ReadAllArrays);
     volumeReader->setDataContainer(getVolumeDataContainer());
     volumeReader->setObservers(getObservers());
@@ -348,8 +348,8 @@ void DataContainerReader::execute()
     smReader->setVertexArraysToRead(m_SelectedSurfaceVertexArrays);
     smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
     smReader->setEdgeArraysToRead(m_SelectedSurfaceEdgeArrays);
-    smReader->setFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
-    smReader->setEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
+    smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
+    smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setDataContainer(getSurfaceDataContainer());
     smReader->setObservers(getObservers());

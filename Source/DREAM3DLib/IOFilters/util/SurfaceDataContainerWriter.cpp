@@ -389,7 +389,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
-  Int32DynamicListArray::Pointer links = dc->getFaces()->getFacesContainingVert;
+  Int32DynamicListArray::Pointer links = dc->getFaces()->getFacesContainingVert();
   if (NULL == links.get())
   {
     return 0;
@@ -418,7 +418,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
   for(size_t v = 0; v < nVerts; ++v)
   {
     uint16_t ncells = links->getNumberOfElements(v);
-    int32_t* cells = links->getFaceListPointer(v);
+    int32_t* cells = links->getElementListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
     ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
@@ -444,18 +444,18 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 {
-  Int32DynamicListArray::Pointer links = getSurfaceDataContainer()->getFaces()->getFaceNeighbors();
-  if (NULL == links.get())
-  {
-    return 0;
-  }
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  FaceArray::Pointer facesPtr = sm->getFaces();
+
+  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  FaceArray::Pointer facesPtr = dc->getFaces();
   if (NULL == facesPtr.get())
   {
     return -1;
   }
-
+  Int32DynamicListArray::Pointer links = dc->getFaces()->getFaceNeighbors();
+  if (NULL == links.get())
+  {
+    return 0;
+  }
   herr_t err = -1;
   size_t total = 0;
   size_t nFaces = facesPtr->getNumberOfTuples();
