@@ -52,7 +52,7 @@ Q_DECLARE_METATYPE(IntVec3Widget_t)
 Q_DECLARE_METATYPE(FloatVec3Widget_t)
 
 /**
- * @class FilterParameter FilterParameter.h DREAM3DLib/Common/FilterParameter.h
+ * @class FilterParameter FilterParameter.h DREAM3DLib/FilterParameters/FilterParameter.h
  * @brief This class holds the various properties that an input parameter to a
  * filter needs to describe itself.
  * @author Michael A. Jackson for BlueQuartz Software

@@ -48,7 +48,7 @@
 typedef QVector<FloatArrayType::Pointer> VectorOfFloatArray;
 
 /**
- * @class MatrixStatsData MatrixStatsData.h DREAM3DLib/Common/MatrixStatsData.h
+ * @class MatrixStatsData MatrixStatsData.h DREAM3DLib/StatsData/MatrixStatsData.h
  * @brief This class holds the statistical data for a single phase of a microstructure.
  * There are several statistics that are held by this class in a varying number of
  * storage types. Some types have specific ordering of the sub arrays with in them. Those

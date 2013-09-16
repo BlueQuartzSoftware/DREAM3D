@@ -61,7 +61,7 @@
 #include "DREAM3DLib/DataContainers/CellArray.hpp"
 
 /**
- * @class VolumeDataContainer VolumeDataContainer DREAM3DLib/Common/VolumeDataContainer.h
+ * @class VolumeDataContainer VolumeDataContainer DREAM3DLib/DataContainers/VolumeDataContainer.h
  * @brief This data container holds data the represents a structured rectangular
  * grid of data typically referred to as a Voxel Volume
  * @author Michael A. Jackson for BlueQuartz Software
