@@ -62,6 +62,7 @@
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"
 #include "StatsGenerator/TextureDialog.h"
+#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
 
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 #include "QtSupport/PoleFigureImageUtilities.h"
@@ -177,11 +178,11 @@ int StatsGenODFWidget::getOrientationData(StatsData* statsData, unsigned int pha
   QVector<float> odf;
 
   // Initialize xMax and yMax....
-  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1).toStdVector();
-  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2).toStdVector();
-  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3).toStdVector();
-  weights = m_ODFTableModel->getData(SGODFTableModel::Weight).toStdVector();
-  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma).toStdVector();
+  e1s = m_ODFTableModel->getData(SGODFTableModel::Euler1);
+  e2s = m_ODFTableModel->getData(SGODFTableModel::Euler2);
+  e3s = m_ODFTableModel->getData(SGODFTableModel::Euler3);
+  weights = m_ODFTableModel->getData(SGODFTableModel::Weight);
+  sigmas = m_ODFTableModel->getData(SGODFTableModel::Sigma);
 
   for (QVector<float>::size_type i = 0; i < e1s.size(); i++)
   {

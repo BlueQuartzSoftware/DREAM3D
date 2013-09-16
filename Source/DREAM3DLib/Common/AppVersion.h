@@ -38,7 +38,9 @@
 #ifndef _AppVersion_H_
 #define _AppVersion_H_
 
-class AppVersion
+#include "DREAM3DLib\DREAM3DLib.h"
+
+class DREAM3DLib_EXPORT AppVersion
 {
   public:
   AppVersion();

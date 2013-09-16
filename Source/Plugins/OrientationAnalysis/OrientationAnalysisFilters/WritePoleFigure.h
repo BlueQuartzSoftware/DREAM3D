@@ -54,7 +54,7 @@
  * @date
  * @version 1.0
  */
-class DREAM3DLib_EXPORT WritePoleFigure : public AbstractFilter
+class WritePoleFigure : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(WritePoleFigure)

@@ -50,7 +50,7 @@
  * @date
  * @version 1.0
  */
-class GrainFaceCurvatureFilter : public SurfaceMeshFilter
+class DREAM3DLib_EXPORT GrainFaceCurvatureFilter : public SurfaceMeshFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(GrainFaceCurvatureFilter)
