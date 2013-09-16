@@ -61,6 +61,12 @@ if(UNIX AND NOT APPLE)
     set(DREAM3D_LINUX_SYSTEM ${CMAKE_SYSTEM_NAME} CACHE STRING "The Name of the linux distrubution for packaging")
 endif()
 
+
+
+# --------------------------------------------------------------------
+# This is set to "1" so that our test files are deleted at the end of the tests
+set(DREAM3D_REMOVE_TEST_FILES "1")
+
 # --------------------------------------------------------------------
 # In order to increment the version of DREAM3D simply adjust these variables.
 # we are using a 3 part Version scheme commonly found in software development. The
