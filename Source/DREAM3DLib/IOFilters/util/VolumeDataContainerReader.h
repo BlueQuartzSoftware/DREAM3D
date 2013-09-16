@@ -48,7 +48,7 @@
 
 
 /**
- * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/VolumeDataContainerReader.h
+ * @class VolumeDataContainerReader VolumeDataContainerReader.h DREAM3DLib/IOFilters/util/VolumeDataContainerReader.h
  * @brief
  * @author
  * @date

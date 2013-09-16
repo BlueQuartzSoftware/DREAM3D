@@ -45,7 +45,7 @@
 #include "DREAM3DLib/IOFilters/util/EdgeDataContainerReader.h"
 
 /**
- * @class SurfaceDataContainerReader SurfaceDataContainerReader.h DREAM3DLib/IOFilters/SurfaceDataContainerReader.h
+ * @class SurfaceDataContainerReader SurfaceDataContainerReader.h DREAM3DLib/IOFilters/util/SurfaceDataContainerReader.h
  * @brief
  * @author
  * @date

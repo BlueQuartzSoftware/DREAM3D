@@ -54,7 +54,7 @@
 
 
 /**
- * @class GbcdDataArray GbcdDataArray.hpp DREAM3DLib/Common/GbcdDataArray.hpp
+ * @class GbcdDataArray GbcdDataArray.hpp DREAM3DLib/DataArrays/GBCDDataArray.hpp
  * @brief Template class for wrapping raw arrays of data.
  * @author mjackson
  * @date July 3, 2008

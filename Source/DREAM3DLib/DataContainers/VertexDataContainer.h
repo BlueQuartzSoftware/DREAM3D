@@ -62,7 +62,7 @@
 #include "DREAM3DLib/DataContainers/VertexArray.hpp"
 
 /**
- * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/Common/VertexDataContainer.h
+ * @class VertexDataContainer VertexDataContainer.h DREAM3DLib/DataContainers/VertexDataContainer.h
  * @brief This data container holds data the represents a SurfaceMesh
  * @author Michael A. Jackson for BlueQuartz Software
  * @date Sep 28, 2012
