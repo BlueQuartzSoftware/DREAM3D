@@ -35,6 +35,15 @@ macro(ADD_DREAM3D_SUPPORT_HEADER SourceDir filterGroup headerFileName)
                     ${SourceDir}/${filterGroup}/${headerFileName})
     cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
 endmacro()
+
+#-------------------------------------------------------------------------------
+# Macro ADD_DREAM3D_SUPPORT_HEADER
+macro(ADD_DREAM3D_SUPPORT_HEADER_SUBDIR SourceDir filterGroup headerFileName subdir)
+    set(Project_SRCS ${Project_SRCS}
+                    ${SourceDir}/${filterGroup}/${headerFileName})
+    cmp_IDE_SOURCE_PROPERTIES( "DREAM3DLib/${filterGroup}/${subdir}" "${DREAM3DLib_SOURCE_DIR}/${filterGroup}/${headerFileName}" "" "0")
+endmacro()
+
 #-------------------------------------------------------------------------------
 # Macro ADD_DREAM3D_SUPPORT_SOURCE
 macro(ADD_DREAM3D_SUPPORT_SOURCE SourceDir filterGroup sourceFileName)
