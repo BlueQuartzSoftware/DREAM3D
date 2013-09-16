@@ -69,6 +69,9 @@ ModifiedLambertProjection::Pointer forwardProjectGreyScaleImage(QImage image)
   return lambert;
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void forwardAndReverse()
 {
 
@@ -81,11 +84,11 @@ void forwardAndReverse()
   size_t dims[3] = {1001, 1001, 1};
   float res[3] = { 1.0, 1.0, 1.0};
   DoubleArrayType::Pointer lambertSquare = lambert->getNorthSquare();
-  lambertSquare->SetName(std::string("North_") + std::string("lambert_from_orig_stereo"));
+  lambertSquare->SetName(QString("North_") + QString("lambert_from_orig_stereo"));
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/North_lambert_from_orig_stereo.vtk", lambertSquare.get(), dims, res, "double", true);
 
   lambertSquare = lambert->getSouthSquare();
-  lambertSquare->SetName(std::string("South_") + std::string("lambert_from_orig_stereo"));
+  lambertSquare->SetName(QString("South_") + QString("lambert_from_orig_stereo"));
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/South_lambert_from_orig_stereo.vtk", lambertSquare.get(), dims, res, "double", true);
 
 
@@ -93,7 +96,9 @@ void forwardAndReverse()
 }
 
 
-
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int main(int argc, char *argv[])
 {
   forwardAndReverse();

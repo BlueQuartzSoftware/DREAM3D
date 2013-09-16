@@ -78,6 +78,41 @@ EdgeDataContainerWriter::~EdgeDataContainerWriter()
 {
 }
 
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  if(getHdfFileId() < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainerWriter::preflight()
+{
+  /* Place code here that sanity checks input arrays and input values. Look at some
+  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  dataCheck(true, 1, 1, 1);
+}
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -177,7 +212,7 @@ void EdgeDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Edge Data"));
 
 
   notifyStatusMessage("Complete");
@@ -228,7 +263,7 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfGridFooter()
+void EdgeDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
   //{
@@ -349,6 +384,18 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 
   out << block << "\n";
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int EdgeDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
+{
+    int err = -1;
+    BOOST_ASSERT(false);
+    return err;
+}
+
+
 
 // -----------------------------------------------------------------------------
 //

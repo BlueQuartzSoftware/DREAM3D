@@ -43,7 +43,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/DataContainers/DynamicListArray.hpp"
 
 /**
@@ -67,6 +67,9 @@ class EdgeArray
     //
     // -----------------------------------------------------------------------------
     virtual ~EdgeArray(){ }
+
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, EdgesContainingVert)
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, EdgeNeighbors)
 
     // -----------------------------------------------------------------------------
     //
@@ -124,13 +127,6 @@ class EdgeArray
       m_EdgesContainingVert = Int32DynamicListArray::NullPointer();
     }
 
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getEdgesContainingVert()
-    {
-      return m_EdgesContainingVert;
-    }
 
     // -----------------------------------------------------------------------------
     //
@@ -189,22 +185,6 @@ class EdgeArray
     void deleteEdgeNeighbors()
     {
       m_EdgeNeighbors = Int32DynamicListArray::NullPointer();
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    void setEdgeNeighbors()
-    {
-      m_EdgeNeighbors;
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getEdgeNeighbors()
-    {
-      return m_EdgeNeighbors;
     }
 
     // -----------------------------------------------------------------------------
@@ -325,8 +305,7 @@ class EdgeArray
   private:
     StructArray<Edge_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    Int32DynamicListArray::Pointer m_EdgesContainingVert;
-    Int32DynamicListArray::Pointer m_EdgeNeighbors;
+
 
     QString m_Name;
 

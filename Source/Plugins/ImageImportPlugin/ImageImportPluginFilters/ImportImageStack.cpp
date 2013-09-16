@@ -124,15 +124,14 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (m_ImageFileList.size() == 0)
   {
-    ss.str("");
-    ss << "No files have been selected for import. Have you set the input directory?";
+    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
     setErrorCondition(-11);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else
   {
@@ -154,26 +153,22 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
 #else
     int64_t max = std::numeric_limits<int64_t>::max();
 #endif
-    if(dims[0] * dims[1] * dims[2] > max)
-    {
-      err = -1;
-      QTextStream s;
-      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
-      setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
-      return;
-    }
+  if(dims[0] * dims[1] * dims[2] > max)
+  {
+    err = -1;
+    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
+    setErrorCondition(err);
+    addErrorMessage(getHumanLabel(), ss, err);
+  }
 
-    if(dims[0] > max || dims[1] > max || dims[2] > max)
-    {
-      err = -1;
-      QTextStream s;
-      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
-      setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s.str(), -1);
-      return;
-    }
+  if(dims[0] > max || dims[1] > max || dims[2] > max)
+  {
+    err = -1;
+    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
+    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+    setErrorCondition(err);
+    addErrorMessage(getHumanLabel(), ss, err);
+  }
     /* ************ End Sanity Check *************************** */
 
     m->setDimensions(static_cast<size_t>(dims[0]), static_cast<size_t>(dims[1]), static_cast<size_t>(dims[2]));
@@ -210,7 +205,7 @@ void ImportImageStack::execute()
     return;
   }
   setErrorCondition(0);
-  
+
 
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -232,9 +227,8 @@ void ImportImageStack::execute()
   for (QVector<QString>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
     QString imageFName = *filepath;
-    ss.str("");
-    ss << "Importing file " << imageFName;
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Importing file %1").arg(imageFName);
+    notifyStatusMessage(ss);
 
     QImage image((imageFName));
     if (image.isNull() == true)

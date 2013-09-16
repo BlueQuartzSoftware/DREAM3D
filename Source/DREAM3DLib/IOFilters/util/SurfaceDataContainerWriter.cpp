@@ -45,6 +45,8 @@
 
 #define WRITE_FIELD_XDMF 0
 
+namespace Detail
+{
 class H5GroupAutoCloser
 {
 public:
@@ -62,6 +64,7 @@ public:
   private:
    hid_t* gid;
 };
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -86,8 +89,6 @@ void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
   if (NULL == dc)
   {
@@ -151,7 +152,7 @@ void SurfaceDataContainerWriter::execute()
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(DREAM3D::HDF5::SurfaceDataContainerName, H5_VTK_POLYDATA);
@@ -203,7 +204,7 @@ void SurfaceDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Surface Data"));
 
 
   notifyStatusMessage("Complete");
@@ -254,7 +255,7 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainerWriter::writeXdmfGridFooter()
+void SurfaceDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
@@ -269,7 +270,7 @@ void SurfaceDataContainerWriter::writeXdmfGridFooter()
   }
   QTextStream& out = *getXdmfOStream();
   out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << "\n";
+  out << "    <!-- *************** END OF SurfaceMesh DataContainer " << label << " *************** -->" << "\n";
   out << "\n";
 }
 

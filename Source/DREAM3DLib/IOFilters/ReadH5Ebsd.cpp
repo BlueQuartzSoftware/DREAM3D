@@ -181,9 +181,9 @@ int ReadH5Ebsd::initDataContainerDimsRes(int64_t dims[3], VolumeDataContainer* m
   if(dims[0] * dims[1] * dims[2] > max)
   {
     err = -1;
-    QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
+    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s, err);
+    addErrorMessage(getHumanLabel(), ss, err);
     return err;
   }
 

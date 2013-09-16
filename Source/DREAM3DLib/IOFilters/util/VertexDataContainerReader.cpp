@@ -43,7 +43,7 @@
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 
 // -----------------------------------------------------------------------------
 //

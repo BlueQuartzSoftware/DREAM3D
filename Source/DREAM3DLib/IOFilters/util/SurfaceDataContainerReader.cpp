@@ -430,7 +430,7 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
   }
   else
   {
-    dc->setMeshFaceNeighborLists(meshTriangleNeighbors);
+    dc->getFaces()->setFaceNeighbors(meshTriangleNeighbors);
   }
 
   if(false == preflight && type_size > 0)
@@ -446,7 +446,7 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
     else
     {
       meshTriangleNeighbors->deserializeLinks(buffer, nFaces);
-      dc->setMeshFaceNeighborLists(meshTriangleNeighbors);
+      dc->getFaces()->setFaceNeighbors(meshTriangleNeighbors);
     }
   }
 

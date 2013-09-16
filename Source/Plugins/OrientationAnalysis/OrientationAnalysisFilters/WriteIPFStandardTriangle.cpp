@@ -172,24 +172,21 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
-  //VolumeDataContainer* m = getVolumeDataContainer();
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
 
-  if (m_OutputFile.isEmpty() == true)
+  QString ss;
+  if (getOutputFile().isEmpty() == true)
   {
-    setErrorCondition(-1003);
-    addErrorMessage(getHumanLabel(), "Output File is Not set correctly", getErrorCondition());
+    ss = QObject::tr( ": The output file must be set before executing this filter.");
+    addErrorMessage(getHumanLabel(), ss, -1);
+    setErrorCondition(-1);
   }
-
-  if (QFileInfo::isDirectory(m_OutputFile) == true)
+  QFileInfo fi(getOutputFile());
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
   {
-    setErrorCondition(-1004);
-    addErrorMessage(getHumanLabel(), "The path for the output file is a directory. Please specify an output file and not a directory.", getErrorCondition());
+    ss = QObject::tr( "The directory path for the output file does not exist.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
-
   if (m_ImageSize == 0)
   {
     setErrorCondition(-1005);
@@ -337,9 +334,9 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::writeImage( QImage &image)
 {
-  
-  ss << "Writing Image " << m_OutputFile;
-  notifyStatusMessage(ss.str());
+
+  QString ss = QObject::tr("Writing Image %1").arg(getOutputFile());
+  notifyStatusMessage(ss);
 
   QFileInfo fi((m_OutputFile));
   QDir parent(fi.absolutePath());
@@ -351,10 +348,9 @@ void WriteIPFStandardTriangle::writeImage( QImage &image)
   bool saved = image.save((m_OutputFile));
   if(!saved)
   {
+    QString ss = QObject::tr("The Triangle image file '%1' was not saved.").arg(getOutputFile());
     setErrorCondition(-90011);
-    ss.str("");
-    ss << "The Triangle image file '" << m_OutputFile << "' was not saved.";
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
   }
 }
 

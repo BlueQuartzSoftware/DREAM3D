@@ -41,7 +41,7 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexArray.hpp"
+#include "DREAM3DLib/DataContainers/VertexArray.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
@@ -81,6 +81,41 @@ VertexDataContainerWriter::VertexDataContainerWriter() :
 VertexDataContainerWriter::~VertexDataContainerWriter()
 {
 }
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  if(getHdfFileId() < 0)
+  {
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
+  }
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainerWriter::preflight()
+{
+  /* Place code here that sanity checks input arrays and input values. Look at some
+  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  dataCheck(true, 1, 1, 1);
+}
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -160,7 +195,7 @@ void VertexDataContainerWriter::execute()
   H5Gclose(dcGid); // Close the Data Container Group
   dcGid = -1;
 
-  writeXdmfGridFooter();
+  writeXdmfGridFooter(QString("Vertex Data"));
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -208,7 +243,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfGridFooter()
+void VertexDataContainerWriter::writeXdmfGridFooter(const QString &label)
 {
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   {
@@ -217,7 +252,7 @@ void VertexDataContainerWriter::writeXdmfGridFooter()
 
   QTextStream& out = *getXdmfOStream();
   out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF Vertex DataContainer *************** -->" << "\n";
+  out << "    <!-- *************** END OF Vertex DataContainer " << label << " *************** -->" << "\n";
   out << "\n";
 }
 

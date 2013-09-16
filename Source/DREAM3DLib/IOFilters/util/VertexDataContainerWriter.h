@@ -81,6 +81,16 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
   protected:
     VertexDataContainerWriter();
 
+    /**
+    * @brief Checks for the appropriate parameter values and availability of
+    * arrays in the data container
+    * @param preflight
+    * @param voxels The number of voxels
+    * @param fields The number of fields
+    * @param ensembles The number of ensembles
+    */
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+
     virtual int writeVertices(hid_t dcGid);
 
     virtual int writeVertexData(hid_t dcGid, QString groupName);
@@ -88,7 +98,7 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
     virtual int writeVertexEnsembleData(hid_t dcGid, QString groupName);
 
     virtual void writeXdmfGridHeader();
-    virtual void writeXdmfGridFooter();
+    virtual void writeXdmfGridFooter(const QString &label);
     virtual void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
     virtual QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 

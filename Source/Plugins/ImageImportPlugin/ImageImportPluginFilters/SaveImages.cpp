@@ -150,23 +150,20 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
-  VolumeDataContainer* m = getVolumeDataContainer();
-  /* Example code for preflighting looking for a valid string for the output file
-   * but not necessarily the fact that the file exists: Example code to make sure
-   * we have something in a string before proceeding.*/
 
-  if (m_OutputPath.isEmpty() == true)
+  VolumeDataContainer* m = getVolumeDataContainer();
+
+  QDir dir(getOutputPath());
+
+  if (getOutputPath().isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
-
-  else if (MXADir::exists(m_OutputPath) == false)
+  else if (dir.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
 
   if(m_ColorsArrayName.isEmpty() == true)
@@ -198,7 +195,7 @@ void SaveImages::preflight()
 void SaveImages::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
