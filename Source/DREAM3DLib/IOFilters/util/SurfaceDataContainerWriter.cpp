@@ -86,8 +86,6 @@ void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
   if (NULL == dc)
   {

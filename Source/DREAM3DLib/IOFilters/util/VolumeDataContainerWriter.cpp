@@ -52,7 +52,6 @@
 VolumeDataContainerWriter::VolumeDataContainerWriter() :
   SurfaceDataContainerWriter()
 {
-  setupFilterParameters();
 }
 
 // -----------------------------------------------------------------------------
@@ -62,38 +61,6 @@ VolumeDataContainerWriter::~VolumeDataContainerWriter()
 {
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::setupFilterParameters()
-{
-  QVector<FilterParameter::Pointer> parameters;
-  setFilterParameters(parameters);
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::readFilterParameters(AbstractFilterParametersReader* reader, int index)
-{
-  reader->openFilterGroup(this, index);
-  /* Code to read the values goes between these statements */
-////!!##
-  reader->closeFilterGroup();
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
-{
-  writer->openFilterGroup(this, index);
-  /* Place code that will write the inputs values into a file. reference the
-   AbstractFilterParametersWriter class for the proper API to use. */
-  /*  writer->writeValue("OutputFile", getOutputFile() ); */
-  writer->closeFilterGroup();
-  return ++index; // we want to return the next index that was just written to
-}
 
 // -----------------------------------------------------------------------------
 //
@@ -101,9 +68,9 @@ int VolumeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
 
-  if(NULL == m)
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+  if(NULL == dc)
   {
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());

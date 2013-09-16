@@ -98,8 +98,8 @@ set(UTIL_FILES
   util/SurfaceDataContainerReader.h
   util/SurfaceDataContainerReader.cpp
 
-#  util/VolumeDataContainerWriter.h
-#  util/VolumeDataContainerWriter.cpp
+  util/VolumeDataContainerWriter.h
+  util/VolumeDataContainerWriter.cpp
 #  util/VolumeDataContainerReader.h
 #  util/VolumeDataContainerReader.cpp
 )
