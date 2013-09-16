@@ -77,9 +77,10 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
 	DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgCAxisMisorientationsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainStdevCAxisMisorientationsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Reference C-Axis Misorientations"; }
 
     virtual void setupFilterParameters();
@@ -112,6 +113,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
     float* m_GrainReferenceCAxisMisorientations;
     float* m_AvgCAxes;
     float* m_GrainAvgCAxisMisorientations;
+    float* m_GrainStdevCAxisMisorientations;
     float* m_Quats;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
