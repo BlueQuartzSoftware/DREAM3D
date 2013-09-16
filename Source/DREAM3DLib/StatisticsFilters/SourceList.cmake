@@ -31,6 +31,7 @@ set(_PublicFilters
   FindNumFields
   FindVolFractions
   FindSchmids
+	FindBasalLoadingFactor
   FindShapes
   FindSizes
   FindLargestCrossSections
