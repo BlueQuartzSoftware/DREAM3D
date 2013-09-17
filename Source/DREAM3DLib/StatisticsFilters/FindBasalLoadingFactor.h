@@ -42,7 +42,7 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
      virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const std::string getHumanLabel() { return "Find Schmid Factors"; }
+    virtual const std::string getHumanLabel() { return "Find Basal Loading Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
