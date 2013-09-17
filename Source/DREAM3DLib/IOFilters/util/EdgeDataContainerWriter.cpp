@@ -168,19 +168,25 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeMeshLinks(dcGid);
+  err = writeEdgesContainingVert(dcGid);
   if (err < 0)
   {
     return;
   }
 
-//  err = writeVertexData(dcGid);
-//  if (err < 0)
-//  {
-//    return;
-//  }
+  err = writeEdgeNeighbors(dcGid);
+  if (err < 0)
+  {
+    return;
+  }
 
   err = writeEdges(dcGid);
+  if (err < 0)
+  {
+    return;
+  }
+
+  err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
   if (err < 0)
   {
     return;
@@ -191,7 +197,6 @@ void EdgeDataContainerWriter::execute()
   {
     return;
   }
-
 
   err = writeEdgeFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if (err < 0)
@@ -388,7 +393,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgeNeighbors(hid_t dcGid)
 {
     int err = -1;
     BOOST_ASSERT(false);
@@ -400,7 +405,7 @@ int EdgeDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
+int EdgeDataContainerWriter::writeEdgesContainingVert(hid_t dcGid)
 {
 
 

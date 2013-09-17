@@ -328,25 +328,6 @@ void DataContainerWriter::execute()
     }
   }
 
-  if (NULL != getVertexDataContainer() && m_WriteVertexData == true)
-  {
-    VertexDataContainerWriter::Pointer writer = VertexDataContainerWriter::New();
-    writer->setHdfFileId(m_FileId);
-    writer->setDataContainer(getVertexDataContainer());
-    writer->setObservers(getObservers());
-    writer->setWriteXdmfFile(getWriteXdmfFile());
-    writer->setXdmfOStream(&out);
-
-    ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
-    writer->setMessagePrefix(ss);
-    writer->execute();
-    if (writer->getErrorCondition() < 0)
-    {
-      notifyErrorMessage("Error Writing the Vertex Data", writer->getErrorCondition());
-      return;
-    }
-  }
-
   if (NULL != getEdgeDataContainer() && m_WriteEdgeData == true)
   {
     EdgeDataContainerWriter::Pointer writer = EdgeDataContainerWriter::New();
@@ -362,6 +343,25 @@ void DataContainerWriter::execute()
     if (writer->getErrorCondition() < 0)
     {
       notifyErrorMessage("Error Writing the Edge Data", writer->getErrorCondition());
+      return;
+    }
+  }
+
+  if (NULL != getVertexDataContainer() && m_WriteVertexData == true)
+  {
+    VertexDataContainerWriter::Pointer writer = VertexDataContainerWriter::New();
+    writer->setHdfFileId(m_FileId);
+    writer->setDataContainer(getVertexDataContainer());
+    writer->setObservers(getObservers());
+    writer->setWriteXdmfFile(getWriteXdmfFile());
+    writer->setXdmfOStream(&out);
+
+    ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
+    writer->setMessagePrefix(ss);
+    writer->execute();
+    if (writer->getErrorCondition() < 0)
+    {
+      notifyErrorMessage("Error Writing the Vertex Data", writer->getErrorCondition());
       return;
     }
   }

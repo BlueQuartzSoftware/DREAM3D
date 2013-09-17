@@ -101,13 +101,13 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
                               float spacing[3], float origin[3]);
 
-    virtual int writeVertexData(hid_t dcGid, QString groupName);
-    virtual int writeEdgeData(hid_t dcGid, QString groupName);
-    virtual int writeFaceData(hid_t dcGid, QString groupName);
+    virtual int writeCells(hid_t dcGid);
+    virtual int writeCellsContainingVert(hid_t dcGid);
+    virtual int writeCellNeighborLists(hid_t dcGid);
 
     virtual int writeCellData(hid_t dcGid);
-    virtual int writeFieldData(hid_t dcGid);
-    virtual int writeEnsembleData(hid_t dcGid);
+    virtual int writeCellFieldData(hid_t dcGid);
+    virtual int writeCellEnsembleData(hid_t dcGid);
 
     virtual void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
     virtual void writeFieldXdmfGridHeader(size_t numElements, const QString &label);

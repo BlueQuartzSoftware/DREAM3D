@@ -163,13 +163,13 @@ void SurfaceDataContainerWriter::execute()
   writeXdmfGridHeader();
 
 
-  err = writeMeshLinks(dcGid);
+  err = writeFacesContainingVert(dcGid);
   if (err < 0)
   {
     return;
   }
 
-  err = writeMeshFaceNeighborLists(dcGid);
+  err = writeFaceNeighborLists(dcGid);
   if (err < 0)
   {
     return;
@@ -180,6 +180,21 @@ void SurfaceDataContainerWriter::execute()
   {
     return;
   }
+
+  err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
+  err = writeEdgeData(dcGid, H5_EDGE_DATA_GROUP_NAME);
+  if (err < 0)
+  {
+    H5Gclose(dcGid); // Close the Data Container Group
+    return;
+  }
+
 
   err = writeFaceData(dcGid, H5_FACE_DATA_GROUP_NAME);
   if (err < 0)
@@ -386,7 +401,7 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
+int SurfaceDataContainerWriter::writeFacesContainingVert(hid_t dcGid)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
@@ -443,7 +458,7 @@ int SurfaceDataContainerWriter::writeMeshLinks(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeMeshFaceNeighborLists(hid_t dcGid)
+int SurfaceDataContainerWriter::writeFaceNeighborLists(hid_t dcGid)
 {
 
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());

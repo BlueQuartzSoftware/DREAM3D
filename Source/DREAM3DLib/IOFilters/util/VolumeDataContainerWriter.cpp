@@ -199,14 +199,14 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
-  err = writeFieldData(dcGid);
+  err = writeCellFieldData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEnsembleData(dcGid);
+  err = writeCellEnsembleData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -323,163 +323,6 @@ int VolumeDataContainerWriter::writeMetaInfo(const QString &hdfPath, int64_t vol
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeVertexData(hid_t dcGid, QString groupName)
-{
-  QString ss;
-  int err = 0;
-  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
-  //QString groupName(H5_VERTEX_DATA_GROUP_NAME);
-
-  // Write the Voxel Data
-  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(groupName);
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = dc->getVertexArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    QString ss = QObject::tr("Writing Data '%1' to HDF5 File").arg(*iter);
-    notifyStatusMessage(ss);
-    IDataArray::Pointer array = dc->getVertexData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-      addErrorMessage(getHumanLabel(), ss, err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-    writeXdmfAttributeData(groupName, array, "Node");
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
-{
-  int err = 0;
-    VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
-
-  //QString groupName(H5_EDGE_DATA_GROUP_NAME);
-
-  // Write the Edge Data
-  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t cellGroupId = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
-  if(err < 0)
-  {
-    QString ss = QObject::tr("Error writing string attribute to HDF Group %1").arg(groupName);
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = dc->getEdgeArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-    QString ss = QObject::tr("Writing Edge Data '%1' to HDF5 File").arg(*iter);
-    notifyStatusMessage(ss);
-    IDataArray::Pointer array = dc->getEdgeData(*iter);
-    err = array->writeH5Data(cellGroupId);
-    if(err < 0)
-    {
-      QString ss = QObject::tr("Error Edge writing array '%1' to the HDF5 File").arg(*iter);
-      addErrorMessage(getHumanLabel(), ss, err);
-      setErrorCondition(err);
-      H5Gclose(cellGroupId); // Close the Cell Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(cellGroupId); // Close the Cell Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeFaceData(hid_t dcGid, QString groupName)
-{
-  QString ss;
-  int err = 0;
-    VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
-
-
-  //QString groupName(H5_FACE_DATA_GROUP_NAME);
-
-  // Write the Face Data
-  err = QH5Utilities::createGroupsFromPath(H5_FACE_DATA_GROUP_NAME, dcGid);
-  if(err < 0)
-  {
-
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(H5_FACE_DATA_GROUP_NAME);
-    setErrorCondition(-63);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  hid_t FaceGroupId = H5Gopen(dcGid, H5_FACE_DATA_GROUP_NAME, H5P_DEFAULT);
-  if(err < 0)
-  {
-
-    QString ss = QObject::tr("Error writing string attribute to HDF Group %2").arg(H5_FACE_DATA_GROUP_NAME);
-    setErrorCondition(-64);
-    addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(dcGid); // Close the Data Container Group
-    return err;
-  }
-  NameListType names = dc->getFaceArrayNameList();
-  for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
-  {
-
-    QString ss = QObject::tr("Writing Face Data '%1' to HDF5 File").arg(*iter);
-    notifyStatusMessage(ss);
-    IDataArray::Pointer array = dc->getFaceData(*iter);
-    err = array->writeH5Data(FaceGroupId);
-    if(err < 0)
-    {
-
-      QString ss = QObject::tr("Error writing array '%1' to the HDF5 File").arg(*iter);
-      addErrorMessage(getHumanLabel(), ss, err);
-      setErrorCondition(err);
-      H5Gclose(FaceGroupId); // Close the Face Group
-      H5Gclose(dcGid); // Close the Data Container Group
-      return err;
-    }
-  }
-  H5Gclose(FaceGroupId); // Close the Face Group
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 {
   QString ss;
@@ -548,7 +391,7 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
+int VolumeDataContainerWriter::writeCellFieldData(hid_t dcGid)
 {
   QString ss;
   int err = 0;
@@ -701,7 +544,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
+int VolumeDataContainerWriter::writeCellEnsembleData(hid_t dcGid)
 {
   QString ss;
   int err = 0;

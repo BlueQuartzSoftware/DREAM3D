@@ -85,13 +85,12 @@ class DREAM3DLib_EXPORT SurfaceDataContainerWriter : public EdgeDataContainerWri
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     virtual int writeFaces(hid_t dcGid);
+    virtual int writeFacesContainingVert(hid_t dcGid);
+    virtual int writeFaceNeighborLists(hid_t dcGid);
 
     virtual int writeFaceData(hid_t dcGid, QString groupName);
     virtual int writeFaceFieldData(hid_t dcGid, QString groupName);
     virtual int writeFaceEnsembleData(hid_t dcGid, QString groupName);
-
-    virtual int writeMeshLinks(hid_t dcGid);
-    virtual int writeMeshFaceNeighborLists(hid_t dcGid);
 
     virtual void writeXdmfGridHeader();
     virtual void writeXdmfGridFooter(const QString &label);
