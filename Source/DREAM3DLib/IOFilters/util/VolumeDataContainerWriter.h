@@ -101,9 +101,9 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
                               float spacing[3], float origin[3]);
 
-    virtual int writeCells(hid_t dcGid);
-    virtual int writeCellsContainingVert(hid_t dcGid);
-    virtual int writeCellNeighborLists(hid_t dcGid);
+    //virtual int writeCells(hid_t dcGid);
+    //virtual int writeCellsContainingVert(hid_t dcGid);
+    //virtual int writeCellNeighborLists(hid_t dcGid);
 
     virtual int writeCellData(hid_t dcGid);
     virtual int writeCellFieldData(hid_t dcGid);

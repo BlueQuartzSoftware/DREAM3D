@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT IOSupport : public Observable
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
     DREAM3D_INSTANCE_PROPERTY(DataContainer*, DataContainer)
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
+    DREAM3D_INSTANCE_PROPERTY(hid_t, HdfGroupId)
 
 
     DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)

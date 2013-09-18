@@ -162,12 +162,6 @@ void EdgeDataContainerWriter::execute()
 
   H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
-  err = writeVertices(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
   err = writeEdgesContainingVert(dcGid);
   if (err < 0)
   {
@@ -181,12 +175,6 @@ void EdgeDataContainerWriter::execute()
   }
 
   err = writeEdges(dcGid);
-  if (err < 0)
-  {
-    return;
-  }
-
-  err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
   if (err < 0)
   {
     return;

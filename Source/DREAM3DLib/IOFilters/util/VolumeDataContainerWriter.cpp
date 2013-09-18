@@ -171,27 +171,6 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
-  err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeEdgeData(dcGid, H5_EDGE_DATA_GROUP_NAME);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeFaceData(dcGid, H5_FACE_DATA_GROUP_NAME);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
   err = writeCellData(dcGid);
   if (err < 0)
   {

@@ -252,7 +252,7 @@ namespace DREAM3D
   {
     const QString FileVersionName("FileVersion");
     const QString FileVersion("5.0");
-    const QString DataContainerName("DataContainer");
+    const QString DataContainerName("DataContainers");
     const QString VolumeDataContainerName("VolumeDataContainer");
     const QString SurfaceDataContainerName("SurfaceDataContainer");
     const QString VertexDataContainerName("VertexDataContainer");
