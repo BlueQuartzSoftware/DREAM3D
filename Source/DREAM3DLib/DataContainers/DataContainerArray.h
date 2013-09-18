@@ -41,6 +41,10 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/DataContainers/DataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
+#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 
 /**
  * @class DataContainerArray DataContainerArray.h DREAM3DLib/Common/DataContainerArray.h
@@ -51,11 +55,11 @@
  * @date Sep 28, 2011
  * @version 1.0
  */
-class DREAM3DLib_EXPORT DataContainerArray : public Observer
+class DREAM3DLib_EXPORT DataContainerArray : public Observable
 {
   public:
     DREAM3D_SHARED_POINTERS(DataContainerArray)
-    DREAM3D_TYPE_MACRO_SUPER(DataContainerArray, Observer)
+    DREAM3D_TYPE_MACRO_SUPER(DataContainerArray, Observable)
     DREAM3D_STATIC_NEW_MACRO(DataContainerArray)
 
     virtual ~DataContainerArray();
@@ -78,11 +82,21 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observer
     /**
      * @brief
      */
-    virtual DataContainer::Pointer removeDataContainerByName(const QString &name);
+    virtual DataContainer::Pointer removeDataContainer(const QString &name);
+    virtual DataContainer::Pointer getDataContainer(const QString &name);
     QList<DataContainer::Pointer>& getDataContainerArray();
 
     virtual void printDataContainerNames(QTextStream &out);
 
+    template<typename T>
+    T* getDataContainerAs(const QString &name)
+    {
+      DataContainer::Pointer dc = getDataContainer(name);
+      if(NULL == dc.get()) { return NULL; }
+
+      T* m = T::SafePointerDownCast(dc.get());
+      return m;
+    }
 
 
   protected:

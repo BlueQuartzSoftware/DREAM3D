@@ -43,10 +43,7 @@
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/FilterParameters/AbstractFilterParametersReader.h"
@@ -82,10 +79,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     virtual const QString getFilterVersion() { return DREAM3DLib::Version::Complete(); }
 
-    DREAM3D_INSTANCE_PROPERTY(VolumeDataContainer*, VolumeDataContainer)
-    DREAM3D_INSTANCE_PROPERTY(SurfaceDataContainer*, SurfaceDataContainer)
-    DREAM3D_INSTANCE_PROPERTY(VertexDataContainer*, VertexDataContainer)
-    DREAM3D_INSTANCE_PROPERTY(EdgeDataContainer*, EdgeDataContainer)
+    DREAM3D_INSTANCE_PROPERTY(DataContainerArray::Pointer, DataContainerArray)
 
     DREAM3D_INSTANCE_PROPERTY(QVector<PipelineMessage>, PipelineMessages)
 

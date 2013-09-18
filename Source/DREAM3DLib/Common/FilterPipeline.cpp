@@ -29,6 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include "FilterPipeline.h"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 
 
 // -----------------------------------------------------------------------------
@@ -240,11 +241,9 @@ void FilterPipeline::updatePrevNextFilters()
 int FilterPipeline::preflightPipeline()
 {
   // Create the DataContainer object
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-  VertexDataContainer::Pointer solid = VertexDataContainer::New();
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
-  m->addObserver(static_cast<Observer*>(this));
+  dca->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
 
@@ -253,14 +252,10 @@ int FilterPipeline::preflightPipeline()
   // Start looping through the Pipeline and preflight everything
   for (FilterContainerType::iterator filter = m_Pipeline.begin(); filter != m_Pipeline.end(); ++filter)
   {
-    (*filter)->setVolumeDataContainer(m.get());
-    (*filter)->setSurfaceDataContainer(sm.get());
-    (*filter)->setVertexDataContainer(solid.get());
+    (*filter)->setDataContainerArray(dca);
     setCurrentFilter(*filter);
     (*filter)->preflight();
-    (*filter)->setVolumeDataContainer(NULL);
-    (*filter)->setSurfaceDataContainer(NULL);
-    (*filter)->setVertexDataContainer(NULL);
+    (*filter)->setDataContainerArray(DataContainerArray::NullPointer());
     QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
     // warning messages we are going to let the preflight pass. Hopefully if the warning
@@ -318,14 +313,7 @@ void FilterPipeline::execute()
 //    m_DataContainer = DataContainer::New();
 //  }
 
-  VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
-  dataContainer->addObserver(static_cast<Observer*>(this));
-
-  SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-  sm->addObserver(static_cast<Observer*>(this));
-
-  VertexDataContainer::Pointer solid = VertexDataContainer::New();
-  solid->addObserver(static_cast<Observer*>(this));
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
   // Start looping through the Pipeline
   float progress = 0.0f;
@@ -350,15 +338,12 @@ void FilterPipeline::execute()
     sendPipelineMessage(progValue);
     (*iter)->setMessagePrefix(ss);
     (*iter)->addObserver(static_cast<Observer*>(this));
-    (*iter)->setVolumeDataContainer(dataContainer.get());
-    (*iter)->setSurfaceDataContainer(sm.get());
-    (*iter)->setVertexDataContainer(solid.get());
+    (*iter)->setDataContainerArray(dca);
     setCurrentFilter(*iter);
     (*iter)->execute();
     (*iter)->removeObserver(static_cast<Observer*>(this));
-    (*iter)->setVolumeDataContainer(NULL);
-    (*iter)->setSurfaceDataContainer(NULL);
-    (*iter)->setVertexDataContainer(NULL);
+    (*iter)->setDataContainerArray(DataContainerArray::NullPointer());
+
     err = (*iter)->getErrorCondition();
     if(err < 0)
     {

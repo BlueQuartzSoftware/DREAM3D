@@ -35,12 +35,10 @@
 // -----------------------------------------------------------------------------
 AbstractFilter::AbstractFilter() :
 Observable(),
-m_VolumeDataContainer(NULL),
-m_SurfaceDataContainer(NULL),
-m_VertexDataContainer(NULL),
 m_ErrorCondition(0),
 m_Cancel(false)
 {
+  m_DataContainerArray = DataContainerArray::Pointer();
   setupFilterParameters();
 }
 

@@ -35,7 +35,7 @@
 //
 // -----------------------------------------------------------------------------
 DataContainerArray::DataContainerArray() :
-    Observer()
+    Observable()
 {
 
 }
@@ -123,7 +123,7 @@ bool DataContainerArray::empty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DataContainer::Pointer DataContainerArray::removeDataContainerByName(const QString &name)
+DataContainer::Pointer DataContainerArray::removeDataContainer(const QString &name)
 {
   DataContainer::Pointer f = DataContainer::NullPointer();
   for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
@@ -132,6 +132,24 @@ DataContainer::Pointer DataContainerArray::removeDataContainerByName(const QStri
     {
       f = *it;
       m_Array.erase(it);
+      break;
+    }
+  }
+
+  return f;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+DataContainer::Pointer DataContainerArray::getDataContainer(const QString &name)
+{
+  DataContainer::Pointer f = DataContainer::NullPointer();
+  for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
+  {
+    if((*it)->getName().compare(name) == 0)
+    {
+      f = *it;
       break;
     }
   }

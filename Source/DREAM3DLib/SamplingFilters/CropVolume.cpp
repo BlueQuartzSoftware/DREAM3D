@@ -49,6 +49,7 @@
 // -----------------------------------------------------------------------------
 CropVolume::CropVolume() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_XMin(0),
@@ -191,7 +192,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs(getDataContainerName());
 
   if(NULL == m)
   {
