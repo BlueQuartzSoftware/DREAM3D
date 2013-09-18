@@ -161,14 +161,10 @@ void FindGrainReferenceCAxisMisorientations::execute()
   }
 
   size_t numFields = m->getNumFieldTuples();
-  int avgMisoComps = 2;
+  int avgMisoComps = 3;
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
   float* avgmiso = avgmisoPtr->GetPointer(0);
-
-  FloatArrayType::Pointer stdevDiffPtr = FloatArrayType::CreateArray(numFields, 1, "Stdev_Diff");
-  stdevDiffPtr->initializeWithZeros();
-  float* stdevDiff = stdevDiffPtr->GetPointer(0);
 
   QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
@@ -215,14 +211,6 @@ void FindGrainReferenceCAxisMisorientations::execute()
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
-<<<<<<< HEAD
-=======
-                if (index == 138567)
-    {
-      int stop = 0;
-    }
-
->>>>>>> 63fad122d36f619b51e9ae8ef047f11ec7cdb3b2
           QuaternionMathF::Copy(quats[point], q1);
           OrientationMath::QuattoMat(q1, g1);
           //transpose the g matricies so when caxis is multiplied by it
@@ -258,11 +246,6 @@ void FindGrainReferenceCAxisMisorientations::execute()
 
   for (size_t i = 1; i < numFields; i++)
   {
-<<<<<<< HEAD
-    index = i * avgMisoComps;
-    m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];
-    if(avgmiso[index] == 0) { m_GrainAvgCAxisMisorientations[i] = 0.0; }
-=======
     if (i%1000 == 0)
     {
       ss.str("");
@@ -272,19 +255,19 @@ void FindGrainReferenceCAxisMisorientations::execute()
     index = i * avgMisoComps;
     m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];
     if(avgmiso[index] == 0) { m_GrainAvgCAxisMisorientations[i] = 0.0; }
-    int counter = 0;
-    for (size_t j = 1; j < totalPoints; j++)
-    {
-      if (counter == avgmiso[index]) break;
-      if (m_GrainIds[i] == m_GrainIds[j])
-      {
-        stdevDiff[i] += powf(m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[i],2);
-        counter++;
-      }
+  }
 
-    }
-    m_GrainStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * stdevDiff[i]);
->>>>>>> 63fad122d36f619b51e9ae8ef047f11ec7cdb3b2
+    size_t gNum;
+  for (size_t j = 0; j < totalPoints; j++)
+  {
+    gNum = m_GrainIds[j];
+    avgmiso[(gNum*avgMisoComps)+2] += ((m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]) * (m_GrainReferenceCAxisMisorientations[j] - m_GrainAvgCAxisMisorientations[gNum]));
+  }
+
+  for (size_t i = 1; i < numFields; i++)
+  {
+    index = i * avgMisoComps;
+    m_GrainStdevCAxisMisorientations[i] = sqrtf((1 / avgmiso[index]) * avgmiso[index+2]);
   }
 
   notifyStatusMessage("Completed");

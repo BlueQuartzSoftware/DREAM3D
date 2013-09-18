@@ -301,6 +301,10 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
+        if (m_GrainIds[1860530] == firstgrain || m_GrainIds[1860531] == firstgrain)
+        {
+        int stop = 0;
+        }
         size1 = int(neighborlist[firstgrain].size());
 
         if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
@@ -346,7 +350,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 //dividing by the magnitudes (they would be 1)
                 MatrixMath::Normalize3x1(c2);
 
-                w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+                w = MatrixMath::CosThetaBetweenVectors(c1,c2);
+                DREAM3DMath::boundF(w,-1,1);
                 w = acosf(w);
                 if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
                 {
