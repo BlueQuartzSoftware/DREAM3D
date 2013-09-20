@@ -83,10 +83,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void removeSelectionsFromDataContainers(VolumeDataContainer::Pointer vldc,
-                                    SurfaceDataContainer::Pointer sdc,
-                                    EdgeDataContainer::Pointer edc,
-                                    VertexDataContainer::Pointer vdc);
+    virtual void removeSelectionsFromDataContainers(DataContainerArray::Pointer dca);
 
     /**
      * @brief This method examines the selections in each of the array lists and if an array is <b>NOT</b> selected
@@ -95,10 +92,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void removeNonSelectionsFromDataContainers(VolumeDataContainer::Pointer vldc,
-                                    SurfaceDataContainer::Pointer sdc,
-                                    EdgeDataContainer::Pointer edc,
-                                    VertexDataContainer::Pointer vdc);
+    virtual void removeNonSelectionsFromDataContainers(DataContainerArray::Pointer dca);
 
     /**
      * @brief

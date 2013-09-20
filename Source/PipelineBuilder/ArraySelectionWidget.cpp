@@ -528,10 +528,7 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::removeSelectionsFromDataContainers(VolumeDataContainer::Pointer vldc,
-                                                              SurfaceDataContainer::Pointer sdc,
-                                                              EdgeDataContainer::Pointer edc,
-                                                              VertexDataContainer::Pointer vdc)
+void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray::Pointer dca)
 {
   REMOVE_ARRAYS_HELPER(volume, vldc, Vertex, Selected)
   REMOVE_ARRAYS_HELPER(volume, vldc, Edge, Selected)
@@ -559,10 +556,7 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(VolumeDataContaine
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::removeNonSelectionsFromDataContainers(VolumeDataContainer::Pointer vldc,
-                                                              SurfaceDataContainer::Pointer sdc,
-                                                              EdgeDataContainer::Pointer edc,
-                                                              VertexDataContainer::Pointer vdc)
+void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerArray::Pointer dca)
 {
   REMOVE_ARRAYS_HELPER(volume, vldc, Vertex, NonSelected)
   REMOVE_ARRAYS_HELPER(volume, vldc, Edge, NonSelected)

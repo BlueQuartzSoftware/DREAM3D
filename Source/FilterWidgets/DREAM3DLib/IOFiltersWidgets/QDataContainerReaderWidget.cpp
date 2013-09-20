@@ -334,8 +334,8 @@ void QDataContainerReaderWidget::preflightAboutToExecute(DataContainerArray::Poi
 void QDataContainerReaderWidget::preflightDoneExecuting(DataContainerArray::Pointer dca)
 {
 
-  arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
-  arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);
+  arraySelectionWidget->populateArrayNames(dca);
+  arraySelectionWidget->removeNonSelectionsFromDataContainers(dca);
 
   // -- This section fills in the GUI elements for the Dims, Res and Origin
   int64_t dims[3] = {0, 0, 0};
