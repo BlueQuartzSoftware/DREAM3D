@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT TriangleDihedralAngleFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(TriangleDihedralAngleFilter, SurfaceMeshFilter)
 
     virtual ~TriangleDihedralAngleFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleDihedralAnglesArrayName)
 

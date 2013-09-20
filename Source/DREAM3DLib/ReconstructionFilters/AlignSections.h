@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AlignSections, AbstractFilter)
 
     virtual ~AlignSections();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteAlignmentShifts)

@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
 FileReader(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_InputFile(""),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL),
@@ -151,7 +152,7 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -210,7 +211,7 @@ void PhReader::execute()
   /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
    * The array will get allocated down in the 'readFile()' method.
    */
-  if (NULL == getVolumeDataContainer())
+  if (NULL == getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()))
   {
 
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
@@ -253,7 +254,7 @@ void PhReader::execute()
 // -----------------------------------------------------------------------------
 int PhReader::readHeader()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int nx = 0;
   int ny = 0;
@@ -280,7 +281,7 @@ int PhReader::readHeader()
 int  PhReader::readFile()
 {
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);
@@ -299,7 +300,7 @@ int  PhReader::readFile()
   }
 
   // Read the data and stick it in the data Container
-  getVolumeDataContainer()->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::GrainIds, m_GrainIdData);
 
   // Now set the Resolution and Origin that the user provided on the GUI or as parameters
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);

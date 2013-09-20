@@ -61,6 +61,7 @@
 // -----------------------------------------------------------------------------
 ReadOrientationData::ReadOrientationData() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
@@ -133,7 +134,7 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);
@@ -290,7 +291,7 @@ void ReadOrientationData::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);
@@ -333,7 +334,7 @@ void ReadOrientationData::readAngFile()
     notifyErrorMessage("AngReader could not read the .ang file.", getErrorCondition());
     return;
   }
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();
@@ -432,7 +433,7 @@ void ReadOrientationData::readCtfFile()
     notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
     return;
   }
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t dims[3];
   dims[0] = reader.getXCells();
@@ -555,7 +556,7 @@ void ReadOrientationData::readMicFile()
     notifyErrorMessage(reader.getErrorMessage(), getErrorCondition());
     return;
   }
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();

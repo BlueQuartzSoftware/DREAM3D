@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 FindSurfaceCells::FindSurfaceCells() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_SurfaceVoxelsArrayName(DREAM3D::CellData::SurfaceVoxels),
 m_GrainIds(NULL),
@@ -88,7 +89,7 @@ void FindSurfaceCells::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -111,7 +112,7 @@ void FindSurfaceCells::preflight()
 void FindSurfaceCells::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

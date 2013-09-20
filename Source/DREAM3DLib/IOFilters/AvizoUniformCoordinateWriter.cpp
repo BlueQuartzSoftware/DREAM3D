@@ -46,7 +46,12 @@
 //
 // -----------------------------------------------------------------------------
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
-  AbstractFilter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_WriteGrainIds(true), m_WriteBinaryFile(false), m_GrainIds(NULL)
+  AbstractFilter(), 
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), 
+  m_WriteGrainIds(true), 
+  m_WriteBinaryFile(false), 
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -115,7 +120,7 @@ int AvizoUniformCoordinateWriter::writeFilterParameters(AbstractFilterParameters
 void AvizoUniformCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(m_OutputFile.isEmpty() == true)
@@ -147,7 +152,7 @@ void AvizoUniformCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -214,7 +219,7 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getVolumeDataContainer()->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(x, y, z);
   ss << "define Lattice " << (qint32)x << " " << (qint32)y << " " << (qint32)z << "\n\n";
 
   ss << "Parameters {\n";
@@ -228,9 +233,9 @@ void AvizoUniformCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "     }\n";
   ss << "     Content \"" << (qint32)x << "x" << (qint32)y << "x" << (qint32)z << " int, uniform coordinates\",\n";
   float origin[3];
-  getVolumeDataContainer()->getOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
   float res[3];
-  getVolumeDataContainer()->getResolution(res);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
   ss << "     # Bounding Box is xmin xmax ymin ymax zmin zmax\n";
   ss << "     BoundingBox " << origin[0] << " " << origin[0] + (res[0] * x);
   ss << " " << origin[1] << " " << origin[1] + (res[1] * x);
@@ -254,12 +259,12 @@ int AvizoUniformCoordinateWriter::writeData(QDataStream &out)
   out << start;
   if(true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getVolumeDataContainer()->getTotalPoints() * sizeof(int32_t));
+    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
+    int64_t totalPoints = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints();
     int count = 0;
     for (int64_t i = 0; i < totalPoints; ++i)
     {

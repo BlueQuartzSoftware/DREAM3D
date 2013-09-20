@@ -46,7 +46,8 @@
 //
 // -----------------------------------------------------------------------------
 FileWriter::FileWriter() :
-  AbstractFilter()
+  AbstractFilter(),
+    m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
 
 }
@@ -88,7 +89,7 @@ int FileWriter::writeFile()
 // -----------------------------------------------------------------------------
 void FileWriter::execute()
 {
-  if (getVolumeDataContainer() == NULL)
+  if (getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()) == NULL)
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "The DataContainer Object was NOT set correctly.", -1);

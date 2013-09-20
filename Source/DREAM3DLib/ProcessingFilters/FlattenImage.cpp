@@ -90,6 +90,7 @@ class FlattenImageImpl
 // -----------------------------------------------------------------------------
 FlattenImage::FlattenImage() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ImageDataArrayName(DREAM3D::CellData::ImageData),
   m_FlatImageDataArrayName(DREAM3D::CellData::FlatImageData),
   m_FlattenMethod(DREAM3D::FlattenImageMethod::Luminosity), // We convert from Degrees to Radians by Default
@@ -160,7 +161,7 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int err = 0;
 
   int numImageComp = 1;
@@ -198,7 +199,7 @@ void FlattenImage::preflight()
 // -----------------------------------------------------------------------------
 void FlattenImage::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

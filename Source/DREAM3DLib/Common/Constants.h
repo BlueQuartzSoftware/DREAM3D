@@ -251,8 +251,9 @@ namespace DREAM3D
   namespace HDF5
   {
     const QString FileVersionName("FileVersion");
-    const QString FileVersion("5.0");
+    const QString FileVersion("6.0");
     const QString DataContainerName("DataContainers");
+    const QString DataContainerType("DataContainerType");
     const QString VolumeDataContainerName("VolumeDataContainer");
     const QString SurfaceDataContainerName("SurfaceDataContainer");
     const QString VertexDataContainerName("VertexDataContainer");
@@ -426,6 +427,15 @@ namespace DREAM3D
     const unsigned int Rigid = 0; //!<
     const unsigned int Progressive = 1; //!<
     const unsigned int UnknownOverlap = 999; //!<
+  }
+
+  namespace DataContainerType
+  {
+    const unsigned int VolumeDataContainer = 0; //!<
+    const unsigned int SurfaceDataContainer = 1; //!<
+    const unsigned int EdgeDataContainer = 2; //!<
+    const unsigned int VertexDataContainer = 3; //!<
+    const unsigned int UnknownDataContainer = 999; //!<
   }
 
   namespace ShapeType

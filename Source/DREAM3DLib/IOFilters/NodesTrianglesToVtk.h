@@ -61,6 +61,8 @@ class DREAM3DLib_EXPORT NodesTrianglesToVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToVtk, AbstractFilter)
 
     virtual ~NodesTrianglesToVtk();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+
     DREAM3D_INSTANCE_STRING_PROPERTY(NodeTypeArrayName)
 
 

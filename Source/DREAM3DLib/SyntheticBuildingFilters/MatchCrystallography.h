@@ -72,6 +72,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
 
     virtual ~MatchCrystallography();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

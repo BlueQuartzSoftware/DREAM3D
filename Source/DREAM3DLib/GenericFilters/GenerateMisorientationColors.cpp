@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 GenerateMisorientationColors::GenerateMisorientationColors() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -141,7 +142,7 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   QString ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);
@@ -177,7 +178,7 @@ void GenerateMisorientationColors::execute()
   int err = 0;
   QTextStream ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);

@@ -55,6 +55,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 RegularizeZSpacing::RegularizeZSpacing() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_NewZRes(1.0f)
 {
   setupFilterParameters();
@@ -126,7 +127,7 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::preflight()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());
@@ -151,7 +152,7 @@ void RegularizeZSpacing::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

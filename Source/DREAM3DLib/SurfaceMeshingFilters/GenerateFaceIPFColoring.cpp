@@ -197,8 +197,9 @@ class CalculateFaceIPFColorsImpl
 // -----------------------------------------------------------------------------
 GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   SurfaceMeshFilter(),
-  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceMeshFaceLabelsArrayName(DREAM3D::FaceData::SurfaceMeshFaceLabels),
+  m_SurfaceMeshFaceNormalsArrayName(DREAM3D::FaceData::SurfaceMeshFaceNormals),
   m_SurfaceMeshFaceIPFColorsArrayName(DREAM3D::FaceData::SurfaceMeshFaceIPFColors),
   m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
@@ -209,7 +210,6 @@ GenerateFaceIPFColoring::GenerateFaceIPFColoring() :
   m_FieldEulerAngles(NULL),
   m_FieldPhases(NULL),
   m_CrystalStructures(NULL)
-
 {
   setupFilterParameters();
 }
@@ -259,7 +259,7 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
 {
   setErrorCondition(0);
   
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -296,7 +296,7 @@ void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
@@ -330,8 +330,8 @@ void GenerateFaceIPFColoring::execute()
   int err = 0;
   
   setErrorCondition(err);
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
-  VolumeDataContainer* m = getVolumeDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);

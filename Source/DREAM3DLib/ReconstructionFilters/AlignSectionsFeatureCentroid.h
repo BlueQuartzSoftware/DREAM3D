@@ -64,6 +64,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsFeatureCentroid, AlignSections)
 
     virtual ~AlignSectionsFeatureCentroid();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)

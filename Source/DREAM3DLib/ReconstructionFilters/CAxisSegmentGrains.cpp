@@ -66,6 +66,7 @@
 // -----------------------------------------------------------------------------
 CAxisSegmentGrains::CAxisSegmentGrains() :
 SegmentGrains(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -154,7 +155,7 @@ int CAxisSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* wr
 void CAxisSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
 
@@ -185,7 +186,7 @@ void CAxisSegmentGrains::preflight()
 void CAxisSegmentGrains::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -277,7 +278,7 @@ void CAxisSegmentGrains::execute()
 int64_t CAxisSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);

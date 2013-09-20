@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
 FileReader(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_InputFile("")
 {
 }
@@ -146,7 +147,7 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  if (NULL == getVolumeDataContainer())
+  if (NULL == getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()))
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "DataContainer Pointer was NULL and must be valid", -1);
@@ -228,7 +229,7 @@ int VTKFileReader::readHeader()
   }
 
   size_t dcDims[3] = {dims[0], dims[1], dims[2]};
-  getVolumeDataContainer()->setDimensions(dcDims);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dcDims);
 
 
 
@@ -238,7 +239,7 @@ int VTKFileReader::readHeader()
   origin[0] = tokens[1].toFloat(&ok);
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
-  getVolumeDataContainer()->setOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setOrigin(origin);
 
 
   buf = in.readLine(); // Read Line 7 which is the Scaling values
@@ -247,7 +248,7 @@ int VTKFileReader::readHeader()
   resolution[0] = tokens[1].toFloat(&ok);
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
-  getVolumeDataContainer()->setResolution(resolution);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(resolution);
 
 
   return err;

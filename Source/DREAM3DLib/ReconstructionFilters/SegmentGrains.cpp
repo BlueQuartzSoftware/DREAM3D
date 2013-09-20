@@ -61,7 +61,8 @@
 //
 // -----------------------------------------------------------------------------
 SegmentGrains::SegmentGrains() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
 
 }
@@ -119,7 +120,7 @@ void SegmentGrains::execute()
 {
   setErrorCondition(0);
   QString ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(NULL == m)
   {

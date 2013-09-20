@@ -43,6 +43,7 @@
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
 FileReader(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_InputFile(""),
 m_Comment("DREAM3D Generated File"),
 m_DatasetType(""),
@@ -119,7 +120,7 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -222,7 +223,7 @@ int VtkGrainIdReader::readHeader()
 
   int err = 0;
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
 
@@ -295,7 +296,7 @@ int VtkGrainIdReader::readHeader()
   dims[0] = tokens[1].toInt(&ok, 10);
   dims[1] = tokens[2].toInt(&ok, 10);
   dims[2] = tokens[3].toInt(&ok, 10);
-  getVolumeDataContainer()->setDimensions(dims);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dims);
 
 #if 1
   buf = instream.readLine(); // Read Line 6 which is the Origin values
@@ -303,14 +304,14 @@ int VtkGrainIdReader::readHeader()
   origin[0] = tokens[1].toFloat(&ok);
   origin[1] = tokens[2].toFloat(&ok);
   origin[2] = tokens[3].toFloat(&ok);
-  getVolumeDataContainer()->setOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setOrigin(origin);
 
   buf = instream.readLine();// Read Line 7 which is the Scaling values
   float resolution[3];
   resolution[0] = tokens[1].toFloat(&ok);
   resolution[1] = tokens[2].toFloat(&ok);
   resolution[2] = tokens[3].toFloat(&ok);
-  getVolumeDataContainer()->setResolution(resolution);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(resolution);
 
 #endif
 
@@ -362,7 +363,7 @@ int VtkGrainIdReader::readFile()
 
   // These should have been set from reading the header
   size_t dims[3];
-  getVolumeDataContainer()->getDimensions(dims);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(dims);
 
 #if 0
   size_t dim = 0;
@@ -416,7 +417,7 @@ int VtkGrainIdReader::readFile()
   // This makes a very bad assumption that the Rectilinear grid has even spacing
   // along each axis which it does NOT have to have. Since this class is specific
   // to the DREAM.3D package this is a safe assumption.
-  getVolumeDataContainer()->setResolution(xscale, yscale, zscale);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(xscale, yscale, zscale);
 #endif
   bool ok = false;
   // Now we need to search for the 'GrainID' and
@@ -497,7 +498,7 @@ int VtkGrainIdReader::readFile()
   }
 
   // push our grain id data into the DataContainer map
-  getVolumeDataContainer()->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::GrainIds, grainIds);
 
   instream.close();
   return err;

@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT FindSurfaceVoxelFractions : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSurfaceVoxelFractions, AbstractFilter)
 
     virtual ~FindSurfaceVoxelFractions();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

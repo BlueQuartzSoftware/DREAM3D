@@ -50,7 +50,8 @@
 //
 // -----------------------------------------------------------------------------
 ChangeResolution::ChangeResolution() :
-AbstractFilter()
+AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName)
 {
   m_Resolution.x = 1.0f;
   m_Resolution.y = 1.0f;
@@ -113,7 +114,7 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 void ChangeResolution::preflight()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t dims[3];
   m->getDimensions(dims);
@@ -137,7 +138,7 @@ void ChangeResolution::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

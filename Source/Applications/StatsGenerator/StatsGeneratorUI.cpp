@@ -644,7 +644,9 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   int nPhases = phaseTabs->count();
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  dca->pushBack(m);
   StatsDataArray::Pointer statsDataArray = StatsDataArray::New();
   m->addCellEnsembleData(DREAM3D::EnsembleData::Statistics, statsDataArray);
 
@@ -698,7 +700,7 @@ void StatsGeneratorUI::on_actionSave_triggered()
   }
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setVolumeDataContainer(m.get());
+  writer->setDataContainerArray(dca);
   writer->setOutputFile(m_FilePath);
   writer->setWriteVolumeData(true);
   writer->setWriteSurfaceData(false);
@@ -812,11 +814,13 @@ void StatsGeneratorUI::openFile(QString h5file)
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  dca->pushBack(m);
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(m_FilePath);
-  reader->setVolumeDataContainer(m.get());
+  reader->setDataContainerArray(dca);
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);
   reader->setReadEdgeData(false);

@@ -53,6 +53,7 @@
 // -----------------------------------------------------------------------------
 NeighborOrientationCorrelation::NeighborOrientationCorrelation() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_QuatsArrayName(DREAM3D::CellData::Quats),
 m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -147,7 +148,7 @@ void NeighborOrientationCorrelation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
@@ -172,7 +173,7 @@ void NeighborOrientationCorrelation::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
 m_CellPhases(NULL),
@@ -88,7 +89,7 @@ void FindVolFractions::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1)
 
@@ -111,7 +112,7 @@ void FindVolFractions::preflight()
 void FindVolFractions::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

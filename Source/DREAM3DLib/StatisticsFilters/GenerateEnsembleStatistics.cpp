@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 GenerateEnsembleStatistics::GenerateEnsembleStatistics()  :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
   m_VolumesArrayName(DREAM3D::FieldData::Volumes),
@@ -160,7 +161,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -272,7 +273,7 @@ void GenerateEnsembleStatistics::preflight()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -361,7 +362,7 @@ void GenerateEnsembleStatistics::execute()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   // int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -444,7 +445,7 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 }
 void GenerateEnsembleStatistics::gatherAspectRatioStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -543,7 +544,7 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -620,7 +621,7 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 }
 void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -697,7 +698,7 @@ void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 }
 void GenerateEnsembleStatistics::gatherODFStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -786,7 +787,7 @@ void GenerateEnsembleStatistics::gatherODFStats()
 }
 void GenerateEnsembleStatistics::gatherMDFStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -901,7 +902,7 @@ void GenerateEnsembleStatistics::gatherMDFStats()
 // -----------------------------------------------------------------------------
 void GenerateEnsembleStatistics::gatherAxisODFStats()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

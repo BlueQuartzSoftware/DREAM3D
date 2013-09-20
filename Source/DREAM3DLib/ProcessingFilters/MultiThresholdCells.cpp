@@ -48,6 +48,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdCells::MultiThresholdCells() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_OutputArrayName(DREAM3D::CellData::GoodVoxels)
 {
   setupFilterParameters();
@@ -125,7 +126,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
@@ -159,7 +160,7 @@ void MultiThresholdCells::execute()
   int err = 0;
   
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

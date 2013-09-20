@@ -52,6 +52,7 @@
 // -----------------------------------------------------------------------------
 EstablishMatrixPhase::EstablishMatrixPhase() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CellPhasesArrayName(DREAM3D::CellData::Phases),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -99,7 +100,7 @@ void EstablishMatrixPhase::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -137,7 +138,7 @@ void EstablishMatrixPhase::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(NULL == m)
   {
@@ -170,7 +171,7 @@ void  EstablishMatrixPhase::establish_matrix()
  notifyStatusMessage("Establishing Matrix");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 

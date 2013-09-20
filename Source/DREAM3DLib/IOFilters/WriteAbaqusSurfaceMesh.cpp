@@ -51,6 +51,7 @@
 // -----------------------------------------------------------------------------
 WriteAbaqusSurfaceMesh::WriteAbaqusSurfaceMesh() :
   AbstractFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_OutputFile("")
 {
   setupFilterParameters();
@@ -117,7 +118,7 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if (NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -156,7 +157,7 @@ void WriteAbaqusSurfaceMesh::execute()
   int err = 0;
 
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -188,7 +189,7 @@ void WriteAbaqusSurfaceMesh::execute()
   FaceArray::Pointer trianglePtr = sm->getFaces();
 
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -235,7 +236,7 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
 // -----------------------------------------------------------------------------
 int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 {
-  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
   size_t numNodes = nodesPtr->getNumberOfTuples();
   int err = 0;
@@ -258,7 +259,7 @@ int WriteAbaqusSurfaceMesh::writeNodes(FILE* f)
 int WriteAbaqusSurfaceMesh::writeTriangles(FILE* f)
 {
   int err = 0;
-  FaceArray& triangles = *(getSurfaceDataContainer()->getFaces());
+  FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces());
   size_t numTri = triangles.getNumberOfTuples();
 
   fprintf(f, "*ELEMENT, TYPE=SFM3D3\n");
@@ -287,10 +288,10 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
 
 
-  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
-  FaceArray::Pointer trianglePtr = getSurfaceDataContainer()->getFaces();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
+  FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 

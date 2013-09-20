@@ -42,6 +42,7 @@
 // -----------------------------------------------------------------------------
 LinkFieldMapToCellArray::LinkFieldMapToCellArray() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SelectedCellDataArrayName("")
 {
   setupFilterParameters();
@@ -103,7 +104,7 @@ int LinkFieldMapToCellArray::writeFilterParameters(AbstractFilterParametersWrite
 void LinkFieldMapToCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);
@@ -159,7 +160,7 @@ void LinkFieldMapToCellArray::preflight()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

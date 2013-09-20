@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT ClearData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ClearData, AbstractFilter)
 
     virtual ~ClearData();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_PROPERTY(int, XMin)
     DREAM3D_INSTANCE_PROPERTY(int, YMin)

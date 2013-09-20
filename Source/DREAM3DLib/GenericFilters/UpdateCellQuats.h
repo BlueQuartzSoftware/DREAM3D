@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
 
     virtual ~UpdateCellQuats();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Required Cell Data
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)

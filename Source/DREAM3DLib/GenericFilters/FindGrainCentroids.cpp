@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 FindGrainCentroids::FindGrainCentroids() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_GrainIds(NULL),
@@ -90,7 +91,7 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -114,7 +115,7 @@ void FindGrainCentroids::preflight()
 void FindGrainCentroids::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -143,7 +144,7 @@ void FindGrainCentroids::execute()
 // -----------------------------------------------------------------------------
 void FindGrainCentroids::find_centroids()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   float x, y, z;
   size_t numgrains = m->getNumCellFieldTuples();
   if (numgrains == 0) { return; }

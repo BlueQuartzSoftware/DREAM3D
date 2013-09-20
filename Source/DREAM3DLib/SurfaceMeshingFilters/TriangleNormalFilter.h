@@ -60,6 +60,7 @@ class DREAM3DLib_EXPORT TriangleNormalFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(TriangleNormalFilter, SurfaceMeshFilter)
 
     virtual ~TriangleNormalFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleNormalsArrayName)
 

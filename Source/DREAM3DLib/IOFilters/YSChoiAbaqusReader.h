@@ -51,6 +51,7 @@ class DREAM3DLib_EXPORT YSChoiAbaqusReader : public FileReader
 
 
     virtual ~YSChoiAbaqusReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_STRING_PROPERTY(InputGrainInfoFile)

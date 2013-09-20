@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT VtkRectilinearGridWriter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(VtkRectilinearGridWriter, AbstractFilter)
 
     virtual ~VtkRectilinearGridWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

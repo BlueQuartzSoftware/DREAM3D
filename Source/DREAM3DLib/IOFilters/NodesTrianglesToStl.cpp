@@ -47,7 +47,8 @@
 //
 // -----------------------------------------------------------------------------
 NodesTrianglesToStl::NodesTrianglesToStl() :
-AbstractFilter()
+AbstractFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
 {
   setupFilterParameters();
 }
@@ -202,13 +203,13 @@ void NodesTrianglesToStl::execute()
   int err = 0;
 
 
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //if(NULL == m)
+  //{
+  //  setErrorCondition(-999);
+  //  notifyErrorMessage("The DataContainer Object was NULL", -999);
+  //  return;
+  //}
 
 
   dataCheck(false, 1, 1, 1);

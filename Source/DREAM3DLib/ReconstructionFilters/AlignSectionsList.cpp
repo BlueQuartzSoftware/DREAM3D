@@ -64,6 +64,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSectionsList::AlignSectionsList() :
 AlignSections(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GoodVoxels(NULL)
 {
   setupFilterParameters();
@@ -151,7 +152,7 @@ void AlignSectionsList::preflight()
 void AlignSectionsList::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -180,7 +181,7 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->totalPoints();
 
   ifstream inFile;

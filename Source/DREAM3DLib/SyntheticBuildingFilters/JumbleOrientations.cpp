@@ -54,6 +54,7 @@
 
 JumbleOrientations::JumbleOrientations() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
@@ -110,7 +111,7 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
       CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
@@ -136,7 +137,7 @@ void JumbleOrientations::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

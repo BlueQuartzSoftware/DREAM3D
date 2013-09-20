@@ -106,6 +106,7 @@ class RotateEulerRefFrameImpl
 // -----------------------------------------------------------------------------
 RotateEulerRefFrame::RotateEulerRefFrame() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_RotationAngle(0.0),
   m_CellEulerAngles(NULL)
@@ -186,7 +187,7 @@ void RotateEulerRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
 }
@@ -204,7 +205,7 @@ void RotateEulerRefFrame::preflight()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

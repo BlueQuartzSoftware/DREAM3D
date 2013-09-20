@@ -52,6 +52,7 @@
 // -----------------------------------------------------------------------------
 FieldDataCSVWriter::FieldDataCSVWriter() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_FieldDataFile(""),
   m_WriteNeighborListData(false)
 {
@@ -152,7 +153,7 @@ void FieldDataCSVWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

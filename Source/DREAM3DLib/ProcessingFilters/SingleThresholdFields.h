@@ -56,6 +56,7 @@ class DREAM3DLib_EXPORT SingleThresholdFields : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SingleThresholdFields, AbstractFilter)
 
     virtual ~SingleThresholdFields();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)

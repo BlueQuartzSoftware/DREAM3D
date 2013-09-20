@@ -76,6 +76,7 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ReadH5Ebsd, AbstractFilter)
 
     virtual ~ReadH5Ebsd();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
@@ -230,10 +231,10 @@ class DREAM3DLib_EXPORT ReadH5Ebsd : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
-      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
       return 0;
     }
 

@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 OpenCloseBadData::OpenCloseBadData() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_Direction(0),
 m_NumIterations(1),
@@ -165,7 +166,7 @@ void OpenCloseBadData::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
 
@@ -185,7 +186,7 @@ void OpenCloseBadData::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

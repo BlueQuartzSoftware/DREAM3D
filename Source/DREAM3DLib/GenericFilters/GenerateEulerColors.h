@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateEulerColors, AbstractFilter);
 
     virtual ~GenerateEulerColors();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)

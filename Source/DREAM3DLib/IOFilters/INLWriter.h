@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT INLWriter : public FileWriter
 
 
     virtual ~INLWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

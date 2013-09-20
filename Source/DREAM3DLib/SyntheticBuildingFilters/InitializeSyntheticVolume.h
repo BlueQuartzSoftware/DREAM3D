@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
 
 
     virtual ~InitializeSyntheticVolume();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

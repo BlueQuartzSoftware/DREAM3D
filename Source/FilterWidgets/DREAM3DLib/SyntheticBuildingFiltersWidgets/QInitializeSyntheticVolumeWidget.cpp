@@ -267,7 +267,9 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     {
       
 
+      DataContainerArray::Pointer dca = DataContainerArray::New();
       m_DataContainer = VolumeDataContainer::New();
+      dca->pushBack(m_DataContainer);
 
       QSet<QString> selectedArrays;
       selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
@@ -276,7 +278,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
 
       DataContainerReader::Pointer reader = DataContainerReader::New();
       reader->setInputFile(m_InputFile->text());
-      reader->setVolumeDataContainer(m_DataContainer.get());
+      reader->setDataContainerArray(dca);
       reader->setReadVolumeData(true);
       reader->setReadSurfaceData(false);
       reader->setReadEdgeData(false);

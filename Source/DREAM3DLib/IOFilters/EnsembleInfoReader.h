@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(EnsembleInfoReader, FileReader)
 
     virtual ~EnsembleInfoReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

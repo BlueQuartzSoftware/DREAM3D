@@ -194,11 +194,13 @@ bool QEbsdReferenceFrameDialog::getNoTranschecked()
 void QEbsdReferenceFrameDialog::loadEbsdData()
 {
   if (m_EbsdFileName.isEmpty() == true) { return; }
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  dca->pushBack(m);
 
   ReadOrientationData::Pointer reader = ReadOrientationData::New();
   reader->setInputFile(m_EbsdFileName);
-  reader->setVolumeDataContainer(m.get());
+  reader->setDataContainerArray(dca);
   reader->execute();
   int err = reader->getErrorCondition();
   if (err < 0)
@@ -213,7 +215,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   {
     ConvertEulerAngles::Pointer convert = ConvertEulerAngles::New();
     convert->setConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians);
-    convert->setVolumeDataContainer(m.get());
+    convert->setDataContainerArray(dca);
     convert->execute();
     err = convert->getErrorCondition();
     if (err < 0)
@@ -242,7 +244,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
     ref.z = 1;
   }
   ipfColorFilter->setReferenceDir(ref);
-  ipfColorFilter->setVolumeDataContainer(m.get());
+  ipfColorFilter->setDataContainerArray(dca);
   ipfColorFilter->execute();
   err = ipfColorFilter->getErrorCondition();
   if (err < 0)

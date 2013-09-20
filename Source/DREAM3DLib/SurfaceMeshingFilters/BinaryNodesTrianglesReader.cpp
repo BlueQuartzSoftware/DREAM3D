@@ -50,6 +50,7 @@
 //
 // -----------------------------------------------------------------------------
 BinaryNodesTrianglesReader::BinaryNodesTrianglesReader() :
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   SurfaceMeshFilter()
 {
   setupFilterParameters();
@@ -121,7 +122,7 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-384);
@@ -183,7 +184,7 @@ void BinaryNodesTrianglesReader::execute()
 int BinaryNodesTrianglesReader::read()
 {
 
-  SurfaceDataContainer *sm = getSurfaceDataContainer();
+  SurfaceDataContainer *sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   int err = 0;
   setErrorCondition(err);
 

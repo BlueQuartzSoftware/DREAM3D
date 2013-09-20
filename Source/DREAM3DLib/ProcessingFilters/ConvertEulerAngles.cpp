@@ -82,6 +82,7 @@ class ConvertEulerAnglesImpl
 // -----------------------------------------------------------------------------
 ConvertEulerAngles::ConvertEulerAngles() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_ConversionType(DREAM3D::EulerAngleConversionType::DegreesToRadians), // We convert from Degrees to Radians by Default
 m_CellEulerAngles(NULL)
@@ -149,7 +150,7 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
 }
@@ -167,7 +168,7 @@ void ConvertEulerAngles::preflight()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

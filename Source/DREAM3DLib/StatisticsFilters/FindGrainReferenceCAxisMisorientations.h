@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
     DREAM3D_TYPE_MACRO_SUPER(FindGrainReferenceCAxisMisorientations, AbstractFilter)
 
     virtual ~FindGrainReferenceCAxisMisorientations();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

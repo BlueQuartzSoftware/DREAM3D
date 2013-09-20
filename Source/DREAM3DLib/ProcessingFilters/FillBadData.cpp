@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 FillBadData::FillBadData() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_MinAllowedDefectSize(1),
 m_AlreadyChecked(NULL),
@@ -117,7 +118,7 @@ void FillBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -138,7 +139,7 @@ void FillBadData::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

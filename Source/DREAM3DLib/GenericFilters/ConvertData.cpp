@@ -176,6 +176,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 ConvertData::ConvertData() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ScalarType(0),
   m_OutputArrayName(""),
   m_SelectedCellArrayName("")
@@ -276,7 +277,7 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 {
   setErrorCondition(0);
   QString ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
@@ -367,7 +368,7 @@ void ConvertData::execute()
   int err = 0;
   QTextStream ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);

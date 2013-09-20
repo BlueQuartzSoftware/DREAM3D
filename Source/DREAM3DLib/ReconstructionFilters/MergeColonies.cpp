@@ -119,6 +119,7 @@ float crystalDirections[12][3][3] = {{{unit111, unit112_1, unit110},
 // -----------------------------------------------------------------------------
 MergeColonies::MergeColonies() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
@@ -225,7 +226,7 @@ int MergeColonies::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   // Cell Data
@@ -269,7 +270,7 @@ void MergeColonies::preflight()
 // -----------------------------------------------------------------------------
 void MergeColonies::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -356,7 +357,7 @@ void MergeColonies::merge_colonies()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   NeighborList<int>& neighborlist = *m_NeighborList;
 
@@ -479,7 +480,7 @@ void MergeColonies::merge_colonies()
 // -----------------------------------------------------------------------------
 void MergeColonies::characterize_colonies()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
@@ -561,7 +562,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 // -----------------------------------------------------------------------------
 void MergeColonies::identify_globAlpha()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
   QVector<int> betaSize(numParents,0);
   QVector<int> totalSize(numParents,0);

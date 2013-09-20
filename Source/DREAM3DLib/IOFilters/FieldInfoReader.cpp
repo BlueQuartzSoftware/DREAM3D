@@ -51,6 +51,7 @@
 // -----------------------------------------------------------------------------
 FieldInfoReader::FieldInfoReader() :
   FileReader(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -146,7 +147,7 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -194,7 +195,7 @@ int  FieldInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int  FieldInfoReader::readFile()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
 
@@ -301,7 +302,7 @@ int  FieldInfoReader::readFile()
     }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
-    renum->setVolumeDataContainer(m);
+    renum->setDataContainerArray(getDataContainerArray());
     renum->setObservers(getObservers());
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();

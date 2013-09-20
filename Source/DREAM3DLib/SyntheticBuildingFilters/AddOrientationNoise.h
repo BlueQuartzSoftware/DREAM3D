@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT AddOrientationNoise : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AddOrientationNoise, AbstractFilter)
 
     virtual ~AddOrientationNoise();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)

@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToNonconformalVtk : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToNonconformalVtk, AbstractFilter)
 
     virtual ~SurfaceMeshToNonconformalVtk();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     // DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 

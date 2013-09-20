@@ -221,15 +221,15 @@ void DataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-    QString ss;
-    ss = QObject::tr("DataContainer was NULL");
-    notifyErrorMessage(ss, -10);
-    return;
-  }
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //if (NULL == m)
+  //{
+  //  setErrorCondition(-1);
+  //  QString ss;
+  //  ss = QObject::tr("DataContainer was NULL");
+  //  notifyErrorMessage(ss, -10);
+  //  return;
+  //}
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
@@ -291,18 +291,46 @@ void DataContainerWriter::execute()
   err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::DataContainerName.toLatin1().data(), m_FileId);
   if (err < 0)
   {
-
     QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::DataContainerName);
     setErrorCondition(-60);
     addErrorMessage(getHumanLabel(), ss, err);
     return;
   }
-  hid_t dcGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
 
+  int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
   std::vector<DataContainer::Pointer> dataContainerArray;
   for(size_t iter = 0; iter < dataContainerArray.size(); iter++)
   {
-    /* WRITE THE VOXEL DATA TO THE HDF5 FILE */
+    dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+    VolumeDataContainer* vl = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dataContainerArray[iter]->getName());
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(dataContainerArray[iter]->getName());
+    EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(dataContainerArray[iter]->getName());
+    VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(dataContainerArray[iter]->getName());
+    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
+    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
+    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
+    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_WriteVolumeData) ||
+      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData) ||
+      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData) ||
+      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData))
+    {
+
+      err = H5Utilities::createGroupsFromPath(dataContainerArray[iter]->getName().toLatin1().data(), dcaGid);
+      if (err < 0)
+      {
+        QString ss = QObject::tr("Error creating HDF Group %1").arg(dataContainerArray[iter]->getName());
+        setErrorCondition(-60);
+        addErrorMessage(getHumanLabel(), ss, err);
+        return;
+      }
+      hid_t dcGid = H5Gopen(m_FileId, dataContainerArray[iter]->getName().toLatin1().data(), H5P_DEFAULT );
+      err = QH5Lite::writeScalarAttribute(dcGid, dataContainerArray[iter]->getName(), DREAM3D::HDF5::DataContainerType, dcType);
+      if (err < 0)
+      {
+        qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dataContainerArray[iter]->getName() << "\n";
+      }
 
       VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
       volWriter->setHdfGroupId(dcGid);
@@ -369,6 +397,7 @@ void DataContainerWriter::execute()
         notifyErrorMessage("Error Writing the Vertex Data", vertWriter->getErrorCondition());
         return;
       }
+    }
   }
 
   if (m_WriteXdmfFile == true)

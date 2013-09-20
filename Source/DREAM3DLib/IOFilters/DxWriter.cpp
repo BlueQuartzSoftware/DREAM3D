@@ -47,7 +47,11 @@
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-  FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
+FileWriter(), 
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName), 
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), 
+  m_AddSurfaceLayer(false), 
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -119,7 +123,7 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QString ss;
   if (getOutputFile().isEmpty() == true)
@@ -165,7 +169,7 @@ int DxWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int DxWriter::writeFile()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     QString ss;

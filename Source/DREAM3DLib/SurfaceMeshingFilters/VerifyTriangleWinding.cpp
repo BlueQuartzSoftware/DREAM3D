@@ -208,6 +208,7 @@ class LabelVisitorInfo
 // -----------------------------------------------------------------------------
 VerifyTriangleWinding::VerifyTriangleWinding() :
   SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   m_SurfaceMeshNodeFacesArrayName(DREAM3D::VertexData::SurfaceMeshNodeFaces),
   m_DoUniqueEdgesFilter(false),
@@ -265,7 +266,7 @@ void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -322,8 +323,7 @@ void VerifyTriangleWinding::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceDataContainer DataContainer Object was NULL", -999);
@@ -341,9 +341,7 @@ void VerifyTriangleWinding::execute()
     conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
     conn->setSurfaceMeshUniqueEdgesArrayName(getSurfaceMeshUniqueEdgesArrayName());
-    conn->setVolumeDataContainer(getVolumeDataContainer());
-    conn->setSurfaceDataContainer(getSurfaceDataContainer());
-    conn->setVertexDataContainer(getVertexDataContainer());
+    conn->setDataContainerArray(getDataContainerArray());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {
@@ -357,17 +355,17 @@ void VerifyTriangleWinding::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  if (NULL == getSurfaceDataContainer()->getFaces()->getFacesContainingVert())
+  if (NULL == getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFacesContainingVert())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
   if (getCancel() == true) { return; }
   bool clearFaceNeighbors = false;
-  if (NULL == getSurfaceDataContainer()->getFaces()->getFaceNeighbors())
+  if (NULL == getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFaceNeighbors())
   {
     clearFaceNeighbors = true;
-    getSurfaceDataContainer()->getFaces()->findFaceNeighbors();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFaceNeighbors();
   }
 
   // Execute the actual verification step.
@@ -379,16 +377,16 @@ void VerifyTriangleWinding::execute()
   // Clean up any arrays that were designated as temp
   if (m_DoUniqueEdgesFilter == true)
   {
-    IDataArray::Pointer removedConnectviity = getSurfaceDataContainer()->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
+    IDataArray::Pointer removedConnectviity = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
     BOOST_ASSERT(removedConnectviity.get() != NULL);
   }
   if (clearMeshLinks == true)
   {
-    getSurfaceDataContainer()->getFaces()->deleteFacesContainingVert();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->deleteFacesContainingVert();
   }
   if (clearFaceNeighbors == true)
   {
-    getSurfaceDataContainer()->getFaces()->deleteFaceNeighbors();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->deleteFaceNeighbors();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -399,7 +397,7 @@ void VerifyTriangleWinding::execute()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabelMap)
 {
-  FaceArray::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer masterFaceList = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -407,7 +405,7 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
     return;
   }
 
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -430,10 +428,10 @@ void VerifyTriangleWinding::getLabelTriangelMap(LabelFaceMap_t &trianglesToLabel
 int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &triangleIndices)
 {
 
-  VertexArray::Vert_t* verts = getSurfaceDataContainer()->getVertices()->getPointer(0);
-  FaceArray::Face_t* triangles = getSurfaceDataContainer()->getFaces()->getPointer(0);
+  VertexArray::Vert_t* verts = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices()->getPointer(0);
+  FaceArray::Face_t* triangles = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getPointer(0);
 
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -470,7 +468,7 @@ int32_t VerifyTriangleWinding::getSeedTriangle(int32_t label, QSet<int32_t> &tri
   if (normal.x < 0.0f)
   {
     ReverseTriangleWinding::Pointer reverse = ReverseTriangleWinding::New();
-    reverse->setSurfaceDataContainer(getSurfaceDataContainer());
+    reverse->setDataContainerArray(getDataContainerArray());
     reverse->setObservers(getObservers());
     reverse->setMessagePrefix(getMessagePrefix());
     reverse->execute();
@@ -523,7 +521,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
 
   // get the triangle definitions - use the pointer to the start of the Struct Array
-  FaceArray::Pointer masterFaceList = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer masterFaceList = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   if(NULL == masterFaceList.get())
   {
     setErrorCondition(-556);
@@ -531,13 +529,13 @@ int VerifyTriangleWinding::verifyTriangleWinding()
     return getErrorCondition();
   }
   FaceArray::Face_t* triangles = masterFaceList->getPointer(0);
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
   int numFaces = masterFaceList->getNumberOfTuples();
 
-  VertexArray::Pointer masterNodeListPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer masterNodeListPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   if(NULL == masterNodeListPtr.get())
   {
     setErrorCondition(-555);
@@ -671,7 +669,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
 
       //   qDebug() << " $ tIndex: " << triangleIndex << "\n";
 
-      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getSurfaceDataContainer(), triangleIndex, currentLabel);
+      QVector<int32_t> adjTris = TriangleOps::findAdjacentTriangles(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), triangleIndex, currentLabel);
       for (FaceList_t::iterator adjTri = adjTris.begin(); adjTri != adjTris.end(); ++adjTri)
       {
         // qDebug() << "  ^ AdjTri index: " << *adjTri << "\n";

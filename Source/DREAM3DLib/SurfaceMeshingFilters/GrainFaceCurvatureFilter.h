@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT GrainFaceCurvatureFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(GrainFaceCurvatureFilter, SurfaceMeshFilter)
 
     virtual ~GrainFaceCurvatureFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PrincipalCurvature1ArrayName)

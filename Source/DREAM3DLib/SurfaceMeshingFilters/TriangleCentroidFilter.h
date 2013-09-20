@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT TriangleCentroidFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(TriangleCentroidFilter, SurfaceMeshFilter)
 
     virtual ~TriangleCentroidFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleCentroidsArrayName)
 

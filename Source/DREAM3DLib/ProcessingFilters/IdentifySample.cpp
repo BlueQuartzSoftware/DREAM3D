@@ -52,6 +52,7 @@
 // -----------------------------------------------------------------------------
 IdentifySample::IdentifySample() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_AlreadyChecked(NULL),
   m_Neighbors(NULL),
@@ -101,7 +102,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, 1)
 }
@@ -122,7 +123,7 @@ void IdentifySample::execute()
 {
   setErrorCondition(0);
   // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

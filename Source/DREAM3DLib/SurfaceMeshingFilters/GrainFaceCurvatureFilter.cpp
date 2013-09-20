@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 GrainFaceCurvatureFilter::GrainFaceCurvatureFilter() :
   SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
   //m_SurfaceMeshFaceEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshFaceEdges),
   m_PrincipalCurvature1ArrayName(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1),
@@ -175,7 +176,7 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -251,8 +252,7 @@ void GrainFaceCurvatureFilter::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
@@ -268,7 +268,7 @@ void GrainFaceCurvatureFilter::execute()
   }
 
   // Get our Reference counted Array of Face Structures
-  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -281,7 +281,7 @@ void GrainFaceCurvatureFilter::execute()
   // so we are going to recalculate them all just in case they are stale
   TriangleCentroidFilter::Pointer centroidFilter = TriangleCentroidFilter::New();
   centroidFilter->setSurfaceMeshTriangleCentroidsArrayName(getSurfaceMeshTriangleCentroidsArrayName());
-  centroidFilter->setSurfaceDataContainer(getSurfaceDataContainer());
+  centroidFilter->setDataContainerArray(getDataContainerArray());
   centroidFilter->setObservers(getObservers());
   centroidFilter->setMessagePrefix(getMessagePrefix());
   centroidFilter->execute();
@@ -293,13 +293,13 @@ void GrainFaceCurvatureFilter::execute()
 
   // Calculate/update the Face Normals
   bool clearFaceNormals = false;
-  if (getSurfaceDataContainer()->getFaceData(m_SurfaceMeshTriangleNormalsArrayName).get() == NULL)
+  if (getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(m_SurfaceMeshTriangleNormalsArrayName).get() == NULL)
   {
     clearFaceNormals = true;
   }
   TriangleNormalFilter::Pointer normalsFilter = TriangleNormalFilter::New();
   normalsFilter->setSurfaceMeshTriangleNormalsArrayName(getSurfaceMeshTriangleNormalsArrayName());
-  normalsFilter->setSurfaceDataContainer(getSurfaceDataContainer());
+  normalsFilter->setDataContainerArray(getDataContainerArray());
   normalsFilter->setObservers(getObservers());
   normalsFilter->setMessagePrefix(getMessagePrefix());
   normalsFilter->execute();
@@ -312,18 +312,18 @@ void GrainFaceCurvatureFilter::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  Int32DynamicListArray::Pointer vertLinks = getSurfaceDataContainer()->getFaces()->getFacesContainingVert();
+  Int32DynamicListArray::Pointer vertLinks = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFacesContainingVert();
   if (NULL == vertLinks.get())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
-    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
 
   // Group the Faces by common neighboring grain face. This means that each group of triangles
   // each share the same set of Grain Ids. Since each triangle can only have 2 Grain Ids
   SharedGrainFaceFilter::Pointer sharedGrainFacesFilter = SharedGrainFaceFilter::New();
   sharedGrainFacesFilter->setSurfaceMeshGrainFaceIdArrayName(getSurfaceMeshGrainFaceIdArrayName());
-  sharedGrainFacesFilter->setSurfaceDataContainer(getSurfaceDataContainer());
+  sharedGrainFacesFilter->setDataContainerArray(getDataContainerArray());
   sharedGrainFacesFilter->setObservers(getObservers());
   sharedGrainFacesFilter->setMessagePrefix(getMessagePrefix());
   sharedGrainFacesFilter->execute();
@@ -402,7 +402,7 @@ void GrainFaceCurvatureFilter::execute()
                                               principalCurvature1, principalCurvature2,
                                               principalDirection1, principalDirection2,
                                               gaussianCurvature, meanCurvature,
-                                              getSurfaceDataContainer(), this ) );
+                                              getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), this ) );
     }
     else
 #endif
@@ -411,7 +411,7 @@ void GrainFaceCurvatureFilter::execute()
                                                  principalCurvature1, principalCurvature2,
                                                  principalDirection1, principalDirection2,
                                                  gaussianCurvature, meanCurvature,
-                                                 getSurfaceDataContainer(), this );
+                                                 getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()), this );
       curvature();
       index++;
     }
@@ -423,33 +423,33 @@ void GrainFaceCurvatureFilter::execute()
   delete g;
 #endif
 
-  getSurfaceDataContainer()->addFaceData(principalCurvature1->GetName(), principalCurvature1);
-  getSurfaceDataContainer()->addFaceData(principalCurvature2->GetName(), principalCurvature2);
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(principalCurvature1->GetName(), principalCurvature1);
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(principalCurvature2->GetName(), principalCurvature2);
   if (m_ComputePrincipalDirectionVectors == true)
   {
-    getSurfaceDataContainer()->addFaceData(principalDirection1->GetName(), principalDirection1);
-    getSurfaceDataContainer()->addFaceData(principalDirection2->GetName(), principalDirection2);
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(principalDirection1->GetName(), principalDirection1);
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(principalDirection2->GetName(), principalDirection2);
   }
 
   if (m_ComputeGaussianCurvature == true)
   {
-    getSurfaceDataContainer()->addFaceData(gaussianCurvature->GetName(), gaussianCurvature);
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(gaussianCurvature->GetName(), gaussianCurvature);
   }
   if (m_ComputeMeanCurvature == true)
   {
-    getSurfaceDataContainer()->addFaceData(meanCurvature->GetName(), meanCurvature);
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(meanCurvature->GetName(), meanCurvature);
   }
 
   // Now clear up some temp arrays that were created for this filter
   if (clearFaceNormals == true)
   {
-    getSurfaceDataContainer()->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeFaceData(getSurfaceMeshTriangleNormalsArrayName());
   }
-  getSurfaceDataContainer()->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
-  getSurfaceDataContainer()->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeFaceData(getSurfaceMeshTriangleCentroidsArrayName() );
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->removeFaceData(getSurfaceMeshGrainFaceIdArrayName() );
   if (clearMeshLinks == true)
   {
-    getSurfaceDataContainer()->getFaces()->deleteFacesContainingVert();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->deleteFacesContainingVert();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

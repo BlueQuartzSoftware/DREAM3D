@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT CopyFieldArrayToCellArray : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(CopyFieldArrayToCellArray, AbstractFilter)
 
     virtual ~CopyFieldArrayToCellArray();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)

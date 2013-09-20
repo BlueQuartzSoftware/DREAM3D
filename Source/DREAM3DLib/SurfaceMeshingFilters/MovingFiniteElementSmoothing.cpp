@@ -130,6 +130,7 @@ double AngleLineCurvature(Node& n0, Node& n1, Node& n2)
 // -----------------------------------------------------------------------------
 MovingFiniteElementSmoothing::MovingFiniteElementSmoothing() :
 SurfaceMeshFilter(),
+m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
 m_SurfaceMeshNodeTypeArrayName(DREAM3D::VertexData::SurfaceMeshNodeType),
 m_IterationSteps(1),
 m_NodeConstraints(true),
@@ -237,7 +238,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
   setErrorCondition(0);
 
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -307,8 +308,7 @@ void MovingFiniteElementSmoothing::execute()
   }
 
 
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);

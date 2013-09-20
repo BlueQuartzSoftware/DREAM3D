@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsList, AlignSections)
 
     virtual ~AlignSectionsList();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

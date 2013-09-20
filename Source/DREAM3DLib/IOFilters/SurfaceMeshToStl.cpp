@@ -50,6 +50,7 @@
 // -----------------------------------------------------------------------------
 SurfaceMeshToStl::SurfaceMeshToStl() :
   AbstractFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_OutputStlDirectory(""),
   m_OutputStlPrefix("")
 {
@@ -126,7 +127,7 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-    SurfaceDataContainer* sm = getSurfaceDataContainer();
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if (NULL == sm)
   {
       addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -165,7 +166,7 @@ void SurfaceMeshToStl::execute()
  int err = 0;
 
 
-    SurfaceDataContainer* sm = getSurfaceDataContainer();
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);
@@ -195,7 +196,7 @@ void SurfaceMeshToStl::execute()
   VertexArray& nodes = *(sm->getVertices());
   FaceArray& triangles = *(sm->getFaces());
   // Get the Labels(GrainIds or Region Ids) for the triangles
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 

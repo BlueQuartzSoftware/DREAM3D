@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT OpenCloseBadData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(OpenCloseBadData, AbstractFilter)
 
     virtual ~OpenCloseBadData();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

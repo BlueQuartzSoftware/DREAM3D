@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT FieldInfoReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(FieldInfoReader, FileReader)
 
     virtual ~FieldInfoReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)

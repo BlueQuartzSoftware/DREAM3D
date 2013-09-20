@@ -56,6 +56,7 @@ class DREAM3DLib_EXPORT ConvertEulerAngles : public AbstractFilter
     DREAM3D_STATIC_NEW_MACRO(ConvertEulerAngles)
     DREAM3D_TYPE_MACRO_SUPER(ConvertEulerAngles, AbstractFilter)
     virtual ~ConvertEulerAngles();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)

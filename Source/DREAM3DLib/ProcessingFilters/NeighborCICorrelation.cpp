@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 NeighborCICorrelation::NeighborCICorrelation() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_ConfidenceIndexArrayName(DREAM3D::CellData::ConfidenceIndex),
 m_MinConfidence(0.1),
 m_Loop(false),
@@ -128,7 +129,7 @@ void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
 }
@@ -149,7 +150,7 @@ void NeighborCICorrelation::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

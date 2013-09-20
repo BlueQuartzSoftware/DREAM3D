@@ -48,6 +48,7 @@
 // -----------------------------------------------------------------------------
 AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_WriteGrainIds(true),
   m_WriteBinaryFile(false),
@@ -119,7 +120,7 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(m_OutputFile.isEmpty() == true)
@@ -152,7 +153,7 @@ void AvizoRectilinearCoordinateWriter::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -221,7 +222,7 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "\n";
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
-  getVolumeDataContainer()->getDimensions(x, y, z);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(x, y, z);
   ss << "define Lattice " << (qint64)x << " " << (qint64)y << (qint64)z << "\n";
   ss << "define Coordinates " << (qint64)(x + y + z) << "\n\n";
 
@@ -235,9 +236,9 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "         Coordinates \"microns\"\n";
   ss << "     }\n";
   float origin[3];
-  getVolumeDataContainer()->getOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
   float res[3];
-  getVolumeDataContainer()->getResolution(res);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
 
   ss << "     CoordType \"rectilinear\"\n";
   ss << "}\n\n";
@@ -254,24 +255,24 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
 int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
 {
   size_t dims[3];
-  getVolumeDataContainer()->getDimensions(dims);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(dims);
   float origin[3];
-  getVolumeDataContainer()->getOrigin(origin);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
   float res[3];
-  getVolumeDataContainer()->getResolution(res);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
 
   QString start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
   out << start;
   if (true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getVolumeDataContainer()->getTotalPoints() * sizeof(int32_t));
-    //writer.writeArray(m_GrainIds, getVolumeDataContainer()->getTotalPoints());
+    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints() * sizeof(int32_t));
+    //writer.writeArray(m_GrainIds, getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints());
     out << "\n";
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
-    int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
+    int64_t totalPoints = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getTotalPoints();
     int count = 0;
     QString ss;
     for (int64_t i = 0; i < totalPoints; ++i)

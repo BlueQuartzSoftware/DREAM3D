@@ -79,6 +79,7 @@ class DREAM3DLib_EXPORT FindSlipTransmissionMetrics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindSlipTransmissionMetrics, AbstractFilter)
 
     virtual ~FindSlipTransmissionMetrics();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)

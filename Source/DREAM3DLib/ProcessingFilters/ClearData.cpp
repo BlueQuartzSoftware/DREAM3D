@@ -48,6 +48,7 @@
 // -----------------------------------------------------------------------------
 ClearData::ClearData() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_XMin(0),
   m_YMin(0),
   m_ZMin(0),
@@ -167,7 +168,7 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   QString ss;
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if (getXMax() < getXMin())
   {
@@ -250,7 +251,7 @@ void ClearData::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBoundingBoxGrains, AbstractFilter)
 
     virtual ~FindBoundingBoxGrains();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(CentroidsArrayName)

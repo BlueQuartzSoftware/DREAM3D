@@ -18,11 +18,11 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Samplin
 # List your public filters here
 
 set(_PublicFilters
-#  ChangeResolution
-#  RegularizeZSpacing
-#  RotateSampleRefFrame
+  ChangeResolution
+  RegularizeZSpacing
+  RotateSampleRefFrame
   CropVolume
-#  Hex2SqrConverter
+  Hex2SqrConverter
 )
 
 

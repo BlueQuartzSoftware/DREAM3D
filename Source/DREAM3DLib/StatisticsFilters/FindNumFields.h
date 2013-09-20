@@ -57,6 +57,7 @@ class DREAM3DLib_EXPORT FindNumFields : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindNumFields, AbstractFilter)
 
     virtual ~FindNumFields();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)

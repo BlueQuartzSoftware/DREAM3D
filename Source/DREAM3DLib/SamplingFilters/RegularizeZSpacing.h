@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT RegularizeZSpacing : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RegularizeZSpacing, AbstractFilter)
 
     virtual ~RegularizeZSpacing();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

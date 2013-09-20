@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     DREAM3D_TYPE_MACRO_SUPER(ScalarSegmentGrains, AbstractFilter)
 
     virtual ~ScalarSegmentGrains();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ScalarArrayName)

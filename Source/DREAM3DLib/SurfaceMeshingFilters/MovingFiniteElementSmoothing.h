@@ -63,6 +63,7 @@ class DREAM3DLib_EXPORT MovingFiniteElementSmoothing : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(MovingFiniteElementSmoothing, SurfaceMeshFilter)
 
     virtual ~MovingFiniteElementSmoothing();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshNodeTypeArrayName)
 

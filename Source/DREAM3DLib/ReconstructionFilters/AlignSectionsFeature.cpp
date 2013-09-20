@@ -64,6 +64,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSectionsFeature::AlignSectionsFeature() :
 AlignSections(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
 m_GoodVoxels(NULL)
 {
@@ -114,7 +115,7 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -141,7 +142,7 @@ void AlignSectionsFeature::preflight()
 void AlignSectionsFeature::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -170,7 +171,7 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;

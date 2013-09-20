@@ -111,7 +111,7 @@ int PhWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(getOutputFile().isEmpty() == true)
@@ -148,7 +148,7 @@ int PhWriter::writeHeader()
 int PhWriter::writeFile()
 {
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
 

@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 OpenCloseCoordinationNumber::OpenCloseCoordinationNumber() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_Loop(false),
 m_CoordinationNumber(6),
@@ -128,7 +129,7 @@ void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
 
@@ -148,7 +149,7 @@ void OpenCloseCoordinationNumber::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

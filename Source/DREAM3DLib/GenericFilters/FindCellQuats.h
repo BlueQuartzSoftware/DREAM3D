@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindCellQuats, AbstractFilter)
 
     virtual ~FindCellQuats();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)

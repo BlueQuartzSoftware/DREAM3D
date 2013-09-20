@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT RenameFieldArray : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(RenameFieldArray, AbstractFilter)
 
     virtual ~RenameFieldArray();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedFieldArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(NewFieldArrayName)

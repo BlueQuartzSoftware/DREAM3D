@@ -56,6 +56,10 @@
 // -----------------------------------------------------------------------------
 DataContainerReader::DataContainerReader() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
+  m_VertexDataContainerName(DREAM3D::HDF5::VertexDataContainerName),
   m_InputFile(""),
   m_ReadVolumeData(true),
   m_ReadSurfaceData(false),
@@ -198,20 +202,28 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
       err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
       err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-      err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+      err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, "5.0");
       QH5Utilities::closeFile(fileId);
       fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+    }
+    if(fVersion < 6.0)
+    {
+      ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
+      setErrorCondition(-250);
+      addErrorMessage(getHumanLabel(), ss, err);
+      return;
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
     /* READ THE VOXEL DATA From THE HDF5 FILE */
-    if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
+    if (getDataContainerArray() != NULL && m_ReadVolumeData == true)
     {
       VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+      getDataContainerArray()->pushBack(volumeReader);
       volumeReader->setHdfFileId(fileId);
-      volumeReader->setDataContainer(getVolumeDataContainer());
+      volumeReader->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
       volumeReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Volume Data ";
       volumeReader->setMessagePrefix(ss);
@@ -225,11 +237,12 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     }
 
     /* READ THE Surface DATA From THE HDF5 FILE */
-    if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
+    if (NULL != getDataContainerArray() && m_ReadSurfaceData == true)
     {
       SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
+      getDataContainerArray()->pushBack(smReader);
       smReader->setHdfFileId(fileId);
-      smReader->setDataContainer(getSurfaceDataContainer());
+      smReader->setDataContainer(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()));
       smReader->setObservers(getObservers());
       ss = getMessagePrefix() + " |--> Reading Surface Data ";
       smReader->setMessagePrefix(ss);
@@ -243,9 +256,10 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     }
 
     /* READ THE Edge DATA From THE HDF5 FILE */
-    if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
+    if (NULL != getDataContainerArray() && m_ReadEdgeData == true)
     {
       EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+      getDataContainerArray()->pushBack(e);
       eReader->setHdfFileId(fileId);
       eReader->setDataContainer(getEdgeDataContainer());
       eReader->setObservers(getObservers());
@@ -261,9 +275,10 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
     }
 
     /* READ THE Vertex DATA TO THE HDF5 FILE */
-    if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
+    if (NULL != getDataContainerArray() && m_ReadVertexData == true)
     {
       VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
+      getDataContainerArray()->pushBack(smReader);
       smReader->setHdfFileId(fileId);
       smReader->setDataContainer(getVertexDataContainer());
       smReader->setObservers(getObservers());
@@ -317,7 +332,7 @@ void DataContainerReader::execute()
   err = readExistingPipelineFromFile(fileId);
 
   /* READ THE VOXEL DATA FROM THE HDF5 FILE */
-  if (getVolumeDataContainer() != NULL && m_ReadVolumeData == true)
+  if (getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()) != NULL && m_ReadVolumeData == true)
   {
     VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
     volumeReader->setHdfFileId(fileId);
@@ -328,7 +343,7 @@ void DataContainerReader::execute()
     volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
     volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
     volumeReader->setReadAllArrays(m_ReadAllArrays);
-    volumeReader->setDataContainer(getVolumeDataContainer());
+    volumeReader->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
     volumeReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Volume Data ";
     volumeReader->setMessagePrefix(ss);
@@ -341,7 +356,7 @@ void DataContainerReader::execute()
   }
 
   /* READ THE Surface DATA FROM THE HDF5 FILE */
-  if (NULL != getSurfaceDataContainer() && m_ReadSurfaceData == true)
+  if (NULL != getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()) && m_ReadSurfaceData == true)
   {
     SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
     smReader->setHdfFileId(fileId);
@@ -351,7 +366,7 @@ void DataContainerReader::execute()
     smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
     smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
     smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setDataContainer(getSurfaceDataContainer());
+    smReader->setDataContainer(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()));
     smReader->setObservers(getObservers());
     ss = getMessagePrefix() + " |--> Reading Surface Data ";
     smReader->setMessagePrefix(ss);

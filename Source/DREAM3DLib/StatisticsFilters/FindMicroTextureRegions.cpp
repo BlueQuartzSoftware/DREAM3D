@@ -11,6 +11,7 @@
 // -----------------------------------------------------------------------------
 FindMicroTextureRegions::FindMicroTextureRegions() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_MicroTextureRegionNumCellsArrayName(DREAM3D::FieldData::MicroTextureRegionNumCells),
 m_MicroTextureRegionFractionOccupiedArrayName(DREAM3D::FieldData::MicroTextureRegionFractionOccupied),
@@ -61,7 +62,7 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
 
@@ -87,7 +88,7 @@ void FindMicroTextureRegions::preflight()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -111,7 +112,7 @@ void FindMicroTextureRegions::execute()
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::find_microtextureregions()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
 
   size_t nummicrotextureregions = m->getNumCellFieldTuples();

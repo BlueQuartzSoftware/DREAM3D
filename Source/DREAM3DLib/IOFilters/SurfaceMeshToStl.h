@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshToStl, AbstractFilter);
 
     virtual ~SurfaceMeshToStl();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputStlDirectory);

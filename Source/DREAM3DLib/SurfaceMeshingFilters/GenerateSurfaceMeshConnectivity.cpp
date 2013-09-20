@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 GenerateSurfaceMeshConnectivity::GenerateSurfaceMeshConnectivity() :
   SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_GenerateVertexTriangleLists(true),
   m_GenerateTriangleNeighbors(true),
   m_GenerateEdgeIdList(false)
@@ -134,7 +135,7 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -177,13 +178,13 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
 
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
-  }
+  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  //if(NULL == m)
+  //{
+  //  setErrorCondition(-999);
+  //  notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+  //  return;
+  //}
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)
@@ -195,12 +196,12 @@ void GenerateSurfaceMeshConnectivity::execute()
   if (m_GenerateVertexTriangleLists == true || m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Vertex Triangle List");
-    getSurfaceDataContainer()->getFaces()->findFacesContainingVert();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
   if (m_GenerateTriangleNeighbors == true)
   {
     notifyStatusMessage("Generating Face Neighbors List");
-    getSurfaceDataContainer()->getFaces()->findFaceNeighbors();
+    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFaceNeighbors();
   }
 
   if (m_GenerateEdgeIdList == true)
@@ -210,9 +211,7 @@ void GenerateSurfaceMeshConnectivity::execute()
     QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
     conn->setMessagePrefix(ss);
     conn->setObservers(getObservers());
-    conn->setVolumeDataContainer(getVolumeDataContainer());
-    conn->setSurfaceDataContainer(getSurfaceDataContainer());
-    conn->setVertexDataContainer(getVertexDataContainer());
+    conn->setDataContainerArray(getDataContainerArray());
     conn->execute();
     if(conn->getErrorCondition() < 0)
     {

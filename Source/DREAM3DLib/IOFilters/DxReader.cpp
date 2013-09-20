@@ -45,6 +45,7 @@
 // -----------------------------------------------------------------------------
 DxReader::DxReader() :
   FileReader(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_GrainIds(NULL)
@@ -137,7 +138,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   QString ss;
   QFileInfo fi(getInputFile());
 
@@ -233,7 +234,7 @@ void DxReader::execute()
 int DxReader::readHeader()
 {
   QString ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int error = 0;
 
@@ -326,7 +327,7 @@ int DxReader::readHeader()
 // -----------------------------------------------------------------------------
 int DxReader::readFile()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   QString ss;
   if (NULL == m)
   {

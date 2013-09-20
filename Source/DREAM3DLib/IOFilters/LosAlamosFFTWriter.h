@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
 
 
     virtual ~LosAlamosFFTWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

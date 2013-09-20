@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT GenerateUniqueEdges : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateUniqueEdges, SurfaceMeshFilter)
 
     virtual ~GenerateUniqueEdges();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshUniqueEdgesArrayName)

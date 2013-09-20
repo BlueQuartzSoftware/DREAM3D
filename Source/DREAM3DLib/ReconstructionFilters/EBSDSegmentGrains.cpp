@@ -63,6 +63,7 @@
 // -----------------------------------------------------------------------------
 EBSDSegmentGrains::EBSDSegmentGrains() :
   SegmentGrains(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -141,7 +142,7 @@ int EBSDSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType,  true, voxels, 1)
@@ -173,7 +174,7 @@ void EBSDSegmentGrains::preflight()
 void EBSDSegmentGrains::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -267,7 +268,7 @@ void EBSDSegmentGrains::execute()
 int64_t EBSDSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);

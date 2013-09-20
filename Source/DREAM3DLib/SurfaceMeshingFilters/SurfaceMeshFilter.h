@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT SurfaceMeshFilter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(SurfaceMeshFilter, AbstractFilter)
 
     virtual ~SurfaceMeshFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
 
   protected:

@@ -57,6 +57,7 @@
 // -----------------------------------------------------------------------------
 GenerateIPFColors::GenerateIPFColors() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -133,7 +134,7 @@ void GenerateIPFColors::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
 
   QString ss;
-    VolumeDataContainer* m = getVolumeDataContainer();
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);
@@ -169,7 +170,7 @@ void GenerateIPFColors::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-999);

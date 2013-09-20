@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 MinNeighbors::MinNeighbors() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -122,7 +123,7 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
@@ -140,7 +141,7 @@ void MinNeighbors::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -150,7 +151,7 @@ void MinNeighbors::preflight()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVolumeDataContainer(m);
+  renumber_grains->setDataContainerArray(getDataContainerArray());
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->preflight();
   int err = renumber_grains->getErrorCondition();
@@ -169,7 +170,7 @@ void MinNeighbors::execute()
 {
   setErrorCondition(0);
  // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -199,7 +200,7 @@ void MinNeighbors::execute()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVolumeDataContainer(m);
+  renumber_grains->setDataContainerArray(getDataContainerArray());
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   int err = renumber_grains->getErrorCondition();
@@ -219,7 +220,7 @@ void MinNeighbors::execute()
 // -----------------------------------------------------------------------------
 void MinNeighbors::assign_badpoints()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -352,7 +353,7 @@ void MinNeighbors::merge_containedgrains()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   bool good = false;
 

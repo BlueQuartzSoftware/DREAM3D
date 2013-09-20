@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT FindRadialDist : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindRadialDist, AbstractFilter)
 
     virtual ~FindRadialDist();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)

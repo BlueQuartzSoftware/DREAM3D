@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMutualInformation, AlignSections)
 
     virtual ~AlignSectionsMutualInformation();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)

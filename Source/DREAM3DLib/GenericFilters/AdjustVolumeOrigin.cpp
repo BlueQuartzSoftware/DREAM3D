@@ -97,6 +97,7 @@ class UpdateVerticesImpl
 // -----------------------------------------------------------------------------
 AdjustVolumeOrigin::AdjustVolumeOrigin() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ApplyToVoxelVolume(true),
   m_ApplyToSurfaceMesh(true),
   m_ApplyToSolidMesh(false)
@@ -198,7 +199,7 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   if (m_ApplyToVoxelVolume == true)
   {
-    VolumeDataContainer* m = getVolumeDataContainer();
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
     if(NULL == m)
     {
       setErrorCondition(-383);
@@ -209,7 +210,7 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   if (m_ApplyToSurfaceMesh == true)
   {
-    SurfaceDataContainer* sm = getSurfaceDataContainer();
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
     if(NULL == sm)
     {
       setErrorCondition(-383);
@@ -244,7 +245,7 @@ void AdjustVolumeOrigin::preflight()
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -280,7 +281,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -295,7 +296,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   VertexArray::Vert_t* nodes = nodesPtr->getPointer(0);
 
   // First get the min/max coords.

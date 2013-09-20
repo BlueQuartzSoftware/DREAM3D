@@ -60,6 +60,7 @@ class DREAM3DLib_EXPORT DxWriter : public FileWriter
 
 
     virtual ~DxWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

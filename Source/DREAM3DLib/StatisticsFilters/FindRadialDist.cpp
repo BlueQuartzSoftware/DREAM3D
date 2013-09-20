@@ -57,6 +57,7 @@
 // -----------------------------------------------------------------------------
 FindRadialDist::FindRadialDist() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
   m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
   m_VolumesArrayName(DREAM3D::FieldData::Volumes),
@@ -122,7 +123,7 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
@@ -171,7 +172,7 @@ void FindRadialDist::preflight()
 // -----------------------------------------------------------------------------
 void FindRadialDist::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -212,7 +213,7 @@ QString parentPath = fi.path();
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_radialdist()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   float x, y, z;
   float xn, yn, zn;
@@ -340,7 +341,7 @@ void FindRadialDist::find_radialdist()
 // -----------------------------------------------------------------------------
 void FindRadialDist::find_boundingbox()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t size = m->getNumCellFieldTuples();
 
   float coords[7];

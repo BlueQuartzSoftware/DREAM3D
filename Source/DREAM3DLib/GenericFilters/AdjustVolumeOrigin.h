@@ -61,6 +61,8 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(AdjustVolumeOrigin, AbstractFilter)
 
     virtual ~AdjustVolumeOrigin();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
 
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToVoxelVolume)

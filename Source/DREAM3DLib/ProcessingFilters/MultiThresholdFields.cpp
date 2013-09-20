@@ -48,6 +48,7 @@
 // -----------------------------------------------------------------------------
 MultiThresholdFields::MultiThresholdFields() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_OutputArrayName(DREAM3D::FieldData::GoodFields)
 {
   setupFilterParameters();
@@ -125,7 +126,7 @@ void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
@@ -159,7 +160,7 @@ void MultiThresholdFields::execute()
   int err = 0;
   
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

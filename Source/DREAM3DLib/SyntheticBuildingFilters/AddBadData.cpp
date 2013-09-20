@@ -50,6 +50,7 @@
 // -----------------------------------------------------------------------------
 AddBadData::AddBadData() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
 m_PoissonNoise(false),
 m_PoissonVolFraction(0.0f),
@@ -143,7 +144,7 @@ void AddBadData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
@@ -165,7 +166,7 @@ void AddBadData::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(NULL == m)
   {
@@ -197,7 +198,7 @@ void  AddBadData::add_noise()
  notifyStatusMessage("Adding Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QList<QString> voxelArrayNames = m->getCellArrayNameList();
 

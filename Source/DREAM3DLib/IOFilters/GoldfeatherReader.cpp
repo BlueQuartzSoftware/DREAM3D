@@ -60,6 +60,7 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 GoldfeatherReader::GoldfeatherReader() :
   AbstractFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
 m_Principal_Curvature_1ArrayName("Principal_Curvature_1"),
 m_Principal_Curvature_2ArrayName("Principal_Curvature_2"),
 m_Principal_Direction_1ArrayName("Principal_Direction_1"),
@@ -129,7 +130,7 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -202,8 +203,7 @@ void GoldfeatherReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);

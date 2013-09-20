@@ -59,6 +59,7 @@
 // -----------------------------------------------------------------------------
 AlignSectionsMisorientation::AlignSectionsMisorientation() :
   AlignSections(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -158,7 +159,7 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
 
@@ -195,7 +196,7 @@ void AlignSectionsMisorientation::preflight()
 void AlignSectionsMisorientation::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -227,7 +228,7 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;

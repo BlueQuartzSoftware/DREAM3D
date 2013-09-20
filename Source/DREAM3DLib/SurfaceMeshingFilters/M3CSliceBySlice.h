@@ -104,6 +104,8 @@ class DREAM3DLib_EXPORT M3CSliceBySlice : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(M3CSliceBySlice, AbstractFilter)
 
     virtual ~M3CSliceBySlice();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

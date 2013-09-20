@@ -127,6 +127,7 @@ private:
 // -----------------------------------------------------------------------------
 ScalarSegmentGrains::ScalarSegmentGrains() :
 SegmentGrains(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_ScalarArrayName(""),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -219,7 +220,7 @@ int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* w
 void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   //int err = 0;
 
@@ -248,7 +249,7 @@ void ScalarSegmentGrains::preflight()
 void ScalarSegmentGrains::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -397,7 +398,7 @@ void ScalarSegmentGrains::execute()
 int64_t ScalarSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);

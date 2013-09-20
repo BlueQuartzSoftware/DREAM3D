@@ -63,6 +63,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(MergeColonies, AbstractFilter)
 
     virtual ~MergeColonies();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

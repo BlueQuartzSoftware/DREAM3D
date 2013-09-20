@@ -98,7 +98,8 @@ class ReverseWindingImpl
 //
 // -----------------------------------------------------------------------------
 ReverseTriangleWinding::ReverseTriangleWinding() :
-  SurfaceMeshFilter()
+  SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName)
 {
   setupFilterParameters();
 }
@@ -222,7 +223,7 @@ void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fie
 {
   setErrorCondition(0);
   
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -266,8 +267,7 @@ void ReverseTriangleWinding::execute()
   int err = 0;
   
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
@@ -280,7 +280,7 @@ void ReverseTriangleWinding::execute()
   bool doParallel = true;
 #endif
 
-  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

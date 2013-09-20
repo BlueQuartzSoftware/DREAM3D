@@ -84,6 +84,10 @@ class DREAM3DLib_EXPORT RemoveArrays : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVertexVertexEnsembleArrays)
 
     virtual ~RemoveArrays();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
 
     typedef QSet<QString> ArrayList_t;
 

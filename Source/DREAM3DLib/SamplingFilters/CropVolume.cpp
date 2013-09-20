@@ -192,7 +192,7 @@ int CropVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(NULL == m)
   {
@@ -215,7 +215,7 @@ void CropVolume::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   setErrorCondition(0);
   QString ss;
   if(NULL == m)
@@ -298,7 +298,7 @@ void CropVolume::execute()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -424,7 +424,7 @@ void CropVolume::execute()
     }
 
     RenumberGrains::Pointer renum = RenumberGrains::New();
-    renum->setVolumeDataContainer(m);
+    renum->setDataContainerArray(getDataContainerArray());
     renum->setObservers(getObservers());
     renum->setMessagePrefix(getMessagePrefix());
     renum->execute();

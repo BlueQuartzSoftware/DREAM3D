@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT FindAvgCAxes : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindAvgCAxes, AbstractFilter)
 
     virtual ~FindAvgCAxes();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

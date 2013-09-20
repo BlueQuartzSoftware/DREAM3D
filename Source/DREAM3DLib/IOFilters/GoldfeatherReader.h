@@ -60,6 +60,7 @@ class DREAM3DLib_EXPORT GoldfeatherReader : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GoldfeatherReader, AbstractFilter);
 
     virtual ~GoldfeatherReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_1ArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(Principal_Curvature_2ArrayName)

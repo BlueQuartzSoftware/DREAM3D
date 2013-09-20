@@ -60,6 +60,10 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(DataContainerReader, AbstractFilter)
 
     virtual ~DataContainerReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(EdgeDataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VertexDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVolumeData)

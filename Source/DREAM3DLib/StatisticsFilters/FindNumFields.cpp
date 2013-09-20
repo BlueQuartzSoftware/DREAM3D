@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 FindNumFields::FindNumFields() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
 m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
 m_FieldPhases(NULL),
@@ -88,7 +89,7 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
 
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)
 
@@ -111,7 +112,7 @@ void FindNumFields::preflight()
 void FindNumFields::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

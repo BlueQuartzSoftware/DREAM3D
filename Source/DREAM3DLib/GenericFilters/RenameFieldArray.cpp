@@ -140,7 +140,7 @@ void RenameFieldArray::preflight()
 // -----------------------------------------------------------------------------
 void RenameFieldArray::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

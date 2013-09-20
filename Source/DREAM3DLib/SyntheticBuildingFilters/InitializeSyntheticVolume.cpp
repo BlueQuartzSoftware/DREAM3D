@@ -54,6 +54,7 @@
 // -----------------------------------------------------------------------------
 InitializeSyntheticVolume::InitializeSyntheticVolume() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
@@ -129,7 +130,7 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   QString ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   //Cell Data
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, -1, voxels, 1)
@@ -169,7 +170,7 @@ void InitializeSyntheticVolume::preflight()
 {
   QTextStream ss;
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 
   dataCheck(true, 1, 1, 1);
 
@@ -190,7 +191,7 @@ void InitializeSyntheticVolume::preflight()
   read_data->setReadCellData(false);
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
-  read_data->setDataContainer(getVolumeDataContainer());
+  read_data->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
@@ -205,7 +206,7 @@ void InitializeSyntheticVolume::execute()
 {
   QTextStream ss;
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -231,7 +232,7 @@ void InitializeSyntheticVolume::execute()
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
   read_data->setReadAllArrays(true);
-  read_data->setDataContainer(getVolumeDataContainer());
+  read_data->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);

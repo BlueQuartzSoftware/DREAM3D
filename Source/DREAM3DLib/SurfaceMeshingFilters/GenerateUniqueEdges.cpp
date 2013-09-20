@@ -53,6 +53,7 @@ typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 // -----------------------------------------------------------------------------
 GenerateUniqueEdges::GenerateUniqueEdges() :
 SurfaceMeshFilter(),
+m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
 m_SurfaceMeshUniqueEdgesArrayName(DREAM3D::EdgeData::SurfaceMeshUniqueEdges),
 m_SurfaceMeshUniqueEdges(NULL)
 {
@@ -107,7 +108,7 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -155,8 +156,7 @@ void GenerateUniqueEdges::execute()
   int err = 0;
 
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
@@ -185,7 +185,7 @@ void GenerateUniqueEdges::execute()
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
@@ -254,7 +254,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   notifyStatusMessage("Generating edge list for mesh. Stage 1 of 2");
   // Get our Reference counted Array of Triangle Structures
-  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   if(NULL == trianglesPtr.get())
   {
     setErrorCondition(-556);
@@ -396,8 +396,8 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   }
 
   // Finally push both the arrays into the Data Container for the pipeline
-  getSurfaceDataContainer()->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
-  getSurfaceDataContainer()->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addVertexData(uniqueEdgesArrayPtr->GetName(), uniqueEdgesArrayPtr);
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addVertexData(edgeTriangleArray->GetName(), edgeTriangleArray);
 
   notifyStatusMessage("Complete");
   return;

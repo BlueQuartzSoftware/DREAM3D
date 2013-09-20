@@ -67,6 +67,7 @@ class DREAM3DLib_EXPORT FindMisorientations : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindMisorientations, AbstractFilter)
 
     virtual ~FindMisorientations();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)

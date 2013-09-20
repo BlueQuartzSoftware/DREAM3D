@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT FieldDataCSVWriter : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FieldDataCSVWriter, AbstractFilter)
 
     virtual ~FieldDataCSVWriter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldDataFile)

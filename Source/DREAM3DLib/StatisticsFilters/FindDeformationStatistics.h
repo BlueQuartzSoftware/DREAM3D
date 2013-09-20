@@ -78,6 +78,7 @@ class DREAM3DLib_EXPORT FindDeformationStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindDeformationStatistics, AbstractFilter)
 
     virtual ~FindDeformationStatistics();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(F1ArrayName)

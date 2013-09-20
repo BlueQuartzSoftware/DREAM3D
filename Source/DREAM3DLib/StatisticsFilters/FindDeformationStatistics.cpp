@@ -48,6 +48,7 @@
 // -----------------------------------------------------------------------------
 FindDeformationStatistics::FindDeformationStatistics() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_F1ArrayName(DREAM3D::FieldData::F1),
   m_F1sptArrayName(DREAM3D::FieldData::F1spt),
   m_F7ArrayName(DREAM3D::FieldData::F7),
@@ -145,7 +146,7 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
       GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
@@ -185,7 +186,7 @@ void FindDeformationStatistics::preflight()
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

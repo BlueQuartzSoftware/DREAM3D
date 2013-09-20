@@ -64,6 +64,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSectionsFeatureCentroid::AlignSectionsFeatureCentroid() :
   AlignSections(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_ReferenceSlice(0),
   m_UseReferenceSlice(false),
@@ -158,7 +159,7 @@ int AlignSectionsFeatureCentroid::writeFilterParameters(AbstractFilterParameters
 void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -186,7 +187,7 @@ void AlignSectionsFeatureCentroid::preflight()
 void AlignSectionsFeatureCentroid::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -215,7 +216,7 @@ void AlignSectionsFeatureCentroid::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;

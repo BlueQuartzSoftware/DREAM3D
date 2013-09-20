@@ -47,6 +47,7 @@
 // -----------------------------------------------------------------------------
 FindLargestCrossSections::FindLargestCrossSections() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_LargestCrossSectionsArrayName(DREAM3D::FieldData::LargestCrossSections),
 m_Plane(0),
@@ -113,7 +114,7 @@ void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -135,7 +136,7 @@ void FindLargestCrossSections::preflight()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -166,7 +167,7 @@ void FindLargestCrossSections::execute()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::find_crosssections()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 //  int64_t totalPoints = m->getTotalPoints();
 
 //  float radcubed;

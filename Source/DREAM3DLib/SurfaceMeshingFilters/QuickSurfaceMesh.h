@@ -56,6 +56,8 @@ class DREAM3DLib_EXPORT QuickSurfaceMesh : public AbstractFilter
      DREAM3D_TYPE_MACRO_SUPER(QuickSurfaceMesh, AbstractFilter)
 
      virtual ~QuickSurfaceMesh();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
    //------ Required Cell Data
   DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

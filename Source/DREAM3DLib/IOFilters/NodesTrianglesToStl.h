@@ -62,6 +62,7 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter);
 
     virtual ~NodesTrianglesToStl();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);

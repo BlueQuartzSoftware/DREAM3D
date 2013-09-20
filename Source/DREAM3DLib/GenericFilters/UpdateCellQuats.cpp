@@ -47,6 +47,7 @@
 // -----------------------------------------------------------------------------
 UpdateCellQuats::UpdateCellQuats() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_Quats(NULL)
 {
@@ -88,7 +89,7 @@ void UpdateCellQuats::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 5)
@@ -113,7 +114,7 @@ void UpdateCellQuats::preflight()
 void UpdateCellQuats::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -60,6 +60,8 @@ class DREAM3DLib_EXPORT GenerateFaceMisorientationColoring : public SurfaceMeshF
     DREAM3D_TYPE_MACRO_SUPER(GenerateFaceMisorientationColoring, SurfaceMeshFilter)
 
     virtual ~GenerateFaceMisorientationColoring();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceLabelsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshFaceMisorientationColorsArrayName)

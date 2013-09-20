@@ -45,6 +45,7 @@
 // -----------------------------------------------------------------------------
 SharedGrainFaceFilter::SharedGrainFaceFilter() :
   SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_SurfaceMeshGrainFaceIdArrayName(DREAM3D::FaceData::SurfaceMeshGrainFaceId)
 {
   setupFilterParameters();
@@ -98,7 +99,7 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -145,8 +146,7 @@ void SharedGrainFaceFilter::execute()
   int err = 0;
   
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
@@ -157,11 +157,11 @@ void SharedGrainFaceFilter::execute()
 
   /* Place all your code to execute your filter here. */
 
-  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
 //  FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
-  IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
 
@@ -244,7 +244,7 @@ void SharedGrainFaceFilter::execute()
 
   m_SharedGrainFaces = faces;
 
-  getSurfaceDataContainer()->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
+  getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

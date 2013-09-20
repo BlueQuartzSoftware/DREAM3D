@@ -50,6 +50,7 @@
 // -----------------------------------------------------------------------------
 EnsembleInfoReader::EnsembleInfoReader() :
 FileReader(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_InputFile(""),
 m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
 m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
@@ -117,7 +118,7 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -160,7 +161,7 @@ int EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 int EnsembleInfoReader::readFile()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);

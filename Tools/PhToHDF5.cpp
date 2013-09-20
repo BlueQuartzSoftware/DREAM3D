@@ -83,9 +83,11 @@ class EulerSet
  */
 int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
 {
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  dca->pushBack(m);
   PhReader::Pointer reader = PhReader::New();
-  reader->setVolumeDataContainer(m.get());
+  reader->setDataContainerArray(dca);
   reader->setInputFile(FileName);
   reader->execute();
   if (reader->getErrorCondition() < 0)

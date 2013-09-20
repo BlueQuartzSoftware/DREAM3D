@@ -65,6 +65,7 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(ReadOrientationData, AbstractFilter)
 
     virtual ~ReadOrientationData();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 
     //------ Created Cell Data
@@ -212,12 +213,12 @@ class DREAM3DLib_EXPORT ReadOrientationData : public AbstractFilter
         latticeConstants->SetComponent(phaseID, 5, lc[5]);
 
       }
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystalStructures);
       m_CrystalStructures = crystalStructures->getPointer(0);
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
-      getVolumeDataContainer()->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::MaterialName, materialNames);
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::LatticeConstants, latticeConstants);
       m_LatticeConstants = latticeConstants->getPointer(0);
-      getVolumeDataContainer()->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
+      getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setNumCellEnsembleTuples(crystalStructures->getNumberOfTuples());
       return 0;
     }
 

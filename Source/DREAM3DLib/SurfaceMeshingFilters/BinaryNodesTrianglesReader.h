@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT BinaryNodesTrianglesReader : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(BinaryNodesTrianglesReader, SurfaceMeshFilter)
 
     virtual ~BinaryNodesTrianglesReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
 
 

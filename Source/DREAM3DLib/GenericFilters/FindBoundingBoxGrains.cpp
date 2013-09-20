@@ -46,6 +46,7 @@
 // -----------------------------------------------------------------------------
 FindBoundingBoxGrains::FindBoundingBoxGrains() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_CentroidsArrayName(DREAM3D::FieldData::Centroids),
 m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
 m_BiasedFieldsArrayName(DREAM3D::FieldData::BiasedFields),
@@ -88,7 +89,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -301)
@@ -96,7 +97,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	setErrorCondition(0);
 	FindGrainCentroids::Pointer find_graincentroids = FindGrainCentroids::New();
 	find_graincentroids->setObservers(this->getObservers());
-	find_graincentroids->setVolumeDataContainer(getVolumeDataContainer());
+	find_graincentroids->setDataContainerArray(getDataContainerArray());
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
@@ -107,7 +108,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	setErrorCondition(0);
 	FindSurfaceGrains::Pointer find_surfacegrains = FindSurfaceGrains::New();
 	find_surfacegrains->setObservers(this->getObservers());
-	find_surfacegrains->setVolumeDataContainer(getVolumeDataContainer());
+	find_surfacegrains->setDataContainerArray(getDataContainerArray());
 	if(preflight == true) find_surfacegrains->preflight();
 	if(preflight == false) find_surfacegrains->execute();
     GET_PREREQ_DATA(m, DREAM3D, CellFieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
@@ -129,7 +130,7 @@ void FindBoundingBoxGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);
@@ -156,7 +157,7 @@ void FindBoundingBoxGrains::execute()
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t size = m->getNumCellFieldTuples();
   float boundbox[7];
   float coords[7];
@@ -215,7 +216,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
 }
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t size = m->getNumCellFieldTuples();
   float boundbox[5];
   float coords[5];

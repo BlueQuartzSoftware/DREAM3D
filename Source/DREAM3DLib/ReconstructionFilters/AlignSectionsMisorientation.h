@@ -66,6 +66,7 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     DREAM3D_TYPE_MACRO_SUPER(AlignSectionsMisorientation, AlignSections)
 
     virtual ~AlignSectionsMisorientation();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)

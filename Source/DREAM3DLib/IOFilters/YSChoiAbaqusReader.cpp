@@ -56,6 +56,7 @@
 // -----------------------------------------------------------------------------
 YSChoiAbaqusReader::YSChoiAbaqusReader() :
   FileReader(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_InputFile(""),
   m_InputGrainInfoFile(""),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
@@ -138,7 +139,7 @@ int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -213,7 +214,7 @@ void YSChoiAbaqusReader::preflight()
 }
 void YSChoiAbaqusReader::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;

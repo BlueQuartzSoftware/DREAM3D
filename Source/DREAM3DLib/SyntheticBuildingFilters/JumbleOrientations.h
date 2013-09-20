@@ -68,6 +68,7 @@ class DREAM3DLib_EXPORT JumbleOrientations : public AbstractFilter
 
 
     virtual ~JumbleOrientations();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)

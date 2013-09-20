@@ -125,14 +125,19 @@ QString Md5OfFile(QString filePath)
 // -----------------------------------------------------------------------------
 void extractHelpIndexEntries(AbstractFilter* filter)
 {
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  
   VolumeDataContainer::Pointer vol = VolumeDataContainer::New();
   SurfaceDataContainer::Pointer surf = SurfaceDataContainer::New();
   EdgeDataContainer::Pointer edg = EdgeDataContainer::New();
   VertexDataContainer::Pointer vert = VertexDataContainer::New();
-  filter->setVolumeDataContainer(vol.get());
-  filter->setSurfaceDataContainer(surf.get());
-  filter->setEdgeDataContainer(edg.get());
-  filter->setVertexDataContainer(vert.get());
+
+  dca->pushBack(vol);
+  dca->pushBack(surf);
+  dca->pushBack(edg);
+  dca->pushBack(vert);
+
+  filter->setDataContainerArray(dca);
   filter->preflight();
   CreatedArrayHelpIndexEntry::VectorType entries = filter->getCreatedArrayHelpIndexEntries();
 

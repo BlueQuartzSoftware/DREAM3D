@@ -64,6 +64,7 @@
 // -----------------------------------------------------------------------------
 AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
   AlignSections(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
@@ -143,7 +144,7 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -178,7 +179,7 @@ void AlignSectionsMutualInformation::preflight()
 void AlignSectionsMutualInformation::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -213,7 +214,7 @@ void AlignSectionsMutualInformation::execute()
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
@@ -415,7 +416,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
 void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getVolumeDataContainer();
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

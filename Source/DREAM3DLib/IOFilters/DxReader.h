@@ -61,6 +61,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     DREAM3D_TYPE_MACRO_SUPER(DxReader, FileReader)
 
     virtual ~DxReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)

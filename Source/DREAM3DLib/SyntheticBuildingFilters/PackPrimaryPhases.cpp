@@ -229,6 +229,7 @@ class AssignVoxelsGapsImpl
 // -----------------------------------------------------------------------------
 PackPrimaryPhases::PackPrimaryPhases() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
@@ -357,7 +358,7 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -411,7 +412,7 @@ void PackPrimaryPhases::preflight()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   bool writeErrorFile = true;
   std::ofstream outFile;
@@ -1045,7 +1046,7 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Packing Grains - Renumbering Grains");
   RenumberGrains::Pointer renumber_grains2 = RenumberGrains::New();
   renumber_grains2->setObservers(this->getObservers());
-  renumber_grains2->setVolumeDataContainer(m);
+  renumber_grains2->setDataContainerArray(getDataContainerArray());
   renumber_grains2->execute();
   err = renumber_grains2->getErrorCondition();
   if (err < 0)
@@ -1142,7 +1143,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::initialize_packinggrid()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   m_PackingRes[0] = m->getXRes() * 2.0f;
   m_PackingRes[1] = m->getYRes() * 2.0f;
@@ -1309,7 +1310,7 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -1348,7 +1349,7 @@ void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
   // Optimized Code
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1519,7 +1520,7 @@ void PackPrimaryPhases::compare_3Ddistributions(QVector<QVector<QVector<float> >
 // -----------------------------------------------------------------------------
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1797,7 +1798,7 @@ void PackPrimaryPhases::assign_voxels()
 {
   notifyStatusMessage("Assigning Voxels");
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totpoints = m->getTotalPoints();
 
 
@@ -1952,7 +1953,7 @@ void PackPrimaryPhases::assign_voxels()
   notifyStatusMessage("Assigning Voxels - Removing Included Grains");
   RenumberGrains::Pointer renumber_grains1 = RenumberGrains::New();
   renumber_grains1->setObservers(this->getObservers());
-  renumber_grains1->setVolumeDataContainer(m);
+  renumber_grains1->setDataContainerArray(getDataContainerArray());
   renumber_grains1->execute();
   int err = renumber_grains1->getErrorCondition();
   if (err < 0)
@@ -1993,7 +1994,7 @@ void PackPrimaryPhases::assign_gaps_only()
 
 
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   int grainname, grain;
   int current = 0;
@@ -2120,7 +2121,7 @@ void PackPrimaryPhases::cleanup_grains()
 {
   notifyStatusMessage("Cleaning Up Grains");
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -2288,7 +2289,7 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
   {
     return 1;
   }
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   IDataArray::Pointer iPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
@@ -2367,7 +2368,7 @@ void PackPrimaryPhases::write_goal_attributes()
 {
   int err = 0;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -58,6 +58,7 @@ class DREAM3DLib_EXPORT TriangleAreaFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(TriangleAreaFilter, SurfaceMeshFilter)
 
     virtual ~TriangleAreaFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceMeshTriangleAreasArrayName)
 

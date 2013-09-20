@@ -70,6 +70,7 @@ class DREAM3DLib_EXPORT GenerateEnsembleStatistics : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(GenerateEnsembleStatistics, AbstractFilter)
 
     virtual ~GenerateEnsembleStatistics();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ (Possible) Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)

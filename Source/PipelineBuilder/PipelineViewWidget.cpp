@@ -310,11 +310,8 @@ void PipelineViewWidget::preflightPipeline()
   errorTableWidget->setRowCount(0);
 
 
-  // Create the DataContainer object
-  VolumeDataContainer::Pointer vl = VolumeDataContainer::New();
-  SurfaceDataContainer::Pointer s = SurfaceDataContainer::New();
-  EdgeDataContainer::Pointer e = EdgeDataContainer::New();
-  VertexDataContainer::Pointer v = VertexDataContainer::New();
+  // Create the DataContainerArray object
+  DataContainerArray::Pointer dca = DataContainerArray::New();
 
   
 
@@ -329,14 +326,11 @@ void PipelineViewWidget::preflightPipeline()
     {
       fw->setHasPreflightErrors(false);
       fw->setHasPreflightWarnings(false);
-      fw->preflightAboutToExecute(vl, s, e, v);
+      fw->preflightAboutToExecute(dca);
 
       AbstractFilter::Pointer filter = fw->getFilter(false);
 
-      filter->setVolumeDataContainer(vl.get());
-      filter->setSurfaceDataContainer(s.get());
-      filter->setEdgeDataContainer(e.get());
-      filter->setVertexDataContainer(v.get());
+      filter->setDataContainerArray(dca);
 
       filter->preflight();
       int err = filter->getErrorCondition();
@@ -360,7 +354,7 @@ void PipelineViewWidget::preflightPipeline()
       }
 
       // Tell the widget that we have arrays and to possibly update its gui
-      fw->preflightDoneExecuting(vl, s, e, v);
+      fw->preflightDoneExecuting(dca);
     }
   }
 

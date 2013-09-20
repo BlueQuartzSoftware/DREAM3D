@@ -43,7 +43,11 @@
 //
 // -----------------------------------------------------------------------------
 RemoveArrays::RemoveArrays() :
-  AbstractFilter()
+  AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
+  m_EdgeDataContainerName(DREAM3D::HDF5::EdgeDataContainerName),
+  m_VertexDataContainerName(DREAM3D::HDF5::VertexDataContainerName)
 {
   setupFilterParameters();
 }
@@ -121,7 +125,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   typedef QSet<QString> NameList_t;
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL != m)
   {
     for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
@@ -140,7 +144,7 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
 
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if (NULL != sm)
   {
     for(NameList_t::iterator iter = m_SelectedSurfaceVertexArrays.begin(); iter != m_SelectedSurfaceVertexArrays.end(); ++iter)
@@ -165,12 +169,41 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
   }
 
-  VertexDataContainer* sol = getVertexDataContainer();
-  if (NULL != sol)
+  EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
+  if (NULL != sm)
+  {
+    for(NameList_t::iterator iter = m_SelectedEdgeVertexArrays.begin(); iter != m_SelectedEdgeVertexArrays.end(); ++iter)
+    {
+      sm->removeVertexData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedEdgeEdgeArrays.begin(); iter != m_SelectedEdgeEdgeArrays.end(); ++iter)
+    {
+      sm->removeEdgeData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedEdgeEdgeFieldArrays.begin(); iter != m_SelectedEdgeEdgeFieldArrays.end(); ++iter)
+    {
+      sm->removeEdgeFieldData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedEdgeEdgeEnsembleArrays.begin(); iter != m_SelectedEdgeEdgeEnsembleArrays.end(); ++iter)
+    {
+      sm->removeEdgeEnsembleData(*iter);
+    }
+  }
+
+  VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(getVertexDataContainerName());
+  if (NULL != v)
   {
     for(NameList_t::iterator iter = m_SelectedVertexVertexArrays.begin(); iter != m_SelectedVertexVertexArrays.end(); ++iter)
     {
-      sol->removeVertexData(*iter);
+      v->removeVertexData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedVertexVertexFieldArrays.begin(); iter != m_SelectedVertexVertexFieldArrays.end(); ++iter)
+    {
+      v->removeVertexFieldData(*iter);
+    }
+    for(NameList_t::iterator iter = m_SelectedVertexVertexEnsembleArrays.begin(); iter != m_SelectedVertexVertexEnsembleArrays.end(); ++iter)
+    {
+      v->removeVertexEnsembleData(*iter);
     }
   }
 
@@ -195,7 +228,7 @@ void RemoveArrays::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

@@ -44,6 +44,7 @@
 // -----------------------------------------------------------------------------
 SingleThresholdFields::SingleThresholdFields():
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SelectedFieldArrayName(""),
   m_OutputArrayName(DREAM3D::FieldData::GoodFields),
   m_Output(NULL)
@@ -145,7 +146,7 @@ int SingleThresholdFields::writeFilterParameters(AbstractFilterParametersWriter*
 void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 
@@ -169,7 +170,7 @@ void SingleThresholdFields::preflight()
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);

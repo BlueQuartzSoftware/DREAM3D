@@ -130,11 +130,13 @@ int main(int argc, char **argv)
 
   int err = 0;
 
+  DataContainerArray::Pointer dca = DataContainerArray::New();
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  dca->pushBack(m);
 
   DataContainerReader::Pointer h5Reader = DataContainerReader::New();
   h5Reader->setInputFile(iFile);
-  h5Reader->setVolumeDataContainer(m.get());
+  h5Reader->setDataContainerArray(dca);
   size_t dcDims[3];
   float spacing[3];
   float origin[3];

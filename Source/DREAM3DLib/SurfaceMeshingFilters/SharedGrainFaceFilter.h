@@ -59,6 +59,7 @@ class DREAM3DLib_EXPORT SharedGrainFaceFilter : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(SharedGrainFaceFilter, SurfaceMeshFilter)
 
     virtual ~SharedGrainFaceFilter();
+    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     typedef QVector<int> FaceIds_t;

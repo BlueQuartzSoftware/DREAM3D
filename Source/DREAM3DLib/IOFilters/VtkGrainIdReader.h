@@ -56,6 +56,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
 
 
     virtual ~VtkGrainIdReader();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 

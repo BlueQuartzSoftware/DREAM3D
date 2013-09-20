@@ -97,6 +97,7 @@ class CalculateAreasImpl
 // -----------------------------------------------------------------------------
 TriangleAreaFilter::TriangleAreaFilter() :
   SurfaceMeshFilter(),
+  m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_SurfaceMeshTriangleAreasArrayName(DREAM3D::FaceData::SurfaceMeshFaceAreas),
   m_SurfaceMeshTriangleAreas(NULL)
 {
@@ -151,7 +152,7 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   
-  SurfaceDataContainer* sm = getSurfaceDataContainer();
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -199,8 +200,7 @@ void TriangleAreaFilter::execute()
   int err = 0;
   
   setErrorCondition(err);
-  SurfaceDataContainer* m = getSurfaceDataContainer();
-  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
@@ -214,9 +214,9 @@ void TriangleAreaFilter::execute()
   bool doParallel = true;
 #endif
 
-  VertexArray::Pointer nodesPtr = getSurfaceDataContainer()->getVertices();
+  VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
 
-  FaceArray::Pointer trianglesPtr = getSurfaceDataContainer()->getFaces();
+  FaceArray::Pointer trianglesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();
 
   // Run the data check to allocate the memory for the centroid array

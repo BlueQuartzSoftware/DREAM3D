@@ -55,6 +55,7 @@
 // -----------------------------------------------------------------------------
 MinSize::MinSize() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
   m_MinAllowedGrainSize(1),
@@ -121,7 +122,7 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
 
@@ -135,7 +136,7 @@ void MinSize::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -145,7 +146,7 @@ void MinSize::preflight()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVolumeDataContainer(m);
+  renumber_grains->setDataContainerArray(getDataContainerArray());
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->preflight();
   int err = renumber_grains->getErrorCondition();
@@ -164,7 +165,7 @@ void MinSize::execute()
 {
   setErrorCondition(0);
   // int err = 0;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -186,7 +187,7 @@ void MinSize::execute()
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
-  renumber_grains->setVolumeDataContainer(m);
+  renumber_grains->setDataContainerArray(getDataContainerArray());
   renumber_grains->setMessagePrefix(getMessagePrefix());
   renumber_grains->execute();
   int err = renumber_grains->getErrorCondition();
@@ -206,7 +207,7 @@ void MinSize::execute()
 // -----------------------------------------------------------------------------
 void MinSize::assign_badpoints()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -343,7 +344,7 @@ void MinSize::assign_badpoints()
 // -----------------------------------------------------------------------------
 void MinSize::remove_smallgrains()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;

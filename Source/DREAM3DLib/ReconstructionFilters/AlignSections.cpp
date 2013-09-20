@@ -65,6 +65,7 @@ using namespace std;
 // -----------------------------------------------------------------------------
 AlignSections::AlignSections() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_WriteAlignmentShifts(true),
   m_AlignmentShiftFileName("")
 {
@@ -160,7 +161,7 @@ void AlignSections::preflight()
 void AlignSections::execute()
 {
   setErrorCondition(0);
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     setErrorCondition(-1);

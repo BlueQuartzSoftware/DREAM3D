@@ -53,6 +53,7 @@
 // -----------------------------------------------------------------------------
 AddOrientationNoise::AddOrientationNoise() :
 AbstractFilter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
 m_Magnitude(1.0f),
 m_CellEulerAngles(NULL)
@@ -115,7 +116,7 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
@@ -137,7 +138,7 @@ void AddOrientationNoise::execute()
   int err = 0;
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   if(NULL == m)
   {
@@ -171,7 +172,7 @@ void  AddOrientationNoise::add_orientation_noise()
  notifyStatusMessage("Adding Orientation Noise");
   DREAM3D_RANDOMNG_NEW()
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   //float ea1, ea2, ea3;
   float g[3][3];

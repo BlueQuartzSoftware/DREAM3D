@@ -132,7 +132,7 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 {
   setErrorCondition(0);
 
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(getOutputFile().isEmpty() == true)
   {
 
@@ -187,7 +187,7 @@ int INLWriter::writeHeader()
 // -----------------------------------------------------------------------------
 int INLWriter::writeFile()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
 
