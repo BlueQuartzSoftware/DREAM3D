@@ -61,6 +61,7 @@
 // -----------------------------------------------------------------------------
 INLWriter::INLWriter() :
   FileWriter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),

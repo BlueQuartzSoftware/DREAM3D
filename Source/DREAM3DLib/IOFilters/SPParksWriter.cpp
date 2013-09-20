@@ -55,6 +55,7 @@
 // -----------------------------------------------------------------------------
 SPParksWriter::SPParksWriter() :
 FileWriter(),
+m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
 m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
 m_GrainIds(NULL)
 {

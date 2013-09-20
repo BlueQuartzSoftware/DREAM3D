@@ -54,7 +54,7 @@ SurfaceDataContainer::SurfaceDataContainer() :
 EdgeDataContainer(),
 m_NumFaceTuples(0)
 {
-
+  setName(DREAM3D::HDF5::SurfaceDataContainerName);
 }
 
 // -----------------------------------------------------------------------------

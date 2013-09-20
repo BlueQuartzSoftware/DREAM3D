@@ -54,7 +54,7 @@ EdgeDataContainer::EdgeDataContainer() :
 VertexDataContainer(),
 m_NumEdgeTuples(0)
 {
-
+  setName(DREAM3D::HDF5::EdgeDataContainerName);
 }
 
 // -----------------------------------------------------------------------------
