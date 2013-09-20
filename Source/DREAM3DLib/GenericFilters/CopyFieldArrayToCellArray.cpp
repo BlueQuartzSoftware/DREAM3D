@@ -158,7 +158,7 @@ IDataArray::Pointer copyData(IDataArray::Pointer inputData, int64_t voxels, int3
   {
     // Get the grain id (or what ever the user has selected as their "Grain" identifier
     grainIdx = grainIds[i];
-    // Now get the pointer to the start of the tuple for the Field Array at the give Grain Id Index value
+    // Now get the pointer to the start of the tuple for the Field Array at the given Grain Id Index value
     T* fSourcePtr = fPtr + (numComp * grainIdx);
     // Now get the pointer to the start of the tuple for the Cell Array at the proper index
     T* cDestPtr = cPtr + (numComp * i);

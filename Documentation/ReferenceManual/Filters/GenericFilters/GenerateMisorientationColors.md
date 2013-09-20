@@ -5,7 +5,18 @@ Generate Misorientation Colors {#generatemisorientationcolors}
 Generic Filters (Misc)
 
 ## Description ##
-This filter will generate colors based on the method developed by C. Schuh and S. Patala for Cubic, Hexagonal, Orthorhombic, or Tetragonal Crystal Structures (currently only cubic high is working). Orientations are colored by disorientation relative to a reference orientation. The user can enter an reference orientation (relative to the sample frame). The defualt reference orientation is the sample frame (misorientation from sample frame: 0 degrees about [001]). The user is required to run a filter that will determine if a voxel should have it's color calculated by generating the _GoodVoxels_ array or an equivalent **boolean** array. Typically the **MultiThreshold Cells** or **Single Threshold Cells** filter is run _before_ this filter with an output array set to _GoodVoxels_.
+This filter will generate colors based on the method developed by C. Schuh and S. Patala for Cubic, Hexagonal, Tetragonal, or Orthorhombic Crystal Structures (currently only cubic high is working)[1]. Orientations are colored by disorientation relative to a reference orientation. The user can enter an reference orientation (relative to the sample frame). The defualt reference orientation is the sample frame (misorientation from sample frame: 0 degrees about [001]). The user is required to run a filter that will determine if a voxel should have it's color calculated by generating the _GoodVoxels_ array or an equivalent **boolean** array. Typically the **MultiThreshold Cells** or **Single Threshold Cells** filter is run _before_ this filter with an output array set to _GoodVoxels_.
+
+
+|Crystal Structure | Key [1] |
+|------------------|---------|
+| Cubic (432) |![](MisorientationLegendO_432.png)|
+| Cubic (23) |![](MisorientationLegendT_23.png)|
+| Hexagonal (622) |![](MisorientationLegendD6_622.png)|
+| Tetragonal (422) |![](MisorientationLegendD4_422.png)|
+| Orthorhombic (222) |![](MisorientationLegendD2_222.png)|
+
+[1] Patala, S., Mason J., Schuh C., 2012. Improved representations of misorientation information for grain boundary science and engineering. Prog Mater Sci. 57, 1383-1425.
 
 
 ## Input Options ##

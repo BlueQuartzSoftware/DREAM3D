@@ -49,15 +49,17 @@
 #include <QtGui/QDesktopServices>
 
 
+
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
+#include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerWriter.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 #include "QtSupport/ApplicationAboutBoxDialog.h"
 #include "QtSupport/QRecentFileList.h"
@@ -67,24 +69,6 @@
 
 #include "SGApplication.h"
 #include "EditPhaseDialog.h"
-
-/**
- * @brief The HDF5FileSentinel class ensures the HDF5 file that is currently open
- * is closed when the variable goes out of Scope
- */
-class HDF5ScopedFileSentinel
-{
-  public:
-    HDF5ScopedFileSentinel(hid_t fileId) : m_FileId(fileId)
-    {}
-    virtual ~HDF5ScopedFileSentinel()
-    {
-      if (m_FileId > 0) {
-        QH5Utilities::closeFile(m_FileId);
-      }
-    }
-    DREAM3D_INSTANCE_PROPERTY(hid_t, FileId)
-};
 
 
 // -----------------------------------------------------------------------------
@@ -719,13 +703,19 @@ void StatsGeneratorUI::on_actionSave_triggered()
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(fileId);
 
-  VolumeDataContainerWriter::Pointer writer = VolumeDataContainerWriter::New();
+  DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setVolumeDataContainer(m.get());
-  writer->setHdfFileId(fileId);
+  writer->setOutputFile(m_FilePath.toStdString());
+  writer->setWriteVolumeData(true);
+  writer->setWriteSurfaceData(false);
+  writer->setWriteEdgeData(false);
+  writer->setWriteVertexData(false);
+  writer->setWriteXdmfFile(false);
+  writer->setWritePipeline(false);
   writer->execute();
   // Force the clean up of the writer by assigning a NULL pointer which will
   // have the effect of executing the destructor of the H5StatsWriter Class
-  writer = VolumeDataContainerWriter::NullPointer();
+  writer = DataContainerWriter::NullPointer();
 
   setWindowTitle(m_FilePath + " - StatsGenerator");
   setWindowModified(false);
@@ -822,33 +812,31 @@ void StatsGeneratorUI::openFile(QString h5file)
   phaseTabs->clear();
 
   // Instantiate a Reader object
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  {
-    // We are going to scope this next section so that we make sure the HDF5 file gets closed after the reading is complete
-    hid_t fileId = QH5Utilities::openFile(m_FilePath, true); // Open the file Read Only
-    if(fileId < 0)
-    {
-      QString ss = QObject::tr(": Error opening input file '%1'").arg(m_FilePath);
-      return;
-    }
-    // This will make sure if we return early from this method that the HDF5 File is properly closed.
-    HDF5ScopedFileSentinel scopedFileSentinel(fileId);
 
-    VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
-    reader->setHdfFileId(fileId);
-    reader->setVolumeDataContainer(m.get());
-    reader->setReadCellData(false);
-    reader->setReadFieldData(false);
-    reader->setReadEnsembleData(true);
-    reader->setReadAllArrays(true);
-    reader->execute();
-    err = reader->getErrorCondition();
-    if (err < 0)
-    {
-      this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
-      return;
-    }
-  } // The HDF5 file will get properly closed when we move to the next line because the ScopedFileMonitor will go out of scope and close the file
+  std::set<std::string> selectedArrays;
+  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
+
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_FilePath.toStdString());
+  reader->setVolumeDataContainer(m.get());
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadEdgeData(false);
+  reader->setReadVertexData(false);
+  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setReadAllArrays(false);
+  reader->execute();
+  err = reader->getErrorCondition();
+  if (err < 0)
+  {
+    this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
+    return;
+  }
+
 
   // Get the number of Phases
   size_t ensembles = m->getNumEnsembleTuples();

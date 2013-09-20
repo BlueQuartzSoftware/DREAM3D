@@ -57,31 +57,6 @@ void MatrixMath::CrossProduct(double a[3], double b[3], double c[3])
   c[1] = a[2] * b[0] - a[0] * b[2];
   c[2] = a[0] * b[1] - a[1] * b[0];
 }
-#if 0
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MatrixMath::NormalizeVector(double g[3])
-{
-  double denom;
-  denom = sqrt(((g[0]*g[0])+(g[1]*g[1])+(g[2]*g[2])));
-  g[0] = g[0]/denom;
-  g[1] = g[1]/denom;
-  g[2] = g[2]/denom;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void MatrixMath::NormalizeVector(float g[3])
-{
-  float denom;
-  denom = sqrtf(((g[0]*g[0])+(g[1]*g[1])+(g[2]*g[2])));
-  g[0] = g[0]/denom;
-  g[1] = g[1]/denom;
-  g[2] = g[2]/denom;
-}
-#endif
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -89,6 +64,10 @@ void MatrixMath::Normalize3x1(double &i, double &j, double &k)
 {
   double denom;
   denom = sqrt(((i*i)+(j*j)+(k*k)));
+  if (denom == 0)
+  {
+    return;
+  }
   i = i/denom;
   j = j/denom;
   k = k/denom;
@@ -100,6 +79,10 @@ void MatrixMath::Normalize3x1(float &i, float &j, float &k)
 {
   float denom;
   denom = sqrtf(((i*i)+(j*j)+(k*k)));
+  if (denom == 0)
+  {
+    return;
+  }
   i = i/denom;
   j = j/denom;
   k = k/denom;

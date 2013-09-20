@@ -56,7 +56,7 @@
 #include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/StatsData.h"
 #include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #include "QtSupport/QR3DFileCompleter.h"
@@ -266,22 +266,21 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     if(fi.exists() && fi.isFile())
     {
       m_DataContainer = VolumeDataContainer::New();
-      hid_t fileId = QH5Utilities::openFile(m_InputFile->text(), true); // Open the file Read Only
-      if(fileId < 0)
-      {
-        QMessageBox::critical(this, tr("DREAM.3D"), tr("Error opening DREAM3D file"), QMessageBox::Ok, QMessageBox::Ok);
 
-        return;
-      }
-      HDF5ScopedFileSentinel sentinel(&fileId, true);
+      std::set<std::string> selectedArrays;
+      selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+      selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+      selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
-      VolumeDataContainerReader::Pointer reader = VolumeDataContainerReader::New();
-      reader->setHdfFileId(fileId);
+      DataContainerReader::Pointer reader = DataContainerReader::New();
+      reader->setInputFile(m_InputFile->text());
       reader->setVolumeDataContainer(m_DataContainer.get());
-      reader->setReadCellData(false);
-      reader->setReadFieldData(false);
-      reader->setReadEnsembleData(true);
-      reader->setReadAllArrays(true); // THIS IS VERY IMPORTANT to set otherwise nothing gets read.
+      reader->setReadVolumeData(true);
+      reader->setReadSurfaceData(false);
+      reader->setReadEdgeData(false);
+      reader->setReadVertexData(false);
+      reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+      reader->setReadAllArrays(false);
       reader->execute();
       int err = reader->getErrorCondition();
       if(err < 0)

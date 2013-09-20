@@ -40,7 +40,7 @@
 #include "H5Support/QH5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
-#include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
@@ -166,35 +166,35 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  QTextStream ss;
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getVolumeDataContainer()->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   dataCheck(true, 1, 1, 1);
 
-  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
+  std::set<std::string> selectedArrays;
+  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
-    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_InputFile);
+  reader->setVolumeDataContainer(m);
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadEdgeData(false);
+  reader->setReadVertexData(false);
+  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setReadAllArrays(false);
+  reader->preflight();
+  int err = reader->getErrorCondition();
+  if(err < 0)
+  {
+    QString ss = QObject::tr(": Error reading DREAM3D file '%1'").arg(m_InputFile);
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
   }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
-  read_data->preflight();
-  if (read_data->getErrorCondition() < 0)
-  {
-    setErrorCondition(read_data->getErrorCondition());
-  }
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
+  m->addEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -202,7 +202,6 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  QTextStream ss;
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -212,26 +211,30 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
-  if(fileId < 0)
-  {
 
-    QString ss = QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
+  std::set<std::string> selectedArrays;
+  selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
+  selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
+  selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
+
+  DataContainerReader::Pointer reader = DataContainerReader::New();
+  reader->setInputFile(m_InputFile);
+  reader->setVolumeDataContainer(m);
+  reader->setReadVolumeData(true);
+  reader->setReadSurfaceData(false);
+  reader->setReadEdgeData(false);
+  reader->setReadVertexData(false);
+  reader->setSelectedVolumeEnsembleArrays(selectedArrays);
+  reader->setReadAllArrays(false);
+  reader->execute();
+  int err = reader->getErrorCondition();
+  if(err < 0)
+  {
+    QString ss = QObject::tr(": Error reading DREAM3D file '%1'").arg(getInputFile());
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
-  // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
-
-  VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
-  read_data->setHdfFileId(fileId);
-  read_data->setReadCellData(false);
-  read_data->setReadFieldData(false);
-  read_data->setReadEnsembleData(true);
-  read_data->setReadAllArrays(true);
-  read_data->setVolumeDataContainer(getVolumeDataContainer());
-  read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);

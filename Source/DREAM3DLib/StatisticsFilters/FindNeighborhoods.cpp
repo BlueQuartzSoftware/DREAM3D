@@ -36,9 +36,8 @@
 
 #include "FindNeighborhoods.h"
 
-
-#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
@@ -77,7 +76,7 @@ FindNeighborhoods::~FindNeighborhoods()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MultiplesOfAverage");
@@ -118,8 +117,8 @@ int FindNeighborhoods::writeFilterParameters(AbstractFilterParametersWriter* wri
 void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
 
   // Field Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
@@ -135,7 +134,7 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     neighborhoodlistPtr->setNumNeighborsArrayName(m_NeighborhoodsArrayName);
     m->addFieldData(m_NeighborhoodListArrayName, neighborhoodlistPtr);
     if (neighborhoodlistPtr.get() == NULL) {
-      QString ss = QObject::tr("NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter");
+      ss << "NeighborhoodLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
     m_NeighborhoodList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -153,13 +152,13 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -199,8 +198,8 @@ void FindNeighborhoods::execute()
 // -----------------------------------------------------------------------------
 void FindNeighborhoods::find_neighborhoods()
 {
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
 
   float x, y, z;
   float xn, yn, zn;
@@ -238,13 +237,13 @@ void FindNeighborhoods::find_neighborhoods()
 
   size_t xP = dims[0];
   size_t yP = dims[1];
-  //size_t zP = dims[2];
+//  size_t zP = dims[2];
   float xRes = m->getXRes();
   float yRes = m->getYRes();
- // float zRes = m->getZRes();
+//  float zRes = m->getZRes();
   float sizeX = float(xP)*xRes;
   float sizeY = float(yP)*yRes;
-  //float sizeZ = float(zP)*zRes;
+//  float sizeZ = float(zP)*zRes;
   int numXBins = int(sizeX/criticalDistance);
   int numYBins = int(sizeY/criticalDistance);
 //  int numZBins = int(sizeZ/criticalDistance);
@@ -266,9 +265,9 @@ void FindNeighborhoods::find_neighborhoods()
   {
     if (i%1000 == 0)
     {
-
-      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Working On Grain " << i << " of " << totalFields;
+      notifyStatusMessage(ss.str());
     }
     x = m_Centroids[3*i];
     y = m_Centroids[3*i+1];

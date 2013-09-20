@@ -56,8 +56,8 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
 {
 //hsv to rgb (from wikipedia hsv/hsl page)
   float c = v*s;
-  float k=c*(1.0f-fabs(fmod(h*6.0f,2.0f)-1.0f));//x in wiki article
-  h=h*6;
+  h=h*6.0f;
+  float x=c*(1.0f-fabs(fmod(h,2.0f)-1.0f));
   float r= 0.0f;
   float g= 0.0f;
   float b= 0.0f;
@@ -67,45 +67,52 @@ DREAM3D::Rgb ColorUtilities::convertHSVtoRgb(float h, float s, float v)
       if(h<1.0f)
       {
           r=c;
-          g=k;
+          g=x;
       }
       else if(h<2.0f)
       {
-          r=k;
+          r=x;
           g=c;
       }
       else if(h<3.0f)
       {
           g=c;
-          b=k;
+          b=x;
       }
       else if(h<4.0f)
       {
-          g=k;
+          g=x;
           b=c;
       }
       else if (h<5.0f)
       {
-          r=k;
+          r=x;
           b=c;
       }
       else if(h<6.0f)
       {
           r=c;
-          b=k;
+          b=x;
       }
   }
 
-  //adjust lumosity and invert
-  r=(r+(v-c));
-  g=(g+(v-c));
-  b=(b+(v-c));
+  //adjust lumosity
+  r=r+(v-c);
+  g=g+(v-c);
+  b=b+(v-c);
 
-  //now standard 0-1 rgb, needs rotation
-  k=r;
-  r=1-g;
-  g=b;
-  b=k;
+  if(r>1.0f)
+    r=1.0f;
+  if(g>1.0f)
+    g=1.0f;
+  if(b>1.0f)
+    b=1.0f;
+  if(r<0.0f)
+    r=0.0f;
+  if(g<0.0f)
+    g=0.0f;
+  if(b<0.0f)
+    b=0.0f;
 
   return RgbColor::dRgb(r*255, g*255, b*255, 0);
 }

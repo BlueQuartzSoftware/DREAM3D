@@ -184,6 +184,19 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
+    //Check to see if version of .dream3d file is prior to new data container names
+    err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
+    check = StringUtils::stringToNum(fVersion, m_FileVersion);
+    if(fVersion < 5.0 || err < 0)
+    {
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+      err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+    }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
@@ -517,7 +530,6 @@ void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVert
   m_SelectedVertexEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
-
 
 
 

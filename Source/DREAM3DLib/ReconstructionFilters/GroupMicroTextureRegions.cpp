@@ -37,7 +37,7 @@
 #include "GroupMicroTextureRegions.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Common/DREAM3DRandom.h"
@@ -62,23 +62,25 @@ GroupMicroTextureRegions::GroupMicroTextureRegions() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
   m_CellParentIdsArrayName(DREAM3D::CellData::ParentIds),
+  m_MicroTexVolFracArrayName(DREAM3D::CellData::MicroTexVolFrac),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_FieldParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_ContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
-  m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::Active),
+  m_FieldParentIdsArrayName(DREAM3D::FieldData::ParentIds),
+  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+  m_ContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborList),
+  m_NonContiguousNeighborListArrayName(DREAM3D::FieldData::NeighborhoodList),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_CAxisTolerance(1.0f),
   m_UseNonContiguousNeighbors(false),
   m_GrainIds(NULL),
   m_CellParentIds(NULL),
   m_FieldParentIds(NULL),
+  m_Volumes(NULL),
   m_AvgQuats(NULL),
   m_Active(NULL),
   m_FieldPhases(NULL),
-  m_ContiguousNeighborList(NULL),
-  m_NonContiguousNeighborList(NULL),
+  m_MicroTexVolFrac(NULL),
   m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
@@ -98,7 +100,7 @@ GroupMicroTextureRegions::~GroupMicroTextureRegions()
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("C-Axis Alignment Tolerance");
@@ -155,21 +157,23 @@ int GroupMicroTextureRegions::writeFilterParameters(AbstractFilterParametersWrit
 void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, int32_t, Int32ArrayType, -1, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellParentIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MicroTexVolFrac, ss, float, FloatArrayType, 0, voxels, 1)
 
   // Field Data
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -302, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -302, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldParentIds, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
 
   if(m_UseNonContiguousNeighbors == false)
   {
@@ -177,9 +181,9 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
       if(m_ContiguousNeighborList == NULL)
       {
-        QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
+        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
         setErrorCondition(-304);
-        addErrorMessage(getHumanLabel(), ss, -1);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
       }
   }
   else
@@ -189,13 +193,13 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
       m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
       if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
       {
-        QString ss = QObject::tr("NeighborhoodLists Array Not Initialized correctly");
+        ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
         setErrorCondition(-305);
-        addErrorMessage(getHumanLabel(), ss, -1);
+        addErrorMessage(getHumanLabel(), ss.str(), -1);
       }
   }
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -226,14 +230,14 @@ void GroupMicroTextureRegions::execute()
     return;
   }
 
-  //Convert user defined tolerance to radians.
+  // Convert user defined tolerance to radians.
   m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi/180.0f;
 
   notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
 
   notifyStatusMessage("Characterizing MicroTexture Regions");
-  characterize_micro_texture_regions();
+  // characterize_micro_texture_regions();
 
   // If there is an error set this to something negative and also set a message
   notifyStatusMessage("GroupMicroTextureRegions Completed");
@@ -246,6 +250,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 {
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
@@ -253,6 +258,9 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 
   float angcur = 180.0f;
   std::vector<int> microtexturelist;
+  std::vector<int> totalCheckList;
+  float microtexturevolume = 0.0f;
+  float totalCheckVolume = 0.0f;
   float w;
   float g1[3][3];
   float g2[3][3];
@@ -269,6 +277,8 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   unsigned int phase1, phase2;
   int parentcount = 0;
   parentnumbers.resize(numgrains, -1);
+  beenChecked.resize(numgrains, false);
+  intensities.resize(numgrains, 0.0);
   int size1 = 0, size2 = 0, size = 0;
   parentnumbers[0] = 0;
   for (size_t i = 1; i < numgrains; i++)
@@ -277,11 +287,24 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     {
       parentcount++;
       parentnumbers[i] = parentcount;
+      if (i%1000 == 0)
+      {
+        ss.str("");
+        ss << "Working On Grain " << i << " of " << numgrains;
+        notifyStatusMessage(ss.str());
+      }
       m_Active[i] = true;
       microtexturelist.push_back(i);
+      totalCheckList.push_back(i);
+      microtexturevolume = m_Volumes[i];
+      totalCheckVolume = m_Volumes[i];
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
+        if (m_GrainIds[1860530] == firstgrain || m_GrainIds[1860531] == firstgrain)
+        {
+        int stop = 0;
+        }
         size1 = int(neighborlist[firstgrain].size());
 
         if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
@@ -306,17 +329,18 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
             angcur = 180.0f;
             if (k == 0) neigh = neighborlist[firstgrain][l];
             else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
+            if (beenChecked[neigh] == false)
+            {
+              totalCheckList.push_back(neigh);
+              totalCheckVolume += m_Volumes[neigh];
+            }
+            beenChecked[neigh] = true;
             if (neigh != i && parentnumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
             {
               phase2 = m_CrystalStructures[m_FieldPhases[neigh]];
               if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
               {
                 QuaternionMathF::Copy(avgQuats[neigh], q2);
-//                q2[0] = 1;
-//                q2[1] = m_AvgQuats[5*neigh+1];
-//                q2[2] = m_AvgQuats[5*neigh+2];
-//                q2[3] = m_AvgQuats[5*neigh+3];
-//                q2[4] = m_AvgQuats[5*neigh+4];
                 OrientationMath::QuattoMat(q2, g2);
                 //transpose the g matrix so when caxis is multiplied by it
                 //it will give the sample direction that the caxis is along
@@ -326,39 +350,113 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 //dividing by the magnitudes (they would be 1)
                 MatrixMath::Normalize3x1(c2);
 
-                w = ((c1[0]*c2[0])+(c1[1]*c2[1])+(c1[2]*c2[2]));
+                w = MatrixMath::CosThetaBetweenVectors(c1,c2);
+                DREAM3DMath::boundF(w,-1,1);
                 w = acosf(w);
                 if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
                 {
                   parentnumbers[neigh] = parentcount;
                   microtexturelist.push_back(neigh);
+                  microtexturevolume += m_Volumes[neigh];
                 }
               }
             }
           }
         }
       }
+      //float fraction = (float)microtexturelist.size()/(float)totalCheckList.size();
+      float fraction = microtexturevolume / totalCheckVolume;
+      intensities[parentcount] = fraction;
+      int checkedSize = totalCheckList.size();
+      for (size_t j = 0 ; j < checkedSize ; j++)
+      {
+          beenChecked[totalCheckList[j]] = false;
+      }
     }
     microtexturelist.clear();
+    totalCheckList.clear();
+    microtexturevolume = 0.0f;
+    totalCheckVolume = 0.0f;
   }
   size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
+
   for (size_t k = 0; k < totalPoints; k++)
   {
     int grainname = m_GrainIds[k];
     m_CellParentIds[k] = parentnumbers[grainname];
     m_FieldParentIds[grainname] = m_CellParentIds[k];
+    m_MicroTexVolFrac[k] = intensities[parentnumbers[grainname]];
   }
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void GroupMicroTextureRegions::characterize_micro_texture_regions()
+/*void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
+
+  NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
+  NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
+
+  std::vector<int> microtexturelist;
+
   size_t numgrains = m->getNumFieldTuples();
+
+  int grandparentcount = 0;
+  grandparentnumbers.resize(numgrains, -1);
+  grandparenttallynumbers.resize(numgrains, -1);
+  int size1 = 0, size2 = 0, size = 0;
+  grandparenttallynumbers[0] = 0;
+
   for (size_t i = 0; i < numgrains; i++)
   {
-
+    if (grandparentnumbers[i] == -1 && m_FieldPhases[i] > 0)
+    {
+      grandparentcount++;
+      grandparentnumbers[i] = grandparentcount;
+      grandparenttallynumbers[i] = grandparentcount;
+      m_Active[i] = true;
+      microtexturelist.push_back(i);
+      for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
+      {
+        int firstgrain = microtexturelist[j];
+        size1 = int(neighborlist[firstgrain].size());
+        if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
+        size_t neigh;
+        for (int k = 0; k < 2; k++)
+        {
+          if (k == 0) size = size1;
+          else if (k == 1) size = size2;
+          for (int l = 0; l < size; l++)
+          {
+            if (k == 0) neigh = neighborlist[firstgrain][l];
+            else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
+            if (neigh != i && grandparenttallynumbers[neigh] == -1 && m_FieldPhases[neigh] > 0)
+            {
+              grandparentnumbers[neigh] = grandparentcount;
+              grandparenttallynumbers[neigh] = grandparentcount;
+              microtexturelist.push_back(neigh);
+            }
+          }
+        }
+      }
+    }
+    microtexturelist.clear();
+    grandparenttallynumbers.resize(numgrains, -1);
   }
-}
+  size_t totalPoints = static_cast<size_t>(m->getTotalPoints());
+
+  std::ofstream outFile;
+  outFile.open("test.txt");
+
+  for (size_t k = 0; k < totalPoints; k++)
+  {
+    int grainname = m_GrainIds[k];
+    m_MicroTexVolFrac[k] = grandparentnumbers[grainname];
+    outFile << m_MicroTexVolFrac[k] << " ";
+  }
+  outFile.close();
+}*/
+
