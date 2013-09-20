@@ -293,7 +293,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -322,7 +322,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
     {
       fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, %s)\n\n", prop.toLatin1().data());
       fprintf(f, "  public:\n");
-      fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
+      fprintf(f, "    virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);\n");
       fprintf(f, "\n\n");
       implementPreflightAboutToExecute = false;
     }
@@ -1143,7 +1143,7 @@ void createSourceFile( const QString &group,
   {
 
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)\n{\n", filter.toLatin1().data());
+    fprintf(f, "void Q%sWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)\n{\n", filter.toLatin1().data());
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];

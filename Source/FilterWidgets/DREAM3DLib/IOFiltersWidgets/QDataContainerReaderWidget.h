@@ -83,7 +83,7 @@ class QDataContainerReaderWidget : public QFilterWidget, private Ui::QDataContai
     void setReadEdgeData(bool value) { this->ReadEdgeData->setChecked(value); emit parametersChanged();}
     bool getReadEdgeData() { return this->ReadEdgeData->isChecked(); }
 
-    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
+    virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);
     virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
 
     virtual void openHtmlHelpFile();

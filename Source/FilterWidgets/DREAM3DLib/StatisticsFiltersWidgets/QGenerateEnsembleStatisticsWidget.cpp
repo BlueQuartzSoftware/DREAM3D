@@ -278,10 +278,7 @@ QString QGenerateEnsembleStatisticsWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc,
-                                                                SurfaceDataContainer::Pointer sdc,
-                                                                EdgeDataContainer::Pointer edc,
-                                                                VertexDataContainer::Pointer vdc)
+void QGenerateEnsembleStatisticsWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
 {
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   // Add the PhaseTypes Array into the VolumeDataContainer if the user has set them up.
