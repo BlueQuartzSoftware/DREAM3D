@@ -311,10 +311,10 @@ void DataContainerWriter::execute()
     else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
     else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
     else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
-    if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_WriteVolumeData) ||
-      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData) ||
-      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData) ||
-      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData))
+    if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_WriteVolumeData == true) ||
+      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_WriteSurfaceData == true) ||
+      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_WriteEdgeData == true) ||
+      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData == true))
     {
 
       err = H5Utilities::createGroupsFromPath(dataContainerArray[iter]->getName().toLatin1().data(), dcaGid);

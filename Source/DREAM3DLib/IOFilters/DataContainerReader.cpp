@@ -39,6 +39,7 @@
 #include <QtCore/QFileInfo>
 
 #include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
@@ -195,7 +196,7 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
 
     //Check to see if version of .dream3d file is prior to new data container names
     err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
-    m_FileVersion.toFloat(&check);
+    fVersion = m_FileVersion.toFloat(&check);
     if(fVersion < 5.0 || err < 0)
     {
       QH5Utilities::closeFile(fileId);
@@ -213,83 +214,105 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       addErrorMessage(getHumanLabel(), ss, err);
       return;
     }
+    hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+
+    QList<QString> dcNames;
+    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::CustomHDFDataTypes::H5Support_GROUP, dcNames);
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
-    /* READ THE VOXEL DATA From THE HDF5 FILE */
-    if (getDataContainerArray() != NULL && m_ReadVolumeData == true)
+    int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+    for(int iter = 0; iter < dcNames.size(); iter++)
     {
-      VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
-      getDataContainerArray()->pushBack(volumeReader);
-      volumeReader->setHdfFileId(fileId);
-      volumeReader->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
-      volumeReader->setObservers(getObservers());
-      ss = getMessagePrefix() + " |--> Reading Volume Data ";
-      volumeReader->setMessagePrefix(ss);
-      volumeReader->preflight();
-      if (volumeReader->getErrorCondition() < 0)
+      err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+      if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
+      (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
+      (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
+      (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
       {
-        setReadVolumeData(false);
-        setErrorCondition(volumeReader->getErrorCondition());
-        addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
-      }
-    }
+        if(dcType == DREAM3D::DataContainerType::VolumeDataContainer) 
+        {
+          VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
+          dc->setName(dcNames[iter]);
+          getDataContainerArray()->pushBack(dc);
+        }
+        if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer) 
+        {
+          SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
+          dc->setName(dcNames[iter]);
+          getDataContainerArray()->pushBack(dc);
+        }
+        if(dcType == DREAM3D::DataContainerType::EdgeDataContainer) 
+        {
+          EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
+          dc->setName(dcNames[iter]);
+          getDataContainerArray()->pushBack(dc);
+        }
+        if(dcType == DREAM3D::DataContainerType::VertexDataContainer) 
+        {
+          VertexDataContainer::Pointer dc = VertexDataContainer::New();
+          dc->setName(dcNames[iter]);
+          getDataContainerArray()->pushBack(dc);
+        }
 
-    /* READ THE Surface DATA From THE HDF5 FILE */
-    if (NULL != getDataContainerArray() && m_ReadSurfaceData == true)
-    {
-      SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
-      getDataContainerArray()->pushBack(smReader);
-      smReader->setHdfFileId(fileId);
-      smReader->setDataContainer(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()));
-      smReader->setObservers(getObservers());
-      ss = getMessagePrefix() + " |--> Reading Surface Data ";
-      smReader->setMessagePrefix(ss);
-      smReader->preflight();
-      if (smReader->getErrorCondition() < 0)
-      {
-        setReadSurfaceData(false);
-        setErrorCondition(smReader->getErrorCondition());
-        addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
-      }
-    }
+        hid_t cur_dcGid = H5Gopen(dcGid, dcNames[iter].toLatin1().data(), 0);
 
-    /* READ THE Edge DATA From THE HDF5 FILE */
-    if (NULL != getDataContainerArray() && m_ReadEdgeData == true)
-    {
-      EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
-      getDataContainerArray()->pushBack(e);
-      eReader->setHdfFileId(fileId);
-      eReader->setDataContainer(getEdgeDataContainer());
-      eReader->setObservers(getObservers());
-      ss = getMessagePrefix() + " |--> Reading Surface Data ";
-      eReader->setMessagePrefix(ss);
-      eReader->preflight();
-      if (eReader->getErrorCondition() < 0)
-      {
-        setReadEdgeData(false);
-        setErrorCondition(eReader->getErrorCondition());
-        addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
-      }
-    }
+        VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+        volumeReader->setHdfGroupId(cur_dcGid);
+        volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        volumeReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Volume Data ";
+        volumeReader->setMessagePrefix(ss);
+        volumeReader->preflight();
+        if (volumeReader->getErrorCondition() < 0)
+        {
+          setReadVolumeData(false);
+          setErrorCondition(volumeReader->getErrorCondition());
+          addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
+        }
 
-    /* READ THE Vertex DATA TO THE HDF5 FILE */
-    if (NULL != getDataContainerArray() && m_ReadVertexData == true)
-    {
-      VertexDataContainerReader::Pointer smReader = VertexDataContainerReader::New();
-      getDataContainerArray()->pushBack(smReader);
-      smReader->setHdfFileId(fileId);
-      smReader->setDataContainer(getVertexDataContainer());
-      smReader->setObservers(getObservers());
-      ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-      smReader->setMessagePrefix(ss);
-      smReader->preflight();
-      if (smReader->getErrorCondition() < 0)
-      {
-        setReadVertexData(false);
-        setErrorCondition(smReader->getErrorCondition());
-        addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
+        SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
+        smReader->setHdfGroupId(cur_dcGid);
+        smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        smReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Surface Data ";
+        smReader->setMessagePrefix(ss);
+        smReader->preflight();
+        if (smReader->getErrorCondition() < 0)
+        {
+          setReadSurfaceData(false);
+          setErrorCondition(smReader->getErrorCondition());
+          addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
+        }
+
+        EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+        eReader->setHdfGroupId(cur_dcGid);
+        eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        eReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Surface Data ";
+        eReader->setMessagePrefix(ss);
+        eReader->preflight();
+        if (eReader->getErrorCondition() < 0)
+        {
+          setReadEdgeData(false);
+          setErrorCondition(eReader->getErrorCondition());
+          addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
+        }
+
+        VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
+        vReader->setHdfGroupId(cur_dcGid);
+        vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        vReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+        vReader->setMessagePrefix(ss);
+        vReader->preflight();
+        if (vReader->getErrorCondition() < 0)
+        {
+          setReadVertexData(false);
+          setErrorCondition(vReader->getErrorCondition());
+          addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
+        }
       }
     }
   }
@@ -326,99 +349,135 @@ void DataContainerReader::execute()
 
   // Read our File Version string to the Root "/" group
   QString fileVersion;
+  float fVersion = 0.0;
+  bool check;
 
   err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
 
   err = readExistingPipelineFromFile(fileId);
 
-  /* READ THE VOXEL DATA FROM THE HDF5 FILE */
-  if (getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()) != NULL && m_ReadVolumeData == true)
+  fVersion = fileVersion.toFloat(&check);
+  if(fVersion < 6.0)
   {
-    VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
-    volumeReader->setHdfFileId(fileId);
-    volumeReader->setVertexArraysToRead(m_SelectedVolumeVertexArrays);
-    volumeReader->setFaceArraysToRead(m_SelectedVolumeFaceArrays);
-    volumeReader->setEdgeArraysToRead(m_SelectedVolumeEdgeArrays);
-    volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-    volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
-    volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
-    volumeReader->setReadAllArrays(m_ReadAllArrays);
-    volumeReader->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
-    volumeReader->setObservers(getObservers());
-    ss = getMessagePrefix() + " |--> Reading Volume Data ";
-    volumeReader->setMessagePrefix(ss);
-    volumeReader->execute();
-    if (volumeReader->getErrorCondition() < 0)
-    {
-      notifyErrorMessage("Error Reading the Volume Data", -803);
-      return;
-    }
+    ss = QObject::tr(": File unable to be read - file structure older than 6.0 '%1'").arg(ClassName());
+    setErrorCondition(-250);
+    addErrorMessage(getHumanLabel(), ss, err);
+    return;
   }
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
-  /* READ THE Surface DATA FROM THE HDF5 FILE */
-  if (NULL != getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()) && m_ReadSurfaceData == true)
+  QList<QString> dcNames;
+  err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::CustomHDFDataTypes::H5Support_GROUP, dcNames);
+
+  int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  for(int iter = 0; iter < dcNames.size(); iter++)
   {
-    SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
-    smReader->setHdfFileId(fileId);
-    smReader->setVertexArraysToRead(m_SelectedSurfaceVertexArrays);
-    smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
-    smReader->setEdgeArraysToRead(m_SelectedSurfaceEdgeArrays);
-    smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
-    smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
-    smReader->setReadAllArrays(m_ReadAllArrays);
-    smReader->setDataContainer(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName()));
-    smReader->setObservers(getObservers());
-    ss = getMessagePrefix() + " |--> Reading Surface Data ";
-    smReader->setMessagePrefix(ss);
-    smReader->execute();
-    if (smReader->getErrorCondition() < 0)
+    err = QH5Lite::readScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+    if((dcType == DREAM3D::DataContainerType::VolumeDataContainer && m_ReadVolumeData == true) ||
+    (dcType == DREAM3D::DataContainerType::SurfaceDataContainer && m_ReadSurfaceData == true) ||
+    (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
+    (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
     {
-      notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
-      return;
-    }
-  }
+      if(dcType == DREAM3D::DataContainerType::VolumeDataContainer) 
+      {
+        VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer) 
+      {
+        SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::EdgeDataContainer) 
+      {
+        EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
+      if(dcType == DREAM3D::DataContainerType::VertexDataContainer) 
+      {
+        VertexDataContainer::Pointer dc = VertexDataContainer::New();
+        dc->setName(dcNames[iter]);
+        getDataContainerArray()->pushBack(dc);
+      }
 
+      hid_t cur_dcGid = H5Gopen(dcGid, dcNames[iter].toLatin1().data(), 0);
 
-  /* READ THE Surface DATA FROM THE HDF5 FILE */
-  if (NULL != getEdgeDataContainer() && m_ReadEdgeData == true)
-  {
-    EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
-    eReader->setHdfFileId(fileId);
-    eReader->setVertexArraysToRead(m_SelectedEdgeVertexArrays);
-    eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
-    eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
-    eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
-    eReader->setReadAllArrays(m_ReadAllArrays);
-    eReader->setDataContainer(getEdgeDataContainer());
-    eReader->setObservers(getObservers());
-    ss = getMessagePrefix() + " |--> Reading Surface Data ";
-    eReader->setMessagePrefix(ss);
-    eReader->preflight();
-    if (eReader->getErrorCondition() < 0)
-    {
-      notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
-      return;
-    }
-  }
+      VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+      volumeReader->setVertexArraysToRead(m_SelectedVolumeVertexArrays);
+      volumeReader->setFaceArraysToRead(m_SelectedVolumeFaceArrays);
+      volumeReader->setEdgeArraysToRead(m_SelectedVolumeEdgeArrays);
+      volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
+      volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
+      volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
+      volumeReader->setReadAllArrays(m_ReadAllArrays);
+      volumeReader->setHdfGroupId(cur_dcGid);
+      volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      volumeReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Volume Data ";
+      volumeReader->setMessagePrefix(ss);
+      volumeReader->execute();
+      if (volumeReader->getErrorCondition() < 0)
+      {
+        notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
+        return;
+      }
 
-  /* READ THE Vertex DATA FROM THE HDF5 FILE */
-  if (NULL != getVertexDataContainer() && m_ReadVertexData == true)
-  {
-    VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
-    vReader->setHdfFileId(fileId);
-    vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-    vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
-    vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
-    vReader->setReadAllArrays(m_ReadAllArrays);
-    vReader->setDataContainer(getVertexDataContainer());
-    vReader->setObservers(getObservers());
-    ss = getMessagePrefix() + " |--> Reading Edge Data ";
-    vReader->setMessagePrefix(ss);
-    vReader->execute();
-    if (vReader->getErrorCondition() < 0)
-    {
-      notifyErrorMessage("Error Reading the Solid Mesh Data", vReader->getErrorCondition());
-      return;
+      SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
+      smReader->setVertexArraysToRead(m_SelectedSurfaceVertexArrays);
+      smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
+      smReader->setEdgeArraysToRead(m_SelectedSurfaceEdgeArrays);
+      smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
+      smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
+      smReader->setReadAllArrays(m_ReadAllArrays);
+      smReader->setHdfGroupId(cur_dcGid);
+      smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      smReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      smReader->setMessagePrefix(ss);
+      smReader->preflight();
+      if (smReader->getErrorCondition() < 0)
+      {
+        notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
+        return;
+      }
+
+      EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+      eReader->setVertexArraysToRead(m_SelectedEdgeVertexArrays);
+      eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
+      eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
+      eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
+      eReader->setReadAllArrays(m_ReadAllArrays);
+      eReader->setHdfGroupId(cur_dcGid);
+      eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      eReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Surface Data ";
+      eReader->setMessagePrefix(ss);
+      eReader->preflight();
+      if (eReader->getErrorCondition() < 0)
+      {
+        notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
+        return;
+      }
+
+      VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
+      vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
+      vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
+      vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
+      vReader->setReadAllArrays(m_ReadAllArrays);
+      vReader->setHdfGroupId(cur_dcGid);
+      vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      vReader->setObservers(getObservers());
+      ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+      vReader->setMessagePrefix(ss);
+      vReader->preflight();
+      if (vReader->getErrorCondition() < 0)
+      {
+        notifyErrorMessage("Error Reading the Solid Mesh Data", vReader->getErrorCondition());
+        return;
+      }
     }
   }
 
