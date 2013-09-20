@@ -132,8 +132,8 @@ class PipelineBuilderLib_EXPORT QFilterWidget : public QGroupBox
     static QString getOpenDialogLastDirectory() { return m_OpenDialogLastDirectory; }
     static void setOpenDialogLastDirectory(QString val) { m_OpenDialogLastDirectory = val; }
 
-    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
-    virtual void preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);
+    virtual void preflightAboutToExecute(DataContainerArray::Pointer dca);
+    virtual void preflightDoneExecuting(DataContainerArray::Pointer dca);
 
     virtual void getGuiParametersFromFilter(AbstractFilter* filt);
 
