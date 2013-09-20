@@ -182,11 +182,11 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
 
   if (m_OutputFile.isEmpty() == true)
   {
-    ss = QObject::tr(": The output file must be set before executing this filter.");
+    QString ss = QObject::tr(": The output file must be set before executing this filter.");
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -195,7 +195,7 @@ void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields
   QDir parentPath(fi.path());
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr("The directory path for the output file does not exist.");
+    QString ss = QObject::tr("The directory path for the output file does not exist.");
     addWarningMessage(getHumanLabel(), ss, -1);
   }
   if (fi.suffix().compare("") == 0)
@@ -222,15 +222,15 @@ void DataContainerWriter::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-    
-    ss = QObject::tr("DataContainer was NULL");
+
+    QString ss = QObject::tr("DataContainer was NULL");
     notifyErrorMessage(ss, -10);
     return;
   }
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-  
+
   int err = 0;
 
   // Make sure any directory path is also available as the user may have just typed
@@ -295,7 +295,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr("%1 |--> Writing Voxel Data ").arg(getMessagePrefix());
+    QString ss = QObject::tr("%1 |--> Writing Voxel Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -315,7 +315,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr("%1 |--> Writing Surface Mesh Data ").arg(getMessagePrefix());
+    QString ss = QObject::tr("%1 |--> Writing Surface Mesh Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -334,7 +334,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
+    QString ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)
@@ -353,7 +353,7 @@ void DataContainerWriter::execute()
     writer->setWriteXdmfFile(getWriteXdmfFile());
     writer->setXdmfOStream(&out);
 
-    ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
+    QString ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
     writer->setMessagePrefix(ss);
     writer->execute();
     if (writer->getErrorCondition() < 0)

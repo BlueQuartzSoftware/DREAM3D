@@ -41,8 +41,8 @@
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //

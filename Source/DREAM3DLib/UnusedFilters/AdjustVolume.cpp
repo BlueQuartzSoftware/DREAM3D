@@ -38,7 +38,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 
 

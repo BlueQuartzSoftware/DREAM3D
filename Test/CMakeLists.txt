@@ -12,6 +12,7 @@
 project(DREAM3DTest)
 
 set(DREAM3D_DATA_DIR ""  CACHE PATH "The directory where to find test data files")
+set(DIR_SEP "/")
 
 # --------------------------------------------------------------------------
 macro(ConvertPathToHeaderCompatible INPUT)

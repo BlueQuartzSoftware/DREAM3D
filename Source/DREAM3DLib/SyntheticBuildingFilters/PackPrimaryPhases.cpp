@@ -43,10 +43,10 @@
 #include <QtCore/QFile>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
 #include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
@@ -470,7 +470,7 @@ void PackPrimaryPhases::execute()
   totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
-  
+
 
   // float change1, change2;
   float change = 0.0f;
@@ -564,7 +564,7 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
-    ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Filter Cancelled.");
     notifyWarningMessage(ss, -1);
     setErrorCondition(-1);
     return;
@@ -615,7 +615,7 @@ void PackPrimaryPhases::execute()
       }
       if (getCancel() == true)
       {
-        ss = QObject::tr("Filter Cancelled.");
+        QString ss = QObject::tr("Filter Cancelled.");
         notifyWarningMessage(ss, -1);
         setErrorCondition(-1);
         return;
@@ -663,7 +663,7 @@ void PackPrimaryPhases::execute()
         }
         if (getCancel() == true)
         {
-          ss = QObject::tr("Filter Cancelled.");
+          QString ss = QObject::tr("Filter Cancelled.");
           notifyWarningMessage(ss, -1);
           setErrorCondition(-1);
           return;
@@ -678,7 +678,7 @@ void PackPrimaryPhases::execute()
   if (getCancel() == true)
   {
 
-    ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Filter Cancelled.");
     notifyWarningMessage(ss, -1);
     setErrorCondition(-1);
     return;
@@ -736,7 +736,7 @@ void PackPrimaryPhases::execute()
   if (getCancel() == true)
   {
 
-    ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Filter Cancelled.");
     notifyWarningMessage(ss, -1);
     setErrorCondition(-1);
     return;
@@ -764,7 +764,7 @@ void PackPrimaryPhases::execute()
     if ((int)i > progGrain + progGrainInc)
     {
 
-      ss = QObject::tr("Placing Grain #%1/%2").arg(i).arg(numgrains);
+      QString ss = QObject::tr("Placing Grain #%1/%2").arg(i).arg(numgrains);
       notifyStatusMessage(ss);
       progGrain = i;
     }
@@ -810,7 +810,7 @@ void PackPrimaryPhases::execute()
     if (getCancel() == true)
     {
 
-      ss = QObject::tr("Filter Cancelled.");
+      QString ss = QObject::tr("Filter Cancelled.");
       notifyWarningMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -833,10 +833,9 @@ void PackPrimaryPhases::execute()
     if (currentMillis - millis > 1000)
     {
 
-      ss = QObject::tr("Determining Neighbors %1/%2").arg(i).arg(numgrains);
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(numgrains - i) / timeDiff;
-      QString ss = QObject::tr(" Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
+      QString ss = QObject::tr("Determining Neighbors %1/%2 | Est. Time Remain: %3").arg(i).arg(numgrains).arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
       notifyStatusMessage(ss);
       millis = QDateTime::currentMSecsSinceEpoch();
     }
@@ -858,11 +857,11 @@ void PackPrimaryPhases::execute()
     if (currentMillis - millis > 1000)
     {
 
-      ss = QObject::tr("Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
+      QString ss = QObject::tr("Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
-      QString ss = QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
+      ss = QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
       notifyStatusMessage(ss);
 
       millis = QDateTime::currentMSecsSinceEpoch();
@@ -875,7 +874,7 @@ void PackPrimaryPhases::execute()
     if (getCancel() == true)
     {
 
-      ss = QObject::tr("Filter Cancelled.");
+      QString ss = QObject::tr("Filter Cancelled.");
       notifyWarningMessage(ss, -1);
       setErrorCondition(-1);
       return;
@@ -1797,7 +1796,7 @@ void PackPrimaryPhases::assign_voxels()
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
-  
+
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1845,7 +1844,7 @@ void PackPrimaryPhases::assign_voxels()
     {
       float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
 
-      ss = QObject::tr("Assign Voxels & Gaps|| Grains Checked: %1 || Grains/Second: %2").arg(i).arg((int)rate);
+      QString ss = QObject::tr("Assign Voxels & Gaps|| Grains Checked: %1 || Grains/Second: %2").arg(i).arg((int)rate);
       notifyStatusMessage(ss);
       grainsPerTime = 0;
       millis = QDateTime::currentMSecsSinceEpoch();
@@ -1963,7 +1962,7 @@ void PackPrimaryPhases::assign_voxels()
   if (getCancel() == true)
   {
 
-    ss = QObject::tr("Filter Cancelled.");
+    QString ss = QObject::tr("Filter Cancelled.");
     notifyWarningMessage(ss, -1);
     setErrorCondition(-1);
     return;
@@ -1988,7 +1987,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage("Assigning Gaps");
 
-  
+
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -2043,7 +2042,7 @@ void PackPrimaryPhases::assign_gaps_only()
             if (currentMillis - millis > 1000)
             {
 
-              ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
+              QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
               notifyStatusMessage(ss);
               millis = QDateTime::currentMSecsSinceEpoch();
             }
@@ -2109,7 +2108,7 @@ void PackPrimaryPhases::assign_gaps_only()
       for(int i = 0; i < 1000; i++)
       {
 
-        ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
+        QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
       }
     }
   }

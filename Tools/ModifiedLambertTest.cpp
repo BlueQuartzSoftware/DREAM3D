@@ -37,7 +37,7 @@
 
 #include <QtGui/QImageReader>
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"

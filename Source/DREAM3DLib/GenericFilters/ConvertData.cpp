@@ -275,19 +275,19 @@ int ConvertData::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
-    ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    QString ss = QObject::tr("The Input Voxel Cell Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-397);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   if(m_OutputArrayName.isEmpty() == true)
   {
-    ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }

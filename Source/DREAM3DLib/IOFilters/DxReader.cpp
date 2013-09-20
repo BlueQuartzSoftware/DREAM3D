@@ -138,18 +138,18 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
-  
+
   QFileInfo fi(getInputFile());
 
   if (getInputFile().isEmpty() == true)
   {
-    ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
   else if (fi.exists() == false)
   {
-    ss = QObject::tr("The input file does not exist.");
+    QString ss = QObject::tr("The input file does not exist.");
     setErrorCondition(-388);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -180,7 +180,7 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     if (error < 0)
     {
       setErrorCondition(error);
-      ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
+      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Dx file?");
       addErrorMessage(getHumanLabel(), ss, -11000);
     }
   }
@@ -199,7 +199,7 @@ void DxReader::preflight()
 // -----------------------------------------------------------------------------
 void DxReader::execute()
 {
-  
+
   int err = 0;
 
   m_InStream.setFileName(getInputFile());
@@ -232,7 +232,7 @@ void DxReader::execute()
 // -----------------------------------------------------------------------------
 int DxReader::readHeader()
 {
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   int error = 0;
@@ -302,7 +302,7 @@ int DxReader::readHeader()
     {
       if(tokens.size() == 20)
       {
-        ss = QObject::tr("ERROR: Unable to locate the last header line");
+        QString ss = QObject::tr("ERROR: Unable to locate the last header line");
         addErrorMessage(getHumanLabel(), ss, -8);
         setErrorCondition(-496);
         m_InStream.close();
@@ -327,10 +327,10 @@ int DxReader::readHeader()
 int DxReader::readFile()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
-  
+
   if (NULL == m)
   {
-    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -5);
     setErrorCondition(-5);
     return -1;
@@ -397,7 +397,7 @@ int DxReader::readFile()
 
   if(index != static_cast<size_t>(m->getTotalPoints()))
   {
-    ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
+    QString ss = QObject::tr("ERROR: data size does not match header dimensions\t%1\t%2").arg(index).arg(m->getTotalPoints());
     setErrorCondition(-495);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     m_InStream.close();

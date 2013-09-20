@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ConvertEulerAngles.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS

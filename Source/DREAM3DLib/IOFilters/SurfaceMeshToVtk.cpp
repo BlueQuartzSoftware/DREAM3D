@@ -42,7 +42,7 @@
 #include <QtCore/QDir>
 #include <QtCore/QFile>
 
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -131,7 +131,7 @@ int SurfaceMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -194,7 +194,7 @@ class ScopedFileMonitor
 void SurfaceMeshToVtk::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -381,7 +381,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
                           bool writeBinaryData, bool writeConformalMesh, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  
+
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -399,8 +399,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
       }
       else
       {
-
-        ss = QString::number(m[i]) + " ";
+        QString ss = QString::number(m[i]) + " ";
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
@@ -419,7 +418,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  
+
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -445,7 +444,7 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       else
       {
 
-        ss = QString::number(m[i*3+0]) + " " + QString::number(m[i*3+1]) + " " + QString::number(m[i*3+2]) + " ";
+        QString ss = QString::number(m[i*3+0]) + " " + QString::number(m[i*3+1]) + " " + QString::number(m[i*3+2]) + " ";
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }

@@ -58,7 +58,7 @@
 
 #include "DREAM3DLib/Common/Texture.hpp"
 #include "DREAM3DLib/Common/StatsGen.hpp"
-#include "DREAM3DLib/Utilities/AngleFileLoader.h"
+#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
 
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 #include "StatsGenerator/StatsGenMDFWidget.h"

@@ -121,10 +121,10 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  
+
   if (getOutputFile().isEmpty() == true)
   {
-    ss = QObject::tr( ": The output file must be set before executing this filter.");
+    QString ss = QObject::tr( ": The output file must be set before executing this filter.");
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
   }
@@ -132,7 +132,7 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
   QDir parentPath = fi.path();
   if (parentPath.exists() == false)
   {
-    ss = QObject::tr( "The directory path for the output file does not exist.");
+    QString ss = QObject::tr( "The directory path for the output file does not exist.");
     addWarningMessage(getHumanLabel(), ss, -1);
   }
 
@@ -168,8 +168,7 @@ int DxWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    
-    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-1);
     return -1;
@@ -204,8 +203,7 @@ int DxWriter::writeFile()
   QDir dir(fi.path());
   if(!dir.mkpath("."))
   {
-    
-    ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
     notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return -1;

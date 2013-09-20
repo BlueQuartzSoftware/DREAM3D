@@ -44,7 +44,7 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 /**

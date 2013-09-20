@@ -36,7 +36,7 @@
 #include "CubicLowOps.h"
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"

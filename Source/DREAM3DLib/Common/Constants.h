@@ -100,16 +100,15 @@ namespace DREAM3D
 
   namespace CellData
   {
-
     const QString GrainIds("GrainIds");
     const QString FarFieldZoneIds("FarFieldZoneIds");
     const QString FarFieldQuats("FarFieldQuats");
     const QString ParentIds("ParentIds");
+    const QString MicroTexVolFrac("MicroTexVolFrac");
     const QString Phases("Phases");
     const QString CellPhases("Phases");
     const QString BandContrast("BandContrast");
     const QString EulerAngles("EulerAngles");
- //   const QString CellEulerAngles("CellEulerAngles");
     const QString SurfaceVoxels("SurfaceVoxels");
     const QString Quats("Quats");
     const QString GoodVoxels("GoodVoxels");
@@ -125,17 +124,15 @@ namespace DREAM3D
     const QString ConfidenceIndexNoSpace("ConfidenceIndex");
     const QString ConfidenceIndex("Confidence Index");
     const QString IPFColor("IPFColor");
+    const QString MisorientationColor("MisorientationColor");
     const QString RodriguesColor("RodriguesColor");
     const QString EulerColor("EulerColor");
     const QString GlobAlpha("GlobAlpha");
     const QString BC("BandContrasts");
     const QString ImageData("ImageData");
     const QString FlatImageData("FlatImageData");
-
     const QString SolidMeshNodes("SolidMeshNodes");
     const QString SolidMeshTetrahedrons("SolidMeshTetrahedrons");
-    const QString MisorientationColor("MisorientationColor");
-
   }
 
   namespace FieldData
@@ -150,7 +147,6 @@ namespace DREAM3D
     const QString F7("F7");
     const QString mPrime("mPrime");
     const QString EulerAngles("EulerAngles");
-  //  const QString FieldEulerAngles("FieldEulerAngles");
     const QString SurfaceVoxelFractions("SurfaceVoxelFractions");
     const QString AxisEulerAngles("AxisEulerAngles");
     const QString SurfaceFields("SurfaceFields");
@@ -176,6 +172,7 @@ namespace DREAM3D
     const QString Neighborhoods("Neighborhoods");
     const QString GrainAvgMisorientations("GrainAvgMisorientations");
     const QString GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+    const QString GrainStdevCAxisMisorientations("GrainStdevCAxisMisorientations");
     const QString KernelAvgMisorientations("KernelAvgMisorientations");
     const QString NeighborList("NeighborList");
     const QString NeighborhoodList("NeighborhoodList");
@@ -186,6 +183,7 @@ namespace DREAM3D
     const QString MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
 
 
+    const QString BasalLoadingFactor("BasalLoadingFactor");
   }
 
   namespace EnsembleData
@@ -254,7 +252,6 @@ namespace DREAM3D
 
   namespace HDF5
   {
-
     const QString FileVersionName("FileVersion");
     const QString FileVersion("5.0");
     const QString DataContainerName("DataContainer");
@@ -273,10 +270,11 @@ namespace DREAM3D
     const QString MeshLinksName("MeshLinks");
     const QString MeshFaceNeighborLists("MeshFaceNeighborLists");
 
+
     const QString Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
     const QString KernelAvgDisorientation( "KernelAvgDisorientation");
     const QString GrainAvgDisorientation ("GrainAvgDisorientation");
-;
+
     const QString GBCD("GBCD");
     const QString Statistics("Statistics");
     const QString AxisOrientation("AxisOrientation");
@@ -331,7 +329,6 @@ namespace DREAM3D
     const QString BetaDistribution("Beta Distribution");
     const QString LogNormalDistribution("Log Normal Distribution");
     const QString PowerLawDistribution("Power Law Distribution");
-
 
     enum ColumnCount
     {

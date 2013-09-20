@@ -46,7 +46,7 @@
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
 
@@ -229,7 +229,7 @@ void createHeaderFile(const QString &group, const QString &filterName, AbstractF
 
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
+  fprintf(f, "#include \"DREAM3DLib/FilterParameters/FilterParameter.h\"\n\n");
   if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
     fprintf(f, "#include \"%s/%s.h\"\n", group.toLatin1().data(), filterName.toLatin1().data());
   }

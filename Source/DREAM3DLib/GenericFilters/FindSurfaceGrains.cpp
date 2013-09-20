@@ -36,7 +36,7 @@
 
 #include "FindSurfaceGrains.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
@@ -105,7 +105,7 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -117,7 +117,7 @@ void FindSurfaceGrains::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  ss = QObject::tr("FSG Points - %1, Fields - %2").arg(totalPoints).arg(totalFields);
+  QString ss = QObject::tr("FSG Points - %1, Fields - %2").arg(totalPoints).arg(totalFields);
   notifyStatusMessage(ss);
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)

@@ -50,8 +50,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
 #include "DREAM3DLib/ProcessingFilters/ConvertEulerAngles.h"

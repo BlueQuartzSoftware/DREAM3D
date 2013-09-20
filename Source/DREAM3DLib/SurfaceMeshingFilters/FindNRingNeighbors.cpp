@@ -41,9 +41,9 @@
 #include <QtCore/QFile>
 #include <QtCore/QtEndian>
 
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 

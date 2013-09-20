@@ -38,11 +38,11 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -148,7 +148,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
-  
+
   //int err = 0;
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -170,7 +170,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
       if (NULL == m->getFieldData(m_NeighborListArrayName).get())
   {
 
-    ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'NeighborLists' are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -182,7 +182,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getFieldData(m_SharedSurfaceAreaListArrayName).get())
   {
 
-    ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'SharedSurfaceAreaLists' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-306);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -194,7 +194,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   if(NULL == m->getEnsembleData(m_StatsDataArrayName).get())
   {
 
-    ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
+    QString ss = QObject::tr("'Ensemble Statistics' are not available and are required for this filter to run. A filter that generates 'Shared SurfaceArea Lists' needs to be placed before this filter in the pipeline.");
     setErrorCondition(-310);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
@@ -243,8 +243,8 @@ void MatchCrystallography::execute()
   }
 
 
-  
-  ss = QObject::tr("Determining Volumes");
+
+  QString ss = QObject::tr("Determining Volumes");
   notifyStatusMessage(ss);
   determine_volumes();
 
@@ -311,8 +311,8 @@ void MatchCrystallography::initializeArrays(int ensem)
   else
   {
     setErrorCondition(-55000);
-    
-    ss = QObject::tr("Improper PhaseType for MatchCrystallography");
+
+    QString ss = QObject::tr("Improper PhaseType for MatchCrystallography");
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return;
   }
@@ -415,7 +415,7 @@ void MatchCrystallography::assign_eulers(int ensem)
 
   int totalFields = m->getNumFieldTuples();
 
-  
+
   for (int i = 1; i < totalFields; i++)
   {
     phase = m_FieldPhases[i];
@@ -854,7 +854,7 @@ void MatchCrystallography::measure_misorientations(int ensem)
   //float threshold = 0.0f;
 
   misorientationlists.resize(totalFields);
-  
+
   for (size_t i = 1; i < totalFields; i++)
   {
     if(m_FieldPhases[i] == ensem)

@@ -35,11 +35,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InitializeSyntheticVolume.h"
 
+#include <QtCore/QSet>
+#include <QtCore/QString>
 
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
-
 #include "H5Support/HDF5ScopedFileSentinel.h"
+
+
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
@@ -127,7 +130,7 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
@@ -170,7 +173,7 @@ void InitializeSyntheticVolume::preflight()
 
   dataCheck(true, 1, 1, 1);
 
-  std::set<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -212,7 +215,7 @@ void InitializeSyntheticVolume::execute()
   }
 
 
-  std::set<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);

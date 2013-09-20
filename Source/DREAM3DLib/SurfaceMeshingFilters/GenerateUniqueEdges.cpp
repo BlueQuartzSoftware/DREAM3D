@@ -40,7 +40,7 @@
 #include <QtCore/QSet>
 
 
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 
 
 

@@ -40,9 +40,9 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 

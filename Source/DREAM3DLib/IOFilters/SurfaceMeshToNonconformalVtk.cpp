@@ -43,7 +43,7 @@
 #include <QtCore/QFile>
 
 
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -119,7 +119,7 @@ int SurfaceMeshToNonconformalVtk::writeFilterParameters(AbstractFilterParameters
 void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
 
   if (m_OutputVtkFile.isEmpty() == true)
   {
@@ -182,7 +182,7 @@ class ScopedFileMonitor
 void SurfaceMeshToNonconformalVtk::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   dataCheck(false, 0, 0, 0);
   if(getErrorCondition() < 0)
@@ -426,7 +426,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
                           bool writeBinaryData, FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  
+
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -444,8 +444,7 @@ void writePointScalarData(DataContainer* dc, const QString &dataName, const QStr
       }
       else
       {
-
-        ss = QString::number(m[i]) + " ";
+        QString ss = QString::number(m[i]) + " ";
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
@@ -611,7 +610,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
 
   int triangleCount = triangles.GetNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  
+
   if (NULL != data.get())
 {
   int32_t totalCellsWritten = 0;
@@ -646,8 +645,7 @@ void writeCellScalarData(SurfaceDataContainer* dc, const QString &dataName, cons
     }
     else
     {
-
-      ss = QString::number(s0);
+      QString ss = QString::number(s0);
       fprintf(vtkFile, "%s\n", ss.toLatin1().data());
     }
   }
@@ -755,7 +753,7 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
   int triangleCount = triangles.GetNumberOfTuples();
 
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  
+
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -781,9 +779,9 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
       }
       else
       {
-
-        ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-
+        QString ss;
+        QTextStream out(&ss);
+        out << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         fprintf(vtkFile, "%s ", ss.toLatin1().data());
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }

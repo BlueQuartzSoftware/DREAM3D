@@ -177,7 +177,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     setErrorCondition(-666);
-    
+
     QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
     notifyErrorMessage(ss, getErrorCondition());
     return;
@@ -245,9 +245,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   {
     if (i%1000 == 0)
     {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
     m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];

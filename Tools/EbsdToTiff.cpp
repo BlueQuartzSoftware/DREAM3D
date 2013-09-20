@@ -45,7 +45,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/Win32Defines.h"
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"

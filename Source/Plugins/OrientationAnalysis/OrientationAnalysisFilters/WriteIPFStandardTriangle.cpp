@@ -60,8 +60,8 @@
 
 
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DEndian.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 

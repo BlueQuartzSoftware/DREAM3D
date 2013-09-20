@@ -36,7 +36,7 @@
 
 #include "StatsGeneratorUI.h"
 
-
+#include <QtCore/QSet>
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -55,8 +55,8 @@
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -701,11 +701,11 @@ void StatsGeneratorUI::on_actionSave_triggered()
 
   hid_t fileId = QH5Utilities::createFile (m_FilePath);
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(fileId);
+  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, false);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setVolumeDataContainer(m.get());
-  writer->setOutputFile(m_FilePath.toStdString());
+  writer->setOutputFile(m_FilePath);
   writer->setWriteVolumeData(true);
   writer->setWriteSurfaceData(false);
   writer->setWriteEdgeData(false);
@@ -813,7 +813,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
 
-  std::set<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -821,7 +821,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath.toStdString());
+  reader->setInputFile(m_FilePath);
   reader->setVolumeDataContainer(m.get());
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);

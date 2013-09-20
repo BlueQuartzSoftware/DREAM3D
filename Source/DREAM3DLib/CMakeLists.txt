@@ -79,13 +79,17 @@ endMacro()
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
+D3DCompileDir(DataArrays)
+D3DCompileDir(DataContainers)
+D3DCompileDir(DistributionAnalysisOps)
+D3DCompileDir(FilterParameters)
 D3DCompileDir(HDF5)
 D3DCompileDir(Math)
 D3DCompileDir(OrientationOps)
-D3DCompileDir(DistributionAnalysisOps)
 D3DCompileDir(ShapeOps)
-D3DCompileDir(VTKUtils)
+D3DCompileDir(StatsData)
 D3DCompileDir(Utilities)
+D3DCompileDir(VTKUtils)
 
 
 

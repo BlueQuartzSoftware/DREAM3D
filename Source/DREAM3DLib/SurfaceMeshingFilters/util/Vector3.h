@@ -9,7 +9,7 @@
 
 #include <QtCore/QtDebug>
 
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 template <typename T>
 struct Vector3

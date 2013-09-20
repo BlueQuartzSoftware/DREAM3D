@@ -252,7 +252,7 @@ int FilterPipeline::preflightPipeline()
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-  
+
   int err = 0;
 
   // Start looping through the Pipeline and preflight everything
@@ -334,7 +334,7 @@ void FilterPipeline::execute()
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-  
+
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   DEFINE_CLOCK;
@@ -347,7 +347,7 @@ void FilterPipeline::execute()
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     sendPipelineMessage(progValue);
 
-    ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
+    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
 
     progValue.setMessageType(PipelineMessage::StatusMessage);
     progValue.setMessageText(ss);

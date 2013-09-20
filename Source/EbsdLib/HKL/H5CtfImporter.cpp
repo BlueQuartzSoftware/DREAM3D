@@ -164,8 +164,7 @@ int H5CtfImporter::importFile(hid_t fileId, int64_t z, const QString &ctfFile)
   // Check for errors
   if (err < 0)
   {
-
-    
+    QString ss;
     if (err == -200)
     {
       ss = "H5CtfImporter Error: There was no data in the file.";

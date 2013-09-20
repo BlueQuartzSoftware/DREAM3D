@@ -44,9 +44,9 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 
 #include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
 #include "DREAM3DLib/ShapeOps/CylinderOps.h"
@@ -57,7 +57,7 @@
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 
 
 
@@ -189,7 +189,7 @@ int InsertPrecipitatePhases::writeFilterParameters(AbstractFilterParametersWrite
 void InsertPrecipitatePhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -611,8 +611,7 @@ void  InsertPrecipitatePhases::place_precipitates(Int32ArrayType::Pointer grainO
   int totalAdjustments = static_cast<int>(10 * ((numgrains-firstPrecipitateField) - 1));
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    
-    ss = QObject::tr("Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
+    QString ss = QObject::tr("Packing Grains - Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
     if(iteration % 100 == 0) notifyStatusMessage(ss);
 
     //    change1 = 0;

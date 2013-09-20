@@ -49,12 +49,12 @@
 #include "H5Support/H5Utilities.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 

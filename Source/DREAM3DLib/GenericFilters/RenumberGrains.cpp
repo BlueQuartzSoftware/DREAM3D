@@ -41,7 +41,7 @@
 #include <QtCore/QVector>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -164,13 +164,13 @@ void RenumberGrains::execute()
     return;
   }
 
-  
+
   size_t goodcount = 1;
   std::vector<size_t> NewNames;
   NewNames.resize(totalFields,0);
 
 
-  ss = QObject::tr(" - Generating Active Grain List");
+  QString ss = QObject::tr(" - Generating Active Grain List");
   notifyStatusMessage(ss);
   QVector<size_t> RemoveList;
   for(size_t i = 1; i < totalFields; i++)
@@ -195,7 +195,7 @@ void RenumberGrains::execute()
     {
       IDataArray::Pointer p = m->getFieldData(*iter);
 
-      ss = QObject::tr("Updating Field Array '%1'").arg(*iter);
+      QString ss = QObject::tr("Updating Field Array '%1'").arg(*iter);
       notifyStatusMessage(ss);
       QString type = p->getTypeAsString();
       if(type.compare("NeighborList<T>") == 0)
@@ -212,7 +212,7 @@ void RenumberGrains::execute()
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
     // Loop over all the points and correct all the grain names
-    ss = QObject::tr("Renumbering Cell Region Ids");
+    QString ss = QObject::tr("Renumbering Cell Region Ids");
     notifyStatusMessage(ss);
     for (int i = 0; i < totalPoints; i++)
     {

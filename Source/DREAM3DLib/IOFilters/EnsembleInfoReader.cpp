@@ -43,7 +43,7 @@
 
 #include <QtCore/QFileInfo>
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //

@@ -91,7 +91,7 @@ void Observer::updatePipelineMessage(const char* msg)
 // -----------------------------------------------------------------------------
 void Observer::sendPipelineMessage(PipelineMessage &msg)
 {
-  
+  QString ss;
   if(msg.getMessageType() == PipelineMessage::Error)
   {
     ss.append(msg.generateErrorString());
@@ -110,7 +110,7 @@ void Observer::sendPipelineMessage(PipelineMessage &msg)
   }
   else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
   {
-    ss = QObject::tr("%1 %  %2").arg(msg.getProgressValue()).arg(msg.generateStatusString());
+    QString ss = QObject::tr("%1 %  %2").arg(msg.getProgressValue()).arg(msg.generateStatusString());
   }
   qDebug() << ss;
 

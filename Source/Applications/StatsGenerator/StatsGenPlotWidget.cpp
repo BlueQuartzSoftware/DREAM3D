@@ -65,7 +65,7 @@
 #include <qwt_plot_canvas.h>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"

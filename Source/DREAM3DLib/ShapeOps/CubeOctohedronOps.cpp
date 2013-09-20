@@ -36,7 +36,7 @@
 #include "CubeOctohedronOps.h"
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 float root3 = static_cast<float>( sqrt(3.0) );

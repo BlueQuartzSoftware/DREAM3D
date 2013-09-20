@@ -41,7 +41,7 @@
 #include "H5Support/QH5Utilities.h"
 #include "H5Support/QH5Lite.h"
 
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #define WRITE_FIELD_XDMF 0
 
