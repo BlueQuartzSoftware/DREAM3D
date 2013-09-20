@@ -133,7 +133,7 @@ void FindCellQuats::execute()
     return;
   }
   setErrorCondition(0);
-  QTextStream ss;
+  
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();

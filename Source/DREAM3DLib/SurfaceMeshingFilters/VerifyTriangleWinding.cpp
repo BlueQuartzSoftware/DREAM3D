@@ -266,7 +266,7 @@ int VerifyTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter*
 void VerifyTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -322,7 +322,7 @@ void VerifyTriangleWinding::preflight()
 void VerifyTriangleWinding::execute()
 {
   int err = 0;
-  QTextStream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -618,7 +618,7 @@ int VerifyTriangleWinding::verifyTriangleWinding()
   float total = (float)(trianglesToLabelMap.size());
   float curPercent = 0.0;
   int progressIndex = 0;
-  QTextStream ss;
+  
 
   // Start looping on all the Face Labels (Grain Ids) values
   while (labelObjectsToVisit.empty() == false)

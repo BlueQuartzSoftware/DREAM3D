@@ -122,7 +122,7 @@ int EdgeDataContainerWriter::writeFilterParameters(AbstractFilterParametersWrite
 void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  
   EdgeDataContainer* m = getEdgeDataContainer();
 
   if(NULL == m)
@@ -620,7 +620,7 @@ int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   EdgeDataContainer* sm = getEdgeDataContainer();
 
@@ -671,7 +671,7 @@ int EdgeDataContainerWriter::writeEdgeAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   EdgeDataContainer* m = getEdgeDataContainer();
 
@@ -824,7 +824,7 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   EdgeDataContainer* m = getEdgeDataContainer();
 

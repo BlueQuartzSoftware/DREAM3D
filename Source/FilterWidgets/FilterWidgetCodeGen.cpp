@@ -597,7 +597,7 @@ void createSourceFile( const QString &group,
       fprintf(f, "     {\n");
       fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-    //  fprintf(f, "           QTextStream ss;\n");
+    //  fprintf(f, "           \n");
     //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
       fprintf(f, "           w->setText( QString::number(filter->get%s()) );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");

@@ -327,7 +327,7 @@ void SolidMeshToVtk::execute()
   notifyStatusMessage("Complete");
 =======
 //  int err = 0;
-//  QTextStream ss;
+//  
 //  setErrorCondition(err);
 //  dataCheck(false, 0, 0, 0);
 //  if(getErrorCondition() < 0)

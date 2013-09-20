@@ -316,7 +316,7 @@ void PipelineViewWidget::preflightPipeline()
   EdgeDataContainer::Pointer e = EdgeDataContainer::New();
   VertexDataContainer::Pointer v = VertexDataContainer::New();
 
-  QTextStream ss;
+  
 
 
   // Build up the pipeline

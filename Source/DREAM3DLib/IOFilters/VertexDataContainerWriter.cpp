@@ -122,7 +122,7 @@ int VertexDataContainerWriter::writeFilterParameters(AbstractFilterParametersWri
 void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QTextStream ss;
+  
   VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
@@ -421,7 +421,7 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   VertexDataContainer* sm = getVertexDataContainer();
 
@@ -475,7 +475,7 @@ int VertexDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   VertexDataContainer* m = getVertexDataContainer();
 
@@ -628,7 +628,7 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 int VertexDataContainerWriter::writeEnsembleData(hid_t dcGid)
 {
-  QTextStream ss;
+  
   int err = 0;
   VertexDataContainer* m = getVertexDataContainer();
 

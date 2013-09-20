@@ -783,7 +783,7 @@ void M3CSliceBySlice::renumberVoxelGrainIds(int32_t gid)
 void M3CSliceBySlice::copyBulkSliceIntoWorkingArray(int i, int* wrappedDims,
                                                     size_t* dims, int32_t* voxels)
 {
-  QTextStream ss;
+  
   int NSP = wrappedDims[0] * wrappedDims[1];
   size_t offset = 0;
 

@@ -239,7 +239,8 @@ int SPParksWriter::writeFile()
 
 
   int increment = totalpoints * .01;
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -256,7 +257,7 @@ int SPParksWriter::writeFile()
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
         ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage( *(ss.string()));
+        notifyStatusMessage( buf );
         millis = QDateTime::currentMSecsSinceEpoch();
       }
     }

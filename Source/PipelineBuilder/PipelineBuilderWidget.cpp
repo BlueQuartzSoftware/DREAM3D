@@ -372,9 +372,7 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QTextStream ss;
-    ss << i;
-    err = QH5Lite::readStringAttribute(pipelineGroupId, *(ss.string()), "ClassName", classNameStr);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, QString::number(i, 10), "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);

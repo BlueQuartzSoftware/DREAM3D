@@ -78,9 +78,7 @@ class GenerateGrainIds : public AbstractFilter
       if(NULL == m)
       {
         setErrorCondition(-1);
-        QTextStream ss;
-        ss << " DataContainer was NULL";
-        addErrorMessage(getHumanLabel(), *(ss.string()), -1);
+        addErrorMessage(getHumanLabel(), " DataContainer was NULL", -1);
         return;
       }
       int size = UnitTest::DxIOTest::XSize * UnitTest::DxIOTest::YSize * UnitTest::DxIOTest::ZSize;

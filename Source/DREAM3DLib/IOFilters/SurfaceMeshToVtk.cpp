@@ -535,7 +535,8 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
 {
   // Write the Grain Face ID Data to the file
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -557,12 +558,14 @@ void writeCellScalarData(DataContainer* dc, const QString &dataName, const QStri
       }
       else
       {
+
         ss << m[i] << " ";
         if(false == writeConformalMesh)
         {
           ss << m[i] << " ";
         }
-        fprintf(vtkFile, "%s", ss.string()->toLatin1().data());
+        fprintf(vtkFile, "%s", buf.toLatin1().data());
+        buf.clear();
         if (i%50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -579,7 +582,8 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
                          FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -615,7 +619,8 @@ void writeCellVectorData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
         }
-        fprintf(vtkFile, "%s ", ss.string()->toLatin1().data());
+        fprintf(vtkFile, "%s ",  buf.toLatin1().data());
+        buf.clear();
         if (i%25 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
@@ -631,7 +636,8 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
                          FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -674,7 +680,8 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         {
           ss << -1.0*m[i*3+0] << " " << -1.0*m[i*3+1] << " " << -1.0*m[i*3+2] << " ";
         }
-        fprintf(vtkFile, "%s ", ss.string()->toLatin1().data());
+        fprintf(vtkFile, "%s ", buf.toLatin1().data());
+        buf.clear();
         if (i%50 == 0) { fprintf(vtkFile, "\n"); }
       }
     }
