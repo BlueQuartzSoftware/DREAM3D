@@ -41,6 +41,7 @@
 
 #include "ui_ArraySelectionWidget.h"
 
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
@@ -74,10 +75,7 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
      * @param smdc
      * @param sdc
      */
-    virtual void populateArrayNames(VolumeDataContainer::Pointer vldc,
-                                    SurfaceDataContainer::Pointer sdc,
-                                    EdgeDataContainer::Pointer edc,
-                                    VertexDataContainer::Pointer vdc);
+    virtual void populateArrayNames(DataContainerArray::Pointer dca);
     /**
      * @brief This method examines the selections in each of the array lists and if an array is selected
      * it is removed from the data container.

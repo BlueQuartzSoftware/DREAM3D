@@ -114,15 +114,15 @@ void ArraySelectionWidget::arrayListUpdated(QListWidgetItem *item)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionWidget::populateArrayNames(VolumeDataContainer::Pointer vldc,
-                                              SurfaceDataContainer::Pointer sdc,
-                                              EdgeDataContainer::Pointer edc,
-                                              VertexDataContainer::Pointer vdc)
+void ArraySelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
+  BOOST_ASSERT(false);
+#if 0
   populateVolumeArrayNames(vldc);
   populateSurfaceArrayNames(sdc);
   populateEdgeArrayNames(edc);
   populateVertexArrayNames(vdc);
+#endif
 }
 
 

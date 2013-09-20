@@ -313,7 +313,7 @@ void QReadH5EbsdWidget::preflightAboutToExecute(DataContainerArray::Pointer dca)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QReadH5EbsdWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
+void QReadH5EbsdWidget::preflightDoneExecuting(DataContainerArray::Pointer dca)
 {
   arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);

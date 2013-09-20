@@ -331,8 +331,9 @@ void QDataContainerReaderWidget::preflightAboutToExecute(DataContainerArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
+void QDataContainerReaderWidget::preflightDoneExecuting(DataContainerArray::Pointer dca)
 {
+
   arraySelectionWidget->populateArrayNames(vldc, sdc, edc, vdc);
   arraySelectionWidget->removeNonSelectionsFromDataContainers(vldc, sdc, edc, vdc);
 

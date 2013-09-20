@@ -1153,14 +1153,14 @@ void createSourceFile( const QString &group,
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
         fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(dca);\n    }\n  }\n");
       }
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
           && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
         fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
-        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
+        fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(dca);\n    }\n  }\n");
       }
     }
     fprintf(f, "}\n");
