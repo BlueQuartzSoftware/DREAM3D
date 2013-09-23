@@ -152,10 +152,7 @@ void ComparisonSelectionWidget::on_removeComparison_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::populateArrayNames(VolumeDataContainer::Pointer vldc,
-                                                   SurfaceDataContainer::Pointer sdc,
-                                                   EdgeDataContainer::Pointer edc,
-                                                   VertexDataContainer::Pointer vdc)
+void ComparisonSelectionWidget::populateArrayNames(DataContainerArray::Pointer dca)
 {
 
   if (m_ArrayListType >= CellListType && m_ArrayListType <= FaceListType )

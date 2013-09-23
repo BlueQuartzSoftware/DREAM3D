@@ -530,27 +530,50 @@ void ArraySelectionWidget::setSelections(QListWidget* listWidget, QStringList &s
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray::Pointer dca)
 {
-  REMOVE_ARRAYS_HELPER(volume, vldc, Vertex, Selected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Edge, Selected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Face, Selected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Cell, Selected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, CellField, Selected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, CellEnsemble, Selected)
-
-  REMOVE_ARRAYS_HELPER(surface, sdc, Vertex, Selected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, Face, Selected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, Edge, Selected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, FaceField, Selected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, FaceEnsemble, Selected)
-
-  REMOVE_ARRAYS_HELPER(edge, edc, Vertex, Selected)
-  REMOVE_ARRAYS_HELPER(edge, edc, Edge, Selected)
-  REMOVE_ARRAYS_HELPER(edge, edc, EdgeField, Selected)
-  REMOVE_ARRAYS_HELPER(edge, edc, EdgeEnsemble, Selected)
-
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Vertex, Selected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexField, Selected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexEnsemble, Selected)
+  int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  QList<QString> dcNames = dca->getDataContainerNames();
+  for(size_t i = 0; i < dca->size(); i++)
+  {
+    dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+    VolumeDataContainer* vl = dca->getDataContainerAs<VolumeDataContainer>(dcNames[i]);
+    SurfaceDataContainer* sm = dca->getDataContainerAs<SurfaceDataContainer>(dcNames[i]);
+    EdgeDataContainer* e = dca->getDataContainerAs<EdgeDataContainer>(dcNames[i]);
+    VertexDataContainer* v = dca->getDataContainerAs<VertexDataContainer>(dcNames[i]);
+    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
+    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
+    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
+    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(volume, vl, Vertex, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Edge, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Face, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Cell, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellField, Selected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellEnsemble, Selected)
+    }
+    if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(surface, sm, Vertex, Selected)
+      REMOVE_ARRAYS_HELPER(surface, sm, Face, Selected)
+      REMOVE_ARRAYS_HELPER(surface, sm, Edge, Selected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceField, Selected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceEnsemble, Selected)
+    }
+    if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(edge, e, Vertex, Selected)
+      REMOVE_ARRAYS_HELPER(edge, e, Edge, Selected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeField, Selected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeEnsemble, Selected)
+    }
+    if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(vertex, v, Vertex, Selected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexField, Selected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexEnsemble, Selected)
+    }
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -558,27 +581,50 @@ void ArraySelectionWidget::removeSelectionsFromDataContainers(DataContainerArray
 // -----------------------------------------------------------------------------
 void ArraySelectionWidget::removeNonSelectionsFromDataContainers(DataContainerArray::Pointer dca)
 {
-  REMOVE_ARRAYS_HELPER(volume, vldc, Vertex, NonSelected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Edge, NonSelected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Face, NonSelected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, Cell, NonSelected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, CellField, NonSelected)
-  REMOVE_ARRAYS_HELPER(volume, vldc, CellEnsemble, NonSelected)
-
-  REMOVE_ARRAYS_HELPER(surface, sdc, Vertex, NonSelected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, Face, NonSelected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, Edge, NonSelected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, FaceField, NonSelected)
-  REMOVE_ARRAYS_HELPER(surface, sdc, FaceEnsemble, NonSelected)
-
-  REMOVE_ARRAYS_HELPER(edge, edc, Vertex, NonSelected)
-  REMOVE_ARRAYS_HELPER(edge, edc, Edge, NonSelected)
-  REMOVE_ARRAYS_HELPER(edge, edc, EdgeField, NonSelected)
-  REMOVE_ARRAYS_HELPER(edge, edc, EdgeEnsemble, NonSelected)
-
-  REMOVE_ARRAYS_HELPER(vertex, vdc, Vertex, NonSelected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexField, NonSelected)
-  REMOVE_ARRAYS_HELPER(vertex, vdc, VertexEnsemble, NonSelected)
+  int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+  QList<QString> dcNames = dca->getDataContainerNames();
+  for(size_t i = 0; i < dca->size(); i++)
+  {
+    dcType = DREAM3D::DataContainerType::UnknownDataContainer;
+    VolumeDataContainer* vl = dca->getDataContainerAs<VolumeDataContainer>(dcNames[i]);
+    SurfaceDataContainer* sm = dca->getDataContainerAs<SurfaceDataContainer>(dcNames[i]);
+    EdgeDataContainer* e = dca->getDataContainerAs<EdgeDataContainer>(dcNames[i]);
+    VertexDataContainer* v = dca->getDataContainerAs<VertexDataContainer>(dcNames[i]);
+    if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
+    else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
+    else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
+    else if(v != NULL) dcType = DREAM3D::DataContainerType::VertexDataContainer;
+    if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(volume, vl, Vertex, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Edge, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Face, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, Cell, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellField, NonSelected)
+      REMOVE_ARRAYS_HELPER(volume, vl, CellEnsemble, NonSelected)
+    }
+    if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(surface, sm, Vertex, NonSelected)
+      REMOVE_ARRAYS_HELPER(surface, sm, Face, NonSelected)
+      REMOVE_ARRAYS_HELPER(surface, sm, Edge, NonSelected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceField, NonSelected)
+      REMOVE_ARRAYS_HELPER(surface, sm, FaceEnsemble, NonSelected)
+    }
+    if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(edge, e, Vertex, NonSelected)
+      REMOVE_ARRAYS_HELPER(edge, e, Edge, NonSelected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeField, NonSelected)
+      REMOVE_ARRAYS_HELPER(edge, e, EdgeEnsemble, NonSelected)
+    }
+    if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
+    {
+      REMOVE_ARRAYS_HELPER(vertex, v, Vertex, NonSelected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexField, NonSelected)
+      REMOVE_ARRAYS_HELPER(vertex, v, VertexEnsemble, NonSelected)
+    }
+  }
 }
 
 

@@ -46,10 +46,7 @@
 
 #include "ui_ComparisonSelectionWidget.h"
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -98,10 +95,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @param smdc
      * @param sdc
      */
-    virtual void populateArrayNames(VolumeDataContainer::Pointer vldc,
-                                    SurfaceDataContainer::Pointer sdc,
-                                    EdgeDataContainer::Pointer edc,
-                                    VertexDataContainer::Pointer vdc);
+    virtual void populateArrayNames(DataContainerArray::Pointer dca);
 
 
     /**

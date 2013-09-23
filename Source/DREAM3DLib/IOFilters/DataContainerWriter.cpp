@@ -299,14 +299,14 @@ void DataContainerWriter::execute()
   hid_t dcaGid = H5Gopen(m_FileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), H5P_DEFAULT );
 
   int32_t dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-  std::vector<DataContainer::Pointer> dataContainerArray;
-  for(size_t iter = 0; iter < dataContainerArray.size(); iter++)
+  QList<QString> dcNames = getDataContainerArray()->getDataContainerNames();
+  for(size_t iter = 0; iter < getDataContainerArray()->size(); iter++)
   {
     dcType = DREAM3D::DataContainerType::UnknownDataContainer;
-    VolumeDataContainer* vl = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dataContainerArray[iter]->getName());
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(dataContainerArray[iter]->getName());
-    EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(dataContainerArray[iter]->getName());
-    VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(dataContainerArray[iter]->getName());
+    VolumeDataContainer* vl = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(dcNames[iter]);
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(dcNames[iter]);
+    EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(dcNames[iter]);
+    VertexDataContainer* v = getDataContainerArray()->getDataContainerAs<VertexDataContainer>(dcNames[iter]);
     if(vl != NULL) dcType = DREAM3D::DataContainerType::VolumeDataContainer;
     else if(sm != NULL) dcType = DREAM3D::DataContainerType::SurfaceDataContainer;
     else if(e != NULL) dcType = DREAM3D::DataContainerType::EdgeDataContainer;
@@ -317,24 +317,24 @@ void DataContainerWriter::execute()
       (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_WriteVertexData == true))
     {
 
-      err = H5Utilities::createGroupsFromPath(dataContainerArray[iter]->getName().toLatin1().data(), dcaGid);
+      err = H5Utilities::createGroupsFromPath(dcNames[iter].toLatin1().data(), dcaGid);
       if (err < 0)
       {
-        QString ss = QObject::tr("Error creating HDF Group %1").arg(dataContainerArray[iter]->getName());
+        QString ss = QObject::tr("Error creating HDF Group %1").arg(dcNames[iter]);
         setErrorCondition(-60);
         addErrorMessage(getHumanLabel(), ss, err);
         return;
       }
-      hid_t dcGid = H5Gopen(m_FileId, dataContainerArray[iter]->getName().toLatin1().data(), H5P_DEFAULT );
-      err = QH5Lite::writeScalarAttribute(dcGid, dataContainerArray[iter]->getName(), DREAM3D::HDF5::DataContainerType, dcType);
+      hid_t dcGid = H5Gopen(m_FileId, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
+      err = QH5Lite::writeScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if (err < 0)
       {
-        qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dataContainerArray[iter]->getName() << "\n";
+        qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dcNames[iter] << "\n";
       }
 
       VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
       volWriter->setHdfGroupId(dcGid);
-      volWriter->setDataContainer(dataContainerArray[iter].get());
+      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       volWriter->setObservers(getObservers());
       volWriter->setWriteXdmfFile(getWriteXdmfFile());
       volWriter->setXdmfOStream(&out);
@@ -350,7 +350,7 @@ void DataContainerWriter::execute()
 
       SurfaceDataContainerWriter::Pointer surfWriter = SurfaceDataContainerWriter::New();
       surfWriter->setHdfGroupId(dcGid);
-      volWriter->setDataContainer(dataContainerArray[iter].get());
+      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       surfWriter->setObservers(getObservers());
       surfWriter->setWriteXdmfFile(getWriteXdmfFile());
       surfWriter->setXdmfOStream(&out);
@@ -367,7 +367,7 @@ void DataContainerWriter::execute()
 
       EdgeDataContainerWriter::Pointer edgeWriter = EdgeDataContainerWriter::New();
       edgeWriter->setHdfFileId(m_FileId);
-      volWriter->setDataContainer(dataContainerArray[iter].get());
+      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       edgeWriter->setObservers(getObservers());
       edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
       edgeWriter->setXdmfOStream(&out);
@@ -384,7 +384,7 @@ void DataContainerWriter::execute()
 
       VertexDataContainerWriter::Pointer vertWriter = VertexDataContainerWriter::New();
       vertWriter->setHdfGroupId(dcGid);
-      volWriter->setDataContainer(dataContainerArray[iter].get());
+      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       vertWriter->setObservers(getObservers());
       vertWriter->setWriteXdmfFile(getWriteXdmfFile());
       vertWriter->setXdmfOStream(&out);

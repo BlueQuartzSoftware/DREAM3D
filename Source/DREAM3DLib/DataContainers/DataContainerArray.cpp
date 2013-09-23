@@ -160,6 +160,19 @@ DataContainer::Pointer DataContainerArray::getDataContainer(const QString &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+QList<QString>& DataContainerArray::getDataContainerNames()
+{
+  QList<QString> names;
+  for(QList<DataContainer::Pointer>::iterator it = m_Array.begin(); it != m_Array.end(); ++it)
+  {
+    names.push_back((*it)->getName());
+  }
+  return names;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 QList<DataContainer::Pointer>& DataContainerArray::getDataContainerArray()
 {
   return m_Array;
