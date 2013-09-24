@@ -33,8 +33,7 @@
 #ifndef _OrientationMath_H_
 #define _OrientationMath_H_
 
-#include <vector>
-
+#include <limits>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"

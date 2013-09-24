@@ -104,6 +104,7 @@ namespace DREAM3D
     const std::string FarFieldZoneIds("FarFieldZoneIds");
     const std::string FarFieldQuats("FarFieldQuats");
     const std::string ParentIds("ParentIds");
+    const std::string MicroTexVolFrac("MicroTexVolFrac");
     const std::string Phases("Phases");
     const std::string CellPhases("Phases");
     const std::string BandContrast("BandContrast");
@@ -173,15 +174,14 @@ namespace DREAM3D
     const std::string Neighborhoods("Neighborhoods");
     const std::string GrainAvgMisorientations("GrainAvgMisorientations");
     const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+    const std::string GrainStdevCAxisMisorientations("GrainStdevCAxisMisorientations");
     const std::string KernelAvgMisorientations("KernelAvgMisorientations");
     const std::string NeighborList("NeighborList");
     const std::string NeighborhoodList("NeighborhoodList");
     const std::string MisorientationList("MisorientationList");
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
     const std::string LMG("LMG");
-    const std::string MicroTextureRegionNumCells("MicroTextureRegionNumCells");
-    const std::string MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
-
+    const std::string BasalLoadingFactor("BasalLoadingFactor");
   }
 
   namespace EnsembleData

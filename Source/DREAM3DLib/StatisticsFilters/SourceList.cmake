@@ -31,6 +31,7 @@ set(_PublicFilters
   FindNumFields
   FindVolFractions
   FindSchmids
+	FindBasalLoadingFactor
   FindShapes
   FindSizes
   FindLargestCrossSections
@@ -40,7 +41,6 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   GenerateEnsembleStatistics
-  FindMicroTextureRegions
 )
 
 

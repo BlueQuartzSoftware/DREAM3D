@@ -206,10 +206,6 @@ void FindKernelAvgMisorientations::execute()
           totalmisorientation = 0.0;
           numVoxel = 0;
           QuaternionMathF::Copy(quats[point], q1);
-//          q1[1] = m_Quats[point*5 + 1];
-//          q1[2] = m_Quats[point*5 + 2];
-//          q1[3] = m_Quats[point*5 + 3];
-//          q1[4] = m_Quats[point*5 + 4];
           phase1 = m_CrystalStructures[m_CellPhases[point]];
           for (int j = -m_KernelSize.z; j < m_KernelSize.z + 1; j++)
           {
@@ -231,10 +227,6 @@ void FindKernelAvgMisorientations::execute()
                 {
                   w = 10000.0;
                   QuaternionMathF::Copy(quats[neighbor], q2);
-//                  q2[1] = m_Quats[neighbor*5 + 1];
-//                  q2[2] = m_Quats[neighbor*5 + 2];
-//                  q2[3] = m_Quats[neighbor*5 + 3];
-//                  q2[4] = m_Quats[neighbor*5 + 4];
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
                   w = w *(180.0f/DREAM3D::Constants::k_Pi);

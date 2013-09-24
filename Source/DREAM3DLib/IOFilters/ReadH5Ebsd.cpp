@@ -522,21 +522,6 @@ void ReadH5Ebsd::execute()
 
   if(m_UseTransformations == true)
   {
-    if(m_EulerTransformationAngle > 0)
-    {
-      FloatVec3Widget_t eulerAxis;
-      eulerAxis.x = m_EulerTransformationAxis[0];
-      eulerAxis.y = m_EulerTransformationAxis[1];
-      eulerAxis.z = m_EulerTransformationAxis[2];
-
-      RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
-      rot_Euler->setObservers(this->getObservers());
-      rot_Euler->setVolumeDataContainer(getVolumeDataContainer());
-      rot_Euler->setRotationAngle(m_EulerTransformationAngle);
-      rot_Euler->setRotationAxis(eulerAxis);
-      rot_Euler->execute();
-    }
-
     if(m_SampleTransformationAngle > 0)
     {
       FloatVec3Widget_t sampleAxis;
@@ -552,6 +537,22 @@ void ReadH5Ebsd::execute()
       rot_Sample->setsliceBySlice(true);
       rot_Sample->execute();
     }
+
+    if(m_EulerTransformationAngle > 0)
+    {
+      FloatVec3Widget_t eulerAxis;
+      eulerAxis.x = m_EulerTransformationAxis[0];
+      eulerAxis.y = m_EulerTransformationAxis[1];
+      eulerAxis.z = m_EulerTransformationAxis[2];
+
+      RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
+      rot_Euler->setObservers(this->getObservers());
+      rot_Euler->setVolumeDataContainer(getVolumeDataContainer());
+      rot_Euler->setRotationAngle(m_EulerTransformationAngle);
+      rot_Euler->setRotationAxis(eulerAxis);
+      rot_Euler->execute();
+    }
+
   }
 
   // If there is an error set this to something negative and also set a message
