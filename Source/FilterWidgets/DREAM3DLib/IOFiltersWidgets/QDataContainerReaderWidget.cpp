@@ -325,7 +325,7 @@ void QDataContainerReaderWidget::preflightAboutToExecute(DataContainerArray::Poi
 {
   // This would only really make sense if the Reader were in the middle of a pipeline then the list
   // would show what is currently in the pipeline
-  //  arraySelectionWidget->populateArrayNames(vdc, smdc, sdc);
+  arraySelectionWidget->populateArrayNames(dca);
 }
 
 // -----------------------------------------------------------------------------
