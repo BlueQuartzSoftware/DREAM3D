@@ -101,6 +101,14 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
     /**
      * @brief addValue
      * @param square
+     * @param sqCoord
+     * @param value
+     */
+    void addInterpolatedValues(Square square, float* sqCoord, double value);
+
+    /**
+     * @brief addValue
+     * @param square
      * @param index
      * @param value
      */
