@@ -258,10 +258,13 @@ int testCase1_Execute(const QString &name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
@@ -356,10 +359,13 @@ void testCase2_Execute(const QString &name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get error condition, and check that the "file is too small" error is returned
   filt->preflight();
@@ -452,10 +458,13 @@ void testCase3_Execute(const QString &name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get the error condition, and check that there are no errors
   filt->preflight();
@@ -557,10 +566,13 @@ void testCase4_Execute(const QString &name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
@@ -588,10 +600,13 @@ void testCase4_Execute(const QString &name, int scalarType)
 
   // Create another data container
   VolumeDataContainer::Pointer m2 = VolumeDataContainer::New();
+  m2->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca2 = DataContainerArray::New();
+  dca2->pushBack(m2);
 
   // Create another filter, passing in the skipHeaderBytes + 1
   RawBinaryReader::Pointer filt2 = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes+1);
-  filt2->setVolumeDataContainer(m2.get());
+  filt2->setDataContainerArray(dca2);
 
   // Preflight, get error condition, and check that there are errors
   filt2->preflight();
@@ -681,12 +696,15 @@ void testCase5_Execute(const QString &name, int scalarType)
   // Test to make sure that the file was created and written to successfully
   DREAM3D_REQUIRED(result, ==, true)
 
-    // Create the data container
-    VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  // Create the data container
+  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get error condition, and check that there are no errors
   filt->preflight();
@@ -788,10 +806,13 @@ void testCase6_Execute(const QString &name, int scalarType)
 
   // Create the data container
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   // Create the filter, passing in the skipHeaderBytes
   RawBinaryReader::Pointer filt = createRawBinaryReaderFilter(scalarType, N, skipHeaderBytes);
-  filt->setVolumeDataContainer(m.get());
+  filt->setDataContainerArray(dca);
 
   // Preflight, get error condition, and check that the "file too small" error has occurred
   filt->preflight();

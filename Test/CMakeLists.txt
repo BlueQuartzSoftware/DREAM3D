@@ -182,6 +182,13 @@ target_link_libraries(DataContainerTest DREAM3DLib)
 set_target_properties(DataContainerTest PROPERTIES FOLDER Test)
 add_test(DataContainerTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/DataContainerTest)
 
+# --------------------------------------------------------------------------
+# NewDataContainerStructure Test
+# --------------------------------------------------------------------------
+add_executable(NewDataContainerStructureTest NewDataContainerStructureTest.cpp )
+target_link_libraries(NewDataContainerStructureTest DREAM3DLib)
+set_target_properties(NewDataContainerStructureTest PROPERTIES FOLDER Test)
+add_test(NewDataContainerStructureTest ${CMAKE_RUNTIME_OUTPUT_DIRECTORY}/NewDataContainerStructureTest )
 
 # --------------------------------------------------------------------------
 # DataArray Testing

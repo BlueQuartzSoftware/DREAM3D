@@ -98,6 +98,9 @@ void TestDataContainerWriter()
 {
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
   size_t nx = UnitTest::DataContainerIOTest::XSize;
   size_t ny = UnitTest::DataContainerIOTest::YSize;
   size_t nz = UnitTest::DataContainerIOTest::ZSize;
@@ -154,7 +157,7 @@ void TestDataContainerWriter()
   }
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setVolumeDataContainer(m.get());
+  writer->setDataContainerArray(dca);
   writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile);
   writer->execute();
   int err = writer->getErrorCondition();
@@ -172,10 +175,13 @@ void TestDataContainerReader()
   size_t nz = 0;
 
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
   reader->setInputFile(UnitTest::DataContainerIOTest::TestFile);
-  reader->setVolumeDataContainer(m.get());
+  reader->setDataContainerArray(dca);
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);
   reader->setReadVertexData(false);
@@ -215,7 +221,7 @@ void TestDataContainerReader()
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setOutputFile(UnitTest::DataContainerIOTest::TestFile2);
-  writer->setVolumeDataContainer(m.get());
+  writer->setDataContainerArray(dca);
   writer->execute();
   err = writer->getErrorCondition();
   DREAM3D_REQUIRE(err >= 0)
@@ -260,6 +266,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 void TestInsertDelete()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
   QList<QString> nameList;
 
   insertDeleteArray<Int8ArrayType> (m);
@@ -407,6 +414,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 void TestArrayCreation()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
   QList<QString> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
@@ -467,6 +475,7 @@ void TestDataContainer()
   std::cout << "Value for [5][3]: " << neighborList->getValue(5, 3, ok) << std::endl;
 
   VolumeDataContainer::Pointer dataContainer = VolumeDataContainer::New();
+  dataContainer->setName(DREAM3D::HDF5::VolumeDataContainerName);
   dataContainer->addCellData("NeighborList", iDataArray);
   {
     MAKE_ARRAY(int8_t, "int8_t_Array" );

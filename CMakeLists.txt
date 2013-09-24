@@ -267,15 +267,6 @@ add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/DREAM3DLib/ ${PROJECT_BINARY_
 
 file(WRITE ${DREAM3DProj_BINARY_DIR}/Qt_Plugins.txt)
 
-# Build the static QtSupport library - which MUST be a static library or the linking
-# will not work due to signals/slots mechanism.
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
-
-add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
-
-# --------------------------------------------------------------------
-# Build the FilterWidgets Static Library which is ONLY needed by this plugin
-add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
 
 
 # --------------------------------------------------------------------
@@ -319,6 +310,16 @@ endforeach()
 
 
 if(DREAM3D_BUILD_DREAM3D)
+# Build the static QtSupport library - which MUST be a static library or the linking
+# will not work due to signals/slots mechanism.
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/QtSupport ${PROJECT_BINARY_DIR}/QtSupport)
+
+add_subdirectory(${DREAM3DProj_SOURCE_DIR}/Source/PipelineBuilder ${PROJECT_BINARY_DIR}/PipelineBuilder)
+
+# --------------------------------------------------------------------
+# Build the FilterWidgets Static Library which is ONLY needed by this plugin
+add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/FilterWidgets/ ${PROJECT_BINARY_DIR}/FilterWidgets)
+
     #- Add in the Main DREAM.3D Application
     add_subdirectory( ${DREAM3DProj_SOURCE_DIR}/Source/Applications/DREAM3D ${PROJECT_BINARY_DIR}/Applications/DREAM3D)
     #- Now set up the dependency between the main application and each of the plugins so that

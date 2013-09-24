@@ -77,7 +77,7 @@ class GenerateGrainIds : public AbstractFilter
     virtual void execute()
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getVolumeDataContainer();
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
       if(NULL == m)
       {
         setErrorCondition(-1);
@@ -121,7 +121,7 @@ class GenerateGrainIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
     {
       setErrorCondition(0);
-      VolumeDataContainer* m = getVolumeDataContainer();
+      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName);
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
@@ -183,9 +183,13 @@ int TestPhWriter()
 int TestPhReader()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
+  m->setName(DREAM3D::HDF5::VolumeDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(m);
+
   PhReader::Pointer reader = PhReader::New();
   reader->setInputFile(UnitTest::PhIOTest::TestFile);
-  reader->setVolumeDataContainer(m.get());
+  reader->setDataContainerArray(dca);
   size_t nx = 0;
   size_t ny = 0;
   size_t nz = 0;
@@ -199,7 +203,7 @@ int TestPhReader()
   DREAM3D_REQUIRE_EQUAL(ny, UnitTest::PhIOTest::YSize);
   DREAM3D_REQUIRE_EQUAL(nz, UnitTest::PhIOTest::ZSize);
 
-  IDataArray::Pointer mdata = reader->getVolumeDataContainer()->getCellData(DREAM3D::CellData::GrainIds);
+  IDataArray::Pointer mdata = reader->getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(DREAM3D::HDF5::VolumeDataContainerName)->getCellData(DREAM3D::CellData::GrainIds);
 
   int size = UnitTest::PhIOTest::XSize * UnitTest::PhIOTest::YSize * UnitTest::PhIOTest::ZSize;
   int32_t* data = Int32ArrayType::SafeReinterpretCast<IDataArray*, Int32ArrayType*, int32_t*>(mdata.get());

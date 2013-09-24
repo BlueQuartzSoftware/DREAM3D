@@ -70,7 +70,9 @@ int main(int argc, char** argv)
 
   int err = 0;
   SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
-
+  sm->setName(DREAM3D::HDF5::SurfaceDataContainerName);
+  DataContainerArray::Pointer dca = DataContainerArray::New();
+  dca->pushBack(sm);
 
   QString nodesFileName = argv[1];
   QString trianglesFileName = argv[2];
@@ -82,7 +84,7 @@ int main(int argc, char** argv)
   binaryReader->setBinaryTrianglesFile(trianglesFileName);
   binaryReader->setMessagePrefix(binaryReader->getNameOfClass());
   binaryReader->addObserver(&observer);
-  binaryReader->setSurfaceDataContainer(sm.get());
+  binaryReader->setDataContainerArray(dca);
   binaryReader->execute();
   if(binaryReader->getErrorCondition() < 0)
   {
@@ -105,7 +107,7 @@ int main(int argc, char** argv)
   filter->setTripleLineLambda(0.125f);
   filter->setQuadPointLambda(0.65f);
 
-  filter->setSurfaceDataContainer(sm.get());
+  filter->setDataContainerArray(dca);
   filter->setMessagePrefix(filter->getNameOfClass());
   filter->addObserver(&observer);
   filter->setIterationSteps(50);
