@@ -92,10 +92,14 @@ void FindNRingNeighbors::generate()
 
   // Get the Triangle List from the Data Container
   FaceArray::Pointer trianglesPtr = sm->getFaces();
+  if(trianglesPtr == NULL)
+  {
+    return;
+  }
   FaceArray::Face_t* triangles = trianglesPtr->getPointer(0);
 
   // Make sure we have the proper connectivity built
-  Int32DynamicListArray::Pointer node2TrianglePtr =sm->getFaces()->getFacesContainingVert();
+  Int32DynamicListArray::Pointer node2TrianglePtr = trianglesPtr->getFacesContainingVert();
   if (node2TrianglePtr.get() == NULL)
   {
     sm->getFaces()->findFacesContainingVert();

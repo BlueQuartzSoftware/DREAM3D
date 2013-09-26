@@ -312,7 +312,12 @@ void GrainFaceCurvatureFilter::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  Int32DynamicListArray::Pointer vertLinks = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFacesContainingVert();
+  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  if(facesPtr == NULL)
+  {
+    return;
+  }
+  Int32DynamicListArray::Pointer vertLinks = facesPtr->getFacesContainingVert();
   if (NULL == vertLinks.get())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete

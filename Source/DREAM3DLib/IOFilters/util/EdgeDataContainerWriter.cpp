@@ -45,24 +45,6 @@
 
 #define WRITE_FIELD_XDMF 0
 
-class H5GroupAutoCloser
-{
-  public:
-    H5GroupAutoCloser(hid_t* groupId) :
-      gid(groupId)
-    {}
-
-    virtual ~H5GroupAutoCloser()
-    {
-      if (*gid > 0)
-      {
-        H5Gclose(*gid);
-      }
-    }
-  private:
-    hid_t* gid;
-};
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -94,7 +76,7 @@ void EdgeDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fi
     return;
   }
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -133,56 +115,41 @@ void EdgeDataContainerWriter::execute()
   }
   setErrorCondition(0);
 
-  // Create the HDF5 Group for the Data Container
-  err = H5Utilities::createGroupsFromPath(DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), getHdfFileId());
-  if (err < 0)
-  {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::EdgeDataContainerName);
-    setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return;
-  }
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
-  if (dcGid < 0)
-  {
-    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::EdgeDataContainerName);
-    setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return;
-  }
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
 
   // Add some VTK hints into the group
-  err = createVtkObjectGroup(DREAM3D::HDF5::EdgeDataContainerName, H5_VTK_POLYDATA);
+  err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
   if (err < 0)  {
     return;
   }
 
   writeXdmfGridHeader();
 
-
-  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
-
   err = writeEdgesContainingVert(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeEdgeNeighbors(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeEdges(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeEdgeData(dcGid, H5_EDGE_DATA_GROUP_NAME);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -193,7 +160,7 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeEdgeEnsembleData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  err = writeEdgeEnsembleData(getHdfGroupId(), H5_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -203,7 +170,6 @@ void EdgeDataContainerWriter::execute()
 
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-  dcGid = -1;
 
   writeXdmfGridFooter(QString("Edge Data"));
 
@@ -236,9 +202,9 @@ void EdgeDataContainerWriter::writeXdmfGridHeader()
 
   //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
   //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
-  //ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
+  //ssize_t nameSize = H5Fget_name(getHdfGroupId(), NULL, 0) + 1;
   //QVector<char> nameBuffer(nameSize, 0);
-  //nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
+  //nameSize = H5Fget_name(getHdfGroupId(), &(nameBuffer.front()), nameSize);
   //QString hdfFileName(&(nameBuffer.front()), nameSize);
   //hdfFileName = QFileInfo::filename(hdfFileName);
   //out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << "\n";
@@ -286,7 +252,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   QString buf;
   QTextStream out(&buf);
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
 
   if((numComp%2) == 1)
@@ -400,8 +366,12 @@ int EdgeDataContainerWriter::writeEdgesContainingVert(hid_t dcGid)
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-
-  Int32DynamicListArray::Pointer links = dc->getEdges()->getEdgesContainingVert();
+  EdgeArray::Pointer edgesPtr = dc->getEdges();
+  if (NULL == edgesPtr.get())
+  {
+    return -1;
+  }
+  Int32DynamicListArray::Pointer links = edgesPtr->getEdgesContainingVert();
   if (NULL == links.get())
   {
     return 0;
@@ -532,9 +502,9 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 
 #if WRITE_FIELD_XDMF
   // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
+  ssize_t nameSize = H5Fget_name(getHdfGroupId(), NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
+  nameSize = H5Fget_name(getHdfGroupId(), &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = QFileInfo::filename(hdfFileName);

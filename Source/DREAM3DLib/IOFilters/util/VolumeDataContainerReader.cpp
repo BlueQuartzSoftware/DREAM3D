@@ -77,7 +77,7 @@ void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Voxel DataContainer is missing", getErrorCondition());
   }
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -121,7 +121,6 @@ void VolumeDataContainerReader::execute()
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
-
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -233,23 +232,12 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   { 0.0f, 0.0f, 0.0f };
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
 
-  if(getHdfFileId() < 0)
-  {
-    QString ss = QObject::tr(": Error opening input file");
-    setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return -1;
-  }
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
-  if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
-  {
-    dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
-  }
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), 0);
   if(dcGid < 0)
   {
-    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::VolumeDataContainerName);
+    QString ss = QObject::tr(": Error opening data container folder");
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
 
@@ -323,7 +311,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> cellFeildArraysToRead = getCellFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFeildArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFeildArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -336,7 +324,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> cellEnsembleArraysToRead = getCellEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, cellEnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, cellEnsembleArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -416,11 +404,11 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
       {
         dc->addCellData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_CELL_FIELD_DATA_GROUP_NAME) == 0)
       {
         dc->addCellFieldData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_CELL_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
         dc->addCellEnsembleData(dPtr->GetName(), dPtr);
       }

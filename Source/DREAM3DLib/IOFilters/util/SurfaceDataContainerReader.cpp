@@ -101,7 +101,7 @@ void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t
     return;
   }
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -157,7 +157,7 @@ void SurfaceDataContainerReader::execute()
 int SurfaceDataContainerReader::gatherData(bool preflight)
 {
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
@@ -165,7 +165,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
   if(dcGid < 0)
   {
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::EdgeDataContainerName);
@@ -176,12 +176,6 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   int err = 0;
-
-  err = gatherVertexData(dcGid, preflight);
-  if (err < 0)
-  {
-    return err;
-  }
 
   err = gatherFaceData(dcGid, preflight);
   if (err < 0)
@@ -212,7 +206,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
 int SurfaceDataContainerReader::gatherFaceFieldData(hid_t dcGid, bool preflight)
 {
     QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FaceFieldArraysToRead);
+    herr_t err = readGroupsData(dcGid, H5_FACE_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FaceFieldArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -228,7 +222,7 @@ int SurfaceDataContainerReader::gatherFaceFieldData(hid_t dcGid, bool preflight)
 int SurfaceDataContainerReader::gatherFaceEnsembleData(hid_t dcGid, bool preflight)
 {
     QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_FaceEnsembleArraysToRead);
+    herr_t err = readGroupsData(dcGid, H5_FACE_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_FaceEnsembleArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);

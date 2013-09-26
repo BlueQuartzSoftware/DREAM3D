@@ -48,7 +48,7 @@ Observable(),
 m_ErrorCondition(0),
 m_Cancel(false),
   m_DataContainer(NULL),
-  m_HdfFileId(-1)
+  m_HdfGroupId(-1)
 {
 
 }
@@ -191,12 +191,12 @@ void IOSupport::clearErrorMessages() {
 int IOSupport::createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType)
 {
   // qDebug() << "   vtkH5DataWriter::WritePoints()" << "\n";
-  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfFileId());
+  herr_t err = QH5Utilities::createGroupsFromPath(hdfGroupPath, getHdfGroupId());
   if (err < 0)
   {
     qDebug() << "Error creating HDF Group " << hdfGroupPath << "\n";
   }
-  err = QH5Lite::writeStringAttribute(getHdfFileId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
+  err = QH5Lite::writeStringAttribute(getHdfGroupId(), hdfGroupPath, H5_VTK_DATA_OBJECT, vtkDataObjectType );
   if(err < 0)
   {
     qDebug() << "Error writing string attribute to HDF Group " << hdfGroupPath << "\n";

@@ -355,17 +355,22 @@ void VerifyTriangleWinding::execute()
   // Make sure the Face Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
   bool clearMeshLinks = false;
-  if (NULL == getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFacesContainingVert())
+  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  if(facesPtr == NULL)
+  {
+    return;
+  }
+  if (NULL == facesPtr->getFacesContainingVert())
   {
     clearMeshLinks = true; // This was not explicitly set in the pipeline so we are going to clear it when the filter is complete
     getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
   if (getCancel() == true) { return; }
   bool clearFaceNeighbors = false;
-  if (NULL == getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFaceNeighbors())
+  if (NULL == facesPtr->getFaceNeighbors())
   {
     clearFaceNeighbors = true;
-    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFaceNeighbors();
+    facesPtr->findFaceNeighbors();
   }
 
   // Execute the actual verification step.
@@ -382,11 +387,11 @@ void VerifyTriangleWinding::execute()
   }
   if (clearMeshLinks == true)
   {
-    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->deleteFacesContainingVert();
+    facesPtr->deleteFacesContainingVert();
   }
   if (clearFaceNeighbors == true)
   {
-    getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->deleteFaceNeighbors();
+    facesPtr->deleteFaceNeighbors();
   }
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
