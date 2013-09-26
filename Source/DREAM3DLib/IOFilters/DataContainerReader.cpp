@@ -553,7 +553,3 @@ void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVert
   m_SelectedVertexVertexEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
-
-
-
-

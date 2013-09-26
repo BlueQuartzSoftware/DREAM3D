@@ -523,4 +523,3 @@ int DataContainerWriter::closeFile()
   // Close the file when we are finished with it
   return QH5Utilities::closeFile(m_FileId);
 }
-
