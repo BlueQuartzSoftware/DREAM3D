@@ -59,6 +59,26 @@
 #define APPEND_DATA_TRUE 1
 #define APPEND_DATA_FALSE 0
 
+namespace Detail
+{
+class H5GroupAutoCloser
+{
+public:
+  H5GroupAutoCloser(hid_t* groupId) :
+  gid(groupId)
+  {}
+
+  virtual ~H5GroupAutoCloser()
+  {
+    if (*gid > 0)
+    {
+      H5Gclose(*gid);
+    }
+  }
+  private:
+   hid_t* gid;
+};
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -325,15 +345,18 @@ void DataContainerWriter::execute()
         addErrorMessage(getHumanLabel(), ss, err);
         return;
       }
-      hid_t dcGid = H5Gopen(m_FileId, dcNames[iter].toLatin1().data(), H5P_DEFAULT );
-      err = QH5Lite::writeScalarAttribute(dcGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
+
+      Detail::H5GroupAutoCloser dcGidAutoCloser(&dcaGid);
+
+      err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if (err < 0)
       {
         qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dcNames[iter] << "\n";
       }
 
       VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
-      volWriter->setHdfGroupId(dcGid);
+      volWriter->setHdfFileId(m_FileId);
+      volWriter->setHdfGroupId(dcaGid);
       volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       volWriter->setObservers(getObservers());
       volWriter->setWriteXdmfFile(getWriteXdmfFile());
@@ -349,8 +372,9 @@ void DataContainerWriter::execute()
       }
 
       SurfaceDataContainerWriter::Pointer surfWriter = SurfaceDataContainerWriter::New();
-      surfWriter->setHdfGroupId(dcGid);
-      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      surfWriter->setHdfFileId(m_FileId);
+      surfWriter->setHdfGroupId(dcaGid);
+      surfWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       surfWriter->setObservers(getObservers());
       surfWriter->setWriteXdmfFile(getWriteXdmfFile());
       surfWriter->setXdmfOStream(&out);
@@ -367,7 +391,8 @@ void DataContainerWriter::execute()
 
       EdgeDataContainerWriter::Pointer edgeWriter = EdgeDataContainerWriter::New();
       edgeWriter->setHdfFileId(m_FileId);
-      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      edgeWriter->setHdfGroupId(dcaGid);
+      edgeWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       edgeWriter->setObservers(getObservers());
       edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
       edgeWriter->setXdmfOStream(&out);
@@ -383,8 +408,9 @@ void DataContainerWriter::execute()
 
 
       VertexDataContainerWriter::Pointer vertWriter = VertexDataContainerWriter::New();
-      vertWriter->setHdfGroupId(dcGid);
-      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+      vertWriter->setHdfFileId(m_FileId);
+      vertWriter->setHdfGroupId(dcaGid);
+      vertWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
       vertWriter->setObservers(getObservers());
       vertWriter->setWriteXdmfFile(getWriteXdmfFile());
       vertWriter->setXdmfOStream(&out);
@@ -497,4 +523,3 @@ int DataContainerWriter::closeFile()
   // Close the file when we are finished with it
   return QH5Utilities::closeFile(m_FileId);
 }
-

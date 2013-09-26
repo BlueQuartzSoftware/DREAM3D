@@ -69,11 +69,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceEnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
 
     /**
@@ -103,25 +106,11 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
 
     int gatherData(bool preflight);
 
-    int gatherFaceData(hid_t dcGid, bool preflight);
-    int gatherFaceFieldData(hid_t dcGid, bool preflight);
-    int gatherFaceEnsembleData(hid_t dcGid, bool preflight);
-
-    int readFaces(hid_t dcGid);
-    int readMeshLinks(hid_t dcGid, bool preflight);
-    int readFaceFieldData(hid_t dcGid);
-    int readFaceEnsembleData(hid_t dcGid);
-
-    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
+    int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead);
-
-    /* ********** NOT SURE IF THIS IS NEEDED ****************** */
-    int readVertices(hid_t dcGid);
-
-
 
   private:
 

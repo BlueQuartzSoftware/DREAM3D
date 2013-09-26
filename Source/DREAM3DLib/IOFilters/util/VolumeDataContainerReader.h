@@ -70,10 +70,14 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadCellEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellEnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     /**
     * @brief Reimplemented from @see AbstractFilter class

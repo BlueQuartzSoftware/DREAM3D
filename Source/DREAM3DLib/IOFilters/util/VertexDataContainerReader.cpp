@@ -53,6 +53,9 @@ VertexDataContainerReader::VertexDataContainerReader() :
   m_ReadVertexData(true),
   m_ReadVertexFieldData(true),
   m_ReadVertexEnsembleData(true),
+  m_ReadAllVertexArrays(false),
+  m_ReadAllVertexFieldArrays(false),
+  m_ReadAllVertexEnsembleArrays(false),
   m_ReadAllArrays(false)
 {
 }
@@ -80,7 +83,7 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition());
   }
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -125,10 +128,9 @@ void VertexDataContainerReader::execute()
 
   setErrorCondition(err);
 
-
-  if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) m_ReadVertexData = false;
-  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexFieldData = false;
-  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadVertexEnsembleData = false;
+  if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true && m_ReadAllArrays != true) m_ReadVertexData = false;
+  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true && m_ReadAllArrays != true) m_ReadVertexFieldData = false;
+  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true && m_ReadAllArrays != true) m_ReadVertexEnsembleData = false;
 
   if(m_ReadVertexData == true) dc->clearVertexData();
   if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
@@ -148,7 +150,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
 {
 
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
@@ -156,7 +158,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
@@ -165,19 +167,51 @@ int VertexDataContainerReader::gatherData(bool preflight)
     return -61;
   }
 
-  HDF_ERROR_HANDLER_OFF
   int err = 0;
 
-  err = gatherVertexData(dcGid, preflight);
+  readMeshData(dcGid, preflight);
 
-  err = gatherVertexFieldData(dcGid, preflight);
+  if(m_ReadVertexData == true)
+  {
+    QVector<QString> readNames;
+    QSet<QString> vertexArraysToRead = getVertexArraysToRead();
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+  }
 
-  err = gatherVertexEnsembleData(dcGid, preflight);
+  if(m_ReadVertexFieldData == true)
+  {
+    QVector<QString> readNames;
+    QSet<QString> vertexFieldArraysToRead = getVertexFieldArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+  }
+
+  if(m_ReadVertexEnsembleData == true)
+  {
+    QVector<QString> readNames;
+    QSet<QString> vertexEnsembleArraysToRead = getVertexEnsembleArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, vertexEnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+  }
 
   // Now finally close the group
-  H5Gclose(dcGid); // Close the Data Container Group
-
-  HDF_ERROR_HANDLER_ON
+  err |= H5Gclose(dcGid); // Close the Data Container Group
 
   return err;
 }
@@ -185,110 +219,46 @@ int VertexDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
+int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 {
-  int err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
 
+  int err = 0;
+  QVector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
   if (true == preflight)
   {
     err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
-    if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
+    if (err >= 0)
     {
-      VertexArray::Pointer vertices = VertexArray::New();
-      vertices->resizeArray(1);
+      VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
       dc->setVertices(vertices);
     }
   }
   else
   {
-    err = readVertices(dcGid);
-    if (err < 0)
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    if (err >= 0)
     {
+      // Allocate the Vertex_t structures
+      VertexArray::Pointer verticesPtr = VertexArray::CreateArray(dims[0], DREAM3D::VertexData::SurfaceMeshNodes);
+      // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
+      int32_t* data = reinterpret_cast<int32_t*>(verticesPtr->getPointer(0));
+      // Read the data from the file
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage("Error Reading Vertex List from DREAM3D file", getErrorCondition());
+        return err;
+      }
+      dc->setVertices(verticesPtr);
     }
   }
-
-  // Read all the Vertex Attribute data
-  QVector<QString> readNames;
-  err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
-  if(err == -154) // The group was not in the file so just ignore that error
-  {
-    err = 0;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerReader::gatherVertexFieldData(hid_t dcGid, bool preflight)
-{
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, m_VertexFieldArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerReader::gatherVertexEnsembleData(hid_t dcGid, bool preflight)
-{
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_VertexEnsembleArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int VertexDataContainerReader::readVertices(hid_t dcGid)
-{
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
-
-  herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    notifyErrorMessage("No Vertices Data in Data file", getErrorCondition());
-    return err;
-  }
-  // Allocate the data
-  VertexArray::Pointer verticesPtr = VertexArray::New();
-  verticesPtr->resizeArray(dims[0]);
-  // Read the data
-  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
-  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
-  }
-  dc->setVertices(verticesPtr);
-  return err;
+  return 1;
 }
 
 // -----------------------------------------------------------------------------

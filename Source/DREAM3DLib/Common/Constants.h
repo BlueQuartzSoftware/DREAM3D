@@ -266,8 +266,12 @@ namespace DREAM3D
     const QString VerticesName("Vertices");
     const QString FacesName("Faces");
     const QString EdgesName("Edges");
-    const QString MeshLinksName("MeshLinks");
-    const QString MeshFaceNeighborLists("MeshFaceNeighborLists");
+    const QString EdgesContainingVert("EdgesContainingVert");
+    const QString EdgeNeighbors("EdgeNeighbors");
+    const QString FacesContainingVert("FacesContainingVert");
+    const QString FaceNeighbors("FaceNeighbors");
+    const QString CellsContainingVert("CellsContainingVert");
+    const QString CellNeighbors("CellNeighbors");
 
     //  const QString Grain_ID("Grain_ID");
     // const QString SchmidFactor ("SchmidFactor");

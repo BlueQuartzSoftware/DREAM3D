@@ -169,10 +169,13 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 void InitializeSyntheticVolume::preflight()
 {
   QTextStream ss;
-  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
-
-  dataCheck(true, 1, 1, 1);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(m == NULL)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+  }
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
@@ -186,17 +189,26 @@ void InitializeSyntheticVolume::preflight()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+
   VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
+  read_data->setHdfGroupId(dcGid);
   read_data->setReadCellData(false);
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
-  read_data->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
+  read_data->setReadAllCellEnsembleArrays(true);
+  read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
   {
     setErrorCondition(read_data->getErrorCondition());
   }
+
+  dataCheck(true, 1, 1, 1);
+
+  UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
+  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::ShapeTypes, shapeTypes);
 }
 
 // -----------------------------------------------------------------------------
@@ -207,11 +219,12 @@ void InitializeSyntheticVolume::execute()
   QTextStream ss;
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
+  if(m == NULL)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
 
   hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
@@ -226,13 +239,19 @@ void InitializeSyntheticVolume::execute()
   // This will make sure if we return early from this method that the HDF5 File is properly closed.
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+
   VolumeDataContainerReader::Pointer read_data = VolumeDataContainerReader::New();
   read_data->setHdfFileId(fileId);
+  read_data->setHdfGroupId(dcGid);
+  read_data->setReadVertexData(false);
+  read_data->setReadEdgeData(false);
+  read_data->setReadFaceData(false);
   read_data->setReadCellData(false);
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
-  read_data->setReadAllArrays(true);
-  read_data->setDataContainer(getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()));
+  read_data->setReadAllCellEnsembleArrays(true);
+  read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
   read_data->execute();
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -243,7 +262,7 @@ void InitializeSyntheticVolume::execute()
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = m->getNumCellFieldTuples();
-  int totalEnsembles = m_ShapeTypes.size();
+  int totalEnsembles = m->getNumCellEnsembleTuples();
 
   // Check to make sure we have all of our data arrays available or make them available.
   dataCheck(false, totalPoints, totalFields, totalEnsembles);

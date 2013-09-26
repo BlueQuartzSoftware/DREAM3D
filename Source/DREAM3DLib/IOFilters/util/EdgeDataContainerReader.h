@@ -69,10 +69,14 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeEnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
 
     /**
@@ -99,18 +103,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-
     int gatherData(bool preflight);
 
-    int gatherEdgeData(hid_t dcGid, bool preflight);
-    int gatherEdgeFieldData(hid_t dcGid, bool preflight);
-    int gatherEdgeEnsembleData(hid_t dcGid, bool preflight);
-
-    int readEdges(hid_t dcGid);
-    int readMeshLinks(hid_t dcGid, bool preflight);
-    int readEdgeFieldData(hid_t dcGid);
-    int readEdgeEnsembleData(hid_t dcGid);
-
+    int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
