@@ -366,7 +366,7 @@ void ConvertData::preflight()
 void ConvertData::execute()
 {
   int err = 0;
-  QTextStream ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)

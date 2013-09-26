@@ -463,7 +463,8 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
                           FILE* vtkFile, int nT)
 {
   IDataArray::Pointer data = dc->getVertexData(dataName);
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   if (NULL != data.get())
   {
     T* m = reinterpret_cast<T*>(data->GetVoidPointer(0));
@@ -490,7 +491,8 @@ void writePointVectorData(DataContainer* dc, const QString &dataName, const QStr
       {
 
         ss << m[i*3+0] << " " << m[i*3+1] << " " << m[i*3+2] << " ";
-        fprintf(vtkFile, "%s ", ss.string()->toLatin1().data());
+        fprintf(vtkFile, "%s ", buf.toLatin1().data());
+        buf.clear();
         //if (i%50 == 0)
         { fprintf(vtkFile, "\n"); }
       }
@@ -678,7 +680,8 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
 
   int triangleCount = triangles.getNumberOfTuples();
   IDataArray::Pointer data = dc->getFaceData(dataName);
-  QTextStream ss;
+  QString buf;
+  QTextStream ss(&buf);
   if (NULL != data.get())
   {
     int32_t totalCellsWritten = 0;
@@ -725,7 +728,8 @@ void writeCellNormalData(DataContainer* dc, const QString &dataName, const QStri
         {
 
           ss << s0 << " " << s1 << " " << s2;
-          fprintf(vtkFile, "%s\n", ss.string()->toLatin1().data());
+          fprintf(vtkFile, "%s\n", buf.toLatin1().data());
+          buf.clear();
         }
       }
 

@@ -43,6 +43,7 @@
 #include <H5Tpublic.h>
 
 #include <vector>
+#include <limits>
 
 #include "H5Support/H5Support.h"
 #include "H5Support/H5SupportDLLExport.h"

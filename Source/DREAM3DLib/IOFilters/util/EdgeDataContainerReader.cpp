@@ -148,7 +148,7 @@ void EdgeDataContainerReader::execute()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-  setErrorCondition(0);
+  setErrorCondition(err);
 
   err = gatherData(false);
   setErrorCondition(err);
