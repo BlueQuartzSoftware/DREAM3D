@@ -78,8 +78,7 @@ EdgeDataContainerReader(),
   m_ReadFaceEnsembleData(true),
   m_ReadAllFaceArrays(false),
   m_ReadAllFaceFieldArrays(false),
-  m_ReadAllFaceEnsembleArrays(false),
-  m_ReadAllArrays(false)
+  m_ReadAllFaceEnsembleArrays(false)
 {
 }
 
@@ -111,6 +110,14 @@ void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t
   }
   else if (preflight == true)
   {
+    if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) m_ReadFaceData = false;
+    if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) m_ReadFaceFieldData = false;
+    if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) m_ReadFaceEnsembleData = false;
+
+    if(m_ReadFaceData == true) dc->clearFaceData();
+    if(m_ReadFaceFieldData == true) dc->clearFaceFieldData();
+    if(m_ReadFaceEnsembleData == true) dc->clearFaceEnsembleData();
+
     int err = gatherData(preflight);
     if (err < 0)
     {
@@ -147,9 +154,9 @@ void SurfaceDataContainerReader::execute()
   }
   setErrorCondition(0);
 
-  if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true && m_ReadAllArrays != true) m_ReadFaceData = false;
-  if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true && m_ReadAllArrays != true) m_ReadFaceFieldData = false;
-  if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true && m_ReadAllArrays != true) m_ReadFaceEnsembleData = false;
+  if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true) m_ReadFaceData = false;
+  if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true) m_ReadFaceFieldData = false;
+  if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true) m_ReadFaceEnsembleData = false;
 
   if(m_ReadFaceData == true) dc->clearFaceData();
   if(m_ReadFaceFieldData == true) dc->clearFaceFieldData();
@@ -160,6 +167,16 @@ void SurfaceDataContainerReader::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void SurfaceDataContainerReader::setReadAllArrays()
+{
+  m_ReadAllFaceArrays = true;
+  m_ReadAllFaceFieldArrays = true;
+  m_ReadAllFaceEnsembleArrays = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -193,7 +210,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> faceArraysToRead = getFaceArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, faceArraysToRead);
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, faceArraysToRead, m_ReadAllFaceArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -206,7 +223,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> faceFieldArraysToRead = getFaceFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, faceFieldArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, faceFieldArraysToRead, m_ReadAllFaceFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -219,7 +236,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> faceEnsembleArraysToRead = getFaceEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, faceEnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, faceEnsembleArraysToRead, m_ReadAllFaceFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -332,7 +349,8 @@ int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead)
+                                                QSet<QString> &namesToRead,
+                                                bool readAllCurrentArrays)
 {
 
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
@@ -354,7 +372,7 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     QSet<QString>::iterator contains = namesToRead.find(*iter);
-    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);

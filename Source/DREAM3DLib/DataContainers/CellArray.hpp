@@ -63,6 +63,9 @@ class CellArray
       size_t verts[3];
     } Cell_t;
 
+    typedef QSet<int32_t> UniqueCellIds_t;
+    typedef StructArray<Cell_t> CellContainerType;
+
     DREAM3D_SHARED_POINTERS(CellArray)
     DREAM3D_STATIC_NEW_MACRO(CellArray)
     DREAM3D_TYPE_MACRO(CellArray)
@@ -71,6 +74,10 @@ class CellArray
     //
     // -----------------------------------------------------------------------------
     virtual ~CellArray(){ }
+
+
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellsContainingVert)
+    DREAM3D_INSTANCE_PROPERTY(Int32DynamicListArray::Pointer, CellNeighbors)
 
     // -----------------------------------------------------------------------------
     //
@@ -132,14 +139,6 @@ class CellArray
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getCellsContainingVert()
-    {
-      return m_CellsContainingVert;
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
     void findCellsContainingVert()
     {
 
@@ -195,14 +194,6 @@ class CellArray
     void deleteCellNeighbors()
     {
       m_CellNeighbors = Int32DynamicListArray::NullPointer();
-    }
-
-    // -----------------------------------------------------------------------------
-    //
-    // -----------------------------------------------------------------------------
-    Int32DynamicListArray::Pointer getCellNeighbors()
-    {
-      return m_CellNeighbors;
     }
 
     // -----------------------------------------------------------------------------
@@ -325,14 +316,15 @@ class CellArray
     }
 
   protected:
-    CellArray();
+    CellArray() :
+    m_Verts(NULL)
+    {
+      m_Array = CellContainerType::CreateArray(0, "CellArray_Internal_Use_Only");
+    }
 
   private:
     StructArray<Cell_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-    Int32DynamicListArray::Pointer m_CellsContainingVert;
-    Int32DynamicListArray::Pointer m_CellNeighbors;
-
     QString m_Name;
 
     CellArray(const CellArray&); // Copy Constructor Not Implemented

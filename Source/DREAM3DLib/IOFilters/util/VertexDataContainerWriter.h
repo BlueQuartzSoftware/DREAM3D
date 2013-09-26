@@ -91,7 +91,7 @@ class DREAM3DLib_EXPORT VertexDataContainerWriter : public IOSupport
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    virtual int writeVertices(hid_t dcGid);
+    virtual int writeMeshData(hid_t dcGid);
 
     virtual int writeVertexData(hid_t dcGid, QString groupName);
     virtual int writeVertexFieldData(hid_t dcGid, QString groupName);

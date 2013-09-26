@@ -624,7 +624,7 @@ void RunPipeline2()
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
   dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
   dcw->setWriteVolumeData(true);
-  dcw->setWriteSurfaceData(false);
+  dcw->setWriteSurfaceData(true);
   dcw->setWriteEdgeData(false);
   dcw->setWriteVertexData(false);
   dcw->setWriteXdmfFile(true);

@@ -78,8 +78,7 @@ EdgeDataContainerReader::EdgeDataContainerReader() :
   m_ReadEdgeEnsembleData(true),
   m_ReadAllEdgeArrays(false),
   m_ReadAllEdgeFieldArrays(false),
-  m_ReadAllEdgeEnsembleArrays(false),
-  m_ReadAllArrays(false)
+  m_ReadAllEdgeEnsembleArrays(false)
 {
 }
 
@@ -113,6 +112,14 @@ void EdgeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fi
   }
   else if (preflight == true)
   {
+    if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) m_ReadEdgeData = false;
+    if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) m_ReadEdgeFieldData = false;
+    if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) m_ReadEdgeEnsembleData = false;
+
+    if(m_ReadEdgeData == true) dc->clearEdgeData();
+    if(m_ReadEdgeFieldData == true) dc->clearEdgeFieldData();
+    if(m_ReadEdgeEnsembleData == true) dc->clearEdgeEnsembleData();
+
     int err = gatherData(preflight);
     if (err < 0)
     {
@@ -150,9 +157,9 @@ void EdgeDataContainerReader::execute()
   }
   setErrorCondition(err);
 
-  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true && m_ReadAllArrays != true) m_ReadEdgeData = false;
-  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true && m_ReadAllArrays != true) m_ReadEdgeFieldData = false;
-  if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true && m_ReadAllArrays != true) m_ReadEdgeEnsembleData = false;
+  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true) m_ReadEdgeData = false;
+  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true) m_ReadEdgeFieldData = false;
+  if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true) m_ReadEdgeEnsembleData = false;
 
   if(m_ReadEdgeData == true) dc->clearEdgeData();
   if(m_ReadEdgeFieldData == true) dc->clearEdgeFieldData();
@@ -163,6 +170,16 @@ void EdgeDataContainerReader::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void EdgeDataContainerReader::setReadAllArrays()
+{
+  m_ReadAllEdgeArrays = true;
+  m_ReadAllEdgeFieldArrays = true;
+  m_ReadAllEdgeEnsembleArrays = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -199,7 +216,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeArraysToRead = getEdgeArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead);
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead, m_ReadAllEdgeArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -212,7 +229,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeFieldArraysToRead = getEdgeFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead, m_ReadAllEdgeFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -225,7 +242,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeEnsembleArraysToRead = getEdgeEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, edgeEnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, edgeEnsembleArraysToRead, m_ReadAllEdgeEnsembleArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -337,7 +354,8 @@ int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead)
+                                                QSet<QString> &namesToRead,
+                                                bool readAllCurrentArrays)
 {
 
   int err = 0;
@@ -358,7 +376,7 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     QSet<QString>::iterator contains = namesToRead.find(*iter);
-    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);

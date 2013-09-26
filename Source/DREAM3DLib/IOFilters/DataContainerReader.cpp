@@ -368,7 +368,6 @@ void DataContainerReader::readData(bool preflight)
         vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
         vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
         vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
-        vReader->setReadAllArrays(m_ReadAllArrays);
         vReader->setHdfFileId(fileId);
         vReader->setHdfGroupId(dcGid);
         vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -399,7 +398,6 @@ void DataContainerReader::readData(bool preflight)
         eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
         eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
         eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
-        eReader->setReadAllArrays(m_ReadAllArrays);
         eReader->setHdfFileId(fileId);
         eReader->setHdfGroupId(dcGid);
         eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -430,7 +428,6 @@ void DataContainerReader::readData(bool preflight)
         smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
         smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
         smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
-        smReader->setReadAllArrays(m_ReadAllArrays);
         smReader->setHdfFileId(fileId);
         smReader->setHdfGroupId(dcGid);
         smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
@@ -461,7 +458,6 @@ void DataContainerReader::readData(bool preflight)
         volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
         volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
         volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
-        volumeReader->setReadAllArrays(m_ReadAllArrays);
         volumeReader->setHdfFileId(fileId);
         volumeReader->setHdfGroupId(dcGid);
         volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());

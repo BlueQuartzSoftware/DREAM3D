@@ -123,22 +123,7 @@ void SurfaceDataContainerWriter::execute()
 
   writeXdmfGridHeader();
 
-
-  err = writeFacesContainingVert(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeFaceNeighborLists(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeFaces(dcGid);
+  err = writeMeshData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -152,14 +137,14 @@ void SurfaceDataContainerWriter::execute()
     return;
   }
 
-  err = writeFaceFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
+  err = writeFaceFieldData(dcGid, H5_FACE_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeFaceEnsembleData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
+  err = writeFaceEnsembleData(dcGid, H5_FACE_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -353,145 +338,115 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFacesContainingVert(hid_t dcGid)
-{
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-  FaceArray::Pointer facesPtr = dc->getFaces();
-  if (NULL == facesPtr.get())
-  {
-    return -1;
-  }
-  Int32DynamicListArray::Pointer links = facesPtr->getFacesContainingVert();
-  if (NULL == links.get())
-  {
-    return 0;
-  }
-  VertexArray::Pointer verticesPtr = dc->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
-
-  herr_t err = -1;
-  size_t total = 0;
-  size_t nVerts = verticesPtr->getNumberOfTuples();
-  for(size_t v = 0; v < nVerts; ++v)
-  {
-    total += links->getNumberOfElements(v);
-  }
-
-  size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
-
-  // Allocate a flat array to copy the data into
-  QVector<uint8_t> buffer(totalBytes, 0);
-  uint8_t* bufPtr = &(buffer.front());
-  size_t offset = 0;
-
-  for(size_t v = 0; v < nVerts; ++v)
-  {
-    uint16_t ncells = links->getNumberOfElements(v);
-    int32_t* cells = links->getElementListPointer(v);
-    ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
-    offset += sizeof(uint16_t);
-    ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-    offset += ncells*sizeof(int32_t);
-  }
-
-  int32_t rank = 1;
-  hsize_t dims[1] = {totalBytes};
-
-  err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesContainingVert, rank, dims, bufPtr);
-  if (err < 0)
-  {
-    notifyErrorMessage("Error writing the Mesh Vert Links", -999);
-    return err;
-  }
-
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFaceNeighborLists(hid_t dcGid)
-{
-
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-  FaceArray::Pointer facesPtr = dc->getFaces();
-  if (NULL == facesPtr.get())
-  {
-    return -1;
-  }
-  Int32DynamicListArray::Pointer links = facesPtr->getFaceNeighbors();
-  if (NULL == links.get())
-  {
-    return 0;
-  }
-  herr_t err = -1;
-  size_t total = 0;
-  size_t nFaces = facesPtr->getNumberOfTuples();
-  for(size_t v = 0; v < nFaces; ++v)
-  {
-    total += links->getNumberOfElements(v);
-  }
-
-  size_t totalBytes = nFaces * sizeof(uint16_t) + total * sizeof(int32_t);
-
-  // Allocate a flat array to copy the data into
-  QVector<uint8_t> buffer(totalBytes, 0);
-  uint8_t* bufPtr = &(buffer.front());
-  size_t offset = 0;
-
-  for(size_t v = 0; v < nFaces; ++v)
-  {
-    uint16_t ncells = links->getNumberOfElements(v);
-    int32_t* cells = links->getElementListPointer(v);
-    ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
-    offset += sizeof(uint16_t);
-    ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-    offset += ncells*sizeof(int32_t);
-  }
-
-  int32_t rank = 1;
-  hsize_t dims[1] = {totalBytes};
-
-  err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FaceNeighbors, rank, dims, bufPtr);
-  if (err < 0)
-  {
-    notifyErrorMessage("Error writing the Mesh Face Neighbor Lists", -998);
-    return err;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerWriter::writeFaces(hid_t dcGid)
+int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
+  herr_t err = 0;
+  //first write the faces if they exist
   FaceArray::Pointer facesPtr = dc->getFaces();
-  if (facesPtr.get() == NULL)
+  if (facesPtr.get() != NULL)
   {
-    return -1;
-  }
+    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
+    hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
 
-  int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
-  hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
+    int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
 
-  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
+    if (err < 0) 
+    {
+      setErrorCondition(err);
+      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+    }
 
-  herr_t err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+    //next write face neighbors if they exist
+    Int32DynamicListArray::Pointer faceNeighbors = facesPtr->getFaceNeighbors();
+    if (NULL != faceNeighbors.get())
+    {
+      size_t total = 0;
+      size_t nFaces = facesPtr->getNumberOfTuples();
+      for(size_t v = 0; v < nFaces; ++v)
+      {
+        total += faceNeighbors->getNumberOfElements(v);
+      }
+
+      size_t totalBytes = nFaces * sizeof(uint16_t) + total * sizeof(int32_t);
+
+      // Allocate a flat array to copy the data into
+      QVector<uint8_t> buffer(totalBytes, 0);
+      uint8_t* bufPtr = &(buffer.front());
+      size_t offset = 0;
+
+      for(size_t v = 0; v < nFaces; ++v)
+      {
+        uint16_t ncells = faceNeighbors->getNumberOfElements(v);
+        int32_t* cells = faceNeighbors->getElementListPointer(v);
+        ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
+        offset += sizeof(uint16_t);
+        ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
+        offset += ncells*sizeof(int32_t);
+      }
+
+      int32_t rank = 1;
+      hsize_t dims[1] = {totalBytes};
+
+      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FaceNeighbors, rank, dims, bufPtr);
+      if (err < 0)
+      {
+        notifyErrorMessage("Error writing the Face Neighbors", -998);
+        return err;
+      }
+    }
+
+    //last write faces containing verts if they exist
+    Int32DynamicListArray::Pointer facesContainingVert = facesPtr->getFacesContainingVert();
+    if (NULL == facesContainingVert.get())
+    {
+      return 0;
+    }
+    VertexArray::Pointer verticesPtr = dc->getVertices();
+    if (NULL == verticesPtr.get())
+    {
+      return -1;
+    }
+
+    herr_t err = -1;
+    size_t total = 0;
+    size_t nVerts = verticesPtr->getNumberOfTuples();
+    for(size_t v = 0; v < nVerts; ++v)
+    {
+      total += facesContainingVert->getNumberOfElements(v);
+    }
+
+    size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
+
+    // Allocate a flat array to copy the data into
+    QVector<uint8_t> buffer(totalBytes, 0);
+    uint8_t* bufPtr = &(buffer.front());
+    size_t offset = 0;
+
+    for(size_t v = 0; v < nVerts; ++v)
+    {
+      uint16_t ncells = facesContainingVert->getNumberOfElements(v);
+      int32_t* cells = facesContainingVert->getElementListPointer(v);
+      ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
+      offset += sizeof(uint16_t);
+      ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
+      offset += ncells*sizeof(int32_t);
+    }
+
+    rank = 1;
+    dims[0] = totalBytes;
+
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesContainingVert, rank, dims, bufPtr);
+    if (err < 0)
+    {
+      notifyErrorMessage("Error writing the Faces Containing Verts", -999);
+      return err;
+    }
   }
   return err;
 }
-
 
 // -----------------------------------------------------------------------------
 //

@@ -72,7 +72,6 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeEnsembleArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeFieldArraysToRead)
@@ -90,17 +89,11 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     */
     virtual void preflight();
 
+    void setReadAllArrays();
+
   protected:
     EdgeDataContainerReader();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
@@ -108,8 +101,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public VertexDataContainerRead
     int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead);
+                       QVector<QString> &namesRead,
+                       QSet<QString> &namesToRead,
+                       bool readAllCurrentArrays);
 
 
   private:

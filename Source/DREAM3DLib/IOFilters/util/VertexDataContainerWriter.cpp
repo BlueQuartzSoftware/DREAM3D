@@ -128,7 +128,7 @@ void VertexDataContainerWriter::execute()
 
   writeXdmfGridHeader();
 
-  err = writeVertices(dcGid);
+  err = writeMeshData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -290,28 +290,26 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const QString &groupName,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::writeVertices(hid_t dcGid)
+int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
 {
-
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
   VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
 
-  VertexArray::Pointer verts = dc->getVertices();
-  if(NULL == verts.get())
+  herr_t err = 0;
+  //first write the faces if they exist
+  VertexArray::Pointer verticesPtr = dc->getVertices();
+  if (verticesPtr.get() != NULL)
   {
-    return -1;
-  }
+    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
+    hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
 
-  int32_t rank = 2;
-  hsize_t dims[2] = {verts->getNumberOfTuples(), 3};
+    int32_t* data = reinterpret_cast<int32_t*>(verticesPtr->getPointer(0));
 
-  float* data = reinterpret_cast<float*>(verts->getPointer(0));
-
-  herr_t err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
+    if (err < 0) 
+    {
+      setErrorCondition(err);
+      notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+    }
   }
   return err;
 }

@@ -241,15 +241,7 @@ void DataContainerWriter::preflight()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::execute()
 {
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  //if (NULL == m)
-  //{
-  //  setErrorCondition(-1);
-  //  QString ss;
-  //  ss = QObject::tr("DataContainer was NULL");
-  //  notifyErrorMessage(ss, -10);
-  //  return;
-  //}
+
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 

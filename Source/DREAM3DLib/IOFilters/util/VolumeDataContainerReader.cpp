@@ -55,8 +55,7 @@ VolumeDataContainerReader::VolumeDataContainerReader() :
   m_ReadCellEnsembleData(true),
   m_ReadAllCellArrays(false),
   m_ReadAllCellFieldArrays(false),
-  m_ReadAllCellEnsembleArrays(false),
-  m_ReadAllArrays(false)
+  m_ReadAllCellEnsembleArrays(false)
 {
 }
 
@@ -87,6 +86,14 @@ void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   }
   else if (preflight == true)
   {
+    if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) m_ReadCellData = false;
+    if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) m_ReadCellFieldData = false;
+    if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) m_ReadCellEnsembleData = false;
+
+    if(m_ReadCellData == true) dc->clearCellData();
+    if(m_ReadCellFieldData == true) dc->clearCellFieldData();
+    if(m_ReadCellEnsembleData == true) dc->clearCellEnsembleData();
+
     int err = gatherData(preflight);
     if (err < 0)
     {
@@ -136,9 +143,9 @@ void VolumeDataContainerReader::execute()
   dc->setResolution(spacing);
   dc->setOrigin(origin);
 
-  if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true && m_ReadAllArrays != true) m_ReadCellData = false;
-  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true && m_ReadAllArrays != true) m_ReadCellFieldData = false;
-  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true && m_ReadAllArrays != true) m_ReadCellEnsembleData = false;
+  if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true) m_ReadCellData = false;
+  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true) m_ReadCellFieldData = false;
+  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true) m_ReadCellEnsembleData = false;
 
   if(m_ReadCellData == true) dc->clearCellData();
   if(m_ReadCellFieldData == true) dc->clearCellFieldData();
@@ -150,6 +157,15 @@ void VolumeDataContainerReader::execute()
   setErrorCondition(err);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VolumeDataContainerReader::setReadAllArrays()
+{
+  m_ReadAllCellArrays = true;
+  m_ReadAllCellFieldArrays = true;
+  m_ReadAllCellEnsembleArrays = true;
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -217,6 +233,98 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+int VolumeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
+{
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+
+  int err = 0;
+  QVector<hsize_t> dims;
+  H5T_class_t type_class;
+  size_t type_size;
+  if (true == preflight)
+  {
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    if (err >= 0)
+    {
+      CellArray::Pointer triangles = CellArray::CreateArray(1, DREAM3D::CellData::SurfaceMeshCells, NULL);
+      dc->setCells(triangles);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
+      dc->getCells()->setCellNeighbors(cellNeighbors);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
+      dc->getCells()->setCellsContainingVert(cellsContainingVert);
+    }
+  }
+  else
+  {
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsName, dims, type_class, type_size);
+    if (err >= 0)
+    {
+      // Allocate the Cell_t structures
+      CellArray::Pointer cellsPtr = CellArray::CreateArray(dims[0], DREAM3D::CellData::SurfaceMeshCells, NULL);
+      // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
+      int32_t* data = reinterpret_cast<int32_t*>(cellsPtr->getPointer(0));
+      // Read the data from the file
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::CellsName, data);
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+        return err;
+      }
+      dc->setCells(cellsPtr);
+      size_t nCells= cellsPtr->getNumberOfTuples();
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellNeighbors, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the cellNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellNeighbors, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer cellNeighbors = Int32DynamicListArray::New();
+        cellNeighbors->deserializeLinks(buffer, nCells);
+        dc->getCells()->setCellNeighbors(cellNeighbors);
+      }
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::CellsContainingVert, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the cellNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::CellsContainingVert, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Cell List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer cellsContainingVert = Int32DynamicListArray::New();
+        cellsContainingVert->deserializeLinks(buffer, nCells);
+        dc->getCells()->setCellsContainingVert(cellsContainingVert);
+      }
+    }
+  }
+  return 1;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
@@ -252,11 +360,13 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     dc->setOrigin(origin);
   }
 
+  readMeshData(dcGid, preflight);
+
   if(m_ReadCellData == true)
   {
     QVector<QString> readNames;
     QSet<QString> cellArraysToRead = getCellArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, cellArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, cellArraysToRead, m_ReadAllCellArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -269,7 +379,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> cellFieldArraysToRead = getCellFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFieldArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFieldArraysToRead, m_ReadAllCellFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -282,7 +392,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> cellEnsembleArraysToRead = getCellEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, cellEnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, cellEnsembleArraysToRead, m_ReadAllCellEnsembleArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -302,7 +412,8 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead)
+                                                QSet<QString> &namesToRead,
+                                                bool readAllCurrentArrays)
 {
 
   VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
@@ -325,7 +436,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     QSet<QString>::iterator contains = namesToRead.find(*iter);
-    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
