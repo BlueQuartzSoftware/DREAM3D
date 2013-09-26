@@ -613,7 +613,9 @@ void RunPipeline2()
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(false);
   dcr->setReadVolumeData(true);
-  dcr->setReadAllArrays(true);
+  dcr->setReadAllCellArrays(true);
+  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellEnsembleArrays(true);
   pipeline->pushBack(dcr);
 
   QuickSurfaceMesh::Pointer qsm = QuickSurfaceMesh::New();

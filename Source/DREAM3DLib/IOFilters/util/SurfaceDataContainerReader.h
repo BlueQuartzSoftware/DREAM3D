@@ -69,11 +69,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFaceEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFieldArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceEnsembleArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
 
     /**

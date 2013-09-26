@@ -53,6 +53,9 @@ VertexDataContainerReader::VertexDataContainerReader() :
   m_ReadVertexData(true),
   m_ReadVertexFieldData(true),
   m_ReadVertexEnsembleData(true),
+  m_ReadAllVertexArrays(false),
+  m_ReadAllVertexFieldArrays(false),
+  m_ReadAllVertexEnsembleArrays(false),
   m_ReadAllArrays(false)
 {
 }

@@ -197,6 +197,7 @@ void InitializeSyntheticVolume::preflight()
   read_data->setReadCellData(false);
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
+  read_data->setReadAllCellEnsembleArrays(true);
   read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
   read_data->preflight();
   if (read_data->getErrorCondition() < 0)
@@ -249,7 +250,7 @@ void InitializeSyntheticVolume::execute()
   read_data->setReadCellData(false);
   read_data->setReadCellFieldData(false);
   read_data->setReadCellEnsembleData(true);
-  read_data->setReadAllArrays(true);
+  read_data->setReadAllCellEnsembleArrays(true);
   read_data->setDataContainer(getDataContainerArray()->getDataContainer(getDataContainerName()).get());
   read_data->execute();
 

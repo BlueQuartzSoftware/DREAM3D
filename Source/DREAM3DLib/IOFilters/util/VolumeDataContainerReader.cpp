@@ -53,6 +53,9 @@ VolumeDataContainerReader::VolumeDataContainerReader() :
   m_ReadCellData(true),
   m_ReadCellFieldData(true),
   m_ReadCellEnsembleData(true),
+  m_ReadAllCellArrays(false),
+  m_ReadAllCellFieldArrays(false),
+  m_ReadAllCellEnsembleArrays(false),
   m_ReadAllArrays(false)
 {
 }

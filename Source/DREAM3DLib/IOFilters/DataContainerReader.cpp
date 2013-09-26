@@ -427,9 +427,9 @@ void DataContainerReader::readData(bool preflight)
         eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
         eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
         eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
-        eReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
-        eReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
-        eReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
+        eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
+        eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
+        eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
         eReader->setReadAllArrays(m_ReadAllArrays);
         eReader->setHdfFileId(fileId);
         eReader->setHdfGroupId(dcGid);
@@ -458,6 +458,9 @@ void DataContainerReader::readData(bool preflight)
         vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
         vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
         vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
+        vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
+        vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
+        vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
         vReader->setReadAllArrays(m_ReadAllArrays);
         vReader->setHdfFileId(fileId);
         vReader->setHdfGroupId(dcGid);

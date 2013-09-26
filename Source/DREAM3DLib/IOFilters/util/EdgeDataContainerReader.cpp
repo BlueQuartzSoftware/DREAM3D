@@ -76,6 +76,9 @@ EdgeDataContainerReader::EdgeDataContainerReader() :
   m_ReadEdgeData(true),
   m_ReadEdgeFieldData(true),
   m_ReadEdgeEnsembleData(true),
+  m_ReadAllEdgeArrays(false),
+  m_ReadAllEdgeFieldArrays(false),
+  m_ReadAllEdgeEnsembleArrays(false),
   m_ReadAllArrays(false)
 {
 }

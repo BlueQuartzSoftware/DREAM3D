@@ -67,6 +67,9 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexEnsembleData)
 
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexEnsembleArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)

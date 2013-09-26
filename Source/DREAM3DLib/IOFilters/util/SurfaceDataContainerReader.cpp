@@ -76,6 +76,9 @@ EdgeDataContainerReader(),
   m_ReadFaceData(true),
   m_ReadFaceFieldData(true),
   m_ReadFaceEnsembleData(true),
+  m_ReadAllFaceArrays(false),
+  m_ReadAllFaceFieldArrays(false),
+  m_ReadAllFaceEnsembleArrays(false),
   m_ReadAllArrays(false)
 {
 }
