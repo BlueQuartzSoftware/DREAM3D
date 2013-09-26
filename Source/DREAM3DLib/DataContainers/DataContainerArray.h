@@ -84,7 +84,7 @@ class DREAM3DLib_EXPORT DataContainerArray : public Observable
      */
     virtual DataContainer::Pointer removeDataContainer(const QString &name);
     virtual DataContainer::Pointer getDataContainer(const QString &name);
-    QList<QString>& getDataContainerNames();
+    QList<QString> getDataContainerNames();
     QList<DataContainer::Pointer>& getDataContainerArray();
 
     virtual void printDataContainerNames(QTextStream &out);

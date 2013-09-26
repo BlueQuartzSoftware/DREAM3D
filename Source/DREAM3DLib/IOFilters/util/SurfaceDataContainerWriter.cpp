@@ -45,27 +45,6 @@
 
 #define WRITE_FIELD_XDMF 0
 
-namespace Detail
-{
-class H5GroupAutoCloser
-{
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
-
-  virtual ~H5GroupAutoCloser()
-  {
-    if (*gid > 0)
-    {
-      H5Gclose(*gid);
-    }
-  }
-  private:
-   hid_t* gid;
-};
-}
-
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -97,7 +76,7 @@ void SurfaceDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t
     setErrorCondition(-1);
     return;
   }
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -134,28 +113,10 @@ void SurfaceDataContainerWriter::execute()
 
   setErrorCondition(0);
 
-  // Create the HDF5 Group for the Data Container
-  err = QH5Utilities::createGroupsFromPath(DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), getHdfFileId());
-  if (err < 0)
-  {
-
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::SurfaceDataContainerName);
-    setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return;
-  }
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT );
-  if (dcGid < 0)
-  {
-    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::SurfaceDataContainerName);
-    setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return;
-  }
-  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
 
   // Add some VTK hints into the group
-  err = createVtkObjectGroup(DREAM3D::HDF5::SurfaceDataContainerName, H5_VTK_POLYDATA);
+  err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
   if (err < 0)  {
     return;
   }
@@ -166,43 +127,49 @@ void SurfaceDataContainerWriter::execute()
   err = writeFacesContainingVert(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaceNeighborLists(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaces(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaceData(dcGid, H5_FACE_DATA_GROUP_NAME);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaceFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeFaceEnsembleData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
 
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-  dcGid = -1;
+
 
   writeXdmfGridFooter(QString("Surface Data"));
 
@@ -233,7 +200,7 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
     return;
   }
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
   QTextStream& out = *getXdmfOStream();
   out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
@@ -287,7 +254,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
   QString buf;
   QTextStream out(&buf);
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
   QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents()/2);
@@ -389,8 +356,12 @@ void SurfaceDataContainerWriter::writeXdmfAttributeData(const QString &groupName
 int SurfaceDataContainerWriter::writeFacesContainingVert(hid_t dcGid)
 {
   SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-
-  Int32DynamicListArray::Pointer links = dc->getFaces()->getFacesContainingVert();
+  FaceArray::Pointer facesPtr = dc->getFaces();
+  if (NULL == facesPtr.get())
+  {
+    return -1;
+  }
+  Int32DynamicListArray::Pointer links = facesPtr->getFacesContainingVert();
   if (NULL == links.get())
   {
     return 0;
@@ -452,7 +423,7 @@ int SurfaceDataContainerWriter::writeFaceNeighborLists(hid_t dcGid)
   {
     return -1;
   }
-  Int32DynamicListArray::Pointer links = dc->getFaces()->getFaceNeighbors();
+  Int32DynamicListArray::Pointer links = facesPtr->getFaceNeighbors();
   if (NULL == links.get())
   {
     return 0;
@@ -587,9 +558,9 @@ int SurfaceDataContainerWriter::writeFaceFieldData(hid_t dcGid, QString groupNam
   //QString groupName(H5_FIELD_DATA_GROUP_NAME)
 #if WRITE_FIELD_XDMF
 // Get the name of the .dream3d file that we are writing to:
-  ssize_t nameSize = H5Fget_name(getHdfFileId(), NULL, 0) + 1;
+  ssize_t nameSize = H5Fget_name(getHdfGroupId(), NULL, 0) + 1;
   QVector<char> nameBuffer(nameSize, 0);
-  nameSize = H5Fget_name(getHdfFileId(), &(nameBuffer.front()), nameSize);
+  nameSize = H5Fget_name(getHdfGroupId(), &(nameBuffer.front()), nameSize);
 
   QString hdfFileName(&(nameBuffer.front()), nameSize);
   hdfFileName = QFileInfo::filename(hdfFileName);

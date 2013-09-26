@@ -589,14 +589,17 @@ int LaplacianSmoothing::vertexBasedSmoothing()
 
   //Make sure the Triangle Connectivity is created because the FindNRing algorithm needs this and will
   // assert if the data is NOT in the SurfaceMesh Data Container
-  Int32DynamicListArray::Pointer MeshLinks = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->getFacesContainingVert();
+  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
+  if(facesPtr == NULL)
+  {
+    return -1;
+  }
+  Int32DynamicListArray::Pointer MeshLinks = facesPtr->getFacesContainingVert();
   if (NULL == MeshLinks.get())
   {
     getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces()->findFacesContainingVert();
   }
 
-
-  FaceArray::Pointer facesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   //  FaceArray::Face_t* faces = facesPtr->getPointer(0);
 
   DataArray<int8_t>::Pointer nodeTypeSharedPtr = DataArray<int8_t>::NullPointer();

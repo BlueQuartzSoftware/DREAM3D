@@ -324,7 +324,6 @@ void FilterPipeline::execute()
   START_CLOCK;
   PipelineMessage progValue("", "", 0, PipelineMessage::StatusValue, -1);
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
-  for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter)
   {
     progress = progress + 1.0f;
     progValue.setMessageType(PipelineMessage::StatusValue);

@@ -71,6 +71,18 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadVertexData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEdgeData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllEdgeEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellEnsembleArrays)
 
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, SelectedVolumeVertexArrays)
@@ -170,6 +182,8 @@ class DREAM3DLib_EXPORT DataContainerReader : public AbstractFilter
     * @param ensembles The number of ensembles
     */
     void dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles);
+
+    void readData(bool preflight);
 
   private:
     FilterPipeline::Pointer m_PipelineFromFile;

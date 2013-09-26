@@ -48,12 +48,22 @@
 
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/DataContainerArray.h"
 #include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+
+#include "DREAM3DLib\SyntheticBuildingFilters\InitializeSyntheticVolume.h"
+#include "DREAM3DLib\SyntheticBuildingFilters\PackPrimaryPhases.h"
+#include "DREAM3DLib\StatisticsFilters\FindNeighbors.h"
+#include "DREAM3DLib\StatisticsFilters\FindNumFields.h"
+#include "DREAM3DLib\SyntheticBuildingFilters\MatchCrystallography.h"
+#include "DREAM3DLib\GenericFilters\GenerateIPFColors.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
+
+#include "DREAM3DLib/IOFilters/DataContainerReader.h"
+#include "DREAM3DLib/SurfaceMeshingFilters/QuickSurfaceMesh.h"
+
 
 #include "UnitTestSupport.hpp"
 
@@ -539,7 +549,92 @@ void TestDataContainer()
 
 }
 
+void RunPipeline()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
+  InitializeSyntheticVolume::Pointer isv = InitializeSyntheticVolume::New();
+  isv->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTest.dream3d");
+  isv->setXVoxels(128);
+  isv->setYVoxels(128);
+  isv->setZVoxels(128);
+  isv->setXRes(0.1);
+  isv->setYRes(0.1);
+  isv->setZRes(0.1);
+  QVector<uint> sTypes;
+  sTypes.push_back(DREAM3D::ShapeType::UnknownShapeType);
+  sTypes.push_back(DREAM3D::ShapeType::EllipsoidShape);
+  isv->setShapeTypes(sTypes);
+  pipeline->pushBack(isv);
+
+  PackPrimaryPhases::Pointer ppp = PackPrimaryPhases::New();
+  ppp->setPeriodicBoundaries(false);
+  ppp->setWriteGoalAttributes(false);
+  pipeline->pushBack(ppp);
+
+  FindNeighbors::Pointer fn = FindNeighbors::New();
+  pipeline->pushBack(fn);
+
+  FindNumFields::Pointer fnf = FindNumFields::New();
+  pipeline->pushBack(fnf);
+
+  MatchCrystallography::Pointer mc = MatchCrystallography::New();
+  mc->setMaxIterations(100000);
+  pipeline->pushBack(mc);
+
+  GenerateIPFColors::Pointer gipfc = GenerateIPFColors::New();
+  pipeline->pushBack(gipfc);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut.dream3d");
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
+void RunPipeline2()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut.dream3d");
+  dcr->setReadVertexData(false);
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(false);
+  dcr->setReadVolumeData(true);
+  dcr->setReadAllArrays(true);
+  pipeline->pushBack(dcr);
+
+  QuickSurfaceMesh::Pointer qsm = QuickSurfaceMesh::New();
+  pipeline->pushBack(qsm);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
 
 // -----------------------------------------------------------------------------
 //  Use unit test framework
@@ -549,21 +644,23 @@ int main(int argc, char **argv)
   int err = EXIT_SUCCESS;
 
 #if !REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
+//  RunPipeline();
+  RunPipeline2();
 
-  DREAM3D_REGISTER_TEST( TestInsertDelete() )
-  DREAM3D_REGISTER_TEST( TestArrayCreation() )
+  //DREAM3D_REGISTER_TEST( TestInsertDelete() )
+  //DREAM3D_REGISTER_TEST( TestArrayCreation() )
 
-  DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
-  DREAM3D_REGISTER_TEST( TestDataContainerReader() )
+  //DREAM3D_REGISTER_TEST( TestDataContainerWriter() )
+  //DREAM3D_REGISTER_TEST( TestDataContainerReader() )
 
 #if REMOVE_TEST_FILES
-  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
+//  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-  PRINT_TEST_SUMMARY();
+//  PRINT_TEST_SUMMARY();
 return err;
 }
 

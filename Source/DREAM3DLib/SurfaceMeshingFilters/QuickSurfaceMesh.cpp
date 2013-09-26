@@ -95,11 +95,13 @@ void QuickSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, s
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-      SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if (NULL == sm)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-384);
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   }
   else
   {
@@ -132,7 +134,6 @@ void QuickSurfaceMesh::execute()
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -145,6 +146,8 @@ void QuickSurfaceMesh::execute()
   size_t totalFields = m->getNumCellFieldTuples();
   size_t totalEnsembles = m->getNumCellEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
   float m_OriginX, m_OriginY, m_OriginZ;
   m->getOrigin(m_OriginX, m_OriginY, m_OriginZ);

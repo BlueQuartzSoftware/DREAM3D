@@ -80,7 +80,7 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
     setErrorCondition(-383);
     addErrorMessage(getHumanLabel(), "Vertex DataContainer is NULL", getErrorCondition());
   }
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -148,7 +148,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
 {
 
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     QString ss = QObject::tr(": Error opening input file");
     setErrorCondition(-150);
@@ -156,7 +156,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfGroupId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
   if (dcGid < 0)
   {
     QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);

@@ -47,23 +47,6 @@
 
 #define WRITE_FIELD_XDMF 0
 
-class H5GroupAutoCloser
-{
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
-
-  virtual ~H5GroupAutoCloser()
-  {
-    if (*gid > 0)
-    {
-      H5Gclose(*gid);
-    }
-  }
-  private:
-   hid_t* gid;
-};
 
 // -----------------------------------------------------------------------------
 //
@@ -97,7 +80,7 @@ void VertexDataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t 
     return;
   }
 
-  if(getHdfFileId() < 0)
+  if(getHdfGroupId() < 0)
   {
     setErrorCondition(-150);
     addErrorMessage(getHumanLabel(), "The HDF5 file id was < 0. This means this value was not set correctly from the calling object.", getErrorCondition());
@@ -135,44 +118,27 @@ void VertexDataContainerWriter::execute()
   }
   setErrorCondition(0);
 
-  // Create the HDF5 Group for the Data Container
-  err = QH5Utilities::createGroupsFromPath(DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), getHdfFileId());
-  if (err < 0)
-  {
-    QString ss = QObject::tr("Error creating HDF Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
-    setErrorCondition(-60);
-    addErrorMessage(getHumanLabel(), ss, err);
-    return;
-  }
-  hid_t dcGid = H5Gopen(getHdfFileId(), DREAM3D::HDF5::VertexDataContainerName.toLatin1().data(), H5P_DEFAULT );
-  if (dcGid < 0)
-  {
-    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::VertexDataContainerName);
-    setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
-  }
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
 
   // Add some VTK hints into the group
-  err = createVtkObjectGroup(DREAM3D::HDF5::VertexDataContainerName, H5_VTK_POLYDATA);
+  err = createVtkObjectGroup(getDataContainer()->getName(), H5_VTK_POLYDATA);
   if (err < 0)  {
     return;
   }
 
   writeXdmfGridHeader();
 
-
-  H5GroupAutoCloser dcGidAutoCloser(&dcGid);
-
   err = writeVertices(dcGid);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
   err = writeVertexData(dcGid, H5_VERTEX_DATA_GROUP_NAME);
   if (err < 0)
   {
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
@@ -193,7 +159,6 @@ void VertexDataContainerWriter::execute()
 
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-  dcGid = -1;
 
   writeXdmfGridFooter(QString("Vertex Data"));
 
@@ -220,7 +185,7 @@ void VertexDataContainerWriter::writeXdmfGridHeader()
     return;
   }
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
 
   QTextStream& out = *getXdmfOStream();
   out << "  <Grid Name=\"Vertex DataContainer\">" << "\n";
@@ -269,7 +234,7 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
   QString buf;
   QTextStream out(&buf);
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
 
   out << "    <Attribute Name=\"" << array->GetName() << "\" ";
