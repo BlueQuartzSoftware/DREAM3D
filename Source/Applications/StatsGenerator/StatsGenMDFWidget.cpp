@@ -168,7 +168,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
   if ( Ebsd::CrystalStructure::Cubic_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(CubicOps::k_MdfSize);
+    QVector<float> mdf(CubicOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
@@ -184,7 +184,7 @@ void StatsGenMDFWidget::updateMDFPlot(QVector<float> &odf)
   else if ( Ebsd::CrystalStructure::Hexagonal_High == m_CrystalStructure )
   {
     // Allocate a new vector to hold the mdf data
-    std::vector<float> mdf(HexagonalOps::k_MdfSize);
+    QVector<float> mdf(HexagonalOps::k_MdfSize);
     // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
     Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
     // Now generate the actual XY point data that gets plotted.
