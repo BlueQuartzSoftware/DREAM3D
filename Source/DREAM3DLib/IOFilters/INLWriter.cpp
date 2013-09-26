@@ -254,10 +254,12 @@ int INLWriter::writeFile()
     return -1;
   }
   uint32_t symmetry = 0;
-  for(size_t i = 1; i < materialNamePtr->GetNumberOfTuples(); ++i)
+  int32_t count = static_cast<int32_t>(materialNamePtr->GetNumberOfTuples());
+  for(int32_t i = 1; i < count; ++i)
   {
+    std::string matName = materialNames->GetValue(i);
+    fprintf(f, "# Phase_%d: %s\r\n", i, matName.c_str());
     symmetry = m_CrystalStructures[i];
-    fprintf(f, "# Phase_%zu: %s\r\n", i, materialNames->GetValue(i).c_str());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::Cubic;
@@ -270,7 +272,7 @@ int INLWriter::writeFile()
     {
       symmetry = Ebsd::Ang::PhaseSymmetry::UnknownSymmetry;
     }
-    fprintf(f, "# Symmetry_%zu: %u\r\n", i, symmetry);
+    fprintf(f, "# Symmetry_%d: %u\r\n", i, symmetry);
     fprintf(f, "#\r\n");
   }
 
@@ -279,7 +281,8 @@ int INLWriter::writeFile()
   {
     uniqueGrainIds.insert(m_GrainIds[i]);
   }
-  fprintf(f, "# Num_Grains: %zu \r\n", uniqueGrainIds.size());
+  count = static_cast<int32_t>(uniqueGrainIds.size());
+  fprintf(f, "# Num_Grains: %d \r\n", count);
   fprintf(f, "#\r\n");
 
 //  fprintf(f, "# Column 1-3: phi1, PHI, phi2 (orientation of point in radians)\r\n");
