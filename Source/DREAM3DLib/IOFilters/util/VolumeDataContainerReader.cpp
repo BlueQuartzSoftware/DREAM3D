@@ -136,16 +136,10 @@ void VolumeDataContainerReader::execute()
   dc->setResolution(spacing);
   dc->setOrigin(origin);
 
-  if(getVertexArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadVertexData(false);
-  if(getEdgeArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadEdgeData(false);
-  if(getFaceArraysToRead().size() == 0 && m_ReadAllArrays != true) setReadFaceData(false);
-  if(m_CellArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellData = false;
-  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellFieldData = false;
-  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllArrays != true) m_ReadCellEnsembleData = false;
+  if(m_CellArraysToRead.size() == 0 && m_ReadAllCellArrays != true && m_ReadAllArrays != true) m_ReadCellData = false;
+  if(m_CellFieldArraysToRead.size() == 0 && m_ReadAllCellFieldArrays != true && m_ReadAllArrays != true) m_ReadCellFieldData = false;
+  if(m_CellEnsembleArraysToRead.size() == 0 && m_ReadAllCellEnsembleArrays != true && m_ReadAllArrays != true) m_ReadCellEnsembleData = false;
 
-  if(getReadVertexData() == true) dc->clearVertexData();
-  if(getReadEdgeData() == true) dc->clearEdgeData();
-  if(getReadFaceData() == true) dc->clearFaceData();
   if(m_ReadCellData == true) dc->clearCellData();
   if(m_ReadCellFieldData == true) dc->clearCellFieldData();
   if(m_ReadCellEnsembleData == true) dc->clearCellEnsembleData();
@@ -258,45 +252,6 @@ int VolumeDataContainerReader::gatherData(bool preflight)
     dc->setOrigin(origin);
   }
 
-  if(getReadVertexData() == true)
-  {
-    QVector<QString> readNames;
-    QSet<QString> vertexArraysToRead = getVertexArraysToRead();
-    err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-  }
-
-  if(getReadEdgeData() == true)
-  {
-    QVector<QString> readNames;
-    QSet<QString> edgeArraysToRead = getEdgeArraysToRead();
-    err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-  }
-
-  if(getReadFaceData() == true)
-  {
-    QVector<QString> readNames;
-    QSet<QString> faceArraysToRead = getFaceArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, faceArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-  }
-
   if(m_ReadCellData == true)
   {
     QVector<QString> readNames;
@@ -313,8 +268,8 @@ int VolumeDataContainerReader::gatherData(bool preflight)
   if(m_ReadCellFieldData == true)
   {
     QVector<QString> readNames;
-    QSet<QString> cellFeildArraysToRead = getCellFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFeildArraysToRead);
+    QSet<QString> cellFieldArraysToRead = getCellFieldArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, cellFieldArraysToRead);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);

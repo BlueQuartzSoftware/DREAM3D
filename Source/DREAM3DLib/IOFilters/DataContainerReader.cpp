@@ -361,64 +361,33 @@ void DataContainerReader::readData(bool preflight)
           getDataContainerArray()->pushBack(dc);
         }
 
-        VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
-        volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-        volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
-        volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
-        volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
-        volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
-        volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
-        volumeReader->setReadAllArrays(m_ReadAllArrays);
-        volumeReader->setHdfFileId(fileId);
-        volumeReader->setHdfGroupId(dcGid);
-        volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        volumeReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Volume Data ";
-        volumeReader->setMessagePrefix(ss);
-        if(preflight == true) volumeReader->preflight();
-        else volumeReader->execute();
-        if (volumeReader->getErrorCondition() < 0)
+        VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
+        vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
+        vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
+        vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
+        vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
+        vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
+        vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
+        vReader->setReadAllArrays(m_ReadAllArrays);
+        vReader->setHdfFileId(fileId);
+        vReader->setHdfGroupId(dcGid);
+        vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        vReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+        vReader->setMessagePrefix(ss);
+        if(preflight == true) vReader->preflight();
+        else vReader->execute();
+        if (vReader->getErrorCondition() < 0)
         {
           if(preflight == true)
           {
-            setReadVolumeData(false);
-            setErrorCondition(volumeReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
+            setReadVertexData(false);
+            setErrorCondition(vReader->getErrorCondition());
+            addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
           }
           else
           {
-            notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
-            return;
-          }
-        }
-
-        SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
-        smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
-        smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
-        smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
-        smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
-        smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
-        smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
-        smReader->setReadAllArrays(m_ReadAllArrays);
-        smReader->setHdfFileId(fileId);
-        smReader->setHdfGroupId(dcGid);
-        smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        smReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Surface Data ";
-        smReader->setMessagePrefix(ss);
-        if(preflight == true) smReader->preflight();
-        else smReader->execute();
-        if (smReader->getErrorCondition() < 0)
-        {
-          if(preflight == true)
-          {
-            setReadSurfaceData(false);
-            setErrorCondition(smReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
-          }
-          else
-          {
-            notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
+            notifyErrorMessage("Error Reading the Vertex Data", vReader->getErrorCondition());
             return;
           }
         }
@@ -454,33 +423,64 @@ void DataContainerReader::readData(bool preflight)
           }
         }
 
-        VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
-        vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-        vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
-        vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
-        vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
-        vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
-        vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
-        vReader->setReadAllArrays(m_ReadAllArrays);
-        vReader->setHdfFileId(fileId);
-        vReader->setHdfGroupId(dcGid);
-        vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        vReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-        vReader->setMessagePrefix(ss);
-        if(preflight == true) vReader->preflight();
-        else vReader->execute();
-        if (vReader->getErrorCondition() < 0)
+        SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
+        smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
+        smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
+        smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
+        smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
+        smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
+        smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
+        smReader->setReadAllArrays(m_ReadAllArrays);
+        smReader->setHdfFileId(fileId);
+        smReader->setHdfGroupId(dcGid);
+        smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        smReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Surface Data ";
+        smReader->setMessagePrefix(ss);
+        if(preflight == true) smReader->preflight();
+        else smReader->execute();
+        if (smReader->getErrorCondition() < 0)
         {
           if(preflight == true)
           {
-            setReadVertexData(false);
-            setErrorCondition(vReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
+            setReadSurfaceData(false);
+            setErrorCondition(smReader->getErrorCondition());
+            addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
           }
           else
           {
-            notifyErrorMessage("Error Reading the Vertex Data", vReader->getErrorCondition());
+            notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
+            return;
+          }
+        }
+
+        VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+        volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
+        volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
+        volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
+        volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
+        volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
+        volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
+        volumeReader->setReadAllArrays(m_ReadAllArrays);
+        volumeReader->setHdfFileId(fileId);
+        volumeReader->setHdfGroupId(dcGid);
+        volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        volumeReader->setObservers(getObservers());
+        ss = getMessagePrefix() + " |--> Reading Volume Data ";
+        volumeReader->setMessagePrefix(ss);
+        if(preflight == true) volumeReader->preflight();
+        else volumeReader->execute();
+        if (volumeReader->getErrorCondition() < 0)
+        {
+          if(preflight == true)
+          {
+            setReadVolumeData(false);
+            setErrorCondition(volumeReader->getErrorCondition());
+            addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
+          }
+          else
+          {
+            notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
             return;
           }
         }

@@ -150,6 +150,14 @@ void EdgeDataContainerReader::execute()
   }
   setErrorCondition(err);
 
+  if(m_EdgeArraysToRead.size() == 0 && m_ReadAllEdgeArrays != true && m_ReadAllArrays != true) m_ReadEdgeData = false;
+  if(m_EdgeFieldArraysToRead.size() == 0 && m_ReadAllEdgeFieldArrays != true && m_ReadAllArrays != true) m_ReadEdgeFieldData = false;
+  if(m_EdgeEnsembleArraysToRead.size() == 0 && m_ReadAllEdgeEnsembleArrays != true && m_ReadAllArrays != true) m_ReadEdgeEnsembleData = false;
+
+  if(m_ReadEdgeData == true) dc->clearEdgeData();
+  if(m_ReadEdgeFieldData == true) dc->clearEdgeFieldData();
+  if(m_ReadEdgeEnsembleData == true) dc->clearEdgeEnsembleData();
+
   err = gatherData(false);
   setErrorCondition(err);
 
@@ -172,7 +180,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(getHdfGroupId(), DREAM3D::HDF5::EdgeDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(getHdfGroupId(), getDataContainer()->getName().toLatin1().data(), H5P_DEFAULT );
   if(dcGid < 0)
   {
     QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::EdgeDataContainerName);
@@ -185,31 +193,49 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 
   int err = 0;
 
-  err = gatherVertexData(dcGid, preflight);
-  if (err < 0)
+  readMeshData(dcGid, preflight);
+
+  if(m_ReadEdgeData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> edgeArraysToRead = getEdgeArraysToRead();
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  err = gatherEdgeData(dcGid, preflight);
-  if (err < 0)
+  if(m_ReadEdgeFieldData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> edgeFieldArraysToRead = getEdgeFieldArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  err = gatherEdgeFieldData(dcGid, preflight);
-  if (err < 0)
+  if(m_ReadEdgeEnsembleData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> edgeEnsembleArraysToRead = getEdgeEnsembleArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, edgeEnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  err = gatherEdgeEnsembleData(dcGid, preflight);
-  if (err < 0)
-  {
-    return err;
-  }
   // Now finally close the group
-  H5Gclose(dcGid); // Close the Data Container Group
+  err |= H5Gclose(dcGid); // Close the Data Container Group
 
   return err;
 }
@@ -217,124 +243,93 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherEdgeFieldData(hid_t dcGid, bool preflight)
+int EdgeDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 {
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_EdgeFieldArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherEdgeEnsembleData(hid_t dcGid, bool preflight)
-{
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EdgeEnsembleArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
-{
-  int err = 0;
-//  QVector<hsize_t> dims;
-//  H5T_class_t type_class;
-//  size_t type_size;
-
-//  if (true == preflight)
-//  {
-//    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
-//    if (err >= 0)
-//    {
-//      StructArray<EdgeArray::Edge_t>::Pointer edges = StructArray<EdgeArray::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
-//      getEdgeDataContainer()->setEdges(edges);
-//    }
-//  }
-//  else
-//  {
-//    err = readEdges(dcGid);
-//  }
-
-  // Read all the Edge Attribute data
-  QVector<QString> readNames;
-  err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
-  if(err == -154) // The group was not in the file so just ignore that error
-  {
-    err = 0;
-  }
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
-{
+  // We are NOT going to check for NULL DataContainer because we are this far and the checks
+  // have already happened. WHich is why this method is protected or private.
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-  VertexArray::Pointer verticesPtr = dc->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
 
-  Int32DynamicListArray::Pointer MeshLinks = Int32DynamicListArray::New();
-
-  size_t nVerts = verticesPtr->getNumberOfTuples();
-  herr_t err = 0;
+  int err = 0;
   QVector<hsize_t> dims;
   H5T_class_t type_class;
-  size_t type_size = 0;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
-  if (err < 0)
+  size_t type_size;
+  if (true == preflight)
   {
-    return err;
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+    if (err >= 0)
+    {
+      EdgeArray::Pointer edges = EdgeArray::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges, NULL);
+      dc->setEdges(edges);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgeNeighbors, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
+      dc->getEdges()->setEdgeNeighbors(edgeNeighbors);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesContainingVert, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();
+      dc->getEdges()->setEdgesContainingVert(edgesContainingVert);
+    }
   }
   else
   {
-    dc->getEdges()->setEdgeNeighbors(MeshLinks);
-  }
-
-  if (false == preflight && type_size > 0)
-  {
-    //Read the array into the buffer
-    std::vector<uint8_t> buffer;
-    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
-    if (err < 0)
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+    if (err >= 0)
     {
-      setErrorCondition(err);
-      notifyErrorMessage("Error Reading Vertex Links from Data file", getErrorCondition());
-      return err;
+      // Allocate the Edge_t structures
+      EdgeArray::Pointer edgesPtr = EdgeArray::CreateArray(dims[0], DREAM3D::EdgeData::SurfaceMeshEdges, NULL);
+      // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
+      int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
+      // Read the data from the file
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::EdgesName, data);
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+        return err;
+      }
+      dc->setEdges(edgesPtr);
+      size_t nEdges= edgesPtr->getNumberOfTuples();
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgeNeighbors, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the edgeNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::EdgeNeighbors, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer edgeNeighbors = Int32DynamicListArray::New();
+        edgeNeighbors->deserializeLinks(buffer, nEdges);
+        dc->getEdges()->setEdgeNeighbors(edgeNeighbors);
+      }
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesContainingVert, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the edgeNeighbors array into the buffer
+
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Edge List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer edgesContainingVert = Int32DynamicListArray::New();
+        edgesContainingVert->deserializeLinks(buffer, nEdges);
+        dc->getEdges()->setEdgesContainingVert(edgesContainingVert);
+      }
     }
-    MeshLinks->deserializeLinks(buffer, nVerts);
-    dc->setMeshLinks(MeshLinks);
   }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readEdges(hid_t dcGid)
-{
-  herr_t err = -1;
-
-  return err;
+  return 1;
 }
 
 // -----------------------------------------------------------------------------

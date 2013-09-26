@@ -147,6 +147,14 @@ void SurfaceDataContainerReader::execute()
   }
   setErrorCondition(0);
 
+  if(m_FaceArraysToRead.size() == 0 && m_ReadAllFaceArrays != true && m_ReadAllArrays != true) m_ReadFaceData = false;
+  if(m_FaceFieldArraysToRead.size() == 0 && m_ReadAllFaceFieldArrays != true && m_ReadAllArrays != true) m_ReadFaceFieldData = false;
+  if(m_FaceEnsembleArraysToRead.size() == 0 && m_ReadAllFaceEnsembleArrays != true && m_ReadAllArrays != true) m_ReadFaceEnsembleData = false;
+
+  if(m_ReadFaceData == true) dc->clearFaceData();
+  if(m_ReadFaceFieldData == true) dc->clearFaceFieldData();
+  if(m_ReadFaceEnsembleData == true) dc->clearFaceEnsembleData();
+
   err = gatherData(false);
   setErrorCondition(err);
 
@@ -176,70 +184,61 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
     return -1;
   }
-  Detail::H5GroupAutoCloser dcGidAutoCloser(&dcGid);
 
   int err = 0;
 
-  err = gatherFaceData(dcGid, preflight);
-  if (err < 0)
+  readMeshData(dcGid, preflight);
+
+  if(m_ReadFaceData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> faceArraysToRead = getFaceArraysToRead();
+    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, faceArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  err = gatherFaceFieldData(dcGid, preflight);
-  if (err < 0)
+  if(m_ReadFaceFieldData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> faceFieldArraysToRead = getFaceFieldArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, faceFieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
 
-  err = gatherFaceEnsembleData(dcGid, preflight);
-  if (err < 0)
+  if(m_ReadFaceEnsembleData == true)
   {
-    return err;
+    QVector<QString> readNames;
+    QSet<QString> faceEnsembleArraysToRead = getFaceEnsembleArraysToRead();
+    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, faceEnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
   }
+
   // Now finally close the group
-  H5Gclose(dcGid); // Close the Data Container Group
+  err |= H5Gclose(dcGid); // Close the Data Container Group
 
   return err;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::gatherFaceFieldData(hid_t dcGid, bool preflight)
-{
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FACE_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FaceFieldArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::gatherFaceEnsembleData(hid_t dcGid, bool preflight)
-{
-    QVector<QString> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FACE_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_FaceEnsembleArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
+int SurfaceDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 {
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
@@ -257,197 +256,75 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
       FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, NULL);
       dc->setFaces(triangles);
     }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FaceNeighbors, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
+      dc->getFaces()->setFaceNeighbors(faceNeighbors);
+    }
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesContainingVert, dims, type_class, type_size);
+    if(err >= 0)
+    {
+      Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();
+      dc->getFaces()->setFacesContainingVert(facesContainingVert);
+    }
   }
   else
   {
-    err = readFaces(dcGid);
-  }
-
-  // This will conditionally read all the MeshTriangleNeighborLists data if preflight is true
-  err = readMeshTriangleNeighborLists(dcGid, preflight);
-  if (err < 0)
-  {
-  }
-
-  // Read all the Face Attribute data
-  QVector<QString> readNames;
-  err = readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
-  if(err == -154) // The group was not in the file so just ignore that error
-  {
-    err = 0;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
-{
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-  VertexArray::Pointer verticesPtr = dc->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
-
-  Int32DynamicListArray::Pointer MeshLinks = Int32DynamicListArray::New();
-
-  size_t nVerts = verticesPtr->getNumberOfTuples();
-  herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size = 0;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
-  if (err < 0)
-  {
-    return err;
-  }
-  else
-  {
-    dc->setMeshLinks(MeshLinks);
-  }
-
-  if (false == preflight && type_size > 0)
-  {
-    //Read the array into the buffer
-    std::vector<uint8_t> buffer;
-    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
-    if (err < 0)
+    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
+    if (err >= 0)
     {
-      setErrorCondition(err);
-      notifyErrorMessage("Error Reading Vertex Links from Data file", getErrorCondition());
-      return err;
-    }
-    MeshLinks->deserializeLinks(buffer, nVerts);
-    dc->setMeshLinks(MeshLinks);
-  }
+      // Allocate the Face_t structures
+      FaceArray::Pointer facesPtr = FaceArray::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces, NULL);
+      // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
+      int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
+      // Read the data from the file
+      err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
+      if (err < 0)
+      {
+        setErrorCondition(err);
+        notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+        return err;
+      }
+      dc->setFaces(facesPtr);
+      size_t nFaces= facesPtr->getNumberOfTuples();
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FaceNeighbors, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the faceNeighbors array into the buffer
 
-  return err;
-}
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::FaceNeighbors, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer faceNeighbors = Int32DynamicListArray::New();
+        faceNeighbors->deserializeLinks(buffer, nFaces);
+        dc->getFaces()->setFaceNeighbors(faceNeighbors);
+      }
+      err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesContainingVert, dims, type_class, type_size);
+      if (err >= 0)
+      {
+        //Read the faceNeighbors array into the buffer
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readVertices(hid_t dcGid)
-{
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-  herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    notifyErrorMessage("No Vertices Data in Data file", getErrorCondition());
-    return err;
-  }
-  // Allocate the data
-  VertexArray::Pointer verticesPtr = VertexArray::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
-  // Read the data
-  float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
-  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
-  }
-  dc->setVertices(verticesPtr);
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readFaces(hid_t dcGid)
-{
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-
-  herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size;
-  // Get the size of the data set so we know what to allocate
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
-  if (err < 0)
-  {
-    setErrorCondition(err);
-    notifyErrorMessage("No Vertex Links in Data file", getErrorCondition());
-    return err;
-  }
-  // Allocate the Face_t structures
-  FaceArray::Pointer facesPtr = FaceArray::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces, NULL);
-  // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
-  int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
-  // Read the data from the file
-  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
-  if (err < 0) {
-    setErrorCondition(err);
-    notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
-    return err;
-  }
-  dc->setFaces(facesPtr);
-
-  return err;
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool preflight)
-{
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  SurfaceDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
-  FaceArray::Pointer facesPtr = dc->getFaces();
-  if (NULL == facesPtr.get())
-  {
-    return -1;
-  }
-
-  Int32DynamicListArray::Pointer meshTriangleNeighbors = Int32DynamicListArray::New();
-
-  size_t nFaces= facesPtr->getNumberOfTuples();
-  herr_t err = 0;
-  QVector<hsize_t> dims;
-  H5T_class_t type_class;
-  size_t type_size = 0;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, dims, type_class, type_size);
-  if (err < 0)
-  {
-    return err;
-  }
-  else
-  {
-    dc->getFaces()->setFaceNeighbors(meshTriangleNeighbors);
-  }
-
-  if(false == preflight && type_size > 0)
-  {
-    //Read the array into the buffer
-    std::vector<uint8_t> buffer;
-    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, buffer);
-    if (err < 0)
-    {
-      setErrorCondition(err);
-      notifyErrorMessage("Error Reading Face Neighbor Links from Data file", getErrorCondition());
-    }
-    else
-    {
-      meshTriangleNeighbors->deserializeLinks(buffer, nFaces);
-      dc->getFaces()->setFaceNeighbors(meshTriangleNeighbors);
+        std::vector<uint8_t> buffer;
+        err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::FacesContainingVert, buffer);
+        if(err < 0)
+        {
+          setErrorCondition(err);
+          notifyErrorMessage("Error Reading Face List from DREAM3D file", getErrorCondition());
+          return err;
+        }
+        Int32DynamicListArray::Pointer facesContainingVert = Int32DynamicListArray::New();
+        facesContainingVert->deserializeLinks(buffer, nFaces);
+        dc->getFaces()->setFacesContainingVert(facesContainingVert);
+      }
     }
   }
-
-  return err;
+  return 1;
 }
 
 // -----------------------------------------------------------------------------

@@ -106,25 +106,11 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
 
     int gatherData(bool preflight);
 
-    int gatherFaceData(hid_t dcGid, bool preflight);
-    int gatherFaceFieldData(hid_t dcGid, bool preflight);
-    int gatherFaceEnsembleData(hid_t dcGid, bool preflight);
-
-    int readFaces(hid_t dcGid);
-    int readMeshLinks(hid_t dcGid, bool preflight);
-    int readFaceFieldData(hid_t dcGid);
-    int readFaceEnsembleData(hid_t dcGid);
-
-    int readMeshTriangleNeighborLists(hid_t dcGid, bool preflight);
+    int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
                                                 QSet<QString> &namesToRead);
-
-    /* ********** NOT SURE IF THIS IS NEEDED ****************** */
-    int readVertices(hid_t dcGid);
-
-
 
   private:
 

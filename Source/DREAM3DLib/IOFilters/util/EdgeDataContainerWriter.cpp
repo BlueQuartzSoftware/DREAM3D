@@ -413,7 +413,7 @@ int EdgeDataContainerWriter::writeEdgesContainingVert(hid_t dcGid)
   int32_t rank = 1;
   hsize_t dims[1] = {totalBytes};
 
-  err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::MeshLinksName, rank, dims, bufPtr);
+  err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, rank, dims, bufPtr);
   if (err < 0)
   {
     notifyErrorMessage("Error writing the Mesh Vert Links", -999);
