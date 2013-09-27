@@ -338,82 +338,87 @@ void DataContainerWriter::execute()
         return;
       }
 
-      Detail::H5GroupAutoCloser dcGidAutoCloser(&dcaGid);
-
       err = QH5Lite::writeScalarAttribute(dcaGid, dcNames[iter], DREAM3D::HDF5::DataContainerType, dcType);
       if (err < 0)
       {
         qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dcNames[iter] << "\n";
       }
-
-      VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
-      volWriter->setHdfFileId(m_FileId);
-      volWriter->setHdfGroupId(dcaGid);
-      volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-      volWriter->setObservers(getObservers());
-      volWriter->setWriteXdmfFile(getWriteXdmfFile());
-      volWriter->setXdmfOStream(&out);
-
-      ss = QObject::tr("%1 |--> Writing Volume Data ").arg(getMessagePrefix());
-      volWriter->setMessagePrefix(ss);
-      volWriter->execute();
-      if (volWriter->getErrorCondition() < 0)
+      
+      if(dcType == 0)
       {
-        notifyErrorMessage("Error Writing the Volume Data", -803);
-        return;
+        VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
+        volWriter->setHdfFileId(m_FileId);
+        volWriter->setHdfGroupId(dcaGid);
+        volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        volWriter->setObservers(getObservers());
+        volWriter->setWriteXdmfFile(getWriteXdmfFile());
+        volWriter->setXdmfOStream(&out);
+
+        ss = QObject::tr("%1 |--> Writing Volume Data ").arg(getMessagePrefix());
+        volWriter->setMessagePrefix(ss);
+        volWriter->execute();
+        if (volWriter->getErrorCondition() < 0)
+        {
+          notifyErrorMessage("Error Writing the Volume Data", -803);
+          return;
+        }
       }
-
-      SurfaceDataContainerWriter::Pointer surfWriter = SurfaceDataContainerWriter::New();
-      surfWriter->setHdfFileId(m_FileId);
-      surfWriter->setHdfGroupId(dcaGid);
-      surfWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-      surfWriter->setObservers(getObservers());
-      surfWriter->setWriteXdmfFile(getWriteXdmfFile());
-      surfWriter->setXdmfOStream(&out);
-
-      ss = QObject::tr("%1 |--> Writing Surface Data ").arg(getMessagePrefix());
-      surfWriter->setMessagePrefix(ss);
-      surfWriter->execute();
-      if (surfWriter->getErrorCondition() < 0)
+      if(dcType <= 1)
       {
-        notifyErrorMessage("Error Writing the Surface Data", surfWriter->getErrorCondition());
-        return;
+        SurfaceDataContainerWriter::Pointer surfWriter = SurfaceDataContainerWriter::New();
+        surfWriter->setHdfFileId(m_FileId);
+        surfWriter->setHdfGroupId(dcaGid);
+        surfWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        surfWriter->setObservers(getObservers());
+        surfWriter->setWriteXdmfFile(getWriteXdmfFile());
+        surfWriter->setXdmfOStream(&out);
+
+        ss = QObject::tr("%1 |--> Writing Surface Data ").arg(getMessagePrefix());
+        surfWriter->setMessagePrefix(ss);
+        surfWriter->execute();
+        if (surfWriter->getErrorCondition() < 0)
+        {
+          notifyErrorMessage("Error Writing the Surface Data", surfWriter->getErrorCondition());
+          return;
+        }
       }
-
-
-      EdgeDataContainerWriter::Pointer edgeWriter = EdgeDataContainerWriter::New();
-      edgeWriter->setHdfFileId(m_FileId);
-      edgeWriter->setHdfGroupId(dcaGid);
-      edgeWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-      edgeWriter->setObservers(getObservers());
-      edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
-      edgeWriter->setXdmfOStream(&out);
-
-      ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
-      edgeWriter->setMessagePrefix(ss);
-      edgeWriter->execute();
-      if (edgeWriter->getErrorCondition() < 0)
+      if(dcType <= 2)
       {
-        notifyErrorMessage("Error Writing the Edge Data", edgeWriter->getErrorCondition());
-        return;
+        EdgeDataContainerWriter::Pointer edgeWriter = EdgeDataContainerWriter::New();
+        edgeWriter->setHdfFileId(m_FileId);
+        edgeWriter->setHdfGroupId(dcaGid);
+        edgeWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        edgeWriter->setObservers(getObservers());
+        edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
+        edgeWriter->setXdmfOStream(&out);
+
+        ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
+        edgeWriter->setMessagePrefix(ss);
+        edgeWriter->execute();
+        if (edgeWriter->getErrorCondition() < 0)
+        {
+          notifyErrorMessage("Error Writing the Edge Data", edgeWriter->getErrorCondition());
+          return;
+        }
       }
-
-
-      VertexDataContainerWriter::Pointer vertWriter = VertexDataContainerWriter::New();
-      vertWriter->setHdfFileId(m_FileId);
-      vertWriter->setHdfGroupId(dcaGid);
-      vertWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-      vertWriter->setObservers(getObservers());
-      vertWriter->setWriteXdmfFile(getWriteXdmfFile());
-      vertWriter->setXdmfOStream(&out);
-
-      ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
-      vertWriter->setMessagePrefix(ss);
-      vertWriter->execute();
-      if (vertWriter->getErrorCondition() < 0)
+      if(dcType <= 3)
       {
-        notifyErrorMessage("Error Writing the Vertex Data", vertWriter->getErrorCondition());
-        return;
+        VertexDataContainerWriter::Pointer vertWriter = VertexDataContainerWriter::New();
+        vertWriter->setHdfFileId(m_FileId);
+        vertWriter->setHdfGroupId(dcaGid);
+        vertWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        vertWriter->setObservers(getObservers());
+        vertWriter->setWriteXdmfFile(getWriteXdmfFile());
+        vertWriter->setXdmfOStream(&out);
+
+        ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
+        vertWriter->setMessagePrefix(ss);
+        vertWriter->execute();
+        if (vertWriter->getErrorCondition() < 0)
+        {
+          notifyErrorMessage("Error Writing the Vertex Data", vertWriter->getErrorCondition());
+          return;
+        }
       }
     }
   }

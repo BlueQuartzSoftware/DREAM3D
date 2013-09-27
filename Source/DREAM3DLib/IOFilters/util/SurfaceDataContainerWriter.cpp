@@ -192,13 +192,13 @@ void SurfaceDataContainerWriter::writeXdmfGridHeader()
 
   out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
-  out << "        " << hdfFileName << ":/SurfaceDataContainer/Faces" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/SurfaceDataContainer/Faces" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
   out << "    <Geometry Type=\"XYZ\">" << "\n";
   out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/SurfaceDataContainer/Vertices" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/SurfaceDataContainer/Vertices" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
   out << "" << "\n";
@@ -252,7 +252,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
   }
@@ -273,7 +273,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
-    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
@@ -292,7 +292,7 @@ QString SurfaceDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, co
     out << "          " << dimStrHalf << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << dimStr << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/SurfaceDataContainer/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
@@ -350,7 +350,7 @@ int SurfaceDataContainerWriter::writeMeshData(hid_t dcGid)
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
     hsize_t dims[2] = {facesPtr->getNumberOfTuples(), 3};
 
-    int32_t* data = reinterpret_cast<int32_t*>(facesPtr->getPointer(0));
+    size_t* data = reinterpret_cast<size_t*>(facesPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::FacesName, rank, dims, data);
     if (err < 0) 

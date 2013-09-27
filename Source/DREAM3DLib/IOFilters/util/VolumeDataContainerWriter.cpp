@@ -128,7 +128,7 @@ void VolumeDataContainerWriter::execute()
     QString ss = QObject::tr(":Error Writing header information to output file");
     setErrorCondition(-62);
     addErrorMessage(getHumanLabel(), ss, err);
-    H5Gclose(getHdfGroupId()); // Close the Data Container Group
+    H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 

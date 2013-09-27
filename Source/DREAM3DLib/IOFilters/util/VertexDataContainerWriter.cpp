@@ -302,7 +302,7 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SurfaceMesh::DataStruc
     hsize_t dims[2] = {verticesPtr->getNumberOfTuples(), 3};
 
-    int32_t* data = reinterpret_cast<int32_t*>(verticesPtr->getPointer(0));
+    float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
 
     err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
     if (err < 0) 

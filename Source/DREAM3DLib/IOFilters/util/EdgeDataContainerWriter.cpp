@@ -146,7 +146,7 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeEdgeEnsembleData(getHdfGroupId(), H5_EDGE_ENSEMBLE_DATA_GROUP_NAME);
+  err = writeEdgeEnsembleData(dcGid, H5_EDGE_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -525,13 +525,13 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 
 
   // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
+    qDebug() << "Error creating HDF Group " << groupName << "\n";
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
@@ -662,7 +662,7 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupNam
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
   //QString groupName(H5_ENSEMBLE_DATA_GROUP_NAME);
   // Write the Ensemble data
-   err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
+   err = QH5Utilities::createGroupsFromPath(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
@@ -671,12 +671,12 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupNam
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_EDGE_ENSEMBLE_DATA_DEFAULT);
 
   hid_t ensembleGid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error opening ensemble Group ").arg(H5_ENSEMBLE_DATA_GROUP_NAME);
+    QString ss = QObject::tr("Error opening ensemble Group ").arg(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME);
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group
