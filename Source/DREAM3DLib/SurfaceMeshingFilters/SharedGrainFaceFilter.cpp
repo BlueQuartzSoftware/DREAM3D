@@ -100,31 +100,24 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
   
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-  else
-  {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
-
-    // List any arrays that are created during this filter
-    Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
-    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
+  {
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+  }
+
+  // List any arrays that are created during this filter
+  Int32ArrayType::Pointer grainFaceId = Int32ArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGrainFaceId);
+  sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGrainFaceId, grainFaceId);
 }
 
 
@@ -133,8 +126,13 @@ void SharedGrainFaceFilter::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void SharedGrainFaceFilter::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

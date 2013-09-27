@@ -177,59 +177,51 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
-  else
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+  }
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
+  // We do not know the size of the array so we can not use the macro so we just manually call
+  // the needed methods that will propagate these array additions to the pipeline
+  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
+  sm->addEdgeData(DREAM3D::EdgeData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
 
-    // We do not know the size of the array so we can not use the macro so we just manually call
-    // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, DREAM3D::EdgeData::SurfaceMeshUniqueEdges);
-    sm->addEdgeData(DREAM3D::EdgeData::SurfaceMeshUniqueEdges, uniqueEdgesArray);
+  DoubleArrayType::Pointer principalCurv1 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
+  sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1, principalCurv1);
 
-    DoubleArrayType::Pointer principalCurv1 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1);
-    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature1, principalCurv1);
+  DoubleArrayType::Pointer principalCurv2 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
+  sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2, principalCurv2);
 
-    DoubleArrayType::Pointer principalCurv2 = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2);
-    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalCurvature2, principalCurv2);
+  if (m_ComputeGaussianCurvature == true)
+  {
+    DoubleArrayType::Pointer gaussianCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
+    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures, gaussianCurv);
+  }
 
-    if (m_ComputeGaussianCurvature == true)
-    {
-      DoubleArrayType::Pointer gaussianCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshGaussianCurvatures);
-      sm->addFaceData(DREAM3D::FaceData::SurfaceMeshGaussianCurvatures, gaussianCurv);
-    }
+  if (m_ComputeMeanCurvature == true)
+  {
+    DoubleArrayType::Pointer meanCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
+    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshMeanCurvatures, meanCurv);
+  }
 
-    if (m_ComputeMeanCurvature == true)
-    {
-      DoubleArrayType::Pointer meanCurv = DoubleArrayType::CreateArray(1, 1, DREAM3D::FaceData::SurfaceMeshMeanCurvatures);
-      sm->addFaceData(DREAM3D::FaceData::SurfaceMeshMeanCurvatures, meanCurv);
-    }
+  if (m_ComputePrincipalDirectionVectors == true)
+  {
+    DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
+    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1, prinDir1);
 
-    if (m_ComputePrincipalDirectionVectors == true)
-    {
-      DoubleArrayType::Pointer prinDir1 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection1);
-      sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection1, prinDir1);
-
-      DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
-      sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2, prinDir2);
-    }
-
+    DoubleArrayType::Pointer prinDir2 = DoubleArrayType::CreateArray(1, 3, DREAM3D::FaceData::SurfaceMeshPrincipalDirection2);
+    sm->addFaceData(DREAM3D::FaceData::SurfaceMeshPrincipalDirection2, prinDir2);
   }
 }
 
@@ -239,8 +231,13 @@ void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void GrainFaceCurvatureFilter::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

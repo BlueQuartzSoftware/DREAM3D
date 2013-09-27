@@ -300,36 +300,29 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+  }
+
+  if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
+  {
+    m_DoConnectivityFilter = true;
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
-
-    if (sm->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName).get() == NULL)
-    {
-      m_DoConnectivityFilter = true;
-    } else
-    {
-      m_DoConnectivityFilter = false;
-    }
+    m_DoConnectivityFilter = false;
   }
-
 }
 
 
@@ -338,8 +331,13 @@ void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

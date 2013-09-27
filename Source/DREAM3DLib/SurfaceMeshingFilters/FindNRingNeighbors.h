@@ -94,15 +94,15 @@ class FindNRingNeighbors
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFile)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteConformalMesh)
 
+  protected:
+      FindNRingNeighbors();
+
      /**
      * @brief writeVTKFile
      * @param node2Triangle
      * @param twoRingNeighbors
      */
     int writeVTKFile(const QString &outputFile);
-
-  protected:
-      FindNRingNeighbors();
 
   private:
     FaceArray::UniqueFaceIds_t  m_NRingTriangles;

@@ -136,26 +136,19 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-  else
-  {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
+  {
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
 }
 
@@ -165,8 +158,13 @@ void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, s
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -178,14 +176,6 @@ void GenerateSurfaceMeshConnectivity::execute()
   int err = 0;
 
   setErrorCondition(err);
-  //VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  //if(NULL == m)
-  //{
-  //  setErrorCondition(-999);
-  //  notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-  //  return;
-  //}
-  setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
   if (getErrorCondition() < 0)
   {

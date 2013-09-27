@@ -123,11 +123,6 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-384);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
 
   if (getBinaryNodesFile().isEmpty() == true)
   {
@@ -151,8 +146,15 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -164,6 +166,15 @@ void BinaryNodesTrianglesReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  }
 
   /* Make sure everything is in place */
   dataCheck(false, 1, 1, 1);

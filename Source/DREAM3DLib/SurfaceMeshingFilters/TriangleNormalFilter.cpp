@@ -163,30 +163,23 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
-    else
-    {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, 3)
-    }
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, 3)
   }
 }
 
@@ -196,8 +189,13 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -209,7 +207,8 @@ void TriangleNormalFilter::execute()
   int err = 0;
   
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);

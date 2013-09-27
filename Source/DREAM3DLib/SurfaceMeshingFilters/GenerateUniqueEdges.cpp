@@ -109,32 +109,25 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-  else
-  {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
-
-    // We do not know the size of the array so we can not use the macro so we just manually call
-    // the needed methods that will propagate these array additions to the pipeline
-    DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, m_SurfaceMeshUniqueEdgesArrayName);
-    sm->addEdgeData(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
+  {
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
   }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+  }
+
+  // We do not know the size of the array so we can not use the macro so we just manually call
+  // the needed methods that will propagate these array additions to the pipeline
+  DataArray<int>::Pointer uniqueEdgesArray = DataArray<int>::CreateArray(1, 2, m_SurfaceMeshUniqueEdgesArrayName);
+  sm->addEdgeData(m_SurfaceMeshUniqueEdgesArrayName, uniqueEdgesArray);
 }
 
 
@@ -143,8 +136,13 @@ void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -186,12 +184,6 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();

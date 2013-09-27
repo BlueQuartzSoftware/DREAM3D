@@ -239,46 +239,37 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
 
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-  else
-  {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-    }
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
+  {
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
+  }
+
+  if (getErrorCondition() >= 0)
+  {
+    // Check for Node Type Array
+    int size = sm->getVertices()->getNumberOfTuples();
+    GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, 1)
+  }
+
+  if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
+  {
+    IDataArray::Pointer edges = sm->getVertexData(DREAM3D::EdgeData::SurfaceMeshEdges);
+    if(edges.get() == NULL)
     {
+      addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);
       setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-    }
-
-    if (getErrorCondition() >= 0)
-    {
-      // Check for Node Type Array
-      int size = sm->getVertices()->getNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, 1)
-    }
-
-
-    if ( getConstrainQuadPoints() == true || getSmoothTripleLines() == true )
-    {
-      IDataArray::Pointer edges = sm->getVertexData(DREAM3D::EdgeData::SurfaceMeshEdges);
-      if(edges.get() == NULL)
-      {
-        addErrorMessage(getHumanLabel(), "Constraining Quad Points or Triples lines requires Edges array", -385);
-        setErrorCondition(-385);
-      }
     }
   }
-
 }
 
 // -----------------------------------------------------------------------------
@@ -286,8 +277,13 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-   * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -314,6 +310,7 @@ void MovingFiniteElementSmoothing::execute()
     notifyErrorMessage("The SurfaceMesh DataContainer Object was NULL", -999);
     return;
   }
+
   VertexArray::Pointer floatNodesPtr = m->getVertices();
   if(NULL == floatNodesPtr.get())
   {

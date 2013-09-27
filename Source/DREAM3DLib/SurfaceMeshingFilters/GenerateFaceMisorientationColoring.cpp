@@ -109,18 +109,8 @@ class CalculateFaceMisorientationColorsImpl
           if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Cubic_High)
           {
             QuaternionMathF::Copy(quats[grain1], q1);
-//            q1[0] = m_Quats[5*grain1+0];
-//            q1[1] = m_Quats[5*grain1+1];
-//            q1[2] = m_Quats[5*grain1+2];
-//            q1[3] = m_Quats[5*grain1+3];
-//            q1[4] = m_Quats[5*grain1+4];
 
             QuaternionMathF::Copy(quats[grain2], q2);
-//            q2[0] = m_Quats[5*grain2+0];
-//            q2[1] = m_Quats[5*grain2+1];
-//            q2[2] = m_Quats[5*grain2+2];
-//            q2[3] = m_Quats[5*grain2+3];
-//            q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
             w=w*radToDeg;
             m_Colors[3*i+0] = w*n1;
@@ -130,17 +120,7 @@ class CalculateFaceMisorientationColorsImpl
           else if(phase1 == phase2 && m_CrystalStructures[phase1] == Ebsd::CrystalStructure::Hexagonal_High)
           {
             QuaternionMathF::Copy(quats[grain1], q1);
-//            q1[0] = m_Quats[5*grain1+0];
-//            q1[1] = m_Quats[5*grain1+1];
-//            q1[2] = m_Quats[5*grain1+2];
-//            q1[3] = m_Quats[5*grain1+3];
-//            q1[4] = m_Quats[5*grain1+4];
             QuaternionMathF::Copy(quats[grain2], q2);
-//            q2[0] = m_Quats[5*grain2+0];
-//            q2[1] = m_Quats[5*grain2+1];
-//            q2[2] = m_Quats[5*grain2+2];
-//            q2[3] = m_Quats[5*grain2+3];
-//            q2[4] = m_Quats[5*grain2+4];
             w = m_OrientationOps[m_CrystalStructures[phase1]]->getMisoQuat(q1, q2, n1, n2, n3);
             w=w*radToDeg;
             m_Colors[3*i+0] = w*n1;
@@ -239,31 +219,24 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
   setErrorCondition(0);
   
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
+  }
+  
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+    setErrorCondition(-385);
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
-      setErrorCondition(-385);
-    }
-    else
-    {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
-    }
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
   }
 }
 
@@ -275,18 +248,11 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-  else
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-        GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
-        typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-  }
+
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -294,9 +260,22 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckSurfaceMesh(true, 1, 1, 1);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckVoxel(true, 1, 1, 1);
 }
 

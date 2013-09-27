@@ -393,34 +393,21 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   setErrorCondition(0);
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-383);
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-  }
-  else {
-    VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
-    FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
+  VertexArray::Pointer vertices = VertexArray::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
+  FaceArray::Pointer triangles = FaceArray::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces, vertices.get());
 
-    int8_t* m_SurfaceMeshNodeType;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
+  int8_t* m_SurfaceMeshNodeType;
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
 
-        DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
-    sm->addFaceData(labels->GetName(), labels);
-    sm->setVertices(vertices);
-    sm->setFaces(triangles);
-  }
+  DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
+  sm->addFaceData(labels->GetName(), labels);
+  sm->setVertices(vertices);
+  sm->setFaces(triangles);
 }
 
 // -----------------------------------------------------------------------------
@@ -428,6 +415,23 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -444,6 +448,15 @@ void M3CSliceBySlice::execute()
     setErrorCondition(-999);
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
+  }
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   }
 
   int64_t totalPoints = m->getTotalPoints();
