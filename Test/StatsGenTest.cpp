@@ -50,33 +50,34 @@ void GenHexMDFPlotData()
 
   int err = 0;
   int size = 2500;
-  std::vector<float> e1s;
-  std::vector<float> e2s;
-  std::vector<float> e3s;
-  std::vector<float> weights;
-  std::vector<float> sigmas;
-  std::vector<float> odf;
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
 
   odf.resize(HexagonalOps::k_OdfSize);
-  Texture::CalculateHexODFData( &(e1s.front()), &(e2s.front()), &(e3s.front()), &(weights.front()), &(sigmas.front()), true, &(odf.front()), e1s.size());
+  size_t numEntries = e1s.size();
+  Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
 
 
   // These are the input vectors
-  std::vector<float> angles;
-  std::vector<float> axes;
+  QVector<float> angles;
+  QVector<float> axes;
 
 
   // Allocate a new vector to hold the mdf data
-  std::vector<float> mdf(HexagonalOps::k_MdfSize);
+  QVector<float> mdf(HexagonalOps::k_MdfSize);
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
   Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
   int npoints = 20;
   // Now generate the actual XY point data that gets plotted.
   // These are the output vectors
-  std::vector<float> x(npoints);
-  std::vector<float> y(npoints);
-  err = StatsGen::GenHexMDFPlotData( &(mdf.front()), &(x.front()), &(y.front()), npoints, size );
+  QVector<float> x(npoints);
+  QVector<float> y(npoints);
+  err = StatsGen::GenHexMDFPlotData( mdf.data(), x.data(), y.data(), npoints, size );
 
   DREAM3D_REQUIRE(err >= 0)
 }

@@ -669,7 +669,7 @@ static herr_t readVectorAttribute(hid_t loc_id,
       else
       {
         data.resize( static_cast<signed int>(numElements) );
-        err = H5Aread( attr_id, dataType, data.data() );
+        err = H5Aread( attr_id, dataType, &(data.front()) );
       }
       if ( err < 0 ) {
         qDebug() << "Error Reading Attribute." << err;

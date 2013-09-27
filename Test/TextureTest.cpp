@@ -52,36 +52,32 @@
 int main(int argc, char **argv)
 {
 
-  std::vector<float> e1s;
-  std::vector<float> e2s;
-  std::vector<float> e3s;
-  std::vector<float> weights;
-  std::vector<float> sigmas;
-  std::vector<float> odf;
+  QVector<float> e1s;
+  QVector<float> e2s;
+  QVector<float> e3s;
+  QVector<float> weights;
+  QVector<float> sigmas;
+  QVector<float> odf;
 
   size_t numEntries = e1s.size();
   odf.resize(CubicOps::k_OdfSize);
-  Texture::CalculateCubicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                 &(weights.front()), &(sigmas.front()), true,
-                                 &(odf.front()), numEntries);
+  Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
   odf.resize(HexagonalOps::k_OdfSize);
-  Texture::CalculateHexODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                 &(weights.front()), &(sigmas.front()), true,
-                                 &(odf.front()), numEntries);
+  Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
+                                 odf.data(), numEntries);
 
 
   odf.resize(OrthoRhombicOps::k_OdfSize);
-  Texture::CalculateOrthoRhombicODFData(&(e1s.front()), &(e2s.front()), &(e3s.front()),
-                                 &(weights.front()), &(sigmas.front()), true,
-                                 &(odf.front()), numEntries);
+  Texture::CalculateOrthoRhombicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
+                                  odf.data(), numEntries);
 
 
   //int size = 1000;
   // Now generate the actual XY point data that gets plotted.
   // These are the output vectors
-  std::vector<float> angles;
-  std::vector<float> axes;
-  std::vector<float> mdf(CubicOps::k_MdfSize);
+  QVector<float> angles;
+  QVector<float> axes;
+  QVector<float> mdf(CubicOps::k_MdfSize);
 
   Texture::CalculateMDFData<float, CubicOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 
