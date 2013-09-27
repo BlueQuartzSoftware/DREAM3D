@@ -223,7 +223,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> faceFieldArraysToRead = getFaceFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, faceFieldArraysToRead, m_ReadAllFaceFieldArrays);
+    err |= readGroupsData(dcGid, H5_FACE_FIELD_DATA_GROUP_NAME, preflight, readNames, faceFieldArraysToRead, m_ReadAllFaceFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -236,7 +236,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> faceEnsembleArraysToRead = getFaceEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, faceEnsembleArraysToRead, m_ReadAllFaceFieldArrays);
+    err |= readGroupsData(dcGid, H5_FACE_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, faceEnsembleArraysToRead, m_ReadAllFaceFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -405,23 +405,15 @@ int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &group
 
     if (NULL != dPtr.get())
     {
-      if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
-      {
-        dc->addVertexData(dPtr->GetName(), dPtr);
-      }
-      else if(groupName.compare(H5_FACE_DATA_GROUP_NAME) == 0)
+      if(groupName.compare(H5_FACE_DATA_GROUP_NAME) == 0)
       {
        dc->addFaceData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
-      {
-        dc->addEdgeData(dPtr->GetName(), dPtr);
-      }
-      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_FACE_FIELD_DATA_GROUP_NAME) == 0)
       {
         dc->addFaceFieldData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_FACE_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
         dc->addFaceEnsembleData(dPtr->GetName(), dPtr);
       }

@@ -216,7 +216,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeArraysToRead = getEdgeArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead, m_ReadAllEdgeArrays);
+    err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, edgeArraysToRead, m_ReadAllEdgeArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -229,7 +229,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeFieldArraysToRead = getEdgeFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead, m_ReadAllEdgeFieldArrays);
+    err |= readGroupsData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME, preflight, readNames, edgeFieldArraysToRead, m_ReadAllEdgeFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -242,7 +242,7 @@ int EdgeDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> edgeEnsembleArraysToRead = getEdgeEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, edgeEnsembleArraysToRead, m_ReadAllEdgeEnsembleArrays);
+    err |= readGroupsData(dcGid, H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, edgeEnsembleArraysToRead, m_ReadAllEdgeEnsembleArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -409,19 +409,15 @@ int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupNam
 
     if (NULL != dPtr.get())
     {
-      if(groupName.compare(H5_VERTEX_DATA_GROUP_NAME) == 0)
-      {
-        dc->addVertexData(dPtr->GetName(), dPtr);
-      }
-      else if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
+      if(groupName.compare(H5_EDGE_DATA_GROUP_NAME) == 0)
       {
         dc->addEdgeData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_EDGE_FIELD_DATA_GROUP_NAME) == 0)
       {
         dc->addEdgeFieldData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
         dc->addEdgeEnsembleData(dPtr->GetName(), dPtr);
       }

@@ -192,7 +192,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexArraysToRead = getVertexArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead, m_ReadAllVertexArrays);
+    err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead, m_ReadAllVertexArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -205,7 +205,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexFieldArraysToRead = getVertexFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead, m_ReadAllVertexFieldArrays);
+    err |= readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead, m_ReadAllVertexFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -218,7 +218,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexEnsembleArraysToRead = getVertexEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, vertexEnsembleArraysToRead, m_ReadAllVertexEnsembleArrays);
+    err |= readGroupsData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, vertexEnsembleArraysToRead, m_ReadAllVertexEnsembleArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -342,11 +342,11 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
       {
         dc->addVertexData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_VERTEX_FIELD_DATA_GROUP_NAME) == 0)
       {
         dc->addVertexFieldData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
         dc->addVertexEnsembleData(dPtr->GetName(), dPtr);
       }

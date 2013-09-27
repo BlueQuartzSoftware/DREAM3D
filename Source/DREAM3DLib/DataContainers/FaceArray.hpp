@@ -61,7 +61,7 @@ class FaceArray
 
     typedef struct
     {
-      size_t verts[3];
+      int32_t verts[3];
     } Face_t;
 
     typedef QSet<int32_t> UniqueFaceIds_t;

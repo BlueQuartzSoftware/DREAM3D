@@ -60,7 +60,7 @@ class CellArray
 
     typedef struct
     {
-      size_t verts[3];
+      int32_t verts[3];
     } Cell_t;
 
     typedef QSet<int32_t> UniqueCellIds_t;

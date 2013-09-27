@@ -56,7 +56,7 @@ class EdgeArray
 
     typedef struct
     {
-      size_t verts[2];
+      int32_t verts[2];
     } Edge_t;
 
     typedef QSet<int32_t> UniqueEdgeIds_t;

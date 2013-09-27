@@ -64,6 +64,8 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/QuickSurfaceMesh.h"
 
+#include "DREAM3DLib/SurfaceMeshingFilters/LaplacianSmoothing.h"
+
 
 #include "UnitTestSupport.hpp"
 
@@ -549,7 +551,7 @@ void TestDataContainer()
 
 }
 
-void RunPipeline()
+void RunPipeline1()
 {
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
@@ -638,6 +640,51 @@ void RunPipeline2()
   pipeline->run();
 }
 
+void RunPipeline3()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
+  dcr->setReadVertexData(false);
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(false);
+  dcr->setReadSurfaceData(true);
+  dcr->setReadAllVertexArrays(true);
+  dcr->setReadAllFaceArrays(true);
+  dcr->setReadVolumeData(true);
+  dcr->setReadAllCellArrays(true);
+  dcr->setReadAllCellFieldArrays(true);
+  dcr->setReadAllCellEnsembleArrays(true);
+  pipeline->pushBack(dcr);
+
+  LaplacianSmoothing::Pointer ls = LaplacianSmoothing::New();
+  ls->setIterationSteps(50);
+  ls->setLambda(0.25);
+  ls->setTripleLineLambda(0.2);
+  ls->setQuadPointLambda(0.15);
+  ls->setSurfacePointLambda(0.0);
+  ls->setSurfaceTripleLineLambda(0.0);
+  ls->setSurfaceQuadPointLambda(0.0);
+  pipeline->pushBack(ls);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut3.dream3d");
+  dcw->setWriteVolumeData(true);
+  dcw->setWriteSurfaceData(true);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -649,8 +696,9 @@ int main(int argc, char **argv)
 //  DREAM3D_REGISTER_TEST( RemoveTestFiles() )
 #endif
 
-//  RunPipeline();
-  RunPipeline2();
+//  RunPipeline1();
+//  RunPipeline2();
+  RunPipeline3();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
