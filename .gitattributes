@@ -1,7 +1,9 @@
 # Auto detect text files and perform LF normalization
 * text=auto
-*.ctf text eol=crlf
-*.ang text eol=crlf
+
+*.ctf binary
+*.ang binary
+*.dream3d binary
 *.bat text eol=crlf
 
 # Custom for Visual Studio
