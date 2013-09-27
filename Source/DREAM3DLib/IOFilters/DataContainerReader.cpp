@@ -360,128 +360,132 @@ void DataContainerReader::readData(bool preflight)
           dc->setName(dcNames[iter]);
           getDataContainerArray()->pushBack(dc);
         }
-
-        VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
-        vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
-        vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
-        vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
-        vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
-        vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
-        vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
-        vReader->setReadAllArrays(m_ReadAllArrays);
-        vReader->setHdfFileId(fileId);
-        vReader->setHdfGroupId(dcGid);
-        vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        vReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-        vReader->setMessagePrefix(ss);
-        if(preflight == true) vReader->preflight();
-        else vReader->execute();
-        if (vReader->getErrorCondition() < 0)
+        if(dcType <= 3)
         {
-          if(preflight == true)
+          VertexDataContainerReader::Pointer vReader = VertexDataContainerReader::New();
+          vReader->setVertexArraysToRead(m_SelectedVertexVertexArrays);
+          vReader->setVertexFieldArraysToRead(m_SelectedVertexVertexFieldArrays);
+          vReader->setVertexEnsembleArraysToRead(m_SelectedVertexVertexEnsembleArrays);
+          vReader->setReadAllVertexArrays(m_ReadAllVertexArrays);
+          vReader->setReadAllVertexFieldArrays(m_ReadAllVertexFieldArrays);
+          vReader->setReadAllVertexEnsembleArrays(m_ReadAllVertexEnsembleArrays);
+          vReader->setHdfFileId(fileId);
+          vReader->setHdfGroupId(dcGid);
+          vReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+          vReader->setObservers(getObservers());
+          ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
+          vReader->setMessagePrefix(ss);
+          if(preflight == true) vReader->preflight();
+          else vReader->execute();
+          if (vReader->getErrorCondition() < 0)
           {
-            setReadVertexData(false);
-            setErrorCondition(vReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
-          }
-          else
-          {
-            notifyErrorMessage("Error Reading the Vertex Data", vReader->getErrorCondition());
-            return;
+            if(preflight == true)
+            {
+              setReadVertexData(false);
+              setErrorCondition(vReader->getErrorCondition());
+              addErrorMessage(getHumanLabel(), "The solid mesh data was not available in the data file.", getErrorCondition());
+            }
+            else
+            {
+              notifyErrorMessage("Error Reading the Vertex Data", vReader->getErrorCondition());
+              return;
+            }
           }
         }
-
-        EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
-        eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
-        eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
-        eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
-        eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
-        eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
-        eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
-        eReader->setReadAllArrays(m_ReadAllArrays);
-        eReader->setHdfFileId(fileId);
-        eReader->setHdfGroupId(dcGid);
-        eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        eReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Surface Data ";
-        eReader->setMessagePrefix(ss);
-        if(preflight == true) eReader->preflight();
-        else eReader->execute();
-        if (eReader->getErrorCondition() < 0)
+        if(dcType <= 2)
         {
-          if(preflight == true)
+          EdgeDataContainerReader::Pointer eReader = EdgeDataContainerReader::New();
+          eReader->setEdgeArraysToRead(m_SelectedEdgeEdgeArrays);
+          eReader->setEdgeFieldArraysToRead(m_SelectedEdgeEdgeFieldArrays);
+          eReader->setEdgeEnsembleArraysToRead(m_SelectedEdgeEdgeEnsembleArrays);
+          eReader->setReadAllEdgeArrays(m_ReadAllEdgeArrays);
+          eReader->setReadAllEdgeFieldArrays(m_ReadAllEdgeFieldArrays);
+          eReader->setReadAllEdgeEnsembleArrays(m_ReadAllEdgeEnsembleArrays);
+          eReader->setHdfFileId(fileId);
+          eReader->setHdfGroupId(dcGid);
+          eReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+          eReader->setObservers(getObservers());
+          ss = getMessagePrefix() + " |--> Reading Surface Data ";
+          eReader->setMessagePrefix(ss);
+          if(preflight == true) eReader->preflight();
+          else eReader->execute();
+          if (eReader->getErrorCondition() < 0)
           {
-            setReadEdgeData(false);
-            setErrorCondition(eReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The edge mesh data was not available in the data file.", getErrorCondition());
-          }
-          else
-          {
-            notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
-            return;
+            if(preflight == true)
+            {
+              setReadEdgeData(false);
+              setErrorCondition(eReader->getErrorCondition());
+              addErrorMessage(getHumanLabel(), "The edge mesh data was not available in the data file.", getErrorCondition());
+            }
+            else
+            {
+              notifyErrorMessage("Error Reading the Edge Data", eReader->getErrorCondition());
+              return;
+            }
           }
         }
-
-        SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
-        smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
-        smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
-        smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
-        smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
-        smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
-        smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
-        smReader->setReadAllArrays(m_ReadAllArrays);
-        smReader->setHdfFileId(fileId);
-        smReader->setHdfGroupId(dcGid);
-        smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        smReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Surface Data ";
-        smReader->setMessagePrefix(ss);
-        if(preflight == true) smReader->preflight();
-        else smReader->execute();
-        if (smReader->getErrorCondition() < 0)
+        if(dcType <= 1)
         {
-          if(preflight == true)
+          SurfaceDataContainerReader::Pointer smReader = SurfaceDataContainerReader::New();
+          smReader->setFaceArraysToRead(m_SelectedSurfaceFaceArrays);
+          smReader->setFaceFieldArraysToRead(m_SelectedSurfaceFaceFieldArrays);
+          smReader->setFaceEnsembleArraysToRead(m_SelectedSurfaceFaceEnsembleArrays);
+          smReader->setReadAllFaceArrays(m_ReadAllFaceArrays);
+          smReader->setReadAllFaceFieldArrays(m_ReadAllFaceFieldArrays);
+          smReader->setReadAllFaceEnsembleArrays(m_ReadAllFaceEnsembleArrays);
+          smReader->setHdfFileId(fileId);
+          smReader->setHdfGroupId(dcGid);
+          smReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+          smReader->setObservers(getObservers());
+          ss = getMessagePrefix() + " |--> Reading Surface Data ";
+          smReader->setMessagePrefix(ss);
+          if(preflight == true) smReader->preflight();
+          else smReader->execute();
+          if (smReader->getErrorCondition() < 0)
           {
-            setReadSurfaceData(false);
-            setErrorCondition(smReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
-          }
-          else
-          {
-            notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
-            return;
+            if(preflight == true)
+            {
+              setReadSurfaceData(false);
+              setErrorCondition(smReader->getErrorCondition());
+              addErrorMessage(getHumanLabel(), "The surface mesh data was not available in the data file.", getErrorCondition());
+            }
+            else
+            {
+              notifyErrorMessage("Error Reading the Surface Data", smReader->getErrorCondition());
+              return;
+            }
           }
         }
-
-        VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
-        volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
-        volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
-        volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
-        volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
-        volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
-        volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
-        volumeReader->setReadAllArrays(m_ReadAllArrays);
-        volumeReader->setHdfFileId(fileId);
-        volumeReader->setHdfGroupId(dcGid);
-        volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
-        volumeReader->setObservers(getObservers());
-        ss = getMessagePrefix() + " |--> Reading Volume Data ";
-        volumeReader->setMessagePrefix(ss);
-        if(preflight == true) volumeReader->preflight();
-        else volumeReader->execute();
-        if (volumeReader->getErrorCondition() < 0)
+        if(dcType == 0)
         {
-          if(preflight == true)
+          VolumeDataContainerReader::Pointer volumeReader = VolumeDataContainerReader::New();
+          volumeReader->setCellArraysToRead(m_SelectedVolumeCellArrays);
+          volumeReader->setCellFieldArraysToRead(m_SelectedVolumeCellFieldArrays);
+          volumeReader->setCellEnsembleArraysToRead(m_SelectedVolumeCellEnsembleArrays);
+          volumeReader->setReadAllCellArrays(m_ReadAllCellArrays);
+          volumeReader->setReadAllCellFieldArrays(m_ReadAllCellFieldArrays);
+          volumeReader->setReadAllCellEnsembleArrays(m_ReadAllCellEnsembleArrays);
+          volumeReader->setHdfFileId(fileId);
+          volumeReader->setHdfGroupId(dcGid);
+          volumeReader->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+          volumeReader->setObservers(getObservers());
+          ss = getMessagePrefix() + " |--> Reading Volume Data ";
+          volumeReader->setMessagePrefix(ss);
+          if(preflight == true) volumeReader->preflight();
+          else volumeReader->execute();
+          if (volumeReader->getErrorCondition() < 0)
           {
-            setReadVolumeData(false);
-            setErrorCondition(volumeReader->getErrorCondition());
-            addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
-          }
-          else
-          {
-            notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
-            return;
+            if(preflight == true)
+            {
+              setReadVolumeData(false);
+              setErrorCondition(volumeReader->getErrorCondition());
+              addErrorMessage(getHumanLabel(), "The volume data was not available in the data file.", getErrorCondition());
+            }
+            else
+            {
+              notifyErrorMessage("Error Reading the Volume Data", volumeReader->getErrorCondition());
+              return;
+            }
           }
         }
       }

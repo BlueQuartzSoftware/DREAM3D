@@ -125,21 +125,7 @@ void EdgeDataContainerWriter::execute()
 
   writeXdmfGridHeader();
 
-  err = writeEdgesContainingVert(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeEdgeNeighbors(dcGid);
-  if (err < 0)
-  {
-    H5Gclose(dcGid); // Close the Data Container Group
-    return;
-  }
-
-  err = writeEdges(dcGid);
+  err = writeMeshData(dcGid);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -153,14 +139,14 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  err = writeEdgeFieldData(dcGid, H5_FIELD_DATA_GROUP_NAME);
+  err = writeEdgeFieldData(dcGid, H5_EDGE_FIELD_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
     return;
   }
 
-  err = writeEdgeEnsembleData(getHdfGroupId(), H5_ENSEMBLE_DATA_GROUP_NAME);
+  err = writeEdgeEnsembleData(dcGid, H5_EDGE_ENSEMBLE_DATA_GROUP_NAME);
   if (err < 0)
   {
     H5Gclose(dcGid); // Close the Data Container Group
@@ -347,89 +333,113 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgeNeighbors(hid_t dcGid)
+int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
 {
-    int err = -1;
-    BOOST_ASSERT(false);
-    return err;
-}
+  EdgeDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
 
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdgesContainingVert(hid_t dcGid)
-{
-
-
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
-  EdgeArray::Pointer edgesPtr = dc->getEdges();
-  if (NULL == edgesPtr.get())
-  {
-    return -1;
-  }
-  Int32DynamicListArray::Pointer links = edgesPtr->getEdgesContainingVert();
-  if (NULL == links.get())
-  {
-    return 0;
-  }
-
-
-
-  VertexArray::Pointer verticesPtr = dc->getVertices();
-  if (NULL == verticesPtr.get())
-  {
-    return -1;
-  }
-
-  herr_t err = -1;
-  size_t total = 0;
-  size_t nVerts = verticesPtr->getNumberOfTuples();
-  for(size_t v = 0; v < nVerts; ++v)
-  {
-    total += links->getNumberOfElements(v);
-  }
-
-  size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
-
-  // Allocate a flat array to copy the data into
-  QVector<uint8_t> buffer(totalBytes, 0);
-  uint8_t* bufPtr = &(buffer.front());
-  size_t offset = 0;
-
-  for(size_t v = 0; v < nVerts; ++v)
-  {
-    uint16_t ncells = links->getNumberOfElements(v);
-    int32_t* cells = links->getElementListPointer(v);
-    ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
-    offset += sizeof(uint16_t);
-    ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-    offset += ncells*sizeof(int32_t);
-  }
-
-  int32_t rank = 1;
-  hsize_t dims[1] = {totalBytes};
-
-  err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, rank, dims, bufPtr);
-  if (err < 0)
-  {
-    notifyErrorMessage("Error writing the Mesh Vert Links", -999);
-    return err;
-  }
-
-  return err;
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
-{
   herr_t err = 0;
-  // notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
+  //first write the edges if they exist
+  EdgeArray::Pointer edgesPtr = dc->getEdges();
+  if (edgesPtr.get() != NULL)
+  {
+    int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SuredgeMesh::DataStruc
+    hsize_t dims[2] = {edgesPtr->getNumberOfTuples(), 3};
+
+    int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
+
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesName, rank, dims, data);
+    if (err < 0) 
+    {
+      setErrorCondition(err);
+      notifyErrorMessage("Error Writing Edge List to DREAM3D file", getErrorCondition());
+    }
+
+    //next write edge neighbors if they exist
+    Int32DynamicListArray::Pointer edgeNeighbors = edgesPtr->getEdgeNeighbors();
+    if (NULL != edgeNeighbors.get())
+    {
+      size_t total = 0;
+      size_t nEdges = edgesPtr->getNumberOfTuples();
+      for(size_t v = 0; v < nEdges; ++v)
+      {
+        total += edgeNeighbors->getNumberOfElements(v);
+      }
+
+      size_t totalBytes = nEdges * sizeof(uint16_t) + total * sizeof(int32_t);
+
+      // Allocate a flat array to copy the data into
+      QVector<uint8_t> buffer(totalBytes, 0);
+      uint8_t* bufPtr = &(buffer.front());
+      size_t offset = 0;
+
+      for(size_t v = 0; v < nEdges; ++v)
+      {
+        uint16_t ncells = edgeNeighbors->getNumberOfElements(v);
+        int32_t* cells = edgeNeighbors->getElementListPointer(v);
+        ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
+        offset += sizeof(uint16_t);
+        ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
+        offset += ncells*sizeof(int32_t);
+      }
+
+      int32_t rank = 1;
+      hsize_t dims[1] = {totalBytes};
+
+      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgeNeighbors, rank, dims, bufPtr);
+      if (err < 0)
+      {
+        notifyErrorMessage("Error writing the Edge Neighbors", -998);
+        return err;
+      }
+    }
+
+    //last write edges containing verts if they exist
+    Int32DynamicListArray::Pointer edgesContainingVert = edgesPtr->getEdgesContainingVert();
+    if (NULL == edgesContainingVert.get())
+    {
+      return 0;
+    }
+    VertexArray::Pointer verticesPtr = dc->getVertices();
+    if (NULL == verticesPtr.get())
+    {
+      return -1;
+    }
+
+    herr_t err = -1;
+    size_t total = 0;
+    size_t nVerts = verticesPtr->getNumberOfTuples();
+    for(size_t v = 0; v < nVerts; ++v)
+    {
+      total += edgesContainingVert->getNumberOfElements(v);
+    }
+
+    size_t totalBytes = nVerts * sizeof(uint16_t) + total * sizeof(int32_t);
+
+    // Allocate a flat array to copy the data into
+    QVector<uint8_t> buffer(totalBytes, 0);
+    uint8_t* bufPtr = &(buffer.front());
+    size_t offset = 0;
+
+    for(size_t v = 0; v < nVerts; ++v)
+    {
+      uint16_t ncells = edgesContainingVert->getNumberOfElements(v);
+      int32_t* cells = edgesContainingVert->getElementListPointer(v);
+      ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
+      offset += sizeof(uint16_t);
+      ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
+      offset += ncells*sizeof(int32_t);
+    }
+
+    rank = 1;
+    dims[0] = totalBytes;
+
+    err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::EdgesContainingVert, rank, dims, bufPtr);
+    if (err < 0)
+    {
+      notifyErrorMessage("Error writing the Edges Containing Verts", -999);
+      return err;
+    }
+  }
   return err;
 }
 
@@ -515,13 +525,13 @@ int EdgeDataContainerWriter::writeEdgeFieldData(hid_t dcGid, QString groupName)
 
 
   // Write the Field Data
-  err = H5Utilities::createGroupsFromPath(H5_FIELD_DATA_GROUP_NAME, dcGid);
+  err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
   if(err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_FIELD_DATA_GROUP_NAME << "\n";
+    qDebug() << "Error creating HDF Group " << groupName << "\n";
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, H5_FIELD_DATA_GROUP_NAME, H5_NAME, H5_FIELD_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_FIELD_DATA_DEFAULT);
   if(err < 0)
   {
     return err;
@@ -652,7 +662,7 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupNam
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
   //QString groupName(H5_ENSEMBLE_DATA_GROUP_NAME);
   // Write the Ensemble data
-   err = QH5Utilities::createGroupsFromPath(groupName, dcGid);
+   err = QH5Utilities::createGroupsFromPath(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, dcGid);
   if(err < 0)
   {
     QString ss = QObject::tr("Error creating HDF Group ").arg(groupName);
@@ -661,12 +671,12 @@ int EdgeDataContainerWriter::writeEdgeEnsembleData(hid_t dcGid, QString groupNam
     H5Gclose(dcGid); // Close the Data Container Group
     return err;
   }
-  err = QH5Lite::writeStringAttribute(dcGid, groupName, H5_NAME, H5_ENSEMBLE_DATA_DEFAULT);
+  err = QH5Lite::writeStringAttribute(dcGid, H5_EDGE_ENSEMBLE_DATA_GROUP_NAME, H5_NAME, H5_EDGE_ENSEMBLE_DATA_DEFAULT);
 
   hid_t ensembleGid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
   if(err < 0)
   {
-    QString ss = QObject::tr("Error opening ensemble Group ").arg(H5_ENSEMBLE_DATA_GROUP_NAME);
+    QString ss = QObject::tr("Error opening ensemble Group ").arg(H5_EDGE_ENSEMBLE_DATA_GROUP_NAME);
     setErrorCondition(-67);
     addErrorMessage(getHumanLabel(), ss, err);
     H5Gclose(dcGid); // Close the Data Container Group

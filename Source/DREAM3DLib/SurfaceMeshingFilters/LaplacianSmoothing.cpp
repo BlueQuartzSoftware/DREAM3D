@@ -493,7 +493,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // Get the unique Edges from the data container
 
   IDataArray::Pointer uniqueEdgesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getEdgeData(m_SurfaceMeshUniqueEdgesArrayName);
-  DataArray<int>* uniqueEdges = DataArray<int>::SafePointerDownCast(uniqueEdgesPtr.get());
+  DataArray<int32_t>* uniqueEdges = DataArray<int32_t>::SafePointerDownCast(uniqueEdgesPtr.get());
   if (NULL == uniqueEdges)
   {
     setErrorCondition(-560);
@@ -501,7 +501,7 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     return -560;
   }
   // Get a pointer to the Unique Edges
-  int* uedges = uniqueEdges->getPointer(0);
+  int32_t* uedges = uniqueEdges->getPointer(0);
   int nedges = uniqueEdges->getNumberOfTuples();
 
 
@@ -523,8 +523,8 @@ int LaplacianSmoothing::edgeBasedSmoothing()
     for (int i = 0; i < nedges; i++)
     {
       int in_edge = 2*i;
-      int in1 = uedges[in_edge]; // row of the first vertex
-      int in2 = uedges[in_edge+1]; //row the second vertex
+      size_t in1 = uedges[in_edge]; // row of the first vertex
+      size_t in2 = uedges[in_edge+1]; //row the second vertex
 
       for (int j = 0; j < 3; j++)
       {

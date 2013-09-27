@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllCellEnsembleArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
+
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, CellFieldArraysToRead)
@@ -92,24 +92,23 @@ class DREAM3DLib_EXPORT VolumeDataContainerReader : public SurfaceDataContainerR
 
     int getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3]);
 
+    void setReadAllArrays();
+
   protected:
     VolumeDataContainerReader();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
 
+    int readMeshData(hid_t dcGid, bool preflight);
+
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                        QVector<QString> &namesRead,
-                       QSet<QString> &namesToRead);
+                       QSet<QString> &namesToRead,
+                       bool readAllCurrentArrays);
+
+
 
     int gatherMetaData(hid_t dcId, int64_t volDims[3], float spacing[3], float origin[3]);
 

@@ -55,8 +55,7 @@ VertexDataContainerReader::VertexDataContainerReader() :
   m_ReadVertexEnsembleData(true),
   m_ReadAllVertexArrays(false),
   m_ReadAllVertexFieldArrays(false),
-  m_ReadAllVertexEnsembleArrays(false),
-  m_ReadAllArrays(false)
+  m_ReadAllVertexEnsembleArrays(false)
 {
 }
 
@@ -90,6 +89,14 @@ void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t 
   }
   else if (preflight == true)
   {
+    if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) m_ReadVertexData = false;
+    if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) m_ReadVertexFieldData = false;
+    if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) m_ReadVertexEnsembleData = false;
+
+    if(m_ReadVertexData == true) dc->clearVertexData();
+    if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
+    if(m_ReadVertexEnsembleData == true) dc->clearVertexEnsembleData();
+
     int err = gatherData(preflight);
     if (err < 0)
     {
@@ -128,9 +135,9 @@ void VertexDataContainerReader::execute()
 
   setErrorCondition(err);
 
-  if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true && m_ReadAllArrays != true) m_ReadVertexData = false;
-  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true && m_ReadAllArrays != true) m_ReadVertexFieldData = false;
-  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true && m_ReadAllArrays != true) m_ReadVertexEnsembleData = false;
+  if(m_VertexArraysToRead.size() == 0 && m_ReadAllVertexArrays != true) m_ReadVertexData = false;
+  if(m_VertexFieldArraysToRead.size() == 0 && m_ReadAllVertexFieldArrays != true) m_ReadVertexFieldData = false;
+  if(m_VertexEnsembleArraysToRead.size() == 0 && m_ReadAllVertexEnsembleArrays != true) m_ReadVertexEnsembleData = false;
 
   if(m_ReadVertexData == true) dc->clearVertexData();
   if(m_ReadVertexFieldData == true) dc->clearVertexFieldData();
@@ -141,6 +148,16 @@ void VertexDataContainerReader::execute()
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void VertexDataContainerReader::setReadAllArrays()
+{
+  m_ReadAllVertexArrays = true;
+  m_ReadAllVertexFieldArrays = true;
+  m_ReadAllVertexEnsembleArrays = true;
 }
 
 // -----------------------------------------------------------------------------
@@ -175,7 +192,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexArraysToRead = getVertexArraysToRead();
-    err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead);
+    err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, vertexArraysToRead, m_ReadAllVertexArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -188,7 +205,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexFieldArraysToRead = getVertexFieldArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead);
+    err |= readGroupsData(dcGid, H5_VERTEX_FIELD_DATA_GROUP_NAME, preflight, readNames, vertexFieldArraysToRead, m_ReadAllVertexFieldArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -201,7 +218,7 @@ int VertexDataContainerReader::gatherData(bool preflight)
   {
     QVector<QString> readNames;
     QSet<QString> vertexEnsembleArraysToRead = getVertexEnsembleArraysToRead();
-    err |= readGroupsData(dcGid, H5_CELL_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, vertexEnsembleArraysToRead);
+    err |= readGroupsData(dcGid, H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, vertexEnsembleArraysToRead, m_ReadAllVertexEnsembleArrays);
     if(err < 0)
     {
       err |= H5Gclose(dcGid);
@@ -266,7 +283,8 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                                                 QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead)
+                                                QSet<QString> &namesToRead,
+                                                bool readAllCurrentArrays)
 {
   // We are NOT going to check for NULL DataContainer because we are this far and the checks
   // have already happened. WHich is why this method is protected or private.
@@ -287,7 +305,7 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
     QSet<QString>::iterator contains = namesToRead.find(*iter);
-    if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
+    if (contains == namesToRead.end() && false == preflight && readAllCurrentArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
     QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
@@ -324,11 +342,11 @@ int VertexDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
       {
         dc->addVertexData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_FIELD_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_VERTEX_FIELD_DATA_GROUP_NAME) == 0)
       {
         dc->addVertexFieldData(dPtr->GetName(), dPtr);
       }
-      else if(groupName.compare(H5_ENSEMBLE_DATA_GROUP_NAME) == 0)
+      else if(groupName.compare(H5_VERTEX_ENSEMBLE_DATA_GROUP_NAME) == 0)
       {
         dc->addVertexEnsembleData(dPtr->GetName(), dPtr);
       }

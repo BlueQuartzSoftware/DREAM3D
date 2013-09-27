@@ -56,8 +56,11 @@ class EdgeArray
 
     typedef struct
     {
-      size_t verts[2];
+      int32_t verts[2];
     } Edge_t;
+
+    typedef QSet<int32_t> UniqueEdgeIds_t;
+    typedef StructArray<Edge_t> EdgeContainerType;
 
     DREAM3D_SHARED_POINTERS(EdgeArray)
     DREAM3D_STATIC_NEW_MACRO(EdgeArray)
@@ -300,13 +303,15 @@ class EdgeArray
       return (*m_Array)[i];
     }
   protected:
-    EdgeArray();
+    EdgeArray():
+    m_Verts(NULL)
+    {
+      m_Array = EdgeContainerType::CreateArray(0, "EdgeArray_Internal_Use_Only");
+    }
 
   private:
     StructArray<Edge_t>::Pointer  m_Array;
     VertexArray* m_Verts;
-
-
     QString m_Name;
 
     EdgeArray(const EdgeArray&); // Copy Constructor Not Implemented

@@ -100,6 +100,7 @@ namespace DREAM3D
 
   namespace CellData
   {
+    const QString SurfaceMeshCells("SurfaceMeshCells");
     const QString GrainIds("GrainIds");
     const QString FarFieldZoneIds("FarFieldZoneIds");
     const QString FarFieldQuats("FarFieldQuats");
@@ -266,6 +267,7 @@ namespace DREAM3D
     const QString VerticesName("Vertices");
     const QString FacesName("Faces");
     const QString EdgesName("Edges");
+    const QString CellsName("Cells");
     const QString EdgesContainingVert("EdgesContainingVert");
     const QString EdgeNeighbors("EdgeNeighbors");
     const QString FacesContainingVert("FacesContainingVert");

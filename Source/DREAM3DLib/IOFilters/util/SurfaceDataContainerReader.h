@@ -72,7 +72,6 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllFaceEnsembleArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceFieldArraysToRead)
@@ -90,18 +89,11 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     */
     virtual void preflight();
 
+    void setReadAllArrays();
 
   protected:
     SurfaceDataContainerReader();
 
-    /**
-    * @brief Checks for the appropriate parameter values and availability of
-    * arrays in the data container
-    * @param preflight
-    * @param voxels The number of voxels
-    * @param fields The number of fields
-    * @param ensembles The number of ensembles
-    */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
     int gatherData(bool preflight);
@@ -109,8 +101,10 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public EdgeDataContainerRea
     int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead);
+                       QVector<QString> &namesRead,
+                       QSet<QString> &namesToRead,
+                       bool readAllCurrentArrays);
+
 
   private:
 

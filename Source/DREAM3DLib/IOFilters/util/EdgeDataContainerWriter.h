@@ -92,9 +92,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public VertexDataContainerWrit
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    virtual int writeEdges(hid_t dcGid);
-    virtual int writeEdgesContainingVert(hid_t dcGid);
-    virtual int writeEdgeNeighbors(hid_t dcGid);
+    virtual int writeMeshData(hid_t dcGid);
 
     virtual int writeEdgeData(hid_t dcGid, QString groupName);
     virtual int writeEdgeFieldData(hid_t dcGid, QString groupName);

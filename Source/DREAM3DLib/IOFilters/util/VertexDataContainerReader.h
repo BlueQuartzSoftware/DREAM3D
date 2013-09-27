@@ -70,7 +70,6 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexFieldArrays)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllVertexEnsembleArrays)
-    DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
     DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexFieldArraysToRead)
@@ -87,21 +86,22 @@ class DREAM3DLib_EXPORT VertexDataContainerReader : public IOSupport
     */
     virtual void execute();
 
-
-
+    void setReadAllArrays();
 
   protected:
     VertexDataContainerReader();
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    virtual int gatherData(bool preflight);
+    int gatherData(bool preflight);
 
-    virtual int readMeshData(hid_t dcGid, bool preflight);
+    int readMeshData(hid_t dcGid, bool preflight);
 
     int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
                        QVector<QString> &namesRead,
-                       QSet<QString> &namesToRead);
+                       QSet<QString> &namesToRead,
+                       bool readAllCurrentArrays);
+
 
   private:
 
