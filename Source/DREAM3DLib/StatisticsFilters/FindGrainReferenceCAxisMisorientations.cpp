@@ -113,23 +113,14 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, 1)
-
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
-
-
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -138,6 +129,14 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
 // -----------------------------------------------------------------------------
 void FindGrainReferenceCAxisMisorientations::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1,1);
 }
 
@@ -226,10 +225,6 @@ void FindGrainReferenceCAxisMisorientations::execute()
         if (m_GrainIds[point] > 0 && m_CellPhases[point] > 0)
         {
           QuaternionMathF::Copy(quats[point], q1);
-          //          q1[1] = m_Quats[point*5 + 1];
-          //          q1[2] = m_Quats[point*5 + 2];
-          //          q1[3] = m_Quats[point*5 + 3];
-          //          q1[4] = m_Quats[point*5 + 4];
           OrientationMath::QuattoMat(q1, g1);
           //transpose the g matricies so when caxis is multiplied by it
           //it will give the sample direction that the caxis is along

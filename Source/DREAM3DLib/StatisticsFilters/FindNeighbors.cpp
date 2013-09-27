@@ -97,13 +97,6 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -182,6 +175,14 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void FindNeighbors::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -192,14 +193,12 @@ void FindNeighbors::execute()
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
-
 
   int64_t totalPoints = m->getTotalPoints();
   int totalFields = int(m->getNumCellFieldTuples());

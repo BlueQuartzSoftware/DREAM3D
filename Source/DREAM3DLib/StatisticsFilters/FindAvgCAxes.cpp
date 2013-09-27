@@ -92,17 +92,10 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType,  voxels, 1)
-
-      GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, float, FloatArrayType, 0, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -110,6 +103,14 @@ void FindAvgCAxes::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 void FindAvgCAxes::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -157,11 +158,6 @@ void FindAvgCAxes::execute()
     if(m_GrainIds[i] > 0)
     {
       QuaternionMathF::Copy(quats[i], q1);
-//      q1[0] = m_Quats[i*5 + 0];
-//      q1[1] = m_Quats[i*5 + 1];
-//      q1[2] = m_Quats[i*5 + 2];
-//      q1[3] = m_Quats[i*5 + 3];
-//      q1[4] = m_Quats[i*5 + 4];
 
       OrientationMath::QuattoMat(q1, g1);
       //transpose the g matricies so when caxis is multiplied by it

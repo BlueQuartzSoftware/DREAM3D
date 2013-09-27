@@ -135,18 +135,11 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, float, FloatArrayType, 0, voxels, 1)
 
   if(m_ReferenceOrientation == 0)
@@ -170,6 +163,14 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
 // -----------------------------------------------------------------------------
 void FindGrainReferenceMisorientations::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1,1);
 }
 
@@ -233,8 +234,6 @@ void FindGrainReferenceMisorientations::execute()
 #else
   typedef int64_t DimType;
 #endif
-
-
 
   size_t gnum;
   float dist;

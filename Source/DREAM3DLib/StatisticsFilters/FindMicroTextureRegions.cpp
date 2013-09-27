@@ -63,19 +63,11 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   // Cell Data
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionNumCells, int32_t, Int32ArrayType, 0, fields, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, MicroTextureRegionFractionOccupied, float, FloatArrayType, 0, fields, 1)
 
@@ -87,6 +79,14 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
 // -----------------------------------------------------------------------------
 void FindMicroTextureRegions::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
@@ -119,12 +119,7 @@ void FindMicroTextureRegions::execute()
 void FindMicroTextureRegions::find_microtextureregions()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
 
   size_t nummicrotextureregions = m->getNumCellFieldTuples();
@@ -215,6 +210,5 @@ void FindMicroTextureRegions::find_microtextureregions()
       m_MicroTextureRegionFractionOccupied[i] = ((float)m_MicroTextureRegionNumCells[i] * xRes * yRes) / rectanglevolume;
     }
   }
-
 }
 

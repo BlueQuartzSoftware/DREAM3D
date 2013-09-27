@@ -119,11 +119,6 @@ class CalculateTwinBoundaryImpl
 
           QuaternionMathF::Copy(quats[grain1], q1);
           QuaternionMathF::Copy(quats[grain2], q2);
-//          for(int m=0;m<5;m++)
-//          {
-//            q1[m]=m_Quats[5*grain1+m];
-//            q2[m]=m_Quats[5*grain2+m];
-//          }
 
           phase1 = m_CrystalStructures[m_Phases[grain1]];
           phase2 = m_CrystalStructures[m_Phases[grain2]];
@@ -266,12 +261,6 @@ void FindTwinBoundaries::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
 
@@ -289,12 +278,6 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
   setErrorCondition(0);
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
   GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
@@ -307,7 +290,24 @@ void FindTwinBoundaries::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 // -----------------------------------------------------------------------------
 void FindTwinBoundaries::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheckVoxel(true, 1, 1, 1);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheckSurfaceMesh(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------

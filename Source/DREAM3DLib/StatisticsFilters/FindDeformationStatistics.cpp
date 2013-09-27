@@ -147,35 +147,28 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, -300, int32_t, Int32ArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -300, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
 
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, -306, int32_t, Int32ArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, -306, float, FloatArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Poles, -306, int32_t, Int32ArrayType, fields, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgMisorientations, -306, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, -307, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, -308, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, -309, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, -310, float, FloatArrayType, voxels, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1, -307, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F1spt, -308, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, F7, -309, float, FloatArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, mPrime, -310, float, FloatArrayType, voxels, 1)
-
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
@@ -184,6 +177,14 @@ void FindDeformationStatistics::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void FindDeformationStatistics::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1 ,1);
 }
 

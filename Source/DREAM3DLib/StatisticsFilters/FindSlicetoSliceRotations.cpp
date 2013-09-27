@@ -114,12 +114,6 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -300, bool, BoolArrayType,  voxels, 1)
@@ -136,6 +130,14 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1,1);
 }
 
@@ -220,20 +222,12 @@ void FindSlicetoSliceRotations::execute()
       {
         point = (plane * xPoints * yPoints) + (row * xPoints) + col;
         QuaternionMathF::Copy(quats[point], q1);
-//        q1[1] = m_Quats[point*5 + 1];
-//        q1[2] = m_Quats[point*5 + 2];
-//        q1[3] = m_Quats[point*5 + 3];
-//        q1[4] = m_Quats[point*5 + 4];
         if (plane < zPoints-1)
         {
             outNeighbor = point + neighpoints[5];
             if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
             {
                 QuaternionMathF::Copy(quats[outNeighbor], q2);
-//                q2[1] = m_Quats[outNeighbor*5 + 1];
-//                q2[2] = m_Quats[outNeighbor*5 + 2];
-//                q2[3] = m_Quats[outNeighbor*5 + 3];
-//                q2[4] = m_Quats[outNeighbor*5 + 4];
                 w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
                 if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
                 {
@@ -257,10 +251,6 @@ void FindSlicetoSliceRotations::execute()
           if(good == true && m_CellPhases[point] == m_CellPhases[inNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[inNeighbor] == true)
           {
              QuaternionMathF::Copy(quats[inNeighbor], q2);
-//             q2[1] = m_Quats[inNeighbor*5 + 1];
-//             q2[2] = m_Quats[inNeighbor*5 + 2];
-//             q2[3] = m_Quats[inNeighbor*5 + 3];
-//             q2[4] = m_Quats[inNeighbor*5 + 4];
              w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
              if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
              {

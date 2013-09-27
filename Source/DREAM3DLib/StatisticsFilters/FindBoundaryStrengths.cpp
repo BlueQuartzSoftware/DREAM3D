@@ -134,34 +134,27 @@ void FindBoundaryStrengths::dataCheckSurfaceMesh(bool preflight, size_t voxels, 
   setErrorCondition(0);
   
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
+    setErrorCondition(-385);
   }
   else
   {
-  // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -385);
-      setErrorCondition(-385);
-    }
-    else
-    {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, fields, 2)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, fields, 2)
-    }
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1s, float, FloatArrayType, 0, fields, 2)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF1spts, float, FloatArrayType, 0, fields, 2)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshF7s, float, FloatArrayType, 0, fields, 2)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshmPrimes, float, FloatArrayType, 0, fields, 2)
   }
 }
 
@@ -173,12 +166,6 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
@@ -192,7 +179,23 @@ void FindBoundaryStrengths::dataCheckVoxel(bool preflight, size_t voxels, size_t
 // -----------------------------------------------------------------------------
 void FindBoundaryStrengths::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheckVoxel(true, 1,1 ,1);
+
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckSurfaceMesh(true, 1,1 ,1);
 }
 

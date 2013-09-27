@@ -367,38 +367,30 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-  if(NULL == sm)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+    setErrorCondition(-384);
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
 
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-    else
-    {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
-
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, 5)
-    }
-
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, 5)
   }
 }
 
@@ -410,18 +402,11 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  if(NULL == m)
-  {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-  else
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
-    typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-  }
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+
 }
 
 // -----------------------------------------------------------------------------
@@ -429,9 +414,23 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void FindGBCD::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckSurfaceMesh(true, 1, 1, 1);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  if(NULL == m)
+  {
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckVoxel(true, 1, 1, 1);
 }
 

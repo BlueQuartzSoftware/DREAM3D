@@ -109,29 +109,18 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
-
-
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-
     QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
     setErrorCondition(-305);
     addErrorMessage(getHumanLabel(), ss, -305);
   }
-
-
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
   f1Ptr->SetName(DREAM3D::FieldData::F1);
@@ -186,6 +175,14 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1 ,1);
 }
 
