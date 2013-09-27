@@ -61,7 +61,7 @@ int main(int argc, char **argv)
 
   size_t numEntries = e1s.size();
   odf.resize(CubicOps::k_OdfSize);
-  Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), e1s.size(), numEntries);
+  Texture::CalculateCubicODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true, odf.data(), numEntries);
   odf.resize(HexagonalOps::k_OdfSize);
   Texture::CalculateHexODFData(e1s.data(), e2s.data(), e3s.data(), weights.data(), sigmas.data(), true,
                                  odf.data(), numEntries);
