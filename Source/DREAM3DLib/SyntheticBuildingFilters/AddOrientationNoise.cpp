@@ -117,12 +117,6 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   // Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
@@ -133,6 +127,14 @@ void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -145,7 +147,6 @@ void AddOrientationNoise::execute()
   setErrorCondition(err);
   DREAM3D_RANDOMNG_NEW()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -179,12 +180,6 @@ void  AddOrientationNoise::add_orientation_noise()
   DREAM3D_RANDOMNG_NEW()
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   //float ea1, ea2, ea3;
   float g[3][3];

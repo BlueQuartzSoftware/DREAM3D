@@ -149,12 +149,7 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   QString ss;
   //int err = 0;
   // Cell Data
@@ -222,6 +217,14 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
 // -----------------------------------------------------------------------------
 void MatchCrystallography::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -342,12 +345,6 @@ void MatchCrystallography::initializeArrays(int ensem)
 void MatchCrystallography::determine_volumes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   size_t totalPoints = m->getNumCellTuples();
   size_t totalFields = m->getNumCellFieldTuples();
@@ -379,12 +376,6 @@ void MatchCrystallography::determine_volumes()
 void MatchCrystallography::determine_boundary_areas()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   NeighborList<int>& neighborlist = *m_NeighborList;
   NeighborList<float>& neighborsurfacearealist = *m_SharedSurfaceAreaList;
@@ -423,13 +414,8 @@ void MatchCrystallography::determine_boundary_areas()
 void MatchCrystallography::assign_eulers(int ensem)
 {
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
   int numbins = 0;
   float totaldensity = 0;
   float synea1 = 0, synea2 = 0, synea3 = 0;
@@ -540,12 +526,7 @@ void MatchCrystallography::MC_LoopBody2(int grain, int ensem, int j, float neigh
 void MatchCrystallography::matchCrystallography(int ensem)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -665,10 +646,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
           m_FieldEulerAngles[3 * selectedgrain1 + 1] = g1ea2;
           m_FieldEulerAngles[3 * selectedgrain1 + 2] = g1ea3;
           QuaternionMathF::Copy(q1, avgQuats[selectedgrain1]);
-          //          m_AvgQuats[4 * selectedgrain1 + 1] = q1[1];
-          //          m_AvgQuats[4 * selectedgrain1 + 2] = q1[2];
-          //          m_AvgQuats[4 * selectedgrain1 + 3] = q1[3];
-          //          m_AvgQuats[4 * selectedgrain1 + 4] = q1[4];
           simodf->SetValue(choose, (simodf->GetValue(choose) + (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
           simodf->SetValue(g1odfbin, (simodf->GetValue(g1odfbin) - (m_Volumes[selectedgrain1] / unbiasedvol[ensem])));
           size_t size = 0;
@@ -723,17 +700,9 @@ void MatchCrystallography::matchCrystallography(int ensem)
           g2ea2 = m_FieldEulerAngles[3 * selectedgrain2 + 1];
           g2ea3 = m_FieldEulerAngles[3 * selectedgrain2 + 2];
           QuaternionMathF::Copy(q1, avgQuats[selectedgrain1]);
-          //          q1[1] = m_AvgQuats[4 * selectedgrain1 + 1];
-          //          q1[2] = m_AvgQuats[4 * selectedgrain1 + 2];
-          //          q1[3] = m_AvgQuats[4 * selectedgrain1 + 3];
-          //          q1[4] = m_AvgQuats[4 * selectedgrain1 + 4];
           OrientationMath::EulertoRod(r1, r2, r3, g1ea1, g1ea2, g1ea3);
           g1odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
           QuaternionMathF::Copy(q1, avgQuats[selectedgrain2]);
-          //          q1[1] = m_AvgQuats[4 * selectedgrain2 + 1];
-          //          q1[2] = m_AvgQuats[4 * selectedgrain2 + 2];
-          //          q1[3] = m_AvgQuats[4 * selectedgrain2 + 3];
-          //          q1[4] = m_AvgQuats[4 * selectedgrain2 + 4];
           OrientationMath::EulertoRod(r1, r2, r3, g2ea1, g2ea2, g2ea3);
           g2odfbin = m_OrientationOps[m_CrystalStructures[ensem]]->getOdfBin(r1, r2, r3);
 
@@ -806,10 +775,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
 
             OrientationMath::EulertoQuat(q1, g2ea1, g2ea2, g2ea3);
             QuaternionMathF::Copy(avgQuats[selectedgrain1], q1);
-            //            m_AvgQuats[4 * selectedgrain1 + 1] = q1[1];
-            //            m_AvgQuats[4 * selectedgrain1 + 2] = q1[2];
-            //            m_AvgQuats[4 * selectedgrain1 + 3] = q1[3];
-            //            m_AvgQuats[4 * selectedgrain1 + 4] = q1[4];
             size = 0;
             if(neighborlist[selectedgrain1].size() != 0) size = neighborlist[selectedgrain1].size();
             for (size_t j = 0; j < size; j++)
@@ -828,10 +793,6 @@ void MatchCrystallography::matchCrystallography(int ensem)
 
             OrientationMath::EulertoQuat(q1, g1ea1, g1ea2, g1ea3);
             QuaternionMathF::Copy(q1, avgQuats[selectedgrain2]);
-            //            m_AvgQuats[4 * selectedgrain2 + 1] = q1[1];
-            //            m_AvgQuats[4 * selectedgrain2 + 2] = q1[2];
-            //            m_AvgQuats[4 * selectedgrain2 + 3] = q1[3];
-            //            m_AvgQuats[4 * selectedgrain2 + 4] = q1[4];
             size = 0;
             if(neighborlist[selectedgrain2].size() != 0) size = neighborlist[selectedgrain2].size();
             for (size_t j = 0; j < size; j++)
@@ -866,12 +827,7 @@ void MatchCrystallography::matchCrystallography(int ensem)
 void MatchCrystallography::measure_misorientations(int ensem)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   // But since a pointer is difficult to use operators with we will now create a
   // reference variable to the pointer with the correct variable name that allows
   // us to use the same syntax as the "vector of vectors"
@@ -905,10 +861,6 @@ void MatchCrystallography::measure_misorientations(int ensem)
         m_MisorientationLists[i].fill(0.0f, neighborlist[i].size() * 3);
       }
       QuaternionMathF::Copy(avgQuats[i], q1);
-      //      q1[1] = m_AvgQuats[4 * i + 1];
-      //      q1[2] = m_AvgQuats[4 * i + 2];
-      //      q1[3] = m_AvgQuats[4 * i + 3];
-      //      q1[4] = m_AvgQuats[4 * i + 4];
       crys1 = m_CrystalStructures[ensem];
       size_t size = 0;
       if(neighborlist[i].size() != 0 && neighborsurfacearealist[i].size() == neighborlist[i].size())
@@ -924,10 +876,6 @@ void MatchCrystallography::measure_misorientations(int ensem)
           w = 10000.0;
           float neighsurfarea = neighborsurfacearealist[i][j];
           QuaternionMathF::Copy(avgQuats[nname], q2);
-          //          q2[1] = m_AvgQuats[4 * nname + 1];
-          //          q2[2] = m_AvgQuats[4 * nname + 2];
-          //          q2[3] = m_AvgQuats[4 * nname + 3];
-          //          q2[4] = m_AvgQuats[4 * nname + 4];
           w = m_OrientationOps[crys1]->getMisoQuat(q1, q2, n1, n2, n3);
           OrientationMath::AxisAngletoRod(w, n1, n2, n3, r1, r2, r3);
           m_MisorientationLists[i][3 * j] = r1;

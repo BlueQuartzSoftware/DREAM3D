@@ -112,12 +112,7 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
       CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
@@ -133,6 +128,14 @@ void JumbleOrientations::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void JumbleOrientations::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -211,11 +214,6 @@ void JumbleOrientations::execute()
   {
     OrientationMath::EulertoQuat(q, m_FieldEulerAngles[3*i], m_FieldEulerAngles[3*i+1], m_FieldEulerAngles[3*i+2]);
     QuaternionMathF::Copy(q, avgQuats[i]);
-//    m_AvgQuats[5*i] = q[0];
-//    m_AvgQuats[5*i+1] = q[1];
-//    m_AvgQuats[5*i+2] = q[2];
-//    m_AvgQuats[5*i+3] = q[3];
-//    m_AvgQuats[5*i+4] = q[4];
   }
 
   // If there is an error set this to something negative and also set a message

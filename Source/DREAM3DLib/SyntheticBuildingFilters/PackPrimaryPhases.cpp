@@ -359,12 +359,6 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   //Cell Data
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -401,6 +395,14 @@ void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 
   if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
@@ -1156,12 +1158,6 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
 void PackPrimaryPhases::initialize_packinggrid()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   m_PackingRes[0] = m->getXRes() * 2.0f;
   m_PackingRes[1] = m->getYRes() * 2.0f;
@@ -1329,12 +1325,7 @@ void PackPrimaryPhases::move_grain(size_t gnum, float xc, float yc, float zc)
 void PackPrimaryPhases::determine_neighbors(size_t gnum, int add)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   float x, y, z;
   float xn, yn, zn;
   float dia, dia2;
@@ -1374,11 +1365,6 @@ float PackPrimaryPhases::check_neighborhooderror(int gadd, int gremove)
 {
   // Optimized Code
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-  }
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1550,11 +1536,6 @@ void PackPrimaryPhases::compare_3Ddistributions(QVector<QVector<QVector<float> >
 float PackPrimaryPhases::check_sizedisterror(Field* field)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-  }
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -1833,15 +1814,8 @@ void PackPrimaryPhases::assign_voxels()
   notifyStatusMessage("Assigning Voxels");
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totpoints = m->getTotalPoints();
-
-
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -2032,15 +2006,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage("Assigning Gaps");
 
-
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   int grainname, grain;
   int current = 0;
@@ -2168,12 +2134,6 @@ void PackPrimaryPhases::cleanup_grains()
   notifyStatusMessage("Cleaning Up Grains");
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 
@@ -2342,11 +2302,6 @@ int PackPrimaryPhases::estimate_numgrains(int xpoints, int ypoints, int zpoints,
     return 1;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-  }
 
   IDataArray::Pointer iPtr = m->getCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   // Get the PhaseTypes - Remember there is a Dummy PhaseType in the first slot of the array
@@ -2426,12 +2381,6 @@ void PackPrimaryPhases::write_goal_attributes()
   int err = 0;
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
 // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
