@@ -124,12 +124,7 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
@@ -145,8 +140,6 @@ void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 void MinNeighbors::preflight()
 {
-  dataCheck(true, 1, 1, 1);
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -154,6 +147,8 @@ void MinNeighbors::preflight()
     notifyErrorMessage("The DataContainer Object was NULL", -999);
     return;
   }
+
+  dataCheck(true, 1, 1, 1);
 
   RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
   renumber_grains->setObservers(this->getObservers());
@@ -227,12 +222,7 @@ void MinNeighbors::execute()
 void MinNeighbors::assign_badpoints()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -366,12 +356,6 @@ void MinNeighbors::merge_containedgrains()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   bool good = false;
 

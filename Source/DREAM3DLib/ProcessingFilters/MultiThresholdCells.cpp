@@ -127,17 +127,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
-  //  {
-  //    ComparisonInput_t& input = m_ComparisonInputs[i];
-  //    qDebug() << input.arrayName << "  " << input.compOperator << "  " << input.compValue << "\n";
-  //  }
+
   if (m_ComparisonInputs.size() == 0)
   {
     setErrorCondition(-12000);
@@ -153,8 +143,14 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void MultiThresholdCells::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

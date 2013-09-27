@@ -162,13 +162,6 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  //int err = 0;
 
   int numImageComp = 1;
   IDataArray::Pointer iDataArray = m->getCellData(m_ImageDataArrayName);
@@ -182,12 +175,6 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -301, unsigned char, UCharArrayType, voxels, numImageComp)
-//  if(err == -301)
-//  {
-//    setErrorCondition(0);
-//    err = 0;
-//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -302, unsigned char, UCharArrayType, voxels, 3)
-//  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, 1)
 }
@@ -197,6 +184,14 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 // -----------------------------------------------------------------------------
 void FlattenImage::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

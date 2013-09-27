@@ -147,12 +147,6 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Output, bool, BoolArrayType, true, fields, 1)
 
@@ -168,6 +162,14 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

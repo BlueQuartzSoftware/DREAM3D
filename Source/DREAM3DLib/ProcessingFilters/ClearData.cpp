@@ -169,12 +169,6 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   QString ss;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   if (getXMax() < getXMin())
   {
@@ -247,6 +241,14 @@ void ClearData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 // -----------------------------------------------------------------------------
 void ClearData::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
