@@ -263,7 +263,7 @@ int VertexDataContainerReader::readMeshData(hid_t dcGid, bool preflight)
       // Allocate the Vertex_t structures
       VertexArray::Pointer verticesPtr = VertexArray::CreateArray(dims[0], DREAM3D::VertexData::SurfaceMeshNodes);
       // We need this to properly use QH5Lite because the data is stored as int32_t in 5 columns
-      int32_t* data = reinterpret_cast<int32_t*>(verticesPtr->getPointer(0));
+      float* data = reinterpret_cast<float*>(verticesPtr->getPointer(0));
       // Read the data from the file
       err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
       if (err < 0)
