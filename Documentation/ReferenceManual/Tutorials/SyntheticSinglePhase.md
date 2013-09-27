@@ -1,7 +1,7 @@
 Synthetic Microstructure Generation {#tutorialsyntheticsingle}
 =========
 
-Launch DREAM3D and open the "Prebuilt Pipelines" area then the "Workshop" area (See image) and then double click the "(01) Single Cubic Phase Equiaxed" prebuilt pipeline. This will clear any filters currently in the pipeline and then populate the pipeline with the proper pipeline to build this synthetic microstructure. 
+Launch DREAM3D and open the "Prebuilt Pipelines" area then the "Workshop" area (See image) and then double click the "(01) Single Cubic Phase Equiaxed" prebuilt pipeline. This will clear any filters currently in the pipeline and then populate the pipeline with the proper pipeline to build this synthetic microstructure.
 
 -------------------
 
@@ -16,15 +16,15 @@ Launch DREAM3D and open the "Prebuilt Pipelines" area then the "Workshop" area (
 
 
 + Initialize Synthetic Volume
-	- 128 Voxels in X,Y & Z
-	- 0.500 micron resolution in X, Y & Z
+  - 128 Voxels in X,Y & Z
+  - 0.500 micron resolution in X, Y & Z
 + Pack Primary Phases
 + Find Field Neighbors
 + Find Number of Fields
 + Match Crystallography
 + Generate IPF Colors (Optional)
-  	- This filter is Optional
-  	- It will generate actual colors corresponding to the standard IPF Color Triangle
+    - This filter is Optional
+    - It will generate actual colors corresponding to the standard IPF Color Triangle
 + Write DREAM3D Data File
 
 
@@ -58,9 +58,9 @@ After the pipeline is complete a .dream3d file and its supporting .xdmf file wil
 ### ParaView Notes ###
 
 If you color by the IPFColors then a few additional steps need to be taken to force ParaView to use the generated colors. The image below shows the settings that need to be set in order to use the generated colors. If you would like to view internal grains then use the "Slice" and "Clip" filters to view to make cuts through the structure. [ParaView](http://www.paraview.org)  offers many tutorials on their website.
-![ParaView OverView](Images/ex_reconstruction_3.png)
+![ParaView OverView](Images/ex_reconstruction_50.png)
 
-@image latex Images/ex_reconstruction_3.png "ParaView OverView" width=6in
+@image latex Images/ex_reconstruction_50.png "ParaView OverView" width=6in
 
 -------------------
 

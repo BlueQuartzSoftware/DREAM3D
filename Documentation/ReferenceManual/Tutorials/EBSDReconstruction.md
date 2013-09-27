@@ -9,10 +9,10 @@ This tutorial uses a prebuilt pipeline to reconstruct a 3D data set of a Ni base
 Download the compressed archive from [the DREAM3D web site](http://dream3d.bluequartz.net/Data/Small_IN100.zip). After downloading the zip we need to place the data into the *Data* folder that is part of the DREAM3D distribution. Regardless of operating system the DREAM3D distribution will have a directory called "Data". The user needs to decompress the **Small_IN100.zip** archive inside of the **Data** folder so that the resulting folder hierarchy is exactly as follows:
 
 + DREAM3D-DREAM3D-4.2.XX-XXX
-	+ Data
-		+ SmallIN100
-			+ Small_IN100_X.ang
-			+ Small_IN100_X.ang
+  + Data
+    + SmallIN100
+      + Small_IN100_X.ang
+      + Small_IN100_X.ang
 
 Where the *.ang* files should be numbered from 1 to 117.
 
@@ -42,7 +42,7 @@ We want to convert the text based set of .ang files into a single binary archive
 
 ## Running the Reconstruction ##
 
-To reconstruct the Small IN100 data set a complete pipeline is provided. The user should navigate to *Prebuilt Pipelines->Workshop->Reconstruction* and double click on **"(17) SmallIN100 Full Pipeline"**. This will clear any current pipeline and populate the pipeline area with all the necessary filters and their settings to reconstruct the Small IN100 data set. The user is encouraged to run this pipeline once as it stands and then visualize the results. After this step the user is encouraged to read the documentation files for each of the filters to gain an understanding of the processing being performed on the data. 
+To reconstruct the Small IN100 data set a complete pipeline is provided. The user should navigate to *Prebuilt Pipelines->Workshop->Reconstruction* and double click on **"(17) SmallIN100 Full Pipeline"**. This will clear any current pipeline and populate the pipeline area with all the necessary filters and their settings to reconstruct the Small IN100 data set. The user is encouraged to run this pipeline once as it stands and then visualize the results. After this step the user is encouraged to read the documentation files for each of the filters to gain an understanding of the processing being performed on the data.
 
 ## Visualizing the Microstructure ##
 
@@ -54,7 +54,7 @@ After running the pipeline [ParaView](http://www.paraview.org) can be used to di
 4. Uncheck the *Map Scalars* option
 
 
-At this point the reconstructed volume will be mostly black. This is because the black voxels were outside of the scan area and have been marked as "bad" data (GoodVoxels=0) and when the "Generate IPF Colors" filter executed those voxels marked as "bad data" were given a black color since black is impossible to have on the IPF color scale. 
+At this point the reconstructed volume will be mostly black. This is because the black voxels were outside of the scan area and have been marked as "bad" data (GoodVoxels=0) and when the "Generate IPF Colors" filter executed those voxels marked as "bad data" were given a black color since black is impossible to have on the IPF color scale.
 
 ------------
 
@@ -71,7 +71,7 @@ In order to visually reveal more of the inner structure of the reconstructed vol
 
 ![Applying the Threshold filter using the toolbar](Images/ParaViewToolbar.png)
 
-@image latex Images/ex_reconstruction.png "Applying the Threshold filter using the toolbar" width=4.5in
+@image latex Images/ParaViewToolbar.png "Applying the Threshold filter using the toolbar" width=4.5in
 
 ------------
 
