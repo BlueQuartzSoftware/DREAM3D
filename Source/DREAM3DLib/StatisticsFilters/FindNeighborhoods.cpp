@@ -120,6 +120,12 @@ void FindNeighborhoods::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   // Field Data
@@ -202,6 +208,12 @@ void FindNeighborhoods::execute()
 void FindNeighborhoods::find_neighborhoods()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   float x, y, z;

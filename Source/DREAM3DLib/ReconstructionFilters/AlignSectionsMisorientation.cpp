@@ -160,6 +160,12 @@ void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
 
@@ -229,6 +235,12 @@ void AlignSectionsMisorientation::execute()
 void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;

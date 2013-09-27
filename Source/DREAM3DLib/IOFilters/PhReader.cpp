@@ -153,6 +153,12 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -255,6 +261,12 @@ void PhReader::execute()
 int PhReader::readHeader()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return -1;
+  }
 
   int nx = 0;
   int ny = 0;
@@ -282,6 +294,12 @@ int  PhReader::readFile()
 {
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return -1;
+  }
 
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);

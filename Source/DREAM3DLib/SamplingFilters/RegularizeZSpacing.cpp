@@ -128,6 +128,12 @@ int RegularizeZSpacing::writeFilterParameters(AbstractFilterParametersWriter* wr
 void RegularizeZSpacing::preflight()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());

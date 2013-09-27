@@ -160,6 +160,12 @@ void MergeTwins::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   // Cell Data
@@ -282,6 +288,12 @@ void MergeTwins::merge_twins()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >(m->getCellFieldData(DREAM3D::FieldData::NeighborList).get());
   // But since a pointer is difficult to use operators with we will now create a
@@ -359,6 +371,12 @@ void MergeTwins::merge_twins()
 void MergeTwins::characterize_twins()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {

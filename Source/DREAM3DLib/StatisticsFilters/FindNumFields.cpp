@@ -90,6 +90,12 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)
 

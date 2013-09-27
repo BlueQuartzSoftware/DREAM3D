@@ -145,6 +145,12 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -215,6 +221,12 @@ void AlignSectionsMutualInformation::execute()
 void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
@@ -417,6 +429,12 @@ void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
       VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

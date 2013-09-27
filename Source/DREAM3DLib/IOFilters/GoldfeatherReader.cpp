@@ -130,7 +130,13 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   QString ss;
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  if(NULL == sm)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)

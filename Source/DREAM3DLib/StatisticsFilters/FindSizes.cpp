@@ -101,6 +101,12 @@ void FindSizes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int err = 0;
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
@@ -150,6 +156,12 @@ void FindSizes::execute()
 void FindSizes::find_sizes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
 
   float radcubed;
@@ -186,6 +198,12 @@ void FindSizes::find_sizes()
 void FindSizes::find_sizes2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
 
   float radsquared;

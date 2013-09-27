@@ -160,6 +160,12 @@ void AlignSectionsFeatureCentroid::dataCheck(bool preflight, size_t voxels, size
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
@@ -217,6 +223,12 @@ void AlignSectionsFeatureCentroid::execute()
 void AlignSectionsFeatureCentroid::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;

@@ -162,6 +162,12 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
@@ -363,6 +369,12 @@ void GenerateEnsembleStatistics::execute()
 void GenerateEnsembleStatistics::gatherSizeStats()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   // int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -446,6 +458,12 @@ void GenerateEnsembleStatistics::gatherSizeStats()
 void GenerateEnsembleStatistics::gatherAspectRatioStats()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   StatsData::Pointer stats_data = StatsData::New();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -545,6 +563,12 @@ void GenerateEnsembleStatistics::gatherAspectRatioStats()
 void GenerateEnsembleStatistics::gatherOmega3Stats()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->getTotalPoints();
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
@@ -622,6 +646,12 @@ void GenerateEnsembleStatistics::gatherOmega3Stats()
 void GenerateEnsembleStatistics::gatherNeighborhoodStats()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   StatsDataArray& statsDataArray = *m_StatsDataArray;
 

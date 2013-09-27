@@ -335,6 +335,12 @@ void ReadOrientationData::readAngFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();
@@ -434,6 +440,12 @@ void ReadOrientationData::readCtfFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   int64_t dims[3];
   dims[0] = reader.getXCells();
@@ -557,6 +569,12 @@ void ReadOrientationData::readMicFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();

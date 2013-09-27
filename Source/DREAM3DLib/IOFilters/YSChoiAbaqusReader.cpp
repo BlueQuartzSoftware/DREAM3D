@@ -140,6 +140,12 @@ void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -215,6 +221,12 @@ void YSChoiAbaqusReader::preflight()
 void YSChoiAbaqusReader::execute()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   int xpoints, ypoints, zpoints, totalpoints = 0;
   float resx, resy, resz;

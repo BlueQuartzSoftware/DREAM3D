@@ -157,6 +157,12 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   // Cell Data
@@ -248,6 +254,12 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
   NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
@@ -358,6 +370,12 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {

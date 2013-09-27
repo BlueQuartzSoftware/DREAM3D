@@ -134,6 +134,12 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   if(getOutputFile().isEmpty() == true)
   {
 

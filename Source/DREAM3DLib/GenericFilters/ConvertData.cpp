@@ -278,6 +278,12 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   setErrorCondition(0);
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {

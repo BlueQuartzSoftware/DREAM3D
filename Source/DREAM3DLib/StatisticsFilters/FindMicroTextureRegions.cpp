@@ -63,6 +63,12 @@ void FindMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   // Cell Data
 
@@ -113,6 +119,12 @@ void FindMicroTextureRegions::execute()
 void FindMicroTextureRegions::find_microtextureregions()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
 
   size_t nummicrotextureregions = m->getNumCellFieldTuples();

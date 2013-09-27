@@ -244,6 +244,12 @@ void RotateSampleRefFrame::preflight()
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;

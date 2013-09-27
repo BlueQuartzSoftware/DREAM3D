@@ -123,6 +123,12 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
 
@@ -208,6 +214,12 @@ void MinSize::execute()
 void MinSize::assign_badpoints()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -345,6 +357,12 @@ void MinSize::assign_badpoints()
 void MinSize::remove_smallgrains()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;

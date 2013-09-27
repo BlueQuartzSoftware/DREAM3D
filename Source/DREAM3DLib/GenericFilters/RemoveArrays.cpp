@@ -126,6 +126,12 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   typedef QSet<QString> NameList_t;
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   if (NULL != m)
   {
     for(NameList_t::iterator iter = m_SelectedVolumeCellArrays.begin(); iter != m_SelectedVolumeCellArrays.end(); ++iter)
@@ -144,7 +150,13 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
 
 
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  if(NULL == sm)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   if (NULL != sm)
   {
     for(NameList_t::iterator iter = m_SelectedSurfaceVertexArrays.begin(); iter != m_SelectedSurfaceVertexArrays.end(); ++iter)
@@ -170,23 +182,23 @@ void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   }
 
   EdgeDataContainer* e = getDataContainerArray()->getDataContainerAs<EdgeDataContainer>(getEdgeDataContainerName());
-  if (NULL != sm)
+  if (NULL != e)
   {
     for(NameList_t::iterator iter = m_SelectedEdgeVertexArrays.begin(); iter != m_SelectedEdgeVertexArrays.end(); ++iter)
     {
-      sm->removeVertexData(*iter);
+      e->removeVertexData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedEdgeEdgeArrays.begin(); iter != m_SelectedEdgeEdgeArrays.end(); ++iter)
     {
-      sm->removeEdgeData(*iter);
+      e->removeEdgeData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedEdgeEdgeFieldArrays.begin(); iter != m_SelectedEdgeEdgeFieldArrays.end(); ++iter)
     {
-      sm->removeEdgeFieldData(*iter);
+      e->removeEdgeFieldData(*iter);
     }
     for(NameList_t::iterator iter = m_SelectedEdgeEdgeEnsembleArrays.begin(); iter != m_SelectedEdgeEdgeEnsembleArrays.end(); ++iter)
     {
-      sm->removeEdgeEnsembleData(*iter);
+      e->removeEdgeEnsembleData(*iter);
     }
   }
 

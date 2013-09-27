@@ -115,6 +115,12 @@ int ChangeResolution::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ChangeResolution::preflight()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   size_t dims[3];
   m->getDimensions(dims);

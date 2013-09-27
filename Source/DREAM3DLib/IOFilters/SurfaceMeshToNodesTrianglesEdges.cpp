@@ -212,7 +212,13 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   {
     return;
   }
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  if(NULL == sm)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
 
   VertexArray::Pointer nodes = sm->getVertices();

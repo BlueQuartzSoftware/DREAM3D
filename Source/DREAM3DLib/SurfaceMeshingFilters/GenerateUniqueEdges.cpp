@@ -185,7 +185,13 @@ void GenerateUniqueEdges::execute()
 void GenerateUniqueEdges::generateUniqueEdgeIds()
 {
 
-  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
+  if(NULL == sm)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalPoints = trianglesPtr->getNumberOfTuples();

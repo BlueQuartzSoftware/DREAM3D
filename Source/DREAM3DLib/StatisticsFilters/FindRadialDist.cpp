@@ -124,6 +124,12 @@ void FindRadialDist::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
@@ -214,6 +220,12 @@ QString parentPath = fi.path();
 void FindRadialDist::find_radialdist()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   float x, y, z;
   float xn, yn, zn;
@@ -342,6 +354,12 @@ void FindRadialDist::find_radialdist()
 void FindRadialDist::find_boundingbox()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   size_t size = m->getNumCellFieldTuples();
 
   float coords[7];

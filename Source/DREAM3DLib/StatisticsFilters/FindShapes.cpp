@@ -118,6 +118,12 @@ void FindShapes::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -305, float, FloatArrayType, fields, 3)
@@ -175,6 +181,12 @@ void FindShapes::execute()
 void FindShapes::find_moments()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->getTotalPoints();
 
   float u200 = 0;
@@ -311,6 +323,12 @@ void FindShapes::find_moments()
 void FindShapes::find_moments2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   //int64_t totalPoints = m->getTotalPoints();
   float xx, yy, xy;
   size_t numgrains = m->getNumCellFieldTuples();
@@ -394,6 +412,12 @@ void FindShapes::find_moments2D()
 void FindShapes::find_axes()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   float I1, I2, I3;
   float Ixx, Iyy, Izz, Ixy, Ixz, Iyz;
@@ -490,6 +514,12 @@ void FindShapes::find_axes()
 void FindShapes::find_axes2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
 
   float Ixx, Iyy, Ixy;
 
@@ -525,6 +555,12 @@ void FindShapes::find_axes2D()
 void FindShapes::find_axiseulers()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   size_t numgrains = m->getNumCellFieldTuples();
   float ea1=0, ea2=0, ea3=0;
   for (size_t i = 1; i < numgrains; i++)
@@ -679,6 +715,12 @@ void FindShapes::find_axiseulers()
 void FindShapes::find_axiseulers2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
   size_t numgrains = m->getNumCellFieldTuples();
 
   for (size_t i = 1; i < numgrains; i++)
