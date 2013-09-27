@@ -143,6 +143,14 @@ void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void AlignSectionsList::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -182,13 +190,6 @@ void AlignSectionsList::execute()
 void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  //int64_t totalPoints = m->totalPoints();
 
   ifstream inFile;
   inFile.open(m_InputFile.toLatin1().data());

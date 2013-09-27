@@ -143,27 +143,17 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType,  true, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
-
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -171,6 +161,14 @@ void EBSDSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void EBSDSegmentGrains::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -275,14 +273,6 @@ int64_t EBSDSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return -1;
-  }
 
   int64_t totalPoints = m->getTotalPoints();
 

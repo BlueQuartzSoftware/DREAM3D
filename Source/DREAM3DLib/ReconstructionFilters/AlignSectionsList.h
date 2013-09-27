@@ -68,14 +68,14 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     virtual ~AlignSectionsList();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+	  virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (List)"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+	  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file
@@ -86,13 +86,14 @@ class DREAM3DLib_EXPORT AlignSectionsList : public AlignSections
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-	virtual void execute();
+	  virtual void execute();
     virtual void preflight();
 
-	virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   protected:
     AlignSectionsList();
+
+	  virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   private:
     bool* m_GoodVoxels;

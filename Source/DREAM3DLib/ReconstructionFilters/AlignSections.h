@@ -93,11 +93,10 @@ class DREAM3DLib_EXPORT AlignSections : public AbstractFilter
 	  virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
-
-
   protected:
     AlignSections();
+
+    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   private:
 

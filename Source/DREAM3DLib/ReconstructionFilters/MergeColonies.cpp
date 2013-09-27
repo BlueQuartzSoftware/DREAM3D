@@ -227,13 +227,6 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -268,6 +261,14 @@ void MergeColonies::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void MergeColonies::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -364,12 +365,6 @@ void MergeColonies::merge_colonies()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   NeighborList<int>& neighborlist = *m_NeighborList;
 
@@ -493,12 +488,7 @@ void MergeColonies::merge_colonies()
 void MergeColonies::characterize_colonies()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {
@@ -581,12 +571,7 @@ int MergeColonies::check_for_burgers(QuatF betaQuat, QuatF alphaQuat)
 void MergeColonies::identify_globAlpha()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
   QVector<int> betaSize(numParents,0);
   QVector<int> totalSize(numParents,0);

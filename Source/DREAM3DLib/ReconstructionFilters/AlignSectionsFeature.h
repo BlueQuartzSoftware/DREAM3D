@@ -95,10 +95,10 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
-
   protected:
     AlignSectionsFeature();
+
+    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   private:
     bool* m_GoodVoxels;

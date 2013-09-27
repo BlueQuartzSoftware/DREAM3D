@@ -157,13 +157,6 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   // Cell Data
   GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
@@ -210,6 +203,14 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void GroupMicroTextureRegions::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -254,12 +255,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   // Since this method is called from the 'execute' and the DataContainer validity
   // was checked there we are just going to get the Shared Pointer to the DataContainer
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   NeighborList<int>& neighborlist = *m_ContiguousNeighborList;
   NeighborList<int>& neighborhoodlist = *m_NonContiguousNeighborList;
@@ -326,11 +321,6 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
               if (phase1 == phase2 && (phase1 == Ebsd::CrystalStructure::Hexagonal_High) )
               {
                 QuaternionMathF::Copy(avgQuats[neigh], q2);
-//                q2[0] = 1;
-//                q2[1] = m_AvgQuats[5*neigh+1];
-//                q2[2] = m_AvgQuats[5*neigh+2];
-//                q2[3] = m_AvgQuats[5*neigh+3];
-//                q2[4] = m_AvgQuats[5*neigh+4];
                 OrientationMath::QuattoMat(q2, g2);
                 //transpose the g matrix so when caxis is multiplied by it
                 //it will give the sample direction that the caxis is along
@@ -370,12 +360,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
 void GroupMicroTextureRegions::characterize_micro_texture_regions()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 0; i < numgrains; i++)
   {

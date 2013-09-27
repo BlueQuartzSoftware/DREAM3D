@@ -221,14 +221,6 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
-  //int err = 0;
 
   if(m_ScalarArrayName.isEmpty() == true)
   {
@@ -246,6 +238,14 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void ScalarSegmentGrains::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -271,8 +271,6 @@ void ScalarSegmentGrains::execute()
   {
     return;
   }
-
-
 
   m_InputData = m->getCellData(m_ScalarArrayName);
   if (NULL == m_InputData.get())
@@ -405,14 +403,6 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-1);
-
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return -1;
-  }
 
   int64_t totalPoints = m->getTotalPoints();
 

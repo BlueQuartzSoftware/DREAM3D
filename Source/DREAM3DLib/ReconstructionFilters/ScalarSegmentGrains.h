@@ -103,11 +103,11 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     virtual void execute();
     virtual void preflight();
 
-    virtual int64_t getSeed(size_t gnum);
-    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
-
   protected:
     ScalarSegmentGrains();
+
+    virtual int64_t getSeed(size_t gnum);
+    virtual bool determineGrouping(int64_t referencepoint, int64_t neighborpoint, size_t gnum);
 
   private:
 	  IDataArray::Pointer m_InputData;

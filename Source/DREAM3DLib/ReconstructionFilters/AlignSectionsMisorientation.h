@@ -68,21 +68,21 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     virtual ~AlignSectionsMisorientation();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
+	  //------ Required Cell Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+	  DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+	  //------ Required Ensemble Data
+	  DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+	  virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const QString getHumanLabel() { return "Align Sections (Misorientation)"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+	  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     
     /**
     * @brief This method will read the options from a file
@@ -91,15 +91,15 @@ class DREAM3DLib_EXPORT AlignSectionsMisorientation : public AlignSections
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
     /**
-     * @brief Reimplemented from @see AbstractFilter class
-     */
-	virtual void execute();
+    * @brief Reimplemented from @see AbstractFilter class
+    */
+	  virtual void execute();
     virtual void preflight();
-
-	virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   protected:
     AlignSectionsMisorientation();
+
+	  virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   private:
     float* m_Quats;

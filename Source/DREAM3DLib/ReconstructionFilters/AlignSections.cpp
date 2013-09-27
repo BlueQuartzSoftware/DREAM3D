@@ -135,7 +135,6 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
 
-
   if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
   {
     QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
@@ -152,6 +151,16 @@ void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void AlignSections::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if (NULL == m)
+  {
+    setErrorCondition(-1);
+
+    QString ss = QObject::tr(" DataContainer was NULL");
+    notifyErrorMessage(ss, -1);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

@@ -145,13 +145,6 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
   {
@@ -162,13 +155,11 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-
 }
 
 // -----------------------------------------------------------------------------
@@ -176,6 +167,14 @@ void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, si
 // -----------------------------------------------------------------------------
 void AlignSectionsMutualInformation::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -221,13 +220,6 @@ void AlignSectionsMutualInformation::execute()
 void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-  //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
@@ -428,13 +420,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
 void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);

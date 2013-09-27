@@ -101,11 +101,10 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
-
   protected:
     AlignSectionsMutualInformation();
 
+    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
     void form_grains_sections();
 
   private:

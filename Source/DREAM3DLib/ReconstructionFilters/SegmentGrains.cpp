@@ -110,6 +110,15 @@ void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void SegmentGrains::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-1);
+    QString ss = QObject::tr(" DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -121,7 +130,6 @@ void SegmentGrains::execute()
   setErrorCondition(0);
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   if(NULL == m)
   {
     setErrorCondition(-1);
