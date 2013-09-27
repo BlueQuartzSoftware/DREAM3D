@@ -106,15 +106,16 @@ class RotateSampleRefFrameImpl
       //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
-      int32_t colOld, rowOld, planeOld;
 
-      for (size_t k = zStart; k < zEnd; k++)
+      int64_t colOld, rowOld, planeOld;
+
+      for (int64_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew*m_params->ypNew)*k;
-        for (size_t j = yStart; j < yEnd; j++)
+        for (int64_t j = yStart; j < yEnd; j++)
         {
           jtot = (m_params->xpNew)*j;
-          for (size_t i = xStart; i < xEnd; i++)
+          for (int64_t i = xStart; i < xEnd; i++)
           {
             index = ktot + jtot + i;
             newindicies[index] = -1;
@@ -374,6 +375,10 @@ void RotateSampleRefFrame::execute()
   yRes = m->getYRes();
   zp = static_cast<int32_t>(m->getZPoints());
   zRes = m->getZRes();
+
+  if (xRes == 0.0) { xRes = 1.0; }
+  if (yRes == 0.0) { yRes = 1.0; }
+  if (zRes == 0.0) { zRes = 1.0; }
 
   params.xp = xp;
   params.xRes = xRes;
