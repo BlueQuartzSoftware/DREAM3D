@@ -350,9 +350,9 @@ int CtfReader::readData(QFile &in)
   QList<QByteArray> tokens = buf.split('\t'); // Tokenize the array with a tab
 
   Ebsd::NumType pType = Ebsd::UnknownNumType;
-  size_t size = tokens.size();
+  qint32 size = tokens.size();
   bool didAllocate = false;
-  for (size_t i = 0; i < size; ++i)
+  for (qint32 i = 0; i < size; ++i)
   {
     QString name = QString::fromAscii(tokens[i]);
     pType = getPointerType(name);
@@ -456,8 +456,8 @@ int CtfReader::readData(QFile &in)
 int CtfReader::parseHeaderLines(QList<QByteArray> &headerLines)
 {
   int err = 0;
-  size_t size = headerLines.size();
-  for (size_t i = 0; i < size; ++i)
+  qint32 size = headerLines.size();
+  for (qint32 i = 0; i < size; ++i)
   {
     QByteArray line = headerLines[i];
     QString sLine = line; // Turn the line into a QString

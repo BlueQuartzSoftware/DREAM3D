@@ -337,7 +337,7 @@ int H5CtfImporter::writeSliceData(hid_t fileId, CtfReader &reader, int z, int ac
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
   QList<QString> columnNames = reader.getColumnNames();
-  for (size_t i = 0; i < columnNames.size(); ++i)
+  for (qint32 i = 0; i < columnNames.size(); ++i)
   {
     numType = reader.getPointerType(columnNames[i]);
     if(numType == Ebsd::Int32)
