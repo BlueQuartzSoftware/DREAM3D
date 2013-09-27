@@ -91,7 +91,6 @@ class DREAM3DLib_EXPORT FindGrainCentroids : public AbstractFilter
     FindGrainCentroids();
 
     void find_centroids();
-    void find_centroids2D();
 
   private:
     int32_t* m_GrainIds;

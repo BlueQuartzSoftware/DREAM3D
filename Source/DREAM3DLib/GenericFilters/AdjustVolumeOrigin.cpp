@@ -99,8 +99,7 @@ AdjustVolumeOrigin::AdjustVolumeOrigin() :
   AbstractFilter(),
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true),
-  m_ApplyToSolidMesh(false)
+  m_ApplyToSurfaceMesh(true)
 {
   m_Origin.x = 0.0f;
   m_Origin.y = 0.0f;
@@ -137,18 +136,6 @@ void AdjustVolumeOrigin::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-#if 0
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Apply to Solid Mesh");
-    option->setPropertyName("ApplyToSolidMesh");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-#endif
-
-
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Origin");
@@ -185,7 +172,6 @@ int AdjustVolumeOrigin::writeFilterParameters(AbstractFilterParametersWriter* wr
   writer->writeValue("Origin", getOrigin() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
-  writer->writeValue("ApplyToSolidMesh", getApplyToSolidMesh() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -197,33 +183,13 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
 
-  if (m_ApplyToVoxelVolume == true)
-  {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-    if(NULL == m)
-    {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
-    }
-  }
-
-
   if (m_ApplyToSurfaceMesh == true)
   {
     SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-    if(NULL == sm)
+    if(sm->getVertices().get() == NULL)
     {
-      setErrorCondition(-383);
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
-    }
-    else
-    {
-      // We MUST have Nodes
-      if(sm->getVertices().get() == NULL)
-      {
-        setErrorCondition(-384);
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-      }
+      setErrorCondition(-384);
+      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
     }
   }
 }
@@ -234,8 +200,25 @@ void AdjustVolumeOrigin::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  if (m_ApplyToVoxelVolume == true)
+  {
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    if(NULL == m)
+    {
+      setErrorCondition(-383);
+      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", getErrorCondition());
+    }
+  }
+  if (m_ApplyToSurfaceMesh == true)
+  {
+    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    if(NULL == sm)
+    {
+      setErrorCondition(-383);
+      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
+    }
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -245,31 +228,33 @@ void AdjustVolumeOrigin::preflight()
 // -----------------------------------------------------------------------------
 void AdjustVolumeOrigin::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
   setErrorCondition(0);
-
 
   // Set the Voxel Volume First, since this is easy
   if (m_ApplyToVoxelVolume ==true)
   {
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      return;
+    }
     m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
   }
 
   if (m_ApplyToSurfaceMesh == true)
   {
+    SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      return;
+    }
     updateSurfaceMesh();
   }
 
-  if (m_ApplyToSolidMesh == true)
-  {
-    updatesSolidMesh();
-  }
   notifyStatusMessage("Complete");
 }
 
@@ -282,12 +267,7 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
 
   setErrorCondition(err);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
+
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
@@ -333,10 +313,3 @@ void AdjustVolumeOrigin::updateSurfaceMesh()
 
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void AdjustVolumeOrigin::updatesSolidMesh()
-{
-  BOOST_ASSERT(false);
-}

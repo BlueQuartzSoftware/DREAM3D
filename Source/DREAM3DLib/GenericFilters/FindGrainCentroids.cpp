@@ -92,12 +92,6 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
@@ -112,6 +106,14 @@ void FindGrainCentroids::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void FindGrainCentroids::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -141,7 +143,6 @@ void FindGrainCentroids::execute()
 
   find_centroids();
 
-
   notifyStatusMessage("Complete");
 }
 
@@ -151,12 +152,7 @@ void FindGrainCentroids::execute()
 void FindGrainCentroids::find_centroids()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   float x, y, z;
   size_t numgrains = m->getNumCellFieldTuples();
   if (numgrains == 0) { return; }

@@ -90,12 +90,6 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
   
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   GET_PREREQ_DATA(m, DREAM3D, CellFieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -301)
@@ -129,6 +123,14 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 // -----------------------------------------------------------------------------
 void FindBoundingBoxGrains::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1,1,1);
 }
 // -----------------------------------------------------------------------------
@@ -164,12 +166,7 @@ void FindBoundingBoxGrains::execute()
 void FindBoundingBoxGrains::find_boundingboxgrains()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   size_t size = m->getNumCellFieldTuples();
   float boundbox[7];
   float coords[7];
@@ -229,12 +226,7 @@ void FindBoundingBoxGrains::find_boundingboxgrains()
 void FindBoundingBoxGrains::find_boundingboxgrains2D()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   size_t size = m->getNumCellFieldTuples();
   float boundbox[5];
   float coords[5];

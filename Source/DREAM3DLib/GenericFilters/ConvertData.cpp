@@ -278,12 +278,6 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
   setErrorCondition(0);
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   if(m_SelectedCellArrayName.isEmpty() == true)
   {
@@ -298,7 +292,6 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
     setErrorCondition(-398);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-
 
   int numberOfComponents = 0;
   IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
@@ -360,8 +353,14 @@ void ConvertData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 // -----------------------------------------------------------------------------
 void ConvertData::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -385,11 +384,7 @@ void ConvertData::execute()
 
   IDataArray::Pointer iArray = m->getCellData(m_SelectedCellArrayName);
   bool completed = false;
-  //  UInt8ArrayType* uint8Ptr = UInt8ArrayType::SafePointerDownCast(iArray.get());
-  //  if (uint8Ptr != NULL)
-  //  {
-  //    Detail::ConvertData<UInt8ArrayType>(uint8Ptr, m, m_ScalarType);
-  //  }
+
   CHECK_AND_CONVERT(UInt8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(Int8ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)
   CHECK_AND_CONVERT(UInt16ArrayType, m, m_ScalarType, iArray, m_OutputArrayName)

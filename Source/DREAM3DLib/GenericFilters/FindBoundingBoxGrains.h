@@ -91,12 +91,11 @@ class DREAM3DLib_EXPORT FindBoundingBoxGrains : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    void find_boundingboxgrains();
-    void find_boundingboxgrains2D();
-
-
   protected:
     FindBoundingBoxGrains();
+
+    void find_boundingboxgrains();
+    void find_boundingboxgrains2D();
 
   private:
     float* m_Centroids;

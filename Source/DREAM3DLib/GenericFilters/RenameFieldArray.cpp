@@ -116,10 +116,21 @@ void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, s
   setErrorCondition(0);
   QString ss;
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
   if(m_SelectedFieldArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
      addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
+  }
+  else
+  {
+    bool check = m->renameCellData(m_SelectedFieldArrayName, m_NewFieldArrayName);
+    if(check == false)
+    {
+      QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
+      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    }
   }
 }
 
@@ -129,8 +140,14 @@ void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void RenameFieldArray::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

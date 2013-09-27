@@ -67,7 +67,6 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToVoxelVolume)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSurfaceMesh)
-    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSolidMesh)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
 
     /**
@@ -130,12 +129,6 @@ class DREAM3DLib_EXPORT AdjustVolumeOrigin : public AbstractFilter
      * @brief updateSurfaceMesh This method does the actual updating of the meesh coordinates
      */
     void updateSurfaceMesh();
-
-    /**
-     * @brief updatesSolidMesh This method updates the solid mesh vertex points
-     */
-    void updatesSolidMesh();
-
 
   private:
 

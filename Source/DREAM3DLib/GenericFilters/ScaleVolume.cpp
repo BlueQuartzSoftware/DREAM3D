@@ -95,8 +95,7 @@ ScaleVolume::ScaleVolume() :
   m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_ApplyToVoxelVolume(true),
-  m_ApplyToSurfaceMesh(true),
-  m_ApplyToSolidMesh(false)
+  m_ApplyToSurfaceMesh(true)
 {
 
   m_ScaleFactor.x = 1.0f;
@@ -135,17 +134,6 @@ void ScaleVolume::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-#if 0
-  {
-    FilterParameter::Pointer option = FilterParameter::New();
-    option->setHumanLabel("Apply to Solid Mesh");
-    option->setPropertyName("ApplyToSolidMesh");
-    option->setWidgetType(FilterParameter::BooleanWidget);
-    option->setValueType("bool");
-    parameters.push_back(option);
-  }
-#endif
-
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -184,7 +172,6 @@ int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
   writer->writeValue("ScaleFactor", getScaleFactor() );
   writer->writeValue("ApplyToVoxelVolume", getApplyToVoxelVolume() );
   writer->writeValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh() );
-  writer->writeValue("ApplyToSolidMesh", getApplyToSolidMesh() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -193,6 +180,15 @@ int ScaleVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, i
 //
 // -----------------------------------------------------------------------------
 void ScaleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+
+}
+
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ScaleVolume::preflight()
 {
   setErrorCondition(0);
   if (m_ApplyToVoxelVolume == true)
@@ -229,32 +225,22 @@ void ScaleVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ScaleVolume::preflight()
-{
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
-  dataCheck(true, 1, 1, 1);
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
 void ScaleVolume::execute()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   setErrorCondition(0);
   QString ss;
 
 
   if (m_ApplyToVoxelVolume ==true)
   {
+    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      return;
+    }
     float resolution[3];
     m->getResolution(resolution);
     resolution[0] *= m_ScaleFactor.x;
@@ -264,12 +250,14 @@ void ScaleVolume::execute()
 
   if (m_ApplyToSurfaceMesh == true)
   {
+    SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+    if(NULL == m)
+    {
+      setErrorCondition(-999);
+      notifyErrorMessage("The DataContainer Object was NULL", -999);
+      return;
+    }
     updateSurfaceMesh();
-  }
-
-  if (m_ApplyToSolidMesh == true)
-  {
-    updatesSolidMesh();
   }
 
   notifyStatusMessage("Complete");
@@ -283,12 +271,8 @@ void ScaleVolume::updateSurfaceMesh()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
+  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
@@ -331,13 +315,4 @@ void ScaleVolume::updateSurfaceMesh()
     serial.generate(0, count);
   }
 
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void ScaleVolume::updatesSolidMesh()
-{
-  BOOST_ASSERT(false);
 }

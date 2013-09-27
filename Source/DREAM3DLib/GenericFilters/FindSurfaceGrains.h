@@ -87,12 +87,11 @@ class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-    void find_surfacegrains();
-    void find_surfacegrains2D();
-
-
   protected:
     FindSurfaceGrains();
+
+    void find_surfacegrains();
+    void find_surfacegrains2D();
 
   private:
     int32_t* m_GrainIds;

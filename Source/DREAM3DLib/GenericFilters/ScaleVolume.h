@@ -66,7 +66,6 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToVoxelVolume)
     DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSurfaceMesh)
-    DREAM3D_INSTANCE_PROPERTY(bool, ApplyToSolidMesh)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, ScaleFactor)
 
     /**
@@ -130,10 +129,6 @@ class DREAM3DLib_EXPORT ScaleVolume : public AbstractFilter
      */
     void updateSurfaceMesh();
 
-    /**
-     * @brief updatesSolidMesh This method updates the solid mesh vertex points
-     */
-    void updatesSolidMesh();
 
   private:
 
