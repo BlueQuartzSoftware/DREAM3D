@@ -126,7 +126,7 @@ void VertexDataContainerWriter::execute()
     return;
   }
 
-  writeXdmfGridHeader();
+  if(getdcType() == 3) writeXdmfMeshStructure();
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -156,11 +156,8 @@ void VertexDataContainerWriter::execute()
     return;
   }
 
-
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-
-  writeXdmfGridFooter(QString("Vertex Data"));
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -169,58 +166,39 @@ void VertexDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfGridHeader()
+void VertexDataContainerWriter::writeXdmfMeshStructure()
 {
+
+  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
+
   if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
   {
     return;
   }
-
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
-  VertexDataContainer* dc = VertexDataContainer::SafePointerDownCast(getDataContainer());
   VertexArray::Pointer verts = dc->getVertices();
   if(NULL == verts.get())
   {
     return;
   }
 
-  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
 
   QTextStream& out = *getXdmfOStream();
-  out << "  <Grid Name=\"Vertex DataContainer\">" << "\n";
 
+  out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
   out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 1\">" << "\n";
-
-  out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Verts" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
 
   out << "    <Geometry Type=\"XYZ\">" << "\n";
   out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  out << "        " << hdfFileName << ":/VertexDataContainer/Vertices" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Vertices" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
   out << "" << "\n";
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfGridFooter(const QString &label)
-{
-  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
-  {
-    return;
-  }
-
-  QTextStream& out = *getXdmfOStream();
-  out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF Vertex DataContainer " << label << " *************** -->" << "\n";
-  out << "\n";
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -243,7 +221,7 @@ QString VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, con
   // Open the <DataItem> Tag
   out << "      <DataItem Format=\"HDF\" Dimensions=\"" << dimStr <<  "\" ";
   out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-  out << "        " << hdfFileName << ":/VertexDataContainer/" << groupName << "/" << array->GetName() << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Attribute>" << "\n" << "\n";
 
@@ -309,6 +287,19 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     {
       setErrorCondition(err);
       notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
+    }
+    if(getWriteXdmfFile() == true)
+    {
+      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), 1, DREAM3D::HDF5::VertsName);
+      int32_t* verts = vertsPtr->getPointer(0);
+      for(int i=0;i<verticesPtr->getNumberOfTuples();i++)
+      {
+        verts[i] = i;
+      }
+      rank = 2;
+      dims[0] = verticesPtr->getNumberOfTuples();
+      dims[1] = 1;
+      err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VertsName, rank, dims, verts);
     }
   }
   return err;

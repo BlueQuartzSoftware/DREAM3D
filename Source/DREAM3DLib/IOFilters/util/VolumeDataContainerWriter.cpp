@@ -132,6 +132,8 @@ void VolumeDataContainerWriter::execute()
     return;
   }
 
+  if(getdcType() == 0) writeXdmfMeshStructure();
+
   err = writeMeshData(dcGid);
   if (err < 0)
   {
@@ -172,15 +174,23 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims)
+void VolumeDataContainerWriter::writeXdmfMeshStructure()
 {
+  VolumeDataContainer* dc = VolumeDataContainer::SafePointerDownCast(getDataContainer());
+  int64_t volDims[3] =
+  { dc->getXPoints(), dc->getYPoints(), dc->getZPoints() };
+  float spacing[3] =
+  { dc->getXRes(), dc->getYRes(), dc->getZRes() };
+  float origin[3] =
+  { 0.0f, 0.0f, 0.0f };
+  dc->getOrigin(origin);
 
   if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
   {
     return;
   }
   QTextStream& out = *(getXdmfOStream());
-  out << "\n  <Grid Name=\"Cell Data\" GridType=\"Uniform\">" << "\n";
+  out << "\n  <Grid Name=\"" << getDataContainer()->getName() << "\" GridType=\"Uniform\">" << "\n";
   out << "    <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << volDims[2] + 1 << " " << volDims[1] + 1 << " " << volDims[0] + 1 << " \"></Topology>" << "\n";
   out << "    <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
   out << "      <!-- Origin -->" << "\n";
@@ -188,43 +198,6 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
   out << "      <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
   out << "      <DataItem Format=\"XML\" Dimensions=\"3\">" << spacing[2] << " " << spacing[1] << " " << spacing[0] <<  "</DataItem>" << "\n";
   out << "    </Geometry>" << "\n";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const QString &label)
-{
-
-  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
-  {
-    return;
-  }
-
-  QTextStream& out = *getXdmfOStream();
-  out << "\n  <Grid Name=\"" << label << "\" GridType=\"Uniform\">" << "\n";
-  out << "      <Topology TopologyType=\"3DCoRectMesh\" Dimensions=\"" << numElements << " 1 1\"></Topology>" << "\n";
-  out << "      <Geometry Type=\"ORIGIN_DXDYDZ\">" << "\n";
-  out << "        <!-- Origin -->" << "\n";
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">0 0 0</DataItem>" << "\n";
-  out << "        <!-- DxDyDz (Spacing/Resolution)-->" << "\n";
-  out << "        <DataItem Format=\"XML\" Dimensions=\"3\">1 1 1</DataItem>" << "\n";
-  out << "      </Geometry>" << "\n";
-}
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeXdmfGridFooter(const QString &label)
-{
-  if (false == getWriteXdmfFile() || NULL == getXdmfOStream() || NULL == getDataContainer())
-  {
-    return;
-  }
-  QTextStream& out = *getXdmfOStream();
-  out << "  </Grid>" << "\n";
-  out << "    <!-- *************** END OF " << label << " *************** -->" << "\n";
-  out << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -396,8 +369,6 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
   { 0.0f, 0.0f, 0.0f };
   dc->getOrigin(origin);
 
-  writeCellXdmfGridHeader(origin, spacing, volDims);
-
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
   QString xdmfGroupPath = QString(":/") + DREAM3D::HDF5::DataContainerName + QString("/") + getDataContainer()->getName() + QString("/") + H5_CELL_DATA_GROUP_NAME;
 
@@ -443,7 +414,6 @@ int VolumeDataContainerWriter::writeCellData(hid_t dcGid)
     array->writeXdmfAttribute( *getXdmfOStream(), volDims, hdfFileName, xdmfGroupPath, " (Cell)");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
-  writeXdmfGridFooter("Cell Data");
   return err;
 }
 

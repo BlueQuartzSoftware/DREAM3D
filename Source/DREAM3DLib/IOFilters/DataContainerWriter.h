@@ -120,6 +120,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     int writePipeline();
 
     void writeXdmfHeader(QTextStream &out);
+    virtual void writeXdmfGridFooter(QTextStream &xdmf, const QString label);
     void writeXdmfFooter(QTextStream &out);
 
   private:

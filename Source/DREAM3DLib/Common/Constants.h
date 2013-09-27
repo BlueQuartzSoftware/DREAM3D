@@ -265,6 +265,7 @@ namespace DREAM3D
     const QString NumComponents("NumComponents");
 
     const QString VerticesName("Vertices");
+    const QString VertsName("Verts");
     const QString FacesName("Faces");
     const QString EdgesName("Edges");
     const QString CellsName("Cells");

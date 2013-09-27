@@ -123,7 +123,7 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-  writeXdmfGridHeader();
+  if(getdcType() == 2) writeXdmfMeshStructure();
 
   err = writeMeshData(dcGid);
   if (err < 0)
@@ -153,12 +153,8 @@ void EdgeDataContainerWriter::execute()
     return;
   }
 
-
   // Now finally close the group and the HDf5 File
   H5Gclose(dcGid); // Close the Data Container Group
-
-  writeXdmfGridFooter(QString("Edge Data"));
-
 
   notifyStatusMessage("Complete");
 }
@@ -166,65 +162,44 @@ void EdgeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfGridHeader()
+void EdgeDataContainerWriter::writeXdmfMeshStructure()
 {
-  //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
-  //{
-  //  return;
-  //}
-  //FaceArray::Pointer faces = getEdgeDataContainer()->getFaces();
-  //if (NULL == faces.get())
-  //{
-  //  return;
-  //}
-  //VertexArray::Pointer verts = getEdgeDataContainer()->getVertices();
-  //if(NULL == verts.get())
-  //{
-  //  return;
-  //}
 
-  //std::ostream& out = *getXdmfOStream();
-  //out << "  <Grid Name=\"SurfaceMesh DataContainer\">" << "\n";
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
 
-  //out << "    <Topology TopologyType=\"Triangle\" NumberOfElements=\"" << faces->getNumberOfTuples() << "\">" << "\n";
-  //out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << faces->getNumberOfTuples() << " 3\">" << "\n";
-  //ssize_t nameSize = H5Fget_name(getHdfGroupId(), NULL, 0) + 1;
-  //QVector<char> nameBuffer(nameSize, 0);
-  //nameSize = H5Fget_name(getHdfGroupId(), &(nameBuffer.front()), nameSize);
-  //QString hdfFileName(&(nameBuffer.front()), nameSize);
-  //hdfFileName = QFileInfo::filename(hdfFileName);
-  //out << "        " << hdfFileName << ":/EdgeDataContainer/Faces" << "\n";
-  //out << "      </DataItem>" << "\n";
-  //out << "    </Topology>" << "\n";
+  if (getWriteXdmfFile() == false || getXdmfOStream() == NULL)
+  {
+    return;
+  }
+  EdgeArray::Pointer edges = dc->getEdges();
+  if (NULL == edges.get())
+  {
+    return;
+  }
+  VertexArray::Pointer verts = dc->getVertices();
+  if(NULL == verts.get())
+  {
+    return;
+  }
 
-  //out << "    <Geometry Type=\"XYZ\">" << "\n";
-  //out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
-  //out << "        " << hdfFileName << ":/EdgeDataContainer/Vertices" << "\n";
-  //out << "      </DataItem>" << "\n";
-  //out << "    </Geometry>" << "\n";
-  //out << "" << "\n";
+  QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfFileId());
+
+  QTextStream& out = *getXdmfOStream();
+
+  out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyline\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Edges" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Topology>" << "\n";
+
+  out << "    <Geometry Type=\"XYZ\">" << "\n";
+  out << "      <DataItem Format=\"HDF\"  Dimensions=\"" << verts->getNumberOfTuples() << " 3\" NumberType=\"Float\" Precision=\"4\">" << "\n";
+  out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Vertices" << "\n";
+  out << "      </DataItem>" << "\n";
+  out << "    </Geometry>" << "\n";
+  out << "" << "\n";
 }
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfGridFooter(const QString &label)
-{
-  //if (m_WriteXdmfFile == false || getXdmfOStream() == NULL)
-  //{
-  //  return;
-  //}
-  //FaceArray::Pointer faces = getEdgeDataContainer()->getFaces();
-  //if (NULL == faces.get())
-  //{
-  //  return;
-  //}
-  //std::ostream& out = *getXdmfOStream();
-  //out << "  </Grid>" << "\n";
-  //out << "    <!-- *************** END OF SurfaceMesh DataContainer *************** -->" << "\n";
-  //out << "\n";
-}
-
 
 // -----------------------------------------------------------------------------
 //
@@ -249,7 +224,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     // Open the <DataItem> Tag
     out << "      <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() <<  "\" ";
     out << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
   }
@@ -268,7 +243,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "          " << array->getNumberOfTuples() << " " << (array->GetNumberOfComponents()/2) << " </DataItem>" << "\n";
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
-    out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";
@@ -287,7 +262,7 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
     out << "\n";
     out << "        <DataItem Format=\"HDF\" Dimensions=\"" << array->getNumberOfTuples() << " " << array->GetNumberOfComponents() << "\" " << "NumberType=\"" << xdmfTypeName << "\" " << "Precision=\"" << precision << "\" >" << "\n";
 
-    out << "        " << hdfFileName << ":/EdgeDataContainer/" << groupName << "/" << array->GetName() << "\n";
+    out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/" << groupName << "/" << array->GetName() << "\n";
     out << "        </DataItem>" << "\n";
     out << "      </DataItem>" << "\n";
     out << "    </Attribute>" << "\n" << "\n";

@@ -343,13 +343,14 @@ void DataContainerWriter::execute()
       {
         qDebug() << "Error Writing H5_NUMBER_OF_POINTS attribute for " << dcNames[iter] << "\n";
       }
-      
+
       if(dcType == 0)
       {
         VolumeDataContainerWriter::Pointer volWriter = VolumeDataContainerWriter::New();
         volWriter->setHdfFileId(m_FileId);
         volWriter->setHdfGroupId(dcaGid);
         volWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        volWriter->setdcType(dcType);
         volWriter->setObservers(getObservers());
         volWriter->setWriteXdmfFile(getWriteXdmfFile());
         volWriter->setXdmfOStream(&out);
@@ -369,6 +370,7 @@ void DataContainerWriter::execute()
         surfWriter->setHdfFileId(m_FileId);
         surfWriter->setHdfGroupId(dcaGid);
         surfWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        surfWriter->setdcType(dcType);
         surfWriter->setObservers(getObservers());
         surfWriter->setWriteXdmfFile(getWriteXdmfFile());
         surfWriter->setXdmfOStream(&out);
@@ -388,6 +390,7 @@ void DataContainerWriter::execute()
         edgeWriter->setHdfFileId(m_FileId);
         edgeWriter->setHdfGroupId(dcaGid);
         edgeWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        edgeWriter->setdcType(dcType);
         edgeWriter->setObservers(getObservers());
         edgeWriter->setWriteXdmfFile(getWriteXdmfFile());
         edgeWriter->setXdmfOStream(&out);
@@ -407,6 +410,7 @@ void DataContainerWriter::execute()
         vertWriter->setHdfFileId(m_FileId);
         vertWriter->setHdfGroupId(dcaGid);
         vertWriter->setDataContainer(getDataContainerArray()->getDataContainer(dcNames[iter]).get());
+        vertWriter->setdcType(dcType);
         vertWriter->setObservers(getObservers());
         vertWriter->setWriteXdmfFile(getWriteXdmfFile());
         vertWriter->setXdmfOStream(&out);
@@ -420,6 +424,12 @@ void DataContainerWriter::execute()
           return;
         }
       }
+
+      if (m_WriteXdmfFile == true)
+      {      
+        writeXdmfGridFooter(out, dcNames[iter]);
+      }
+
     }
   }
 
@@ -450,6 +460,16 @@ void DataContainerWriter::writeXdmfFooter(QTextStream &xdmf)
 {
   xdmf << " </Domain>" << "\n";
   xdmf << "</Xdmf>" << "\n";
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void DataContainerWriter::writeXdmfGridFooter(QTextStream &xdmf, const QString label)
+{
+  xdmf << "  </Grid>" << "\n";
+  xdmf << "    <!-- *************** END OF " << label << " *************** -->" << "\n";
+  xdmf << "\n";
 }
 
 // -----------------------------------------------------------------------------

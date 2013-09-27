@@ -107,9 +107,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public SurfaceDataContainerW
     virtual int writeCellFieldData(hid_t dcGid);
     virtual int writeCellEnsembleData(hid_t dcGid);
 
-    virtual void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    virtual void writeFieldXdmfGridHeader(size_t numElements, const QString &label);
-    virtual void writeXdmfGridFooter(const QString &label);
+    virtual void writeXdmfMeshStructure();
 
 
     // -----------------------------------------------------------------------------
