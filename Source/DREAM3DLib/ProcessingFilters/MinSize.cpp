@@ -101,7 +101,6 @@ void MinSize::readFilterParameters(AbstractFilterParametersReader* reader)
 //
 // -----------------------------------------------------------------------------
 void MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
 }
@@ -353,7 +352,7 @@ void MinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	m_Active[i] = true;
+  m_Active[i] = true;
     if(voxcounts[i] >= m_MinAllowedGrainSize ) good = true;
   }
   if(good == false)
@@ -366,9 +365,9 @@ void MinSize::remove_smallgrains()
   {
     gnum = m_GrainIds[i];
     if(voxcounts[gnum] < m_MinAllowedGrainSize && gnum > 0)
-	{
-		m_GrainIds[i] = -1;
-		m_Active[gnum] = false;
-	}
+  {
+    m_GrainIds[i] = -1;
+    m_Active[gnum] = false;
+  }
   }
 }

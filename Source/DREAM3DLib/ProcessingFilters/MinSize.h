@@ -43,12 +43,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+
 
 
 /**
@@ -84,7 +80,7 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -103,17 +99,19 @@ class DREAM3DLib_EXPORT MinSize : public AbstractFilter
     virtual void remove_smallgrains();
     virtual void assign_badpoints();
 
-
-  private:
+    /* ****** Special Note *******************/
+    /*  These variables are in the protected section because we have at least one subclass
+     *  that needs access to the variables. Putting them in the protected section is the
+     *  fastest way to fix the crashing bugs in the subclass. Normally these variables would
+     *  be declared private.
+     */
     int32_t* m_Neighbors;
-
     int32_t* m_GrainIds;
     bool* m_Active;
-
     std::vector<std::vector<int> > voxellists;
     std::vector<int> nuclei;
 
-
+  private:
     MinSize(const MinSize&); // Copy Constructor Not Implemented
     void operator=(const MinSize&); // Operator '=' Not Implemented
 };

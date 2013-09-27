@@ -43,19 +43,12 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-// #include "DREAM3DLib/Common/IDataArray.h"
-
-//#include "DREAM3DLib/Common/AbstractFilter.h"
-//#include "DREAM3DLib/Common/VoxelDataContainer.h"
-//#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-//#include "DREAM3DLib/Common/NeighborList.hpp"
-
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
 
 /**
  * @class PerPhaseMinSize PerPhaseMinSize.h DREAM3DLib/ProcessingFilters/PerPhaseMinSize.h
- * @brief This filter ensures each Grain or Region has a minimum number of voxels.
+ * @brief This filter ensures each Grain or Region has a minimum number of voxels for a specific phase
  * @author
  * @date Nov 19, 2011
  * @version 1.0
@@ -69,14 +62,12 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
 
     virtual ~PerPhaseMinSize();
 
-    //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
+
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -89,12 +80,16 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     * @param writer The writer that is used to write the options to a file
     */
     virtual void writeFilterParameters(AbstractFilterParametersWriter* writer);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader);
+
+    virtual void preflight();
+
+    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   protected:
     PerPhaseMinSize();
@@ -103,15 +98,8 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     virtual void remove_smallgrains();
 
   private:
-    int32_t* m_Neighbors;
-
-    int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
     int32_t* m_FieldPhases;
-    bool* m_Active;
-
-    std::vector<std::vector<int> > voxellists;
-    std::vector<int> nuclei;
-
 
     PerPhaseMinSize(const PerPhaseMinSize&); // Copy Constructor Not Implemented
     void operator=(const PerPhaseMinSize&); // Operator '=' Not Implemented

@@ -56,12 +56,12 @@ const static float m_pi = static_cast<float>(M_PI);
 PerPhaseMinSize::PerPhaseMinSize() :
   MinSize(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_MinAllowedGrainSize(1),
-  m_GrainIds(NULL),
-  m_FieldPhases(NULL),
-  m_Active(NULL)
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_PhaseNumber(1),
+  m_CellPhases(NULL),
+  m_FieldPhases(NULL)
 {
   setupFilterParameters();
 }
@@ -104,16 +104,61 @@ void PerPhaseMinSize::setupFilterParameters()
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::readFilterParameters(AbstractFilterParametersReader* reader)
 {
+
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* writer)
-
 {
   writer->writeValue("MinAllowedGrainSize", getMinAllowedGrainSize() );
   writer->writeValue("PhaseNumber", getPhaseNumber() );
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  std::stringstream ss;
+  VoxelDataContainer* m = getVoxelDataContainer();
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PerPhaseMinSize::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+
+  VoxelDataContainer* m = getVoxelDataContainer();
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setVoxelDataContainer(m);
+  renumber_grains->setMessagePrefix(getMessagePrefix());
+  renumber_grains->preflight();
+  int err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    setErrorCondition(renumber_grains->getErrorCondition());
+    addErrorMessages(renumber_grains->getPipelineMessages());
+    return;
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -139,8 +184,8 @@ void PerPhaseMinSize::remove_smallgrains()
   }
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
-	m_Active[i] = true;
-    if(voxcounts[i] >= m_MinAllowedGrainSize || m_FieldPhases[i] != m_PhaseNumber) good = true;
+    m_Active[i] = true;
+    if(voxcounts[i] >= getMinAllowedGrainSize() || m_FieldPhases[i] != m_PhaseNumber) good = true;
   }
   if(good == false)
   {
@@ -151,10 +196,10 @@ void PerPhaseMinSize::remove_smallgrains()
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    if(voxcounts[gnum] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
-	{
-		m_GrainIds[i] = -1;
-		m_Active[gnum] = false;
-	}
+    if(voxcounts[gnum] < getMinAllowedGrainSize() && m_CellPhases[i] == m_PhaseNumber && gnum > 0)
+    {
+      m_GrainIds[i] = -1;
+      m_Active[gnum] = false;
+    }
   }
 }
