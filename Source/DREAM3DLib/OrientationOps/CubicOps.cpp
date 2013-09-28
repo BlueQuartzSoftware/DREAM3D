@@ -533,6 +533,13 @@ void CubicOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
+void CubicOps::getFZQuat(QuatF &qr)
+{
+  int numsym = 24;
+
+  _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
+}
+
 int CubicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];

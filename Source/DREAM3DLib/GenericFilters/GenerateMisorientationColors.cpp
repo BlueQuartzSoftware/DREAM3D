@@ -235,6 +235,9 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
+  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, 1, "NotSupportedArray");
+  notSupported->initializeWithZeros();
+
   // Write the Misorientation Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -246,24 +249,20 @@ void GenerateMisorientationColors::execute()
     cellQuat = quats[i];
 
     if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
-    /*
-    if(
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Hexagonal_High &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::OrthoRhombic &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_Low &&
-       m_CrystalStructures[phase] != Ebsd::CrystalStructure::Tetragonal_High
-       )
-       */
     {
-        setErrorCondition(-1);
-        notifyErrorMessage("Unsupported Crystal Structure", -1);
-        return;
-    }
+      uint32_t idx = m_CrystalStructures[phase];
+      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure) {
+        idx = 12;
+      }
+      notSupported->SetValue(idx, 1);
+      m_MisorientationColor[index] = 0;
+      m_MisorientationColor[index + 1] = 0;
+      m_MisorientationColor[index + 2] = 0;
 
+    }
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+    else if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+             && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
       argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
       m_MisorientationColor[index] = RgbColor::dRed(argb);
@@ -272,6 +271,22 @@ void GenerateMisorientationColors::execute()
     }
   }
 
+  for(size_t i = 0; i < notSupported->GetNumberOfTuples() - 1; i++)
+  {
+    if (notSupported->GetValue(i) == 1)
+    {
+      std::string msg("The Symmetry of ");
+      msg.append(ops[i]->getSymmetryName()).append(" is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.");
+      notifyWarningMessage(msg, -500);
+    }
+  }
+
+  if (notSupported->GetValue(12) == 1)
+  {
+    std::string msg("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
+    notifyWarningMessage(msg, -500);
+  }
+  
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

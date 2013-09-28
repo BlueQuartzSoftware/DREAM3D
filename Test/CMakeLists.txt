@@ -293,7 +293,7 @@ set_target_properties(SurfaceMeshTest PROPERTIES FOLDER Test)
 
 # --------
 add_executable(StatsGenTest ${DREAM3DTest_SOURCE_DIR}/StatsGenTest.cpp)
-target_link_libraries(StatsGenTest DREAM3DLib)
+target_link_libraries(StatsGenTest DREAM3DLib ${QT_QTCORE_LIBRARY})
 set_target_properties(StatsGenTest PROPERTIES FOLDER Test)
 
 # --------
