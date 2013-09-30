@@ -129,24 +129,15 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
   }
-  else
+  if (sm->getVertices().get() == NULL)
   {
-    if (sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-
-    if (sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
   }
 }
 
@@ -156,8 +147,13 @@ void SurfaceMeshToNonconformalVtk::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNonconformalVtk::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -190,7 +186,6 @@ void SurfaceMeshToNonconformalVtk::execute()
   {
     return;
   }
-
 
   setErrorCondition(0);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
@@ -228,7 +223,6 @@ void SurfaceMeshToNonconformalVtk::execute()
     setErrorCondition(-1);
     return;
   }
-
 
   // Open the output VTK File for writing
   FILE* vtkFile = NULL;
@@ -305,7 +299,6 @@ void SurfaceMeshToNonconformalVtk::execute()
   IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
 
   // Store all the unique Spins
   QMap<int32_t, int32_t> grainTriangleCount;

@@ -124,12 +124,6 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QString ss;
   if (getOutputFile().isEmpty() == true)
@@ -159,6 +153,14 @@ void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 // -----------------------------------------------------------------------------
 void DxWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -176,14 +178,6 @@ int DxWriter::writeHeader()
 int DxWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    QString ss;
-    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return -1;
-  }
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, 1, 1);

@@ -113,13 +113,6 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   if(getOutputFile().isEmpty() == true)
   {
@@ -129,7 +122,6 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
     setErrorCondition(-387);
   }
 
-
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 }
 
@@ -138,6 +130,14 @@ void PhWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 // -----------------------------------------------------------------------------
 void PhWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -156,14 +156,6 @@ int PhWriter::writeFile()
 {
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
-    setErrorCondition(-1);
-    return -1;
-  }
 
 //  int32_t* grain_indicies = 0;
 //  {

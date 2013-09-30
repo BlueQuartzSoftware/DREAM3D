@@ -68,6 +68,8 @@ endforeach()
 set(_PrivateFilters
   GoldfeatherReader
   GBCDTriangleDumper
+  FileReader
+  FileWriter
 )
 
 #-----------------

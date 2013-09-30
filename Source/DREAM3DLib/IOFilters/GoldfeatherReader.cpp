@@ -131,12 +131,6 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
   setErrorCondition(0);
   QString ss;
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
-  if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -196,8 +190,15 @@ void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -209,15 +210,16 @@ void GoldfeatherReader::execute()
   int err = 0;
   QString ss;
   setErrorCondition(err);
-  SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  if(NULL == m)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
-    return;
+    SurfaceDataContainer::Pointer sdc = SurfaceDataContainer::New();
+    sdc->setName(getSurfaceDataContainerName());
+    getDataContainerArray()->pushBack(sdc);
+    sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   }
+
   setErrorCondition(0);
-
-
 
   FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if (NULL == f)
@@ -279,12 +281,12 @@ void GoldfeatherReader::execute()
 
   }
 
-  m->setVertices(nodesPtr);
-  m->addVertexData(normalsPtr->GetName(), normalsPtr);
-  m->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
-  m->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
-  m->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
-  m->addVertexData(pDirection2Ptr->GetName(), pDirection2Ptr);
+  sm->setVertices(nodesPtr);
+  sm->addVertexData(normalsPtr->GetName(), normalsPtr);
+  sm->addVertexData(pcurv1Ptr->GetName(), pcurv1Ptr);
+  sm->addVertexData(pcurv2Ptr->GetName(), pcurv2Ptr);
+  sm->addVertexData(pDirection1Ptr->GetName(), pDirection1Ptr);
+  sm->addVertexData(pDirection2Ptr->GetName(), pDirection2Ptr);
 
   int nTriangles = 0;
   err = fscanf(f, "%d\n", &nTriangles);
@@ -321,9 +323,9 @@ void GoldfeatherReader::execute()
     triNormals[t*3+2] = n2;
   }
 
-  m->setFaces(trianglesPtr);
-  m->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
-  m->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
+  sm->setFaces(trianglesPtr);
+  sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
+  sm->addFaceData(triNormalsPtr->GetName(), triNormalsPtr);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");

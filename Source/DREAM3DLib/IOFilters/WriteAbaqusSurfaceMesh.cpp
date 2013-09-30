@@ -119,22 +119,15 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
   }
-  else {
-    if (sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-    if (sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
+  if (sm->getVertices().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
   }
 }
 
@@ -144,8 +137,13 @@ void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fie
 // -----------------------------------------------------------------------------
 void WriteAbaqusSurfaceMesh::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -156,7 +154,6 @@ void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
 
-
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
@@ -164,7 +161,6 @@ void WriteAbaqusSurfaceMesh::execute()
     notifyErrorMessage("The SurfaceDataContainer Object was NULL", -999);
     return;
   }
-
 
   dataCheck(false, 1, 1, 1);
   if(getErrorCondition() < 0)
@@ -286,17 +282,12 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   int err = 0;
 
-
-
   VertexArray::Pointer nodesPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices();
   FaceArray::Pointer trianglePtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces();
   // Get the Labels(GrainIds or Region Ids) for the triangles
   IDataArray::Pointer flPtr = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->getPointer(0);
-
-
-
 
   int nTriangles = trianglePtr->getNumberOfTuples();
 

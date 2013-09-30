@@ -125,19 +125,13 @@ void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
     addErrorMessage(getHumanLabel(), ss, -1);
     setErrorCondition(-387);
   }
-
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
@@ -149,6 +143,14 @@ void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields,
 // -----------------------------------------------------------------------------
 void LosAlamosFFTWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -166,14 +168,6 @@ int LosAlamosFFTWriter::writeHeader()
 int LosAlamosFFTWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return -1;
-  }
   
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumCellFieldTuples();
@@ -241,10 +235,7 @@ int LosAlamosFFTWriter::writeFile()
     }
   }
 
-
-
   fclose(f);
-
 
   notifyStatusMessage("Complete");
   return err;

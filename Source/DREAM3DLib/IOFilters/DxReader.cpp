@@ -136,15 +136,9 @@ int DxReader::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 // -----------------------------------------------------------------------------
 void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   QString ss;
   QFileInfo fi(getInputFile());
 
@@ -198,6 +192,15 @@ void DxReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 // -----------------------------------------------------------------------------
 void DxReader::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -208,6 +211,15 @@ void DxReader::execute()
 {
   QString ss;
   int err = 0;
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
 
   m_InStream.setFileName(getInputFile());
   if (!m_InStream.open(QIODevice::ReadOnly | QIODevice::Text))
@@ -241,12 +253,6 @@ int DxReader::readHeader()
 {
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return -1;
-  }
 
   int error = 0;
 
@@ -341,13 +347,6 @@ int DxReader::readFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   QString ss;
-  if (NULL == m)
-  {
-    ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -5);
-    setErrorCondition(-5);
-    return -1;
-  }
 
   QString line;
   QString delimeters(", ;\t"); /* delimeters to split the data */

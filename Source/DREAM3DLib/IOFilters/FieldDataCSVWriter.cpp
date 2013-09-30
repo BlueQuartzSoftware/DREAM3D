@@ -125,6 +125,14 @@ void FieldDataCSVWriter::preflight()
 {
   setErrorCondition(0);
 
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   if (getFieldDataFile().isEmpty() == true)
   {
     QString ss = QObject::tr(": The output file must be set before executing this filter.");

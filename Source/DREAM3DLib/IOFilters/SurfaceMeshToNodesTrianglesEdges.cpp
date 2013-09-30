@@ -152,22 +152,16 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
     setErrorCondition(-384);
   }
-  else {
-    if (sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -384);
-      setErrorCondition(-384);
-    }
-    if (sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", -385);
-      setErrorCondition(-384);
-    }
+  if (sm->getVertices().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Vertices", -385);
+    setErrorCondition(-384);
+  }
   #if WRITE_EDGES_FILE
     IDataArray::Pointer edges = sm->getPointData(DREAM3D::CellData::SurfaceMeshEdges);
     if (edges.get() == NULL)
@@ -176,13 +170,12 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
       setErrorCondition(-385);
     }
 #endif
-    IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
-    if (nodeKinds.get() == NULL)
-    {
-      setErrorCondition(-559);
-      notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::VertexData::SurfaceMeshNodeType Array", -387);
-      return;
-    }
+  IDataArray::Pointer nodeKinds = sm->getVertexData(DREAM3D::VertexData::SurfaceMeshNodeType);
+  if (nodeKinds.get() == NULL)
+  {
+    setErrorCondition(-559);
+    notifyErrorMessage("SurfaceMesh DataContainer missing DREAM3D::VertexData::SurfaceMeshNodeType Array", -387);
+    return;
   }
 }
 
@@ -192,8 +185,13 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -206,12 +204,6 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   setErrorCondition(err);
 
-
-  dataCheck(false, 1,1,1);
-  if (getErrorCondition() < 0)
-  {
-    return;
-  }
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  
   if(NULL == sm)
   {
@@ -220,6 +212,11 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
     return;
   }
 
+  dataCheck(false, 1,1,1);
+  if (getErrorCondition() < 0)
+  {
+    return;
+  }
 
   VertexArray::Pointer nodes = sm->getVertices();
   FaceArray::Pointer triangles = sm->getFaces();

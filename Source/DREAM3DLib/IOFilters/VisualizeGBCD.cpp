@@ -55,7 +55,6 @@
 // -----------------------------------------------------------------------------
 VisualizeGBCD::VisualizeGBCD() :
   SurfaceMeshFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SurfaceDataContainerName(DREAM3D::HDF5::SurfaceDataContainerName),
   m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
   m_GBCDArrayName(DREAM3D::EnsembleData::GBCD),
@@ -166,7 +165,6 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
 
-
   if(getOutputFile().isEmpty() == true)
   {
 
@@ -175,42 +173,32 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
     setErrorCondition(-387);
   }
 
-  if(NULL == sm)
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
+  }
+
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    setErrorCondition(-385);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
+    IDataArray::Pointer iDataArray = sm->getFaceEnsembleData(DREAM3D::EnsembleData::GBCD);
+    if (NULL == iDataArray.get())
     {
-      setErrorCondition(-384);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", getErrorCondition());
-
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      setErrorCondition(-385);
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", getErrorCondition());
-
+      setErrorCondition(-387);
+      addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
     }
     else
     {
-      IDataArray::Pointer iDataArray = sm->getFaceEnsembleData(DREAM3D::EnsembleData::GBCD);
-      if (NULL == iDataArray.get())
-      {
-        setErrorCondition(-387);
-        addErrorMessage(getHumanLabel(), "The GBCD Array was not found in the Surface Mesh Ensemble Data. ", getErrorCondition());
-      }
-      else
-      {
-        GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
-        int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
-      }
+      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
+      int numComp = iDataArray->GetNumberOfComponents();
+      GET_PREREQ_DATA(sm, DREAM3D, FaceEnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
     }
   }
 }
@@ -220,8 +208,13 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckSurfaceMesh(true, 1, 1, 1);
 }
 
@@ -235,13 +228,6 @@ void VisualizeGBCD::execute()
   setErrorCondition(err);
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);
-    return;
-  }
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceMeshing DataContainer Object was NULL", -999);

@@ -116,7 +116,6 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
 {
   setErrorCondition(0);
 
-
   if(getOutputFile().isEmpty() == true)
   {
     QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
@@ -124,35 +123,24 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
     setErrorCondition(-387);
   }
 
-
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if(NULL == sm)
+  // We MUST have Nodes
+  if(sm->getVertices().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-    setErrorCondition(-383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
+  }
+  // We MUST have Triangles defined also.
+  if(sm->getFaces().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+    setErrorCondition(-384);
   }
   else
   {
-    // We MUST have Nodes
-    if(sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
-
-    // We MUST have Triangles defined also.
-    if(sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
-    else
-    {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
-    }
-
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
+    GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
   }
 }
 
@@ -164,18 +152,11 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-    setErrorCondition(-383);
-  }
-  else
-  {
-    GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
   //      GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
  //       typedef DataArray<unsigned int> XTalStructArrayType;
  //   GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
-  }
 }
 
 // -----------------------------------------------------------------------------
@@ -183,9 +164,22 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if(NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckSurfaceMesh(true, 1, 1, 1);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
+    setErrorCondition(-383);
+  }
+
   dataCheckVoxel(true, 1, 1, 1);
 }
 
@@ -214,7 +208,6 @@ void GBCDTriangleDumper::execute()
   setErrorCondition(0);
   notifyStatusMessage("Starting");
 
-
   FaceArray::Pointer trianglesPtr = sm->getFaces();
   size_t totalFaces = trianglesPtr->getNumberOfTuples();
 
@@ -234,7 +227,6 @@ void GBCDTriangleDumper::execute()
   }
 
   dataCheckVoxel(false, 0, totalFields, totalEnsembles);
-
 
   float radToDeg = 180.0/M_PI;
 
@@ -271,7 +263,6 @@ void GBCDTriangleDumper::execute()
 
 
   }
-
 
   fclose(f);
 

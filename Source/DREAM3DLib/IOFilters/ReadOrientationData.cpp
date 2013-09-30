@@ -135,12 +135,6 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
-    return;
-  }
 
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
@@ -278,8 +272,15 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
 // -----------------------------------------------------------------------------
 void ReadOrientationData::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -292,11 +293,12 @@ void ReadOrientationData::execute()
   QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
   setErrorCondition(0);
   QFileInfo fi(getInputFile());
@@ -335,12 +337,6 @@ void ReadOrientationData::readAngFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();
@@ -440,12 +436,6 @@ void ReadOrientationData::readCtfFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   int64_t dims[3];
   dims[0] = reader.getXCells();
@@ -569,12 +559,6 @@ void ReadOrientationData::readMicFile()
     return;
   }
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   int64_t dims[3];
   dims[0] = reader.getXDimension();

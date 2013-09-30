@@ -17,8 +17,6 @@ set(DREAM3DLib_Common_HDRS
   ${DREAM3DLib_SOURCE_DIR}/Common/CrystalStructure.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DDLLExport.h
   ${DREAM3DLib_SOURCE_DIR}/Common/DREAM3DSetGetMacros.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.h
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterFactory.hpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.h
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.h
@@ -42,8 +40,6 @@ set(DREAM3DLib_Common_SRCS
   ${DREAM3DLib_SOURCE_DIR}/Common/AbstractFilter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/AppVersion.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/CreatedArrayHelpIndexEntry.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileReader.cpp
-  ${DREAM3DLib_SOURCE_DIR}/Common/FileWriter.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterManager.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/FilterPipeline.cpp
   ${DREAM3DLib_SOURCE_DIR}/Common/IDataArrayFilter.cpp

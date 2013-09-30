@@ -153,12 +153,6 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -206,6 +200,15 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 // -----------------------------------------------------------------------------
 void PhReader::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -217,13 +220,13 @@ void PhReader::execute()
   /* DO NOT CALL THE DATACHECK() from this method. You will end up in an endless loop.
    * The array will get allocated down in the 'readFile()' method.
    */
-  if (NULL == getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()))
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
-    setErrorCondition(-48020);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
 
 
@@ -261,12 +264,6 @@ void PhReader::execute()
 int PhReader::readHeader()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return -1;
-  }
 
   int nx = 0;
   int ny = 0;
@@ -292,14 +289,7 @@ int PhReader::readHeader()
 // -----------------------------------------------------------------------------
 int  PhReader::readFile()
 {
-
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return -1;
-  }
 
   size_t totalPoints = m->getTotalPoints();
   Int32ArrayType::Pointer m_GrainIdData = Int32ArrayType::CreateArray(totalPoints, m_GrainIdsArrayName);

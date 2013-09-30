@@ -74,7 +74,6 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(EbsdToH5Ebsd, AbstractFilter)
 
     virtual ~EbsdToH5Ebsd();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)

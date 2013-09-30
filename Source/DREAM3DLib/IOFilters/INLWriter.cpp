@@ -134,12 +134,7 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
   setErrorCondition(0);
 
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   if(getOutputFile().isEmpty() == true)
   {
 
@@ -178,6 +173,14 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
 // -----------------------------------------------------------------------------
 void INLWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -195,14 +198,6 @@ int INLWriter::writeHeader()
 int INLWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return -1;
-  }
 
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumCellFieldTuples();

@@ -44,7 +44,6 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
  * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h
@@ -62,7 +61,6 @@ class DREAM3DLib_EXPORT NodesTrianglesToStl : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(NodesTrianglesToStl, AbstractFilter);
 
     virtual ~NodesTrianglesToStl();
-    DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile);
     DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile);

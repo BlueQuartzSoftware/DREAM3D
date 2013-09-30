@@ -121,13 +121,6 @@ void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -147,8 +140,14 @@ void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, 
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 

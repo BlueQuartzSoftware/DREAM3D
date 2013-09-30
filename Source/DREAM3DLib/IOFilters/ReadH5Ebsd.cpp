@@ -209,14 +209,6 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   QString ss;
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  if (NULL == m)
-  {
-    QString ss = QObject::tr("%1: The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers").arg(getHumanLabel());
-    setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return;
-  }
-
   QFileInfo fi(m_InputFile);
   if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
@@ -364,6 +356,15 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -375,11 +376,12 @@ void ReadH5Ebsd::execute()
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
-    setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
+
   int err = 0;
   setErrorCondition(err);
   QString manufacturer;
@@ -724,12 +726,7 @@ void ReadH5Ebsd::copyTSLArrays(H5EbsdVolumeReader* ebsdReader)
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
 
   if (m_SelectedVolumeCellArrays.find(m_CellPhasesArrayName) != m_SelectedVolumeCellArrays.end() )
@@ -804,12 +801,7 @@ void ReadH5Ebsd::copyHKLArrays(H5EbsdVolumeReader* ebsdReader)
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
 
   phasePtr = reinterpret_cast<int*>(ebsdReader->getPointerByName(Ebsd::Ctf::Phase));
@@ -899,12 +891,7 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   FloatArrayType::Pointer fArray = FloatArrayType::NullPointer();
   Int32ArrayType::Pointer iArray = Int32ArrayType::NullPointer();
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
+
   int64_t totalPoints = m->getTotalPoints();
 
   float x, y;

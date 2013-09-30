@@ -66,7 +66,6 @@ class DREAM3DLib_EXPORT VisualizeGBCD : public SurfaceMeshFilter
     DREAM3D_TYPE_MACRO_SUPER(VisualizeGBCD, SurfaceMeshFilter)
 
     virtual ~VisualizeGBCD();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceDataContainerName)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)

@@ -336,13 +336,6 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   if(m_OutputFile.isEmpty() == true)
   {
@@ -449,6 +442,14 @@ void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t f
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -484,10 +485,7 @@ void VtkRectilinearGridWriter::execute()
   size_t totalFields = m->getNumCellFieldTuples();
   size_t totalEnsembleTuples = m->getNumCellEnsembleTuples();
 
-
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
-
-
 
   // Setup all the classes that will help us write the Scalars to the VTK File
   std::vector<VtkScalarWriter*> scalarsToWrite;

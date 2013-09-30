@@ -117,13 +117,6 @@ void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
-
 
   GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 }
@@ -133,6 +126,14 @@ void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size
 // -----------------------------------------------------------------------------
 void SPParksWriter::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -141,7 +142,7 @@ void SPParksWriter::preflight()
 // -----------------------------------------------------------------------------
 int SPParksWriter::writeHeader()
 {
-    VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if (NULL == m)
   {
     QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
@@ -200,14 +201,6 @@ int SPParksWriter::writeHeader()
 int SPParksWriter::writeFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
-    setErrorCondition(-1);
-    return -1;
-  }
 
   int64_t totalPoints = m->getTotalPoints();
   dataCheck(false, totalPoints, 1, 1);

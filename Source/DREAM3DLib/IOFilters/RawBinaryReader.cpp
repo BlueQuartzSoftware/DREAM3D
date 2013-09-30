@@ -360,12 +360,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -383,7 +377,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if(m_OutputArrayName.isEmpty() == true)
   {
-
     QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
     setErrorCondition(-398);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -391,7 +384,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if (m_NumberOfComponents < 1)
   {
-
     QString ss = QObject::tr("The number of components must be larger than Zero");
     setErrorCondition(-391);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -399,7 +391,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if (m_Dimensionality < 1)
   {
-
     QString ss = QObject::tr("The dimensionality must be larger than Zero");
     setErrorCondition(-389);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -407,7 +398,6 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
-
     QString ss = QObject::tr("One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).");
     setErrorCondition(-390);
     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
@@ -501,8 +491,15 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 void RawBinaryReader::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -515,14 +512,15 @@ void RawBinaryReader::execute()
   QString ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
+  if(NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
-    return;
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
-  setErrorCondition(0);
 
+  setErrorCondition(0);
 
   // Get the total size of the array from the options
   size_t voxels = m_Dimensions.x * m_Dimensions.y * m_Dimensions.z;

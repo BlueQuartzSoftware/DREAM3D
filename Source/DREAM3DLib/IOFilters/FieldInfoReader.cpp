@@ -148,12 +148,6 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -186,6 +180,15 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 // -----------------------------------------------------------------------------
 void FieldInfoReader::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 // -----------------------------------------------------------------------------
@@ -202,16 +205,6 @@ int  FieldInfoReader::readHeader()
 int  FieldInfoReader::readFile()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
-    return -1;
-  }
-
-
 
   std::ifstream inFile;
   inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);

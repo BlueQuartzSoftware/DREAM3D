@@ -114,12 +114,6 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 {
   setErrorCondition(0);
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if(NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage("The DataContainer Object was NULL", -999);
-    return;
-  }
 
   QFileInfo fi(getInputFile());
   if (getInputFile().isEmpty() == true)
@@ -193,6 +187,15 @@ void H5VoxelFileReader::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void H5VoxelFileReader::preflight()
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -201,12 +204,13 @@ void H5VoxelFileReader::preflight()
 // -----------------------------------------------------------------------------
 void H5VoxelFileReader::execute()
 {
-  if(NULL == getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName()))
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+    VolumeDataContainer::Pointer vdc = VolumeDataContainer::New();
+    vdc->setName(getDataContainerName());
+    getDataContainerArray()->pushBack(vdc);
+    m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   }
 
   int err = 0;
@@ -222,9 +226,9 @@ void H5VoxelFileReader::execute()
     addErrorMessage(em);
   }
   size_t dcDims[3] = {volDims[0], volDims[1], volDims[2]};
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setDimensions(dcDims);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setResolution(spacing);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->setOrigin(origin);
+  m->setDimensions(dcDims);
+  m->setResolution(spacing);
+  m->setOrigin(origin);
 
   size_t totalpoints = volDims[0] * volDims[1] * volDims[2];
   // Create an DataArray to hold the data
@@ -261,9 +265,9 @@ void H5VoxelFileReader::execute()
     grainIds = DataArray<int>::NullPointer();
   }
 
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::GrainIds, grainIds);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::Phases, phases);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellData(DREAM3D::CellData::EulerAngles, eulers);
+  m->addCellData(DREAM3D::CellData::GrainIds, grainIds);
+  m->addCellData(DREAM3D::CellData::Phases, phases);
+  m->addCellData(DREAM3D::CellData::EulerAngles, eulers);
 
   size_t gnum = 0;
   size_t maxId = 0;
@@ -272,7 +276,7 @@ void H5VoxelFileReader::execute()
     gnum = size_t(grainIds->GetValue(i));
     if(gnum > maxId) maxId = gnum;
   }
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->resizeCellFieldDataArrays(maxId+1);
+  m->resizeCellFieldDataArrays(maxId+1);
 
   std::vector<unsigned int> crystruct;
   std::vector<unsigned int> phaseType;
@@ -300,6 +304,6 @@ void H5VoxelFileReader::execute()
     crystructs->SetValue(i,crystruct[i]);
     phaseTypes->SetValue(i,phaseType[i]);
   }
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::CrystalStructures, crystructs);
+  m->addCellEnsembleData(DREAM3D::EnsembleData::PhaseTypes, phaseTypes);
 }

@@ -127,23 +127,16 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
   }
 
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (sm->getFaces().get() == NULL)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
+    setErrorCondition(-384);
   }
-  else {
-    if (sm->getFaces().get() == NULL)
-    {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-        setErrorCondition(-384);
-    }
-    if (sm->getVertices().get() == NULL)
-    {
-        addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-        setErrorCondition(-384);
-    }
+  if (sm->getVertices().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
   }
 }
 
@@ -153,8 +146,13 @@ void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+      addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+      setErrorCondition(-384);
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -165,15 +163,13 @@ void SurfaceMeshToStl::execute()
 {
  int err = 0;
 
-
-    SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
   if(NULL == sm)
   {
     setErrorCondition(-999);
     notifyErrorMessage("The SurfaceDataContainer Object was NULL", -999);
     return;
   }
-
 
   dataCheck(false, 1, 1, 1);
   if(getErrorCondition() < 0)

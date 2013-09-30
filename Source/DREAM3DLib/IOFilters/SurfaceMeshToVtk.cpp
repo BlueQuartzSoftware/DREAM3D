@@ -141,24 +141,16 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
   }
 
   SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
-  if (NULL == sm)
+  if (sm->getFaces().get() == NULL)
   {
-    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
     setErrorCondition(-384);
   }
-  else
-  {
-    if (sm->getFaces().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Triangles", -383);
-      setErrorCondition(-384);
-    }
 
-    if (sm->getVertices().get() == NULL)
-    {
-      addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
-      setErrorCondition(-384);
-    }
+  if (sm->getVertices().get() == NULL)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceMesh DataContainer missing Nodes", -384);
+    setErrorCondition(-384);
   }
 }
 
@@ -168,8 +160,13 @@ void SurfaceMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void SurfaceMeshToVtk::preflight()
 {
-  /* Place code here that sanity checks input arrays and input values. Look at some
-  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
+  SurfaceDataContainer* sm = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());
+  if (NULL == sm)
+  {
+    addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
+    setErrorCondition(-384);
+  }
+
   dataCheck(true, 1, 1, 1);
 }
 
@@ -202,7 +199,6 @@ void SurfaceMeshToVtk::execute()
   {
     return;
   }
-
 
   setErrorCondition(0);
   SurfaceDataContainer* m = getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName());  /* Place all your code to execute your filter here. */
@@ -466,7 +462,6 @@ int SurfaceMeshToVtk::writePointData(FILE* vtkFile)
     return -1;
   }
 
-
   // Write the Node Type Data to the file
   VertexArray& nodes = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getVertices());
   int numNodes = nodes.getNumberOfTuples();
@@ -699,7 +694,6 @@ int SurfaceMeshToVtk::writeCellData(FILE* vtkFile)
   {
     return -1;
   }
-
 
   // Write the triangle region ids
   FaceArray& triangles = *(getDataContainerArray()->getDataContainerAs<SurfaceDataContainer>(getSurfaceDataContainerName())->getFaces());
