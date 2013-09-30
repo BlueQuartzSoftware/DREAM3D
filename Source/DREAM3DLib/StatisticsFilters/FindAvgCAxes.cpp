@@ -129,7 +129,6 @@ void FindAvgCAxes::execute()
 
   size_t numgrains = m->getNumFieldTuples();
   //int phase;
-  QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3];
   float g1t[3][3];
@@ -152,10 +151,6 @@ void FindAvgCAxes::execute()
   {
     if(m_GrainIds[i] > 0)
     {
-    if (m_GrainIds[i] == 121941)
-    {
-    int stop = 0;
-    }
       index = 3 * m_GrainIds[i];
       QuaternionMathF::Copy(quats[i], q1);
       OrientationMath::QuattoMat(q1, g1);

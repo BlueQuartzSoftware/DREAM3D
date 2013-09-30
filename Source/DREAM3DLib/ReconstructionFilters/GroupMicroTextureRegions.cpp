@@ -301,12 +301,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       for (std::vector<int>::size_type j = 0; j < microtexturelist.size(); j++)
       {
         int firstgrain = microtexturelist[j];
-        if (m_GrainIds[1860530] == firstgrain || m_GrainIds[1860531] == firstgrain)
-        {
-        int stop = 0;
-        }
         size1 = int(neighborlist[firstgrain].size());
-
         if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
         QuaternionMathF::Copy(avgQuats[firstgrain], q1);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
