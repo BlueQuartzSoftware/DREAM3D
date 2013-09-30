@@ -182,7 +182,8 @@ namespace DREAM3D
     const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
     const std::string LMG("LMG");
     const std::string BasalLoadingFactor("BasalLoadingFactor");
-    const std::string Clustering("Clustering");
+    const std::string Clusters("Clusters");
+    const std::string ClusteringList("ClusteringList");
   }
 
   namespace EnsembleData

@@ -34,10 +34,8 @@ class DREAM3DLib_EXPORT FindFieldClustering : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
     //------ Created Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringArrayName)
-    DREAM3D_INSTANCE_STRING_PROPERTY(NumNeighborsArrayName)
-
-    DREAM3D_INSTANCE_PROPERTY(int, MultiplesOfAverage)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ClustersArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(ClusteringListArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
@@ -72,7 +70,8 @@ private:
     int32_t* m_FieldPhases;
     float* m_Centroids;
     float* m_EquivalentDiameters;
-    NeighborList<float>* m_Clustering;
+    int32_t* m_Clusters;
+    NeighborList<float>* m_ClusteringList;
 
   void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
