@@ -189,6 +189,9 @@ void FindFieldClustering::find_clustering()
       r = sqrtf((x - xn) * (x - xn) + (y - yn) * (y - yn) + (z - zn) * (z - zn));
       m_Clusters[i]++;
       clusteringlist[i].push_back(r);
+      m_Clusters[j]++;
+      clusteringlist[j].push_back(r);
+
     }
   }
   for (size_t i = 1; i < totalFields; i++)
