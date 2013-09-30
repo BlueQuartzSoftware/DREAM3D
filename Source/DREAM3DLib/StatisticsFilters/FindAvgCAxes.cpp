@@ -129,6 +129,7 @@ void FindAvgCAxes::execute()
 
   size_t numgrains = m->getNumFieldTuples();
   //int phase;
+  QuatF q1;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
   float g1[3][3];
   float g1t[3][3];
