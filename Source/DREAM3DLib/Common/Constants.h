@@ -104,7 +104,7 @@ namespace DREAM3D
     const std::string FarFieldZoneIds("FarFieldZoneIds");
     const std::string FarFieldQuats("FarFieldQuats");
     const std::string ParentIds("ParentIds");
-    const std::string MicroTexVolFrac("MicroTexVolFrac");
+    const std::string MTRdensity("MTRdensity");
     const std::string Phases("Phases");
     const std::string CellPhases("Phases");
     const std::string BandContrast("BandContrast");
@@ -184,6 +184,7 @@ namespace DREAM3D
     const std::string BasalLoadingFactor("BasalLoadingFactor");
     const std::string Clusters("Clusters");
     const std::string ClusteringList("ClusteringList");
+    const std::string MTRgKAM("MTRgKAM");
   }
 
   namespace EnsembleData
