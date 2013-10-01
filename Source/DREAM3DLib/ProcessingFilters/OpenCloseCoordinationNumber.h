@@ -38,17 +38,17 @@
 #define OpenCloseCoordinationNumber_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 
 /**
@@ -73,9 +73,9 @@ class DREAM3DLib_EXPORT OpenCloseCoordinationNumber : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, Loop)
     DREAM3D_INSTANCE_PROPERTY(int, CoordinationNumber)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Smooth Bad Data (Coordination Number)"; }
 
     virtual void setupFilterParameters();
     /**

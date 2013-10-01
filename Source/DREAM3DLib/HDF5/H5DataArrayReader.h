@@ -33,11 +33,11 @@
 
 #include <hdf5.h>
 
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 /**
  * @class H5DataArrayReader H5DataArrayReader.h DREAM3DLib/HDF5/H5DataArrayReader.h
@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param name
      * @return
      */
-    static IDataArray::Pointer readIDataArray(hid_t gid, const std::string &name, bool preflightOnly = false);
+    static IDataArray::Pointer readIDataArray(hid_t gid, const QString &name, bool preflightOnly = false);
 
     /**
      *
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param name
      * @return
      */
-    static IDataArray::Pointer readNeighborListData(hid_t gid, const std::string &name, bool preflightOnly = false);
+    static IDataArray::Pointer readNeighborListData(hid_t gid, const QString &name, bool preflightOnly = false);
 
     /**
      * @brief readStringDataArray
@@ -75,7 +75,7 @@ class DREAM3DLib_EXPORT H5DataArrayReader
      * @param preflightOnly
      * @return
      */
-    static IDataArray::Pointer readStringDataArray(hid_t gid, const std::string &name, bool preflightOnly = false);
+    static IDataArray::Pointer readStringDataArray(hid_t gid, const QString &name, bool preflightOnly = false);
 
 
   protected:

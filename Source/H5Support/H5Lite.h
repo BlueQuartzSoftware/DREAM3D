@@ -8,8 +8,8 @@
 //                           FA8650-04-C-5229
 //
 
-#ifndef _HDF5_LITE_H_
-#define _HDF5_LITE_H_
+#ifndef _H5Lite_H_
+#define _H5Lite_H_
 
 
 //--C++ Headers
@@ -23,50 +23,11 @@
 
 //-- HDF Headers
 #include <hdf5.h>
-#include <H5Tpublic.h>
 
+//-- H5Support Headers
 #include "H5Support/H5Support.h"
-#include "H5Support/H5SupportDLLExport.h"
+#include "H5Support/H5Macros.h"
 
-
-
-/* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
- * this class. If this is being compiled as part of H5SupportDataModel this should
- * _always_ be defined. If this code is being used as part of another project
- * then this should probably NOT be defined.
- */
-#ifdef H5LITE_USE_H5Support_CONSTRUCTS
-class IH5SupportArray;
-#endif
-
-//TODO: Add tests for the find* methods
-
-#define CloseH5A(aid, err, retError)\
-   err = H5Aclose( attr_id );\
-   if (err<0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): " << "Error Closing Attribute." << std::endl;retErr = err;}
-
-#define CloseH5D(did, err, retError)\
-  err = H5Dclose(did);\
-  if (err < 0) { std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error Closing Dataset." << std::endl; retError = err;}
-
-#define CloseH5S(sid, err, retError)\
-  err = H5Sclose(sid); \
-  if ( err < 0) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing Dataspace." << std::endl;retErr = err;}
-
-#define CloseH5T(tid, err, retError)\
-  err = H5Tclose(tid);\
-  if (err < 0 ) {std::cout << "File: " << __FILE__ << "(" << __LINE__ << "): "<< "Error closing DataType" << std::endl; retErr = err;}
-
-#define HDF_ERROR_HANDLER_OFF\
-  herr_t (*_oldHDF_error_func)(hid_t, void *);\
-  void *_oldHDF_error_client_data;\
-  H5Eget_auto(H5E_DEFAULT, &_oldHDF_error_func, &_oldHDF_error_client_data);\
-  H5Eset_auto(H5E_DEFAULT, NULL, NULL);
-
-#define HDF_ERROR_HANDLER_ON  H5Eset_auto(H5E_DEFAULT, _oldHDF_error_func, _oldHDF_error_client_data);
-
-
-#define UNUSED(x) ((void)(x));
 
 #ifdef __cplusplus
 extern "C" {
@@ -1242,7 +1203,7 @@ static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
  */
 static H5Support_EXPORT herr_t readStringDataset(hid_t loc_id,
                                            const std::string &dsetName,
-                                           uint8_t* data);
+                                           char* data);
 
 /**
  * @brief Reads an Attribute from an HDF5 Object.
@@ -1472,7 +1433,7 @@ static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
 static H5Support_EXPORT herr_t readStringAttribute(hid_t loc_id,
                                    const std::string& objName,
                                    const std::string& attrName,
-                                   uint8_t* data);
+                                   char* data);
 /**
  * @brief Returns the number of dimensions for a given attribute
  * @param loc_id The HDF5 id of the parent group/file for the objName
@@ -1542,63 +1503,6 @@ static H5Support_EXPORT herr_t getAttributeInfo(hid_t loc_id,
 
 
 
-#ifdef H5LITE_USE_H5Support_CONSTRUCTS
-/**
- * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
- * @param loc_id The parent ID of the dataset
- * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
- * it represents a path YOU need to make sure all intermediate groups are already
- * crreated.
- * @param array The IH5SupportArray class
- * @return Standard hdf5 error condition
- */
-static H5Support_EXPORT herr_t writeH5SupportArray(hid_t loc_id,
-                            const std::string &dsetName,
-                            IH5SupportArray* array);
-/**
- * @brief Writes the data contained within an IH5SupportArray object into an hdf5 file
- * @param loc_id The parent ID of the dataset
- * @param dsetName The name of the dataset, Can be a name or path within the hdf5 file. If
- * it represents a path YOU need to make sure all intermediate groups are already
- * crreated.
- * @param attributeKey The name of the attribute
- * @param array The IH5SupportArray class
- * @return Standard hdf5 error condition
- */
-static H5Support_EXPORT herr_t writeH5SupportAttribute(hid_t loc_id,
-                            const std::string &dsetName,
-                            const std::string &attributeKey,
-                            IH5SupportArray* array);
-
-
-/**
- * @brief Reads the data from an HDF5 file into a newly allocated H5SupportArrayTemplate
- * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
- * arrangements to clean up the pointer otherwise memory leaks will occur.
- * @param loc_id The HDF5 file or group Id into which to store the data
- * @param dsetName The name/path of the data set
- * @return IH5SupportArray Pointer. NULL value is possible on error
- */
-static H5Support_EXPORT IH5SupportArray* readH5SupportArray(hid_t loc_id,
-                           const std::string &dsetName );
-
-
-/**
- * @brief Reads the attribute data from an HDF5 file into a newly allocated H5SupportArrayTemplate
- * object - PLEASE NOTE: You MUST call delete on the object or otherwise make
- * arrangements to clean up the pointer otherwise memory leaks will occur.
- * @param loc_id The HDF5 file or group Id into which to store the data
- * @param dsetName The name/path of the data set
- * @param attributeKey The name of the attribute
- * @return IH5SupportArray Pointer. NULL value is possible on error
- */
-static H5Support_EXPORT IH5SupportArray* readH5SupportAttribute(hid_t loc_id,
-                                   const std::string &dsetName,
-                                   const std::string &attributeKey);
-
-
-#endif
-
 // -----------------------------------------------------------------------------
 protected:
   H5Lite();
@@ -1606,11 +1510,7 @@ protected:
 
 
 private:
-   void NEVER_USED() {
-//     herr_t ret = H5Aiterate( 0, NULL, find_attr, (void *)(NULL) );
-//     ret = H5Giterate( 0, NULL, 0, find_dataset, (void *)(NULL) );
-//     ret =0;
-   }
+
 };
 
 

@@ -38,15 +38,15 @@
 #define ScalarSegmentGrains_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
 
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT ScalarSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(float, ScalarTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const std::string getHumanLabel() { return "Segment Fields (Scalar)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const QString getHumanLabel() { return "Segment Fields (Scalar)"; }
 
     virtual void setupFilterParameters();
     /**

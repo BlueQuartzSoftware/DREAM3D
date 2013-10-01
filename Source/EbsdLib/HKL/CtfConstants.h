@@ -40,11 +40,11 @@
 #ifndef _HKLConstants_h_
 #define _HKLConstants_h_
 
-#include <string>
-#include <vector>
+#include <QtCore/QString>
+#include <QtCore/QVector>
 
 #define DECLARE_STRING_CONST(var)\
-  const std::string var(#var);
+  const QString var(#var);
 
 
 namespace Ebsd {
@@ -87,13 +87,13 @@ namespace Ctf
        }
        virtual ~LaueGroupStrings() {}
 
-       std::string getString(LaueGroupTable i)
+       QString getString(LaueGroupTable i)
        {
          return m_Values[static_cast<size_t>(i)];
        }
      private:
 
-       std::vector<std::string> m_Values;
+       QVector<QString> m_Values;
 
    };
 
@@ -114,12 +114,12 @@ namespace Ctf
 
    };
 
-  const std::string FileExt("ctf");
+  const QString FileExt("ctf");
 
-  const std::string Manufacturer("HKL");
+  const QString Manufacturer("HKL");
 
 // These are Header related
-  const std::string ChannelTextFile("Channel Text File");
+  const QString ChannelTextFile("Channel Text File");
   DECLARE_STRING_CONST(Prj)
   DECLARE_STRING_CONST(Author)
   DECLARE_STRING_CONST(JobMode)
@@ -139,7 +139,7 @@ namespace Ctf
   DECLARE_STRING_CONST(KV)
   DECLARE_STRING_CONST(TiltAngle)
   DECLARE_STRING_CONST(TiltAxis)
-  const std::string NumPhases("Phases");
+  const QString NumPhases("Phases");
 
   // These are phase related
   DECLARE_STRING_CONST(LatticeConstants)

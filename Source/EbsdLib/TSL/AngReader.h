@@ -39,7 +39,10 @@
 #ifndef ANGREADER_H_
 #define ANGREADER_H_
 
-#include <string>
+#include <QtCore/QString>
+#include <QtCore/QFile>
+#include <QtCore/QByteArray>
+
 #include <map>
 
 
@@ -74,17 +77,17 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStar, Ebsd::Ang::YStar)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, ZStar, Ebsd::Ang::ZStar)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, WorkingDistance, Ebsd::Ang::WorkingDistance)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, Grid, Ebsd::Ang::Grid)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, Grid, Ebsd::Ang::Grid)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, XStep, Ebsd::Ang::XStep)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<float>, float, YStep, Ebsd::Ang::YStep)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumOddCols, Ebsd::Ang::NColsOdd)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumEvenCols, Ebsd::Ang::NColsEven)
     EbsdHeader_INSTANCE_PROPERTY(AngHeaderEntry<int>, int, NumRows, Ebsd::Ang::NRows)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, OIMOperator, Ebsd::Ang::Operator)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, SampleID, Ebsd::Ang::SampleId)
-    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, std::string, ScanID, Ebsd::Ang::ScanId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, OIMOperator, Ebsd::Ang::Operator)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, SampleID, Ebsd::Ang::SampleId)
+    EbsdHeader_INSTANCE_PROPERTY(AngStringHeaderEntry, QString, ScanID, Ebsd::Ang::ScanId)
 
-    EBSD_INSTANCE_PROPERTY(std::vector<AngPhase::Pointer>, PhaseVector)
+    EBSD_INSTANCE_PROPERTY(QVector<AngPhase::Pointer>, PhaseVector)
 
     EBSD_INSTANCE_PROPERTY(bool, ReadHexGrid)
 
@@ -103,14 +106,14 @@ class EbsdLib_EXPORT AngReader : public EbsdReader
      * @brief Returns the pointer to the data for a given field
      * @param fieldName The name of the field to return the pointer to.
      */
-    void* getPointerByName(const std::string &fieldName);
+    void* getPointerByName(const QString &fieldName);
 
     /**
      * @brief Returns an enumeration value that depicts the numerical
      * primitive type that the data is stored as (Int, Float, etc).
      * @param fieldName The name of the field.
      */
-    Ebsd::NumType getPointerType(const std::string &fieldName);
+    Ebsd::NumType getPointerType(const QString &fieldName);
 
     /**
     * @brief Reads the complete TSL .ang file.
@@ -145,17 +148,17 @@ private:
     AngPhase::Pointer   m_CurrentPhase;
 
 
-    void readData(std::ifstream &in, char* buf, size_t bufSize);
+    void readData(QFile &in, QByteArray &buf);
 
     /** @brief Parses the value from a single line of the header section of the TSL .ang file
     * @param line The line to parse
     */
-    void parseHeaderLine(char* buf, size_t length);
+    void parseHeaderLine(QByteArray &buf);
 
   /** @brief Parses the data from a line of data from the TSL .ang file
     * @param line The line of data to parse
     */
-    void parseDataLine(const std::string &line, size_t i);
+    void parseDataLine(QByteArray &line, size_t i);
 
     AngReader(const AngReader&);    // Copy Constructor Not Implemented
     void operator=(const AngReader&);  // Operator '=' Not Implemented

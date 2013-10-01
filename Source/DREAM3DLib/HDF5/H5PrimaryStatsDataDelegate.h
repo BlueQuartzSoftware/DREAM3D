@@ -37,14 +37,14 @@
 #ifndef _H5PrimaryStatsData_DELEGATE_H_
 #define _H5PrimaryStatsData_DELEGATE_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
 
 /**
@@ -86,18 +86,18 @@ class DREAM3DLib_EXPORT H5PrimaryStatsDataDelegate : public H5StatsDataDelegate
     int readODFWeights(hid_t pid, PrimaryStatsData* data);
     int readAxisODFWeights(hid_t pid, PrimaryStatsData* data);
 
-    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
+    int writeWeightsData(hid_t pid, const QString &hdf5GroupName,
                                               VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
                               uint32_t disType,
-                              const std::string &hdf5GroupName,
+                              const QString &hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+    uint32_t readDistributionType(hid_t pid, const QString &hdf5GroupName);
 
     int readDistributionData(hid_t pid,
-                              const std::string &hdf5GroupName,
+                              const QString &hdf5GroupName,
                               VectorOfFloatArray colData);
 
 

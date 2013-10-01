@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -75,7 +75,7 @@ NeighborCICorrelation::~NeighborCICorrelation()
 // -----------------------------------------------------------------------------
 void NeighborCICorrelation::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
@@ -127,10 +127,10 @@ int NeighborCICorrelation::writeFilterParameters(AbstractFilterParametersWriter*
 void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -301, float, FloatArrayType, voxels, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
 }
 
 
@@ -233,15 +233,15 @@ void NeighborCICorrelation::execute()
         }
       }
     }
-      std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+      QList<QString> voxelArrayNames = m->getCellArrayNameList();
       for (size_t j = 0; j < totalPoints; j++)
       {
         neighbor = bestNeighbor[j];
         if (neighbor != -1)
         {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }

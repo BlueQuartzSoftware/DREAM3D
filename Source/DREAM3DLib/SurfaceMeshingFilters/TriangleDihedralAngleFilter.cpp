@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 
@@ -140,7 +140,7 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -175,7 +175,7 @@ int TriangleDihedralAngleFilter::writeFilterParameters(AbstractFilterParametersW
 void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -199,7 +199,7 @@ void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleDihedralAngles, ss, double, DoubleArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleDihedralAngles, double, DoubleArrayType, 0, voxels, 1)
     }
 
   }
@@ -222,7 +222,7 @@ void TriangleDihedralAngleFilter::preflight()
 void TriangleDihedralAngleFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

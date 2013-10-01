@@ -44,10 +44,10 @@
 
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
-#include "MXA/Common/MXASetGetMacros.h"
-#include "MXA/MXA.h"
+
+
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -55,7 +55,7 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 
 /**
  * @class EbsdToH5Ebsd EbsdToH5Ebsd.h EbsdToH5Ebsd/EbsdToH5Ebsd.h
@@ -79,18 +79,18 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZStartIndex)
     DREAM3D_INSTANCE_PROPERTY(int64_t, ZEndIndex)
     DREAM3D_INSTANCE_PROPERTY(float, ZResolution)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, SampleTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, SampleTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<float>, EulerTransformationAxis)
+    DREAM3D_INSTANCE_PROPERTY(QVector<float>, EulerTransformationAxis)
     DREAM3D_INSTANCE_PROPERTY(Ebsd::RefFrameZDir, RefFrameZDir)
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
 
     virtual void setupFilterParameters();
     /**
@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

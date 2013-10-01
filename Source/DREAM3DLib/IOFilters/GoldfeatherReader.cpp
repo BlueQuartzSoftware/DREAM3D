@@ -36,7 +36,7 @@
 
 #include "GoldfeatherReader.h"
 
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QFileInfo>
 
 /**
  * @brief The ScopedFileMonitor class will automatically close an open FILE pointer
@@ -84,7 +84,7 @@ GoldfeatherReader::~GoldfeatherReader()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /*   For an input file use this code*/
    {
     FilterParameter::Pointer parameter = FilterParameter::New();
@@ -128,20 +128,21 @@ int GoldfeatherReader::writeFilterParameters(AbstractFilterParametersWriter* wri
 void GoldfeatherReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  if (getInputFile().empty() == true)
+  QFileInfo fi(getInputFile());
+  if (getInputFile().isEmpty() == true)
   {
-    ss << ClassName() << " needs the Input File Set and it was not.";
+    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
-  else if (MXAFileInfo::exists(getInputFile()) == false)
+  else if (fi.exists() == false)
   {
-    ss << "The input file does not exist.";
+    QString ss = QObject::tr("The input file does not exist");
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
 
@@ -199,7 +200,7 @@ void GoldfeatherReader::preflight()
 void GoldfeatherReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -212,7 +213,7 @@ void GoldfeatherReader::execute()
 
 
 
-  FILE* f = fopen(m_InputFile.c_str(), "r");
+  FILE* f = fopen(m_InputFile.toLatin1().data(), "r");
   if (NULL == f)
   {
     setErrorCondition(-999);

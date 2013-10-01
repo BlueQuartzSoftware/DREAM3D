@@ -36,9 +36,9 @@
 
 #include "AdjustVolume.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 
 
@@ -75,7 +75,7 @@ AdjustVolume::~AdjustVolume()
 
 void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
@@ -112,12 +112,12 @@ int AdjustVolume::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -209,9 +209,9 @@ void AdjustVolume::execute()
 //  oldsizedisterror = packGrains->check_sizedisterror(&field);
   while(iterations < m_MaxIterations)
   {
-    std::stringstream ss;
-	ss << "Adjusting Grain Boundaries - " << ((float)iterations/m_MaxIterations)*100 << "Percent Complete";
-	notifyStatusMessage(ss.str());
+    
+	QString ss = QObject::tr("Adjusting Grain Boundaries - %1Percent Complete").arg(((float)iterations/m_MaxIterations)*100);
+	notifyStatusMessage(ss);
     iterations++;
     good = 0;
     while (good == 0)

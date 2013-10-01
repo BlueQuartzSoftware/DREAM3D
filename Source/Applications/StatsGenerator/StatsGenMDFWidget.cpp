@@ -308,9 +308,9 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
   else
   {
     size_t numMisorients = 0;
-    std::string filename = file.toStdString();
+    QString filename = file;
     std::ifstream inFile;
-    inFile.open(filename.c_str());
+    inFile.open(filename.toLatin1().data());
 
     inFile >> numMisorients;
 
@@ -320,11 +320,11 @@ void StatsGenMDFWidget::on_loadMDFBtn_clicked()
     {
       inFile >> angle >> n1 >> n2 >> n3 >> weight;
 
-      axis = std::string("<" + n1 + "," + n2 + "," + n3 + ">");
+      axis = "<" + n1 + "," + n2 + "," + n3 + ">";
 
       if (!m_MDFTableModel->insertRow(m_MDFTableModel->rowCount())) return;
       int row = m_MDFTableModel->rowCount() - 1;
-      m_MDFTableModel->setRowData(row, angle, axis, weight);
+      m_MDFTableModel->setRowData(row, angle, QString::fromStdString(axis), weight);
 
       m_MDFTableView->resizeColumnsToContents();
       m_MDFTableView->scrollToBottom();

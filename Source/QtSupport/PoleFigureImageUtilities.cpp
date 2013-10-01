@@ -41,7 +41,7 @@
 #include <QtGui/QFont>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 
@@ -479,7 +479,7 @@ QImage PoleFigureImageUtilities::CreateQImageFromRgbaArray(UInt8ArrayType* poleF
   // Flip the image so the (-1, -1) is in the lower left
   image = image.mirrored(false, true);
 
-  QString imageLabel = QString::fromStdString(poleFigurePtr->GetName());
+  QString imageLabel = (poleFigurePtr->GetName());
   if(includeOverlay == true)
   {
     image = PoleFigureImageUtilities::PaintPoleFigureOverlay(imageDimension, imageDimension, imageLabel, image);

@@ -56,9 +56,9 @@ CtfFields::~CtfFields()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> CtfFields::getFieldNames()
+QVector<QString> CtfFields::getFieldNames()
 {
-  std::vector<std::string> fields;
+  QVector<QString> fields;
   fields.push_back(Ebsd::Ctf::Phase);
   fields.push_back(Ebsd::Ctf::X);
   fields.push_back(Ebsd::Ctf::Y);

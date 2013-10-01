@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 /**
  * @brief The CalculateCentroidsImpl class
@@ -110,7 +110,7 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -145,8 +145,9 @@ int TriangleCentroidFilter::writeFilterParameters(AbstractFilterParametersWriter
 void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
+
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -169,7 +170,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fie
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, ss, double, DoubleArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, double, DoubleArrayType, 0, voxels, 3)
     }
 
   }
@@ -192,7 +193,7 @@ void TriangleCentroidFilter::preflight()
 void TriangleCentroidFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

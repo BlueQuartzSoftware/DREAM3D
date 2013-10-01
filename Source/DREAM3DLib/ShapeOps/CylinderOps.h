@@ -38,7 +38,7 @@
 
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 
   /*
@@ -47,14 +47,14 @@
   class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(CylinderOps)
-      MXA_TYPE_MACRO(CylinderOps)
-      MXA_STATIC_NEW_MACRO(CylinderOps)
+      DREAM3D_SHARED_POINTERS(CylinderOps)
+      DREAM3D_TYPE_MACRO(CylinderOps)
+      DREAM3D_STATIC_NEW_MACRO(CylinderOps)
 
 
       virtual ~CylinderOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+      virtual float radcur1(QMap<ArgName, float> args);
       virtual float inside(float axis1comp, float axis2comp, float axis3comp);
       virtual void init() {  }
 

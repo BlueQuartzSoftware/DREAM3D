@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 /**
  * @brief The CalculateAreasImpl class
@@ -115,7 +115,7 @@ TriangleAreaFilter::~TriangleAreaFilter()
 // -----------------------------------------------------------------------------
 void TriangleAreaFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -150,7 +150,7 @@ int TriangleAreaFilter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -174,7 +174,7 @@ void TriangleAreaFilter::dataCheck(bool preflight, size_t voxels, size_t fields,
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleAreas, ss, double, DoubleArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleAreas, double, DoubleArrayType, 0, voxels, 1)
     }
 
   }
@@ -197,7 +197,7 @@ void TriangleAreaFilter::preflight()
 void TriangleAreaFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

@@ -20,20 +20,14 @@
 //-- HDF Headers
 #include <hdf5.h>
 
-
-#include <H5Support/H5Support.h>
-#include <H5Support/H5Lite.h>
-
+#include "H5Support/H5Support.h"
+#include "H5Support/H5Lite.h"
 
 /* H5LITE_USE_H5Support_CONSTRUCTS is used to include H5SupportDataModel Specific classes in
  * this class. If this is being compiled as part of H5SupportDataModel this should
  * _always_ be defined. If this code is being used as part of another project
  * then this should probably NOT be defined.
  */
-#ifdef H5LITE_USE_H5Support_CONSTRUCTS
-#include <H5Support/Base/IDataModel.h>
-#include <H5Support/DataWrappers/H5SupportArrayTemplate.hpp>
-#endif
 
 #if defined (H5Support_NAMESPACE)
 namespace H5Support_NAMESPACE {
@@ -205,111 +199,6 @@ public:
   */
   static H5Support_EXPORT herr_t getAllAttributeNames(hid_t objId, const std::string &obj_name,
                                                   std::list<std::string> &names);
-
-#if H5LITE_USE_H5Support_CONSTRUCTS
-  /**
-   * @brief Returns a vector of IAttributes, one for each attribute of a given hdf5 object
-   * @param fileId The parent hdf5 id
-   * @param datasetPath The path to the hdf5 object whose attributes you want
-   * @param attributes Variable to store the attributes
-   * @return Negative value on error
-   */
-  static H5Support_EXPORT herr_t readAllAttributes(hid_t fileId,
-                                             const std::string &datasetPath,
-                                             H5SupportAbstractAttributes &attributes);
-
-
-/**
-  * @brief Reads data  into an IH5SupportArray::Pointer
-  * @param locId The hdf5 object id of the parent
-  * @param datasetPath The path to the data set containing the attributes you want
-  * @param dims The dimensions of the attribute
-  * @return Boost shared pointer to the data
-  */
-  template<typename T>
-  static IH5SupportArray::Pointer readH5Data( hid_t locId,
-                                         const std::string &datasetPath,
-                                         const std::vector<hsize_t> &dims)
-  {
-    herr_t err = -1;
-    IH5SupportArray::Pointer ptr;
-    size_t* _dims = new size_t[dims.size()];
-     for(size_t i = 0; i < dims.size(); ++i)
-     {
-       _dims[i] = dims[i];
-     }
-    ptr = H5SupportArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
-    if (ptr.get() == NULL)
-    {
-      return ptr; // empty attribute
-    }
-    T* data = (T*)(ptr->getVoidPointer(0));
-    err = H5Lite::readPointerDataset(locId, datasetPath, data);
-    if ( err < 0)
-    {
-      std::cout << "readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" << std::endl;
-      IH5SupportArray* nullData = 0x0;
-      ptr.reset(nullData); // Swap in a null pointer
-    }
-    return ptr;
-  }
-
-
-
-/**
-  * @brief Reads data from an Attribute into an IAttributePtr
-  * @param locId The hdf5 object id of the parent
-  * @param datasetPath The path to the data set containing the attributes you want
-  * @param key The name of the attribute to read
-  * @param dims The dimensions of the attribute
-  * @return Boost shared pointer to the attribute
-  */
-  template<typename T>
-  static IH5SupportArray::Pointer readH5Attribute(  hid_t locId,
-                                               const std::string &datasetPath,
-                                               const std::string &key,
-                                               const std::vector<hsize_t> &dims)
-  {
-    herr_t err = -1;
-    IH5SupportArray::Pointer ptr;
-    if (dims.size() == 1 && dims.at(0) == 1) // One Dimensional Array with 1 element
-    {
-      T data;
-      err = H5Lite::readScalarAttribute(locId, datasetPath, key, data);
-      if (err >= 0) {
-        IH5SupportArray::Pointer attr = H5SupportArrayTemplate<T>::CreateSingleValueArray( data);
-        if (attr.get() != NULL)
-        {
-          ptr = attr;
-        }
-      }
-    }
-    else // Multi-Dimensional Data
-    {
-     // const size_t* dimPtr = reinterpret_cast<const size_t*>(&(dims.front()));
-      size_t* _dims = new size_t[dims.size()];
-      for(size_t i = 0; i < dims.size(); ++i)
-      {
-        _dims[i] = dims[i];
-      }
-      IH5SupportArray::Pointer attr =
-            H5SupportArrayTemplate<T>::CreateMultiDimensionalArray( dims.size(), _dims);
-      delete [] _dims;
-      if (attr.get() == NULL)
-      {
-        return ptr; // empty attribute
-      }
-      // All the needed space is now preallocated in the attribute
-      T* data = static_cast<T*>(attr->getVoidPointer(0) );
-      err = H5Lite::readPointerAttribute(locId, datasetPath, key, data);
-      if (err >= 0)
-      {
-         ptr = attr;
-      }
-    }
-    return ptr;
-  }
-#endif
 
 
 protected:

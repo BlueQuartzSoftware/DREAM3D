@@ -37,15 +37,15 @@
 #ifndef _DATACONTAINERWRITER_H_
 #define _DATACONTAINERWRITER_H_
 
-#include <string>
-#include <iostream>
+#include <QtCore/QString>
+#include <QtCore/QtDebug>
 
 #include <hdf5.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 
 
@@ -76,9 +76,9 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const std::string getHumanLabel() { return "Write DREAM3D Data File"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getHumanLabel() { return "Write DREAM3D Data File"; }
 
     virtual void setupFilterParameters();
     /**
@@ -86,7 +86,7 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -119,8 +119,8 @@ class DREAM3DLib_EXPORT DataContainerWriter : public AbstractFilter
 
     int writePipeline();
 
-    void writeXdmfHeader(std::ostream &out);
-    void writeXdmfFooter(std::ostream &out);
+    void writeXdmfHeader(QTextStream &out);
+    void writeXdmfFooter(QTextStream &out);
 
   private:
     hid_t m_FileId;

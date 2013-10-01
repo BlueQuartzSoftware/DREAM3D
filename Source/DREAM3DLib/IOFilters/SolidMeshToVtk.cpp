@@ -37,9 +37,12 @@
 #include "SolidMeshToVtk.h"
 
 
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
+
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -63,7 +66,7 @@ SolidMeshToVtk::~SolidMeshToVtk()
 // -----------------------------------------------------------------------------
 void SolidMeshToVtk::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> options;
+  QVector<FilterParameter::Pointer> options;
 {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Output Vtk File");
@@ -116,9 +119,9 @@ int SolidMeshToVtk::writeFilterParameters(AbstractFilterParametersWriter* writer
 void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
 
-  if (m_OutputVtkFile.empty() == true)
+  if (m_OutputVtkFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Vtk Output file is Not set correctly", -1003);
@@ -179,8 +182,152 @@ class ScopedFileMonitor
 // -----------------------------------------------------------------------------
 void SolidMeshToVtk::execute()
 {
+<<<<<<< HEAD
+  int err = 0;
+  
+  setErrorCondition(err);
+  dataCheck(false, 0, 0, 0);
+  if(getErrorCondition() < 0)
+  {
+    return;
+  }
+
+
+  setErrorCondition(0);
+  SolidMeshDataContainer* m = getSolidMeshDataContainer();
+  /* Place all your code to execute your filter here. */
+  DREAM3D::SurfaceMesh::VertListPointer_t nodesPtr = m->getVertices();
+  DREAM3D::SurfaceMesh::VertList_t& nodes = *(nodesPtr);
+  int nNodes = nodes.GetNumberOfTuples();
+
+  // Make sure any directory path is also available as the user may have just typed
+  // in a path without actually creating the full path
+  QString parentPath = QFileInfo::parentPath(getOutputVtkFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
+  {
+      ss.str("");
+      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+      notifyErrorMessage(ss, -1);
+      setErrorCondition(-1);
+      return;
+  }
+
+
+// Open the output VTK File for writing
+  FILE* vtkFile = NULL;
+  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
+  if (NULL == vtkFile)
+  {
+      ss.str("");
+      QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
+      notifyErrorMessage(ss, -18542);
+      setErrorCondition(-18542);
+      return;
+  }
+  ScopedFileMonitor vtkFileMonitor(vtkFile);
+
+  fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
+  fprintf(vtkFile, "Data set from DREAM.3D Solid Meshing Module\n");
+  if (m_WriteBinaryFile) {
+    fprintf(vtkFile, "BINARY\n");
+  }
+  else {
+    fprintf(vtkFile, "ASCII\n");
+  }
+  fprintf(vtkFile, "DATASET UNSTRUCTURED_GRID\n");
+
+  fprintf(vtkFile, "POINTS %d float\n", nNodes);
+
+  float pos[3] = {0.0f, 0.0f, 0.0f};
+
+  size_t totalWritten = 0;
+  // Write the POINTS data (Vertex)
+  for (int i = 0; i < nNodes; i++)
+  {
+    DREAM3D::SurfaceMesh::Vert_t& n = nodes[i]; // Get the current Node
+    pos[0] = static_cast<float>(n.pos[0]);
+    pos[1] = static_cast<float>(n.pos[1]);
+    pos[2] = static_cast<float>(n.pos[2]);
+    if (m_WriteBinaryFile == true)
+    {
+        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
+        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
+        if (totalWritten != sizeof(float) * 3)
+        {
+
+        }
+    }
+    else
+  {
+        fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
+    }
+  }
+
+  // Write the triangle indices into the vtk File
+  StructArray<Tetrahedron>& tetrahedrons = *(m->getTetrahedrons());
+
+  int tData[5];
+  int nT = tetrahedrons.GetNumberOfTuples();
+  int tetrahedronCount = nT;
+//  int tn1, tn2, tn3;
+  // Write the CELLS Data
+  fprintf(vtkFile, "CELLS %d %d\n", tetrahedronCount, (tetrahedronCount * 5));
+  for (int j = 0; j < nT; j++)
+  {
+  //  Triangle& t = triangles[j];
+    tData[1] = tetrahedrons[j].node_id[0];
+    tData[2] = tetrahedrons[j].node_id[1];
+    tData[3] = tetrahedrons[j].node_id[2];
+    tData[4] = tetrahedrons[j].node_id[3];
+    if (m_WriteBinaryFile == true)
+    {
+      tData[0] = 4; // Push on the total number of entries for this entry
+      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+      DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+      DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+      DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
+      MXA::Endian::FromSystemToBig::convert<int>(tData[4]); // Index of Vertex 3
+      fwrite(tData, sizeof(int), 5, vtkFile);
+    }
+    else
+    {
+      fprintf(vtkFile, "4 %d %d %d %d\n", tData[1], tData[2], tData[3], tData[4]);
+    }
+  }
+
+  // Write the CELL_TYPE Data
+  int tData2[1];
+  fprintf(vtkFile, "CELL_TYPES %d\n", tetrahedronCount);
+  for (int j = 0; j < nT; j++)
+  {
+  //  Triangle& t = triangles[j];
+    tData2[0] = 10;
+    if (m_WriteBinaryFile == true)
+    {
+      tData2[0] = 10; // Push on the total number of entries for this entry
+      MXA::Endian::FromSystemToBig::convert<int>(tData2[0]);
+      fwrite(tData2, sizeof(int), 1, vtkFile);
+    }
+    else
+    {
+      fprintf(vtkFile, "10\n");
+    }
+  }
+
+  // Write the CELL_DATA section
+  err = writeCellData(vtkFile);
+//  err = writePointData(vtkFile);
+
+  fprintf(vtkFile, "\n");
+
+  setErrorCondition(0);
+  notifyStatusMessage("Complete");
+=======
 //  int err = 0;
-//  std::stringstream ss;
+//  
 //  setErrorCondition(err);
 //  dataCheck(false, 0, 0, 0);
 //  if(getErrorCondition() < 0)
@@ -198,11 +345,11 @@ void SolidMeshToVtk::execute()
 //
 //  // Make sure any directory path is also available as the user may have just typed
 //  // in a path without actually creating the full path
-//  std::string parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
+//  QString parentPath = MXAFileInfo::parentPath(getOutputVtkFile());
 //  if(!MXADir::mkdir(parentPath, true))
 //  {
 //      ss.str("");
-//      ss << "Error creating parent path '" << parentPath << "'";
+//      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
 //      notifyErrorMessage(ss.str(), -1);
 //      setErrorCondition(-1);
 //      return;
@@ -211,11 +358,11 @@ void SolidMeshToVtk::execute()
 //
 //// Open the output VTK File for writing
 //  FILE* vtkFile = NULL;
-//  vtkFile = fopen(getOutputVtkFile().c_str(), "wb");
+//  vtkFile = fopen(getOutputVtkFile().toLatin1().data(), "wb");
 //  if (NULL == vtkFile)
 //  {
 //      ss.str("");
-//      ss << "Error creating file '" << getOutputVtkFile() << "'";
+//      QString ss = QObject::tr("Error creating file '%1'").arg(getOutputVtkFile());
 //      notifyErrorMessage(ss.str(), -18542);
 //      setErrorCondition(-18542);
 //      return;
@@ -246,9 +393,9 @@ void SolidMeshToVtk::execute()
 //    pos[2] = static_cast<float>(n.pos[2]);
 //    if (m_WriteBinaryFile == true)
 //    {
-//        MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
-//        MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
-//        MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
+//        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
 //        totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
 //        if (totalWritten != sizeof(float) * 3)
 //        {
@@ -280,10 +427,10 @@ void SolidMeshToVtk::execute()
 //    if (m_WriteBinaryFile == true)
 //    {
 //      tData[0] = 4; // Push on the total number of entries for this entry
-//      MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
-//      MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
-//      MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
-//      MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[1]); // Index of Vertex 0
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[2]); // Index of Vertex 1
+//      DREAM3D::Endian::FromSystemToBig::convert(tData[3]); // Index of Vertex 2
 //      MXA::Endian::FromSystemToBig::convert<int>(tData[4]); // Index of Vertex 3
 //      fwrite(tData, sizeof(int), 5, vtkFile);
 //    }
@@ -320,6 +467,7 @@ void SolidMeshToVtk::execute()
 //
 //  setErrorCondition(0);
 //  notifyStatusMessage("Complete");
+>>>>>>> develop
 }
 
 
@@ -393,7 +541,7 @@ int SolidMeshToVtk::writeCellData(FILE* vtkFile)
     if(m_WriteBinaryFile == true)
     {
       swapped = t.nSpin;
-      MXA::Endian::FromSystemToBig::convert<int>(swapped);
+      DREAM3D::Endian::FromSystemToBig::convert(swapped);
       fwrite(&swapped, sizeof(int), 1, vtkFile);
     }
     else

@@ -36,12 +36,12 @@
 #ifndef _EdgeDataContainerWriter_H_
 #define _EdgeDataContainerWriter_H_
 
-#include <sstream>
-#include <string>
+#include <QtCore/QTextStream>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -65,9 +65,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    typedef std::list<std::string> NameListType;
+    typedef QList<QString> NameListType;
 
-    void setXdmfOStream(std::ostream* xdmf);
+    void setXdmfOStream(QTextStream *xdmf);
 
 
     /**
@@ -75,14 +75,14 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Edge DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Edge DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
 
     int writeVertices(hid_t dcGid);
     int writeEdges(hid_t dcGid);
@@ -139,11 +139,11 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
-    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+    void writeXdmfAttributeData(const QString &groupName, IDataArray::Pointer array, const QString &centering);
+    QString writeXdmfAttributeDataHelper(int numComp, const QString &attrType, const QString &groupName, IDataArray::Pointer array, const QString &centering, int precision, const QString &xdmfTypeName);
 
   private:
-    std::ostream* m_XdmfPtr;
+    QTextStream* m_XdmfPtr;
 
     EdgeDataContainerWriter(const EdgeDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const EdgeDataContainerWriter&); // Operator '=' Not Implemented

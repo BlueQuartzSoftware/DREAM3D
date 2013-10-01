@@ -38,7 +38,7 @@
 #define CUBOCTOHEDRONOPS_H_
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 
 
@@ -48,13 +48,13 @@
   class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(CubeOctohedronOps)
-      MXA_TYPE_MACRO(CubeOctohedronOps)
-      MXA_STATIC_NEW_MACRO(CubeOctohedronOps)
+      DREAM3D_SHARED_POINTERS(CubeOctohedronOps)
+      DREAM3D_TYPE_MACRO(CubeOctohedronOps)
+      DREAM3D_STATIC_NEW_MACRO(CubeOctohedronOps)
 
       virtual ~CubeOctohedronOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+      virtual float radcur1(QMap<ArgName, float> args);
 
       virtual float inside(float axis1comp, float axis2comp, float axis3comp);
       virtual void init() { Gvalue = 0.0f; }

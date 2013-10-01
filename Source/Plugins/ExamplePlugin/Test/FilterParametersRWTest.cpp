@@ -32,7 +32,8 @@
 #include <stdlib.h>
 #include <stdio.h>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/FilterManager.h"
@@ -43,10 +44,10 @@
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 #include "DREAM3DLib/HDF5/H5FilterParametersReader.h"
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+#include "Test/ExamplePluginTestFileLocations.h"
 
 #include "ExamplePluginFilters/GenericExample.h"
 #include "ExamplePluginFilters/ThresholdExample.h"
@@ -182,16 +183,16 @@ FilterPipeline::Pointer m_PipelineFromFile;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  MXADir::remove(UnitTest::FilterParametersRWTest::OutputFile);
+  QFile::remove(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 #endif
 }
 
 // -----------------------------------------------------------------------------
 //  Function used to generate test sets
 // -----------------------------------------------------------------------------
-std::set<std::string> getSet(std::string name1, std::string name2, std::string name3, std::string name4)
+QSet<QString> getSet(QString name1, QString name2, QString name3, QString name4)
 {
-  std::set<std::string> set1;
+  QSet<QString> set1;
   set1.insert(name1);
   set1.insert(name2);
   set1.insert(name3);
@@ -202,8 +203,8 @@ std::set<std::string> getSet(std::string name1, std::string name2, std::string n
 // -----------------------------------------------------------------------------
 //  Function used to generate test comparison input vectors
 // -----------------------------------------------------------------------------
-std::vector<ComparisonInput_t> getComparisonInputsVector(std::string arrayName1, int compOperator1, double compValue1,
-                                                         std::string arrayName2, int compOperator2, double compValue2)
+QVector<ComparisonInput_t> getComparisonInputsVector(QString arrayName1, int compOperator1, double compValue1,
+                                                         QString arrayName2, int compOperator2, double compValue2)
 {
   ComparisonInput_t comparison1, comparison2;
   comparison1.arrayName = arrayName1;
@@ -214,7 +215,7 @@ std::vector<ComparisonInput_t> getComparisonInputsVector(std::string arrayName1,
   comparison2.compOperator = compOperator2;
   comparison2.compValue = compValue2;
 
-  std::vector<ComparisonInput_t> comparisonVector;
+  QVector<ComparisonInput_t> comparisonVector;
   comparisonVector.push_back(comparison1);
   comparisonVector.push_back(comparison2);
 
@@ -232,52 +233,52 @@ void ArraySelectionExampleTest()
 
   ArraySelectionExample::Pointer filt = ArraySelectionExample::New();
 
-  std::set<std::string> set1 = getSet(SelectedVolumeCellArraysString1, SelectedVolumeCellArraysString2,
+  QSet<QString> set1 = getSet(SelectedVolumeCellArraysString1, SelectedVolumeCellArraysString2,
                                       SelectedVolumeCellArraysString3, SelectedVolumeCellArraysString4);
   filt->setSelectedVolumeCellArrays(set1);
 
-  std::set<std::string> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
+  QSet<QString> set2 = getSet(SelectedVolumeFieldArraysString1, SelectedVolumeFieldArraysString2,
                                       SelectedVolumeFieldArraysString3, SelectedVolumeFieldArraysString4);
   filt->setSelectedVolumeFieldArrays(set2);
 
-  std::set<std::string> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
+  QSet<QString> set3 = getSet(SelectedVolumeEnsembleArraysString1, SelectedVolumeEnsembleArraysString2,
                                       SelectedVolumeEnsembleArraysString3, SelectedVolumeEnsembleArraysString4);
   filt->setSelectedVolumeEnsembleArrays(set3);
 
-  std::set<std::string> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
+  QSet<QString> set4 = getSet(SelectedSurfaceVertexArraysString1, SelectedSurfaceVertexArraysString2,
                                       SelectedSurfaceVertexArraysString3, SelectedSurfaceVertexArraysString4);
   filt->setSelectedSurfaceVertexArrays(set4);
 
-  std::set<std::string> set5 = getSet(SelectedSurfaceFaceArraysString1, SelectedSurfaceFaceArraysString2,
+  QSet<QString> set5 = getSet(SelectedSurfaceFaceArraysString1, SelectedSurfaceFaceArraysString2,
                                       SelectedSurfaceFaceArraysString3, SelectedSurfaceFaceArraysString4);
   filt->setSelectedSurfaceFaceArrays(set5);
 
-  std::set<std::string> set6 = getSet(SelectedSurfaceEdgeArraysString1, SelectedSurfaceEdgeArraysString2,
+  QSet<QString> set6 = getSet(SelectedSurfaceEdgeArraysString1, SelectedSurfaceEdgeArraysString2,
                                       SelectedSurfaceEdgeArraysString3, SelectedSurfaceEdgeArraysString4);
   filt->setSelectedSurfaceEdgeArrays(set6);
 
-  std::set<std::string> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
+  QSet<QString> set7 = getSet(SelectedSurfaceFieldArraysString1, SelectedSurfaceFieldArraysString2,
                                       SelectedSurfaceFieldArraysString3, SelectedSurfaceFieldArraysString4);
   filt->setSelectedSurfaceFieldArrays(set7);
 
-  std::set<std::string> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
+  QSet<QString> set8 = getSet(SelectedSurfaceEnsembleArraysString1, SelectedSurfaceEnsembleArraysString2,
                                       SelectedSurfaceEnsembleArraysString3, SelectedSurfaceEnsembleArraysString4);
   filt->setSelectedSurfaceEnsembleArrays(set8);
 
-  std::set<std::string> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
+  QSet<QString> set9 = getSet(SelectedVertexVertexArraysString1, SelectedVertexVertexArraysString2,
                                       SelectedVertexVertexArraysString3, SelectedVertexVertexArraysString4);
   filt->setSelectedVertexVertexArrays(set9);
 
-  std::set<std::string> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
+  QSet<QString> set10 = getSet(SelectedVertexFieldArraysString1, SelectedVertexFieldArraysString2,
                                        SelectedVertexFieldArraysString3, SelectedVertexFieldArraysString4);
   filt->setSelectedVertexFieldArrays(set10);
 
-  std::set<std::string> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
+  QSet<QString> set11 = getSet(SelectedVertexEnsembleArraysString1, SelectedVertexEnsembleArraysString2,
                                        SelectedVertexEnsembleArraysString3, SelectedVertexEnsembleArraysString4);
   filt->setSelectedVertexEnsembleArrays(set11);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -289,20 +290,20 @@ void ArraySelectionExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ArraySelectionExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
   // This next line should read all the filter parameters into the filter.
   filt->readFilterParameters( reader.get(), index);
 
-  std::set<std::string> set1Read = filt->getSelectedVolumeCellArrays();
-  std::set<std::string>::iterator iter = set1Read.begin();
+  QSet<QString> set1Read = filt->getSelectedVolumeCellArrays();
+  QSet<QString>::iterator iter = set1Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString1, ==, *iter)
       iter++;
@@ -312,7 +313,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeCellArraysString4, ==, *iter)
 
-      std::set<std::string> set2Read = filt->getSelectedVolumeFieldArrays();
+      QSet<QString> set2Read = filt->getSelectedVolumeFieldArrays();
   iter = set2Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeFieldArraysString1, ==, *iter)
@@ -323,7 +324,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set3Read = filt->getSelectedVolumeEnsembleArrays();
+      QSet<QString> set3Read = filt->getSelectedVolumeEnsembleArrays();
   iter = set3Read.begin();
 
   DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString1, ==, *iter)
@@ -334,7 +335,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVolumeEnsembleArraysString4, ==, *iter)
 
-      std::set<std::string> set4Read = filt->getSelectedSurfaceVertexArrays();
+      QSet<QString> set4Read = filt->getSelectedSurfaceVertexArrays();
   iter = set4Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString1, ==, *iter)
@@ -345,7 +346,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceVertexArraysString4, ==, *iter)
 
-      std::set<std::string> set5Read = filt->getSelectedSurfaceFaceArrays();
+      QSet<QString> set5Read = filt->getSelectedSurfaceFaceArrays();
   iter = set5Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString1, ==, *iter)
@@ -356,7 +357,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceFaceArraysString4, ==, *iter)
 
-      std::set<std::string> set6Read = filt->getSelectedSurfaceEdgeArrays();
+      QSet<QString> set6Read = filt->getSelectedSurfaceEdgeArrays();
   iter = set6Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString1, ==, *iter)
@@ -367,7 +368,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEdgeArraysString4, ==, *iter)
 
-      std::set<std::string> set7Read = filt->getSelectedSurfaceFieldArrays();
+      QSet<QString> set7Read = filt->getSelectedSurfaceFieldArrays();
   iter = set7Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString1, ==, *iter)
@@ -378,7 +379,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set8Read = filt->getSelectedSurfaceEnsembleArrays();
+      QSet<QString> set8Read = filt->getSelectedSurfaceEnsembleArrays();
   iter = set8Read.begin();
 
   DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString1, ==, *iter)
@@ -389,7 +390,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedSurfaceEnsembleArraysString4, ==, *iter)
 
-      std::set<std::string> set9Read = filt->getSelectedVertexVertexArrays();
+      QSet<QString> set9Read = filt->getSelectedVertexVertexArrays();
   iter = set9Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString1, ==, *iter)
@@ -400,7 +401,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVertexVertexArraysString4, ==, *iter)
 
-      std::set<std::string> set10Read = filt->getSelectedVertexFieldArrays();
+      QSet<QString> set10Read = filt->getSelectedVertexFieldArrays();
   iter = set10Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexFieldArraysString1, ==, *iter)
@@ -411,7 +412,7 @@ void ArraySelectionExampleTest()
       iter++;
   DREAM3D_REQUIRED(SelectedVertexFieldArraysString4, ==, *iter)
 
-      std::set<std::string> set11Read = filt->getSelectedVertexEnsembleArrays();
+      QSet<QString> set11Read = filt->getSelectedVertexEnsembleArrays();
   iter = set11Read.begin();
 
   DREAM3D_REQUIRED(SelectedVertexEnsembleArraysString1, ==, *iter)
@@ -459,7 +460,7 @@ void GenericExampleTest()
   filt->setSelectedVertexFieldArrayName(SolidMeshFaceArrayNameTestValue);
   filt->setSelectedVertexEnsembleArrayName(SolidMeshEdgeArrayNameTestValue);
 
-  std::vector<std::string> strVector;
+  QVector<QString> strVector;
   strVector.push_back(SurfaceMeshVertexArrayNameTestValue);
   strVector.push_back(SurfaceMeshFaceArrayNameTestValue);
   strVector.push_back(SurfaceMeshEdgeArrayNameTestValue);
@@ -493,13 +494,13 @@ void GenericExampleTest()
   axisAngles2.k = AxisAngles2KTestValue;
   axisAngles2.l = AxisAngles2LTestValue;
 
-  std::vector<AxisAngleInput_t> axisAngleInputsVector;
+  QVector<AxisAngleInput_t> axisAngleInputsVector;
   axisAngleInputsVector.push_back(axisAngles1);
   axisAngleInputsVector.push_back(axisAngles2);
   filt->setCrystalSymmetryRotations(axisAngleInputsVector);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -511,12 +512,12 @@ void GenericExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = GenericExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
@@ -557,7 +558,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(FloatWidgetZTestValue, ==, floatWidgetRead.z)
 
   // Test the AxisAngleInput
-  std::vector<AxisAngleInput_t> axisAngleVectorRead = filt->getCrystalSymmetryRotations();
+  QVector<AxisAngleInput_t> axisAngleVectorRead = filt->getCrystalSymmetryRotations();
   AxisAngleInput_t axisAngles1Read = axisAngleVectorRead[0];
   AxisAngleInput_t axisAngles2Read = axisAngleVectorRead[1];
 
@@ -571,7 +572,7 @@ void GenericExampleTest()
   DREAM3D_REQUIRED(AxisAngles2LTestValue, ==, axisAngles2Read.l)
 
   // Test the string vector
-  std::vector<std::string> strVectorRead = filt->getStrVector();
+  QVector<QString> strVectorRead = filt->getStrVector();
 
   DREAM3D_REQUIRED(SurfaceMeshVertexArrayNameTestValue, ==, strVectorRead[0])
   DREAM3D_REQUIRED(SurfaceMeshFaceArrayNameTestValue, ==, strVectorRead[1])
@@ -596,32 +597,32 @@ void ThresholdExampleTest()
 
   ThresholdExample::Pointer filt = ThresholdExample::New();
 
-  std::vector<ComparisonInput_t> cellComparisonInputsVector = getComparisonInputsVector(CellComparisonInputsArrayName1, CellComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> cellComparisonInputsVector = getComparisonInputsVector(CellComparisonInputsArrayName1, CellComparisonInputsCompOperator1,
                                                                                         CellComparisonInputsCompValue1, CellComparisonInputsArrayName2,
                                                                                         CellComparisonInputsCompOperator2, CellComparisonInputsCompValue2);
   filt->setCellComparisonInputs(cellComparisonInputsVector);
 
-  std::vector<ComparisonInput_t> fieldComparisonInputsVector = getComparisonInputsVector(FieldComparisonInputsArrayName1, FieldComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> fieldComparisonInputsVector = getComparisonInputsVector(FieldComparisonInputsArrayName1, FieldComparisonInputsCompOperator1,
                                                                                          FieldComparisonInputsCompValue1, FieldComparisonInputsArrayName2,
                                                                                          FieldComparisonInputsCompOperator2, FieldComparisonInputsCompValue2);
   filt->setFieldComparisonInputs(fieldComparisonInputsVector);
 
-  std::vector<ComparisonInput_t> ensembleComparisonInputsVector = getComparisonInputsVector(EnsembleComparisonInputsArrayName1, EnsembleComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> ensembleComparisonInputsVector = getComparisonInputsVector(EnsembleComparisonInputsArrayName1, EnsembleComparisonInputsCompOperator1,
                                                                                             EnsembleComparisonInputsCompValue1, EnsembleComparisonInputsArrayName2,
                                                                                             EnsembleComparisonInputsCompOperator2, EnsembleComparisonInputsCompValue2);
   filt->setEnsembleComparisonInputs(ensembleComparisonInputsVector);
 
-  std::vector<ComparisonInput_t> pointComparisonInputsVector = getComparisonInputsVector(PointComparisonInputsArrayName1, PointComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> pointComparisonInputsVector = getComparisonInputsVector(PointComparisonInputsArrayName1, PointComparisonInputsCompOperator1,
                                                                                          PointComparisonInputsCompValue1, PointComparisonInputsArrayName2,
                                                                                          PointComparisonInputsCompOperator2, PointComparisonInputsCompValue2);
   filt->setPointComparisonInputs(pointComparisonInputsVector);
 
-  std::vector<ComparisonInput_t> faceComparisonInputsVector = getComparisonInputsVector(FaceComparisonInputsArrayName1, FaceComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> faceComparisonInputsVector = getComparisonInputsVector(FaceComparisonInputsArrayName1, FaceComparisonInputsCompOperator1,
                                                                                         FaceComparisonInputsCompValue1, FaceComparisonInputsArrayName2,
                                                                                         FaceComparisonInputsCompOperator2, FaceComparisonInputsCompValue2);
   filt->setFaceComparisonInputs(faceComparisonInputsVector);
 
-  std::vector<ComparisonInput_t> edgeComparisonInputsVector = getComparisonInputsVector(EdgeComparisonInputsArrayName1, EdgeComparisonInputsCompOperator1,
+  QVector<ComparisonInput_t> edgeComparisonInputsVector = getComparisonInputsVector(EdgeComparisonInputsArrayName1, EdgeComparisonInputsCompOperator1,
                                                                                         EdgeComparisonInputsCompValue1, EdgeComparisonInputsArrayName2,
                                                                                         EdgeComparisonInputsCompOperator2, EdgeComparisonInputsCompValue2);
   filt->setEdgeComparisonInputs(edgeComparisonInputsVector);
@@ -629,7 +630,7 @@ void ThresholdExampleTest()
 
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -641,12 +642,12 @@ void ThresholdExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ThresholdExample::New();
-  hid_t fid = H5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
-  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fid, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
   int index = 0;
 
@@ -654,27 +655,27 @@ void ThresholdExampleTest()
   filt->readFilterParameters( reader.get(), index );
 
   // Test the CellComparisonInputs
-  std::vector<ComparisonInput_t> cellComparisonInputsVectorRead = filt->getCellComparisonInputs();
+  QVector<ComparisonInput_t> cellComparisonInputsVectorRead = filt->getCellComparisonInputs();
   ComparisonInput_t cellComparisonInputs1 = cellComparisonInputsVectorRead[0];
   ComparisonInput_t cellComparisonInputs2 = cellComparisonInputsVectorRead[1];
 
-  std::vector<ComparisonInput_t> fieldComparisonInputsVectorRead = filt->getFieldComparisonInputs();
+  QVector<ComparisonInput_t> fieldComparisonInputsVectorRead = filt->getFieldComparisonInputs();
   ComparisonInput_t fieldComparisonInputs1 = fieldComparisonInputsVectorRead[0];
   ComparisonInput_t fieldComparisonInputs2 = fieldComparisonInputsVectorRead[1];
 
-  std::vector<ComparisonInput_t> ensembleComparisonInputsVectorRead = filt->getEnsembleComparisonInputs();
+  QVector<ComparisonInput_t> ensembleComparisonInputsVectorRead = filt->getEnsembleComparisonInputs();
   ComparisonInput_t ensembleComparisonInputs1 = ensembleComparisonInputsVectorRead[0];
   ComparisonInput_t ensembleComparisonInputs2 = ensembleComparisonInputsVectorRead[1];
 
-  std::vector<ComparisonInput_t> pointComparisonInputsVectorRead = filt->getPointComparisonInputs();
+  QVector<ComparisonInput_t> pointComparisonInputsVectorRead = filt->getPointComparisonInputs();
   ComparisonInput_t pointComparisonInputs1 = pointComparisonInputsVectorRead[0];
   ComparisonInput_t pointComparisonInputs2 = pointComparisonInputsVectorRead[1];
 
-  std::vector<ComparisonInput_t> faceComparisonInputsVectorRead = filt->getFaceComparisonInputs();
+  QVector<ComparisonInput_t> faceComparisonInputsVectorRead = filt->getFaceComparisonInputs();
   ComparisonInput_t faceComparisonInputs1 = faceComparisonInputsVectorRead[0];
   ComparisonInput_t faceComparisonInputs2 = faceComparisonInputsVectorRead[1];
 
-  std::vector<ComparisonInput_t> edgeComparisonInputsVectorRead = filt->getEdgeComparisonInputs();
+  QVector<ComparisonInput_t> edgeComparisonInputsVectorRead = filt->getEdgeComparisonInputs();
   ComparisonInput_t edgeComparisonInputs1 = edgeComparisonInputsVectorRead[0];
   ComparisonInput_t edgeComparisonInputs2 = edgeComparisonInputsVectorRead[1];
 
@@ -736,20 +737,19 @@ int readPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<std::string> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
+  QList<QString> groupList;
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5O_TYPE_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  std::string classNameStr = "";
+  QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    std::stringstream ss;
-    ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    QString ss = QString::number(i, 10);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     FilterManager::Pointer fm = FilterManager::Instance();
@@ -798,7 +798,7 @@ void FilterManagerTest()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCases test_case)
+void ExistingPipelineTest(QString outputFile, QString inputFile, TestCases test_case)
 {
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -852,7 +852,7 @@ void ExistingPipelineTest(std::string outputFile, std::string inputFile, TestCas
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ExistingPipelineCheck(std::string fileName)
+void ExistingPipelineCheck(QString fileName)
 {
   // Create our Pipeline object
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
@@ -962,13 +962,13 @@ int main(int argc, char **argv)
       DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       //DREAM3D_REGISTER_TEST( FilterManagerTest() )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, "", Test1) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_1, "", Test1) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2, UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_2, ExamplePluginTest::FilterParametersRWTest::TestFile_1, Test2) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_3, ExamplePluginTest::FilterParametersRWTest::TestFile_2, Test3) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(ExamplePluginTest::FilterParametersRWTest::TestFile_3) )
 
 #if 1
     #if REMOVE_TEST_FILES

@@ -39,24 +39,110 @@
 
 #include "H5MicImporter.h"
 
-#include <sstream>
+#include <QtCore/QString>
+#include <QtCore/QObject>
+#include <QtCore/QtDebug>
 
-#include "H5Support/H5Lite.h"
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Lite.h"
+#include "H5Support/QH5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
-#include "EbsdLib/Utilities/MXADir.h"
-#include "EbsdLib/Utilities/StringUtils.h"
+
 
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
 #endif
 
-#define AIM_STRING std::string
+#define AIM_STRING QString
 
 #define CHECK_FOR_CANCELED(AClass)\
   if (m_Cancel == true){\
   break; }
+
+
+#define WRITE_Mic_HEADER_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader.get##prpty();\
+  err = QH5Lite::writeScalarDataset(gid, key, t);\
+  if (err < 0) {\
+  QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Header value '%1' to the HDF5 file with data set name '%2'\n")\
+  .arg(t).arg(key);\
+  progressMessage(ss, 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }
+
+#define WRITE_Mic_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader.get##prpty();\
+  err = QH5Lite::writeStringDataset(gid, key, t);\
+  if (err < 0) {\
+  QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Header value '%1' to the HDF5 file with data set name '%2'\n")\
+  .arg(t).arg(key);\
+  progressMessage(ss, 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }
+
+#define WRITE_Mic_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
+{\
+  m_msgType* dataPtr = reader.get##prpty##Pointer();\
+  if (NULL != dataPtr) {\
+  err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
+  if (err < 0) {\
+  QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Data array for '%1' to the HDF5 file with data set name '%2'\n")\
+  .arg(key).arg(key);\
+  progressMessage(ss, 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }\
+  }
+
+#if 0
+#define WRITE_Mic_HEADER_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader.get##prpty();\
+  err = QH5Lite::writeScalarDataset(gid, key, t);\
+  if (err < 0) {\
+  std::ostringstream ss;\
+  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }
+
+#define WRITE_Mic_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
+{\
+  m_msgType t = reader.get##prpty();\
+  err = QH5Lite::writeStringDataset(gid, key, t);\
+  if (err < 0) {\
+  std::ostringstream ss;\
+  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }
+
+#define WRITE_Mic_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
+{\
+  m_msgType* dataPtr = reader.get##prpty##Pointer();\
+  if (NULL != dataPtr) {\
+  err = QH5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
+  if (err < 0) {\
+  std::ostringstream ss;\
+  ss << "H5MicImporter Error: Could not write Mic Data array for '" << key\
+  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
+  progressMessage(ss.str(), 100);\
+  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
+  return -1; }\
+  }\
+  }
+#endif
 
 
 // -----------------------------------------------------------------------------
@@ -78,48 +164,6 @@ m_FileVersion(Ebsd::H5::FileVersion)
 H5MicImporter::~H5MicImporter()
 {
 }
-
-
-#define WRITE_Mic_HEADER_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader.get##prpty();\
-  err = H5Lite::writeScalarDataset(gid, key, t);\
-  if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
-  return -1; }\
-  }
-
-#define WRITE_Mic_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
-{\
-  m_msgType t = reader.get##prpty();\
-  err = H5Lite::writeStringDataset(gid, key, t);\
-  if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
-  return -1; }\
-  }
-
-#define WRITE_Mic_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
-{\
-  m_msgType* dataPtr = reader.get##prpty##Pointer();\
-  if (NULL != dataPtr) {\
-  err = H5Lite::writePointerDataset(gid, key, rank, dims, dataPtr);\
-  if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Data array for '" << key\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
-  err = H5Gclose(gid); err = H5Gclose(MicGroup);\
-  return -1; }\
-  }\
-  }
 
 // -----------------------------------------------------------------------------
 //
@@ -151,7 +195,7 @@ int H5MicImporter::numberOfSlicesImported()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFile)
+int H5MicImporter::importFile(hid_t fileId, int64_t z, const QString &MicFile)
 {
   herr_t err = -1;
   setCancel(false);
@@ -176,15 +220,15 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 
   // Write the fileversion attribute if it does not exist
   {
-    std::vector<hsize_t> dims;
+    QVector<hsize_t> dims;
     H5T_class_t type_class;
     size_t type_size = 0;
     hid_t attr_type = -1;
-    err = H5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
+    err = QH5Lite::getAttributeInfo(fileId, "/", Ebsd::H5::FileVersionStr, dims, type_class, type_size, attr_type);
     if (attr_type < 0) // The attr_type variable was never set which means the attribute was NOT there
     {
       // The file version does not exist so write it to the file
-      err = H5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
+      err = QH5Lite::writeScalarAttribute(fileId, "/", Ebsd::H5::FileVersionStr, m_FileVersion);
     }
     else
     {
@@ -193,31 +237,29 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   }
 
   // Start creating the HDF5 group structures for this file
-  hid_t MicGroup = H5Utilities::createGroup(fileId, StringUtils::numToString(z));
+  hid_t MicGroup = QH5Utilities::createGroup(fileId, QString::number(z));
   if (MicGroup < 0)
   {
-    std::ostringstream ss;
-    ss << "H5MicImporter Error: A Group for Z index " << z << " could not be created."
-       << " Please check other error messages from the HDF5 library for possible reasons.";
-    setPipelineMessage(ss.str());
+    QString ss = QObject::tr("H5MicImporter Error: A Group for Z index %1 could not be created."
+       " Please check other error messages from the HDF5 library for possible reasons.").arg(z);
+    setPipelineMessage(ss);
     setErrorCondition(-500);
     return -1;
   }
 
-  hid_t gid = H5Utilities::createGroup(MicGroup, Ebsd::H5::Header);
+  hid_t gid = QH5Utilities::createGroup(MicGroup, Ebsd::H5::Header);
   if (gid < 0)
   {
-    std::ostringstream ss;
-    ss << "H5MicImporter Error: The 'Header' Group for Z index " << z << " could not be created."
-       << " Please check other error messages from the HDF5 library for possible reasons.";
-    progressMessage(ss.str(), 100);
+    QString ss = QObject::tr("H5MicImporter Error: The 'Header' Group for Z index %1 could not be created."
+       " Please check other error messages from the HDF5 library for possible reasons.").arg(z);
+    progressMessage(ss, 100);
     err = H5Gclose(MicGroup);
-    setPipelineMessage(ss.str());
+    setPipelineMessage(ss);
     setErrorCondition(-600);
     return -1;
   }
 
-  hid_t phasesGid = H5Utilities::createGroup(gid, Ebsd::H5::Phases);
+  hid_t phasesGid = QH5Utilities::createGroup(gid, Ebsd::H5::Phases);
   err = writePhaseData(reader, phasesGid);
   // Close this group
   err = H5Gclose(phasesGid);
@@ -227,28 +269,28 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
   xRes = reader.getXStep();
   yRes = reader.getYStep();
 
-  WRITE_Mic_HEADER_STRING_DATA(reader, std::string, InfileBasename, Ebsd::Mic::InfileBasename)
+  WRITE_Mic_HEADER_STRING_DATA(reader, QString, InfileBasename, Ebsd::Mic::InfileBasename)
       WRITE_Mic_HEADER_DATA(reader, int, InfileSerialLength, Ebsd::Mic::InfileSerialLength)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OutfileBasename, Ebsd::Mic::OutfileBasename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OutfileBasename, Ebsd::Mic::OutfileBasename)
       WRITE_Mic_HEADER_DATA(reader, int, OutfileSerialLength, Ebsd::Mic::OutfileSerialLength)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OutStructureBasename, Ebsd::Mic::OutStructureBasename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OutStructureBasename, Ebsd::Mic::OutStructureBasename)
       WRITE_Mic_HEADER_DATA(reader, int, BCPeakDetectorOffset, Ebsd::Mic::BCPeakDetectorOffset)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, InFileType, Ebsd::Mic::InFileType)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OutfileExtension, Ebsd::Mic::OutfileExtension)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, InfileExtesnion, Ebsd::Mic::InfileExtesnion)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, InFileType, Ebsd::Mic::InFileType)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OutfileExtension, Ebsd::Mic::OutfileExtension)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, InfileExtesnion, Ebsd::Mic::InfileExtesnion)
       WRITE_Mic_HEADER_DATA(reader, float, BeamEnergyWidth, Ebsd::Mic::BeamEnergyWidth)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, BeamDirection, Ebsd::Mic::BeamDirection)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, BeamDirection, Ebsd::Mic::BeamDirection)
       WRITE_Mic_HEADER_DATA(reader, int, BeamDeflectionChiLaue, Ebsd::Mic::BeamDeflectionChiLaue)
       WRITE_Mic_HEADER_DATA(reader, float, BeamHeight, Ebsd::Mic::BeamHeight)
       WRITE_Mic_HEADER_DATA(reader, float, BeamEnergy, Ebsd::Mic::BeamEnergy)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, DetectorFilename, Ebsd::Mic::DetectorFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OptimizationConstrainFilename, Ebsd::Mic::OptimizationConstrainFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, DetectorFilename, Ebsd::Mic::DetectorFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OptimizationConstrainFilename, Ebsd::Mic::OptimizationConstrainFilename)
       WRITE_Mic_HEADER_DATA(reader, int, EtaLimit, Ebsd::Mic::EtaLimit)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, SampleFilename, Ebsd::Mic::SampleFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, StructureFilename, Ebsd::Mic::StructureFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, RotationRangeFilename, Ebsd::Mic::RotationRangeFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, FundamentalZoneFilename, Ebsd::Mic::FundamentalZoneFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, SampleSymmetry, Ebsd::Mic::SampleSymmetry)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, SampleFilename, Ebsd::Mic::SampleFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, StructureFilename, Ebsd::Mic::StructureFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, RotationRangeFilename, Ebsd::Mic::RotationRangeFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, FundamentalZoneFilename, Ebsd::Mic::FundamentalZoneFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, SampleSymmetry, Ebsd::Mic::SampleSymmetry)
       WRITE_Mic_HEADER_DATA(reader, float, MinAmplitudeFraction, Ebsd::Mic::MinAmplitudeFraction)
       WRITE_Mic_HEADER_DATA(reader, int, MaxQ, Ebsd::Mic::MaxQ)
       WRITE_Mic_HEADER_DATA(reader, float, MaxInitSideLength, Ebsd::Mic::MaxInitSideLength)
@@ -264,17 +306,17 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
       WRITE_Mic_HEADER_DATA(reader, int, SecondsBetweenSave, Ebsd::Mic::SecondsBetweenSave)
       WRITE_Mic_HEADER_DATA(reader, int, NumParameterOptimizationSteps, Ebsd::Mic::NumParameterOptimizationSteps)
       WRITE_Mic_HEADER_DATA(reader, int, NumElementToOptimizePerPE, Ebsd::Mic::NumElementToOptimizePerPE)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OptimizationFilename, Ebsd::Mic::OptimizationFilename)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, DetectionLimitFilename, Ebsd::Mic::DetectionLimitFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OptimizationFilename, Ebsd::Mic::OptimizationFilename)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, DetectionLimitFilename, Ebsd::Mic::DetectionLimitFilename)
       WRITE_Mic_HEADER_DATA(reader, float, ParameterMCInitTemperature, Ebsd::Mic::ParameterMCInitTemperature)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, OrientationSearchMethod, Ebsd::Mic::OrientationSearchMethod)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, OrientationSearchMethod, Ebsd::Mic::OrientationSearchMethod)
       WRITE_Mic_HEADER_DATA(reader, float, CoolingFraction, Ebsd::Mic::CoolingFraction)
       WRITE_Mic_HEADER_DATA(reader, float, ThermalizeFraction, Ebsd::Mic::ThermalizeFraction)
       WRITE_Mic_HEADER_DATA(reader, int, ParameterRefinements, Ebsd::Mic::ParameterRefinements)
       WRITE_Mic_HEADER_DATA(reader, int, NumDetectors, Ebsd::Mic::NumDetectors)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, DetectorSpacing, Ebsd::Mic::DetectorSpacing)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, DetectorSpacing, Ebsd::Mic::DetectorSpacing)
       WRITE_Mic_HEADER_DATA(reader, float, DetectorSpacingDeviation, Ebsd::Mic::DetectorSpacingDeviation)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, DetectorOrientationDeviationInEuler, Ebsd::Mic::DetectorOrientationDeviationInEuler)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, DetectorOrientationDeviationInEuler, Ebsd::Mic::DetectorOrientationDeviationInEuler)
       WRITE_Mic_HEADER_DATA(reader, float, DetectorOrientationDeviationInSO3, Ebsd::Mic::DetectorOrientationDeviationInSO3)
       WRITE_Mic_HEADER_DATA(reader, int, ParamMCMaxLocalRestarts, Ebsd::Mic::ParamMCMaxLocalRestarts)
       WRITE_Mic_HEADER_DATA(reader, int, ParamMCMaxGlobalRestarts, Ebsd::Mic::ParamMCMaxGlobalRestarts)
@@ -283,10 +325,10 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
       WRITE_Mic_HEADER_DATA(reader, int, SearchVolumeReductionFactor, Ebsd::Mic::SearchVolumeReductionFactor)
       WRITE_Mic_HEADER_DATA(reader, int, FileNumStart, Ebsd::Mic::FileNumStart)
       WRITE_Mic_HEADER_DATA(reader, int, FileNumEnd, Ebsd::Mic::FileNumEnd)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, SampleLocation, Ebsd::Mic::SampleLocation)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, SampleOrientation, Ebsd::Mic::SampleOrientation)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, SampleLocation, Ebsd::Mic::SampleLocation)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, SampleOrientation, Ebsd::Mic::SampleOrientation)
       WRITE_Mic_HEADER_DATA(reader, int, EnableStrain, Ebsd::Mic::EnableStrain)
-      WRITE_Mic_HEADER_STRING_DATA(reader, std::string, SampleCenter, Ebsd::Mic::SampleCenter)
+      WRITE_Mic_HEADER_STRING_DATA(reader, QString, SampleCenter, Ebsd::Mic::SampleCenter)
       WRITE_Mic_HEADER_DATA(reader, float, SampleRadius, Ebsd::Mic::SampleRadius)
       WRITE_Mic_HEADER_DATA(reader, float, MaxDeepeningHitRatio, Ebsd::Mic::MaxDeepeningHitRatio)
       WRITE_Mic_HEADER_DATA(reader, float, ConsistencyError, Ebsd::Mic::ConsistencyError)
@@ -298,22 +340,21 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
       WRITE_Mic_HEADER_DATA(reader, float, XRes, Ebsd::Mic::XRes)
       WRITE_Mic_HEADER_DATA(reader, float, YRes, Ebsd::Mic::YRes)
 
-      std::string micCompleteHeader = reader.getOriginalHeader();
-  err = H5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, micCompleteHeader);
+      QString micCompleteHeader = reader.getOriginalHeader();
+  err = QH5Lite::writeStringDataset(gid, Ebsd::H5::OriginalHeader, micCompleteHeader);
 
   // Close the "Header" group
   err = H5Gclose(gid);
 
   // Create the "Data" group
-  gid = H5Utilities::createGroup(MicGroup, Ebsd::H5::Data);
+  gid = QH5Utilities::createGroup(MicGroup, Ebsd::H5::Data);
   if (gid < 0)
   {
-    std::ostringstream ss;
-    ss << "H5MicImporter Error: The 'Data' Group for Z index " << z << " could not be created."
-       << " Please check other error messages from the HDF5 library for possible reasons."<< std::endl;
-    progressMessage(ss.str(), 100);
+    QString ss = QObject::tr("H5MicImporter Error: The 'Data' Group for Z index %1 could not be created."
+        " Please check other error messages from the HDF5 library for possible reasons.").arg(z);
+    progressMessage(ss, 100);
     err = H5Gclose(MicGroup);
-    setPipelineMessage(ss.str());
+    setPipelineMessage(ss);
     setErrorCondition(-700);
     return -1;
   }
@@ -341,12 +382,11 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 #define WRITE_PHASE_HEADER_DATA(reader, m_msgType, prpty, key)\
 {\
   m_msgType t = reader->get##prpty();\
-  err = H5Lite::writeScalarDataset(pid, key, t);\
+  err = QH5Lite::writeScalarDataset(pid, key, t);\
   if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
+  QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Header value '%1' to the HDF5 file with data set name '%2'").arg(t).arg(key);\
+  progressMessage(ss, 100);\
   err = H5Gclose(pid);\
   return -1; }\
   }
@@ -354,28 +394,26 @@ int H5MicImporter::importFile(hid_t fileId, int64_t z, const std::string &MicFil
 #define WRITE_PHASE_HEADER_STRING_DATA(reader, m_msgType, prpty, key)\
 {\
   m_msgType t = reader->get##prpty();\
-  err = H5Lite::writeStringDataset(pid, key, t);\
+  err = QH5Lite::writeStringDataset(pid, key, t);\
   if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Header value '" << t\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
+  QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Header value '%1' to the HDF5 file with data set name '%2'").arg(t).arg(key);\
+  progressMessage(ss, 100);\
   err = H5Gclose(pid);\
   return -1; }\
   }
 
 #define WRITE_PHASE_DATA_ARRAY(reader, m_msgType, gid, prpty, key)\
 {\
-  std::vector<m_msgType> tempVar = reader->get##prpty();\
+  QVector<m_msgType> tempVar = reader->get##prpty();\
   dims[0] = tempVar.size();\
   m_msgType* dataPtr = &(tempVar.front());\
   if (NULL != dataPtr) {\
-  err = H5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
+  err = QH5Lite::writePointerDataset(pid, key, rank, dims, dataPtr);\
   if (err < 0) {\
-  std::ostringstream ss;\
-  ss << "H5MicImporter Error: Could not write Mic Data array for '" << key\
-  <<  "' to the HDF5 file with data set name '" << key << "'" << std::endl;\
-  progressMessage(ss.str(), 100);\
+   QString ss = \
+  QObject::tr("H5MicImporter Error: Could not write Mic Data array for '%1' to the HDF5 file with data set name '%2'").arg(key).arg(key);\
+  progressMessage(ss, 100);\
   err = H5Gclose(pid); \
   return -1; }\
   }\
@@ -391,25 +429,24 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
   // int retErr = 0;
   int32_t rank = 1;
   hsize_t dims[1] = { 0 };
-  std::vector<MicPhase::Pointer> phases = reader.getPhaseVector();
-  for (std::vector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
+  QVector<MicPhase::Pointer> phases = reader.getPhaseVector();
+  for (QVector<MicPhase::Pointer>::iterator phase = phases.begin(); phase != phases.end(); ++phase )
   {
     MicPhase* p = (*phase).get();
-    hid_t pid = H5Utilities::createGroup(phasesGid, StringUtils::numToString(p->getPhaseIndex()));
+    hid_t pid = QH5Utilities::createGroup(phasesGid, QString::number(p->getPhaseIndex()));
     WRITE_PHASE_HEADER_DATA((*phase), int, PhaseIndex, Ebsd::Mic::Phase)
     WRITE_PHASE_DATA_ARRAY((*phase), float, pid, LatticeConstants, Ebsd::Mic::LatticeConstants)
-  //  WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, LatticeAngles, Ebsd::Mic::LatticeAngles)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, BasisAtoms, Ebsd::Mic::BasisAtoms)
-    WRITE_PHASE_HEADER_STRING_DATA((*phase), std::string, Symmetry, Ebsd::Mic::Symmetry)
+  //  WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, LatticeAngles, Ebsd::Mic::LatticeAngles)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, BasisAtoms, Ebsd::Mic::BasisAtoms)
+    WRITE_PHASE_HEADER_STRING_DATA((*phase), QString, Symmetry, Ebsd::Mic::Symmetry)
 
     if (p->getZandCoordinates().size() > 0) {
-      hid_t ZandCGid = H5Utilities::createGroup(pid, Ebsd::Mic::ZandCoordinates);
+      hid_t ZandCGid = QH5Utilities::createGroup(pid, Ebsd::Mic::ZandCoordinates);
       err = writeZandCoordinates(p, ZandCGid);
       if (err < 0) {
-        std::ostringstream ss;
-        ss << "H5MicImporter Error: Could not write Mic Z and Coordinates to the HDF5 file with data set name '"
-           << Ebsd::Mic::ZandCoordinates << "'" << std::endl;
-        progressMessage(ss.str(), 100);
+        QString ss =
+        QObject::tr("H5MicImporter Error: Could not write Mic Z and Coordinates to the HDF5 file with data set name '%1'").arg(Ebsd::Mic::ZandCoordinates);
+        progressMessage(ss, 100);
         err = H5Gclose(ZandCGid);
         return -1;
       }
@@ -426,12 +463,12 @@ int H5MicImporter::writePhaseData(MicReader &reader, hid_t phasesGid)
 int H5MicImporter::writeZandCoordinates(MicPhase* p, hid_t ZandCGid)
 {
   int err = 0;
-  std::vector<std::string> ZandCs = p->getZandCoordinates();
-  std::string ZandC;
+  QVector<QString> ZandCs = p->getZandCoordinates();
+  QString ZandC;
   int count = 0;
-  for (std::vector<std::string>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
+  for (QVector<QString>::iterator f = ZandCs.begin(); f != ZandCs.end(); ++f )
   {
-    err = H5Lite::writeStringDataset(ZandCGid, StringUtils::numToString(count), *f);
+    err = QH5Lite::writeStringDataset(ZandCGid, QString::number(count), *f);
     count++;
   }
   err = H5Gclose(ZandCGid);

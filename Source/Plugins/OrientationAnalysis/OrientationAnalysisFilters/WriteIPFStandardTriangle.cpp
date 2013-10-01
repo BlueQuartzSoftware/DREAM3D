@@ -38,12 +38,15 @@
 #include <stdio.h>
 
 #include <iostream>
-#include <string>
 
+#include <QtCore/QString>
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QDebug>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
@@ -51,25 +54,18 @@
 #include <QtGui/QColor>
 
 
-#include "QtSupport/PoleFigureImageUtilities.h"
-
-
-#include "MXA/MXA.h"
-#include "MXA/Common/MXAEndian.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
 #include "EbsdLib/HKL/CtfReader.h"
 
 
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
 
+#include "QtSupport/PoleFigureImageUtilities.h"
 
 
 // -----------------------------------------------------------------------------
@@ -97,7 +93,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -113,7 +109,7 @@ void WriteIPFStandardTriangle::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -177,19 +173,19 @@ int WriteIPFStandardTriangle::writeFilterParameters(AbstractFilterParametersWrit
 void WriteIPFStandardTriangle::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   //VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
-
-  if (m_OutputFile.empty() == true)
+  QFileInfo fi(getOutputFile());
+  QDir parentPath(fi.path());
+  if (m_OutputFile.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output File is Not set correctly", getErrorCondition());
   }
 
-  if (MXAFileInfo::isDirectory(m_OutputFile) == true)
+  if (fi.isDir() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "The path for the output file is a directory. Please specify an output file and not a directory.", getErrorCondition());
@@ -342,24 +338,22 @@ QImage WriteIPFStandardTriangle::overlayCubicHighText(QImage image)
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::writeImage( QImage &image)
 {
-  std::stringstream ss;
-  ss << "Writing Image " << m_OutputFile;
-  notifyStatusMessage(ss.str());
+  QString ss = QObject::tr("Writing Image %1").arg(m_OutputFile);
+  notifyStatusMessage(ss);
 
-  QFileInfo fi(QString::fromStdString(m_OutputFile));
+  QFileInfo fi(m_OutputFile);
   QDir parent(fi.absolutePath());
   if (parent.exists() == false)
   {
     parent.mkpath(fi.absolutePath());
   }
 
-  bool saved = image.save(QString::fromStdString(m_OutputFile));
+  bool saved = image.save(m_OutputFile);
   if(!saved)
   {
     setErrorCondition(-90011);
-    ss.str("");
-    ss << "The Triangle image file '" << m_OutputFile << "' was not saved.";
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    QString ss = QObject::tr("The Triangle image file '%1' was not saved.").arg(m_OutputFile);
+    notifyErrorMessage(ss, getErrorCondition());
   }
 }
 

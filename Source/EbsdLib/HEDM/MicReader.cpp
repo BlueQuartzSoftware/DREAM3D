@@ -33,20 +33,22 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
-
 #include "MicReader.h"
-#include <iostream>
-#include <fstream>
-#include <sstream>
+
+
 #include <algorithm>
 
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MicConstants.h"
+#include <QtCore/QObject>
+#include <QtCore/QFile>
+#include <QtCore/QtDebug>
+#include <QtCore/QTextStream>
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+
 #include "EbsdLib/EbsdMacros.h"
 #include "EbsdLib/EbsdMath.h"
+
+#include "MicConstants.h"
 
 #ifdef _MSC_VER
 
@@ -206,7 +208,7 @@ void MicReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* MicReader::getPointerByName(const std::string &fieldName)
+void* MicReader::getPointerByName(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return static_cast<void*>(m_Euler1);}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return static_cast<void*>(m_Euler2);}
@@ -223,7 +225,7 @@ void* MicReader::getPointerByName(const std::string &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType MicReader::getPointerType(const std::string &fieldName)
+Ebsd::NumType MicReader::getPointerType(const QString &fieldName)
 {
   if (fieldName.compare(Ebsd::Mic::Euler1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Mic::Euler2) == 0) { return Ebsd::Float;}
@@ -243,43 +245,91 @@ Ebsd::NumType MicReader::getPointerType(const std::string &fieldName)
 int MicReader::readHeaderOnly()
 {
   int err = 1;
-  char buf[kBufferSize];
+  QByteArray buf;
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
   m_CurrentPhase = MicPhase::New();
   m_PhaseVector.push_back(m_CurrentPhase);
 
-  std::string parentPath = MXAFileInfo::parentPath(getFileName());
-  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
-  if(parentPath.empty() == true) name = name + ".config";
-  else name = parentPath + MXAFileInfo::Separator + name + ".config";
-  std::ifstream inHeader(name.c_str());
-  if (!inHeader.is_open())
+  QFileInfo fi(getFileName());
+
+  QString parentPath(fi.path());
+  QString name = fi.baseName();
+  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) name = name + ".config";
+  else name = parentPath + QDir::separator() + name + ".config";
+
+  QFile inHeader(getFileName());
+  if (!inHeader.open(QIODevice::ReadOnly | QIODevice::Text))
   {
-    std::cout << "Config file could not be opened: " << name << std::endl;
+    QString msg = QString("HEDM .config file could not be opened: ") + name;
+    setErrorCode(-100);
+    setErrorMessage(msg);
     return -100;
   }
 
   // 'name' now contains the complete path to the file with the new extension
 
-  while (!inHeader.eof())
+  while (!inHeader.atEnd())
   {
-    ::memset(buf, 0, kBufferSize);
-    inHeader.getline(buf, kBufferSize);
-    parseHeaderLine(buf, kBufferSize);
-    int i = 0;
-    while (buf[i] != 0) { ++i; }
-    buf[i] = 10; //Add back in the \n character
-    origHeader.append(buf);
+    buf = inHeader.readLine();
+    origHeader.append(buf); // Append the line NOW to the header as we are going to modify it next
+
+    parseHeaderLine(buf);
   }
   // Update the Original Header variable
   setOriginalHeader(origHeader);
 
-
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+int MicReader::readDatFile()
+{
+
+  QFileInfo fi(getFileName());
+  QString parentPath(fi.path());
+  QString name = fi.baseName();
+  if(QDir::toNativeSeparators(parentPath).isEmpty() == true) name = name + ".dat";
+  else name = parentPath + QDir::separator() + name + ".dat";
+
+  QFile inHeader(name);
+  if (!inHeader.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QString msg = QString("HEDM .dat file could not be opened: ") + name;
+    setErrorCode(-111);
+    setErrorMessage(msg);
+    return -111;
+  }
+
+  QByteArray buf;
+  m_CurrentPhase = MicPhase::New();
+
+  //hard-coded dat file read
+  buf = inHeader.readLine();
+  m_CurrentPhase->parseLatticeConstants(buf);
+  buf = inHeader.readLine();
+  m_CurrentPhase->parseLatticeAngles(buf);
+  buf = inHeader.readLine();
+
+  m_CurrentPhase->parseBasisAtoms(buf);
+  int numAtoms;
+  sscanf(buf, "%d", &numAtoms);
+  for(int iter=0;iter<numAtoms;iter++)
+  {
+    buf = inHeader.readLine();
+
+    m_CurrentPhase->parseZandCoordinates(buf);
+  }
+  m_CurrentPhase->setPhaseIndex(1);
+  QString symm = getSampleSymmetry();
+  m_CurrentPhase->setSymmetry(symm);
+  m_PhaseVector.push_back(m_CurrentPhase);
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -287,167 +337,101 @@ int MicReader::readHeaderOnly()
 // -----------------------------------------------------------------------------
 int MicReader::readFile()
 {
-  std::stringstream ss;
   int err = 1;
-  char buf[kBufferSize];
-  std::ifstream in(getFileName().c_str());
-  if (!in.is_open())
-  {
-    ss << "Mic file could not be opened: " << getFileName();
-    setErrorMessage(ss.str());
-    setErrorCode(-100);
-    return -100;
-  }
 
-  std::string origHeader;
+  QString origHeader;
   setOriginalHeader(origHeader);
   m_PhaseVector.clear();
 
+  // Read the .config file
+  err = readHeaderOnly();
+  if (err < 0) { return err; }
 
-  std::string parentPath = MXAFileInfo::parentPath(getFileName());
-  std::string name = MXAFileInfo::fileNameWithOutExtension(getFileName());
-  if(parentPath.empty() == true) name = name + ".config";
-  else name = parentPath + MXAFileInfo::Separator + name + ".config";
-  std::ifstream inHeader(name.c_str());
-  if (!inHeader.is_open())
-  {
-    ss.str("");
-    ss << "matching config file could not be opened: " << name;
-    setErrorMessage(ss.str());
-    setErrorCode(-101);
-    return -101;
-  }
-
-  // 'name' now contains the complete path to the file with the new extension
-
-  while (!inHeader.eof())
-  {
-    ::memset(buf, 0, kBufferSize);
-    inHeader.getline(buf, kBufferSize);
-    parseHeaderLine(buf, kBufferSize);
-    int i = 0;
-    while (buf[i] != 0) { ++i; }
-    buf[i] = 10; //Add back in the \n character
-
-    origHeader.append(buf);
-  }
-  // Update the Original Header variable
-  setOriginalHeader(origHeader);
-
-  parentPath = MXAFileInfo::parentPath(getFileName());
-  name = MXAFileInfo::fileNameWithOutExtension(getFileName());
-  if(parentPath.empty() == true) name = name + ".dat";
-  else name = parentPath + MXAFileInfo::Separator + name + ".dat";
-  std::ifstream inHeader2(name.c_str());
-  if (!inHeader2.is_open())
-  {
-    ss.str("");
-    ss << "Matching .dat file could not be opened: " << name << std::endl;
-    setErrorMessage(ss.str());
-    setErrorCode(-102);
-    return -102;
-  }
-
-  // 'name' now contains the complete path to the file with the new extension
-
-  m_CurrentPhase = MicPhase::New();
-
-  //hard-coded dat file read
-  ::memset(buf, 0, kBufferSize);
-  inHeader2.getline(buf, kBufferSize);
-  m_CurrentPhase->parseLatticeConstants(buf,0,kBufferSize);
-  ::memset(buf, 0, kBufferSize);
-  inHeader2.getline(buf, kBufferSize);
-  m_CurrentPhase->parseLatticeAngles(buf,0,kBufferSize);
-  ::memset(buf, 0, kBufferSize);
-  inHeader2.getline(buf, kBufferSize);
-  m_CurrentPhase->parseBasisAtoms(buf,0,kBufferSize);
-  int numAtoms;
-  sscanf(buf, "%d", &numAtoms);
-  for(int iter=0;iter<numAtoms;iter++)
-  {
-    ::memset(buf, 0, kBufferSize);
-    inHeader2.getline(buf, kBufferSize);
-    m_CurrentPhase->parseZandCoordinates(buf,0,kBufferSize);
-  }
-  m_CurrentPhase->setPhaseIndex(1);
-  std::string symm = getSampleSymmetry();
-  m_CurrentPhase->setSymmetry(symm);
-  m_PhaseVector.push_back(m_CurrentPhase);
-
+  // Read the .dat file
+  err = readDatFile();
+  if (err < 0) { return err; }
 
   // We need to pass in the buffer because it has the first line of data
-  err = readData(in, buf, kBufferSize);
-  if (err < 0) {
-      ss.str("");
-    ss << "Error Reading the HEDM Data File." << std::endl;
-    setErrorMessage(ss.str());
-    setErrorCode(-103);
-    return -103;
-
-  }
-
+  err = readMicFile();
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
+int MicReader::readMicFile()
 {
+
+  QFile in(getFileName());
+  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
+  {
+    QString msg = QObject::tr("Mic file could not be opened: %1").arg(getFileName());
+    setErrorMessage(msg);
+    setErrorCode(-113);
+    return -113;
+  }
+
   // Delete any currently existing pointers
   deletePointers();
   // Initialize new pointers
   size_t totalDataRows = 0;
   size_t totalPossibleDataRows = 0;
-  size_t fieldsRead = 0;
+//  size_t fieldsRead = 0;
   float origEdgeLength;
   float xMax = 0, yMax = 0;
   float xMin = 1000000000, yMin = 1000000000;
   float xMinUM, yMinUM;
   size_t counter = 0;
+  bool ok = false;
+  QByteArray buf;
 
+    // Read the First line in the file which is the edge length
+  buf = in.readLine();
+  origEdgeLength = buf.toFloat(&ok);
+
+
+  // Initialize our pointers to 1 element
   initPointers(1);
   if (NULL == m_Euler1 || NULL == m_Euler2 || NULL == m_Euler3
       || NULL == m_Conf || NULL == m_Phase || NULL == m_Level  || m_X == NULL || m_Y == NULL)
   {
-    std::cout << "Internal pointers were NULL at " __FILE__ << "(" << __LINE__ << ")" << std::endl;
+    qDebug() << "Internal pointers were NULL at " __FILE__ << "(" << __LINE__ << ")";
     return -1;
   }
 
-  ::memset(buf, 0, bufSize); // Clear the buffer
-  in.getline(buf, kBufferSize);// Read the next line of data
-  fieldsRead = sscanf(buf, "%f", &origEdgeLength);
- // origEdgeLength = origEdgeLength;
-  ::memset(buf, 0, bufSize); // Clear the buffer
-  in.getline(buf, kBufferSize);// Read the next line of data
-  this->parseDataLine(buf, 0);
+  // Read the first line of actual data which we then derive the actual number of data rows
+  buf = in.readLine();
+  parseDataLine(buf, 0);
+
   int level = m_Level[0];
   float newEdgeLength = origEdgeLength/powf(2.0,float(level));
   totalPossibleDataRows = static_cast<size_t>(6.0f*powf(4.0f,float(level)));
+
+  // Reinitialize the pointers that hold the data to the proper size
   initPointers(totalPossibleDataRows);
-  this->parseDataLine(buf, 0);
-  ::memset(buf, 0, bufSize); // Clear the buffer
-  in.getline(buf, kBufferSize);// Read the next line of data
+  // Reparse the first data line to get those values into the new arrays
+  parseDataLine(buf, 0);
+
+  buf = in.readLine();
   ++counter;
   for(size_t i = 1; i < totalPossibleDataRows; ++i)
   {
-    this->parseDataLine(buf, i);
-    ::memset(buf, 0, bufSize); // Clear the buffer
-    in.getline(buf, kBufferSize);// Read the next line of data
+    parseDataLine(buf, i);
+    buf = in.readLine();
+
     ++counter;
-    if (in.eof() == true) break;
+    if (in.atEnd() == true) break;
   }
   totalDataRows = counter;
 
-  std::vector<float> EA1(totalDataRows,0.0);
-  std::vector<float> EA2(totalDataRows,0.0);
-  std::vector<float> EA3(totalDataRows,0.0);
-  std::vector<float> confidence(totalDataRows,0.0);
-  std::vector<int> phase(totalDataRows,0);
-  std::vector<int> up(totalDataRows,0);
-  std::vector<float> xVal(totalDataRows,0.0);
-  std::vector<float> yVal(totalDataRows,0.0);
+  QVector<float> EA1(totalDataRows,0.0);
+  QVector<float> EA2(totalDataRows,0.0);
+  QVector<float> EA3(totalDataRows,0.0);
+  QVector<float> confidence(totalDataRows,0.0);
+  QVector<int> phase(totalDataRows,0);
+  QVector<int> up(totalDataRows,0);
+  QVector<float> xVal(totalDataRows,0.0);
+  QVector<float> yVal(totalDataRows,0.0);
   float constant = static_cast<float>(1.0f/(2.0*sqrt(3.0)));
   float x, y;
   for(size_t i = 0; i < totalDataRows; ++i)
@@ -486,19 +470,17 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
   xMinUM = xMin*1000.0f;
   yMinUM = xMin*1000.0f;
 
-  char buf_2[16];
-  ::memset(buf_2, 0, 16);
-  snprintf(buf_2, 16, "%d", xDim);
-  m_HeaderMap[Ebsd::Mic::XDim]->parseValue(buf_2,0,16);
-  ::memset(buf_2, 0, 16);
-  snprintf(buf_2, 16, "%d", yDim);
-  m_HeaderMap[Ebsd::Mic::YDim]->parseValue(buf_2,0,16);
-  ::memset(buf_2, 0, 16);
-  snprintf(buf_2, 16, "%f", xRes);
-  m_HeaderMap[Ebsd::Mic::XRes]->parseValue(buf_2,0,16);
-  ::memset(buf_2, 0, 16);
-  snprintf(buf_2, 16, "%f", yRes);
-  m_HeaderMap[Ebsd::Mic::YRes]->parseValue(buf_2,0,16);
+  EbsdHeaderEntry::Pointer xDimHeader = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::XDim, xDim);
+  m_HeaderMap[Ebsd::Mic::XDim] = xDimHeader;
+
+  EbsdHeaderEntry::Pointer yDimHeader = MicHeaderEntry<int>::NewEbsdHeaderEntry(Ebsd::Mic::YDim, yDim);
+  m_HeaderMap[Ebsd::Mic::YDim] = yDimHeader;
+
+  EbsdHeaderEntry::Pointer xResHeader = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::XRes, xRes);
+  m_HeaderMap[Ebsd::Mic::XRes] = xResHeader;
+
+  EbsdHeaderEntry::Pointer yResHeader = MicHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Mic::YRes, yRes);
+  m_HeaderMap[Ebsd::Mic::YRes] = yResHeader;
 
 
   // Delete any currently existing pointers
@@ -557,48 +539,31 @@ int MicReader::readData(std::ifstream &in, char* buf, size_t bufSize)
 }
 
 // -----------------------------------------------------------------------------
-//  Read the Header part of the Mic file
+//  Read the Matching Config file to the .mic file
 // -----------------------------------------------------------------------------
-void MicReader::parseHeaderLine(char* buf, size_t length)
+void MicReader::parseHeaderLine(QByteArray &line)
 {
-  if (buf[0] == '#')
+  if (line[0] == '#')
   {
     return;
   }
-  // Start at the first character and walk until you find another non-space character
-  size_t i = 0;
-  while(buf[i] == ' ')
-  {
-    ++i;
-  }
-  size_t wordStart = i;
-  size_t wordEnd = i+1;
-  while(1)
-  {
-    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
-    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
-    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
-    else { break;}
-  }
-  wordEnd = i;
+  line = line.trimmed();
+  line = line.simplified();
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  // Split the lines based on 'space' delimiter
+  QList<QByteArray> tokens = line.split(' ');
+  QString key(tokens[0]);
 
-  if (word.size() == 0)
-  {
-    return;
-  }
-
-  EbsdHeaderEntry::Pointer p = m_HeaderMap[word];
+  EbsdHeaderEntry::Pointer p = m_HeaderMap[key];
   if (NULL == p.get())
   {
     /*
       std::cout << "---------------------------" << std::endl;
       std::cout << "Could not find header entry for key'" << word << "'" << std::endl;
-      std::string upper(word);
+      QString upper(word);
       std::transform(upper.begin(), upper.end(), upper.begin(), ::toupper);
       std::cout << "#define ANG_" << upper << "     \"" << word << "\"" << std::endl;
-      std::cout << "const std::string " << word << "(ANG_" << upper << ");" << std::endl;
+      std::cout << "const QString " << word << "(ANG_" << upper << ");" << std::endl;
 
       std::cout << "angInstanceProperty(AngHeaderEntry<float>. float, " << word << "Ebsd::Ang::" << word << std::endl;
       std::cout << "m_Headermap[Ebsd::Ang::" << word << "] = AngHeaderEntry<float>::NewEbsdHeaderEntry(Ebsd::Ang::" << word << ");" << std::endl;
@@ -611,7 +576,9 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
   }
   else
   {
-    p->parseValue(buf, wordEnd, length);
+    int size = tokens[0].count();
+    line = line.mid(size);
+    p->parseValue(line); // Send the second part of the QByteArray, just the value part
 #if 0
     std::cout << "<tr>\n    <td>" << p->getKey() << "</td>\n    <td>" << p->getHDFType() << "</td>\n";
     std::cout << "    <td colspan=\"2\"> Contains value for the header entry " << p->getKey() << "</td>\n</tr>" << std::endl;
@@ -623,7 +590,7 @@ void MicReader::parseHeaderLine(char* buf, size_t length)
 // -----------------------------------------------------------------------------
 //  Read the data part of the Mic file
 // -----------------------------------------------------------------------------
-void MicReader::parseDataLine(const std::string &line, size_t i)
+void MicReader::parseDataLine(QByteArray &line, size_t i)
 {
   /* When reading the data there should be at least 8 cols of data. There may even
    * be 10 columns of data. The column names should be the following:
@@ -645,8 +612,7 @@ void MicReader::parseDataLine(const std::string &line, size_t i)
   int up = 0, level = 0, good = 0, junk4, junk5, junk6, junk7, junk8, junk9;
   size_t offset = 0;
   size_t fieldsRead = 0;
-//  fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf);
-  fieldsRead = sscanf(line.c_str(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
+  fieldsRead = sscanf(line.data(), "%f %f %f %d %d %d %f %f %f %f %f %f %f %d %d %d %d %d %d", &x, &y,&z, &up, &level, &good, &p1, &p, &p2, &conf, &junk1, &junk2, &junk3, &junk4, &junk5, &junk6, &junk7, &junk8, &junk9);
 
   offset = i;
 

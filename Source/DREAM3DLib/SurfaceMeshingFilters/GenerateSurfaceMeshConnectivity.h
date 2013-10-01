@@ -38,11 +38,11 @@
 #ifndef _GenerateSurfaceMeshConnectivity_H_
 #define _GenerateSurfaceMeshConnectivity_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
@@ -71,14 +71,14 @@ class DREAM3DLib_EXPORT GenerateSurfaceMeshConnectivity : public SurfaceMeshFilt
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Surface Mesh Connectivity"; }
+    virtual const QString getHumanLabel() { return "Generate Surface Mesh Connectivity"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

@@ -38,7 +38,7 @@
 #define FILEREADER_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -62,7 +62,7 @@
        * and readFile methods unless special setups are needed.
        */
       virtual void execute();
-
+#if 0
       /**
       * @brief This function parses 3 floating point values from a comma delimited string
       * @param input
@@ -116,7 +116,8 @@
       * @param tokens
       * @param delimiters
       */
-     void tokenize(const std::string& str, std::vector<std::string>& tokens, const std::string& delimiters = " ");
+     void tokenize(const QString& str, QVector<QString>& tokens, const QString& delimiters = " ");
+#endif
 
     protected:
      FileReader();

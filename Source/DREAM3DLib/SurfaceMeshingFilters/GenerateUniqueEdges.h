@@ -37,11 +37,11 @@
 #ifndef _GenerateUniqueEdges_H_
 #define _GenerateUniqueEdges_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
@@ -75,13 +75,13 @@ class DREAM3DLib_EXPORT GenerateUniqueEdges : public SurfaceMeshFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Generate Unique Edges Filter"; }
+    virtual const QString getHumanLabel() { return "Generate Unique Edges Filter"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

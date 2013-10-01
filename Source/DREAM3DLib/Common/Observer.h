@@ -31,7 +31,8 @@
 #ifndef OBSERVER_H_
 #define OBSERVER_H_
 
-#include <vector>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -68,7 +69,7 @@ class DREAM3DLib_EXPORT Observer
       * @param msg The message to be printed
       */
      virtual void updatePipelineMessage(const char* msg);
-     virtual void updatePipelineMessage(const std::string &msg);
+     virtual void updatePipelineMessage(const QString &msg);
 
      /**
       * @brief These functions print both a human readable message and a progress integer to the console.
@@ -77,7 +78,7 @@ class DREAM3DLib_EXPORT Observer
       * @param progress The progress of the GrainGenerator normalized to a value between 0 and 100
       */
      virtual void updatePipelineProgressAndMessage(const char* msg, int progress);
-     virtual void updatePipelineProgressAndMessage(const std::string &msg, int progress);
+     virtual void updatePipelineProgressAndMessage(const QString &msg, int progress);
 
      /* --------------------------------------- */
 
@@ -88,7 +89,7 @@ class DREAM3DLib_EXPORT Observer
       * @param msgs The messages to be printed
       */
      virtual void sendPipelineMessage(PipelineMessage &msg);
-     virtual void sendPipelineMessages(std::vector<PipelineMessage> msgs);
+     virtual void sendPipelineMessages(QVector<PipelineMessage> msgs);
 
 
   private:

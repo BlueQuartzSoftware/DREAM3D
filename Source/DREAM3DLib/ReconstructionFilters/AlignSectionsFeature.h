@@ -37,15 +37,15 @@
 #ifndef AlignSectionsFeature_H_
 #define AlignSectionsFeature_H_
 
-#include <vector>
-#include <string>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
@@ -70,13 +70,13 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     //------ Required Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GoodVoxelsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-  virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const std::string getHumanLabel() { return "Align Sections (Feature)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const QString getHumanLabel() { return "Align Sections (Feature)"; }
 
     virtual void setupFilterParameters();
-//
-     /**
+    //
+    /**
     * @brief This method will write the options to a file
     * @param writer The writer that is used to write the options to a file
     */
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeature : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   protected:
     AlignSectionsFeature();

@@ -38,14 +38,14 @@
 #define FINDSIZES_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
  * @class FindSizes FindSizes.h DREAM3DLib/GenericFilters/FindSizes.h
@@ -70,9 +70,9 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
 	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const std::string getHumanLabel() { return "Find Field Sizes"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const QString getHumanLabel() { return "Find Field Sizes"; }
 
     /**
      * @brief Reimplemented from @see AbstractFilter class

@@ -36,7 +36,7 @@
 
 #error THIS FILE SHOULD BE MOVED
 #include <iostream>
-#include <string>
+#include <QString>
 
 #include <QtCore/QDebug>
 #include <QtCore/QString>
@@ -123,7 +123,7 @@ QString generateVtkPath(QString outputPath, QString imagePrefix, QString label)
 // -----------------------------------------------------------------------------
 void writeImage(QString outputPath, DoubleArrayType *intensity, int dimension, QString label, int numColors)
 {
- // std::stringstream ss;
+ // QStringstream ss;
 
 
   QImage image = PoleFigureImageUtilities::CreateQImage(intensity, dimension, numColors, label, true);
@@ -145,7 +145,7 @@ void writeImage(QString outputPath, DoubleArrayType *intensity, int dimension, Q
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
+void writeVtkFile(const QString filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
   std::cout << "writeVtkFile: " << filename << std::endl;
   //notifyStatusMessage("Writing VTK File");
@@ -171,7 +171,7 @@ void generateFromAngFile(QString inputFile, QString outputPath)
   std::cout << "generateFromAngFile....." << std::endl;
   int numOrientations = 0;
   FloatArrayType::Pointer eulers = FloatArrayType::NullPointer();
-  std::vector<AngPhase::Pointer> phases;
+  QVector<AngPhase::Pointer> phases;
   // Scope This section so we dump the reader data soon after we copy it.
   {
     std::cout << "Reading ANG file....." << std::endl;
@@ -182,7 +182,7 @@ void generateFromAngFile(QString inputFile, QString outputPath)
     if (err < 0)
     {
       qDebug() << "Could not Read Ang file. " << err;
-      qDebug() << QString::fromStdString(reader.getErrorMessage());
+      qDebug() << reader.getErrorMessage();
       return;
     }
     numOrientations = reader.getNumRows() * reader.getNumEvenCols();
@@ -325,10 +325,10 @@ int main(int argc, char *argv[])
     // Handle program options passed on command line.
     TCLAP::CmdLine cmd("PoleFigureMaker", ' ', "0.1.0");
 
-    TCLAP::ValueArg<std::string> inputFileArg( "", "file", "The input data file", true, "", "Input File");
+    TCLAP::ValueArg<QString> inputFileArg( "", "file", "The input data file", true, "", "Input File");
     cmd.add(inputFileArg);
 
-    TCLAP::ValueArg<std::string> outputPathArg( "", "outpath", "The output path", true, "", "Output Path");
+    TCLAP::ValueArg<QString> outputPathArg( "", "outpath", "The output path", true, "", "Output Path");
     cmd.add(outputPathArg);
 
     TCLAP::ValueArg<int> angleType("", "angleType", "The type of Angles: Euler=0, Quaternion=1. Rodrigues=2", false, 0, "Angle Type");
@@ -343,8 +343,8 @@ int main(int argc, char *argv[])
       return EXIT_FAILURE;
     }
 
-    inputFile = QString::fromStdString(inputFileArg.getValue());
-    outputPath = QString::fromStdString(outputPathArg.getValue());
+    inputFile = inputFileArg.getValue();
+    outputPath = outputPathArg.getValue();
 
     QDir dir(outputPath);
     // make sure the directory is available

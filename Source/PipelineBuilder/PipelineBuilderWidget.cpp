@@ -280,7 +280,7 @@ QMenu* PipelineBuilderWidget::getPipelineMenu()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
 {
-  hid_t fid = H5Utilities::openFile( filePath.toStdString() );
+  hid_t fid = QH5Utilities::openFile( filePath );
   if (fid <= 0)
   {
     //Present a error dialog
@@ -303,10 +303,10 @@ void PipelineBuilderWidget::extractPipelineFromFile(const QString &filePath)
   for (; iter != filters.end(); iter++)
   {
 
-    std::string filterName = (*iter)->getNameOfClass();
-  //  qDebug() << QTime::currentTime() << " Creating Filter: " << QString::fromStdString(filterName);
-    QFilterWidget* w = m_PipelineViewWidget->addFilter( QString::fromStdString(filterName) );
-   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << QString::fromStdString(filterName);
+    QString filterName = (*iter)->getNameOfClass();
+  //  qDebug() << QTime::currentTime() << " Creating Filter: " << (filterName);
+    QFilterWidget* w = m_PipelineViewWidget->addFilter( (filterName) );
+   // qDebug() << QTime::currentTime() << " Loading GUI Values: " << (filterName);
     if(w) {
       QTime qtime = QTime::currentTime();
       m_PipelineViewWidget->preflightPipeline();
@@ -361,20 +361,18 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toAscii().data(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
-  std::list<std::string> groupList;
-  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
+  QList<QString> groupList;
+  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  std::string classNameStr = "";
+  QString classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    std::stringstream ss;
-    ss << i;
-    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
+    err = QH5Lite::readStringAttribute(pipelineGroupId, QString::number(i, 10), "ClassName", classNameStr);
 
     // Instantiate a new filter using the FilterFactory based on the value of the className attribute
     IFilterFactory::Pointer ff = m_FilterManager->getFactoryForFilter(classNameStr);
@@ -393,7 +391,7 @@ int PipelineBuilderWidget::readPipelineFromFile(hid_t fileId)
     else
     {
       QMessageBox::critical(this, "Error Adding Filter to Pipeline",
-                            QString("The filter was not known to DREAM3D:") + QString::fromStdString(classNameStr),
+                            QString("The filter was not known to DREAM3D:") + (classNameStr),
                             QMessageBox::Ok, QMessageBox::Ok);
     }
 
@@ -570,7 +568,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
       // At this point we have the first level of directories and we want to do 2 things:
       // 1.Create an entry in the tree widget with this name
       // 2.drop into the directory and look for all the .txt files and add entries for those items.
-      //std::cout << fi.absoluteFilePath().toStdString() << std::endl;
+      //qDebug() << fi.absoluteFilePath() << "\n";
       // Add a tree widget item for this Prebuilt Group
       nextDirItem = new QTreeWidgetItem(currentDirItem);
       nextDirItem->setText(0, fi.baseName());
@@ -588,7 +586,7 @@ void PipelineBuilderWidget::addFiltersRecursively(QDir currentDir, QTreeWidgetIt
     pbPref.beginGroup(Detail::PipelineBuilderGroup);
     QString pbName = pbPref.value("Name").toString();
     pbPref.endGroup();
-    //std::cout << pbinfo.absoluteFilePath().toStdString() << std::endl;
+    //qDebug() << pbinfo.absoluteFilePath() << "\n";
     // Add tree widget for this Prebuilt Pipeline
     QTreeWidgetItem* prebuiltItem = new QTreeWidgetItem(currentDirItem, PipelineTreeWidget::Prebuilt_Item_Type);
     prebuiltItem->setText(0, pbName);
@@ -688,7 +686,7 @@ void PipelineBuilderWidget::setupGui()
   // Get the QFilterWidget Manager Instance
   FilterWidgetManager::Pointer fm = FilterWidgetManager::Instance();
 
-  std::set<std::string> groupNames = fm->getGroupNames();
+  QSet<QString> groupNames = fm->getGroupNames();
 
   QTreeWidgetItem* library = new QTreeWidgetItem(filterLibraryTree);
   library->setText(0, Detail::Library);
@@ -707,12 +705,12 @@ void PipelineBuilderWidget::setupGui()
 
   m_favorites->setExpanded(true);
 
-  //  std::cout << "Groups Found: " << std::endl;
-  for(std::set<std::string>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
+  //  qDebug() << "Groups Found: " << "\n";
+  for(QSet<QString>::iterator iter = groupNames.begin(); iter != groupNames.end(); ++iter)
   {
-    //   std::cout << *iter << std::endl;
+    //   qDebug() << *iter << "\n";
     QString iconName(":/");
-    iconName.append( QString::fromStdString(*iter));
+    iconName.append( (*iter));
     iconName.append("_Icon.png");
     // Validate the icon is in the resource system
     QFileInfo iconInfo(iconName);
@@ -723,13 +721,13 @@ void PipelineBuilderWidget::setupGui()
 
     QIcon icon(iconName);
     QTreeWidgetItem* filterGroup = new QTreeWidgetItem(library);
-    filterGroup->setText(0, QString::fromStdString(*iter));
+    filterGroup->setText(0, (*iter));
     filterGroup->setIcon(0, icon);
-    std::set<std::string> subGroupNames = fm->getSubGroupNames(*iter);
-    for(std::set<std::string>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
+    QSet<QString> subGroupNames = fm->getSubGroupNames(*iter);
+    for(QSet<QString>::iterator iter2 = subGroupNames.begin(); iter2 != subGroupNames.end(); ++iter2)
     {
       QTreeWidgetItem* filterSubGroup = new QTreeWidgetItem(filterGroup);
-      filterSubGroup->setText(0, QString::fromStdString(*iter2));
+      filterSubGroup->setText(0, (*iter2));
     }
   }
   library->setExpanded(true);
@@ -915,7 +913,7 @@ bool PipelineBuilderWidget::hasDuplicateFavorites(QList<QTreeWidgetItem*> favori
       favoritePrefs.endGroup();
 
       // Display error message
-      QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+      QMessageBox::critical(this, tr("Rename Favorite"), (displayText),
                             QMessageBox::Ok, QMessageBox::Ok);
 
       return true;
@@ -946,7 +944,7 @@ bool PipelineBuilderWidget::hasIllegalFavoriteName(QString favoritePath, QString
     favoritePrefs.endGroup();
 
     // Display error message
-    QMessageBox::critical(this, tr("Rename Favorite"), tr(displayText.toStdString().c_str()),
+    QMessageBox::critical(this, tr("Rename Favorite"), (displayText),
                           QMessageBox::Ok, QMessageBox::Ok);
 
     return true;
@@ -971,7 +969,7 @@ QString PipelineBuilderWidget::writeNewFavoriteFilePath(QString newFavoriteTitle
   bool success = f.rename(newPath);
   if (false == success)
   {
-    std::cout << "Failed";
+    qDebug() << "Failed";
   }
 
   filterLibraryTree->blockSignals(true);
@@ -998,12 +996,12 @@ void PipelineBuilderWidget::on_filterLibraryTree_currentItemChanged(QTreeWidgetI
   }
   else if (NULL != item->parent() && item->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->text(0).toStdString());
+    factories = fm->getFactories(item->text(0));
     updateFilterGroupList(factories);
   }
   else if (NULL != item->parent() && NULL != item->parent()->parent() && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
+    factories = fm->getFactories(item->parent()->text(0), item->text(0));
     updateFilterGroupList(factories);
   }
   else
@@ -1058,13 +1056,13 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
 
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    IFilterWidgetFactory::Pointer wigFactory = factory.value();
     if (NULL == wigFactory.get() ) {
       continue;
     }
-    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
+    QString humanName = (wigFactory->getFilterHumanLabel());
     QString iconName(":/");
-    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
+    iconName.append( (wigFactory->getFilterGroup()));
     iconName.append("_Icon.png");
 
     // Validate the icon is in the resource system
@@ -1080,7 +1078,7 @@ void PipelineBuilderWidget::updateFilterGroupList(FilterWidgetManager::Collectio
     // Set an "internal" QString that is the name of the filter. We need this value
     // when the item is clicked in order to retreive the Filter Widget from the
     // filter widget manager.
-    QString filterName = QString::fromStdString((*factory).first);
+    QString filterName = (factory.key());
     filterItem->setData( Qt::UserRole, filterName);
   }
 }
@@ -1109,11 +1107,11 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   }
   else if (item->parent() != NULL && item->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->text(0).toStdString());
+    factories = fm->getFactories(item->text(0));
   }
   else if (item->parent()->parent() != NULL && item->parent()->parent()->text(0).compare(Detail::Library) == 0)
   {
-    factories = fm->getFactories(item->parent()->text(0).toStdString(), item->text(0).toStdString());
+    factories = fm->getFactories(item->parent()->text(0), item->text(0));
   }
 
   // Nothing was in the search Field so just reset to what was listed before
@@ -1127,17 +1125,17 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
   filterList->clear();
   for (FilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory)
   {
-    IFilterWidgetFactory::Pointer wigFactory = (*factory).second;
+    IFilterWidgetFactory::Pointer wigFactory = factory.value();
     if (NULL == wigFactory.get() ) {
       continue;
     }
-    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
+    QString humanName = (wigFactory->getFilterHumanLabel());
     bool match = false;
     if (humanName.contains(text, Qt::CaseInsensitive) == true)
     {
       match = true;
     }
-    QString filterName = QString::fromStdString((*factory).first);
+    QString filterName = (factory.key());
     if (filterName.contains(text, Qt::CaseInsensitive) == true)
     {
       match = true;
@@ -1146,7 +1144,7 @@ void PipelineBuilderWidget::on_filterSearch_textChanged (const QString& text)
     if (false == match) { continue; }
 
     QString iconName(":/");
-    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
+    iconName.append( (wigFactory->getFilterGroup()));
     iconName.append("_Icon.png");
 
     // Validate the icon is in the resource system
@@ -1182,7 +1180,7 @@ void PipelineBuilderWidget::on_filterList_itemDoubleClicked( QListWidgetItem* it
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::on_errorTableWidget_itemClicked( QTableWidgetItem* item )
 {
-  std::cout << item->text().toStdString().c_str() << std::endl;
+  qDebug() << item->text() << "\n";
 }
 
 // -----------------------------------------------------------------------------
@@ -1194,7 +1192,7 @@ void PipelineBuilderWidget::actionFilterListHelp_triggered()
   if (NULL == listItem) { return; }
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
 
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString().toStdString());
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(listItem->data(Qt::UserRole).toString());
   if (NULL == wf) { return;}
 
   DREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl( listItem->data(Qt::UserRole).toString().toLower(), this );
@@ -1262,7 +1260,7 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
   {
     if(m_FilterPipeline!= NULL)
     {
-      //std::cout << "canceling from GUI...." << std::endl;
+      //qDebug() << "canceling from GUI...." << "\n";
       emit cancelPipeline();
     }
     return;
@@ -1340,10 +1338,10 @@ void PipelineBuilderWidget::on_m_GoBtn_clicked()
 // -----------------------------------------------------------------------------
 void PipelineBuilderWidget::pipelineComplete()
 {
-  // std::cout << "PipelineBuilderWidget::PipelineBuilder_Finished()" << std::endl;
+  // qDebug() << "PipelineBuilderWidget::PipelineBuilder_Finished()" << "\n";
   if (m_hasErrors) {
-    displayDialogBox(QString::fromStdString("Pipeline Errors"),
-                     QString::fromStdString("Errors occurred during processing.\nPlease check the error table for more information."),
+    displayDialogBox(("Pipeline Errors"),
+                     ("Errors occurred during processing.\nPlease check the error table for more information."),
                      QMessageBox::Critical);
   }
   m_GoBtn->setText("Go");
@@ -1383,14 +1381,14 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     {
       QBrush msgBrush(msgColor);
 
-      QString msgDesc = QString::fromStdString(msg.getMessageText());
+      QString msgDesc = (msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
       int rc = errorTableWidget->rowCount();
 
       errorTableWidget->insertRow(rc);
 
-      QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+      QString msgPrefix = (msg.getMessagePrefix());
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(msgPrefix);
       filterNameWidgetItem->setTextAlignment(Qt::AlignCenter);
       QTableWidgetItem* descriptionWidgetItem = new QTableWidgetItem(msgDesc);
@@ -1423,8 +1421,8 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     {
       QBrush msgBrush(msgColor);
 
-      QString msgName = QString::fromStdString(msg.getMessagePrefix());
-      QString msgDesc = QString::fromStdString(msg.getMessageText());
+      QString msgName = (msg.getMessagePrefix());
+      QString msgDesc = (msg.getMessageText());
       int msgCode = msg.getMessageCode();
 
       QTableWidget* msgTableWidget = m_PipelineViewWidget->getTableWidget();
@@ -1462,8 +1460,8 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
     case PipelineMessage::StatusMessage:
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getMessagePrefix());
-        s = s.append(" ").append(msg.getMessageText().c_str());
+        QString s = (msg.getMessagePrefix());
+        s = s.append(" ").append(msg.getMessageText());
         this->statusBar()->showMessage(s);
       }
       break;
@@ -1471,8 +1469,8 @@ void PipelineBuilderWidget::addMessage(PipelineMessage msg)
       this->m_progressBar->setValue(msg.getProgressValue());
       if(NULL != this->statusBar())
       {
-        QString s = QString::fromStdString(msg.getMessagePrefix());
-        s = s.append(" ").append(msg.getMessageText().c_str());
+        QString s = (msg.getMessagePrefix());
+        s = s.append(" ").append(msg.getMessageText());
         this->statusBar()->showMessage(s);
       }
       break;
@@ -1736,14 +1734,14 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
   for(int i = 0; i < filterNames.size(); ++i)
   {
     QString filterName = filterNames[i];
-    IFilterWidgetFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName.toStdString());
+    IFilterWidgetFactory::Pointer wigFactory = fm->getFactoryForFilter(filterName);
     if (NULL == wigFactory.get() )
     {
       continue;
     }
-    QString humanName = QString::fromStdString(wigFactory->getFilterHumanLabel());
+    QString humanName = (wigFactory->getFilterHumanLabel());
     QString iconName(":/");
-    iconName.append( QString::fromStdString(wigFactory->getFilterGroup()));
+    iconName.append( (wigFactory->getFilterGroup()));
     iconName.append("_Icon.png");
 
     // Validate the icon is in the resource system
@@ -1768,9 +1766,9 @@ void PipelineBuilderWidget::populateFilterList(QStringList filterNames)
 // -----------------------------------------------------------------------------
 QLabel* PipelineBuilderWidget::createHyperlinkLabel(PipelineMessage msg)
 {
-  QString filterClassName = QString::fromStdString(msg.getFilterClassName() );
-  QString filterHumanLabel = QString::fromStdString(msg.getFilterHumanLabel() );
-  QString msgPrefix = QString::fromStdString(msg.getMessagePrefix());
+  QString filterClassName = (msg.getFilterClassName() );
+  QString filterHumanLabel = (msg.getFilterHumanLabel() );
+  QString msgPrefix = (msg.getMessagePrefix());
 
   if ( filterClassName.isEmpty() || filterHumanLabel.isEmpty() )
   {

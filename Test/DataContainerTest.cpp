@@ -36,19 +36,20 @@
 
 
 #include <stdlib.h>
-#include <iostream>
-#include <string>
-#include <map>
-#include <vector>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QList>
+#include <QtCore/QString>
+#include <QtCore/QMap>
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -63,8 +64,8 @@
 
 
 #define MAKE_ARRAY(m_msgType, name)\
-IDataArray::Pointer m_msgType##Ptr = DataArray<m_msgType>::CreateArray(5, name);\
-dataContainer->addCellData(name, m_msgType##Ptr);
+  IDataArray::Pointer m_msgType##Ptr = DataArray<m_msgType>::CreateArray(5, name);\
+  dataContainer->addCellData(name, m_msgType##Ptr);
 
 
 #define TEST_DATA_CONTAINER(Type, DCType)\
@@ -84,7 +85,9 @@ dataContainer->addCellData(name, m_msgType##Ptr);
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-//  MXADir::remove(UnitTest::DataContainerIOTest::TestFile);
+#if REMOVE_TEST_FILES
+  QFile::remove(UnitTest::DataContainerIOTest::TestFile);
+#endif
 }
 
 
@@ -101,7 +104,8 @@ void TestDataContainerWriter()
   m->setDimensions(nx, ny, nz);
   int size = nx * ny * nz;
 
-  MXADir::mkdir(UnitTest::DataContainerIOTest::TestDir, true);
+  QDir dir(UnitTest::DataContainerIOTest::TestDir);
+  dir.mkpath(".");
 
   Int32ArrayType::Pointer grainIds = Int32ArrayType::CreateArray(size, DREAM3D::CellData::GrainIds);
   for (int i = 0; i < size; ++i)
@@ -189,7 +193,7 @@ void TestDataContainerReader()
 
   // Validate the NeighborList Data
   NeighborList<int32_t>* neighborlistPtr
-          = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+      = NeighborList<int32_t>::SafeObjectDownCast<IDataArray*, NeighborList<int32_t>* >(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   DREAM3D_REQUIRE_NE(NULL, neighborlistPtr);
   NeighborList<int32_t>::SharedVectorType vec;
   size_t nLists = neighborlistPtr->GetNumberOfTuples();
@@ -256,7 +260,7 @@ void insertDeleteArray(VolumeDataContainer::Pointer m)
 void TestInsertDelete()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  std::list<std::string> nameList;
+  QList<QString> nameList;
 
   insertDeleteArray<Int8ArrayType> (m);
   insertDeleteArray<UInt16ArrayType> (m);
@@ -294,21 +298,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getCellDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool* bool_ptr =  m->getCellDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -320,7 +324,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   IDataArray::Pointer t = m->removeCellData( "Test" );
   DREAM3D_REQUIRE_NE(t.get(), NULL);
 
-/********************************* Field Data Tests *********************************************/
+  /********************************* Field Data Tests *********************************************/
   ptr = m->createFieldData<T, K, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(absFilt->getErrorCondition(), 0);
   DREAM3D_REQUIRE_NE(ptr, NULL);
@@ -330,21 +334,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getFieldDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool_ptr =  m->getFieldDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -367,21 +371,21 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
   // and negative error condition
   ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("BAD_ARRAY_NAME", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_EQUAL(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad size name which should produce a null pointer
   // and negative error condition
   ptr =  m->getEnsembleDataSizeCheck<T, K, AbstractFilter>("Test", 10, 1, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next try getting the array, but pass in a bad cast type which should produce a null pointer
   // and negative error condition
   bool_ptr =  m->getEnsembleDataSizeCheck<bool, BoolArrayType, AbstractFilter>("Test", 10, 2, absFilt.get());
   DREAM3D_REQUIRE_EQUAL(bool_ptr , NULL)
-  DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
+      DREAM3D_REQUIRE_NE(0, absFilt->getErrorCondition());
   absFilt->setErrorCondition(0);
 
   // Next, pass in all the correct values which should produce a Non NULL pointer value and
@@ -403,7 +407,7 @@ void _arrayCreation(VolumeDataContainer::Pointer m)
 void TestArrayCreation()
 {
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  std::list<std::string> nameList;
+  QList<QString> nameList;
 
   _arrayCreation<int8_t, Int8ArrayType>(m);
   _arrayCreation<uint8_t, UInt8ArrayType>(m);
@@ -426,7 +430,7 @@ void TestArrayCreation()
   nameList = m->getEnsembleArrayNameList();
   DREAM3D_REQUIRE_EQUAL(0, nameList.size() );
 
-// DO NOT TEST THE BoolArrayType - we are using that as a negative test in the _arrayCreation test
+  // DO NOT TEST THE BoolArrayType - we are using that as a negative test in the _arrayCreation test
 
 }
 
@@ -551,6 +555,6 @@ int main(int argc, char **argv)
 #endif
 
   PRINT_TEST_SUMMARY();
-  return err;
+return err;
 }
 

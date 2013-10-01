@@ -82,7 +82,7 @@ int main(int argc, char **argv)
   QFilterWidgetManager::Collection factories = fm->getFactories();
   for (QFilterWidgetManager::Collection::iterator factory = factories.begin(); factory != factories.end(); ++factory )
   {
-    IFilterWidgetFactory::Pointer f = (*factory).second;
+    IFilterWidgetFactory::Pointer f = factory.value();
 
     QFilterWidget* filterWidget = f->createWidget();
     if (filterWidget != NULL)

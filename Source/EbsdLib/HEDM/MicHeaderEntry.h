@@ -33,12 +33,14 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-
-
-
+#ifndef _MicHeaderEntry_H_
+#define _MicHeaderEntry_H_
 
 #include <string.h>
-#include <iostream>
+
+#include <QtCore/QByteArray>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -59,27 +61,30 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
   public:
     EBSD_SHARED_POINTERS(MicHeaderEntry<T >)
     HEADERENTRY_NEW_SUPERCLASS(MicHeaderEntry<T>, EbsdHeaderEntry)
+    HEADERENTRY_NEW_SUPERCLASS_VALUE(MicHeaderEntry<T>, EbsdHeaderEntry)
 
     virtual ~MicHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
-    void parseValue(char* value, size_t start, size_t length)
+    QString getKey() { return m_key; }
+    QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
+
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      std::string data( &(value[start]), strlen(value) - start);
-      std::stringstream ss(data);
+      value = value.trimmed();
+      value = value.simplified();
+      QTextStream ss(&value);
       ss >> m_value;
     }
+
     void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      out << m_key.toStdString() << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
     void setValue(T value) { m_value = value;}
 
   protected:
-    MicHeaderEntry(const std::string &key) :
+    MicHeaderEntry(const QString &key) :
       m_value(0),
       m_key(key)
     {
@@ -89,7 +94,7 @@ class EbsdLib_EXPORT MicHeaderEntry : public EbsdHeaderEntry
 
   private:
     T m_value;
-    std::string m_key;
+    QString m_key;
 
     MicHeaderEntry(const MicHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const MicHeaderEntry&); // Operator '=' Not Implemented
@@ -110,31 +115,26 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
 
     virtual ~MicStringHeaderEntry() {}
 
-    std::string getKey() { return m_key; }
-    std::string getHDFType() { return "H5T_STRING"; }
+    QString getKey() { return m_key; }
+    QString getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(char* value, size_t start, size_t length)
+    void parseValue(QByteArray &value)
     {
-      if (value[start] == ':') { ++start; } // move past the ":" character
-      while(value[start] < 33)
-      {
-        ++start;
-      }
-      std::string data( &(value[start]), strlen(value) - start);
-      m_value = data;
-    }
-    void print(std::ostream &out) {
-      out << m_key << "  " << m_value << std::endl;
+      m_value = QString(value.trimmed());
     }
 
-    std::string getValue() { return m_value; }
-    void setValue(const std::string &value)
+    void print(std::ostream &out) {
+      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
+    }
+
+    QString getValue() { return m_value; }
+    void setValue(const QString &value)
     {
       m_value = value;
     }
 
   protected:
-    MicStringHeaderEntry(const std::string &key) :
+    MicStringHeaderEntry(const QString &key) :
       m_key(key)
     {
     }
@@ -142,8 +142,8 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
     MicStringHeaderEntry() {}
 
   private:
-    std::string m_value;
-    std::string m_key;
+    QString m_value;
+    QString m_key;
 
     MicStringHeaderEntry(const MicStringHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const MicStringHeaderEntry&); // Operator '=' Not Implemented
@@ -153,6 +153,5 @@ class MicStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-
-
+#endif /* _MicHeaderEntry_H_ */
 

@@ -38,14 +38,14 @@
 #define FINDSURFACEGRAINS_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
  * @class FindSurfaceGrains FindSurfaceGrains.h DREAM3DLib/StatisticsFilters/FindSurfaceGrains.h
@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT FindSurfaceGrains : public AbstractFilter
 	//------ Created Field Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(SurfaceFieldsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-    virtual const std::string getHumanLabel() { return "Find Surface Fields"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+    virtual const QString getHumanLabel() { return "Find Surface Fields"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

@@ -53,14 +53,14 @@
 #include <qwt_plot_marker.h>
 #include <qwt_symbol.h>
 
-#include "MXA/Common/MXASetGetMacros.h"
+#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
-#include "DREAM3DLib/Common/TransformationStatsData.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/TransformationStatsData.h"
 
 #include "QtSupport/PoleFigureImageUtilities.h"
 
@@ -88,7 +88,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
     void initQwtPlot(QString xAxisName, QString yAxisName, QwtPlot* plot);
     void enableMDFTab(bool b);
 
-    MXA_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
+    DREAM3D_INSTANCE_PROPERTY(bool, EnableAxisDecorations)
 
     void setPhaseIndex(int value);
     int getPhaseIndex();
@@ -109,7 +109,7 @@ class StatsGenODFWidget : public QWidget, private Ui::SGAxisODFWidget
 
     void drawODFPlotGrid(QwtPlot* plot);
 
-    MXA_INSTANCE_PROPERTY(bool, Initializing)
+    DREAM3D_INSTANCE_PROPERTY(bool, Initializing)
 
     protected slots:
       void on_m_CalculateODFBtn_clicked();

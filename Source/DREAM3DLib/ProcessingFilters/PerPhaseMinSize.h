@@ -38,17 +38,17 @@
 #define _PerPhaseMinSize_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-// #include "DREAM3DLib/Common/IDataArray.h"
+// #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 //#include "DREAM3DLib/Common/AbstractFilter.h"
-//#include "DREAM3DLib/Common/VolumeDataContainer.h"
+//#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 //#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-//#include "DREAM3DLib/Common/NeighborList.hpp"
+//#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Minimum Size Filter (Per Phase)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Minimum Size Filter (Per Phase)"; }
 
     virtual void setupFilterParameters();
     /**

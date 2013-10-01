@@ -36,11 +36,11 @@
 #ifndef _SurfaceDataContainerReader_H_
 #define _SurfaceDataContainerReader_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -69,28 +69,30 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, ReadFieldData)
     DREAM3D_INSTANCE_PROPERTY(bool, ReadEnsembleData)
 
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, VertexArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EdgeArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FaceArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, FieldArraysToRead)
-    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, EnsembleArraysToRead)
+
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, VertexArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EdgeArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FaceArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, FieldArraysToRead)
+    DREAM3D_INSTANCE_PROPERTY(QSet<QString>, EnsembleArraysToRead)
+
     DREAM3D_INSTANCE_PROPERTY(bool, ReadAllArrays)
 
-    typedef std::list<std::string> NameListType;
+    typedef QList<QString> NameListType;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
+    virtual const QString getHumanLabel() { return "SurfaceMesh DataContainer Reader"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -103,7 +105,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -152,9 +154,9 @@ class DREAM3DLib_EXPORT SurfaceDataContainerReader : public AbstractFilter
     int readEnsembleData(hid_t dcGid);
 
 
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead);
+    int readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
+                                                QVector<QString> &namesRead,
+                                                QSet<QString> &namesToRead);
 
 
   private:

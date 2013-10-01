@@ -38,9 +38,9 @@
 
 #include <vector>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 
-#include "DREAM3DLib/Common/GbcdDataArray.hpp"
+#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
 
 
 
@@ -67,8 +67,8 @@ namespace Detail
   // -----------------------------------------------------------------------------
   template<typename T>
   IDataArray::Pointer readGbcdDataset(hid_t locId,
-                                    const std::string &datasetPath,
-                                    const std::vector<hsize_t> &dims)
+                                    const QString &datasetPath,
+                                    const QVector<hsize_t> &dims)
   {
     herr_t err = -1;
     IDataArray::Pointer ptr;
@@ -78,10 +78,10 @@ namespace Detail
     // Get the pointer to the actual memory location
     T* data = (T*)(ptr->GetVoidPointer(0));
     // Read the file into that memory location
-    err = H5Lite::readPointerDataset(locId, datasetPath, data);
+    err = QH5Lite::readPointerDataset(locId, datasetPath, data);
     if(err < 0)
     {
-      std::cout << "H5GbcdArrayReader::readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" << std::endl;
+      qDebug() << "H5GbcdArrayReader::readH5Data read error: " << __FILE__ << "(" << __LINE__ << ")" ;
       ptr = IDataArray::NullPointer();
     }
     return ptr;
@@ -91,7 +91,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::string &name, bool preflightOnly)
+IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const QString &name, bool preflightOnly)
 {
 
   herr_t err = -1;
@@ -99,25 +99,25 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
   hid_t typeId = -1;
   H5T_class_t attr_type;
   size_t attr_size;
-  std::string res;
+  QString res;
 
-  std::vector<hsize_t> dims; //Reusable for the loop
+  QVector<hsize_t> dims; //Reusable for the loop
   IDataArray::Pointer ptr = IDataArray::NullPointer();
-  //std::cout << "Reading Attribute " << *iter << std::endl;
-  typeId = H5Lite::getDatasetType(gid, name);
+  //qDebug() << "Reading Attribute " << *iter ;
+  typeId = QH5Lite::getDatasetType(gid, name);
   if (typeId < 0)
   {
     return ptr;
   }
-  err = H5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
+  err = QH5Lite::getDatasetInfo(gid, name, dims, attr_type, attr_size);
   if(err < 0)
   {
-    std::cout << "Error in getAttributeInfo method in readUserMetaData." << std::endl;
+    qDebug() << "Error in getAttributeInfo method in readUserMetaData." ;
   }
   else
   {
-    std::string classType;
-    err = H5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
+    QString classType;
+    err = QH5Lite::readStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, classType);
     if (err < 0)
     {
       return ptr;
@@ -135,7 +135,7 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
     {
 
       case H5T_INTEGER:
-        //std::cout << "User Meta Data Type is Integer" << std::endl;
+        //qDebug() << "User Meta Data Type is Integer" ;
         if(H5Tequal(typeId, H5T_STD_U8BE) || H5Tequal(typeId, H5T_STD_U8LE))
         {
           if (preflightOnly == false) ptr = Detail::readGbcdDataset<uint8_t>(gid, name, dims);
@@ -178,7 +178,7 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
         }
         else
         {
-          std::cout << "Unknown Type: " << typeId << " at " << name << std::endl;
+          qDebug() << "Unknown Type: " << typeId << " at " << name ;
           err = -1;
           retErr = -1;
         }
@@ -196,14 +196,14 @@ IDataArray::Pointer H5GbcdArrayReader::readIDataArray(hid_t gid, const std::stri
         }
         else
         {
-          std::cout << "Unknown Floating point type" << std::endl;
+          qDebug() << "Unknown Floating point type" ;
           err = -1;
           retErr = -1;
         }
         break;
       default:
-        std::cout << "Error: readUserMetaData() Unknown attribute type: " << attr_type << std::endl;
-        H5Utilities::printHDFClassType(attr_type);
+        qDebug() << "Error: readUserMetaData() Unknown attribute type: " << attr_type ;
+        QH5Utilities::printHDFClassType(attr_type);
     }
 
     CloseH5T(typeId, err, retErr);

@@ -56,7 +56,7 @@ H5VoxelReader::~H5VoxelReader()
 {
   if (m_FileId > 0)
   {
-    H5Utilities::closeFile(m_FileId);
+    QH5Utilities::closeFile(m_FileId);
   }
 }
 
@@ -67,16 +67,16 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
 {
   int err = 0;
 
-  if(m_FileName.empty() == true)
+  if(m_FileName.isEmpty() == true)
   {
     addErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
     return -1;
   }
 
   OPEN_HDF5_FILE(fileId, m_FileName);
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.c_str(), fileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VoxelDataName.toLatin1().data(), fileId);
 
-  err = H5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
+  err = QH5Lite::readPointerDataset(reconGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Dimensions", err);
@@ -85,7 +85,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
     err = H5Fclose(fileId);
     return err;
   }
-  err = H5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
+  err = QH5Lite::readPointerDataset(reconGid, H5_SPACING, spacing);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Spacing (Resolution)", err);
@@ -95,7 +95,7 @@ int H5VoxelReader::getSizeResolutionOrigin(int64_t volDims[3], float spacing[3],
     return err;
   }
 
-  err = H5Lite::readPointerDataset(reconGid, H5_ORIGIN, origin);
+  err = QH5Lite::readPointerDataset(reconGid, H5_ORIGIN, origin);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "H5ReconVolumeReader Error Reading the Origin", err);
@@ -118,13 +118,13 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
 {
   int err = 0;
 
-  if(m_FileName.empty() == true)
+  if(m_FileName.isEmpty() == true)
   {
-    std::cout << "H5ReconVolumeReader Error; Filename was empty" << std::endl;
+    qDebug() << "H5ReconVolumeReader Error; Filename was empty" ;
     return -1;
   }
   OPEN_HDF5_FILE(fileId, m_FileName);
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VolumeDataContainerName.c_str(), fileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), fileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   hid_t dataset;
@@ -137,7 +137,7 @@ int H5VoxelReader::readHyperSlab(int64_t xdim, int64_t ydim, int64_t zIndex, int
   herr_t status;
   int rankc = 1;
 
-  dataset = H5Dopen(scalarGid, DREAM3D::CellData::GrainIds.c_str(), H5P_DEFAULT);
+  dataset = H5Dopen(scalarGid, DREAM3D::CellData::GrainIds.toLatin1().data(), H5P_DEFAULT);
   filespace = H5Dget_space(dataset); /* Get filespace handle first. */
   col_dims[0] = xdim * ydim;
   memspace = H5Screate_simple(rankc, col_dims, NULL);
@@ -177,7 +177,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
                   int64_t totalpoints)
 {
   int err = 0;
-  if(m_FileName.empty() == true)
+  if(m_FileName.isEmpty() == true)
   {
     addErrorMessage(getHumanLabel(), "H5ReconVolumeReader Error; Filename was empty", -1);
     return -1;
@@ -191,7 +191,7 @@ int H5VoxelReader::readVoxelData(int* grain_indicies,
   if (err < 0) { return err; }
 
 
-  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VolumeDataContainerName.c_str(), m_FileId);
+  OPEN_RECONSTRUCTION_GROUP(reconGid, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), m_FileId);
   OPEN_RECONSTRUCTION_GROUP(scalarGid, H5_CELL_DATA_GROUP_NAME, reconGid);
 
   // Check to make sure we can read the amount of data requested. On a 32 bit

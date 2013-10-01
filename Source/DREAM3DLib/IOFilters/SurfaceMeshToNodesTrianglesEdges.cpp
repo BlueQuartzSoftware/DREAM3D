@@ -37,8 +37,9 @@
 #include "SurfaceMeshToNodesTrianglesEdges.h"
 
 
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
 
 
  #define WRITE_EDGES_FILE 0
@@ -66,7 +67,7 @@ SurfaceMeshToNodesTrianglesEdges::~SurfaceMeshToNodesTrianglesEdges()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToNodesTrianglesEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output Nodes File");
@@ -131,19 +132,19 @@ void SurfaceMeshToNodesTrianglesEdges::dataCheck(bool preflight, size_t voxels, 
 {
   setErrorCondition(0);
 
-  if(true == m_OutputNodesFile.empty())
+  if(true == m_OutputNodesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Nodes file needs to be set", -380);
     setErrorCondition(-380);
   }
   #if WRITE_EDGES_FILE
-  if(true == m_OutputEdgesFile.empty())
+  if(true == m_OutputEdgesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Edges file needs to be set", -381);
     setErrorCondition(-381);
   }
   #endif
-  if(true == m_OutputTrianglesFile.empty())
+  if(true == m_OutputTrianglesFile.isEmpty())
   {
     addErrorMessage(getHumanLabel(), "The output Triangles file needs to be set", -382);
     setErrorCondition(-382);
@@ -201,7 +202,7 @@ void SurfaceMeshToNodesTrianglesEdges::preflight()
 void SurfaceMeshToNodesTrianglesEdges::execute()
 {
   int err = 0;
-  std::stringstream ss;
+
   setErrorCondition(err);
 
 
@@ -229,17 +230,19 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
   notifyStatusMessage("Writing Nodes Text File");
-  std::string parentPath = MXAFileInfo::parentPath(getOutputNodesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo fi(getOutputNodesFile());
+  QDir parentPath = fi.path();
+
+  if(!parentPath.mkpath("."))
   {
-    std::stringstream ss;
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
   FILE* nodesFile = NULL;
-  nodesFile = fopen(getOutputNodesFile().c_str(), "wb");
+  nodesFile = fopen(getOutputNodesFile().toLatin1().data(), "wb");
   if (NULL == nodesFile)
   {
     setErrorCondition(-100);
@@ -260,16 +263,17 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 #if WRITE_EDGES_FILE
   // ++++++++++++++ Write the Edges File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Edges Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputEdgesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  parentPath = QFileInfo::parentPath(getOutputEdgesFile());
+    QDir dir;
+  if(!dir.mkpath(parentPath))
   {
-    std::stringstream ss;
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
-  FILE* eFile = fopen(getOutputEdgesFile().c_str(), "wb");
+  FILE* eFile = fopen(getOutputEdgesFile().toLatin1().data(), "wb");
   if (NULL == eFile)
   {
     setErrorCondition(-100);
@@ -311,16 +315,17 @@ void SurfaceMeshToNodesTrianglesEdges::execute()
 
   // ++++++++++++++ Write the Triangles File +++++++++++++++++++++++++++++++++++++++++++
   notifyStatusMessage("Writing Triangles Text File");
-  parentPath = MXAFileInfo::parentPath(getOutputTrianglesFile());
-  if(!MXADir::mkdir(parentPath, true))
+  QFileInfo triFI(getOutputTrianglesFile());
+  parentPath = triFI.path();
+  if(!parentPath.mkpath("."))
   {
-    std::stringstream ss;
-    ss << "Error creating parent path '" << parentPath << "'";
-    notifyErrorMessage(ss.str(), -1);
+
+    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    notifyErrorMessage(ss, -1);
     setErrorCondition(-1);
     return;
   }
-  FILE* triFile = fopen(getOutputTrianglesFile().c_str(), "wb");
+  FILE* triFile = fopen(getOutputTrianglesFile().toLatin1().data(), "wb");
   if (NULL == triFile)
   {
     setErrorCondition(-100);

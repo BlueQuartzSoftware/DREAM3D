@@ -43,7 +43,7 @@
 
 
 #include <MXA/Common/MXASetGetMacros.h>
-#include "MXA/MXA.h"
+
 #include "DREAM3DLib/Common/Constants.h"
 
 
@@ -52,7 +52,7 @@
 
 #define AIM_STRING QString
 #else
-#define AIM_STRING std::string
+#define AIM_STRING QString
 #endif
 
 /**
@@ -77,20 +77,20 @@ Q_OBJECT
 #endif
 
   public:
-    MXA_SHARED_POINTERS(VolumeMesh)
-    MXA_TYPE_MACRO(VolumeMesh)
+    DREAM3D_SHARED_POINTERS(VolumeMesh)
+    DREAM3D_TYPE_MACRO(VolumeMesh)
 
 #ifdef DREAM3D_USE_QT
     static Pointer New (QObject* parent = 0);
 #else
-    MXA_STATIC_NEW_MACRO(VolumeMesh)
+    DREAM3D_STATIC_NEW_MACRO(VolumeMesh)
 #endif
     virtual ~VolumeMesh();
 
-    MXA_INSTANCE_STRING_PROPERTY(NodesFile)
-    MXA_INSTANCE_STRING_PROPERTY(TrianglesFile)
-    MXA_INSTANCE_STRING_PROPERTY(OutputDirectory)
-    MXA_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NodesFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(TrianglesFile)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputDirectory)
+    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFilePrefix)
 
     MXA_INSTANCE_PROPERTY(double, XDim)
     MXA_INSTANCE_PROPERTY(double, YDim)

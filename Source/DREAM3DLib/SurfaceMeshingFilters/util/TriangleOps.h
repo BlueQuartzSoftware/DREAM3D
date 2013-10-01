@@ -38,11 +38,11 @@
 #define _TriangleOps_H_
 
 #include <vector>
-#include <set>
+#include <QtCore/QSet>
 
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 
@@ -64,7 +64,7 @@ class TriangleOps
 
     static VectorType computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::Vert_t& n1, DREAM3D::Mesh::Vert_t& n2);
 
-    static std::set<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
+    static QSet<int32_t> generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr);
 
     static std::vector<int32_t> findAdjacentTriangles(SurfaceDataContainer* sm,
                                                         int32_t triangleIndex,

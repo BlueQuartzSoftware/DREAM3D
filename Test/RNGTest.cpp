@@ -31,9 +31,7 @@
 #include <stdlib.h>
 #include <iostream>
 
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-
-#include "MXA/Common/LogTime.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 int main(int argc, char **argv)
 {

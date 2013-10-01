@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include <string>
+#include <QString>
 #include <iostream>
 
 #include <tclap/CmdLine.h>
@@ -46,12 +46,12 @@
 
 #include "DREAM3DLib/Common/Constants.h"
 #include <DREAM3D/Common/DREAM3DVersion.h>
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 #include <AIM/VolumeMesh/VolumeMesh.h>
 
 #define CHECK_ARG(var, mandatory)\
-    if (vm.count(#var) > 1) { mxa_log << logTime() << "Multiple Occurances for Parameter " << #var << std::endl; }\
+    if (vm.count(#var) > 1) { mxa_log << "Multiple Occurances for Parameter " << #var << std::endl; }\
     if (vm.count(#var) == 0 && mandatory == true) { \
     mxa_log << "Parameter --" << #var << " ==> Required. Program will Terminate." << std::endl; }\
     if (vm.count(#var) == 0 && mandatory == false) { \
@@ -67,7 +67,7 @@
 int main(int argc, char **argv)
 {
 
-  std::cout << logTime() << "Starting Volume Meshing ... " << std::endl;
+  std::cout << "Starting Volume Meshing ... " << std::endl;
   MXALOGGER_METHOD_VARIABLE_INSTANCE
 
   int err = 0;
@@ -75,13 +75,13 @@ int main(int argc, char **argv)
   {
     TCLAP::CmdLine cmd("DREAM.3D Volume Meshing", ' ', DREAM3DLib::Version::Complete);
 
-    TCLAP::ValueArg<std::string > nodesfile("", "nodesfile", "Input Nodes File", false, "", "Input Nodes File");
+    TCLAP::ValueArg<QString > nodesfile("", "nodesfile", "Input Nodes File", false, "", "Input Nodes File");
     cmd.add(nodesfile);
 
-    TCLAP::ValueArg<std::string > trianglefile("", "trianglefile", "Input Triangle File", false, "", "Input Triangle File");
+    TCLAP::ValueArg<QString > trianglefile("", "trianglefile", "Input Triangle File", false, "", "Input Triangle File");
     cmd.add(trianglefile);
 
-    TCLAP::ValueArg<std::string > outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
+    TCLAP::ValueArg<QString > outputDir("", "outputDir", "Output Directory", false, "", "Output Directory");
     cmd.add(outputDir);
 
     TCLAP::ValueArg<int > xDim("x", "xDim", "xDim", false, 0, "X Dimension");
@@ -127,7 +127,7 @@ int main(int argc, char **argv)
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
-    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
+    std::cerr << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
   std::cout << "++++++++++++ Volume Meshing Complete ++++++++++++" << std::endl;

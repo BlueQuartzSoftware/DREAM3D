@@ -38,11 +38,12 @@
 #define CUBICOPS_H_
 
 
-#include "MXA/Common/MXASetGetMacros.h"
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -57,9 +58,9 @@
 class DREAM3DLib_EXPORT CubicOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(CubicOps)
-    MXA_TYPE_MACRO_SUPER(CubicOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(CubicOps)
+    DREAM3D_SHARED_POINTERS(CubicOps)
+    DREAM3D_TYPE_MACRO_SUPER(CubicOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(CubicOps)
 
     CubicOps();
     virtual ~CubicOps();
@@ -72,7 +73,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
-    std::string getSymmetryName() { return "Cubic-High m3m"; }
+    QString getSymmetryName() { return "Cubic-High m3m"; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);
@@ -142,10 +143,10 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      * @param eulers The Euler Angles to generate the pole figure from.
      * @param imageSize The size in Pixels of the final RGB Image.
      * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
-     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
 
     /**
      * @brief generateStandardTriangle Generates an RGBA array that is a color "Standard" IPF Triangle Legend used for IPF Color Maps.

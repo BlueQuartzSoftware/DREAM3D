@@ -36,15 +36,16 @@
 #include "CropVolumePipeline.h"
 #include <stdlib.h>
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
-#include <string>
+#include <QtCore/QString>
 #include <vector>
 
-#include "MXA/MXA.h"
-#include "MXA/Common/LogTime.h"
-#include "MXA/Utilities/MXADir.h"
+
+
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
@@ -103,7 +104,7 @@ CropVolumePipeline::~CropVolumePipeline()
 void CropVolumePipeline::setupFilterParameters()
 {
     // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -144,14 +145,14 @@ void CropVolumePipeline::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
+  
 
 
-  if(true == m_InputFile.empty())
+  if(true == m_InputFile.isEmpty())
   {
-    ss << "The Input file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 }
 
@@ -169,9 +170,9 @@ void CropVolumePipeline::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string convertIntToString(int number)
+QString convertIntToString(int number)
 {
-   std::stringstream ss;//create a stringstream
+   //create a stringstream
    ss << number;//add number to the stream
    return ss.str();//return a string with the contents of the stream
 }
@@ -180,27 +181,27 @@ std::string convertIntToString(int number)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getH5EbsdFile()
+QString getH5EbsdFile()
 {
-  std::string s = "D:/IN100_run1/DREAM3D_files/slice_11_173_transformed.h5ebsd";
+  QString s = "D:/IN100_run1/DREAM3D_files/slice_11_173_transformed.h5ebsd";
   return s;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getZ_spacingfile()
+QString getZ_spacingfile()
 {
-  std::string s = "D:/IN100_run1/DREAM3D_files/Rectilinear_Grid_Data.txt";
+  QString s = "D:/IN100_run1/DREAM3D_files/Rectilinear_Grid_Data.txt";
   return s;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string getFieldDataFile()
+QString getFieldDataFile()
 {
-  std::string s =  "D:/IN100_run1/DREAM3D_files/test.csv";
+  QString s =  "D:/IN100_run1/DREAM3D_files/test.csv";
   return s;
 }
 
@@ -214,7 +215,7 @@ void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, st
   //int64_t totalPoints = m->totalPoints();
   int numinlist;
   std::ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -247,14 +248,14 @@ void CropVolumePipeline::get_max_and_min_xyz_for_crop(std::vector<int> &xmax, st
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-unsigned int getNumLinesinFile(std::string filename)
+unsigned int getNumLinesinFile(QString filename)
 {
 
   //DataContainer* m = getDataContainer();
 
   int num_lines;
   std::ifstream inFile;
-  inFile.open(filename.c_str());
+  inFile.open(filename.toLatin1().data());
   inFile >> num_lines;
   inFile.close();
 
@@ -452,7 +453,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
 
       FieldDataCSVWriter::Pointer field_data_write_csv = FieldDataCSVWriter::New();
-      std::string field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
+      QString field_csv =  "D:/IN100_run1/DREAM3D_files/crop_line_"+ convertIntToString(i) +".csv";
       field_data_write_csv->setFieldDataFile(field_csv);
       field_data_write_csv->setVoxelDataContainer(m);
       field_data_write_csv->execute();
@@ -473,7 +474,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
       if(m_WriteVtkFile)
       {
-        std::string vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
+        QString vtk_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".vtk";
         vtkWriter->setOutputFile(vtk_file);
         vtkWriter->setWriteGrainIds(m_WriteGrainID);
         vtkWriter->setWritePhaseIds(m_WritePhaseId);
@@ -488,7 +489,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
       }
 
       DataContainerWriter::Pointer writer = DataContainerWriter::New();
-      std::string dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
+      QString dream_3d_file = "D:/IN100_run1/DREAM3D_files/crop_line_" + convertIntToString(i) + ".dream3d";
       writer->setOutputFile(dream_3d_file);
       writer->setVoxelDataContainer(m);
       pipeline->pushBack(writer);
@@ -496,7 +497,7 @@ for (DimType i = 1; i < NUM_OF_CROPS+1; i++)
 
 
 
-    //  std::cout << "********* RUNNING PIPELINE **********************" << std::endl;
+    //  qDebug() << "********* RUNNING PIPELINE **********************" ;
     // // pipeline->run();
       pipeline->clear();
 

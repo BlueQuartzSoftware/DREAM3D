@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
@@ -76,7 +76,7 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 void MinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -120,12 +120,12 @@ int MinSize::writeFilterParameters(AbstractFilterParametersWriter* writer, int i
 void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -264,7 +264,7 @@ void MinSize::assign_badpoints()
         for (int i = 0; i < dims[0]; i++)
         {
           count = kstride+jstride+i;
-          std::stringstream ss;
+          
           grainname = m_GrainIds[count];
           if (grainname < 0)
           {
@@ -316,7 +316,7 @@ void MinSize::assign_badpoints()
         }
       }
     }
-    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+    QList<QString> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
@@ -326,9 +326,9 @@ void MinSize::assign_badpoints()
         if (grainname < 0 && m_GrainIds[neighbor] >= 0)
         {
 
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            std::string name = *iter;
+            QString name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }

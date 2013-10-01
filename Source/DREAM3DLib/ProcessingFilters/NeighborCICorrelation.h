@@ -37,18 +37,18 @@
 #ifndef NeighborCICorrelation_H_
 #define NeighborCICorrelation_H_
 
-#include <vector>
-#include <string>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 
 /**
@@ -67,19 +67,19 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
 
     virtual ~NeighborCICorrelation();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ConfidenceIndexArrayName)
 
-	DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
-	DREAM3D_INSTANCE_PROPERTY(bool, Loop)
+    DREAM3D_INSTANCE_PROPERTY(float, MinConfidence)
+    DREAM3D_INSTANCE_PROPERTY(bool, Loop)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const std::string getHumanLabel() { return "Neighbor CI Correlation"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const QString getHumanLabel() { return "Neighbor CI Correlation"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT NeighborCICorrelation : public AbstractFilter
 
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     float* m_ConfidenceIndex;
 

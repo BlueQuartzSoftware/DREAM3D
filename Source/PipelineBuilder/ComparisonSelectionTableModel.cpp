@@ -76,7 +76,7 @@ ComparisonSelectionTableModel::~ComparisonSelectionTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags ComparisonSelectionTableModel::flags(const QModelIndex &index) const
 {
-  //  std::cout << "ComparisonSelectionTableModel::flags" << std::endl;
+  //  qDebug() << "ComparisonSelectionTableModel::flags" << "\n";
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -251,7 +251,7 @@ bool ComparisonSelectionTableModel::setHeaderData(int col, Qt::Orientation o, co
 // -----------------------------------------------------------------------------
 bool ComparisonSelectionTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "ComparisonSelectionTableModel::setData " << value.toString().toStdString() << std::endl;
+  // qDebug() << "ComparisonSelectionTableModel::setData " << value.toString() << "\n";
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -355,9 +355,9 @@ void ComparisonSelectionTableModel::setTableData(QVector<QString> fieldNames,
   m_FieldOperators.resize(fieldOperators.size());
   for(int i = 0; i < m_FieldOperators.size(); ++i)
   {
-    if (fieldOperators[i] == DREAM3D::Comparison::Operator_LessThan) m_FieldOperators[i] = QString::fromStdString(DREAM3D::Comparison::Strings::LessThan);
-    if (fieldOperators[i] == DREAM3D::Comparison::Operator_GreaterThan) m_FieldOperators[i] = QString::fromStdString(DREAM3D::Comparison::Strings::GreaterThan);
-    if (fieldOperators[i] == DREAM3D::Comparison::Operator_Equal) m_FieldOperators[i] = QString::fromStdString(DREAM3D::Comparison::Strings::Equal);
+    if (fieldOperators[i] == DREAM3D::Comparison::Operator_LessThan) m_FieldOperators[i] = (DREAM3D::Comparison::Strings::LessThan);
+    if (fieldOperators[i] == DREAM3D::Comparison::Operator_GreaterThan) m_FieldOperators[i] = (DREAM3D::Comparison::Strings::GreaterThan);
+    if (fieldOperators[i] == DREAM3D::Comparison::Operator_Equal) m_FieldOperators[i] = (DREAM3D::Comparison::Strings::Equal);
   }
   m_RowCount = count;
   endInsertRows();
@@ -376,9 +376,9 @@ void ComparisonSelectionTableModel::getTableData( QVector<QString> &fieldNames, 
   fieldOperators.resize(m_FieldOperators.size());
   for(int i = 0; i < m_FieldOperators.size(); ++i)
   {
-    if (m_FieldOperators[i].compare(QString::fromStdString(DREAM3D::Comparison::Strings::LessThan)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_LessThan;
-    else if (m_FieldOperators[i].compare(QString::fromStdString(DREAM3D::Comparison::Strings::GreaterThan)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_GreaterThan;
-    else if (m_FieldOperators[i].compare(QString::fromStdString(DREAM3D::Comparison::Strings::Equal)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_Equal;
+    if (m_FieldOperators[i].compare((DREAM3D::Comparison::Strings::LessThan)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_LessThan;
+    else if (m_FieldOperators[i].compare((DREAM3D::Comparison::Strings::GreaterThan)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_GreaterThan;
+    else if (m_FieldOperators[i].compare((DREAM3D::Comparison::Strings::Equal)) == 0) fieldOperators[i] = DREAM3D::Comparison::Operator_Equal;
     else fieldOperators[i] = DREAM3D::Comparison::Operator_Unknown;
   }
 }
@@ -431,12 +431,12 @@ void ComparisonSelectionTableModel::setPossibleFields(QStringList fields)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionTableModel::setPossibleFields(std::list<std::string> &fields)
+void ComparisonSelectionTableModel::setPossibleFields(QList<QString> &fields)
 {
   m_PossibleFields.clear();
-  for(std::list<std::string>::iterator iter = fields.begin(); iter != fields.end(); ++iter)
+  for(QList<QString>::iterator iter = fields.begin(); iter != fields.end(); ++iter)
   {
-    m_PossibleFields << QString::fromStdString(*iter);
+    m_PossibleFields << (*iter);
   }
 
   // Now check to make sure any selected array names are either still there or if they have been

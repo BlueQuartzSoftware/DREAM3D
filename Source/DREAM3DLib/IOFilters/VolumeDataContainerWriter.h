@@ -37,14 +37,15 @@
 #ifndef _VolumeDataContainerWriter_H_
 #define _VolumeDataContainerWriter_H_
 
-#include <string>
+#include <QtCore/QString>
+#include <QtCore/QTextStream>
 
 #include <hdf5.h>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 
@@ -69,23 +70,23 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(hid_t, HdfFileId)
     DREAM3D_INSTANCE_PROPERTY(bool, WriteXdmfFile)
 
-    typedef std::list<std::string> NameListType;
+    typedef QList<QString> NameListType;
 
-    void setXdmfOStream(std::ostream* xdmf);
+    void setXdmfOStream(QTextStream *xdmf);
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Voxel DataContainer Writer"; }
+    virtual const QString getHumanLabel() { return "Voxel DataContainer Writer"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -130,10 +131,10 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
+    int writeMetaInfo(const QString &hdfPath, int64_t volDims[3],
                               float spacing[3], float origin[3]);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const QString &hdfGroupPath, const char* vtkDataObjectType);
     int writeVertexData(hid_t dcGid);
     int writeEdgeData(hid_t dcGid);
     int writeFaceData(hid_t dcGid);
@@ -142,16 +143,16 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     int writeEnsembleData(hid_t dcGid);
 
     void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
+    void writeFieldXdmfGridHeader(size_t numElements, const QString &label);
     //void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeXdmfGridFooter(const std::string &label);
+    void writeXdmfGridFooter(const QString &label);
 
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
+    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const QString &label)
      {
       herr_t err = 0;
       int numComp = 1;
@@ -169,15 +170,15 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
         hsize_t dims[1] =
         { (hsize_t)num * (hsize_t)numComp };
 
-        err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
-        err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);
-        err |= H5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
+        err |= QH5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
+        err |= QH5Lite::writeScalarAttribute(ensembleGid, label, QString(H5_NUMCOMPONENTS), numComp);
+        err |= QH5Lite::writeStringAttribute(ensembleGid, label, DREAM3D::HDF5::ObjectType, "vector");
 
         if(err < 0)
         {
           setErrorCondition(err);
-          std::stringstream ss;
-          ss << "Error writing Ensemble data set '" << label << "'";
+          QString ss = QObject::tr("Error writing Ensemble data set '%1'").arg(label);
+          notifyErrorMessage(ss, getErrorCondition());
         }
       }
 
@@ -185,7 +186,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     }
 
   private:
-    std::ostream* m_XdmfPtr;
+    QTextStream* m_XdmfPtr;
 
     VolumeDataContainerWriter(const VolumeDataContainerWriter&); // Copy Constructor Not Implemented
     void operator=(const VolumeDataContainerWriter&); // Operator '=' Not Implemented

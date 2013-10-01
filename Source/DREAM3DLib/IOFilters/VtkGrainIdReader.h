@@ -32,13 +32,14 @@
 #define VTKRECTILINEARGRIDREADER_H_
 
 #include <string.h> // needed for the ::memcpy function below
-#include <string>
 
-#include "MXA/Common/MXAEndian.h"
+#include <QtCore/QString>
+#include <QtCore/QtEndian>
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/FileReader.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 
 class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
@@ -61,9 +62,9 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const std::string getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Grain Ids Only"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const QString getHumanLabel() { return "Read Vtk File (STRUCTURED_POINTS) Grain Ids Only"; }
 
     virtual void setupFilterParameters();
 
@@ -72,7 +73,7 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -134,16 +135,16 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
          inStream.read(reinterpret_cast<char* > (buffer), (totalSize * sizeof(T)));
          if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
          {
-           std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
-               << " vs " << (totalSize * sizeof(T)) << std::endl;
+           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount()
+               << " vs " << (totalSize * sizeof(T)) ;
            return -1;
          }
          if (totalSize > 1) {
            T t = buffer[totalSize-1];
            T t1 = buffer[totalSize-2];
            // Dont forget to byte swap since VTK Binary Files are explicitly Big Endian formatted
-           MXA::Endian::FromBigToSystem::convert<T>(t);
-           MXA::Endian::FromBigToSystem::convert<T>(t1);
+           t = qFromBigEndian(t);
+           t1 = qFromBigEndian(t1);
            diff =t-t1;
          }
          else
@@ -184,8 +185,8 @@ class DREAM3DLib_EXPORT VtkGrainIdReader : public FileReader
          inStream.read(reinterpret_cast<char*>(buffer), (totalSize * sizeof(T)));
          if(inStream.gcount() != static_cast<std::streamsize>(totalSize * sizeof(T)))
          {
-           std::cout << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
-               << (totalSize * sizeof(T)) << std::endl;
+           qDebug() << " ERROR READING BINARY FILE. Bytes read was not the same as func->xDim *. " << byteSize << "." << inStream.gcount() << " vs "
+               << (totalSize * sizeof(T)) ;
            return -1;
          }
          delete buffer;

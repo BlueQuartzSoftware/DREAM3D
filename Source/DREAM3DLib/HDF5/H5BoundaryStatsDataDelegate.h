@@ -37,14 +37,14 @@
 #ifndef _H5BoundarySTATSDATA_DELEGATE_H_
 #define _H5BoundarySTATSDATA_DELEGATE_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include <hdf5.h>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
 #include "DREAM3DLib/HDF5/H5StatsDataDelegate.h"
 
 

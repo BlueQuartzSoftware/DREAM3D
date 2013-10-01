@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -54,9 +54,9 @@ MicFields::~MicFields()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> MicFields::getFieldNames()
+QVector<QString> MicFields::getFieldNames()
 {
-  std::vector<std::string> fields;
+  QVector<QString> fields;
   fields.push_back(Ebsd::Mic::Euler1);
   fields.push_back(Ebsd::Mic::Euler2);
   fields.push_back(Ebsd::Mic::Euler3);

@@ -39,9 +39,9 @@
 #include <limits>
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Math/OrientationMath.h"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgCAxes.h"
@@ -112,19 +112,16 @@ int FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilter
 void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainStdevCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, ss, -303, float, FloatArrayType, fields, 3)
-
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainStdevCAxisMisorientations, ss, float, FloatArrayType, 0, fields, 1)
 }
 
 
@@ -142,8 +139,8 @@ void FindGrainReferenceCAxisMisorientations::preflight()
 void FindGrainReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
+
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -180,9 +177,9 @@ void FindGrainReferenceCAxisMisorientations::execute()
   if(totalPoints > maxUInt32)
   {
     setErrorCondition(-666);
-    ss.str("");
-    ss << "The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: " << totalPoints;
-    notifyErrorMessage(ss.str(), getErrorCondition());
+
+    QString ss = QObject::tr("The volume is too large for a 32 bit machine. Try reducing the input volume size. Total Voxels: %1").arg(totalPoints);
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 #else
@@ -248,9 +245,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   {
     if (i%1000 == 0)
     {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
     m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];

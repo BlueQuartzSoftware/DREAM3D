@@ -40,6 +40,8 @@
 
 #include "hdf5.h"
 
+#include <QtCore/QtDebug>
+
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
@@ -79,9 +81,19 @@ class EbsdLib_EXPORT EbsdImporter
      * @param message The message to print
      * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
      */
-    virtual void progressMessage(const std::string &message, int progress)
+    virtual void progressMessage(const QString &message, int progress)
     {
-      std::cout << progress << "% " << message << std::endl;
+      qDebug() << progress << "% " << message;
+    }
+
+    /**
+     * @brief Either prints a message or sends the message to the User Interface
+     * @param message The message to print
+     * @param progress The progress of the Reconstruction normalized to a value between 0 and 100
+     */
+    virtual void progressMessage(const QString* message, int progress)
+    {
+      qDebug() << progress << "% " << *message;
     }
 
 
@@ -92,7 +104,7 @@ class EbsdLib_EXPORT EbsdImporter
      * @param index The integer index value of this EBSD data file
      * @param ebsdFile The raw data file from the manufacturere (.ang, .ctf)
      */
-    virtual int importFile(hid_t fileId, int64_t index, const std::string &ebsd) = 0;
+    virtual int importFile(hid_t fileId, int64_t index, const QString &ebsd) = 0;
 
     /**
      * @brief Returns the dimensions for the EBSD Data set

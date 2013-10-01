@@ -36,12 +36,12 @@
 
 #include "ChangeResolution.h"
 
-#include <map>
+#include <QtCore/QMap>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 //#include "DREAM3DLib/HDF5/H5VoxelReader.h"
 
@@ -71,7 +71,7 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 void ChangeResolution::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -180,9 +180,8 @@ void ChangeResolution::execute()
   newindicies.resize(totalPoints);
   for (int i = 0; i < m_ZP; i++)
   {
-    std::stringstream ss;
-    ss << "Changing Resolution - " << ((float)i/m->getZPoints())*100 << " Percent Complete";
-    notifyStatusMessage(ss.str());
+    QString ss = QObject::tr("Changing Resolution - %1 Percent Complete").arg(((float)i/m->getZPoints())*100);
+    notifyStatusMessage(ss);
     for (int j = 0; j < m_YP; j++)
     {
       for (int k = 0; k < m_XP; k++)
@@ -200,10 +199,10 @@ void ChangeResolution::execute()
     }
   }
 
-  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
-  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    std::string name = *iter;
+    QString name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

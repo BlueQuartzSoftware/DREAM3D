@@ -37,10 +37,10 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
-#include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"
@@ -86,7 +86,7 @@ typedef struct
 typedef StructArray<Vec3Int_t> Vec3IntList_t;
 typedef Vec3IntList_t::Pointer Vec3IntListPointer_t;
 
-const std::string kArrayName("TestArray");
+const QString kArrayName("TestArray");
 
 // -----------------------------------------------------------------------------
 //
@@ -125,17 +125,18 @@ Vec3IntListPointer_t initializeStructArray()
     node->pos[2] = i+20;
   }
 
-  std::string name = "foo";
+  QString name = "foo";
   nodes->SetName(name);
-  std::string retName = nodes->GetName();
+  QString retName = nodes->GetName();
+
   DREAM3D_REQUIRE_EQUAL(name, retName);
 
-  std::string tStr = nodes->getTypeAsString();
-  std::string tStrComp("struct");
+  QString tStr = nodes->getTypeAsString();
+  QString tStrComp("struct");
   DREAM3D_REQUIRE_EQUAL(tStr, tStrComp)
 
-  std::string fn = nodes->getFullNameOfClass();
-  std::string fnComp("StructArray<struct>");
+  QString fn = nodes->getFullNameOfClass();
+  QString fnComp("StructArray<struct>");
   DREAM3D_REQUIRE_EQUAL(fn, fnComp)
 
 
@@ -365,7 +366,7 @@ void TestTupleErase()
 {
   // Create an Array of 10 Structs
   Vec3IntListPointer_t nodes = initializeStructArray();
-  std::vector<size_t> idxs(ARRAY_SIZE + 1, 0);
+  QVector<size_t> idxs(ARRAY_SIZE + 1, 0);
   // Try to erase more indices than there are in the struct array
   int err = nodes->EraseTuples(idxs);
   DREAM3D_REQUIRE_EQUAL(err, 0)

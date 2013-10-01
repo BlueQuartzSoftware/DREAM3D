@@ -37,11 +37,11 @@
 #ifndef _ThresholdExample_H_
 #define _ThresholdExample_H_
 
-#include <string>
+#include <QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -65,13 +65,13 @@ class ThresholdExample : public AbstractFilter
 
     // -----------------------------------------------------------------------------
     /* Each Filter can ONLY have ONE of each of these types of widgets */
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, CellComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FieldComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EnsembleComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, CellComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FieldComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EnsembleComparisonInputs)
 
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, PointComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, FaceComparisonInputs)
-    DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, EdgeComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, PointComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, FaceComparisonInputs)
+    DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, EdgeComparisonInputs)
 
 
     /**
@@ -79,19 +79,19 @@ class ThresholdExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return "ExamplePlugin"; }
+    virtual const QString getGroupName() { return "ExamplePlugin"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "ThresholdExample"; }
+    virtual const QString getHumanLabel() { return "ThresholdExample"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const std::string getSubGroupName() { return "Misc"; }
+    virtual const QString getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

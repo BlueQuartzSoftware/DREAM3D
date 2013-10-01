@@ -36,15 +36,15 @@
 
 #include "AlignSectionsList.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -82,7 +82,7 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -124,14 +124,14 @@ int AlignSectionsList::writeFilterParameters(AbstractFilterParametersWriter* wri
 void AlignSectionsList::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
 
 
-  if(true == m_InputFile.empty())
+  if(true == m_InputFile.isEmpty())
   {
-    ss << "The Input file name must be set before executing this filter.";
+    QString ss = QObject::tr("The Input file name must be set before executing this filter.");
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    addErrorMessage(getHumanLabel(), ss, -1);
   }
 
 
@@ -178,13 +178,13 @@ void AlignSectionsList::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
+void AlignSectionsList::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ifstream inFile;
-  inFile.open(m_InputFile.c_str());
+  inFile.open(m_InputFile.toLatin1().data());
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -203,7 +203,7 @@ void AlignSectionsList::find_shifts(std::vector<int> &xshifts, std::vector<int> 
   int newxshift, newyshift;
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-	inFile >> slice >> newxshift >> newyshift;
+  inFile >> slice >> newxshift >> newyshift;
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
   }

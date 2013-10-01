@@ -39,11 +39,14 @@
 #include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
+#include <QtCore/QFile>
+
 #include <QtGui/QImage>
 #include <QtGui/QColor>
 
-#include "MXA/MXA.h"
-#include "MXA/Utilities/MXADir.h"
+
+
+
 
 // -----------------------------------------------------------------------------
 //
@@ -71,7 +74,7 @@ SaveImages::~SaveImages()
 // -----------------------------------------------------------------------------
 void SaveImages::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
@@ -89,7 +92,7 @@ void SaveImages::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -153,33 +156,34 @@ int SaveImages::writeFilterParameters(AbstractFilterParametersWriter* writer, in
 void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+
   VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
+   QFileInfo fi(getOutputPath());
+   QDir parentPath(fi.path());
 
-  if (m_OutputPath.empty() == true)
+  if (m_OutputPath.isEmpty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
 
-  else if (MXADir::exists(m_OutputPath) == false)
+  else if (parentPath.exists() == false)
   {
-    ss.str("");
-    ss <<  "The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.";
-    addWarningMessage(getHumanLabel(), ss.str(), -1);
+    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
+    addWarningMessage(getHumanLabel(), ss, -1);
   }
 
-  if(m_ColorsArrayName.empty() == true)
+  if(m_ColorsArrayName.isEmpty() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "Input  Color Array name is empty", getErrorCondition());
   }
   else
   {
-    GET_PREREQ_DATA_2(m, CellData, Colors, ss, -300, uint8_t, UInt8ArrayType, voxels, 3)
+    GET_PREREQ_DATA_2(m, CellData, Colors, -300, uint8_t, UInt8ArrayType, voxels, 3)
   }
 
 }
@@ -201,7 +205,6 @@ void SaveImages::preflight()
 void SaveImages::execute()
 {
   int err = 0;
-  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -248,7 +251,7 @@ int SaveImages::saveImage(uint8_t* ipfColors, size_t slice, size_t* dims)
 {
   int err = 0;
 
-  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + QString::number(slice);
+  QString path = m_OutputPath + QDir::separator() + m_ImagePrefix + QString::number(slice);
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");

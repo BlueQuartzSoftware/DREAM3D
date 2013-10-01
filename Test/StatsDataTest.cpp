@@ -43,17 +43,18 @@
 #include <limits>
 #include <string>
 
-#include "MXA/Utilities/MXADir.h"
+#include <QtCore/QDir>
+#include <QtCore/QFile>
 
 #include "H5Support/H5Utilities.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/VoxelDataContainer.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
@@ -66,8 +67,8 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  MXADir::remove(UnitTest::StatsDataTest::TestFile);
-  MXADir::remove(UnitTest::StatsDataTest::TestFile2);
+  QFile::remove(UnitTest::StatsDataTest::TestFile);
+  QFile::remove(UnitTest::StatsDataTest::TestFile2);
 }
 
 // -----------------------------------------------------------------------------
@@ -443,7 +444,8 @@ void TestStatsData()
 void TestWriteData()
 {
   // Make sure the output directory is created
-  MXADir::mkdir(UnitTest::StatsDataTest::TestDir, true);
+  QDir dir(UnitTest::StatsDataTest::TestDir);
+dir.mkpath(".");
 
   // Create some test data for a 2 phase material
   StatsDataArray::Pointer statsArray = createStatsDataArray();

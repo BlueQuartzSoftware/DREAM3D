@@ -66,11 +66,11 @@
 #include <qwt_plot_marker.h>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 
 #include "StatsGenerator/Presets/MicrostructurePresetManager.h"
 #include "StatsGenerator/Presets/DefaultStatsPreset.h"
@@ -137,7 +137,7 @@ void TransformationPhaseWidget::on_microstructurePresetCombo_currentIndexChanged
 
   //Factory Method to get an instantiated object of the correct type?
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
+  m_MicroPreset = manager->createNewPreset(presetName);
   m_MicroPreset->displayUserInputDialog();
 }
 
@@ -149,7 +149,7 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 {
   AbstractMicrostructurePresetFactory::Pointer presetFactory = T::New();
   MicrostructurePresetManager::registerFactory(presetFactory);
-  QString displayString = QString::fromStdString(presetFactory->displayName());
+  QString displayString = (presetFactory->displayName());
   microstructurePresetCombo->addItem(displayString);
   return presetFactory;
 }
@@ -159,9 +159,9 @@ AbstractMicrostructurePresetFactory::Pointer RegisterPresetFactory(QComboBox* mi
 // -----------------------------------------------------------------------------
 void TransformationPhaseWidget::setupGui()
 {
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution);
+  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution);
+  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution);
   distributionTypeCombo->setCurrentIndex(DREAM3D::DistributionType::LogNormal);
   // Turn off all the plot widgets
   setTabsPlotTabsEnabled(false);
@@ -172,9 +172,9 @@ void TransformationPhaseWidget::setupGui()
 
   //Register the Equiaxed Preset
   presetFactory = RegisterPresetFactory<EquiaxedPresetFactory>(microstructurePresetCombo);
-  QString presetName = QString::fromStdString(presetFactory->displayName());
+  QString presetName = (presetFactory->displayName());
   MicrostructurePresetManager::Pointer manager = MicrostructurePresetManager::instance();
-  m_MicroPreset = manager->createNewPreset(presetName.toStdString());
+  m_MicroPreset = manager->createNewPreset(presetName);
 
   // Register the Rolled Preset
   presetFactory = RegisterPresetFactory<RolledPresetFactory>(microstructurePresetCombo);
@@ -500,7 +500,7 @@ void TransformationPhaseWidget::calculateNumberOfBins()
     return;
   }
 
-  
+
   int n = StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
   m_NumberBinsGenerated->setText(QString::number(n));
 }
@@ -511,7 +511,7 @@ void TransformationPhaseWidget::calculateNumberOfBins()
 int TransformationPhaseWidget::calculateNumberOfBins(float mu, float sigma, float minCutOff, float maxCutOff, float stepSize)
 {
   float max, min; // Only needed for the method. Not used otherwise.
-  
+
   return StatsGen::ComputeNumberOfBins(mu, sigma, minCutOff, maxCutOff, stepSize, max, min);
 }
 
@@ -531,7 +531,7 @@ int TransformationPhaseWidget::computeBinsAndCutOffs( float mu, float sigma,
   int err = 0;
   int size = 250;
 
-  
+
   err = StatsGen::GenLogNormalPlotData<QwtArray<float> > (mu, sigma, x, y, size);
   if (err == 1)
   {
@@ -700,7 +700,7 @@ void TransformationPhaseWidget::plotSizeDistribution()
 #define SGWIGET_WRITE_ERROR_CHECK(var)\
     if (err < 0)  {\
       QString msg ("Error Writing Data ");\
-      msg.append(QString::fromStdString(var));\
+      msg.append((var));\
       msg.append(" to the HDF5 file");\
       QMessageBox::critical(this, tr("StatsGenerator"),\
                                     msg,\

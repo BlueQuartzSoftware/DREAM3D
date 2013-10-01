@@ -7,9 +7,9 @@
 #ifndef H_CENTIPEDE_BASICS_MATH_VECTORS_VECTOR3
 #define H_CENTIPEDE_BASICS_MATH_VECTORS_VECTOR3
 
-#include <iostream>
+#include <QtCore/QtDebug>
 
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 template <typename T>
 struct Vector3
@@ -48,7 +48,7 @@ template <typename T> Vector3<T> operator-(Vector3<T>& lhs, Vector3<T>& rhs);
 template <typename T> Vector3<T> operator*(double factor, Vector3<T>& v);
 template <typename T> Vector3<T> operator*(Vector3<T>& v, double factor);
 template <typename T> Vector3<T> operator/(Vector3<T>& v, double factor);
-template <typename T> std::ostream& operator<<(std::ostream& os, Vector3<T>& v);
+template <typename T> QDataStream& operator<<(QDataStream& os, Vector3<T>& v);
 
 //################## TYPEDEFS ##################//
 typedef Vector3<float> Vector3f;

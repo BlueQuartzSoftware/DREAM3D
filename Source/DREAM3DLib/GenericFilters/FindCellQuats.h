@@ -37,14 +37,14 @@
 #define FindCellQuats_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /*
@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
 
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const std::string getHumanLabel() { return "Find Cell Quaternions"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const QString getHumanLabel() { return "Find Cell Quaternions"; }
 
     /**
     * @brief This method will write the options to a file
@@ -97,7 +97,7 @@ class DREAM3DLib_EXPORT FindCellQuats : public AbstractFilter
     float* m_CellEulerAngles;
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

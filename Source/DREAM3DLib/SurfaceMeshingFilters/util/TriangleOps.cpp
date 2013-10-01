@@ -36,8 +36,8 @@
 #include "TriangleOps.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 namespace SM = DREAM3D::SurfaceMesh;
@@ -77,7 +77,7 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm
 
   if (count < 3)
   {
-    std::cout << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." << std::endl;
+    qDebug() << "Triangle Neighbor List had only " << count << " neighbors. Must be at least 3." ;
     BOOST_ASSERT(false);
   }
   else if (count == 3) // This triangle only has 3 neighbors so we are assuming all three have the same label set.
@@ -96,7 +96,7 @@ std::vector<int32_t> TriangleOps::findAdjacentTriangles(SurfaceDataContainer* sm
       int32_t fl_1 = faceLabels[nList[n]*2 + 1];
       if ( (fl_0 == label || fl_1 == label)  && (nList[n] != triangleIndex) )
       {
-        //  std::cout << "    Found Adjacent Triangle: " << t->tIndex << std::endl;
+        //  qDebug() << "    Found Adjacent Triangle: " << t->tIndex ;
         adjacentTris.push_back(nList[n]);
         // ++index;
       }
@@ -159,13 +159,13 @@ bool TriangleOps::verifyWinding(DREAM3D::Mesh::Face_t &source,
     {
       if (i0 == nids[j + 1] && i1 == nids[j])
       {
-        //    std::cout << ">>>>>> Winding OK "<< tIndex << " <-> "<< tri->tIndex << std::endl;
+        //    qDebug() << ">>>>>> Winding OK "<< tIndex << " <-> "<< tri->tIndex ;
         done = true;
         break;
       }
       else if (i0 == nids[j] && i1 == nids[j + 1])
       {
-     //   std::cout << "!!!!!! Winding Bad " << std::endl;
+     //   qDebug() << "!!!!!! Winding Bad " ;
         done = true;
         TriangleOps::flipWinding(tri);
         flipped = true;
@@ -263,9 +263,9 @@ VectorType TriangleOps::computeNormal(DREAM3D::Mesh::Vert_t& n0, DREAM3D::Mesh::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::set<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
+QSet<int32_t> TriangleOps::generateUniqueLabels(DataArray<int32_t>* faceLabelsPtr)
 {
-  std::set<int32_t> uniqueLabels;
+  QSet<int32_t> uniqueLabels;
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   size_t count = faceLabelsPtr->GetNumberOfTuples();

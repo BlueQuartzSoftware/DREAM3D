@@ -38,9 +38,9 @@
 
 #include <hdf5.h>
 
-#include <string>
+#include <QtCore/QString>
 
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Lite.h"
 //#include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -58,7 +58,7 @@ class H5DataArrayWriter
   public:
   virtual ~H5DataArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t numTuples, int numComp, T* data, const std::string &className)
+  static int writeArray(hid_t gid, const QString &name, size_t numTuples, int numComp, T* data, const QString &className)
   {
       int32_t rank = 0;
       if(numComp == 1)
@@ -73,20 +73,20 @@ class H5DataArrayWriter
       hsize_t dims[2] =
       { numTuples, numComp };
       int err = 0;
-      if (H5Lite::datasetExists(gid, name) == false) {
-        err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
+      if (QH5Lite::datasetExists(gid, name) == false) {
+        err = QH5Lite::writePointerDataset(gid, name, rank, dims, data);
         if(err < 0)
         {
           return err;
         }
       }
-      err = H5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
+      err = QH5Lite::writeScalarAttribute(gid, name, DREAM3D::HDF5::NumComponents, numComp);
       if(err < 0)
       {
         return err;
       }
 
-      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
       if(err < 0)
       {
         return err;
@@ -119,20 +119,20 @@ class H5GBCDArrayWriter
   public:
   virtual ~H5GBCDArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t* gbcdDims, T* data, const std::string &className)
+  static int writeArray(hid_t gid, const QString &name, size_t* gbcdDims, T* data, const QString &className)
   {
       int32_t rank = 5;
       hsize_t dims[5] = {gbcdDims[0],gbcdDims[1],gbcdDims[2],gbcdDims[3],gbcdDims[4],};
       int err = 0;
-      if (H5Lite::datasetExists(gid, name) == false) {
-        err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
+      if (QH5Lite::datasetExists(gid, name) == false) {
+        err = QH5Lite::writePointerDataset(gid, name, rank, dims, data);
         if(err < 0)
         {
           return err;
         }
       }
 
-      err = H5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
+      err = QH5Lite::writeStringAttribute(gid, name, DREAM3D::HDF5::ObjectType, className);
       if(err < 0)
       {
         return err;

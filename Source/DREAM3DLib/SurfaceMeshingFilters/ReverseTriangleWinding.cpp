@@ -115,7 +115,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
   /* {
@@ -179,7 +179,7 @@ void ReverseTriangleWinding::setupFilterParameters()
     parameter->setPropertyName("ConversionType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    std::vector<std::string> choices;
+    QVector<QString> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     parameter->setChoices(choices);
@@ -221,7 +221,7 @@ int ReverseTriangleWinding::writeFilterParameters(AbstractFilterParametersWriter
 void ReverseTriangleWinding::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
   {
@@ -264,7 +264,7 @@ void ReverseTriangleWinding::preflight()
 void ReverseTriangleWinding::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

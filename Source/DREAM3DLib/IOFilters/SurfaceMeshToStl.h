@@ -37,11 +37,11 @@
 #ifndef _SurfaceMeshToStl_H_
 #define _SurfaceMeshToStl_H_
 
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -71,14 +71,14 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Write Stl Files from SurfaceMesh"; }
+    virtual const QString getHumanLabel() { return "Write Stl Files from SurfaceMesh"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -123,8 +123,8 @@ class DREAM3DLib_EXPORT SurfaceMeshToStl : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int writeHeader(FILE* f, const std::string &header, int triCount);
-    int writeNumTrianglesToFile(const std::string &filename, int triCount);
+    int writeHeader(FILE* f, const QString &header, int triCount);
+    int writeNumTrianglesToFile(const QString &filename, int triCount);
 
     SurfaceMeshToStl(const SurfaceMeshToStl&); // Copy Constructor Not Implemented
     void operator=(const SurfaceMeshToStl&); // Operator '=' Not Implemented

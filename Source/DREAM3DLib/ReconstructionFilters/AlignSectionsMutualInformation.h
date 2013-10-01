@@ -38,13 +38,13 @@
 #define AlignSectionsMutualInformation_H_
 
 #include <vector>
-#include <string>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/AlignSections.h"
@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_DECLARE_ARRAY(int, graincounts, GrainCounts)
 
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
-    virtual const std::string getHumanLabel() { return "Align Sections (Mutual Information)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const QString getHumanLabel() { return "Align Sections (Mutual Information)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(QVector<int> &xshifts, QVector<int> &yshifts);
 
   protected:
     AlignSectionsMutualInformation();
@@ -115,7 +115,7 @@ class DREAM3DLib_EXPORT AlignSectionsMutualInformation : public AlignSections
 
     unsigned int* m_CrystalStructures;
 
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
 
     unsigned long long int Seed;
 

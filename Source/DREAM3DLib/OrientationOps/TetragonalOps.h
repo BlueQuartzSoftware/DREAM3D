@@ -37,11 +37,13 @@
 #ifndef TetragonalOPS_H_
 #define TetragonalOPS_H_
 
-#include "MXA/Common/MXASetGetMacros.h"
+
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -57,9 +59,9 @@
 class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
 {
   public:
-    MXA_SHARED_POINTERS(TetragonalOps)
-    MXA_TYPE_MACRO_SUPER(TetragonalOps, OrientationOps)
-    MXA_STATIC_NEW_MACRO(TetragonalOps)
+    DREAM3D_SHARED_POINTERS(TetragonalOps)
+    DREAM3D_TYPE_MACRO_SUPER(TetragonalOps, OrientationOps)
+    DREAM3D_STATIC_NEW_MACRO(TetragonalOps)
 
 
     TetragonalOps();
@@ -73,7 +75,7 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
-    std::string getSymmetryName() { return "Tetragonal-High 4/mmm"; }
+    QString getSymmetryName() { return "Tetragonal-High 4/mmm"; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);
@@ -140,10 +142,10 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
      * @param eulers The Euler Angles to generate the pole figure from.
      * @param imageSize The size in Pixels of the final RGB Image.
      * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
-     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
+    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config);
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[8], int numsym,

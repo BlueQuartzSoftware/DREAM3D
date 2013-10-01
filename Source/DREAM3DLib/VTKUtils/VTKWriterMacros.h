@@ -36,6 +36,9 @@
 #ifndef VTKWRITER_H_
 #define VTKWRITER_H_
 
+#include <QtCore/QtEndian>
+
+
 /**@file VTKWriterMacros.h
  * @brief This file contains various macros to write out consistent VTK legacy
  * style files.
@@ -86,7 +89,7 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_ASCII(ptr, ScalarName, grain_indicies)\
-  fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
+  fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n"); }\
@@ -96,20 +99,20 @@
 
 
 #define WRITE_VTK_GRAIN_IDS_BINARY(ptr, ScalarName)  \
-  fprintf(f, "SCALARS %s int 1\n", ScalarName.c_str());\
+  fprintf(f, "SCALARS %s int 1\n", ScalarName.toLatin1().data());\
   fprintf(f, "LOOKUP_TABLE default\n"); \
   { \
   int* gn = new int[totalPoints];\
   int t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = grain_indicies[i];\
-    MXA::Endian::FromSystemToBig::convert<int>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(int), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -117,7 +120,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_ASCII(ptr, name, m_msgType, var, FORMAT)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -125,20 +128,20 @@
   }fprintf(f,"\n"); \
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY(ptr, name, m_msgType, var)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[i];\
-    MXA::Endian::FromSystemToBig::convert<m_msgType>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t);\
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -146,7 +149,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_VOXEL_BINARY_NOSWAP(ptr, name, m_msgType, var)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
@@ -156,7 +159,7 @@
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
@@ -164,7 +167,7 @@
 
 
 #define WRITE_VTK_SCALARS_FROM_FIELD_ASCII(ptr, name, m_msgType, var, grain_indicies, FORMAT)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   for (int64_t i = 0; i < totalPoints; i++) {\
     if(i%20 == 0 && i > 0) { fprintf(f, "\n");}\
@@ -172,42 +175,24 @@
   } fprintf(f,"\n");
 
 #define WRITE_VTK_SCALARS_FROM_FIELD_BINARY(ptr, name, m_msgType, var, grain_indicies)\
-  fprintf(f, "SCALARS %s %s 1\n", name.c_str(), #m_msgType);\
+  fprintf(f, "SCALARS %s %s 1\n", name.toLatin1().data(), #m_msgType);\
   fprintf(f, "LOOKUP_TABLE default\n");\
   { \
   m_msgType* gn = new m_msgType[totalPoints];\
   m_msgType t;\
   for (int64_t i = 0; i < totalPoints; i++) {\
     t = var[grain_indicies[i]];\
-    MXA::Endian::FromSystemToBig::convert<m_msgType>(t); \
+    DREAM3D::Endian::FromSystemToBig::convert(t); \
     gn[i] = t; \
   }\
   int64_t totalWritten = fwrite(gn, sizeof(m_msgType), totalPoints, f);\
   delete[] gn;\
   if (totalWritten != totalPoints)  {\
-    std::cout << "Error Writing Binary VTK Data into file " << file << std::endl;\
+    qDebug() << "Error Writing Binary VTK Data into file " << file ;\
     fclose(f);\
     return -1;\
   }\
   }
-
-#define VTK_IPF_COLOR_REFDIRECTION(var)\
-    float var[3] = {0.0f, 0.0f, 1.0f};
-
-#define GGVTKW_IPFCOLOR_BIANRY(var, quat)\
-if (r->crystruct[phase] == Ebsd::CrystalStructure::Cubic) {\
-  OIMColoring::GenerateCubicIPFColor(var->euler1,\
-                              var->euler2,\
-                              var->euler3,\
-                              RefDirection[0], RefDirection[1], RefDirection[2],\
-                              &rgba[i * 4], hkl);\
-} else if (r->crystruct[phase] == Ebsd::CrystalStructure::Hexagonal)   { \
-  q1[1] = var->quat[1];\
-  q1[2] = var->quat[2];\
-  q1[3] = var->quat[3];\
-  q1[4] = var->quat[4];\
-  OIMColoring::CalculateHexIPFColor(q1, RefDirection[0], RefDirection[1], RefDirection[2], &rgba[i * 4]); \
-}
 
 
 #endif /* VTKWRITER_H_ */

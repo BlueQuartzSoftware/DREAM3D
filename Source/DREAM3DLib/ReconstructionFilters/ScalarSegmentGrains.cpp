@@ -41,9 +41,9 @@
 #include <boost/random/variate_generator.hpp>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -94,24 +94,24 @@ class TSpecificCompareFunctor : public CompareFunctor
     {
       // Sanity check the indices that are being passed in.
       if (referencepoint >= m_Length || neighborpoint >= m_Length) { return false; }
-      
+
       if(m_Data[referencepoint] >= m_Data[neighborpoint])
       {
-        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) { 
+        if ((m_Data[referencepoint]-m_Data[neighborpoint]) <= m_Tolerance) {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       else
       {
-        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) { 
+        if ((m_Data[neighborpoint]-m_Data[referencepoint]) <= m_Tolerance) {
           m_GrainIds[neighborpoint] = gnum;
-          return true; 
+          return true;
         }
       }
       return false;
     }
-  
+
 protected:
    TSpecificCompareFunctor(){}
 
@@ -154,7 +154,7 @@ ScalarSegmentGrains::~ScalarSegmentGrains()
 // -----------------------------------------------------------------------------
 void ScalarSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -219,18 +219,18 @@ int ScalarSegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* w
 void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
+
   //int err = 0;
 
-  if(m_ScalarArrayName.empty() == true)
+  if(m_ScalarArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
 
 }
 
@@ -265,15 +265,15 @@ void ScalarSegmentGrains::execute()
     return;
   }
 
-  std::stringstream ss;
+
 
   m_InputData = m->getCellData(m_ScalarArrayName);
   if (NULL == m_InputData.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_ScalarArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_ScalarArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -285,7 +285,7 @@ void ScalarSegmentGrains::execute()
     m_GrainIds[i] = 0;
   }
 
-  std::string dType = m_InputData->getTypeAsString();
+  QString dType = m_InputData->getTypeAsString();
   if(m_InputData->GetNumberOfComponents() != 1)
   {
     m_Compare = new CompareFunctor(); // The default CompareFunctor which ALWAYS returns false for the comparison
@@ -353,12 +353,12 @@ void ScalarSegmentGrains::execute()
     NumberDistribution distribution(rangeMin, rangeMax);
     RandomNumberGenerator generator;
     Generator numberGenerator(generator, distribution);
-    generator.seed(static_cast<boost::uint32_t>( MXA::getMilliSeconds() )); // seed with the current time
+    generator.seed(static_cast<boost::uint32_t>( QDateTime::currentMSecsSinceEpoch() )); // seed with the current time
 
     DataArray<int32_t>::Pointer rndNumbers = DataArray<int32_t>::CreateArray(totalFields, "New GrainIds");
     int32_t* gid = rndNumbers->GetPointer(0);
     gid[0] = 0;
-    std::set<int32_t> grainIdSet;
+    QSet<int32_t> grainIdSet;
     grainIdSet.insert(0);
     for(size_t i = 1; i < totalFields; ++i)
     {
@@ -401,9 +401,9 @@ int64_t ScalarSegmentGrains::getSeed(size_t gnum)
   if (NULL == m)
   {
     setErrorCondition(-1);
-    std::stringstream ss;
-    ss << " DataContainer was NULL";
-    addErrorMessage(getHumanLabel(), ss.str(), -1);
+
+    QString ss = QObject::tr(" DataContainer was NULL");
+    addErrorMessage(getHumanLabel(), ss, -1);
     return -1;
   }
 

@@ -43,19 +43,19 @@
 #include <QtGui/QListWidgetItem>
 #include <QtGui/QComboBox>
 
-#include "H5Support/H5Utilities.h"
+#include "H5Support/QH5Utilities.h"
 #include "H5Support/H5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/ShapeType.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
@@ -77,7 +77,7 @@ QFilterWidget(parent)
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle(QString::fromStdString(filter->getHumanLabel()));
+  setTitle((filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -93,7 +93,7 @@ QInitializeSyntheticVolumeWidget::~QInitializeSyntheticVolumeWidget()
 // -----------------------------------------------------------------------------
 QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::SyntheticBuildingFilters);
+    return (DREAM3D::FilterGroups::SyntheticBuildingFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -102,7 +102,7 @@ QString QInitializeSyntheticVolumeWidget::getFilterGroup()
 void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter* filt)
 {
   InitializeSyntheticVolume* filter = InitializeSyntheticVolume::SafeObjectDownCast<AbstractFilter*, InitializeSyntheticVolume*>(filt);
-  m_InputFile->setText( QString::fromStdString( filter->getInputFile() ) );
+  m_InputFile->setText( ( filter->getInputFile() ) );
   m_XPoints->setValue( filter->getXVoxels() );
   m_YPoints->setValue( filter->getYVoxels() );
   m_ZPoints->setValue( filter->getZVoxels() );
@@ -110,7 +110,7 @@ void QInitializeSyntheticVolumeWidget::getGuiParametersFromFilter(AbstractFilter
   m_YResolution->setValue( filter->getYRes() );
   m_ZResolution->setValue( filter->getZRes() );
 
-  std::vector<uint32_t> shapeTypes = filter->getShapeTypes();
+  QVector<uint32_t> shapeTypes = filter->getShapeTypes();
   int count = shapeTypes.size();
   for (int i=0; i < count; ++i)
   {
@@ -129,7 +129,7 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   InitializeSyntheticVolume::Pointer filter = InitializeSyntheticVolume::New();
   if (defaultValues == true) { return filter; }
 
-  filter->setInputFile(m_InputFile->text().toStdString());
+  filter->setInputFile(m_InputFile->text());
   filter->setXVoxels(m_XPoints->value());
   filter->setYVoxels(m_YPoints->value());
   filter->setZVoxels(m_ZPoints->value());
@@ -138,7 +138,7 @@ AbstractFilter::Pointer QInitializeSyntheticVolumeWidget::getFilter(bool default
   filter->setZRes(m_ZResolution->value());
 
   int count = m_ShapeTypeCombos.count();
-  std::vector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
+  QVector<uint32_t> shapeTypes(count+1, DREAM3D::ShapeType::UnknownShapeType);
   bool ok = false;
   for (int i = 0; i < count; ++i)
   {
@@ -199,7 +199,7 @@ void QInitializeSyntheticVolumeWidget::setShapeTypes(DataArray<unsigned int>::Po
 // -----------------------------------------------------------------------------
 bool QInitializeSyntheticVolumeWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
+//  std::cout << "outFilePath: " << outFilePath << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -265,17 +265,15 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
     QFileInfo fi(m_InputFile->text());
     if(fi.exists() && fi.isFile())
     {
-      std::stringstream ss;
-
       m_DataContainer = VolumeDataContainer::New();
 
-      std::set<std::string> selectedArrays;
+      QSet<QString> selectedArrays;
       selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
       selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
       selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
 
       DataContainerReader::Pointer reader = DataContainerReader::New();
-      reader->setInputFile(m_InputFile->text().toStdString());
+      reader->setInputFile(m_InputFile->text());
       reader->setVolumeDataContainer(m_DataContainer.get());
       reader->setReadVolumeData(true);
       reader->setReadSurfaceData(false);
@@ -303,9 +301,9 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
       DataArray<uint32_t>* phases = DataArray<uint32_t>::SafePointerDownCast(iPtr.get());
 
       int size = static_cast<int>(phases->GetNumberOfTuples());
-      std::vector<std::string> shapeTypeStrings;
+      QVector<QString> shapeTypeStrings;
       ShapeType::getShapeTypeStrings(shapeTypeStrings);
-      std::vector<unsigned int> shapeTypeEnums;
+      QVector<unsigned int> shapeTypeEnums;
       ShapeType::getShapeTypeEnums(shapeTypeEnums);
 
       // Remove all the items from the GUI and from the internal tracking Lists
@@ -346,7 +344,7 @@ void QInitializeSyntheticVolumeWidget::on_m_InputFile_textChanged(const QString 
         cb->setObjectName(str);
         for (size_t s = 0; s < shapeTypeStrings.size(); ++s)
         {
-          cb->addItem(QString::fromStdString(shapeTypeStrings[s]), shapeTypeEnums[s]);
+          cb->addItem((shapeTypeStrings[s]), shapeTypeEnums[s]);
           cb->setItemData(static_cast<int>(s), shapeTypeEnums[s], Qt::UserRole);
         }
         m_ShapeTypeCombos << cb;
@@ -427,16 +425,16 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 
   float totalvol;
   int phase;
-//  std::vector<int> phases;
-//  std::vector<unsigned int> structures;
-//  std::vector<unsigned int> phaseType;
-//  std::vector<float> phasefraction;
-//  std::vector<float> double_data;
-//  std::vector<float> avgdiam;
-//  std::vector<float> sddiam;
-//  std::vector<float> grainDiamInfo;
-//  std::vector<float> maxdiameter;
-//  std::vector<float> mindiameter;
+//  QVector<int> phases;
+//  QVector<unsigned int> structures;
+//  QVector<unsigned int> phaseType;
+//  QVector<float> phasefraction;
+//  QVector<float> double_data;
+//  QVector<float> avgdiam;
+//  QVector<float> sddiam;
+//  QVector<float> grainDiamInfo;
+//  QVector<float> maxdiameter;
+//  QVector<float> mindiameter;
 
   totalvol = (xpoints * xres) * (ypoints * yres) * (zpoints * zres);
   if (totalvol == 0.0)
@@ -470,8 +468,8 @@ int QInitializeSyntheticVolumeWidget::estimate_numgrains(int xpoints, int ypoint
 #if 1
   DREAM3D_RANDOMNG_NEW()
 
-  std::vector<int> primaryphases;
-  std::vector<double> primaryphasefractions;
+  QVector<int> primaryphases;
+  QVector<double> primaryphasefractions;
   double totalprimaryfractions = 0.0;
   StatsData::Pointer statsData = StatsData::NullPointer();
   // find which phases are primary phases

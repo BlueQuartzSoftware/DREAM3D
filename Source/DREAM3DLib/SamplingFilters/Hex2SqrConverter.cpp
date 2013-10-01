@@ -35,13 +35,14 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "Hex2SqrConverter.h"
 
-#include <iostream>
+#include <QtCore/QtDebug>
 #include <fstream>
 
-#include "H5Support/H5Utilities.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/StringUtils.h"
+#include "H5Support/QH5Utilities.h"
+#include <QtCore/QFileInfo>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+
 
 #include "EbsdLib/TSL/AngConstants.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -79,7 +80,7 @@ Hex2SqrConverter::~Hex2SqrConverter()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -119,13 +120,13 @@ int Hex2SqrConverter::writeFilterParameters(AbstractFilterParametersWriter* writ
 void Hex2SqrConverter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
 
   if (m_EbsdFileList.size() == 0)
   {
-    ss.str("");
-    ss << "No files have been selected for import. Have you set the input directory?";
-    addErrorMessage(getHumanLabel(), ss.str(), -11);
+
+    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
+    addErrorMessage(getHumanLabel(), ss, -11);
     setErrorCondition(-1);
   }
 
@@ -144,7 +145,7 @@ void Hex2SqrConverter::preflight()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::execute()
 {
-  std::stringstream ss;
+  
   herr_t err = 0;
 
   std::vector<int> indices;
@@ -176,22 +177,23 @@ void Hex2SqrConverter::execute()
    * into the HDF5 file at the wrong index. YOU HAVE BEEN WARNED.
    */
  // int totalSlicesImported = 0;
-  for (std::vector<std::string>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
+  for (QVector<QString>::iterator filepath = m_EbsdFileList.begin(); filepath != m_EbsdFileList.end(); ++filepath)
   {
-    std::string ebsdFName = *filepath;
+    QString ebsdFName = *filepath;
 
     progress = static_cast<int>( z - m_ZStartIndex );
     progress = (int)(100.0f * (float)(progress) / total);
-    std::string msg = "Converting File: " + ebsdFName;
-    ss.str("");
+    QString msg = "Converting File: " + ebsdFName;
 
-    notifyStatusMessage(msg.c_str());
+
+    notifyStatusMessage(msg.toLatin1().data());
 
     // Write the Manufacturer of the OIM file here
     // This list will grow to be the number of EBSD file formats we support
-    std::string ext = MXAFileInfo::extension(ebsdFName);
-    std::string base = MXAFileInfo::fileNameWithOutExtension(ebsdFName);
-    std::string path = MXAFileInfo::parentPath(ebsdFName);
+    QFileInfo fi(ebsdFName);
+    QString ext = fi.suffix();
+    QString base = fi.baseName();
+    QDir path = fi.path();
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
         AngReader reader;
@@ -204,30 +206,39 @@ void Hex2SqrConverter::execute()
             setErrorCondition(reader.getErrorCode());
             return;
         }
-        else if(reader.getGrid().find(Ebsd::Ang::SquareGrid) == 0)
+        else if(reader.getGrid().startsWith(Ebsd::Ang::SquareGrid) == true)
         {
-            ss.str("");
-            ss << "Ang File is already a square grid: " << ebsdFName;
+
+            QString ss = QObject::tr("Ang File is already a square grid: %1").arg(ebsdFName);
             setErrorCondition(-55000);
-            addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+            addErrorMessage(getHumanLabel(), ss, getErrorCondition());
             return;
         }
         else
         {
-            std::string origHeader = reader.getOriginalHeader();
-            if (origHeader.empty() == true)
+            QString origHeader = reader.getOriginalHeader();
+            if (origHeader.isEmpty() == true)
             {
-              ss.str();
-              ss << "Header could not be retrieved: " << ebsdFName;
-              setErrorCondition(-55001);
-              addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-            }
-            char buf[kBufferSize];
-            std::stringstream in(origHeader);
 
-            std::string newEbsdFName = path + "/Sqr_" + base + "." + ext;
-            std::ofstream outFile;
-            outFile.open(newEbsdFName.c_str());
+              QString ss = QObject::tr("Header could not be retrieved: %1").arg(ebsdFName);
+              setErrorCondition(-55001);
+              addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+            }
+
+            QTextStream in(&origHeader);
+
+            QString newEbsdFName = path.absolutePath() + "/Sqr_" + base + "." + ext;
+
+            QFile outFile(newEbsdFName);
+            if (!outFile.open(QIODevice::WriteOnly | QIODevice::Text))
+            {
+              QString msg = QObject::tr("ANG Square Output file could not be opened for writing: %1").arg(newEbsdFName);
+              setErrorCondition(-200);
+              notifyErrorMessage(msg, getErrorCondition());
+              return;
+            }
+
+            QTextStream dStream(&outFile);
 
             m_HeaderIsComplete = false;
 
@@ -250,13 +261,11 @@ void Hex2SqrConverter::execute()
             float* semsig = reader.getSEMSignalPointer();
             float* fit = reader.getFitPointer();
             int* phase = reader.getPhaseDataPointer();
-            while (!in.eof())
+            while (!in.atEnd())
             {
-                std::string line;
-                ::memset(buf, 0, kBufferSize);
-                in.getline(buf, kBufferSize);
-                line = modifyAngHeaderLine(buf, kBufferSize);
-                if(m_HeaderIsComplete == false) outFile << line << std::endl;
+                QString buf = in.readLine();
+                QString line = modifyAngHeaderLine(buf);
+                if(m_HeaderIsComplete == false) dStream << line ;
             }
             for(int j = 0; j < m_NumRows; j++)
             {
@@ -290,21 +299,21 @@ void Hex2SqrConverter::execute()
                     dist2 = ((xSqr-xHex2)*(xSqr-xHex2)) + ((ySqr-yHex2)*(ySqr-yHex2));
                     if(dist1 <= dist2 || row1 == (HexNumRows-1)) {point = point1;}
                     else {point = point2;}
-                    outFile << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" << std::endl;
+                    dStream << "  " << phi1[point] << "	" << PHI[point] << "	" << phi2[point] << "	" << xSqr << "	" << ySqr << "	" << iq[point] << "	" << ci[point] << "	" << phase[point] << "	" << semsig[point] << "	" << fit[point] << "	" ;
                 }
             }
         }
     }
     else if(ext.compare(Ebsd::Ctf::FileExt) == 0)
     {
-        std::cout << "Ctf files are not on a hexagonal grid and do not need to be converted." << std::endl;
+        qDebug() << "Ctf files are not on a hexagonal grid and do not need to be converted." ;
     }
     else
     {
         err = -1;
-        ss.str("");
-        ss << "The File extension was not detected correctly";
-        addErrorMessage(getHumanLabel(), ss.str(), err);
+
+        QString ss = QObject::tr("The File extension was not detected correctly");
+        addErrorMessage(getHumanLabel(), ss, err);
         setErrorCondition(-1);
         return;
     }
@@ -317,10 +326,10 @@ void Hex2SqrConverter::execute()
 // -----------------------------------------------------------------------------
 //  Modify the Header line of the ANG file if necessary
 // -----------------------------------------------------------------------------
-std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
+QString Hex2SqrConverter::modifyAngHeaderLine(QString buf)
 {
-  std::string line = "";
-  if (buf[0] != '#')
+  QString line = "";
+  if (buf.at(0) != '#')
   {
     line = buf;
     m_HeaderIsComplete = true;
@@ -328,7 +337,7 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   }
   // Start at the first character and walk until you find another non-space character
   size_t i = 1;
-  while(buf[i] == ' ')
+  while(buf.at(i) == ' ')
   {
     ++i;
   }
@@ -336,14 +345,14 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   size_t wordEnd = i+1;
   while(1)
   {
-    if (buf[i] == 45 || buf[i] == 95) { ++i; } // "-" or "_" character
-    else if (buf[i] >= 65 && buf[i] <=90) { ++i; } // Upper case alpha character
-    else if (buf[i] >= 97 && buf[i] <=122) {++i; } // Lower case alpha character
+    if (buf.at(i) == 45 || buf.at(i) == 95) { ++i; } // "-" or "_" character
+    else if (buf.at(i) >= 65 && buf.at(i) <=90) { ++i; } // Upper case alpha character
+    else if (buf.at(i) >= 97 && buf.at(i) <=122) {++i; } // Lower case alpha character
     else { break;}
   }
   wordEnd = i;
 
-  std::string word( &(buf[wordStart]), wordEnd - wordStart);
+  QString word( buf.mid(wordStart) );
 
   if (word.size() == 0)
   {
@@ -356,23 +365,23 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   }
   else if (word.compare(Ebsd::Ang::XStep) == 0)
   {
-      line = "# " + word + ": " + float_to_string(m_XResolution);
+      line = "# " + word + ": " + QString::number( (double)m_XResolution);
   }
   else if (word.compare(Ebsd::Ang::YStep) == 0)
   {
-      line = "# " + word + ": " + float_to_string(m_YResolution);
+      line = "# " + word + ": " + QString::number((double)m_YResolution);
   }
   else if (word.compare(Ebsd::Ang::NColsOdd) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumCols);
+      line = "# " + word + ": " + QString::number(m_NumCols);
   }
   else if (word.compare(Ebsd::Ang::NColsEven) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumCols);
+      line = "# " + word + ": " + QString::number(m_NumCols);
   }
   else if (word.compare(Ebsd::Ang::NRows) == 0)
   {
-      line = "# " + word + ": " + int_to_string(m_NumRows);
+      line = "# " + word + ": " + QString::number(m_NumRows);
   }
   else
   {
@@ -381,16 +390,3 @@ std::string Hex2SqrConverter::modifyAngHeaderLine(char* buf, size_t length)
   return line;
 }
 
-std::string Hex2SqrConverter::int_to_string(int value)
-{
-    std::stringstream oss;
-    oss << value;
-    return oss.str();
-}
-
-std::string Hex2SqrConverter::float_to_string(float value)
-{
-    std::stringstream oss;
-    oss << value;
-    return oss.str();
-}

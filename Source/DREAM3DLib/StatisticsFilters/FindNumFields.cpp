@@ -39,7 +39,7 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -87,12 +87,12 @@ void FindNumFields::dataCheck(bool preflight, size_t voxels, size_t fields, size
 {
 
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -301, int32_t, Int32ArrayType, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, int32_t, Int32ArrayType, 0, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)
+
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, int32_t, Int32ArrayType, 0, ensembles, 1)
 }
 
 

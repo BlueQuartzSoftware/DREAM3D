@@ -35,20 +35,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <stdio.h>
 
-#include <string>
-#include <map>
-#include <vector>
-#include <iostream>
-#include <fstream>
-#include <sstream>
 
-#include "MXA/Utilities/MXADir.h"
-#include "MXA/Utilities/MXAFileInfo.h"
-#include "MXA/Utilities/MD5.h"
+#include <QtCore/QString>
+#include <QtCore/QVector>
+#include <QtCore/QMap>
+#include <QtCore/QDir>
+#include <QtCore/QFile>
+#include <QtCore/QFileInfo>
+#include <QtCore/QCryptographicHash>
 
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 #include "DREAM3DLib/Common/CreatedArrayHelpIndexEntry.h"
 
 
@@ -57,53 +55,70 @@
 // Enabling this will create a pair of files that can be used to update
 // the "PreflightTest.cpp" unit test
 #define GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT 0
-#define GENERATE_FILTER_PARAMTERS_READER_CODE 1
+#define GENERATE_FILTER_PARAMTERS_READER_CODE 0
 
 
 
-typedef std::map<std::string, std::set<std::string> >  FilterMapType;
-typedef std::set<std::string>  StringSetType;
+typedef QMap<QString, QSet<QString> >  FilterMapType;
+typedef QSet<QString>  StringSetType;
 
 // These will be defined in an include header file below.
-std::string FILTER_WIDGETS_BINARY_DIR();
-std::string FILTER_WIDGETS_SOURCE_DIR();
-std::string FILTER_WIDGETS_TEMP_DIR();
-std::string FILTER_WIDGETS_DOCS_DIR();
-std::string DREAM3D_SOURCE_DIR();
-std::string FILTER_INCLUDE_PREFIX();
-std::string DREAM3D_SOURCE_DIR();
-std::string DREAM3D_BINARY_DIR();
-std::string DREAM3DLIB_SOURCE_DIR();
+QString FILTER_WIDGETS_BINARY_DIR();
+QString FILTER_WIDGETS_SOURCE_DIR();
+QString FILTER_WIDGETS_TEMP_DIR();
+QString FILTER_WIDGETS_DOCS_DIR();
+QString DREAM3D_SOURCE_DIR();
+QString FILTER_INCLUDE_PREFIX();
+QString DREAM3D_SOURCE_DIR();
+QString DREAM3D_BINARY_DIR();
+QString DREAM3DLIB_SOURCE_DIR();
 
-typedef std::map<std::string, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
+typedef QMap<QString, CreatedArrayHelpIndexEntry::VectorType> IndexMap_t;
 
-std::map<std::string, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
+QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void copyFile(const std::string &src, const std::string &dest)
+void copyFile(const QString &src, const QString &dest)
 {
-  size_t tempFileSize = MXAFileInfo::fileSize(src);
-
-  unsigned char* contents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-  FILE* f = fopen(src.c_str(), "rb");
-  size_t itemsRead = fread(contents, tempFileSize, 1, f);
-  if(itemsRead != 1)
+  if (src.isEmpty() == true | dest.isEmpty() == true)
   {
-
+    BOOST_ASSERT(false);
   }
-  fclose(f);
-  f = NULL;
 
-  f = fopen(dest.c_str(), "wb");
-  fwrite(contents, tempFileSize, 1, f);
-  fclose(f);
+  QFile srcFile(src);
 
-  free(contents);
+  QFile dstFile(dest);
+  if(dstFile.exists() == true)
+  {
+    dstFile.remove();
+  }
+
+  srcFile.copy(dest);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+QString Md5OfFile(QString filePath)
+{
+  if (filePath.isEmpty() == true)
+  {
+    BOOST_ASSERT(false);
+  }
+  QFile file(filePath);
+  if(!file.open(QFile::ReadOnly | QFile::Text))
+  {
+    qDebug() << "Could not open file '" << filePath << "' to compute MD5 Checksum";
+    return QString("");
+  }
 
+  QByteArray contents = file.readAll();
+  QByteArray hash = QCryptographicHash::hash(contents, QCryptographicHash::Md5).toHex();
+
+  return QString(hash);
+}
 
 // -----------------------------------------------------------------------------
 //
@@ -123,7 +138,7 @@ void extractHelpIndexEntries(AbstractFilter* filter)
 
   for(CreatedArrayHelpIndexEntry::VectorType::iterator entry = entries.begin(); entry != entries.end(); ++entry)
   {
-    std::string entryName = (*entry)->getArrayDefaultName();
+    QString entryName = (*entry)->getArrayDefaultName();
     entryName = entryName + " (" + (*entry)->getArrayGroup() + ")";
     CreatedArrayHelpIndexEntry::VectorType& vec = helpIndex[entryName]; // Will Create one if not there already
     vec.push_back((*entry));
@@ -137,26 +152,26 @@ void extractHelpIndexEntries(AbstractFilter* filter)
 void createMarkdownCreatedArrayIndex()
 {
 
-  std::string path = DREAM3D_BINARY_DIR();
-  path = path + MXADir::Separator + "createdarrayindex.md";
+  QString path = DREAM3D_BINARY_DIR();
+  path = path + "/" + "createdarrayindex.md";
 
-  FILE* f = fopen(path.c_str(), "wb");
+  FILE* f = fopen(path.toLatin1().data(), "wb");
 
   fprintf(f, "Created Array Index {#createdarrayindex}\n======\n");
 
   for(IndexMap_t::iterator entry = helpIndex.begin(); entry != helpIndex.end(); ++entry)
   {
-    std::string name = (*entry).first;
-    fprintf (f, "## %s ##\n\n", (*entry).first.c_str());
+    QString name = entry.key();
+    fprintf (f, "## %s ##\n\n", entry.key().toLatin1().data());
 
-    CreatedArrayHelpIndexEntry::VectorType& filters = (*entry).second;
+    CreatedArrayHelpIndexEntry::VectorType& filters = entry.value();
 
 
     for(CreatedArrayHelpIndexEntry::VectorType::iterator indexEntry = filters.begin(); indexEntry != filters.end(); ++indexEntry)
     {
-      std::string lower = (*indexEntry)->getFilterName();
-      std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
-      fprintf(f, "+ [%s](%s.html) (%s->%s)\n", (*indexEntry)->getFilterHumanLabel().c_str(), lower.c_str(), (*indexEntry)->getFilterGroup().c_str(), (*indexEntry)->getFilterSubGroup().c_str());
+      QString lower = (*indexEntry)->getFilterName();
+      lower = lower.toLower();
+      fprintf(f, "+ [%s](%s.html) (%s->%s)\n", (*indexEntry)->getFilterHumanLabel().toLatin1().data(), lower.toLatin1().data(), (*indexEntry)->getFilterGroup().toLatin1().data(), (*indexEntry)->getFilterSubGroup().toLatin1().data());
     }
 
     fprintf(f, "\n");
@@ -168,47 +183,45 @@ void createMarkdownCreatedArrayIndex()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createHeaderFile(const std::string &group, const std::string &filterName, AbstractFilter* filterPtr, const std::string &outputPath)
+void createHeaderFile(const QString &group, const QString &filterName, AbstractFilter* filterPtr, const QString &outputPath)
 {
-  std::stringstream ss;
-
   extractHelpIndexEntries(filterPtr);
 
-  std::string completePath = MXADir::toNativeSeparators(outputPath);
+
+  QString completePath = QDir::toNativeSeparators(outputPath);
   // Make sure the output path exists
-  std::string parentPath = MXADir::parentPath(completePath);
-  if (MXADir::exists(parentPath) == false)
+  QDir parentPath(completePath);
+  //QString parentPath = MXADir::parentPath(completePath);
+  if (parentPath.exists() == false)
   {
-    MXADir::mkdir(parentPath, true);
+    parentPath.mkpath(".");
   }
 
-  std::vector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
+  QVector<FilterParameter::Pointer> options = filterPtr->getFilterParameters();
 
-  ss.str("");
-  ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.h";
-  std::string tempPath = ss.str();
+  QString tempPath = FILTER_WIDGETS_TEMP_DIR() + "/" + group + "_" + filterName + ".h";
 
-  FILE* f = fopen(tempPath.c_str(), "wb");
+  FILE* f = fopen(tempPath.toLatin1().data(), "wb");
   if (NULL == f)
   {
-    std::cout << "Could not open file '" << tempPath << "' for writing." << std::endl;
-     return;
+    qDebug() << "Could not open file '" << tempPath << "' for writing." << "\n";
+    return;
   }
 
   fprintf(f, "/*\n");
   fprintf(f, "  This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "  If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "  The code generated is based off values from the filter located at\n");
-  if (FILTER_INCLUDE_PREFIX().empty() == true) {
-    fprintf(f, "  %s/%s.h\n*/\n", group.c_str(), filterName.c_str());
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
+    fprintf(f, "  %s/%s.h\n*/\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
   {
-    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filterName.c_str());
+    fprintf(f, "  %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().toLatin1().data(), group.toLatin1().data(), filterName.toLatin1().data());
   }
 
-  fprintf(f, "#ifndef _Q%sWidget_H_\n", filterName.c_str());
-  fprintf(f, "#define _Q%sWidget_H_\n\n", filterName.c_str());
+  fprintf(f, "#ifndef _Q%sWidget_H_\n", filterName.toLatin1().data());
+  fprintf(f, "#define _Q%sWidget_H_\n\n", filterName.toLatin1().data());
 
   fprintf(f, "#include <QtCore/QObject>\n");
   fprintf(f, "#include <QtCore/QSettings>\n");
@@ -216,19 +229,19 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
 
   fprintf(f, "#include \"PipelineBuilder/QFilterWidget.h\"\n");
   fprintf(f, "#include \"DREAM3DLib/Common/DREAM3DSetGetMacros.h\"\n");
-  fprintf(f, "#include \"DREAM3DLib/Common/FilterParameter.h\"\n\n");
-  if (FILTER_INCLUDE_PREFIX().empty() == true) {
-    fprintf(f, "#include \"%s/%s.h\"\n", group.c_str(), filterName.c_str());
+  fprintf(f, "#include \"DREAM3DLib/FilterParameters/FilterParameter.h\"\n\n");
+  if (FILTER_INCLUDE_PREFIX().isEmpty() == true) {
+    fprintf(f, "#include \"%s/%s.h\"\n", group.toLatin1().data(), filterName.toLatin1().data());
   }
   else
   {
-    fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filterName.c_str());
+    fprintf(f, "#include \"%s/%s/%s.h\"\n", FILTER_INCLUDE_PREFIX().toLatin1().data(), group.toLatin1().data(), filterName.toLatin1().data());
   }
-  fprintf(f, "\n\nclass Q%sWidget : public QFilterWidget \n{\n", filterName.c_str());
+  fprintf(f, "\n\nclass Q%sWidget : public QFilterWidget \n{\n", filterName.toLatin1().data());
   fprintf(f, "   Q_OBJECT\n");
   fprintf(f, "  public:\n");
-  fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filterName.c_str());
-  fprintf(f, "    virtual ~Q%sWidget();\n", filterName.c_str());
+  fprintf(f, "    Q%sWidget(QWidget* parent = NULL);\n", filterName.toLatin1().data());
+  fprintf(f, "    virtual ~Q%sWidget();\n", filterName.toLatin1().data());
   fprintf(f, "    virtual AbstractFilter::Pointer getFilter(bool defaultValues);\n");
   fprintf(f, "    void writeOptions(QSettings &prefs);\n");
   fprintf(f, "    void readOptions(QSettings &prefs);\n\n");
@@ -245,32 +258,32 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   for(size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
-    if (opt->getCastableValueType().empty() == false)
+    if (opt->getCastableValueType().isEmpty() == false)
     {
-      std::string cType = opt->getCastableValueType();
+      QString cType = opt->getCastableValueType();
       fprintf(f, "  private:\n");
-      fprintf(f, "    %s m_%s;\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s m_%s;\n", cType.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "  public:\n");
-      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "  public slots:\n");
-      fprintf(f, "    void set%s(%s v, bool emitChanged = true);\n", prop.c_str(), cType.c_str());
+      fprintf(f, "    void set%s(%s v, bool emitChanged = true);\n", prop.toLatin1().data(), cType.toLatin1().data());
       fprintf(f, "  public:\n");
-      fprintf(f, "    %s  get%s();\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s();\n", cType.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getValueType().compare("string") == 0)
     {
-      std::string cType = "QString";
+      QString cType = "QString";
       fprintf(f, "  private:\n");
-      fprintf(f, "    QString m_%s;\n", prop.c_str());
+      fprintf(f, "    QString m_%s;\n", prop.toLatin1().data());
       fprintf(f, "  public:\n");
-      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", cType.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "  public slots:\n");
-      fprintf(f, "    void set%s(const %s &v, bool emitChanged = true);\n", prop.c_str(), cType.c_str());
+      fprintf(f, "    void set%s(const %s &v, bool emitChanged = true);\n", prop.toLatin1().data(), cType.toLatin1().data());
       fprintf(f, "  public:\n");
-      fprintf(f, "    %s  get%s();\n\n\n", cType.c_str(), prop.c_str());
+      fprintf(f, "    %s  get%s();\n\n\n", cType.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget && implementPreflightAboutToExecute == true)
     {
@@ -281,17 +294,17 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
     {
-      fprintf(f, "    Q_PROPERTY(IntVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(IntVec3Widget_t, %s)\n\n", prop.c_str());
+      fprintf(f, "    Q_PROPERTY(IntVec3Widget_t %s READ get%s WRITE set%s)\n", prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(IntVec3Widget_t, %s)\n\n", prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
-      fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.c_str());
+      fprintf(f, "    Q_PROPERTY(FloatVec3Widget_t %s READ get%s WRITE set%s)\n", prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(FloatVec3Widget_t, %s)\n\n", prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, %s)\n\n", prop.c_str());
+      fprintf(f, "DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, %s)\n\n", prop.toLatin1().data());
       axisAngleWidgetCount++;
       if (axisAngleWidgetCount > 1)
       {
@@ -302,7 +315,7 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget
              && implementPreflightAboutToExecute == true)
     {
-      fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(std::vector<ComparisonInput_t>, %s)\n\n", prop.c_str());
+      fprintf(f, "\n  DREAM3D_INSTANCE_PROPERTY(QVector<ComparisonInput_t>, %s)\n\n", prop.toLatin1().data());
       fprintf(f, "  public:\n");
       fprintf(f, "    virtual void preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc);\n");
       fprintf(f, "\n\n");
@@ -310,8 +323,8 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
     }
     else
     {
-      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.c_str(), prop.c_str());
+      fprintf(f, "    Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "    QFILTERWIDGET_INSTANCE_PROPERTY(%s, %s)\n\n", typ.toLatin1().data(), prop.toLatin1().data());
     }
 
     if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
@@ -328,58 +341,50 @@ void createHeaderFile(const std::string &group, const std::string &filterName, A
   fprintf(f, "  private:\n");
   fprintf(f, "    QString m_FilterGroup;\n\n");
   fprintf(f, "    QString m_FilterSubGroup;\n\n");
-  fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filterName.c_str(), filterName.c_str());
-  fprintf(f, "    void operator=(const Q%sWidget&);\n", filterName.c_str());
+  fprintf(f, "    Q%sWidget(const Q%sWidget&);\n", filterName.toLatin1().data(), filterName.toLatin1().data());
+  fprintf(f, "    void operator=(const Q%sWidget&);\n", filterName.toLatin1().data());
   fprintf(f, "};\n");
-  fprintf(f, "#endif /* Q%sWidget_H_ */\n", filterName.c_str());
+  fprintf(f, "#endif /* Q%sWidget_H_ */\n", filterName.toLatin1().data());
 
   fclose(f);
 
+  qint64 currentFileSize = 0;
   // Now compare the file just generated with any possible existing file
-  size_t currentFileSize = MXAFileInfo::fileSize(completePath);
-  size_t tempFileSize = MXAFileInfo::fileSize(tempPath);
+  {
+    QFileInfo fi(completePath);
+    currentFileSize = fi.size();
+  }
+
+  qint64 tempFileSize = 0;
+  {
+    QFileInfo fi(tempPath);
+    tempFileSize = fi.size();
+  }
   // If the file sizes are different then copy the file
   if (currentFileSize != tempFileSize)
   {
-    std::cout << "0-Creating Header File: " <<completePath << std::endl;
+    qDebug() << "0-Creating Header File: " << completePath;
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    FILE* c = fopen(completePath.c_str(), "rb");
-    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
-    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
-    if(itemsRead != 1)
-    {
 
-    }
-    fclose(c);
-
-    MD5 md5_current;
-    md5_current.update(currentContents, currentFileSize);
-    md5_current.finalize();
-    std::string currentHexDigest = md5_current.hexdigest();
-
-
-    FILE* t = fopen(tempPath.c_str(), "rb");
-    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-    itemsRead = fread(tempContents, tempFileSize, 1, t);
-    if(itemsRead != 1)
-    {
-
-    }
-    fclose(t);
-
-    MD5 md5;
-    md5.update(tempContents, tempFileSize);
-    md5.finalize();
-    std::string tempHexDigest = md5.hexdigest();
+    QString currentHash = Md5OfFile(completePath);
+    QString tempHash = Md5OfFile(tempPath);
 
     // Use MD5 Checksums to figure out if the files are different
-    if (tempHexDigest.compare(currentHexDigest) != 0)
+    if (tempHash != currentHash)
     {
-      std::cout << "0-Creating Header File: " << completePath << std::endl;
+      qDebug() << "0-Copying Header File: " << completePath;
+      qDebug() << "    Hex Digest:    " << QString(currentHash);
+      qDebug() << "    tempHexDigest: " << QString(tempHash);
       copyFile(tempPath, completePath);
+    }
+
+    QFile tempFile(tempPath);
+    if(tempFile.remove() == false)
+    {
+      qDebug() << "Could not remove temp header file " << tempPath;
     }
   }
 
@@ -430,22 +435,21 @@ int readLine(std::istream &in, char* buf, int bufSize)
 
 
 #define kBufferSize 1024
-void parseSourceFileForMarker(const std::string filename, const std::string marker, const std::string &replace)
+void parseSourceFileForMarker(const QString filename, const QString marker, const QString &replace)
 {
 
-  std::string tempfile = filename + "_tmp";
+  QString tempfile = filename + "_tmp";
   {
-      std::ofstream out(tempfile.c_str(), std::ios_base::binary);
+    std::ofstream out(tempfile.toLatin1().data(), std::ios_base::binary);
 
-      std::cout << filename << std::endl;
-      std::ifstream instream;
-      instream.open(filename.c_str(), std::ios_base::binary);
-      if (!instream.is_open())
-      {
-        std::stringstream ss;
-        std::cout << " file could not be opened: " << filename << std::endl;
-        return;
-      }
+    qDebug() << filename << "\n";
+    std::ifstream instream;
+    instream.open(filename.toLatin1().data(), std::ios_base::binary);
+    if (!instream.is_open())
+    {
+      qDebug() << " file could not be opened: " << filename << "\n";
+      return;
+    }
 
     char buf[kBufferSize];
     ::memset(buf, 0, kBufferSize);
@@ -463,14 +467,14 @@ void parseSourceFileForMarker(const std::string filename, const std::string mark
       }
       else
       {
-        out << std::string(buf) << std::endl;
+        out << QString(buf) << "\n";
       }
     }
   }
   copyFile(tempfile, filename);
-  if ( !MXADir::remove(tempfile) )
+  if ( !QFile::remove(tempfile) )
   {
-    std::cout << "FILE NOT REMOVED: " << tempfile << std::endl;
+    qDebug() << "FILE NOT REMOVED: " << tempfile << "\n";
   }
 
 }
@@ -482,28 +486,24 @@ void parseSourceFileForMarker(const std::string filename, const std::string mark
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void createSourceFile( const std::string &group,
-                       const std::string &filter,
-                       std::vector<FilterParameter::Pointer> options,
-                       const std::string &outputPath)
+void createSourceFile( const QString &group,
+                       const QString &filter,
+                       QVector<FilterParameter::Pointer> options,
+                       const QString &outputPath)
 {
-  std::stringstream ss;
 
-  std::string completePath = MXADir::toNativeSeparators(outputPath);
+  QString completePath = QDir::toNativeSeparators(outputPath);
+  QFileInfo fi(completePath);
   // Make sure the output path exists
-  std::string parentPath = MXADir::parentPath(completePath);
-  if (MXADir::exists(parentPath) == false)
+  QDir parentPath = fi.path();
+  if (parentPath.exists() == false)
   {
-    MXADir::mkdir(ss.str(), true);
+    parentPath.mkpath(".");
   }
 
-  //std::string headerFile = parentPath + MXADir::Separator + MXAFileInfo::fileNameWithOutExtension(completePath) + ".h";
+  QString tempPath = FILTER_WIDGETS_TEMP_DIR() + "/" + group + "_" + filter + ".cpp";
 
-  ss.str("");
-  ss << FILTER_WIDGETS_TEMP_DIR() << "/TEMP_WIDGET.cpp";
-  std::string tempPath = ss.str();
-
-  FILE* f = fopen(tempPath.c_str(), "wb");
+  FILE* f = fopen(tempPath.toLatin1().data(), "wb");
 
   bool implementArrayNameComboBoxUpdated = false;
   bool implementArrayNameSelectionWidget = false;
@@ -513,15 +513,15 @@ void createSourceFile( const std::string &group,
   fprintf(f, "* This file was auto-generated from the program FilterWidgetCodeGen.cpp which is\n  itself generated during cmake time\n");
   fprintf(f, "* If you need to make changes to the code that is generated you will need to make\n  them in the original file. \n");
   fprintf(f, "* The code generated is based off values from the filter located at\n");
-  if(FILTER_INCLUDE_PREFIX().empty() == true)
+  if(FILTER_INCLUDE_PREFIX().isEmpty() == true)
   {
-    fprintf(f, "* %s/%s.h\n*/\n", group.c_str(), filter.c_str());
+    fprintf(f, "* %s/%s.h\n*/\n", group.toLatin1().data(), filter.toLatin1().data());
   }
   else
   {
-    fprintf(f, "* %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+    fprintf(f, "* %s/%s/%s.h\n*/\n", FILTER_INCLUDE_PREFIX().toLatin1().data(), group.toLatin1().data(), filter.toLatin1().data());
   }
-  fprintf(f, "#include \"%s/%sWidgets/Q%sWidget.h\"\n", FILTER_INCLUDE_PREFIX().c_str(), group.c_str(), filter.c_str());
+  fprintf(f, "#include \"%s/%sWidgets/Q%sWidget.h\"\n", FILTER_INCLUDE_PREFIX().toLatin1().data(), group.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "#include <QtCore/QDir>\n");
   fprintf(f, "#include <QtGui/QApplication>\n");
   fprintf(f, "#include <QtGui/QLineEdit>\n");
@@ -537,7 +537,7 @@ void createSourceFile( const std::string &group,
       fprintf(f, "#include \"ArraySelectionWidget.h\"\n");
     }
     if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+        && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
       fprintf(f, "#include \"ComparisonSelectionWidget.h\"\n");
     }
@@ -550,65 +550,65 @@ void createSourceFile( const std::string &group,
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
   fprintf(f, "// This file is generated by Qt's moc program which sets up the signals/slots\n");
   fprintf(f, "// for this class.\n");
-  fprintf(f, "#include \"moc_Q%sWidget.cxx\"\n\n", filter.c_str());
+  fprintf(f, "#include \"moc_Q%sWidget.cxx\"\n\n", filter.toLatin1().data());
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.c_str(), filter.c_str());
+  fprintf(f, "Q%sWidget::Q%sWidget(QWidget* parent):\nQFilterWidget(parent)\n", filter.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "{\n");
-  fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
-  fprintf(f, "     m_FilterGroup = QString::fromStdString(filter->getGroupName());\n");
-  fprintf(f, "     m_FilterSubGroup = QString::fromStdString(filter->getSubGroupName());\n");
+  fprintf(f, "     %s::Pointer filter = %s::New();\n", filter.toLatin1().data(), filter.toLatin1().data());
+  fprintf(f, "     m_FilterGroup = filter->getGroupName();\n");
+  fprintf(f, "     m_FilterSubGroup = filter->getSubGroupName();\n");
   fprintf(f, "     setupGui();\n");
   fprintf(f, "     getGuiParametersFromFilter( filter.get() );\n");
-  fprintf(f, "     setTitle(QString::fromStdString(filter->getHumanLabel()));\n");
+  fprintf(f, "     setTitle(filter->getHumanLabel());\n");
   fprintf(f, "}\n\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.c_str(), filter.c_str());
+  fprintf(f, "Q%sWidget::~Q%sWidget(){}\n\n", filter.toLatin1().data(), filter.toLatin1().data());
 
   // Write getGuiParametersFromFilter(filter) function
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter* filt)\n{\n", filter.c_str());
+  fprintf(f, "void Q%sWidget::getGuiParametersFromFilter(AbstractFilter* filt)\n{\n", filter.toLatin1().data());
   if (options.size() > 0)
   {
-    fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.c_str(), filter.c_str(), filter.c_str());
+    fprintf(f, "     %s* filter = %s::SafeObjectDownCast<AbstractFilter*, %s*>(filt);\n", filter.toLatin1().data(), filter.toLatin1().data(), filter.toLatin1().data());
     fprintf(f, "     blockSignals(true);\n");
   }
   // Loop on all the options getting the defaults from a fresh instance of the filter class
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
-      if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
-        || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
-        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
+    if(opt->getWidgetType() == FilterParameter::StringWidget || opt->getWidgetType() == FilterParameter::InputFileWidget
+       || opt->getWidgetType() == FilterParameter::InputPathWidget || opt->getWidgetType() == FilterParameter::OutputFileWidget
+       || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
-      fprintf(f, "     {\n");
-      fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "     { \n");
+      fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           w->setText( QString::fromStdString(filter->get%s()) );\n", prop.c_str());
+      fprintf(f, "           w->setText( filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::IntWidget || opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
       fprintf(f, "     {\n");
-      fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        QLineEdit* w = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           std::stringstream ss;\n");
-      fprintf(f, "           ss << filter->get%s();\n", prop.c_str());
-      fprintf(f, "           w->setText( QString::fromStdString(ss.str()) );\n");
+    //  fprintf(f, "           \n");
+    //  fprintf(f, "           ss << filter->get%s();\n", prop.toLatin1().data());
+      fprintf(f, "           w->setText( QString::number(filter->get%s()) );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
       fprintf(f, "     {\n");
-      fprintf(f, "        QCheckBox* w = qFindChild<QCheckBox*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        QCheckBox* w = qFindChild<QCheckBox*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           w->setChecked( filter->get%s() );\n", prop.c_str());
+      fprintf(f, "           w->setChecked( filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
@@ -617,51 +617,51 @@ void createSourceFile( const std::string &group,
       ChoiceFilterParameter* ptr = ChoiceFilterParameter::SafePointerDownCast( opt.get() );
 
       fprintf(f, "     {\n");
-      fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
       if (opt->getValueType().compare("string") == 0)
       {
-          fprintf(f, "           int index = w->findText( QString::fromStdString(filter->get%s()) );\n", prop.c_str());
-          fprintf(f, "           if (index >= 0)\n");
-          fprintf(f, "           {\n");
-          fprintf(f, "              w->setCurrentIndex(index);\n");
-          fprintf(f, "           }\n");
-          fprintf(f, "           else if (%d) {\n", (int)(ptr->getEditable()) );
-          fprintf(f, "             w->setEditable(true);\n");
-          fprintf(f, "             w->addItem( QString::fromStdString( filter->get%s() ) );\n", prop.c_str());
-          fprintf(f, "             w->setCurrentIndex( w->findText( QString::fromStdString(filter->get%s()) ) );\n", prop.c_str());
-          fprintf(f, "           }\n");
+        fprintf(f, "           int index = w->findText( filter->get%s() );\n", prop.toLatin1().data());
+        fprintf(f, "           if (index >= 0)\n");
+        fprintf(f, "           {\n");
+        fprintf(f, "              w->setCurrentIndex(index);\n");
+        fprintf(f, "           }\n");
+        fprintf(f, "           else if (%d) {\n", (int)(ptr->getEditable()) );
+        fprintf(f, "             w->setEditable(true);\n");
+        fprintf(f, "             w->addItem( filter->get%s() );\n", prop.toLatin1().data());
+        fprintf(f, "             w->setCurrentIndex( w->findText(filter->get%s()) );\n", prop.toLatin1().data());
+        fprintf(f, "           }\n");
       }
       else
       {
-        fprintf(f, "           w->setCurrentIndex( filter->get%s() );\n", prop.c_str());
+        fprintf(f, "           w->setCurrentIndex( filter->get%s() );\n", prop.toLatin1().data());
       }
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget || opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
+      QString wType = "IntVec3Widget_t";
+      if(opt->getWidgetType() == FilterParameter::FloatVec3Widget)
+      {
+        wType = "FloatVec3Widget_t";
+      }
       fprintf(f, "     {\n");
-      fprintf(f, "        QLineEdit* w1 = qFindChild<QLineEdit*>(this, \"0_%s\");\n", prop.c_str());
-      fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.c_str());
-      fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.c_str());
+      fprintf(f, "        %s value = filter->get%s();\n", wType.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "        QLineEdit* w1 = qFindChild<QLineEdit*>(this, \"0_%s\");\n", prop.toLatin1().data());
+      fprintf(f, "        QLineEdit* w2 = qFindChild<QLineEdit*>(this, \"1_%s\");\n", prop.toLatin1().data());
+      fprintf(f, "        QLineEdit* w3 = qFindChild<QLineEdit*>(this, \"2_%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w1 && w2 && w3) {\n");
-      fprintf(f, "           std::stringstream ss;\n\n");
-      fprintf(f, "           ss << filter->get%s().x;\n", prop.c_str());
-      fprintf(f, "           w1->setText( QString::fromStdString(ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().y;\n", prop.c_str());
-      fprintf(f, "           w2->setText( QString::fromStdString(ss.str()) );\n");
-      fprintf(f, "           ss.str(\"\");\n");
-      fprintf(f, "           ss << filter->get%s().z;\n", prop.c_str());
-      fprintf(f, "           w3->setText( QString::fromStdString(ss.str()) );\n");
+      fprintf(f, "           w1->setText(QString::number(value.x));\n");
+      fprintf(f, "           w2->setText(QString::number(value.y));\n");
+      fprintf(f, "           w3->setText(QString::number(value.z));\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
       fprintf(f, "     {\n");
-      fprintf(f, "        ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (NULL != w) {\n");
       fprintf(f, "           w->setArraySelections(filter);\n");
       fprintf(f, "        }\n");
@@ -672,28 +672,28 @@ void createSourceFile( const std::string &group,
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
       fprintf(f, "     {\n");
-      fprintf(f, "        AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (NULL != w) {\n");
-      fprintf(f, "           std::vector<AxisAngleInput_t> v = filter->get%s();\n", prop.c_str());
+      fprintf(f, "           QVector<AxisAngleInput_t> v = filter->get%s();\n", prop.toLatin1().data());
       fprintf(f, "           w->getTableModel()->removeRows(0, w->getTableModel()->rowCount());\n");
       fprintf(f, "           for (int i=0; i<v.size(); i++)\n");
       fprintf(f, "           {\n");
-      fprintf(f, "              std::stringstream ss;\n");
+      fprintf(f, "              QString buf;\n");
+      fprintf(f, "              QTextStream ss(&buf);\n");
       fprintf(f, "              ss << \"<\" << v[i].h << \", \" << v[i].k << \", \" << v[i].l << \">\";\n");
       fprintf(f, "              w->getTableModel()->insertRow(w->getTableModel()->rowCount());\n");
-      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, ss.str() );\n");
-      fprintf(f, "              ss.str(\"\");\n");
+      fprintf(f, "              w->getTableModel()->setRowData( i, v[i].angle, buf );\n");
       fprintf(f, "           }\n");
       fprintf(f, "        }\n");
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
-      && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
+             && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget)
     {
       fprintf(f, "     {\n");
-      fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "        QComboBox* w = qFindChild<QComboBox*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "        if (w) {\n");
-      fprintf(f, "           int index = w->findText( QString::fromStdString(filter->get%s()) );\n", prop.c_str());
+      fprintf(f, "           int index = w->findText(filter->get%s() );\n", prop.toLatin1().data());
       fprintf(f, "           if (index >= 0)\n");
       fprintf(f, "           {\n");
       fprintf(f, "              w->setCurrentIndex(index);\n");
@@ -702,21 +702,21 @@ void createSourceFile( const std::string &group,
       fprintf(f, "     }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-      && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-     // fprintf(f, "     {\n");
-      fprintf(f, "     ComparisonSelectionWidget* w_%s = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str(), prop.c_str());
-      fprintf(f, "     if (w_%s) {\n", prop.c_str());
-      fprintf(f, "       w_%s->setComparisons(filter->get%s());\n", prop.c_str(), prop.c_str());
+      // fprintf(f, "     {\n");
+      fprintf(f, "     ComparisonSelectionWidget* w_%s = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "     if (w_%s) {\n", prop.toLatin1().data());
+      fprintf(f, "       w_%s->setComparisons(filter->get%s());\n", prop.toLatin1().data(), prop.toLatin1().data());
       fprintf(f, "     }\n");
-     // fprintf(f, "     }\n");
+      // fprintf(f, "     }\n");
       implementComparisonSelectionWidget = true;
     }
 
-    #if 0
-else
+#if 0
+    else
     {
-      fprintf(f, "     set%s( filter->get%s() );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "     set%s( filter->get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
 #endif
   }
@@ -728,48 +728,48 @@ else
   fprintf(f, "}\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "QString Q%sWidget::getFilterGroup() {\n  return m_FilterGroup;\n}\n\n", filter.c_str() );
+  fprintf(f, "QString Q%sWidget::getFilterGroup() {\n  return m_FilterGroup;\n}\n\n", filter.toLatin1().data() );
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "QString Q%sWidget::getFilterSubGroup() {\n  return m_FilterSubGroup;\n}\n\n", filter.c_str() );
+  fprintf(f, "QString Q%sWidget::getFilterSubGroup() {\n  return m_FilterSubGroup;\n}\n\n", filter.toLatin1().data() );
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter(bool defaultValues) \n{\n", filter.c_str());
-  fprintf(f, "  %s::Pointer filter = %s::New();\n", filter.c_str(), filter.c_str());
+  fprintf(f, "AbstractFilter::Pointer Q%sWidget::getFilter(bool defaultValues) \n{\n", filter.toLatin1().data());
+  fprintf(f, "  %s::Pointer filter = %s::New();\n", filter.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "  if (defaultValues == true) { return filter; }\n\n");
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
     if(opt->getValueType().compare("string") == 0)
     {
-      fprintf(f, "  filter->set%s( get%s().toStdString() );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "  filter->set%s( get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
       fprintf(f, "      w->getArraySelections(filter.get());\n    }\n  }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-    //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
-      fprintf(f, "      filter->set%s(w->getAxisAngleRotations());\n    }\n  }\n", prop.c_str());
+      //  fprintf(f, "//      w->setAxisAnglesIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
+      fprintf(f, "      filter->set%s(w->getAxisAngleRotations());\n    }\n  }\n", prop.toLatin1().data());
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-     // fprintf(f, "//      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.c_str());
-      fprintf(f, "        filter->set%s(w->getComparisonInputs());\n    }\n  }\n", prop.c_str());
+      // fprintf(f, "//      w->setComparisonsIntoFilter<%s>(filter.get());\n    }\n  }\n", filter.toLatin1().data());
+      fprintf(f, "        filter->set%s(w->getComparisonInputs());\n    }\n  }\n", prop.toLatin1().data());
     }
     else
     {
-      fprintf(f, "  filter->set%s( get%s() );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "  filter->set%s( get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
   }
   // Generate all the source code to set the various array names into the filter
@@ -779,8 +779,8 @@ else
   fprintf(f, "}\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "QFilterWidget* Q%sWidget::createDeepCopy() \n{\n", filter.c_str());
-  fprintf(f, "  Q%sWidget* w = new Q%sWidget(NULL);\n", filter.c_str(), filter.c_str());
+  fprintf(f, "QFilterWidget* Q%sWidget::createDeepCopy() \n{\n", filter.toLatin1().data());
+  fprintf(f, "  Q%sWidget* w = new Q%sWidget(NULL);\n", filter.toLatin1().data(), filter.toLatin1().data());
   fprintf(f, "  return w;\n");
   fprintf(f, "}\n");
 
@@ -789,221 +789,222 @@ else
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
 
-    if(opt->getCastableValueType().empty() == false)
+    if(opt->getCastableValueType().isEmpty() == false)
     {
-      std::string cType = opt->getCastableValueType();
+      QString cType = opt->getCastableValueType();
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-      fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n", filter.c_str(), prop.c_str(), cType.c_str() );
-      fprintf(f, "  m_%s = v;\n", prop.c_str());
+      fprintf(f, "void Q%sWidget::set%s(%s v, bool emitChanged)\n{\n", filter.toLatin1().data(), prop.toLatin1().data(), cType.toLatin1().data() );
+      fprintf(f, "  m_%s = v;\n", prop.toLatin1().data());
       fprintf(f, "  if (true == emitChanged) { emit parametersChanged();}\n}\n");
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-      fprintf(f, "%s  Q%sWidget::get%s() { \n  return m_%s; \n}\n", cType.c_str(), filter.c_str(), prop.c_str(),  prop.c_str());
+      fprintf(f, "%s  Q%sWidget::get%s() { \n  return m_%s; \n}\n", cType.toLatin1().data(), filter.toLatin1().data(), prop.toLatin1().data(),  prop.toLatin1().data());
     }
     else if(opt->getValueType().compare("string") == 0)
     {
-      std::string cType = "QString";
+      QString cType = "QString";
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-      fprintf(f, "void Q%sWidget::set%s(const %s &v, bool emitChanged)\n{\n  m_%s = v;\n", filter.c_str(), prop.c_str(), cType.c_str(), prop.c_str());
+      fprintf(f, "void Q%sWidget::set%s(const %s &v, bool emitChanged)\n{\n  m_%s = v;\n", filter.toLatin1().data(), prop.toLatin1().data(), cType.toLatin1().data(), prop.toLatin1().data());
       if (opt->getWidgetType() == FilterParameter::OutputFileWidget ||
           opt->getWidgetType() == FilterParameter::OutputPathWidget ||
           opt->getWidgetType() == FilterParameter::InputFileWidget ||
           opt->getWidgetType() == FilterParameter::InputPathWidget)
       {
-        fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.c_str(), prop.c_str());
+        fprintf(f, "  m_%s = QDir::toNativeSeparators(m_%s);\n", prop.toLatin1().data(), prop.toLatin1().data());
       }
       fprintf(f, "  if (true == emitChanged) { emit parametersChanged();}\n}\n");
 
       fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-      fprintf(f, "%s  Q%sWidget::get%s()\n{ \n  return m_%s; \n}\n", cType.c_str(), filter.c_str(), prop.c_str(), prop.c_str());
+      fprintf(f, "%s  Q%sWidget::get%s()\n{ \n  return m_%s; \n}\n", cType.toLatin1().data(), filter.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
     }
     else
     {
       // If we fall in here then the methods should have been generated in the header file
-      //    fprintf(f, "Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.c_str(), prop.c_str(), prop.c_str(), prop.c_str());
-      //    fprintf(f, "FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.c_str(), prop.c_str());
+      //    fprintf(f, "Q_PROPERTY(%s %s READ get%s WRITE set%s)\n", typ.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data(), prop.toLatin1().data());
+      //    fprintf(f, "FILTER_PROPERTY_WRAPPER(%s, %s, m_Filter);\n", typ.toLatin1().data(), prop.toLatin1().data());
     }
   }
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void Q%sWidget::writeOptions(QSettings &prefs)\n{\n", filter.c_str());
-  fprintf(f, "  prefs.setValue(\"Filter_Name\", \"%s\" );\n", filter.c_str());
+  fprintf(f, "void Q%sWidget::writeOptions(QSettings &prefs)\n{\n", filter.toLatin1().data());
+  fprintf(f, "  prefs.setValue(\"Filter_Name\", \"%s\" );\n", filter.toLatin1().data());
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
     if(opt->getWidgetType() == FilterParameter::InputFileWidget
        || opt->getWidgetType() == FilterParameter::InputPathWidget
        || opt->getWidgetType() == FilterParameter::OutputFileWidget
        || opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
-      fprintf(f, "  prefs.setValue(\"%s\", QDir::toNativeSeparators(get%s()) );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "  prefs.setValue(\"%s\", QDir::toNativeSeparators(get%s()) );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
              && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     {
       implementArrayNameComboBoxUpdated = true;
-      fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.toLatin1().data());
+      fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n  }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
     {
-      fprintf(f, "// ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  IntVec3Widget_t v_%s = get%s();\n", prop.c_str(), prop.c_str());
-      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.c_str());
+      fprintf(f, "// ------------- %s ----------------------------------\n", prop.toLatin1().data());
+      fprintf(f, "  IntVec3Widget_t v_%s = get%s();\n", prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(0);\n");
-      fprintf(f, "  prefs.setValue(\"x\", v_%s.x);\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"x\", v_%s.x);\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(1);\n");
-      fprintf(f, "  prefs.setValue(\"y\", v_%s.y);\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"y\", v_%s.y);\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(2);\n");
-      fprintf(f, "  prefs.setValue(\"z\", v_%s.z);\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"z\", v_%s.z);\n", prop.toLatin1().data());
       fprintf(f, "  prefs.endArray();\n");
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
-      fprintf(f, "// ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  FloatVec3Widget_t v_%s = get%s();\n", prop.c_str(), prop.c_str());
-      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.c_str());
+      fprintf(f, "// ------------- %s ----------------------------------\n", prop.toLatin1().data());
+      fprintf(f, "  FloatVec3Widget_t v_%s = get%s();\n", prop.toLatin1().data(), prop.toLatin1().data());
+      fprintf(f, "  prefs.beginWriteArray(\"%s\", 3);\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(0);\n");
-      fprintf(f, "  prefs.setValue(\"x\", static_cast<double>(v_%s.x));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"x\", static_cast<double>(v_%s.x));\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(1);\n");
-      fprintf(f, "  prefs.setValue(\"y\", static_cast<double>(v_%s.y));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"y\", static_cast<double>(v_%s.y));\n", prop.toLatin1().data());
       fprintf(f, "  prefs.setArrayIndex(2);\n");
-      fprintf(f, "  prefs.setValue(\"z\", static_cast<double>(v_%s.z));\n", prop.c_str());
+      fprintf(f, "  prefs.setValue(\"z\", static_cast<double>(v_%s.z));\n", prop.toLatin1().data());
       fprintf(f, "  prefs.endArray();\n");
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.toLatin1().data());
+      fprintf(f, "  {\n    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n  }\n");
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "  // ------------- %s ----------------------------------\n", prop.toLatin1().data());
+      fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->writeOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n  }\n");
     }
     else
     {
-      fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.c_str(), prop.c_str());
+      fprintf(f, "  prefs.setValue(\"%s\", get%s() );\n", prop.toLatin1().data(), prop.toLatin1().data());
     }
 
   }
   fprintf(f, "}\n");
 
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void Q%sWidget::readOptions(QSettings &prefs)\n{\n", filter.c_str());
-  // fprintf(f, "  std::cout << \"Reading Prefs for Filter  %s \" << std::endl;\n", filter.c_str());
+  fprintf(f, "void Q%sWidget::readOptions(QSettings &prefs)\n{\n", filter.toLatin1().data());
+  // fprintf(f, "  qDebug()\"Reading Prefs for Filter  %s \" << "\n";\n", filter.toLatin1().data());
 
-  std::stringstream replaceStream;
-  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << std::endl;
+  QString replaceString;
+  QTextStream replaceStream(&replaceString);
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/" << "\n";
   for (size_t i = 0; i < options.size(); ++i)
   {
     FilterParameter::Pointer opt = options[i];
-    std::string prop = opt->getPropertyName();
-    std::string typ = opt->getValueType();
-    std::string hl = opt->getHumanLabel();
-    fprintf(f, "  // ------------- %s ----------------------------------\n", prop.c_str());
-    fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.c_str(), prop.c_str());
+    QString prop = opt->getPropertyName();
+    QString typ = opt->getValueType();
+    QString hl = opt->getHumanLabel();
+    fprintf(f, "  // ------------- %s ----------------------------------\n", prop.toLatin1().data());
+    fprintf(f, "  {\n   QVariant p_%s = prefs.value(\"%s\");\n", prop.toLatin1().data(), prop.toLatin1().data());
 
     if(opt->getWidgetType() == FilterParameter::StringWidget)
     {
-      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
-      fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.toLatin1().data());
+      fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::IntWidget)
     {
-      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
-      fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.toLatin1().data());
+      fprintf(f, "   if (le) { le->setText(p_%s.toString()); }\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::DoubleWidget)
     {
-      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.c_str());
-      fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+      fprintf(f, "   QLineEdit* le = findChild<QLineEdit*>(\"%s\");\n", prop.toLatin1().data());
+      fprintf(f, "   if (le) { le->setText(p_%s.toString());}\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::InputFileWidget)
     {
-      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.c_str());
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.toLatin1().data());
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
-      fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      fprintf(f, "   set%s(path);\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::InputPathWidget)
     {
-      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.c_str());
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.toLatin1().data());
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
-      fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      fprintf(f, "   set%s(path);\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::OutputFileWidget)
     {
-      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.c_str());
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.toLatin1().data());
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
-      fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      fprintf(f, "   set%s(path);\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::OutputPathWidget)
     {
-      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.c_str());
-      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "   QString path = QDir::toNativeSeparators(p_%s.toString());\n", prop.toLatin1().data());
+      fprintf(f, "   QLineEdit* lb = qFindChild<QLineEdit*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (lb) { lb->setText(path); }\n");
-      fprintf(f, "   set%s(path);\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      fprintf(f, "   set%s(path);\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::BooleanWidget)
     {
-      fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.c_str());
-      fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.c_str());
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", false) );" << std::endl;
+      fprintf(f, "   QCheckBox* le = findChild<QCheckBox*>(\"%s\");\n", prop.toLatin1().data());
+      fprintf(f, "   if (le) { le->setChecked(p_%s.toBool()); }\n", prop.toLatin1().data());
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", false) );" << "\n";
     }
     else if(opt->getWidgetType() == FilterParameter::ChoiceWidget)
     {
-      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
+      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (cb) {\n");
       if (opt->getValueType().compare("string") == 0)
       {
-        fprintf(f, "    QString str_%s = p_%s.toString();\n", prop.c_str(), prop.c_str());
-        fprintf(f, "    int index = cb->findText(str_%s);\n", prop.c_str() );
+        fprintf(f, "    QString str_%s = p_%s.toString();\n", prop.toLatin1().data(), prop.toLatin1().data());
+        fprintf(f, "    int index = cb->findText(str_%s);\n", prop.toLatin1().data() );
         fprintf(f, "    if (index != -1) {\n");
         fprintf(f, "      cb->setCurrentIndex(index);\n");
         fprintf(f, "    }\n");
         fprintf(f, "    else {\n");
-        fprintf(f, "      cb->addItem(str_%s);\n", prop.c_str() );
+        fprintf(f, "      cb->addItem(str_%s);\n", prop.toLatin1().data() );
         fprintf(f, "      cb->setCurrentIndex(cb->count() -1 );\n");
         fprintf(f, "    }\n");
-        replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+        replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
       }
       else
       {
         fprintf(f, "     bool ok = false;\n");
-        fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.c_str());
-        fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.c_str());
+        fprintf(f, "     if (p_%s.toInt(&ok) < cb->count()) {\n", prop.toLatin1().data());
+        fprintf(f, "       cb->setCurrentIndex(p_%s.toInt());\n", prop.toLatin1().data());
         fprintf(f, "     }\n");
-        replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << std::endl;
+        replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", 0) );" << "\n";
       }
       fprintf(f, "   }\n");
     }
@@ -1011,95 +1012,95 @@ else
              && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget )
     {
       implementArrayNameComboBoxUpdated = true;
-      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.c_str());
+      fprintf(f, "   QComboBox* cb = findChild<QComboBox*>(\"%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (cb) {\n");
       fprintf(f, "     qint32 count = cb->count();\n");
       fprintf(f, "     for(qint32 i = 0; i < count; ++i) {\n");
-      fprintf(f, "       if (cb->itemText(i).compare(p_%s.toString()) == 0) {\n", prop.c_str());
+      fprintf(f, "       if (cb->itemText(i).compare(p_%s.toString()) == 0) {\n", prop.toLatin1().data());
       fprintf(f, "         cb->setCurrentIndex(i);\n");
       fprintf(f, "         break;\n");
       fprintf(f, "       }\n");
       fprintf(f, "     }\n");
       fprintf(f, "   }\n");
-      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue( \"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget)
     {
-      fprintf(f, "    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n");
     }
     else if (opt->getWidgetType() == FilterParameter::IntVec3Widget)
     {
       fprintf(f, "   bool ok = false;\n");
-      fprintf(f, "   IntVec3Widget_t v3 = p_%s.value<IntVec3Widget_t>();\n", prop.c_str());
-      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.c_str());
+      fprintf(f, "   IntVec3Widget_t v3 = p_%s.value<IntVec3Widget_t>();\n", prop.toLatin1().data());
+      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.toLatin1().data());
 
       fprintf(f, "   prefs.setArrayIndex(0);\n");
       fprintf(f, "   v3.x = prefs.value(\"x\", v3.x).toInt(&ok);\n");
-      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_0) { le_0->setText(QString::number(v3.x)); }\n");
 
       fprintf(f, "   prefs.setArrayIndex(1);\n");
       fprintf(f, "   v3.y = prefs.value(\"y\", v3.y).toInt(&ok);\n");
-      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_1) { le_1->setText(QString::number(v3.y)); }\n");
 
       fprintf(f, "   prefs.setArrayIndex(2);\n");
       fprintf(f, "   v3.z = prefs.value(\"z\", v3.z).toInt(&ok);\n");
-      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_2) { le_2->setText(QString::number(v3.z)); }\n");
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::FloatVec3Widget)
     {
       fprintf(f, "   bool ok = false;\n");
-      fprintf(f, "   FloatVec3Widget_t v3 = p_%s.value<FloatVec3Widget_t>();\n", prop.c_str());
-      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.c_str());
+      fprintf(f, "   FloatVec3Widget_t v3 = p_%s.value<FloatVec3Widget_t>();\n", prop.toLatin1().data());
+      fprintf(f, "   prefs.beginReadArray(\"%s\");\n", prop.toLatin1().data());
 
       fprintf(f, "   prefs.setArrayIndex(0);\n");
       fprintf(f, "   v3.x = prefs.value(\"x\", v3.x).toFloat(&ok);\n");
-      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_0 = findChild<QLineEdit*>(\"0_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_0) { le_0->setText(QString::number(v3.x)); }\n");
 
       fprintf(f, "   prefs.setArrayIndex(1);\n");
       fprintf(f, "   v3.y = prefs.value(\"y\", v3.y).toFloat(&ok);\n");
-      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_1 = findChild<QLineEdit*>(\"1_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_1) { le_1->setText(QString::number(v3.y)); }\n");
 
       fprintf(f, "   prefs.setArrayIndex(2);\n");
       fprintf(f, "   v3.z = prefs.value(\"z\", v3.z).toFloat(&ok);\n");
-      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.c_str());
+      fprintf(f, "   QLineEdit* le_2 = findChild<QLineEdit*>(\"2_%s\");\n", prop.toLatin1().data());
       fprintf(f, "   if (le_2) { le_2->setText(QString::number(v3.z)); }\n");
 
       fprintf(f, "   prefs.endArray();\n");
 
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() == FilterParameter::AxisAngleWidget)
     {
-      fprintf(f, "    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    AxisAngleWidget* w = qFindChild<AxisAngleWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
              && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
     {
-      fprintf(f, "    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str());
+      fprintf(f, "    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data());
       fprintf(f, "    if (NULL != w) {\n");
-      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.c_str());
+      fprintf(f, "      w->readOptions(prefs, QString::fromUtf8(\"%s\"));\n", prop.toLatin1().data());
       fprintf(f, "    }\n");
-      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << std::endl;
+      replaceStream << "  set" << prop << "( reader->readValue(\"" << prop << "\", get" << prop << "() ) );" << "\n";
     }
     else
     {
-      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", filter.c_str(), prop.c_str());
+      fprintf(f, " #error: Class %s  Property %s  NOTHING WAS GENERATED TO READ/WRITE PROPERTY\n", filter.toLatin1().data(), prop.toLatin1().data());
     }
     fprintf(f, "  }\n");
   }
@@ -1108,7 +1109,7 @@ else
 
 #if 0
   ss.str("");
-  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/" << std::endl;
+  replaceStream << "/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/" << "\n";
   ss << DREAM3DLIB_SOURCE_DIR() << "/" << group << "/" << filter << ".cpp";
   parseSourceFileForMarker(ss.str(), "////!!##", replaceStream.str());
 #endif
@@ -1116,18 +1117,18 @@ else
   if (true == implementArrayNameComboBoxUpdated)
   {
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::arrayNameComboBoxUpdated(QComboBox* cb)\n{\n", filter.c_str());
+    fprintf(f, "void Q%sWidget::arrayNameComboBoxUpdated(QComboBox* cb)\n{\n", filter.toLatin1().data());
     fprintf(f, "  if (NULL == cb) { return; }\n"); // Make sure we have a non null QWidget to deal with
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];
-      std::string prop = opt->getPropertyName();
-      std::string typ = opt->getValueType();
-      std::string hl = opt->getHumanLabel();
+      QString prop = opt->getPropertyName();
+      QString typ = opt->getValueType();
+      QString hl = opt->getHumanLabel();
       if (opt->getWidgetType() >= FilterParameter::VolumeCellArrayNameSelectionWidget
           && opt->getWidgetType() <= FilterParameter::VertexEnsembleArrayNameSelectionWidget ) {
-        fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.c_str());
-        fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.c_str());
+        fprintf(f, "  if(cb->objectName().compare(\"%s\") == 0) {\n", prop.toLatin1().data());
+        fprintf(f, "    m_%s = cb->currentText();\n  }\n", prop.toLatin1().data());
       }
     }
     fprintf(f, "}\n");
@@ -1137,22 +1138,22 @@ else
   {
 
     fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)\n{\n", filter.c_str());
+    fprintf(f, "void Q%sWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)\n{\n", filter.toLatin1().data());
     for (size_t i = 0; i < options.size(); ++i)
     {
       FilterParameter::Pointer opt = options[i];
-      std::string prop = opt->getPropertyName();
-      std::string typ = opt->getValueType();
-      std::string hl = opt->getHumanLabel();
+      QString prop = opt->getPropertyName();
+      QString typ = opt->getValueType();
+      QString hl = opt->getHumanLabel();
       if (opt->getWidgetType() == FilterParameter::ArraySelectionWidget ) {
-        fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
+        fprintf(f, "  {\n    ArraySelectionWidget* w = qFindChild<ArraySelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
         fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
       if (opt->getWidgetType() >= FilterParameter::CellArrayComparisonSelectionWidget
-             && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
+          && opt->getWidgetType() <= FilterParameter::EdgeArrayComparisonSelectionWidget)
       {
-        fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.c_str()); // Make sure we have a non null QWidget to deal with
+        fprintf(f, "  {\n    ComparisonSelectionWidget* w = qFindChild<ComparisonSelectionWidget*>(this, \"%s\");\n", prop.toLatin1().data()); // Make sure we have a non null QWidget to deal with
 
         fprintf(f, "    if (NULL != w) {\n      w->populateArrayNames(vldc, sdc, edc, vdc);\n    }\n  }\n");
       }
@@ -1163,11 +1164,11 @@ else
 
 
   /* Implement the htmlHelpIndexFile() method */
-  std::string lower = filter;
-  std::transform(lower.begin(), lower.end(), lower.begin(), ::tolower);
+  QString lower = filter.toLower();
+
   fprintf(f, "\n// -----------------------------------------------------------------------------\n");
-  fprintf(f, "void Q%sWidget::openHtmlHelpFile()\n{\n", filter.c_str());
-  fprintf(f, "\tDREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(\"%s\", this);\n", lower.c_str());
+  fprintf(f, "void Q%sWidget::openHtmlHelpFile()\n{\n", filter.toLatin1().data());
+  fprintf(f, "\tDREAM3DHelpUrlGenerator::generateAndOpenHTMLUrl(\"%s\", this);\n", lower.toLatin1().data());
   fprintf(f, "}\n");
   fprintf(f, "\n\n");
 
@@ -1176,53 +1177,37 @@ else
   fclose(f);
 
   // Now compare the file just generated with any possible existing file
-  size_t currentFileSize = MXAFileInfo::fileSize(completePath);
-  size_t tempFileSize = MXAFileInfo::fileSize(tempPath);
+  QFileInfo curFi(completePath);
+  QFileInfo tmpFi(tempPath);
+
+  qint64 currentFileSize = curFi.size();
+  qint64 tempFileSize = tmpFi.size();
 
   // If the file sizes are different then copy the file
   if(currentFileSize != tempFileSize)
   {
-    std::cout << "0-Creating Source File: " << completePath << std::endl;
+    qDebug() << "0-Creating Source File: " << completePath;
     copyFile(tempPath, completePath);
   }
   else // Just because the files are the same size does not mean they are the same.
   {
-    //std::cout << "  Comparing Files: " << filter << std::endl;
-    FILE* c = fopen(completePath.c_str(), "rb");
-    unsigned char* currentContents = reinterpret_cast<unsigned char*>(malloc(currentFileSize));
-    size_t itemsRead = fread(currentContents, currentFileSize, 1, c);
-    if(itemsRead != 1)
-    {
 
-    }
-    fclose(c);
-
-    MD5 md5_current;
-    md5_current.update(currentContents, currentFileSize);
-    md5_current.finalize();
-    std::string currentHexDigest = md5_current.hexdigest();
-
-    FILE* t = fopen(tempPath.c_str(), "rb");
-    unsigned char* tempContents = reinterpret_cast<unsigned char*>(malloc(tempFileSize));
-    itemsRead = fread(tempContents, tempFileSize, 1, t);
-    if(itemsRead != 1)
-    {
-
-    }
-    fclose(t);
-
-    MD5 md5;
-    md5.update(tempContents, tempFileSize);
-    md5.finalize();
-    std::string tempHexDigest = md5.hexdigest();
+    QString currentHash = Md5OfFile(completePath);
+    QString tempHash = Md5OfFile(tempPath);
 
     // Use MD5 Checksums to figure out if the files are different
-    if (tempHexDigest.compare(currentHexDigest) != 0)
+    if (tempHash != currentHash)
     {
-      std::cout << "  0-Copying Source File: " << completePath << std::endl;
-      std::cout << "    Hex Digest:    " << currentHexDigest << std::endl;
-      std::cout << "    tempHexDigest: " << tempHexDigest << std::endl;
+      qDebug() << "0-Copying Source File: " << completePath;
+      qDebug() << "    Hex Digest:    " << QString(currentHash);
+      qDebug() << "    tempHexDigest: " << QString(tempHash);
       copyFile(tempPath, completePath);
+    }
+
+    QFile tempFile(tempPath);
+    if(tempFile.remove() == false)
+    {
+      qDebug() << "Could not remove temp Source file " << tempPath;
     }
   }
 
@@ -1232,19 +1217,19 @@ else
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-void createPreflightTestCode( const std::string &group, const std::string &filter)
+void createPreflightTestCode( const QString &group, const QString &filter)
 {
-  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  QString s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_1.h");
-  FILE* f = fopen(s.c_str(), "ab+"); // Clear out this file
-  fprintf(f, "MAKE_FILTER_TEST(  %s, FAIL_IS_PASS)\n", filter.c_str());
+  FILE* f = fopen(s.toLatin1().data(), "ab+"); // Clear out this file
+  fprintf(f, "MAKE_FILTER_TEST(  %s, FAIL_IS_PASS)\n", filter.toLatin1().data());
   fclose(f);
 
 
   s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_2.h");
-  f = fopen(s.c_str(), "ab+"); // Clear out this file
-  fprintf(f, "DREAM3D_REGISTER_TEST( %s_PreFlightTest() )\n", filter.c_str());
+  f = fopen(s.toLatin1().data(), "ab+"); // Clear out this file
+  fprintf(f, "DREAM3D_REGISTER_TEST( %s_PreFlightTest() )\n", filter.toLatin1().data());
   fclose(f);
 
 }
@@ -1262,14 +1247,14 @@ int main(int argc, char **argv)
   // if (true) return 0;
 
 #if (GENERATE_PREFLIGHT_TEST_CODE_FRAGMENT == 1)
-  std::string s = FILTER_WIDGETS_TEMP_DIR();
+  QString s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_1.h");
-  FILE* f = fopen(s.c_str(), "wb"); // Clear out this file
+  FILE* f = fopen(s.toLatin1().data(), "wb"); // Clear out this file
   fclose(f);
 
   s = FILTER_WIDGETS_TEMP_DIR();
   s.append("Preflight_Test_Code_Fragment_2.h");
-  f = fopen(s.c_str(), "wb"); // Clear out this file
+  f = fopen(s.toLatin1().data(), "wb"); // Clear out this file
   fclose(f);
 #endif
 

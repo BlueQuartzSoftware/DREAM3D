@@ -31,6 +31,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "OrientationMath.h"
 
+
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -38,7 +40,7 @@
 #include "DREAM3DLib/OrientationOps/TrigonalOps.h"
 #include "DREAM3DLib/OrientationOps/TetragonalOps.h"
 
-#include "MXA/Common/LogTime.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -290,7 +292,7 @@ void OrientationMath::RodtoQuat(QuatF &q, float r1, float r2, float r3)
 
   rmag = (r1 * r1) + (r2 * r2) + (r3 * r3);
   rmag = sqrt(rmag);
-  if(rmag == 0.0) 
+  if(rmag == 0.0)
   {
     q.x = 0.0, q.y = 0.0, q.z = 0.0, q.w = 1.0;
     return;

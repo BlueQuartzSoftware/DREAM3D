@@ -35,7 +35,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CylinderOps.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+
 
 
 // -----------------------------------------------------------------------------
@@ -56,7 +57,7 @@ CylinderOps::~CylinderOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CylinderOps::radcur1(std::map<ArgName, float> args)
+float CylinderOps::radcur1(QMap<ArgName, float> args)
 {
   float radcur1 = 0.0f;
 

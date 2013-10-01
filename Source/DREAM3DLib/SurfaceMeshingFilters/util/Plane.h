@@ -16,7 +16,7 @@
 #include <ostream>
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 
 /**
@@ -65,7 +65,7 @@ private:
 };
 
 //#################### GLOBAL OPERATORS ####################
-//std::ostream& operator<<(std::ostream& os, Plane::CP rhs);
+//QDataStream& operator<<(QDataStream& os, Plane::CP rhs);
 
 
 

@@ -35,16 +35,19 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "InitializeSyntheticVolume.h"
 
+#include <QtCore/QSet>
+#include <QtCore/QString>
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
-
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
+
+
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 
 #define INIT_SYNTH_VOLUME_CHECK(var, errCond) \
-  if (m_##var <= 0) { ss << ":" <<  #var << " must be a value > 0\n"; addErrorMessage(getHumanLabel(), ss.str(), errCond);}
+  if (m_##var <= 0) { QString ss = QObject::tr(":%1 must be a value > 0\n").arg( #var); addErrorMessage(getHumanLabel(), ss, errCond);}
 
 
 
@@ -84,7 +87,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -127,19 +130,19 @@ int InitializeSyntheticVolume::writeFilterParameters(AbstractFilterParametersWri
 void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+
   VolumeDataContainer* m = getVolumeDataContainer();
 
   //Cell Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, bool, BoolArrayType, true, voxels, 1)
 
-  if(m_InputFile.empty() == true)
+  if(m_InputFile.isEmpty() == true)
   {
-    ss << "The intput file must be set before executing this filter.\n";
+    QString ss = QObject::tr("The intput file must be set before executing this filter.\n");
     setErrorCondition(-800);
-    addErrorMessage(getHumanLabel(), ss.str(), -800);
+    addErrorMessage(getHumanLabel(), ss, -800);
   }
 
   INIT_SYNTH_VOLUME_CHECK(XVoxels, -5000);
@@ -151,9 +154,9 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 
   if (m_ShapeTypes.size() ==  0)
   {
-    ss << "No ShapeTypes have been set and a shape type for each phase.\n";
+    QString ss = QObject::tr("No ShapeTypes have been set and a shape type for each phase.\n");
     setErrorCondition(-801);
-    addErrorMessage(getHumanLabel(), ss.str(), -801);
+    addErrorMessage(getHumanLabel(), ss, -801);
   }
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
@@ -166,13 +169,11 @@ void InitializeSyntheticVolume::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::preflight()
 {
-  std::stringstream ss;
-
   VolumeDataContainer* m = getVolumeDataContainer();
 
   dataCheck(true, 1, 1, 1);
 
-  std::set<std::string> selectedArrays;
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -190,7 +191,9 @@ void InitializeSyntheticVolume::preflight()
   int err = reader->getErrorCondition();
   if(err < 0)
   {
-    setErrorCondition(err);
+    QString ss = QObject::tr(": Error reading DREAM3D file '%1'").arg(m_InputFile);
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
   }
 
   UInt32ArrayType::Pointer shapeTypes = UInt32ArrayType::CreateArray(1, DREAM3D::EnsembleData::ShapeTypes);
@@ -202,7 +205,6 @@ void InitializeSyntheticVolume::preflight()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::execute()
 {
-  std::stringstream ss;
   setErrorCondition(0);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -212,7 +214,8 @@ void InitializeSyntheticVolume::execute()
     return;
   }
 
-  std::set<std::string> selectedArrays;
+
+  QSet<QString> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -227,6 +230,14 @@ void InitializeSyntheticVolume::execute()
   reader->setSelectedVolumeEnsembleArrays(selectedArrays);
   reader->setReadAllArrays(false);
   reader->execute();
+  int err = reader->getErrorCondition();
+  if(err < 0)
+  {
+    QString ss = QObject::tr(": Error reading DREAM3D file '%1'").arg(getInputFile());
+    setErrorCondition(-150);
+    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    return;
+  }
 
   m->setDimensions(m_XVoxels, m_YVoxels, m_ZVoxels);
   m->setResolution(m_XRes, m_YRes, m_ZRes);

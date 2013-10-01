@@ -37,7 +37,7 @@
 #define _PoleFigureUtilities_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 typedef struct {
   FloatArrayType* eulers;
@@ -62,21 +62,7 @@ public:
   PoleFigureUtilities();
   virtual ~PoleFigureUtilities();
 
-#if 0
-  /**
-   * @brief GenerateCubicPoleFigures
-   * @param eulers
-   * @param lambertDimension
-   * @param poleFigureDim
-   * @param intensity001 [output]
-   * @param intensity011 [output]
-   * @param intensity111 [output]
-   */
-  static void GenerateCubicPoleFigures(FloatArrayType* eulers, int lambertDimension, int poleFigureDim,
-                                              DoubleArrayType::Pointer &intensity001,
-                                              DoubleArrayType::Pointer &intensity011,
-                                              DoubleArrayType::Pointer &intensity111);
-#endif
+
   /**
    * @brief GenerateHexPoleFigures
    * @param eulers

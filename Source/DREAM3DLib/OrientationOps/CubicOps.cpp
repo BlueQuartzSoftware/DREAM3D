@@ -34,16 +34,18 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "CubicOps.h"
+
+
+#include <QtCore/QtEndian>
+
 // Include this FIRST because there is a needed define for some compiles
 // to expose some of the constants needed below
 #include <limits>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
-#include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/ColorUtilities.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -1110,9 +1112,6 @@ void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArray
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   tbb::task_scheduler_init init;
   bool doParallel = true;
-#endif
-
-#ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {
     tbb::parallel_for(tbb::blocked_range<size_t>(0, nOrientations),
@@ -1315,23 +1314,23 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+QVector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
 {
-  std::vector<UInt8ArrayType::Pointer> poleFigures;
-  std::string label0("<001>");
-  std::string label1("<011>");
-  std::string label2("<111>");
+  QVector<UInt8ArrayType::Pointer> poleFigures;
+  QString label0("<001>");
+  QString label1("<011>");
+  QString label2("<111>");
 
 
   int numOrientations = config.eulers->GetNumberOfTuples();
 
   // Create an Array to hold the XYZ Coordinates which are the coords on the sphere.
   // this is size for CUBIC ONLY, <001> Family
-  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, 3, label0 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz001 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize0, 3, label0 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <011> Family
-  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, 3, label1 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz011 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize1, 3, label1 + QString("xyzCoords"));
   // this is size for CUBIC ONLY, <111> Family
-  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, 3, label2 + std::string("xyzCoords"));
+  FloatArrayType::Pointer xyz111 = FloatArrayType::CreateArray(numOrientations * Detail::CubicHigh::symSize2, 3, label2 + QString("xyzCoords"));
 
   config.sphereRadius = 1.0f;
 
@@ -1433,7 +1432,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
   }
 
 
-
+#if 0
   size_t dims[3] = {config.imageDim, config.imageDim, 1};
   float res[3] = {1.0, 1.0, 1.0};
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity001->GetName() + ".vtk",
@@ -1442,7 +1441,7 @@ std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConf
                                                  intensity011.get(), dims, res, "double", true );
   VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/" + intensity111->GetName() + ".vtk",
                                                  intensity111.get(), dims, res, "double", true );
-
+#endif
   return poleFigures;
 }
 

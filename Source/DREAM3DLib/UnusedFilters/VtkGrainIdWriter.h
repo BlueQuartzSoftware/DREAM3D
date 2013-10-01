@@ -39,7 +39,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FileWriter.h"
 
 /*
@@ -59,8 +59,8 @@ class DREAM3DLib_EXPORT VtkGrainIdWriter : public FileWriter
 	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     DREAM3D_INSTANCE_PROPERTY(bool, WriteBinaryFiles)
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const std::string getHumanLabel() { return "Write Vtk File (Rectilinear Grid, Grain Ids Only)"; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const QString getHumanLabel() { return "Write Vtk File (Rectilinear Grid, Grain Ids Only)"; }
     virtual void setupFilterParameters();
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

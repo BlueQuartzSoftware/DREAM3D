@@ -44,8 +44,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
@@ -74,8 +74,8 @@ int main(int argc, char** argv)
   SurfaceDataContainer::Pointer sm = SurfaceDataContainer::New();
 
 
-  std::string nodesFileName = argv[1];
-  std::string trianglesFileName = argv[2];
+  QString nodesFileName = argv[1];
+  QString trianglesFileName = argv[2];
   Observer observer;
 
   // This will read the mesh from the temp file and store it in the SurfaceMesh Data container

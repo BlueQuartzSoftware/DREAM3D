@@ -208,7 +208,7 @@ Vector3<T> operator/(Vector3<T>& v, double factor)
 }
 
 template <typename T>
-std::ostream& operator<<(std::ostream& os, Vector3<T>& v)
+QDataStream& operator<<(QDataStream& os, Vector3<T>& v)
 {
   os << '(' << v.x << ',' << v.y << ',' << v.z << ')';
   return os;
@@ -221,7 +221,7 @@ template Vector3f operator-(Vector3f& lhs, Vector3f& rhs);
 template Vector3f operator*(double factor, Vector3f& v);
 template Vector3f operator*(Vector3f& v, double factor);
 template Vector3f operator/(Vector3f& v, double factor);
-template std::ostream& operator<<(std::ostream& os, Vector3f& v);
+template QDataStream& operator<<(QDataStream& os, Vector3f& v);
 
 template struct Vector3<double>;
 template Vector3d operator+(Vector3d& lhs, Vector3d& rhs);
@@ -229,4 +229,4 @@ template Vector3d operator-(Vector3d& lhs, Vector3d& rhs);
 template Vector3d operator*(double factor, Vector3d& v);
 template Vector3d operator*(Vector3d& v, double factor);
 template Vector3d operator/(Vector3d& v, double factor);
-template std::ostream& operator<<(std::ostream& os, Vector3d& v);
+template QDataStream& operator<<(QDataStream& os, Vector3d& v);

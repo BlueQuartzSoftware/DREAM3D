@@ -36,8 +36,8 @@
 #include "VertexDataContainerReader.h"
 
 
-#include "H5Support/H5Utilities.h"
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Utilities.h"
+#include "H5Support/QH5Lite.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -62,7 +62,7 @@ VertexDataContainerReader::~VertexDataContainerReader()
 // -----------------------------------------------------------------------------
 void VertexDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -96,7 +96,7 @@ int VertexDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VertexDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+
   VertexDataContainer* m = getVertexDataContainer();
 
   if(NULL == m)
@@ -129,13 +129,13 @@ void VertexDataContainerReader::preflight()
 void VertexDataContainerReader::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(NULL == m)
+  if (NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
+    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
     return;
   }
   setErrorCondition(0);

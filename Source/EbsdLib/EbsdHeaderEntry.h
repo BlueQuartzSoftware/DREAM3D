@@ -41,16 +41,26 @@
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
 
-#include "H5Support/H5Lite.h"
+#include "H5Support/QH5Lite.h"
 
 /**
  * @brief Creates a static "New" method that creates an instance of thisClass
  */
 #define HEADERENTRY_NEW_SUPERCLASS(thisClass, SuperClass)\
   typedef SuperClass::Pointer SuperClass##Type;\
-  static SuperClass##Type New##SuperClass(const std::string &key) \
+  static SuperClass##Type New##SuperClass(const QString &key) \
 { \
   SuperClass##Type sharedPtr (new thisClass(key)); \
+  return sharedPtr; \
+}
+
+
+#define HEADERENTRY_NEW_SUPERCLASS_VALUE(thisClass, SuperClass)\
+static SuperClass##Type New##SuperClass(const QString &key, T value) \
+{ \
+  thisClass* object = new thisClass(key);\
+  object->setValue(value);\
+  SuperClass##Type sharedPtr(object); \
   return sharedPtr; \
 }\
 
@@ -74,9 +84,9 @@ class EbsdLib_EXPORT EbsdHeaderEntry
     /**
      * @brief Returns the key of the header entry
      */
-    virtual std::string getKey() = 0;
+    virtual QString getKey() = 0;
 
-    virtual std::string getHDFType() = 0;
+    virtual QString getHDFType() = 0;
 
     /**
      * @brief Parses the value for a given header key
@@ -84,7 +94,7 @@ class EbsdLib_EXPORT EbsdHeaderEntry
      * @param start The starting position to look for the value
      * @param length The ending position to look for the value
      */
-    virtual void parseValue(char* value, size_t start, size_t length) = 0;
+    virtual void parseValue(QByteArray &value) = 0;
 
     /**
      * @brief prints out the key and value for this header entry

@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "TriangleNormalFilter.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -125,7 +125,7 @@ TriangleNormalFilter::~TriangleNormalFilter()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -160,8 +160,9 @@ int TriangleNormalFilter::writeFilterParameters(AbstractFilterParametersWriter* 
 void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  
   SurfaceDataContainer* sm = getSurfaceDataContainer();
+
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -184,7 +185,7 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, ss, double, DoubleArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, 3)
     }
   }
 }
@@ -206,7 +207,7 @@ void TriangleNormalFilter::preflight()
 void TriangleNormalFilter::execute()
 {
   int err = 0;
-  std::stringstream ss;
+  
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

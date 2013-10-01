@@ -37,7 +37,7 @@
 #define SUPERELLIPSOIDOPS_H_
 
 #include "ShapeOps.h"
-#include "MXA/Common/MXASetGetMacros.h"
+
 
 
   /*
@@ -46,13 +46,13 @@
   class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
   {
     public:
-      MXA_SHARED_POINTERS(SuperEllipsoidOps)
-      MXA_TYPE_MACRO(SuperEllipsoidOps)
-      MXA_STATIC_NEW_MACRO(SuperEllipsoidOps)
+      DREAM3D_SHARED_POINTERS(SuperEllipsoidOps)
+      DREAM3D_TYPE_MACRO(SuperEllipsoidOps)
+      DREAM3D_STATIC_NEW_MACRO(SuperEllipsoidOps)
 
       virtual ~SuperEllipsoidOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+      virtual float radcur1(QMap<ArgName, float> args);
 
       virtual float inside(float axis1comp, float axis2comp, float axis3comp);
       virtual void init() { Nvalue = 0.0f; }

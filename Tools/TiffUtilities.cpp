@@ -283,7 +283,7 @@ int TiffUtilities::writeGrayScaleImage(const char* filename, int rows, int colum
    err = TIFFSetField(out, TIFFTAG_ROWSPERSTRIP, (int)rows); // 1 strip
 
 
-   std::string dateTime = tifDateTime();
+   QString dateTime = tifDateTime();
    err = TIFFSetField(out, TIFFTAG_DATETIME, dateTime.c_str());
 
 
