@@ -46,6 +46,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
+#define DREAM3D_STRING QString
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -57,294 +59,294 @@ namespace DREAM3D
 
   namespace FilterGroups
   {
-    const QString GenericFilters("Generic");
-    const QString IOFilters("IO");
-    const QString ProcessingFilters("Processing");
-    const QString ReconstructionFilters("Reconstruction");
-    const QString SamplingFilters("Sampling");
-    const QString StatisticsFilters("Statistics");
-    const QString CustomFilters("Custom");
-    const QString SyntheticBuildingFilters("SyntheticBuilding");
-    const QString SurfaceMeshingFilters("SurfaceMeshing");
-    const QString SolidMeshingFilters("SolidMeshing");
+    const DREAM3D_STRING GenericFilters("Generic");
+    const DREAM3D_STRING IOFilters("IO");
+    const DREAM3D_STRING ProcessingFilters("Processing");
+    const DREAM3D_STRING ReconstructionFilters("Reconstruction");
+    const DREAM3D_STRING SamplingFilters("Sampling");
+    const DREAM3D_STRING StatisticsFilters("Statistics");
+    const DREAM3D_STRING CustomFilters("Custom");
+    const DREAM3D_STRING SyntheticBuildingFilters("SyntheticBuilding");
+    const DREAM3D_STRING SurfaceMeshingFilters("SurfaceMeshing");
+    const DREAM3D_STRING SolidMeshingFilters("SolidMeshing");
   }
 
   namespace FilterSubGroups
   {
-    const QString EnsembleStatsFilters("Ensemble");
-    const QString MemoryManagementFilters("Memory/Management");
-    const QString SpatialFilters("Spatial");
-    const QString OutputFilters("Output");
-    const QString InputFilters("Input");
-    const QString ImageFilters("Image");
-    const QString CleanupFilters("Cleanup");
-    const QString ThresholdFilters("Threshold");
-    const QString RegularizationFilters("Regularization");
-    const QString ConversionFilters("Conversion");
-    const QString AlignmentFilters("Alignment");
-    const QString SegmentationFilters("Segmentation");
-    const QString GroupingFilters("Grouping");
-    const QString CropCutFilters("Croping/Cutting");
-    const QString RotationTransformationFilters("Rotating/Transforming");
-    const QString ResolutionFilters("Resolution");
-    const QString MorphologicalFilters("Morphological");
-    const QString CrystallographicFilters("Crystallographic");
-    const QString PackingFilters("Packing");
-    const QString CrystallographyFilters("Crystallography");
-    const QString GenerationFilters("Generation");
-    const QString SmoothingFilters("Smoothing");
-    const QString CurvatureFilters("Curvature");
-    const QString ConnectivityArrangementFilters("Connectivity/Arrangement");
-    const QString MiscFilters("Misc");
+    const DREAM3D_STRING EnsembleStatsFilters("Ensemble");
+    const DREAM3D_STRING MemoryManagementFilters("Memory/Management");
+    const DREAM3D_STRING SpatialFilters("Spatial");
+    const DREAM3D_STRING OutputFilters("Output");
+    const DREAM3D_STRING InputFilters("Input");
+    const DREAM3D_STRING ImageFilters("Image");
+    const DREAM3D_STRING CleanupFilters("Cleanup");
+    const DREAM3D_STRING ThresholdFilters("Threshold");
+    const DREAM3D_STRING RegularizationFilters("Regularization");
+    const DREAM3D_STRING ConversionFilters("Conversion");
+    const DREAM3D_STRING AlignmentFilters("Alignment");
+    const DREAM3D_STRING SegmentationFilters("Segmentation");
+    const DREAM3D_STRING GroupingFilters("Grouping");
+    const DREAM3D_STRING CropCutFilters("Croping/Cutting");
+    const DREAM3D_STRING RotationTransformationFilters("Rotating/Transforming");
+    const DREAM3D_STRING ResolutionFilters("Resolution");
+    const DREAM3D_STRING MorphologicalFilters("Morphological");
+    const DREAM3D_STRING CrystallographicFilters("Crystallographic");
+    const DREAM3D_STRING PackingFilters("Packing");
+    const DREAM3D_STRING CrystallographyFilters("Crystallography");
+    const DREAM3D_STRING GenerationFilters("Generation");
+    const DREAM3D_STRING SmoothingFilters("Smoothing");
+    const DREAM3D_STRING CurvatureFilters("Curvature");
+    const DREAM3D_STRING ConnectivityArrangementFilters("Connectivity/Arrangement");
+    const DREAM3D_STRING MiscFilters("Misc");
   }
 
   namespace CellData
   {
-    const QString SurfaceMeshCells("SurfaceMeshCells");
-    const QString GrainIds("GrainIds");
-    const QString FarFieldZoneIds("FarFieldZoneIds");
-    const QString FarFieldQuats("FarFieldQuats");
-    const QString ParentIds("ParentIds");
-    const QString Phases("Phases");
-    const QString CellPhases("Phases");
-    const QString BandContrast("BandContrast");
-    const QString EulerAngles("EulerAngles");
- //   const QString CellEulerAngles("CellEulerAngles");
-    const QString SurfaceVoxels("SurfaceVoxels");
-    const QString Quats("Quats");
-    const QString GoodVoxels("GoodVoxels");
-    const QString NearestNeighbors("NearestNeighbors");
-    const QString GBEuclideanDistances("GBEuclideanDistances");
-    const QString TJEuclideanDistances("TJEuclideanDistances");
-    const QString QPEuclideanDistances("QPEuclideanDistances");
-    const QString GrainReferenceMisorientations("GrainReferenceMisorientations");
-    const QString GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
-    const QString KernelAverageMisorientations("KernelAverageMisorientations");
-    const QString ImageQualityNoSpace("ImageQuality");
-    const QString ImageQuality("Image Quality");
-    const QString ConfidenceIndexNoSpace("ConfidenceIndex");
-    const QString ConfidenceIndex("Confidence Index");
-    const QString IPFColor("IPFColor");
-    const QString MisorientationColor("MisorientationColor");
-    const QString RodriguesColor("RodriguesColor");
-    const QString EulerColor("EulerColor");
-    const QString GlobAlpha("GlobAlpha");
-    const QString BC("BandContrasts");
-    const QString ImageData("ImageData");
-    const QString FlatImageData("FlatImageData");
+    const DREAM3D_STRING SurfaceMeshCells("SurfaceMeshCells");
+    const DREAM3D_STRING GrainIds("GrainIds");
+    const DREAM3D_STRING FarFieldZoneIds("FarFieldZoneIds");
+    const DREAM3D_STRING FarFieldQuats("FarFieldQuats");
+    const DREAM3D_STRING ParentIds("ParentIds");
+    const DREAM3D_STRING Phases("Phases");
+    const DREAM3D_STRING CellPhases("Phases");
+    const DREAM3D_STRING BandContrast("BandContrast");
+    const DREAM3D_STRING EulerAngles("EulerAngles");
+ //   const DREAM3D_STRING CellEulerAngles("CellEulerAngles");
+    const DREAM3D_STRING SurfaceVoxels("SurfaceVoxels");
+    const DREAM3D_STRING Quats("Quats");
+    const DREAM3D_STRING GoodVoxels("GoodVoxels");
+    const DREAM3D_STRING NearestNeighbors("NearestNeighbors");
+    const DREAM3D_STRING GBEuclideanDistances("GBEuclideanDistances");
+    const DREAM3D_STRING TJEuclideanDistances("TJEuclideanDistances");
+    const DREAM3D_STRING QPEuclideanDistances("QPEuclideanDistances");
+    const DREAM3D_STRING GrainReferenceMisorientations("GrainReferenceMisorientations");
+    const DREAM3D_STRING GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
+    const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
+    const DREAM3D_STRING ImageQualityNoSpace("ImageQuality");
+    const DREAM3D_STRING ImageQuality("Image Quality");
+    const DREAM3D_STRING ConfidenceIndexNoSpace("ConfidenceIndex");
+    const DREAM3D_STRING ConfidenceIndex("Confidence Index");
+    const DREAM3D_STRING IPFColor("IPFColor");
+    const DREAM3D_STRING MisorientationColor("MisorientationColor");
+    const DREAM3D_STRING RodriguesColor("RodriguesColor");
+    const DREAM3D_STRING EulerColor("EulerColor");
+    const DREAM3D_STRING GlobAlpha("GlobAlpha");
+    const DREAM3D_STRING BC("BandContrasts");
+    const DREAM3D_STRING ImageData("ImageData");
+    const DREAM3D_STRING FlatImageData("FlatImageData");
 
-    const QString SolidMeshNodes("SolidMeshNodes");
-    const QString SolidMeshTetrahedrons("SolidMeshTetrahedrons");
+    const DREAM3D_STRING SolidMeshNodes("SolidMeshNodes");
+    const DREAM3D_STRING SolidMeshTetrahedrons("SolidMeshTetrahedrons");
   }
 
   namespace FieldData
   {
-    const QString Active("Active");
-    const QString GoodFields("GoodFields");
-    const QString Phases("Phases");
-    const QString FieldPhases("Phases");
-    const QString F1("F1");
-    const QString F1spt("F1spt");
-    const QString F7("F7");
-    const QString mPrime("mPrime");
-    const QString EulerAngles("EulerAngles");
-  //  const QString FieldEulerAngles("FieldEulerAngles");
-    const QString SurfaceVoxelFractions("SurfaceVoxelFractions");
-    const QString AxisEulerAngles("AxisEulerAngles");
-    const QString SurfaceFields("SurfaceFields");
-    const QString BiasedFields("BiasedFields");
-    const QString NumNeighbors("NumNeighbors");
-    const QString RGBs("RGBs");
-    const QString ElasticStrains("ElasticStrains");
-    const QString FarFieldOrientations("FarFieldOrientations");
-    const QString Centroids("Centroids");
-    const QString NumCells("NumCells");
-    const QString ParentIds("ParentIds");
-    const QString Volumes("Volumes");
-    const QString EquivalentDiameters("EquivalentDiameters");
-    const QString Schmids("Schmids");
-    const QString SlipSystems("SlipSystems");
-    const QString LargestCrossSections("LargestCrossSections");
-    const QString AspectRatios("AspectRatios");
-    const QString AxisLengths("AxisLengths");
-    const QString Omega3s("Omega3s");
-    const QString AvgCAxes("AvgCAxes");
-    const QString AvgQuats("AvgQuats");
-    const QString Poles("Poles");
-    const QString Neighborhoods("Neighborhoods");
-    const QString GrainAvgMisorientations("GrainAvgMisorientations");
-    const QString GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
-    const QString KernelAvgMisorientations("KernelAvgMisorientations");
-    const QString NeighborList("NeighborList");
-    const QString NeighborhoodList("NeighborhoodList");
-    const QString MisorientationList("MisorientationList");
-    const QString SharedSurfaceAreaList("SharedSurfaceAreaList");
-    const QString LMG("LMG");
-    const QString MicroTextureRegionNumCells("MicroTextureRegionNumCells");
-    const QString MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
+    const DREAM3D_STRING Active("Active");
+    const DREAM3D_STRING GoodFields("GoodFields");
+    const DREAM3D_STRING Phases("Phases");
+    const DREAM3D_STRING FieldPhases("Phases");
+    const DREAM3D_STRING F1("F1");
+    const DREAM3D_STRING F1spt("F1spt");
+    const DREAM3D_STRING F7("F7");
+    const DREAM3D_STRING mPrime("mPrime");
+    const DREAM3D_STRING EulerAngles("EulerAngles");
+  //  const DREAM3D_STRING FieldEulerAngles("FieldEulerAngles");
+    const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
+    const DREAM3D_STRING AxisEulerAngles("AxisEulerAngles");
+    const DREAM3D_STRING SurfaceFields("SurfaceFields");
+    const DREAM3D_STRING BiasedFields("BiasedFields");
+    const DREAM3D_STRING NumNeighbors("NumNeighbors");
+    const DREAM3D_STRING RGBs("RGBs");
+    const DREAM3D_STRING ElasticStrains("ElasticStrains");
+    const DREAM3D_STRING FarFieldOrientations("FarFieldOrientations");
+    const DREAM3D_STRING Centroids("Centroids");
+    const DREAM3D_STRING NumCells("NumCells");
+    const DREAM3D_STRING ParentIds("ParentIds");
+    const DREAM3D_STRING Volumes("Volumes");
+    const DREAM3D_STRING EquivalentDiameters("EquivalentDiameters");
+    const DREAM3D_STRING Schmids("Schmids");
+    const DREAM3D_STRING SlipSystems("SlipSystems");
+    const DREAM3D_STRING LargestCrossSections("LargestCrossSections");
+    const DREAM3D_STRING AspectRatios("AspectRatios");
+    const DREAM3D_STRING AxisLengths("AxisLengths");
+    const DREAM3D_STRING Omega3s("Omega3s");
+    const DREAM3D_STRING AvgCAxes("AvgCAxes");
+    const DREAM3D_STRING AvgQuats("AvgQuats");
+    const DREAM3D_STRING Poles("Poles");
+    const DREAM3D_STRING Neighborhoods("Neighborhoods");
+    const DREAM3D_STRING GrainAvgMisorientations("GrainAvgMisorientations");
+    const DREAM3D_STRING GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+    const DREAM3D_STRING KernelAvgMisorientations("KernelAvgMisorientations");
+    const DREAM3D_STRING NeighborList("NeighborList");
+    const DREAM3D_STRING NeighborhoodList("NeighborhoodList");
+    const DREAM3D_STRING MisorientationList("MisorientationList");
+    const DREAM3D_STRING SharedSurfaceAreaList("SharedSurfaceAreaList");
+    const DREAM3D_STRING LMG("LMG");
+    const DREAM3D_STRING MicroTextureRegionNumCells("MicroTextureRegionNumCells");
+    const DREAM3D_STRING MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
 
   }
 
   namespace EnsembleData
   {
-    const QString NumFields("NumFields");
-    const QString VolFractions("VolFractions");
-    const QString TotalSurfaceAreas("TotalSurfaceAreas");
-    const QString CrystalStructures("CrystalStructures");
-    const QString PhaseTypes("PhaseTypes");
-    const QString BravaisLattice("BravaisLattice");
-    const QString PrecipitateFractions("PrecipitateFractions");
-    const QString ShapeTypes("ShapeTypes");
-    const QString Statistics("Statistics");
-    const QString PhaseName("PhaseName");
-    const QString MaterialName("MaterialName");
-    const QString LatticeConstants("LatticeConstants");
-    const QString GBCD("GBCD");
-    const QString GBCDdimensions("GBCDdimensions");
+    const DREAM3D_STRING NumFields("NumFields");
+    const DREAM3D_STRING VolFractions("VolFractions");
+    const DREAM3D_STRING TotalSurfaceAreas("TotalSurfaceAreas");
+    const DREAM3D_STRING CrystalStructures("CrystalStructures");
+    const DREAM3D_STRING PhaseTypes("PhaseTypes");
+    const DREAM3D_STRING BravaisLattice("BravaisLattice");
+    const DREAM3D_STRING PrecipitateFractions("PrecipitateFractions");
+    const DREAM3D_STRING ShapeTypes("ShapeTypes");
+    const DREAM3D_STRING Statistics("Statistics");
+    const DREAM3D_STRING PhaseName("PhaseName");
+    const DREAM3D_STRING MaterialName("MaterialName");
+    const DREAM3D_STRING LatticeConstants("LatticeConstants");
+    const DREAM3D_STRING GBCD("GBCD");
+    const DREAM3D_STRING GBCDdimensions("GBCDdimensions");
   }
 
 
   namespace VertexData
   {
-    const QString AtomVelocities("AtomVelocities");
-    const QString AtomTypes("AtomTypes");
-    const QString NumberOfArms("NumberOfArms");
-    const QString NodeConstraints("NodeConstraints");
-    const QString SurfaceMeshNodes("SurfaceMeshNodes");
-    const QString SurfaceMeshNodeType("SurfaceMeshNodeType");
-    const QString SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
-    const QString SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
+    const DREAM3D_STRING AtomVelocities("AtomVelocities");
+    const DREAM3D_STRING AtomTypes("AtomTypes");
+    const DREAM3D_STRING NumberOfArms("NumberOfArms");
+    const DREAM3D_STRING NodeConstraints("NodeConstraints");
+    const DREAM3D_STRING SurfaceMeshNodes("SurfaceMeshNodes");
+    const DREAM3D_STRING SurfaceMeshNodeType("SurfaceMeshNodeType");
+    const DREAM3D_STRING SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
+    const DREAM3D_STRING SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
   }
 
   namespace FaceData
   {
-    const QString SurfaceMeshFaces("SurfaceMeshFaces");
-    const QString SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
-    const QString SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
-    const QString SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
-    const QString SurfaceMeshF1s("SurfaceMeshF1s");
-    const QString SurfaceMeshF1spts("SurfaceMeshF1spts");
-    const QString SurfaceMeshF7s("SurfaceMeshF7s");
-    const QString SurfaceMeshmPrimes("SurfaceMeshmPrimes");
-    const QString SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const QString SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
-    const QString SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
-    const QString SurfaceMeshTwinBoundary("SurfaceMeshTwinBoundary");
-    const QString SurfaceMeshTwinBoundaryIncoherence("SurfaceMeshTwinBoundaryIncoherence");
-    const QString SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
-    const QString SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
-    const QString SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
-    const QString SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
-    const QString SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
-    const QString SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
-    const QString SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
-    const QString SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
-    const QString SurfaceMeshPrincipalDirection1("PrincipalDirection1");
-    const QString SurfaceMeshPrincipalDirection2("PrincipalDirection2");
+    const DREAM3D_STRING SurfaceMeshFaces("SurfaceMeshFaces");
+    const DREAM3D_STRING SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
+    const DREAM3D_STRING SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
+    const DREAM3D_STRING SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
+    const DREAM3D_STRING SurfaceMeshF1s("SurfaceMeshF1s");
+    const DREAM3D_STRING SurfaceMeshF1spts("SurfaceMeshF1spts");
+    const DREAM3D_STRING SurfaceMeshF7s("SurfaceMeshF7s");
+    const DREAM3D_STRING SurfaceMeshmPrimes("SurfaceMeshmPrimes");
+    const DREAM3D_STRING SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const DREAM3D_STRING SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
+    const DREAM3D_STRING SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
+    const DREAM3D_STRING SurfaceMeshTwinBoundary("SurfaceMeshTwinBoundary");
+    const DREAM3D_STRING SurfaceMeshTwinBoundaryIncoherence("SurfaceMeshTwinBoundaryIncoherence");
+    const DREAM3D_STRING SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
+    const DREAM3D_STRING SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
+    const DREAM3D_STRING SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
+    const DREAM3D_STRING SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const DREAM3D_STRING SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
+    const DREAM3D_STRING SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const DREAM3D_STRING SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
+    const DREAM3D_STRING SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
+    const DREAM3D_STRING SurfaceMeshPrincipalDirection1("PrincipalDirection1");
+    const DREAM3D_STRING SurfaceMeshPrincipalDirection2("PrincipalDirection2");
   }
 
   namespace EdgeData
   {
-    const QString DislocationIds("DislocationIds");
-    const QString BurgersVectors("BurgersVectors");
-    const QString SlipPlaneNormals("SlipPlaneNormals");
-    const QString SurfaceMeshEdges("SurfaceMeshEdges");
-    const QString SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
-    const QString SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
-    const QString SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
-    const QString SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
+    const DREAM3D_STRING DislocationIds("DislocationIds");
+    const DREAM3D_STRING BurgersVectors("BurgersVectors");
+    const DREAM3D_STRING SlipPlaneNormals("SlipPlaneNormals");
+    const DREAM3D_STRING SurfaceMeshEdges("SurfaceMeshEdges");
+    const DREAM3D_STRING SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
+    const DREAM3D_STRING SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
+    const DREAM3D_STRING SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+    const DREAM3D_STRING SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
   }
 
 
   namespace HDF5
   {
-    const QString FileVersionName("FileVersion");
-    const QString FileVersion("6.0");
-    const QString DataContainerName("DataContainers");
-    const QString DataContainerType("DataContainerType");
-    const QString VolumeDataContainerName("VolumeDataContainer");
-    const QString SurfaceDataContainerName("SurfaceDataContainer");
-    const QString VertexDataContainerName("VertexDataContainer");
-    const QString EdgeDataContainerName("EdgeDataContainer");
-    const QString VoxelDataName("VoxelData");
-    const QString PipelineGroupName("Pipeline");
-    const QString ObjectType("ObjectType");
-    const QString NumComponents("NumComponents");
+    const DREAM3D_STRING FileVersionName("FileVersion");
+    const DREAM3D_STRING FileVersion("6.0");
+    const DREAM3D_STRING DataContainerName("DataContainers");
+    const DREAM3D_STRING DataContainerType("DataContainerType");
+    const DREAM3D_STRING VolumeDataContainerName("VolumeDataContainer");
+    const DREAM3D_STRING SurfaceDataContainerName("SurfaceDataContainer");
+    const DREAM3D_STRING VertexDataContainerName("VertexDataContainer");
+    const DREAM3D_STRING EdgeDataContainerName("EdgeDataContainer");
+    const DREAM3D_STRING VoxelDataName("VoxelData");
+    const DREAM3D_STRING PipelineGroupName("Pipeline");
+    const DREAM3D_STRING ObjectType("ObjectType");
+    const DREAM3D_STRING NumComponents("NumComponents");
 
-    const QString VerticesName("Vertices");
-    const QString VertsName("Verts");
-    const QString FacesName("Faces");
-    const QString EdgesName("Edges");
-    const QString CellsName("Cells");
-    const QString EdgesContainingVert("EdgesContainingVert");
-    const QString EdgeNeighbors("EdgeNeighbors");
-    const QString FacesContainingVert("FacesContainingVert");
-    const QString FaceNeighbors("FaceNeighbors");
-    const QString CellsContainingVert("CellsContainingVert");
-    const QString CellNeighbors("CellNeighbors");
+    const DREAM3D_STRING VerticesName("Vertices");
+    const DREAM3D_STRING VertsName("Verts");
+    const DREAM3D_STRING FacesName("Faces");
+    const DREAM3D_STRING EdgesName("Edges");
+    const DREAM3D_STRING CellsName("Cells");
+    const DREAM3D_STRING EdgesContainingVert("EdgesContainingVert");
+    const DREAM3D_STRING EdgeNeighbors("EdgeNeighbors");
+    const DREAM3D_STRING FacesContainingVert("FacesContainingVert");
+    const DREAM3D_STRING FaceNeighbors("FaceNeighbors");
+    const DREAM3D_STRING CellsContainingVert("CellsContainingVert");
+    const DREAM3D_STRING CellNeighbors("CellNeighbors");
 
-    //  const QString Grain_ID("Grain_ID");
-    // const QString SchmidFactor ("SchmidFactor");
-    const QString Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
-    const QString KernelAvgDisorientation( "KernelAvgDisorientation");
-    const QString GrainAvgDisorientation ("GrainAvgDisorientation");
-    //  const QString ImageQuality( "ImageQuality");
+    //  const DREAM3D_STRING Grain_ID("Grain_ID");
+    // const DREAM3D_STRING SchmidFactor ("SchmidFactor");
+    const DREAM3D_STRING Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
+    const DREAM3D_STRING KernelAvgDisorientation( "KernelAvgDisorientation");
+    const DREAM3D_STRING GrainAvgDisorientation ("GrainAvgDisorientation");
+    //  const DREAM3D_STRING ImageQuality( "ImageQuality");
 
-    // const QString Phase("Phase");
-    const QString GBCD("GBCD");
-    const QString Statistics("Statistics");
-    const QString AxisOrientation("AxisOrientation");
-    const QString AxisODFWeights("AxisODF-Weights");
-    const QString ODF("ODF");
-    const QString ODFWeights("ODF-Weights");
-    const QString Euler1("Euler 1");
-    const QString Euler2("Euler 2");
-    const QString Euler3("Euler 3");
-    const QString Weight("Weight");
-    const QString Sigma("Sigma");
-    const QString MisorientationBins("MisorientationBins");
-    const QString MDFWeights("MDF-Weights");
-    const QString Angle("Angle");
-    const QString Axis("Axis");
-    const QString MicroTextureBins("MicroTextureBins");
-    const QString Stats("Stats");
-    const QString BoundaryArea("BoundaryArea");
-    const QString PhaseFraction("PhaseFraction");
-    const QString CrystalStructure("CrystalStructure");
-    const QString PhaseType("PhaseType");
-    const QString PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
-    const QString ParentPhase("Parent Phase");
-    const QString Grain_Diameter_Info("Grain_Diameter_Info");
-    const QString Grain_Size_Distribution("GrainSize Distribution");
-    const QString Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
-    const QString Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
-    const QString Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
-    const QString Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
-    const QString StatsType("StatsType");
+    // const DREAM3D_STRING Phase("Phase");
+    const DREAM3D_STRING GBCD("GBCD");
+    const DREAM3D_STRING Statistics("Statistics");
+    const DREAM3D_STRING AxisOrientation("AxisOrientation");
+    const DREAM3D_STRING AxisODFWeights("AxisODF-Weights");
+    const DREAM3D_STRING ODF("ODF");
+    const DREAM3D_STRING ODFWeights("ODF-Weights");
+    const DREAM3D_STRING Euler1("Euler 1");
+    const DREAM3D_STRING Euler2("Euler 2");
+    const DREAM3D_STRING Euler3("Euler 3");
+    const DREAM3D_STRING Weight("Weight");
+    const DREAM3D_STRING Sigma("Sigma");
+    const DREAM3D_STRING MisorientationBins("MisorientationBins");
+    const DREAM3D_STRING MDFWeights("MDF-Weights");
+    const DREAM3D_STRING Angle("Angle");
+    const DREAM3D_STRING Axis("Axis");
+    const DREAM3D_STRING MicroTextureBins("MicroTextureBins");
+    const DREAM3D_STRING Stats("Stats");
+    const DREAM3D_STRING BoundaryArea("BoundaryArea");
+    const DREAM3D_STRING PhaseFraction("PhaseFraction");
+    const DREAM3D_STRING CrystalStructure("CrystalStructure");
+    const DREAM3D_STRING PhaseType("PhaseType");
+    const DREAM3D_STRING PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
+    const DREAM3D_STRING ParentPhase("Parent Phase");
+    const DREAM3D_STRING Grain_Diameter_Info("Grain_Diameter_Info");
+    const DREAM3D_STRING Grain_Size_Distribution("GrainSize Distribution");
+    const DREAM3D_STRING Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
+    const DREAM3D_STRING Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
+    const DREAM3D_STRING Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
+    const DREAM3D_STRING Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
+    const DREAM3D_STRING StatsType("StatsType");
 
-    const QString StatsData("StatsData");
-    const QString PrimaryStatsData("PrimaryStatsData");
-    const QString PrecipitateStatsData("PrecipitateStatsData");
-    const QString BoundaryStatsData("BoundaryStatsData");
-    const QString MatrixStatsData("MatrixStatsData");
-    const QString TransformationStatsData("TransformationStatsData");
+    const DREAM3D_STRING StatsData("StatsData");
+    const DREAM3D_STRING PrimaryStatsData("PrimaryStatsData");
+    const DREAM3D_STRING PrecipitateStatsData("PrecipitateStatsData");
+    const DREAM3D_STRING BoundaryStatsData("BoundaryStatsData");
+    const DREAM3D_STRING MatrixStatsData("MatrixStatsData");
+    const DREAM3D_STRING TransformationStatsData("TransformationStatsData");
 
 
-    const QString BinNumber("BinNumber");
+    const DREAM3D_STRING BinNumber("BinNumber");
 
-    const QString Average("Average");
-    const QString StandardDeviation("Standard Deviation");
+    const DREAM3D_STRING Average("Average");
+    const DREAM3D_STRING StandardDeviation("Standard Deviation");
 
-    const QString Alpha("Alpha");
-    const QString Beta("Beta");
-    const QString Exp_k("K");
-    const QString MinimumValue("Minimum Value");
+    const DREAM3D_STRING Alpha("Alpha");
+    const DREAM3D_STRING Beta("Beta");
+    const DREAM3D_STRING Exp_k("K");
+    const DREAM3D_STRING MinimumValue("Minimum Value");
 
-    const QString UnknownDistribution("Unknown Distribution");
-    const QString DistributionType("Distribution Type");
-    const QString BetaDistribution("Beta Distribution");
-    const QString LogNormalDistribution("Log Normal Distribution");
-    const QString PowerLawDistribution("Power Law Distribution");
+    const DREAM3D_STRING UnknownDistribution("Unknown Distribution");
+    const DREAM3D_STRING DistributionType("Distribution Type");
+    const DREAM3D_STRING BetaDistribution("Beta Distribution");
+    const DREAM3D_STRING LogNormalDistribution("Log Normal Distribution");
+    const DREAM3D_STRING PowerLawDistribution("Power Law Distribution");
 
     enum ColumnCount
     {
@@ -364,11 +366,11 @@ namespace DREAM3D
     const unsigned int BoundaryPhase = 4;              //!<
     const unsigned int UnknownPhaseType = 999;    //!<
 
-    const QString Primary("Primary");
-    const QString Precipitate("Precipitate");
-    const QString Transformation("Transformation");
-    const QString Matrix("Matrix");
-    const QString Boundary("Boundary");
+    const DREAM3D_STRING Primary("Primary");
+    const DREAM3D_STRING Precipitate("Precipitate");
+    const DREAM3D_STRING Transformation("Transformation");
+    const DREAM3D_STRING Matrix("Matrix");
+    const DREAM3D_STRING Boundary("Boundary");
   }
 
   namespace AlignmentMethod
@@ -472,48 +474,48 @@ namespace DREAM3D
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const QString H5VoxelFile("VoxelData.h5voxel");
+    const DREAM3D_STRING H5VoxelFile("VoxelData.h5voxel");
 
-    const QString VisualizationVizFile("Visualization.vtk");//11
-    const QString DownSampledVizFile("DownSampled_Visualization.vtk");//11
-    const QString HDF5GrainFile("Grains.h5grain");
+    const DREAM3D_STRING VisualizationVizFile("Visualization.vtk");//11
+    const DREAM3D_STRING DownSampledVizFile("DownSampled_Visualization.vtk");//11
+    const DREAM3D_STRING HDF5GrainFile("Grains.h5grain");
   }
 
   namespace GrainData
   {
-    const QString GrainID("Grain_ID");
-    const QString PhaseID("Phase_ID");
-    const QString Phi1("Phi1");
-    const QString PHI("PHI");
-    const QString Phi2("Phi2");
-    const QString EquivDiam("Equiv_Diameter");
-    const QString B_Over_A("b/a");
-    const QString C_Over_A("c/a");
-    const QString Omega3("Omega3");
-    const QString SurfaceGrain("Surface_Grain");
-    const QString OutsideBoundingBox("Outside_Bounding_Box");
-    const QString NumNeighbors("No_Neighbors");
+    const DREAM3D_STRING GrainID("Grain_ID");
+    const DREAM3D_STRING PhaseID("Phase_ID");
+    const DREAM3D_STRING Phi1("Phi1");
+    const DREAM3D_STRING PHI("PHI");
+    const DREAM3D_STRING Phi2("Phi2");
+    const DREAM3D_STRING EquivDiam("Equiv_Diameter");
+    const DREAM3D_STRING B_Over_A("b/a");
+    const DREAM3D_STRING C_Over_A("c/a");
+    const DREAM3D_STRING Omega3("Omega3");
+    const DREAM3D_STRING SurfaceGrain("Surface_Grain");
+    const DREAM3D_STRING OutsideBoundingBox("Outside_Bounding_Box");
+    const DREAM3D_STRING NumNeighbors("No_Neighbors");
     const char Delimiter = ',';
   }
 
   namespace SyntheticBuilder
   {
-    const QString GrainDataFile("GrainData.csv");
-    const QString H5VoxelFile("VoxelData.h5voxel");
+    const DREAM3D_STRING GrainDataFile("GrainData.csv");
+    const DREAM3D_STRING H5VoxelFile("VoxelData.h5voxel");
 
-    const QString VisualizationVizFile("Visualization.vtk");
-    const QString HDF5GrainFile("Grains.h5grain");
+    const DREAM3D_STRING VisualizationVizFile("Visualization.vtk");
+    const DREAM3D_STRING HDF5GrainFile("Grains.h5grain");
 
-    const QString ErrorFile("Error.txt");
-    const QString VtkFile("Test.vtk");
+    const DREAM3D_STRING ErrorFile("Error.txt");
+    const DREAM3D_STRING VtkFile("Test.vtk");
   }
 
   namespace MicroStats {
-    const QString H5StatisticsFile("Results.h5stats");
-    const QString GrainDataFile("GrainData.csv");//14
-    const QString DeformationStatsFile("Deformation_Stats.txt");
-    const QString IPFDeformVTKFile("IPF_DeformationData.vtk");
-    const QString VoxelDataName("VoxelData");
+    const DREAM3D_STRING H5StatisticsFile("Results.h5stats");
+    const DREAM3D_STRING GrainDataFile("GrainData.csv");//14
+    const DREAM3D_STRING DeformationStatsFile("Deformation_Stats.txt");
+    const DREAM3D_STRING IPFDeformVTKFile("IPF_DeformationData.vtk");
+    const DREAM3D_STRING VoxelDataName("VoxelData");
   }
 
   /*   Surface Meshing Related   */
@@ -537,19 +539,19 @@ namespace DREAM3D
 
   namespace SolidMeshing {
     /* Solid Meshing Related */
-    const QString MeshFile("solid_mesh_v5_1.vtk");
-    const QString MeshFile2("solid_mesh_v5_2.vtk");
-    const QString ElementQualityFile("element_quality_measures_v5.txt");
-    const QString VoxelsFile("voxels_v5.txt");
+    const DREAM3D_STRING MeshFile("solid_mesh_v5_1.vtk");
+    const DREAM3D_STRING MeshFile2("solid_mesh_v5_2.vtk");
+    const DREAM3D_STRING ElementQualityFile("element_quality_measures_v5.txt");
+    const DREAM3D_STRING VoxelsFile("voxels_v5.txt");
   }
 
   namespace Comparison
   {
     namespace Strings
     {
-      const QString LessThan("<");
-      const QString GreaterThan(">");
-      const QString Equal("=");
+      const DREAM3D_STRING LessThan("<");
+      const DREAM3D_STRING GreaterThan(">");
+      const DREAM3D_STRING Equal("=");
     }
     enum Enumeration
     {
