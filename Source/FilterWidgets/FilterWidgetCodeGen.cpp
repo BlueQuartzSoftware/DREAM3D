@@ -82,7 +82,7 @@ QMap<QString, CreatedArrayHelpIndexEntry::VectorType>  helpIndex;
 // -----------------------------------------------------------------------------
 void copyFile(const QString &src, const QString &dest)
 {
-  if (src.isEmpty() == true | dest.isEmpty() == true)
+  if (src.isEmpty() == true || dest.isEmpty() == true)
   {
     BOOST_ASSERT(false);
   }
