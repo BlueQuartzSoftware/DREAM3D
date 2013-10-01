@@ -141,6 +141,19 @@ void MatrixMath::Multiply3x1withConstant(float g[3], float constant)
   g[2] *= constant;
 }
 
+void MatrixMath::Multiply3x3withConstant(float g[3][3], float constant)
+{
+  g[0][0] *= constant;
+  g[0][1] *= constant;
+  g[0][2] *= constant;
+  g[1][0] *= constant;
+  g[1][1] *= constant;
+  g[1][2] *= constant;
+  g[2][0] *= constant;
+  g[2][1] *= constant;
+  g[2][2] *= constant;
+}
+
 void MatrixMath::Transpose3x3(float g[3][3], float outMat[3][3])
 {
   outMat[0][0] = g[0][0];

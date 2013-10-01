@@ -86,6 +86,13 @@ class DREAM3DLib_EXPORT MatrixMath
     static void Multiply3x1withConstant(float g[3], float v);
 
     /**
+     * @brief Multiplies each element of a 3x1 matrix by the value v.
+     * @param g Input Matrix
+     * @param v Value to mutliply each element by.
+     */
+    static void Multiply3x3withConstant(float g[3][3], float v);
+
+    /**
      * @brief Transposes the 3x3 matrix and places the result into outMat
      * @param g
      * @param outMat

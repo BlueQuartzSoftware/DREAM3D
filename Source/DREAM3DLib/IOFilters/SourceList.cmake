@@ -34,6 +34,7 @@ set(_PublicFilters
   LosAlamosFFTWriter
   NodesTrianglesToStl
   NodesTrianglesToVtk
+  ParaDisReader
   PhReader
   PhWriter
   RawBinaryReader
@@ -44,6 +45,7 @@ set(_PublicFilters
   SurfaceMeshToNonconformalVtk
   SurfaceMeshToStl
   SurfaceMeshToVtk
+  VASPReader
   VisualizeGBCD
   VtkGrainIdReader
   VtkRectilinearGridWriter

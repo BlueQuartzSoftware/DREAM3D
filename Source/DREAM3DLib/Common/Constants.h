@@ -206,6 +206,10 @@ namespace DREAM3D
 
   namespace VertexData
   {
+    const QString AtomVelocities("AtomVelocities");
+    const QString AtomTypes("AtomTypes");
+    const QString NumberOfArms("NumberOfArms");
+    const QString NodeConstraints("NodeConstraints");
     const QString SurfaceMeshNodes("SurfaceMeshNodes");
     const QString SurfaceMeshNodeType("SurfaceMeshNodeType");
     const QString SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
@@ -241,6 +245,9 @@ namespace DREAM3D
 
   namespace EdgeData
   {
+    const QString DislocationIds("DislocationIds");
+    const QString BurgersVectors("BurgersVectors");
+    const QString SlipPlaneNormals("SlipPlaneNormals");
     const QString SurfaceMeshEdges("SurfaceMeshEdges");
     const QString SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
     const QString SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");

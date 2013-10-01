@@ -187,7 +187,7 @@ void VertexDataContainerWriter::writeXdmfMeshStructure()
 
   out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
   out << "    <Topology TopologyType=\"Polyvertex\" NumberOfElements=\"" << verts->getNumberOfTuples() << "\">" << "\n";
-  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 1\">" << "\n";
+  out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << verts->getNumberOfTuples() << " 3\">" << "\n";
   out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Verts" << "\n";
   out << "      </DataItem>" << "\n";
   out << "    </Topology>" << "\n";
@@ -290,15 +290,17 @@ int VertexDataContainerWriter::writeMeshData(hid_t dcGid)
     }
     if(getWriteXdmfFile() == true)
     {
-      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), 1, DREAM3D::HDF5::VertsName);
+      DataArray<int32_t>::Pointer vertsPtr = DataArray<int32_t>::CreateArray(verticesPtr->getNumberOfTuples(), 3, DREAM3D::HDF5::VertsName);
       int32_t* verts = vertsPtr->getPointer(0);
       for(int i=0;i<verticesPtr->getNumberOfTuples();i++)
       {
-        verts[i] = i;
+        verts[3*i] = 1;
+        verts[3*i+1] = 1;
+        verts[3*i+2] = i;
       }
       rank = 2;
       dims[0] = verticesPtr->getNumberOfTuples();
-      dims[1] = 1;
+      dims[1] = 3;
       err = QH5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VertsName, rank, dims, verts);
     }
   }

@@ -66,6 +66,9 @@
 
 #include "DREAM3DLib/SurfaceMeshingFilters/LaplacianSmoothing.h"
 
+#include "DREAM3DLib/IOFilters/VASPReader.h"
+
+#include "DREAM3DLib/IOFilters/ParaDisReader.h"
 
 #include "UnitTestSupport.hpp"
 
@@ -685,6 +688,56 @@ void RunPipeline3()
   pipeline->run();
 }
 
+void RunPipeline4()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  VASPReader::Pointer vr = VASPReader::New();
+  vr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\atomistics\\pos_swf2_vrst");
+  pipeline->pushBack(vr);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\atomistics\\pos_swf2_vrst.dream3d");
+  dcw->setWriteVolumeData(false);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(false);
+  dcw->setWriteVertexData(true);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
+void RunPipeline5()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  ParaDisReader::Pointer pr = ParaDisReader::New();
+  pr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.data");
+  pipeline->pushBack(pr);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.dream3d");
+  dcw->setWriteVolumeData(false);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(true);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -698,7 +751,9 @@ int main(int argc, char **argv)
 
 //  RunPipeline1();
 //  RunPipeline2();
-  RunPipeline3();
+//  RunPipeline3();
+//  RunPipeline4();
+  RunPipeline5();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )

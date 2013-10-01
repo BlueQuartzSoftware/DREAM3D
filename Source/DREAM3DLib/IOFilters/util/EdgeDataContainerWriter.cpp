@@ -187,7 +187,7 @@ void EdgeDataContainerWriter::writeXdmfMeshStructure()
   QTextStream& out = *getXdmfOStream();
 
   out << "  <Grid Name=\"" << getDataContainer()->getName() << "\">" << "\n";
-  out << "    <Topology TopologyType=\"Polyline\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
+  out << "    <Topology TopologyType=\"Polyline\" NodesPerElement=\"2\" NumberOfElements=\"" << edges->getNumberOfTuples() << "\">" << "\n";
   out << "      <DataItem Format=\"HDF\" NumberType=\"Int\" Dimensions=\"" << edges->getNumberOfTuples() << " 2\">" << "\n";
   out << "        " << hdfFileName << ":/DataContainers/" << getDataContainer()->getName() << "/Edges" << "\n";
   out << "      </DataItem>" << "\n";
@@ -214,6 +214,9 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   QTextStream out(&buf);
 
   QString hdfFileName = QH5Utilities::fileNameFromFileId(getHdfGroupId());
+
+  QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
+  QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents()/2);
 
 
   if((numComp%2) == 1)
@@ -310,7 +313,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const QString &groupName, I
 // -----------------------------------------------------------------------------
 int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
 {
-  EdgeDataContainer* dc = SurfaceDataContainer::SafePointerDownCast(getDataContainer());
+  EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
 
   herr_t err = 0;
   //first write the edges if they exist
@@ -318,7 +321,7 @@ int EdgeDataContainerWriter::writeMeshData(hid_t dcGid)
   if (edgesPtr.get() != NULL)
   {
     int32_t rank = 2; // THIS NEEDS TO BE THE SAME AS THE NUMBER OF ELEMENTS IN THE Structure from SuredgeMesh::DataStruc
-    hsize_t dims[2] = {edgesPtr->getNumberOfTuples(), 3};
+    hsize_t dims[2] = {edgesPtr->getNumberOfTuples(), 2};
 
     int32_t* data = reinterpret_cast<int32_t*>(edgesPtr->getPointer(0));
 
@@ -425,9 +428,6 @@ int EdgeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
 {
 
   int err = 0;
-
-  // We are NOT going to check for NULL DataContainer because we are this far and the checks
-  // have already happened. WHich is why this method is protected or private.
   EdgeDataContainer* dc = EdgeDataContainer::SafePointerDownCast(getDataContainer());
 
   //QString groupName(H5_EDGE_DATA_GROUP_NAME);
@@ -467,6 +467,7 @@ int EdgeDataContainerWriter::writeEdgeData(hid_t dcGid, QString groupName)
       H5Gclose(dcGid); // Close the Data Container Group
       return err;
     }
+    writeXdmfAttributeData(H5_EDGE_DATA_GROUP_NAME, array, "Cell");
   }
   H5Gclose(cellGroupId); // Close the Cell Group
   return err;
