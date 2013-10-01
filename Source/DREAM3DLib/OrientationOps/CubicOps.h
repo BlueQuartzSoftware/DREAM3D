@@ -153,11 +153,29 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      */
     virtual UInt8ArrayType::Pointer generateIPFTriangleLegend(int imageDim);
 
+    /**
+     * @brief generates a misorientation coloring legend
+     * @param angle
+     * @param n1 (~radial mesh points)
+     * @param n2 (~angular mesh points)
+     * @param width of produced image (in pixels)
+     * @return
+     */
+    virtual UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float, int, int, int);
+
 
   protected:
     float _calcMisoQuat(const QuatF quatsym[24], int numsym,
     QuatF &q1, QuatF &q2,
     float &n1, float &n2, float &n3);
+    /**
+     * @brief area preserving projection of volume preserving transformation (for C. Shuch and S. Patala coloring legend generation)
+     * @param x
+     * @param y
+     * @param z
+     * @return
+     */
+     std::vector< std::pair<double, double> > rodri2pair(std::vector<double>, std::vector<double>, std::vector<double>);
 
   private:
     CubicOps(const CubicOps&); // Copy Constructor Not Implemented
