@@ -255,7 +255,7 @@ int INLWriter::writeFile()
   fprintf(f, "#\r\n");
   fprintf(f, "# X_MAX: %f\r\n", origin[0]+(dims[0]*res[0]));
   fprintf(f, "# Y_MAX: %f\r\n", origin[1]+(dims[1]*res[1]));
-  fprintf(f, "# Z_MAX: %f\r\n", origin[2]+(dims[0]*res[2]));
+  fprintf(f, "# Z_MAX: %f\r\n", origin[2]+(dims[2]*res[2]));
   fprintf(f, "#\r\n");
   fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
   fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
