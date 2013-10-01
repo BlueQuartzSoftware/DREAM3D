@@ -33,18 +33,21 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
+
+
+
+
 #ifndef _H5MicREADER_H_
 #define _H5MicREADER_H_
 
 #include <hdf5.h>
 
-#include <QtCore/QVector>
-#include <QtCore/QSet>
+#include <vector>
+#include <set>
 
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
-
 #include "MicReader.h"
 #include "MicPhase.h"
 
@@ -134,13 +137,13 @@ class EbsdLib_EXPORT H5MicReader : public MicReader
      * @brief Returns a vector of MicPhase objects corresponding to the phases
      * present in the file
      */
-    QVector<MicPhase::Pointer> getPhases() { return m_Phases; }
+    std::vector<MicPhase::Pointer> getPhases() { return m_Phases; }
 
     /**
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(QSet<QString> names);
+    virtual void setArraysToRead(std::set<std::string> names);
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -161,8 +164,8 @@ class EbsdLib_EXPORT H5MicReader : public MicReader
     int readData(hid_t parId);
 
   private:
-    QVector<MicPhase::Pointer> m_Phases;
-    QSet<QString> m_ArrayNames;
+    std::vector<MicPhase::Pointer> m_Phases;
+    std::set<std::string> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
     H5MicReader(const H5MicReader&); // Copy Constructor Not Implemented

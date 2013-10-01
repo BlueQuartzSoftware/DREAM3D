@@ -40,7 +40,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 // -----------------------------------------------------------------------------
@@ -71,31 +71,31 @@ class ArraySelectionExample : public AbstractFilter
 
     // -----------------------------------------------------------------------------
     /* These methods are needed if you use the ArraySelectionWidget as an input */
-    typedef std::set<QString> ArrayList_t;
+    typedef std::set<std::string> ArrayList_t;
 
-    virtual void setVoxelSelectedArrayNames(std::set<QString> selectedCellArrays,
-                                            std::set<QString> selectedFieldArrays,
-                                            std::set<QString> selectedEnsembleArrays);
-    virtual void setSurfaceMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                  std::set<QString> selectedFaceArrays,
-                                                  std::set<QString> selectedEdgeArrays,
-                                                  std::set<QString> selectedFieldArrays,
-                                                  std::set<QString> selectedEnsembleArrays);
-    virtual void setSolidMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                std::set<QString> selectedFaceArrays,
-                                                std::set<QString> selectedEdgeArrays);
+    virtual void setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                            std::set<std::string> selectedFieldArrays,
+                                            std::set<std::string> selectedEnsembleArrays);
+    virtual void setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                  std::set<std::string> selectedFaceArrays,
+                                                  std::set<std::string> selectedEdgeArrays,
+                                                  std::set<std::string> selectedFieldArrays,
+                                                  std::set<std::string> selectedEnsembleArrays);
+    virtual void setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                std::set<std::string> selectedFaceArrays,
+                                                std::set<std::string> selectedEdgeArrays);
 
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<QString>, SelectedSolidMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
+      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
 
   public:
 
@@ -124,19 +124,19 @@ class ArraySelectionExample : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "ExamplePlugin"; }
+    virtual const std::string getGroupName() { return "ExamplePlugin"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "ArraySelectionExample"; }
+    virtual const std::string getHumanLabel() { return "ArraySelectionExample"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Misc"; }
+    virtual const std::string getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

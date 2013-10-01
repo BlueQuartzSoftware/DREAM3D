@@ -88,7 +88,7 @@ GrainFaceCurvatureFilter::~GrainFaceCurvatureFilter()
 // -----------------------------------------------------------------------------
 void GrainFaceCurvatureFilter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Neighborhood Ring Count");
@@ -174,9 +174,8 @@ int GrainFaceCurvatureFilter::writeFilterParameters(AbstractFilterParametersWrit
 void GrainFaceCurvatureFilter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -250,7 +249,7 @@ void GrainFaceCurvatureFilter::preflight()
 void GrainFaceCurvatureFilter::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -381,13 +380,13 @@ void GrainFaceCurvatureFilter::execute()
   tbb::task_group* g = new tbb::task_group;
 //  if(true)
 //  {
-//    qDebug() << "Default Number of Threads to Use: " << init.default_num_threads() ;
-//    qDebug() << "GrainFaceCurvatureFilter Running in Parallel." ;
+//    std::cout << "Default Number of Threads to Use: " << init.default_num_threads() << std::endl;
+//    std::cout << "GrainFaceCurvatureFilter Running in Parallel." << std::endl;
 //  }
 #else
   //if()
 //  {
-//    qDebug() << "CalculateFaceGroupCurvatures Running in Serial." ;
+//    std::cout << "CalculateFaceGroupCurvatures Running in Serial." << std::endl;
 //  }
 #endif
   // typedef here for conveneince
@@ -395,7 +394,7 @@ void GrainFaceCurvatureFilter::execute()
 
   for(SharedGrainFaceIterator_t iter = sharedGrainFaces.begin(); iter != sharedGrainFaces.end(); ++iter)
   {
-    SharedGrainFaceFilter::FaceIds_t& triangleIds = iter.value();
+    SharedGrainFaceFilter::FaceIds_t& triangleIds = (*iter).second;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -463,8 +462,9 @@ void GrainFaceCurvatureFilter::execute()
 void GrainFaceCurvatureFilter::tbbTaskProgress()
 {
   m_CompletedGrainFaces++;
-  QString ss = QObject::tr("%1/%2 COmplete").arg(m_CompletedGrainFaces).arg(m_TotalGrainFaces);
-  notifyStatusMessage(ss);
+  std::stringstream ss;
+  ss << m_CompletedGrainFaces << "/" << m_TotalGrainFaces << " Complete" << std::endl;
+  notifyStatusMessage(ss.str());
 }
 
 #endif

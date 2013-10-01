@@ -25,7 +25,7 @@ CreateFieldArrayFromCellArray::~CreateFieldArrayFromCellArray()
 // -----------------------------------------------------------------------------
 void CreateFieldArrayFromCellArray::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
@@ -69,11 +69,12 @@ int CreateFieldArrayFromCellArray::writeFilterParameters(AbstractFilterParameter
 void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  if(m_SelectedCellArrayName.isEmpty() == true)
+  if(m_SelectedCellArrayName.empty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -102,7 +103,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t fields, 
 {
 
 
-  QString fieldArrayName = inputData->GetName();
+  std::string fieldArrayName = inputData->GetName();
 
   DataArray<T>* cell = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == cell)
@@ -154,17 +155,20 @@ void CreateFieldArrayFromCellArray::execute()
   {
     return;
   }
+  //int err = 0;
+  std::stringstream ss;
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
+    ss.str("");
+    ss << "Selected array '" << m_SelectedCellArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
     setErrorCondition(-11001);
-    notifyErrorMessage(ss, getErrorCondition());
+    notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
-  QString dType = inputData->getTypeAsString();
+  std::string dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {

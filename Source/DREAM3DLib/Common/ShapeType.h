@@ -37,9 +37,9 @@
 #define _SHAPETYPE_H_
 
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtCore/QMap>
+#include <string>
+#include <vector>
+#include <map>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
@@ -59,13 +59,13 @@ class DREAM3DLib_EXPORT ShapeType
 
     virtual ~ShapeType();
 
-    static QString EllipsoidStr() { return QString("Ellipsoid"); }
-    static QString SuperEllipsoid() { return QString("Super Ellipsoid"); }
-    static QString CubeOctahedronStr() { return QString("Cube Octahedron"); }
-    static QString CylinderStr() { return QString("Cylinder"); }
-    static QString UnknownShapeTypeStr() { return QString("Unknown Shape Type"); }
+    static std::string EllipsoidStr() { return std::string("Ellipsoid"); }
+    static std::string SuperEllipsoid() { return std::string("Super Ellipsoid"); }
+    static std::string CubeOctahedronStr() { return std::string("Cube Octahedron"); }
+    static std::string CylinderStr() { return std::string("Cylinder"); }
+    static std::string UnknownShapeTypeStr() { return std::string("Unknown Shape Type"); }
 
-    static QString getShapeTypeString(unsigned int ShapeType)
+    static std::string getShapeTypeString(unsigned int ShapeType)
     {
       switch(ShapeType)
       {
@@ -82,7 +82,7 @@ class DREAM3DLib_EXPORT ShapeType
         default:
           break;
       }
-      return QString("Undefined ShapeType (Error)");
+      return std::string("Undefined ShapeType (Error)");
     }
 
     static unsigned int getShapeType(const char* str)
@@ -107,7 +107,7 @@ class DREAM3DLib_EXPORT ShapeType
     }
 
 
-    static void getShapeTypeStrings(QVector<QString> &strings)
+    static void getShapeTypeStrings(std::vector<std::string> &strings)
     {
       strings.clear();
       strings.push_back(EllipsoidStr());
@@ -117,7 +117,7 @@ class DREAM3DLib_EXPORT ShapeType
       strings.push_back(UnknownShapeTypeStr());
     }
 
-    static void getShapeTypeEnums(QVector<unsigned int> &types)
+    static void getShapeTypeEnums(std::vector<unsigned int> &types)
     {
       types.clear();
       types.push_back(DREAM3D::ShapeType::EllipsoidShape);
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT ShapeType
       types.push_back(DREAM3D::ShapeType::UnknownShapeType);
     }
 
-    static void getShapeTypeMap(QMap<int, QString> &map)
+    static void getShapeTypeMap(std::map<int, std::string> &map)
     {
       map.clear();
       map[DREAM3D::ShapeType::EllipsoidShape] = EllipsoidStr();

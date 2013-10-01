@@ -42,7 +42,7 @@
 
 #include "ui_AxisAngleWidget.h"
 
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 #include "AxisAngleTableModel.h"
@@ -87,7 +87,7 @@ class PipelineBuilderLib_EXPORT AxisAngleWidget : public QWidget, private Ui::Ax
      * @brief getAxisAngleRotations
      * @return
      */
-    virtual QVector<AxisAngleInput_t> getAxisAngleRotations();
+    virtual std::vector<AxisAngleInput_t> getAxisAngleRotations();
 
     virtual AxisAngleTableModel* getTableModel();
 

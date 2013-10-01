@@ -30,10 +30,10 @@
 
 #include "VtkGrainIdReader.h"
 
-#include <QtCore/QMap>
+#include <map>
 
-
-#include <QtCore/QFileInfo>
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 
@@ -69,7 +69,7 @@ VtkGrainIdReader::~VtkGrainIdReader()
 // -----------------------------------------------------------------------------
 void VtkGrainIdReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Vtk File");
@@ -121,23 +121,23 @@ void VtkGrainIdReader::dataCheck(bool preflight, size_t voxels, size_t fields, s
 {
 
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   // Errors will get propagated to the user through the normal mechanism
   // Reading the header will set the Dimensions, Resolution and Origin
@@ -227,93 +227,95 @@ int VtkGrainIdReader::readHeader()
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorCondition(-51000);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
   }
 
 
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-
-    QString ss = QObject::tr("Input filename was empty%1(%2)").arg(__FILE__).arg(__LINE__);
+    std::stringstream ss;
+    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
     setErrorCondition(-51010);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
   }
 
 
-  QFile instream(getInputFile());
-
-  if (!instream.open(QIODevice::ReadOnly | QIODevice::Text))
+  std::ifstream instream;
+  instream.open(getInputFile().c_str(), std::ios_base::binary);
+  if (!instream.is_open())
   {
-    QString msg = QObject::tr("Vtk file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
-    return -100;
+    std::stringstream ss;
+    ss << "Vtk file could not be opened: " << getInputFile();
+    setErrorCondition(-51020);
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+    return getErrorCondition();
   }
-  QByteArray buf = instream.readLine(); // Read Line 1 - VTK Version Info
-  buf = instream.readLine(); // Read Line 2 - User Comment
-  setComment(QString(buf));
-  buf = instream.readLine(); // Read Line 3 - BINARY or ASCII
-  QString fileType(buf);
-  if (fileType.startsWith("BINARY") == true)
+  char buf[kBufferSize];
+  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
+  setComment(std::string(buf));
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
+  std::string fileType(buf);
+  if (fileType.find("BINARY", 0) == 0)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.startsWith("ASCII") == true)
+  else if (fileType.find("ASCII", 0) == 0)
   {
     setFileIsBinary(false);
   }
   else
   {
-
-    QString ss = QObject::tr("The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.");
+    std::stringstream ss;
+    ss << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file.";
     setErrorCondition(-51030);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
   }
-  buf = instream.readLine(); // Read Line 4 - Type of Dataset
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
   {
     char text[256];
     int n = sscanf(buf, "%s %s", text, &(text[16]) );
     if (n < 2)
     {
-
-    QString ss = QObject::tr("Error Reading the type of data set. Was expecting 2 fields but got %1").arg(n);
+      std::stringstream ss;
+      ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
     setErrorCondition(-51040);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
     }
-    QString dataset(&(text[16]));
+    std::string dataset(&(text[16]));
     setDatasetType(dataset);
   }
-  bool ok = false;
-  buf = instream.readLine(); // Read Line 5 which is the Dimension values
+
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   size_t dims[3];
-  QList<QByteArray> tokens = buf.split(' ');
-  dims[0] = tokens[1].toInt(&ok, 10);
-  dims[1] = tokens[2].toInt(&ok, 10);
-  dims[2] = tokens[3].toInt(&ok, 10);
+  err = parseSizeT_3V(buf, dims, 0);
   getVolumeDataContainer()->setDimensions(dims);
 
 #if 1
-  buf = instream.readLine(); // Read Line 6 which is the Origin values
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
-  origin[0] = tokens[1].toFloat(&ok);
-  origin[1] = tokens[2].toFloat(&ok);
-  origin[2] = tokens[3].toFloat(&ok);
+  err = parseFloat3V(buf, origin, 0.0f);
   getVolumeDataContainer()->setOrigin(origin);
 
-  buf = instream.readLine();// Read Line 7 which is the Scaling values
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize);// Read Line 7 which is the Scaling values
   float resolution[3];
-  resolution[0] = tokens[1].toFloat(&ok);
-  resolution[1] = tokens[2].toFloat(&ok);
-  resolution[2] = tokens[3].toFloat(&ok);
+  err = parseFloat3V(buf, resolution, 1.0f);
   getVolumeDataContainer()->setResolution(resolution);
 
+  ::memset(buf, 0, kBufferSize);
 #endif
 
   instream.close();
@@ -347,19 +349,21 @@ int VtkGrainIdReader::readFile()
 {
   int err = 0;
 
-  QFile instream(getInputFile());
-
-  if (!instream.open(QIODevice::ReadOnly | QIODevice::Text))
+  std::string filename = getInputFile();
+  std::ifstream instream;
+  instream.open(filename.c_str(), std::ios_base::binary);
+  if (!instream.is_open())
   {
-    QString msg = QObject::tr("Vtk file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
-    return -100;
+    std::stringstream ss;
+    ss << logTime() << " vtk file could not be opened: " << filename << std::endl;
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    return -1;
   }
-  QByteArray buf;
+
+  char buf[kBufferSize];
   for (int i = 0; i < 8; ++i)
   {
-    buf = instream.readLine();
+    instream.getline(buf, kBufferSize);
   }
 
   // These should have been set from reading the header
@@ -374,9 +378,9 @@ int VtkGrainIdReader::readFile()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
   {
-
+    std::stringstream ss;
     ss << "x dimension does not match expected dimension: " << dim << " <--> " << dims[0];
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float xscale = 1.0f;
@@ -388,9 +392,9 @@ int VtkGrainIdReader::readFile()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
   {
-
+    std::stringstream ss;
     ss << "y dimension does not match expected dimension: " << dim << " <--> " << dims[1];
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float yscale = 1.0f;
@@ -402,16 +406,16 @@ int VtkGrainIdReader::readFile()
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[2])
   {
-
+    std::stringstream ss;
     ss << "z dimension does not match expected dimension: " << dim << " <--> " << dims[2];
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   float zscale = 1.0f;
   err = skipVolume<float>(instream, 4, 1, 1, dim, zscale);
   if (err < 0)
   {
-
+    std::stringstream ss;
     ss << "Error skipping Volume section of VTK file.";
     return err;
   }
@@ -420,20 +424,20 @@ int VtkGrainIdReader::readFile()
   // to the DREAM.3D package this is a safe assumption.
   getVolumeDataContainer()->setResolution(xscale, yscale, zscale);
 #endif
-  bool ok = false;
+
   // Now we need to search for the 'GrainID' and
-//  char text1[kBufferSize];
-//  ::memset(text1, 0, kBufferSize);
-//  char text2[kBufferSize];
-//  ::memset(text2, 0, kBufferSize);
-//  char text3[kBufferSize];
-//  ::memset(text3, 0, kBufferSize);
-//  char text4[kBufferSize];
-//  ::memset(text4, 0, kBufferSize);
+  char text1[kBufferSize];
+  ::memset(text1, 0, kBufferSize);
+  char text2[kBufferSize];
+  ::memset(text2, 0, kBufferSize);
+  char text3[kBufferSize];
+  ::memset(text3, 0, kBufferSize);
+  char text4[kBufferSize];
+  ::memset(text4, 0, kBufferSize);
   //int fieldNum = 0;
   bool needGrainIds = true;
 
-  QString scalarName;
+  std::string scalarName;
   int typeByteSize = 0;
 
   //size_t index = 0;
@@ -443,27 +447,25 @@ int VtkGrainIdReader::readFile()
   size_t totalVoxels = dims[0] * dims[1] * dims[2];
   DataArray<int>::Pointer grainIds = DataArray<int>::CreateArray(totalVoxels, DREAM3D::CellData::GrainIds);
 
-  buf = instream.readLine();
-  QList<QByteArray> tokens;
+  readLine(instream, buf, kBufferSize);
+
  // int i = 0;
   while (needGrainIds == true)
   {
-     buf = instream.readLine();
-     tokens = buf.split(' ');
-//    ::memset(text1, 0, kBufferSize);
-//    ::memset(text2, 0, kBufferSize);
-//    ::memset(text3, 0, kBufferSize);
-
-    //int n = sscanf(buf, "%s %s %s %s", text1, text2, text3, text4);
-    if (tokens.size() != 4)
+    readLine(instream, buf, kBufferSize);
+    ::memset(text1, 0, kBufferSize);
+    ::memset(text2, 0, kBufferSize);
+    ::memset(text3, 0, kBufferSize);
+    int n = sscanf(buf, "%s %s %s %s", text1, text2, text3, text4);
+    if (n != 4)
     {
-
-      QString ss = QObject::tr("Error reading SCALARS header section of VTK file.");
-      addErrorMessage(getHumanLabel(), ss, -1);
+      std::stringstream ss;
+      ss << "Error reading SCALARS header section of VTK file.";
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
       return -1;
     }
-    scalarName = QString(tokens[0]);
-    typeByteSize = tokens[3].toInt(&ok, 10);
+    scalarName = std::string(text1);
+    typeByteSize = parseByteSize(text4);
     if (typeByteSize == 0)
     {
       return -1;
@@ -476,7 +478,7 @@ int VtkGrainIdReader::readFile()
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
-    //  QMap<int, int> grainIdMap;
+    //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
@@ -489,7 +491,7 @@ int VtkGrainIdReader::readFile()
         for (size_t i = 0; i < totalVoxels; ++i)
         {
           t = grainIds->GetValue(i);
-          DREAM3D::Endian::FromSystemToBig::convert(t);
+          MXA::Endian::FromBigToSystem::convert<int>(t);
           grainIds->SetValue(i, t);
         }
       }

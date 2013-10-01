@@ -40,10 +40,10 @@
 
 #include <stdlib.h>
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <cmath>
 #include <fstream>
-#include <QtCore/QList>
+#include <list>
 #include <algorithm>
 #include <numeric>
 #include <sstream>
@@ -110,9 +110,9 @@ DREAM3DRandom rg;
 using namespace VolMesh;
 
 #ifdef VOLUME_MESH_LIBRARY
-int MeshGenerator_Main(const QString &readname1, const QString &readname2,
-                    const QString &writename1, const QString &writename1a,
-                    const QString &writename2, const QString &writename3,
+int MeshGenerator_Main(const std::string &readname1, const std::string &readname2,
+                    const std::string &writename1, const std::string &writename1a,
+                    const std::string &writename2, const std::string &writename3,
                     float xDim, float yDim, float zDim,
                     float xRes, float yRes, float zRes,
                     int numGrains)
@@ -192,11 +192,11 @@ int main(int argc, char **argv)
 
 
   ifstream inputFile1;
-  inputFile1.open(readname1.toLatin1().data(), std::ios_base::binary);
+  inputFile1.open(readname1.c_str(), std::ios_base::binary);
   inputFile1 >> numsurfnodes;
   inputFile1.close();
   ifstream inputFile2;
-  inputFile2.open(readname2.toLatin1().data(), std::ios_base::binary);
+  inputFile2.open(readname2.c_str(), std::ios_base::binary);
   inputFile2 >> numtriangles;
   inputFile2.close();
 
@@ -270,7 +270,7 @@ int main(int argc, char **argv)
     string filein;
     filein = "tets.txt";
     ifstream inputFile3;
-    inputFile3.open(filein.toLatin1().data(), std::ios_base::binary);
+    inputFile3.open(filein.c_str(), std::ios_base::binary);
     inputFile3 >> numelements;
     inputFile3.close();
     element = new elements[numelements];
@@ -290,7 +290,7 @@ int main(int argc, char **argv)
 void read_nodes(string inname1)
 {
   ifstream inputFile;
-  inputFile.open(inname1.toLatin1().data(), std::ios_base::binary);
+  inputFile.open(inname1.c_str(), std::ios_base::binary);
   float x;
   float y;
   float z;
@@ -317,7 +317,7 @@ void read_nodes(string inname1)
 void read_triangles(string inname3)
 {
   ifstream inputFile;
-  inputFile.open(inname3.toLatin1().data(), std::ios_base::binary);
+  inputFile.open(inname3.c_str(), std::ios_base::binary);
   int trianglenum;
   int node1;
   int node2;
@@ -623,7 +623,7 @@ void delete_triangles()
         edgeorder[1] = 2, edgeorder[2] = 1;
       int size = 0;
       float avgmisorient = 0;
-      while (!affectedtrianglelist.isEmpty() && keep == 0)
+      while (!affectedtrianglelist.empty() && keep == 0)
       {
         int trianglenum = affectedtrianglelist.front();
         if (originaltriangle[trianglenum].trianglekilled != 1)
@@ -1306,7 +1306,7 @@ void clean_triangles()
   /*  string fileout;
    fileout = "boundary angles ns.vtk";
    ofstream outputFile;
-   outputFile.open(fileout.toLatin1().data(), std::ios_base::binary);
+   outputFile.open(fileout.c_str(), std::ios_base::binary);
    float minangle = 10000000;
    int goodtriangles = 0;
    for(int i=0;i<numtriangles;i++)
@@ -1580,7 +1580,7 @@ void create_finalnodesandtriangles()
   string fileout;
   fileout = "surface mesh.vtk";
   ofstream outputFile;
-  outputFile.open(fileout.toLatin1().data(), std::ios_base::binary);
+  outputFile.open(fileout.c_str(), std::ios_base::binary);
 //  float minangle = 10000000;
   outputFile << "# vtk DataFile Version 2.0" << endl;
   outputFile << "data set from FFT2dx_GB" << endl;
@@ -1733,9 +1733,9 @@ void make_nodes(int iter)
 //  itoa(iter, num, 10);
 //  strcat(fileout, num);
 //  strcat(fileout, fileoutext);
-  
-  QString ss = QObject::tr("pointcheck%1.vtk").arg(iter);
-  QString fileout = ss.str();
+  std::stringstream ss;
+  ss << "pointcheck" << iter << ".vtk";
+  std::string fileout = ss.str();
 
   //  ofstream outFile;
   //  outFile.open(fileout, std::ios_base::binary);
@@ -2111,7 +2111,7 @@ void make_nodes(int iter)
    outFile << "1 " << i+numsurfnodes-numgoodsurfnodes << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.isEmpty())
+   while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
    outFile << "3 " << triangle[firsttriangle].firstnodeleft << " " << triangle[firsttriangle].secondnodeleft << " " << triangle[firsttriangle].thirdnodeleft << endl;
@@ -2128,7 +2128,7 @@ void make_nodes(int iter)
    outFile << "1" << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.isEmpty())
+   while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
    outFile << "5" << endl;
@@ -2149,7 +2149,7 @@ void make_nodes(int iter)
    outFile << grainname << endl;
    }
    trianglelist = grain[iter].trianglelist;
-   while(!trianglelist.isEmpty())
+   while(!trianglelist.empty())
    {
    int firsttriangle = trianglelist.front();
    outFile << iter << endl;
@@ -2163,7 +2163,7 @@ void write_nodes()
   string filename;
   filename = "points.txt";
   ofstream outFile;
-  outFile.open(filename.toLatin1().data(), std::ios_base::binary);
+  outFile.open(filename.c_str(), std::ios_base::binary);
   outFile << 3 << endl;
   outFile << numnodes << endl;
   for (int i = 0; i < numnodes; i++)
@@ -2202,7 +2202,7 @@ void read_elements(int idea)
   list<int> nglist;
   string filename = "tets.txt";
   ifstream inputFile;
-  inputFile.open(filename.toLatin1().data(), std::ios_base::binary);
+  inputFile.open(filename.c_str(), std::ios_base::binary);
   inputFile >> numelements;
   elementcount = 0;
   for (int i = 0; i < numelements; i++)
@@ -5453,7 +5453,7 @@ void improve_mesh()
 void write_meshdata(string outname1)
 {
   ofstream outFile;
-  outFile.open(outname1.toLatin1().data(), std::ios_base::binary);
+  outFile.open(outname1.c_str(), std::ios_base::binary);
   int edgeelement = 0;
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
@@ -5587,7 +5587,7 @@ void write_meshdata(string outname1)
 void write_dihedralangles(string outname2)
 {
   ofstream outFile;
-  outFile.open(outname2.toLatin1().data(), std::ios_base::binary);
+  outFile.open(outname2.c_str(), std::ios_base::binary);
   for (int i = 0; i < 180; i++)
   {
     if (i < 25)
@@ -5604,7 +5604,7 @@ void write_dihedralangles(string outname2)
 void write_voxeldata(string outname3)
 {
   ofstream outFile;
-  outFile.open(outname3.toLatin1().data(), std::ios_base::binary);
+  outFile.open(outname3.c_str(), std::ios_base::binary);
   outFile << "# vtk DataFile Version 2.0" << endl;
   outFile << "data set from FFT2dx_GB" << endl;
   outFile << "ASCII" << endl;

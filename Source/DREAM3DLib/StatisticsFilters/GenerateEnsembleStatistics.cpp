@@ -36,9 +36,8 @@
 
 #include "GenerateEnsembleStatistics.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
 
 #include "DREAM3DLib/DistributionAnalysisOps/BetaOps.h"
 #include "DREAM3DLib/DistributionAnalysisOps/PowerLawOps.h"
@@ -160,66 +159,66 @@ int GenerateEnsembleStatistics::writeFilterParameters(AbstractFilterParametersWr
 void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
    if(m_SizeDistribution == true || m_Omega3Distribution == true
          || m_AspectRatioDistribution == true || m_NeighborhoodDistribution == true || m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, -302, bool, BoolArrayType, fields, 1)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
   }
   if(m_NeighborhoodDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, -304, int32_t, Int32ArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, -304, int32_t, Int32ArrayType, fields, 1)
   }
   if(m_AspectRatioDistribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, -307, float, FloatArrayType, fields, 2)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AspectRatios, ss, -307, float, FloatArrayType, fields, 2)
   }
   if(m_Omega3Distribution == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, -306, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, -306, float, FloatArrayType, fields, 1)
   }
   if(m_CalculateAxisODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, -305, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, -305, float, FloatArrayType, fields, 3)
   }
 
 
   if(m_CalculateODF == true || m_CalculateMDF == true)
   {
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
   }
   if(m_CalculateODF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, -304, float, FloatArrayType, fields, 1)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, -302, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, -304, float, FloatArrayType, fields, 1)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -302, float, FloatArrayType, fields, 3)
   }
   if(m_CalculateMDF == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
         m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>(m->getFieldData(DREAM3D::FieldData::SharedSurfaceAreaList).get());
     if(m_SharedSurfaceAreaList == NULL)
     {
-
-      QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly");
+      ss.str("");
+      ss << "SurfaceAreaLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-306);
-      addErrorMessage(getHumanLabel(), ss, -306);
+      addErrorMessage(getHumanLabel(), ss.str(), -306);
     }
     // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
     if(m_NeighborList == NULL)
     {
-
-      QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
+      ss.str("");
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-305);
-      addErrorMessage(getHumanLabel(), ss, -305);
+      addErrorMessage(getHumanLabel(), ss.str(), -305);
     }
   }
 
@@ -231,7 +230,7 @@ void GenerateEnsembleStatistics::dataCheck(bool preflight, size_t voxels, size_t
   else
   {
     typedef DataArray<unsigned int> PhaseTypeArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PhaseTypeArrayType, DREAM3D::PhaseType::UnknownPhaseType, ensembles, 1)
   }
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
@@ -281,7 +280,7 @@ void GenerateEnsembleStatistics::execute()
     return;
   }
   setErrorCondition(0);
-  
+  std::stringstream ss;
 
   //  int totalPoints = m->getTotalPoints();
   //  int totalFields = m->getNumFieldTuples();
@@ -305,9 +304,9 @@ void GenerateEnsembleStatistics::execute()
     }
     if(static_cast<int>(m_PhaseTypeArray.size()) > totalEnsembles)
     {
-
-      QString ss = QObject::tr("The number of PhaseTypes entered is more than the number of Ensembles, only the first %1 will be used").arg(totalEnsembles-1);
-      notifyWarningMessage(ss, -999);
+      ss.str("");
+      ss << "The number of PhaseTypes entered is more than the number of Ensembles, only the first " << totalEnsembles-1 << " will be used";
+      notifyWarningMessage(ss.str(), -999);
     }
     PhaseTypeArrayType::Pointer phaseTypes = PhaseTypeArrayType::CreateArray(totalEnsembles, m_PhaseTypesArrayName);
     for(int r = 0; r < totalEnsembles; ++r)

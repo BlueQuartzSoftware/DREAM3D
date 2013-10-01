@@ -36,7 +36,7 @@
 
 #include "FindLargestCrossSections.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -68,14 +68,14 @@ FindLargestCrossSections::~FindLargestCrossSections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Plane of Interest");
     option->setPropertyName("Plane");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("XY");
     choices.push_back("XZ");
     choices.push_back("YZ");
@@ -112,13 +112,13 @@ int FindLargestCrossSections::writeFilterParameters(AbstractFilterParametersWrit
 void FindLargestCrossSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   //int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, LargestCrossSections, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, LargestCrossSections, ss, float, FloatArrayType, 0, fields, 1)
 
 }
 

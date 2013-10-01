@@ -41,7 +41,7 @@
 #include "QtSupport/DREAM3DQtMacros.h"
 #include "QtSupport/DREAM3DHelpUrlGenerator.h"
 
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Utilities.h"
 #include "H5Support/H5Lite.h"
 
 #include "H5Support/HDF5ScopedFileSentinel.h"
@@ -63,10 +63,10 @@ QDataContainerReaderWidget::QDataContainerReaderWidget(QWidget* parent) :
   }
   setupUi(this);
   DataContainerReader::Pointer filter = DataContainerReader::New();
-  m_FilterGroup = (filter->getGroupName());
+  m_FilterGroup = QString::fromStdString(filter->getGroupName());
   setupGui();
   getGuiParametersFromFilter( filter.get() );
-  setTitle((filter->getHumanLabel()));
+  setTitle(QString::fromStdString(filter->getHumanLabel()));
 }
 
 // -----------------------------------------------------------------------------
@@ -85,7 +85,7 @@ void QDataContainerReaderWidget::getGuiParametersFromFilter(AbstractFilter* filt
 {
   DataContainerReader* filter = DataContainerReader::SafeObjectDownCast<AbstractFilter*, DataContainerReader*>(filt);
   blockSignals(true);
-  setInputFile( ( filter->getInputFile() ) );
+  setInputFile( QString::fromStdString( filter->getInputFile() ) );
   setReadVolumeData( filter->getReadVolumeData() );
   setReadSurfaceData( filter->getReadSurfaceData() );
   setReadVertexData( filter->getReadVertexData() );
@@ -103,7 +103,7 @@ AbstractFilter::Pointer QDataContainerReaderWidget::getFilter(bool defaultValues
 {
   DataContainerReader::Pointer filter = DataContainerReader::New();
   if (defaultValues == true) { return filter; }
-  filter->setInputFile( getInputFile() );
+  filter->setInputFile( getInputFile().toStdString() );
   filter->setReadVolumeData( getReadVolumeData() );
   filter->setReadSurfaceData( getReadSurfaceData() );
   filter->setReadVertexData( getReadVertexData() );
@@ -268,8 +268,8 @@ void QDataContainerReaderWidget::on_InputFileBtn_clicked()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName);
-  QString ext = getFileExtension(propName);
+  QString Ftype = getFileType(propName.toStdString());
+  QString ext = getFileExtension(propName.toStdString());
   QString s = Ftype + QString("DREAM3D Files (*.dream3d *.h5 *.hdf5);;All Files(*.*)");
   QString defaultName = getOpenDialogLastDirectory();
   QString inputFile = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
@@ -305,7 +305,7 @@ void QDataContainerReaderWidget::on_InputFile_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 bool QDataContainerReaderWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-  //  std::cout << "outFilePath: " << outFilePath << std::endl;
+  //  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -356,7 +356,7 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Poi
   {
 
     hid_t fileId = -1;
-    fileId = QH5Utilities::openFile(InputFile->text(), true);
+    fileId = H5Utilities::openFile(InputFile->text().toStdString(), true);
     if (fileId < 0) {
       return;
     }
@@ -369,10 +369,10 @@ void QDataContainerReaderWidget::preflightDoneExecuting(VolumeDataContainer::Poi
     int err = reader->getSizeResolutionOrigin(fileId, dims, res, origin);
 
     if (err < 0) {
-      err = QH5Utilities::closeFile(fileId);
+      err = H5Utilities::closeFile(fileId);
       return;
     }
-    err = QH5Utilities::closeFile(fileId);
+    err = H5Utilities::closeFile(fileId);
 
     m_XDim->setText(QString::number(dims[0]));
     m_YDim->setText(QString::number(dims[1]));

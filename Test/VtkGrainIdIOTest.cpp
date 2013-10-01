@@ -38,11 +38,10 @@
 #include <iostream>
 #include <vector>
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/VtkGrainIdWriter.h"
 #include "DREAM3DLib/IOFilters/VtkGrainIdReader.h"
@@ -61,11 +60,11 @@ class GenerateGrainIds : public AbstractFilter
 	  DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
     virtual ~GenerateGrainIds(){};
-    virtual const QString getGroupName()
+    virtual const std::string getGroupName()
     {
       return "UnitTest";
     }
-    virtual const QString getHumanLabel()
+    virtual const std::string getHumanLabel()
     {
       return "Generate Grain Ids";
     }
@@ -76,7 +75,7 @@ class GenerateGrainIds : public AbstractFilter
       if(NULL == m)
       {
         setErrorCondition(-1);
-        QStringstream ss;
+        std::stringstream ss;
         ss << " DataContainer was NULL";
         setErrorMessage(ss.str());
         return;
@@ -118,7 +117,7 @@ class GenerateGrainIds : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
     {
       setErrorCondition(0);
-      QStringstream ss;
+      std::stringstream ss;
       VoxelDataContainer* m = getVoxelDataContainer();
       CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
@@ -137,7 +136,7 @@ class GenerateGrainIds : public AbstractFilter
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::VtkGrainIdIOTest::TestFile);
+  MXADir::remove(UnitTest::VtkGrainIdIOTest::TestFile);
 #endif
 }
 

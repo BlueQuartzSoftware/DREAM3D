@@ -36,7 +36,7 @@
 
 #include <stdlib.h>
 
-#include <QString>
+#include <string>
 
 #include <boost/shared_ptr.hpp>
 
@@ -45,7 +45,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/Win32Defines.h"
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/EbsdColoring.hpp"
 
 #include "EbsdLib/EbsdLib.h"
@@ -61,13 +61,13 @@
 #define _TIFF_DATA_TYPEDEFS_ 1
 #include <tiffio.h>
 
-int writeColorTiff(const QString filename, DataArray<uint8_t>::Pointer image, int width, int height,
-                   const QString imageDescription, int orientation)
+int writeColorTiff(const std::string filename, DataArray<uint8_t>::Pointer image, int width, int height,
+                   const std::string imageDescription, int orientation)
 {
 
   int err;
    TIFF *out;
-   QString dateTime;
+   std::string dateTime;
    char software[1024];
    tsize_t area;
 
@@ -143,7 +143,7 @@ int writeColorTiff(const QString filename, DataArray<uint8_t>::Pointer image, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void grayScaleEulers(float* euler, int width, int height, const QString & imageFile, const QString &desc, int orientation)
+void grayScaleEulers(float* euler, int width, int height, const std::string & imageFile, const std::string &desc, int orientation)
 {
 
   int total = width * height;
@@ -195,8 +195,8 @@ int main(int argc, char **argv)
     std::cout << "Arg 3: Tiff Orientation value" << std::endl;
     std::cout << "The reference direction is set to (001)" << std::endl;
   }
-  QString ebsdFile = argv[1];
-  QString imageFile = argv[2];
+  std::string ebsdFile = argv[1];
+  std::string imageFile = argv[2];
   int orientation = atoi(argv[3]);
 
   std::cout << "Generating IPF Color map for EBSD data" << std::endl;
@@ -205,7 +205,7 @@ int main(int argc, char **argv)
   boost::shared_ptr<EbsdReader> ebsdReader(static_cast<EbsdReader*>(NULL));
   bool degToRads = false;
 
-  QString ext = MXAFileInfo::extension(ebsdFile);
+  std::string ext = MXAFileInfo::extension(ebsdFile);
   if (ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     AngReader* reader = new AngReader;
@@ -271,7 +271,7 @@ int main(int argc, char **argv)
   }
 
 
-  QStringstream ss;
+  std::stringstream ss;
   ss << "IPF Color Map: Reference Direction: " << refDir[0] << refDir[1] << refDir[2];
   err = writeColorTiff(imageFile, rgbArray, width, height, ss.str(), orientation);
   if (err < 0)
@@ -282,24 +282,24 @@ int main(int argc, char **argv)
   {
     ss.str("");
     ss << "Euler 0 Scaled from 0 to 255";
-    QString gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
-    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + QString("_Euler0.tiff");
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler0.tiff");
     grayScaleEulers(e0, width, height, gName, ss.str(), orientation);
   }
 
 {
     ss.str("");
     ss << "Euler 1 Scaled from 0 to 255";
-    QString gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
-    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + QString("_Euler1.tiff");
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler1.tiff");
     grayScaleEulers(e1, width, height, gName, ss.str(), orientation);
   }
 
   {
     ss.str("");
     ss << "Euler 2 Scaled from 0 to 255";
-    QString gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
-    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + QString("_Euler2.tiff");
+    std::string gName = MXAFileInfo::fileNameWithOutExtension(imageFile);
+    gName = MXAFileInfo::parentPath(imageFile) + MXAFileInfo::Separator + gName + std::string("_Euler2.tiff");
     grayScaleEulers(e2, width, height, gName, ss.str(), orientation);
   }
 #endif

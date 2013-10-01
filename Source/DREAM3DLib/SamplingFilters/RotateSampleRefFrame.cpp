@@ -35,16 +35,18 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "RotateSampleRefFrame.h"
 
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/OrientationOps/OrientationOps.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+
 
 
 typedef struct {
@@ -106,16 +108,15 @@ class RotateSampleRefFrameImpl
       //      float rotMatrixInv[3][3];
       float coords[3];
       float coordsNew[3];
+      int32_t colOld, rowOld, planeOld;
 
-      int64_t colOld, rowOld, planeOld;
-
-      for (int64_t k = zStart; k < zEnd; k++)
+      for (size_t k = zStart; k < zEnd; k++)
       {
         ktot = (m_params->xpNew*m_params->ypNew)*k;
-        for (int64_t j = yStart; j < yEnd; j++)
+        for (size_t j = yStart; j < yEnd; j++)
         {
           jtot = (m_params->xpNew)*j;
-          for (int64_t i = xStart; i < xEnd; i++)
+          for (size_t i = xStart; i < xEnd; i++)
           {
             index = ktot + jtot + i;
             newindicies[index] = -1;
@@ -177,7 +178,7 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");
@@ -232,7 +233,7 @@ int RotateSampleRefFrame::writeFilterParameters(AbstractFilterParametersWriter* 
 void RotateSampleRefFrame::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
 }
 
 // -----------------------------------------------------------------------------
@@ -243,8 +244,8 @@ void RotateSampleRefFrame::preflight()
   dataCheck(true, 1, 1, 1);
 
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
 
   m_RotationAngle = m_RotationAngle*DREAM3D::Constants::k_Pi/180.0;
 
@@ -376,10 +377,6 @@ void RotateSampleRefFrame::execute()
   zp = static_cast<int32_t>(m->getZPoints());
   zRes = m->getZRes();
 
-  if (xRes == 0.0) { xRes = 1.0; }
-  if (yRes == 0.0) { yRes = 1.0; }
-  if (zRes == 0.0) { zRes = 1.0; }
-
   params.xp = xp;
   params.xRes = xRes;
   params.yp = yp;
@@ -481,10 +478,10 @@ void RotateSampleRefFrame::execute()
 
   // This could technically be parallelized also where each thred takes an array to adjust. Except
   // that the DataContainer is NOT thread safe or re-entrant so that would actually be a BAD idea.
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    //QString name = *iter;
+    //std::string name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

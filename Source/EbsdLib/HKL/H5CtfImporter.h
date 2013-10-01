@@ -33,13 +33,17 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _H5CTFIMPORTER_H_
-#define _H5CTFIMPORTER_H_
+
+
+
+
+#ifndef H5CTFIMPORTER_H_
+#define H5CTFIMPORTER_H_
 
 #include "hdf5.h"
 
-#include <QtCore/QVector>
-#include <QtCore/QString>
+#include <vector>
+#include <string>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -71,7 +75,7 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
      * @param index The slice index for the file
      * @param angFile The absolute path to the input .ang file
      */
-    int importFile(hid_t fileId, int64_t index, const QString &angFile);
+    int importFile(hid_t fileId, int64_t index, const std::string &angFile);
 
     /**
      * @brief Writes the phase data into the HDF5 file
@@ -127,4 +131,4 @@ class EbsdLib_EXPORT H5CtfImporter : public EbsdImporter
     void operator=(const H5CtfImporter&); // Operator '=' Not Implemented
 };
 
-#endif /* _H5CTFIMPORTER_H_ */
+#endif /* H5CTFIMPORTER_H_ */

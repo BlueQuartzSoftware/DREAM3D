@@ -39,7 +39,7 @@ GenericExample::~GenericExample()
 // -----------------------------------------------------------------------------
 void GenericExample::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
   /* Place all your option initialization code here */
   /* For String input use this code */
   {
@@ -122,7 +122,7 @@ void GenericExample::setupFilterParameters()
     option->setPropertyName("ConversionType");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);

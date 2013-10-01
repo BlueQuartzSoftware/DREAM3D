@@ -12,10 +12,9 @@
 
 #include "Plane.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/InvalidParameterException.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 namespace PlaneDetail {
 
@@ -99,7 +98,7 @@ void Plane::ensure_invariant()
 }
 
 //#################### GLOBAL OPERATORS ####################
-QDataStream& operator<<(QDataStream& os, Plane::CP rhs)
+std::ostream& operator<<(std::ostream& os, Plane::CP rhs)
 {
   switch(rhs)
   {

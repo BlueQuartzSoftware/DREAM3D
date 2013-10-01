@@ -36,14 +36,14 @@
 
 #include "RegularizeZSpacing.h"
 
-#include <QtCore/QMap>
-#include <QtCore/QtDebug>
+#include <map>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 using namespace std;
 
@@ -72,7 +72,7 @@ RegularizeZSpacing::~RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");
@@ -129,7 +129,7 @@ void RegularizeZSpacing::preflight()
   VolumeDataContainer* m = getVolumeDataContainer();
 
   ifstream inFile;
-  inFile.open(m_InputFile.toLatin1().data());
+  inFile.open(m_InputFile.c_str());
 
   float zval;
   for (size_t iter = 0; iter < m->getZPoints() + 1; iter++)
@@ -170,7 +170,7 @@ void RegularizeZSpacing::execute()
   m->getDimensions(dims);
 
   ifstream inFile;
-  inFile.open(m_InputFile.toLatin1().data());
+  inFile.open(m_InputFile.c_str());
 
   float zval;
   std::vector<float> zboundvalues;
@@ -213,10 +213,10 @@ void RegularizeZSpacing::execute()
     }
   }
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
-  for (QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
   {
-    QString name = *iter;
+    std::string name = *iter;
     IDataArray::Pointer p = m->getCellData(*iter);
     // Make a copy of the 'p' array that has the same name. When placed into
     // the data container this will over write the current array with

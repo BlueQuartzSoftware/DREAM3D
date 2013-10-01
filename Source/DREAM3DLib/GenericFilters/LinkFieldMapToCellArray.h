@@ -37,12 +37,12 @@
 #ifndef _LinkFieldMapToCellArray_H_
 #define _LinkFieldMapToCellArray_H_
 
-#include <QtCore/QString>
-#include <QtCore/QSet>
+#include <string>
+#include <set>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -70,14 +70,14 @@ class DREAM3DLib_EXPORT LinkFieldMapToCellArray : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Link Field Map To Cell Array"; }
+    virtual const std::string getHumanLabel() { return "Link Field Map To Cell Array"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

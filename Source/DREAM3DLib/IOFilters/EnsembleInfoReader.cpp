@@ -37,13 +37,13 @@
 
 #include "EnsembleInfoReader.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
-#include <QtCore/QFileInfo>
+#include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -72,7 +72,7 @@ EnsembleInfoReader::~EnsembleInfoReader()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Ensemble Info File");
@@ -117,26 +117,26 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 {
 
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist.");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -150,7 +150,7 @@ void EnsembleInfoReader::preflight()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EnsembleInfoReader::readHeader()
+int  EnsembleInfoReader::readHeader()
 {
   return 0;
 }
@@ -158,24 +158,26 @@ int EnsembleInfoReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EnsembleInfoReader::readFile()
+int  EnsembleInfoReader::readFile()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid. %1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
 
   std::ifstream inFile;
-  inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-    QString ss = QObject::tr("Failed to open: ").arg(getInputFile());
+    std::stringstream ss;
+    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   int numphases, pnum;

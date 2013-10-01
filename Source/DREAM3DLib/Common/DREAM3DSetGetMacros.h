@@ -39,8 +39,8 @@
 
 #include <string.h>
 
-#include <QtCore/QString>
-#include <QtCore/QtDebug>
+#include <string>
+#include <iostream>
 #include <sstream>
 #include <stdexcept>
 
@@ -97,14 +97,14 @@
 #define DREAM3D_BENCHMARKS 0
 
 #if DREAM3D_BENCHMARKS
-
+#include "MXA/Common/LogTime.h"
 
 #define DEFINE_CLOCK unsigned long long int millis;
 
 #define START_CLOCK millis = MXA::getMilliSeconds();
 
 #define END_CLOCK(message)\
-  qDebug() << message << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) ;
+  std::cout << message << " Finish Time(ms): " << (MXA::getMilliSeconds() - millis) << std::endl;
 
 
 #else
@@ -202,7 +202,7 @@ static Pointer New args \
  * information. */
 #define DREAM3D_TYPE_MACRO(thisClass) \
   public: \
-  virtual const QString getNameOfClass() {return QString(#thisClass);}\
+  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -226,8 +226,8 @@ static Pointer New args \
 
 #define DREAM3D_TYPE_MACRO_SUPER(thisClass,superclass) \
   public: \
-  virtual const QString getNameOfClass() {return QString(#thisClass);}\
-  static QString ClassName() {return QString(#thisClass);}\
+  virtual const std::string getNameOfClass() {return std::string(#thisClass);}\
+  static std::string ClassName() {return std::string(#thisClass);}\
   static int IsTypeOf(const char *type) \
   { \
     if ( !strcmp(#thisClass,type) ) \
@@ -256,11 +256,11 @@ static Pointer New args \
 //------------------------------------------------------------------------------
 // Macros for Properties
 /**
-* @brief Creates a QString constant for the Property so that the property
+* @brief Creates a std::string constant for the Property so that the property
 * can be retrieved by name.
 */
 #define DREAM3D_PROPERTY_CONSTANT(prpty) \
-  const QString prpty ( #prpty );
+  const std::string prpty ( #prpty );
 
 /**
 * @brief Creates a "setter" method to set the property.
@@ -345,20 +345,20 @@ static Pointer New args \
 * @brief Creates a "setter" method to set the property.
 */
 #define DREAM3D_SET_STRING_PROPERTY( prpty, varname) \
-  void set##prpty(const QString &value) { this->varname = value; }
+  void set##prpty(const std::string &value) { this->varname = value; }
 
 /**
 * @brief Creates a "getter" method to retrieve the value of the property.
 */
 #define DREAM3D_GET_STRING_PROPERTY( prpty, varname) \
-  QString get##prpty() { return varname; }
+  std::string get##prpty() { return varname; }
 
 /**
  * @brief Creates setters and getters in the form of 'setXXX()' and 'getXXX()' methods
  */
 #define DREAM3D_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  QString      m_##prpty;\
+  std::string      m_##prpty;\
   public:\
   DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
   DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -366,7 +366,7 @@ static Pointer New args \
 
 #define DREAM3D_VIRTUAL_INSTANCE_STRING_PROPERTY(prpty)\
   private:\
-  QString      m_##prpty;\
+  std::string      m_##prpty;\
   public:\
     virtual DREAM3D_SET_STRING_PROPERTY(prpty,  m_##prpty)\
     virtual DREAM3D_GET_STRING_PROPERTY(prpty,  m_##prpty)
@@ -395,7 +395,7 @@ static Pointer New args \
   void set##prpty(type value) { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get()); \
     if (NULL != p) { p->setValue(value); } else {\
-      qDebug() << "Value for Key: " << key << " was null." ;} }
+      std::cout << "Value for Key: " << key << " was null." << std::endl;} }
 
 /**
  * @brief Creates a "getter" method to retrieve the value of the property.
@@ -404,7 +404,7 @@ static Pointer New args \
   type get##prpty() { \
     HeaderType* p = dynamic_cast<HeaderType*>(m_Headermap[key].get());\
     if (NULL != p) { return p->getValue(); } else {\
-      qDebug() << "Value for Key: " << key << " was null." ; return 0;} }
+      std::cout << "Value for Key: " << key << " was null." << std::endl; return 0;} }
 
 
 #define DREAM3DHeader_INSTANCE_PROPERTY(HeaderType, type, prpty, key)\
@@ -433,12 +433,12 @@ void set##name##Pointer(type* f)\
 //
 // -----------------------------------------------------------------------------
 #define CREATE_INPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + QDir::Separator + n;\
-    f = QDir::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 #define CREATE_OUTPUT_FILENAME(f, n)\
-    QString f = m_InputDirectory + QDir::Separator + n;\
-    f = QDir::toNativeSeparators(f);
+    std::string f = m_InputDirectory + MXADir::Separator + n;\
+    f = MXADir::toNativeSeparators(f);
 
 #define CHECK_FOR_CANCELED(FuncClass, Message, name)\
     if (this->getCancel() ) { \
@@ -451,15 +451,15 @@ void set##name##Pointer(type* f)\
 #define CHECK_FOR_ERROR(FuncClass, Message, err)\
     if(err < 0) {\
       setErrorCondition(err);\
-      QString msg = QString(Message);\
-      pipelineErrorMessage(msg.toLatin1().data());\
+      std::string msg = std::string(Message);\
+      pipelineErrorMessage(msg.c_str());\
       updatePipelineProgress(0);\
       pipelineFinished();\
       return;   }
 
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    QString outpath = m_OutputDirectory + QDir::Separator + m_OutputFilePrefix + filename;
+    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
 // -----------------------------------------------------------------------------
@@ -472,22 +472,22 @@ namespace DREAM3D
 {
   class bad_lexical_cast : public std::runtime_error {
   public:
-    bad_lexical_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
+    bad_lexical_cast(const std::string& s)
+      : std::runtime_error(s)
     { }
   };
 
   class bad_any_cast : public std::runtime_error {
   public:
-    bad_any_cast(const QString& s)
-      : std::runtime_error(s.toStdString())
+    bad_any_cast(const std::string& s)
+      : std::runtime_error(s)
     { }
   };
 
   template<typename T>
-  T lexical_cast(const QString &s)
+  T lexical_cast(const std::string &s)
   {
-    std::istringstream i(s.toStdString());
+    std::istringstream i(s);
     T x;
     if (!(i >> x))
       throw bad_lexical_cast("convertToDouble(\"" + s + "\")");

@@ -100,9 +100,9 @@ class QReadH5EbsdWidget : public QFilterWidget, private Ui::QReadH5EbsdWidget
 
   private:
     float                        sampleTransAngle;
-    QVector<float>           sampleTransAxis;
+    std::vector<float>           sampleTransAxis;
     float                        eulerTransAngle;
-    QVector<float>           eulerTransAxis;
+    std::vector<float>           eulerTransAxis;
 
     QString m_FilterGroup;
     bool m_Version4Warning;

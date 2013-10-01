@@ -245,7 +245,7 @@ bool QualityMetricTableModel::setHeaderData(int col, Qt::Orientation o, const QV
 // -----------------------------------------------------------------------------
 bool QualityMetricTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // std::cout << "QualityMetricTableModel::setData " << value.toString() << std::endl;
+  // std::cout << "QualityMetricTableModel::setData " << value.toString().toStdString() << std::endl;
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_FieldNames.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {

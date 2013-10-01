@@ -36,16 +36,16 @@
 
 #include "SPParksWriter.h"
 
+#include <iostream>
 #include <fstream>
+//#include <string>
 #include <sstream>
+//#include <iomanip>
+//#include <map>
 
-#include <QtCore/QtDebug>
-#include <QtCore/QDateTime>
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -71,7 +71,7 @@ SPParksWriter::~SPParksWriter()
 // -----------------------------------------------------------------------------
 void SPParksWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -112,10 +112,10 @@ int SPParksWriter::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SPParksWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -134,9 +134,9 @@ int SPParksWriter::writeHeader()
     VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
   }
@@ -164,23 +164,23 @@ int SPParksWriter::writeHeader()
 
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary);
+  outfile.open(getOutputFile().c_str(), std::ios_base::binary);
   if(!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() ;
+    std::cout << "Failed to open: " << getOutputFile() << std::endl;
     return -1;
   }
 
-  outfile << "-" ;
-  outfile << "3 dimension" ;
-  outfile << totalpoints << " sites" ;
-  outfile << "26 max neighbors" ;
-  outfile << "0 " << udims[0] << " xlo xhi" ;
-  outfile << "0 " << udims[1] << " ylo yhi" ;
-  outfile << "0 " << udims[2] << " zlo zhi" ;
-  outfile << "\n";
-  outfile << "Values" ;
-  outfile << "\n";
+  outfile << "-" << std::endl;
+  outfile << "3 dimension" << std::endl;
+  outfile << totalpoints << " sites" << std::endl;
+  outfile << "26 max neighbors" << std::endl;
+  outfile << "0 " << udims[0] << " xlo xhi" << std::endl;
+  outfile << "0 " << udims[1] << " ylo yhi" << std::endl;
+  outfile << "0 " << udims[2] << " zlo zhi" << std::endl;
+  outfile << std::endl;
+  outfile << "Values" << std::endl;
+  outfile << std::endl;
   outfile.close();
   return 0;
 }
@@ -193,9 +193,9 @@ int SPParksWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -2);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -2);
     setErrorCondition(-1);
     return -1;
   }
@@ -223,24 +223,23 @@ int SPParksWriter::writeFile()
 
 
   std::ofstream outfile;
-  outfile.open(getOutputFile().toLatin1().data(), std::ios_base::binary | std::ios_base::app);
+  outfile.open(getOutputFile().c_str(), std::ios_base::binary | std::ios_base::app);
   if(!outfile)
   {
-    qDebug() << "Failed to open: " << getOutputFile() ;
+    std::cout << "Failed to open: " << getOutputFile() << std::endl;
     return -1;
   }
 
 
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-
+  std::stringstream ss;
 
   int increment = totalpoints * .01;
-  QString buf;
-  QTextStream ss(&buf);
+
   // Buffer the output with 4096 Bytes which is typically the size of a "Block" on a
   // modern Hard Drive. This should speed up the writes considerably
   char buffer[4096];
@@ -249,16 +248,16 @@ int SPParksWriter::writeFile()
   {
     if (totalpoints % increment == 0)
     {
-      currentMillis = QDateTime::currentMSecsSinceEpoch();
+      currentMillis = MXA::getMilliSeconds();
       if (currentMillis - millis > 1000)
       {
-        ss.reset();
+        ss.str("");
         ss << static_cast<int>((float)(k)/(float)(totalpoints) * 100)<< " % Completed ";
         timeDiff = ((float)k / (float)(currentMillis - startMillis));
         estimatedTime = (float)(totalpoints - k) / timeDiff;
-        ss << " Est. Time Remain: " << DREAM3D::convertMillisToHrsMinSecs(estimatedTime);
-        notifyStatusMessage( buf );
-        millis = QDateTime::currentMSecsSinceEpoch();
+        ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+        notifyStatusMessage(ss.str());
+        millis = MXA::getMilliSeconds();
       }
     }
     outfile << k + 1 << " " << m_GrainIds[k] << "\n";

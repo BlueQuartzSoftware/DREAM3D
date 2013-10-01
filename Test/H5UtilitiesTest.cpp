@@ -41,14 +41,14 @@ standard C++ library."
 #include <list>
 #include <string>
 
-#include <boost/assert.hpp>
+//--MXA Includes
+#include "MXA/MXA.h"
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/StringUtils.h"
 
-#include <QtCore/QFile>
-#include <QtCore/QDateTime>
-#include <QtCore/QtDebug>
-
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
 
 #include "UnitTestSupport.hpp"
@@ -74,7 +74,7 @@ size_t AttrSize = 0;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::H5UtilTest::FileName);
+  MXADir::remove(UnitTest::H5UtilTest::FileName);
 #endif
 }
 
@@ -83,13 +83,13 @@ void RemoveTestFiles()
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer1DArrayAttribute(hid_t file_id, const std::string &dsetName)
 {
   AttrSize++;
   T value = 0x0;
   herr_t err = -1;
-  QString attributeKey = QH5Lite::HDFTypeForPrimitiveAsStr(value);
-  DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  DREAM3D_REQUIRE(attributeKey.empty() == false);
   attributeKey = "1DArrayAttribute<" + attributeKey + ">";
   int32_t rank = 1;
   T data[DIM0];
@@ -100,7 +100,7 @@ herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
   hsize_t dims[1];
   dims[0] = DIM0;
 
-  err = QH5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
+  err = H5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
   DREAM3D_REQUIRE(err >= 0);
   return err;
 }
@@ -111,14 +111,14 @@ herr_t testWritePointer1DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer2DArrayAttribute(hid_t file_id, const std::string &dsetName)
 {
-  //std::cout << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute";
+  //std::cout << DEBUG_OUT(logTime) << "testWritePointer2DArrayAttribute" << std::endl;
   AttrSize++;
   T value = 0x0;
   herr_t err = -1;
-  QString attributeKey = QH5Lite::HDFTypeForPrimitiveAsStr(value);
-  DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  DREAM3D_REQUIRE(attributeKey.empty() == false);
 
   attributeKey = "2DArrayAttribute<" + attributeKey + ">";
   int32_t rank = RANK_2D;
@@ -132,7 +132,7 @@ herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
   hsize_t dims[RANK_2D];
   dims[0] = DIM0;
   dims[1] = DIM1;
-  err = QH5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
+  err = H5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
   DREAM3D_REQUIRE(err >= 0);
   return err;
 }
@@ -142,13 +142,13 @@ herr_t testWritePointer2DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWritePointer3DArrayAttribute(hid_t file_id, const std::string &dsetName)
 {
   AttrSize++;
   T value = 0x0;
   herr_t err = -1;
-  QString attributeKey = QH5Lite::HDFTypeForPrimitiveAsStr(value);
-  DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  DREAM3D_REQUIRE(attributeKey.empty() == false);
   attributeKey = "3DArrayAttribute<" + attributeKey + ">";
   int32_t rank = RANK_3D;
   T data[DIM0][DIM1][DIM2];
@@ -163,7 +163,7 @@ herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
   dims[0] = DIM0;
   dims[1] = DIM1;
   dims[2] = DIM2;
-  err = QH5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
+  err = H5Lite::writePointerAttribute<T>(file_id, dsetName, attributeKey, rank, dims, (T*)data);
   DREAM3D_REQUIRE(err >= 0);
   return err;
 }
@@ -172,25 +172,25 @@ herr_t testWritePointer3DArrayAttribute(hid_t file_id, const QString &dsetName)
 //
 // -----------------------------------------------------------------------------
 template <typename T>
-herr_t testWriteVectorAttribute(hid_t file_id, QString dsetName )
+herr_t testWriteVectorAttribute(hid_t file_id, std::string dsetName )
 {
   AttrSize++;
   T value = 0x0;
   herr_t err = -1;
-  QString attributeKey = QH5Lite::HDFTypeForPrimitiveAsStr(value);
-  DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  DREAM3D_REQUIRE(attributeKey.empty() == false);
   attributeKey = "VectorAttribute<" + attributeKey + ">";
 
   int32_t numElements = DIM0;
-  QVector<hsize_t> dims (1, DIM0);
+  std::vector<hsize_t> dims (1, DIM0);
 
   /* Make dataset */
-  QVector<T> data (DIM0, 0);
+  std::vector<T> data (DIM0, 0);
   for (int i = 0; i < numElements; ++i) {
     data[i] = (T)(i);
   }
   //std::cout << "Attribute->Write: " << objName;
-  err = QH5Lite::writeVectorAttribute( file_id, dsetName, attributeKey, dims, data );
+  err = H5Lite::writeVectorAttribute( file_id, dsetName, attributeKey, dims, data );
   DREAM3D_REQUIRE(err >= 0);
   return err;
 }
@@ -200,15 +200,15 @@ herr_t testWriteVectorAttribute(hid_t file_id, QString dsetName )
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-herr_t testWriteScalarAttribute(hid_t file_id, const QString &dsetName)
+herr_t testWriteScalarAttribute(hid_t file_id, const std::string &dsetName)
 {
   AttrSize++;
   T value = 0x0F;
   herr_t err = -1;
-  QString attributeKey = QH5Lite::HDFTypeForPrimitiveAsStr(value);
-  DREAM3D_REQUIRE(attributeKey.isEmpty() == false);
+  std::string attributeKey = H5Lite::HDFTypeForPrimitiveAsStr(value);
+  DREAM3D_REQUIRE(attributeKey.empty() == false);
   attributeKey = "ScalarAttribute<" + attributeKey + ">";
-  err = QH5Lite::writeScalarAttribute(file_id, dsetName, attributeKey, value);
+  err = H5Lite::writeScalarAttribute(file_id, dsetName, attributeKey, value);
   DREAM3D_REQUIRE(err >= 0);
   return err;
 }
@@ -236,10 +236,10 @@ herr_t testWritePointer2DArrayDataset(hid_t file_id)
     data[i] = static_cast<T>( i * 5);
   }
 
-  QString dsetName = QH5Lite::HDFTypeForPrimitiveAsStr(value);
+  std::string dsetName = H5Lite::HDFTypeForPrimitiveAsStr(value);
   dsetName = "Pointer2DArrayDataset<" + dsetName + ">";
-  qDebug() << "Running " << dsetName << " ... ";
-  err = QH5Lite::writePointerDataset( file_id, dsetName, rank, dims, &(data.front()) );
+  std::cout << "Running " << dsetName << " ... ";
+  err = H5Lite::writePointerDataset( file_id, dsetName, rank, dims, &(data.front()) );
   DREAM3D_REQUIRE(err >= 0);
 
   err = testWritePointer3DArrayAttribute<uint8_t>(file_id, dsetName);
@@ -297,109 +297,109 @@ herr_t testWritePointer2DArrayDataset(hid_t file_id)
   err = testWriteScalarAttribute<float32>(file_id, dsetName);
   err = testWriteScalarAttribute<float64>(file_id, dsetName);
 
-  std::cout << " Passed";
+  std::cout << " Passed" << std::endl;
   return err;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QH5UtilitiesTest()
+void H5UtilitiesTest()
 {
   // herr_t err = -1;
    hid_t   file_id;
    /* Create a new file using default properties. */
-   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+   file_id = H5Fcreate( UnitTest::H5UtilTest::FileName.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
    DREAM3D_REQUIRE(file_id > 0);
 
-   // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------";
+   // std::cout << logTime() << "----------- Testing Writing/Reading of Datasets using Raw Pointers -----------" << std::endl;
    DREAM3D_REQUIRE ( testWritePointer2DArrayDataset<int32_t>(file_id) >= 0);
 
-   hid_t dsetId = QH5Utilities::openHDF5Object(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>");
+   hid_t dsetId = H5Utilities::openHDF5Object(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>");
    DREAM3D_REQUIRE(dsetId > 0);
 
-   DREAM3D_REQUIRE( QH5Utilities::isGroup(file_id, "/") == true);
-   DREAM3D_REQUIRE( QH5Utilities::isGroup(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>") == false);
+   DREAM3D_REQUIRE( H5Utilities::isGroup(file_id, "/") == true);
+   DREAM3D_REQUIRE( H5Utilities::isGroup(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>") == false);
 
-   QString objName;
-   int32_t err = QH5Utilities::objectNameAtIndex(file_id, 0, objName);
+   std::string objName;
+   int32_t err = H5Utilities::objectNameAtIndex(file_id, 0, objName);
    DREAM3D_REQUIRE(objName.compare("Pointer2DArrayDataset<H5T_NATIVE_INT32>") == 0);
 
    hid_t objType = -1;
-   err = QH5Utilities::getObjectType(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", &objType);
+   err = H5Utilities::getObjectType(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", &objType);
    DREAM3D_REQUIRE(objType == H5O_TYPE_DATASET);
    DREAM3D_REQUIRE(err >= 0);
 
-   err = QH5Utilities::getObjectType(file_id, "/", &objType);
+   err = H5Utilities::getObjectType(file_id, "/", &objType);
    DREAM3D_REQUIRE(objType == H5O_TYPE_GROUP);
    DREAM3D_REQUIRE(err >= 0);
 
-   QString objPath = QH5Utilities::getObjectPath(dsetId, false);
+   std::string objPath = H5Utilities::getObjectPath(dsetId, false);
    DREAM3D_REQUIRE(objPath.compare("Pointer2DArrayDataset<H5T_NATIVE_INT32>") == 0);
 
-   err = QH5Utilities::closeHDF5Object(dsetId);
+   err = H5Utilities::closeHDF5Object(dsetId);
    DREAM3D_REQUIRE(err >= 0);
 
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 1", file_id) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 2/", file_id) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("Test Path 3/", file_id) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/", file_id) < 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 4/Test Path 7", file_id) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 5/Test Path 8/", file_id) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("Test Path 6/Test Path 9/", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 1", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 2/", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("Test Path 3/", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/", file_id) < 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 4/Test Path 7", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 5/Test Path 8/", file_id) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("Test Path 6/Test Path 9/", file_id) >= 0);
 
-   hid_t grpId = QH5Utilities::openHDF5Object(file_id, "Test Path 1");
+   hid_t grpId = H5Utilities::openHDF5Object(file_id, "Test Path 1");
    DREAM3D_REQUIRE(grpId > 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 1", grpId) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 2/", grpId) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("Test Path 3/", grpId) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/", grpId) < 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 4/Test Path 7", grpId) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("/Test Path 5/Test Path 8/", grpId) >= 0);
-   DREAM3D_REQUIRE ( QH5Utilities::createGroupsFromPath("Test Path 6/Test Path 9/", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 1", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 2/", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("Test Path 3/", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/", grpId) < 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 4/Test Path 7", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("/Test Path 5/Test Path 8/", grpId) >= 0);
+   DREAM3D_REQUIRE ( H5Utilities::createGroupsFromPath("Test Path 6/Test Path 9/", grpId) >= 0);
    err = H5Gclose(grpId);
    DREAM3D_REQUIRE(err >= 0);
 
-   hid_t gid = QH5Utilities::createGroup(file_id, "test group");
+   hid_t gid = H5Utilities::createGroup(file_id, "test group");
    DREAM3D_REQUIRE(gid >= 0);
-   err = QH5Utilities::closeHDF5Object(gid);
+   err = H5Utilities::closeHDF5Object(gid);
 
-   QList<QString> groups;
-   err = QH5Utilities::getGroupObjects(file_id, H5Utilities::H5Support_ANY, groups);
+   std::list<std::string> groups;
+   err = H5Utilities::getGroupObjects(file_id, H5Utilities::H5Support_ANY, groups);
    DREAM3D_REQUIRE(err >= 0);
    DREAM3D_REQUIRE( groups.size() == 8);
 
 
-   err = QH5Utilities::createGroupsForDataset("/group1/group2/group3/data", file_id);
+   err = H5Utilities::createGroupsForDataset("/group1/group2/group3/data", file_id);
    DREAM3D_REQUIRE(err >= 0);
-   gid = QH5Utilities::openHDF5Object(file_id, "/group1/group2");
+   gid = H5Utilities::openHDF5Object(file_id, "/group1/group2");
    DREAM3D_REQUIRE(gid >= 0);
-   err = QH5Utilities::closeHDF5Object(gid);
+   err = H5Utilities::closeHDF5Object(gid);
 
 #if 0
-   bool success = QH5Utilities::probeForAttribute(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", "ScalarAttribute<H5T_NATIVE_INT32>" );
+   bool success = H5Utilities::probeForAttribute(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", "ScalarAttribute<H5T_NATIVE_INT32>" );
    DREAM3D_REQUIRE(success == true);
 
-   success = QH5Utilities::probeForAttribute(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", "ScalarAttribute<>" );
+   success = H5Utilities::probeForAttribute(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", "ScalarAttribute<>" );
    DREAM3D_REQUIRE(success == false);
 #endif
 
-   QList<QString> attributes;
-   err = QH5Utilities::getAllAttributeNames(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", attributes);
+   std::list<std::string> attributes;
+   err = H5Utilities::getAllAttributeNames(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", attributes);
    DREAM3D_REQUIRE(err >= 0);
    DREAM3D_REQUIRE(attributes.size() == AttrSize);
 
-   dsetId = QH5Utilities::openHDF5Object(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>");
+   dsetId = H5Utilities::openHDF5Object(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>");
    DREAM3D_REQUIRE(dsetId > 0);
    attributes.clear();
-   err = QH5Utilities::getAllAttributeNames(dsetId, attributes);
+   err = H5Utilities::getAllAttributeNames(dsetId, attributes);
    DREAM3D_REQUIRE(err >= 0);
    DREAM3D_REQUIRE(attributes.size() == AttrSize);
-   err = QH5Utilities::closeHDF5Object(dsetId);
+   err = H5Utilities::closeHDF5Object(dsetId);
    DREAM3D_REQUIRE(err >= 0);
 //
 //   MXAAbstractAttributes allAttributes;
-//   err = QH5Utilities::readAllAttributes(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", allAttributes );
+//   err = H5Utilities::readAllAttributes(file_id, "Pointer2DArrayDataset<H5T_NATIVE_INT32>", allAttributes );
 //   DREAM3D_REQUIRE(err >= 0);
 //   DREAM3D_REQUIRE(allAttributes.size() == AttrSize);
 //   DREAM3D_REQUIRE(H5Fclose(file_id) >= 0);
@@ -410,7 +410,7 @@ void QH5UtilitiesTest()
 // -----------------------------------------------------------------------------
 void StressTestCreateGroups()
 {
-  qDebug() << QDateTime::currentDateTime() << " Starting StressTestCreateGroups()";
+  std::cout << logTime() << " Starting StressTestCreateGroups()" << std::endl;
   char path[64];
   ::memset(path, 0, 64);
   int err = 0;
@@ -418,18 +418,18 @@ void StressTestCreateGroups()
   hid_t   grpId;
 
   /* Create a new file using default properties. */
-  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
+  file_id = H5Fcreate(UnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_TRUNC, H5P_DEFAULT, H5P_DEFAULT );
   DREAM3D_REQUIRE(file_id > 0);
 
 
   for (int i = 0; i < 100; ++i) {
-    qDebug() << QDateTime::currentDateTime() << "Outer Loop: " << i;
+    std::cout << logTime() << "Outer Loop: " << i << std::endl;
 //    err = H5Fclose(file_id);
 //    DREAM3D_REQUIRE(err >= 0);
-//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest.toStdString().c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
+//    file_id = H5Fopen(MXAUnitTest::H5UtilTest::GroupTest.c_str(), H5F_ACC_RDWR, H5P_DEFAULT);
     ::memset(path, 0, 64);
     snprintf(path, 64, "/%03d", i);
-    grpId = QH5Utilities::createGroup(file_id, path);
+    grpId = H5Utilities::createGroup(file_id, path);
     DREAM3D_REQUIRE(grpId > 0);
     err = H5Gclose(grpId);
     DREAM3D_REQUIRE(err >= 0);
@@ -438,7 +438,7 @@ void StressTestCreateGroups()
     for (int j = 0; j < 100; ++j) {
 
       snprintf(path, 64, "/%03d/%03d", i, j);
-      grpId = QH5Utilities::createGroup(file_id, path);
+      grpId = H5Utilities::createGroup(file_id, path);
       DREAM3D_REQUIRE(grpId > 0);
       DREAM3D_REQUIRE(grpId > 0);
       err = H5Gclose(grpId);
@@ -447,7 +447,7 @@ void StressTestCreateGroups()
       for (int k = 0; k < 100; ++k) {
 
         snprintf(path, 64, "/%03d/%03d/%03d", i, j, k);
-        grpId = QH5Utilities::createGroup(file_id, path);
+        grpId = H5Utilities::createGroup(file_id, path);
         DREAM3D_REQUIRE(grpId >= 0);
         DREAM3D_REQUIRE(grpId > 0);
         err = H5Gclose(grpId);
@@ -468,7 +468,7 @@ void StressTestCreateGroups()
 #if __APPLE__
 void HDF5Darwin2GBWriteTest()
 {
-  std::cout << "sizeof(ssize_t): " << sizeof(ssize_t);
+  std::cout << "sizeof(ssize_t): " << sizeof(ssize_t) << std::endl;
   size_t dim1 = 3;
   size_t dim0 = 178956971;
   int* data = (int*)(malloc(sizeof(int) * dim0 * dim1));
@@ -480,7 +480,7 @@ void HDF5Darwin2GBWriteTest()
   int32_t rank = 2;
   hsize_t dims[2] = {dim0, dim1};
 
-  herr_t err = QH5Lite::writePointerDataset(file_id, "data", rank, dims, data);
+  herr_t err = H5Lite::writePointerDataset(file_id, "data", rank, dims, data);
   BOOST_ASSERT(err > -1);
 }
 #endif
@@ -492,7 +492,7 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
 
-  DREAM3D_REGISTER_TEST( QH5UtilitiesTest() )
+  DREAM3D_REGISTER_TEST( H5UtilitiesTest() )
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )
   PRINT_TEST_SUMMARY();
 

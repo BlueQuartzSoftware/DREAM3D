@@ -21,7 +21,7 @@ class InvalidParameterException : public Exception
 {
 	//#################### CONSTRUCTORS ####################
 public:
-	explicit InvalidParameterException(const QString& message)
+	explicit InvalidParameterException(const std::string& message)
 	:	Exception("Invalid Parameter: " + message)
 	{}
 };

@@ -60,7 +60,7 @@ RenameFieldArray::~RenameFieldArray()
 // -----------------------------------------------------------------------------
 void RenameFieldArray::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Field Array Name");
@@ -114,9 +114,9 @@ int RenameFieldArray::writeFilterParameters(AbstractFilterParametersWriter* writ
 void RenameFieldArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
 
-  if(m_SelectedFieldArrayName.isEmpty() == true)
+  if(m_SelectedFieldArrayName.empty() == true)
   {
     setErrorCondition(-11000);
      addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -148,16 +148,11 @@ void RenameFieldArray::execute()
     return;
   }
   setErrorCondition(0);
-  
+  std::stringstream ss;
 
   bool check = m->renameFieldData(m_SelectedFieldArrayName, m_NewFieldArrayName);
 
-  if(check == false)
-  {
-   QString ss = QObject::tr("Array to be renamed could not be found in DataContainer");
-   setErrorCondition(-10234);
-   addErrorMessage(getHumanLabel(), ss, getErrorCondition());
-  }
+  if(check == false) ss << "Array to be renamed could not be found in DataContainer";
 
   notifyStatusMessage("Complete");
 }

@@ -38,7 +38,7 @@
 #ifndef _DREAM3D_UI_H_
 #define _DREAM3D_UI_H_
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include <MXA/Common/MXASetGetMacros.h>
 
 
 //-- Qt Includes

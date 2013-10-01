@@ -37,14 +37,14 @@
 #define RENUMBERGRAINS_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class RenumberGrains RenumberGrains.h DREAM3DLib/GenericFilters/RenumberGrains.h
@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT RenumberGrains : public AbstractFilter
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
-    virtual const QString getHumanLabel() { return "Renumber Grains"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const std::string getHumanLabel() { return "Renumber Grains"; }
 
     virtual void execute();
     virtual void preflight();

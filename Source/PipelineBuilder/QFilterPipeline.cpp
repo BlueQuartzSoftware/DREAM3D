@@ -65,9 +65,9 @@ void QFilterPipeline::sendPipelineMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterPipeline::sendPipelineMessages(QVector<PipelineMessage> msgs)
+void QFilterPipeline::sendPipelineMessages(std::vector<PipelineMessage> msgs)
 {
-  for (QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+  for (std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
   {
     sendPipelineMessage(*iter);
   }

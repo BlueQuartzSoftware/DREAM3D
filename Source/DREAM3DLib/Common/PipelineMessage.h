@@ -30,7 +30,7 @@
 #ifndef _PIPELINEMESSAGE_H_
 #define _PIPELINEMESSAGE_H_
 
-#include <QtCore/QString>
+#include <string>
 
 
 
@@ -73,7 +73,7 @@ class PipelineMessage
     }
 
 
-    PipelineMessage(const QString &className,
+    PipelineMessage(const std::string &className,
                     const char* msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
@@ -85,8 +85,8 @@ class PipelineMessage
         m_Progress(status)
     {}
 
-    PipelineMessage(const QString &className,
-                    const QString &msg,
+    PipelineMessage(const std::string &className,
+                    const std::string &msg,
                     int code,
                     MessageType msgType = UnknownMessageType,
                     int status = -1) :
@@ -131,13 +131,13 @@ class PipelineMessage
     DREAM3D_INSTANCE_STRING_PROPERTY(FilterClassName)
 //    DREAM3D_INSTANCE_STRING_PROPERTY(FilterHumanLabel)
     private:
-      QString m_FilterHumanLabel;
+      std::string m_FilterHumanLabel;
     public:
-       void setFilterHumanLabel(const QString &s)
+       void setFilterHumanLabel(const std::string &s)
        {
        m_FilterHumanLabel = s;
        }
-      QString getFilterHumanLabel()
+      std::string getFilterHumanLabel()
       {
       return m_FilterHumanLabel;
       }
@@ -148,13 +148,13 @@ class PipelineMessage
     /**
      * @brief This function is the member m_Msg's accessor.
      */
-    QString getMessageText() { return m_Msg; }
+    std::string getMessageText() { return m_Msg; }
 
     /**
      * @brief This function is the member m_Msg's mutator.
      * @param val Variable whose value is assigned to m_Msg.
      */
-    void setMessageText(const QString &val) { m_Msg = val; }
+    void setMessageText(const std::string &val) { m_Msg = val; }
 
     /**
      * @brief This function is the member m_Code's accessor.
@@ -192,32 +192,35 @@ class PipelineMessage
     /**
      * @brief This function creates and returns a string for error messages
      */
-    QString generateErrorString()
+    std::string generateErrorString()
     {
-      QString ss = QObject::tr("Error (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
-      return ss;
+      std::stringstream ss;
+      ss << "Error(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
+      return ss.str();
     }
 
     /**
      * @brief This function creates and returns a string for warning messages
      */
-    QString generateWarningString()
+    std::string generateWarningString()
     {
-      QString ss = QObject::tr("Warning (%1):%2 :%3").arg(m_Code).arg(m_MessagePrefix).arg(m_Msg);
-      return ss;
+      std::stringstream ss;
+      ss << "Warning(" << m_Code << "):" << m_MessagePrefix << " :" << m_Msg;
+      return ss.str();
     }
 
     /**
      * @brief This function creates and returns a string for status messages
      */
-    QString generateStatusString()
+    std::string generateStatusString()
      {
-      QString ss = QObject::tr("%1:%2").arg(m_MessagePrefix).arg(m_Msg);
-      return ss;
+       std::stringstream ss;
+       ss << m_MessagePrefix << ":" << m_Msg;
+       return ss.str();
      }
 
   private:
-    QString m_Msg;          // Message Text
+    std::string m_Msg;          // Message Text
     int m_Code;                 // Error/Warning Code
     MessageType m_msgType;      // Type of Message (see enumeration "MessageType")
     int m_Progress;             // Progress integer

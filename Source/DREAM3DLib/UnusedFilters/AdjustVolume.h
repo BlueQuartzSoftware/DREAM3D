@@ -38,15 +38,15 @@
 #define _ADJUSTVOLUME_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
 
 
 /**
@@ -72,9 +72,9 @@ class DREAM3DLib_EXPORT AdjustVolume : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() { return "Adjust Volume"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const std::string getHumanLabel() { return "Adjust Volume"; }
 
 
     virtual void setupFilterParameters();

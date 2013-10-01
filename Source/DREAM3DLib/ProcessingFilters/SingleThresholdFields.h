@@ -37,7 +37,7 @@
 #ifndef _SingleThresholdFields_H_
 #define _SingleThresholdFields_H_
 
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT SingleThresholdFields : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
-    virtual const QString getHumanLabel() { return "Single Threshold (Field Data)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ThresholdFilters; }
+    virtual const std::string getHumanLabel() { return "Single Threshold (Field Data)"; }
 
     virtual void setupFilterParameters();
     /**

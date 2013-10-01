@@ -60,7 +60,7 @@ RemoveArrays::~RemoveArrays()
 // -----------------------------------------------------------------------------
 void RemoveArrays::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Arrays to Delete");
@@ -119,7 +119,7 @@ int RemoveArrays::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void RemoveArrays::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  typedef QSet<QString> NameList_t;
+  typedef std::set<std::string> NameList_t;
 
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL != m)
@@ -193,7 +193,7 @@ void RemoveArrays::preflight()
 void RemoveArrays::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -211,12 +211,13 @@ void RemoveArrays::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedCellArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays){
+void RemoveArrays::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedCellArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
+{
   m_SelectedVolumeCellArrays = selectedVertexArrays;
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
   m_SelectedVolumeCellArrays = selectedFaceArrays;
@@ -228,11 +229,11 @@ void RemoveArrays::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArray
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+void RemoveArrays::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -241,13 +242,10 @@ void RemoveArrays::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArra
   m_SelectedSurfaceEnsembleArrays = selectedEnsembleArrays;
 }
 
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+void RemoveArrays::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -258,9 +256,9 @@ void RemoveArrays::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void RemoveArrays::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                     QSet<QString> selectedFieldArrays,
-                                                     QSet<QString> selectedEnsembleArrays)
+void RemoveArrays::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                     std::set<std::string> selectedFieldArrays,
+                                                     std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

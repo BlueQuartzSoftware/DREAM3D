@@ -33,11 +33,11 @@
 
 #include <hdf5.h>
 
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 /**
  * @class H5GbcdArrayReader H5GbcdArrayReader.h DREAM3DLib/HDF5/H5GbcdArrayReader.h
@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT H5GbcdArrayReader
      * @param name
      * @return
      */
-    static IDataArray::Pointer readIDataArray(hid_t gid, const QString &name, bool preflightOnly = false);
+    static IDataArray::Pointer readIDataArray(hid_t gid, const std::string &name, bool preflightOnly = false);
 
   protected:
     H5GbcdArrayReader();

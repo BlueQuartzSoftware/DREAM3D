@@ -38,17 +38,17 @@
 #define BadDataNeighborOrientationCheck_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 
 /**
@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(int, NumberOfNeighbors)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
-    virtual const QString getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CleanupFilters; }
+    virtual const std::string getHumanLabel() { return "Neighbor Orientation Comparison (Bad Data)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -103,7 +103,7 @@ class DREAM3DLib_EXPORT BadDataNeighborOrientationCheck : public AbstractFilter
 
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     float* m_Quats;
     bool* m_GoodVoxels;

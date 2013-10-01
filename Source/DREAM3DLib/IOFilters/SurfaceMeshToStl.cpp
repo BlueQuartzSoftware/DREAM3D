@@ -36,14 +36,12 @@
 
 #include "SurfaceMeshToStl.h"
 
-#include <QtCore/QSet>
-#include <QtCore/QDir>
-#include <QtCore/QFileInfo>
+#include <set>
 
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "MXA/MXA.h"
+#include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Common/MXAMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -68,7 +66,7 @@ SurfaceMeshToStl::~SurfaceMeshToStl()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output STL Directory");
@@ -120,7 +118,7 @@ int SurfaceMeshToStl::writeFilterParameters(AbstractFilterParametersWriter* writ
 void SurfaceMeshToStl::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  if (m_OutputStlDirectory.isEmpty() == true)
+  if (m_OutputStlDirectory.empty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -163,7 +161,7 @@ void SurfaceMeshToStl::preflight()
 void SurfaceMeshToStl::execute()
 {
  int err = 0;
-
+  std::stringstream ss;
 
     SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -182,12 +180,11 @@ void SurfaceMeshToStl::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QDir stlDir(getOutputStlDirectory());
-  if(!stlDir.mkpath("."))
+  if(!MXADir::mkdir(getOutputStlDirectory(), true))
   {
-
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(getOutputStlDirectory());
-      notifyErrorMessage(ss, -1);
+      std::stringstream ss;
+      ss << "Error creating parent path '" << getOutputStlDirectory() << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -204,7 +201,7 @@ void SurfaceMeshToStl::execute()
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
-  QSet<int> uniqueSpins;
+  std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -227,22 +224,23 @@ void SurfaceMeshToStl::execute()
   int triCount = 0;
 
   //Loop over the unique Spins
-  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
-
+    ss.str("");
     // Generate the output file name
-    QString filename = getOutputStlDirectory() + "/" + getOutputStlPrefix() + QString::number(spin) + ".stl";
-    FILE* f = fopen(filename.toLatin1().data(), "wb");
+    ss << getOutputStlDirectory() << MXADir::Separator << getOutputStlPrefix() << spin << ".stl";
+    std::string filename = ss.str();
+    FILE* f = fopen(filename.c_str(), "wb");
+
+    ss.str("");
+    ss << "Writing STL for Grain Id " << spin;
+    notifyStatusMessage(ss.str());
 
 
-    QString ss = QObject::tr("Writing STL for Grain Id ").arg(spin);
-    notifyStatusMessage(ss);
-
-
-
-    QString header = "DREAM3D Generated For Grain ID " + QString::number(spin);
-    err = writeHeader(f, header, 0);
+    ss.str("");
+    ss << "DREAM3D Generated For Grain ID " << spin;
+    err = writeHeader(f, ss.str(), 0);
     triCount = 0; // Reset this to Zero. Increment for every triangle written
 
     // Loop over all the triangles for this spin
@@ -305,9 +303,9 @@ void SurfaceMeshToStl::execute()
       totalWritten = fwrite(data, 1, 50, f);
       if (totalWritten != 50)
       {
-
-        QString ss = QObject::tr("Error Writing STL File. Not enough elements written for grain id %1 Wrote %2 of 50.").arg(spin).arg(totalWritten);
-        notifyErrorMessage(ss, -1201);
+        ss.str("");
+        ss << "Error Writing STL File. Not enough elements written for grain id " << spin << " Wrote " << totalWritten << " of 50.";
+        notifyErrorMessage(ss.str(), -1201);
       }
       triCount++;
     }
@@ -324,7 +322,7 @@ void SurfaceMeshToStl::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
+int SurfaceMeshToStl::writeHeader(FILE* f, const std::string &header, int triCount)
 {
   if (NULL == f)
   {
@@ -344,12 +342,12 @@ int SurfaceMeshToStl::writeHeader(FILE* f, const QString &header, int triCount)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceMeshToStl::writeNumTrianglesToFile(const QString &filename, int triCount)
+int SurfaceMeshToStl::writeNumTrianglesToFile(const std::string &filename, int triCount)
 {
   // We need to update the number of triangles in the file
   int err =0;
 
-  FILE* out = fopen(filename.toLatin1().data(), "r+b");
+  FILE* out = fopen(filename.c_str(), "r+b");
   fseek(out, 80L, SEEK_SET);
   fwrite( (char*)(&triCount), 1, 4, out);
   fclose(out);

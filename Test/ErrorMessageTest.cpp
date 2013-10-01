@@ -60,8 +60,8 @@ void TestErrorMessage()
 {
   PipelineMessage e0;
 
-  QString a0("Some Class Name");
-  QString a1("Description");
+  std::string a0("Some Class Name");
+  std::string a1("Description");
   int eCode = -10;
   PipelineMessage e1;
 

@@ -32,8 +32,8 @@
 #define FILTERPIPELINE_H_
 
 
-#include <QtCore/QString>
-#include <QtCore/QList>
+#include <string>
+#include <list>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -59,7 +59,7 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
 
     virtual ~FilterPipeline();
 
-    typedef QList<AbstractFilter::Pointer>  FilterContainerType;
+    typedef std::list<AbstractFilter::Pointer>  FilterContainerType;
 
     DREAM3D_INSTANCE_PROPERTY(int, ErrorCondition)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, CurrentFilter)
@@ -112,10 +112,10 @@ class DREAM3DLib_EXPORT FilterPipeline : public Observer
     /**
      * @brief
      */
-    virtual AbstractFilter::Pointer removeFirstFilterByName(const QString &name);
+    virtual AbstractFilter::Pointer removeFirstFilterByName(const std::string &name);
 
 
-    virtual void printFilterNames(QDataStream &out);
+    virtual void printFilterNames(std::ostream &out);
 
 
 

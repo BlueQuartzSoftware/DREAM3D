@@ -29,7 +29,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "Observer.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 
 // -----------------------------------------------------------------------------
 //
@@ -50,15 +50,15 @@ Observer::~Observer()
 // -----------------------------------------------------------------------------
 void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
 {
-  qDebug() << progress << "% " << msg ;
+  std::cout << progress << "% " << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const QString &msg, int progress)
+void Observer::updatePipelineProgressAndMessage(const std::string &msg, int progress)
 {
-  qDebug() << progress << "% " << msg ;
+  std::cout << progress << "% " << msg << std::endl;
 }
 
 
@@ -67,15 +67,15 @@ void Observer::updatePipelineProgressAndMessage(const QString &msg, int progress
 // -----------------------------------------------------------------------------
 void Observer::updatePipelineProgress(int progress)
 {
-  qDebug() << progress << "%" ;
+  std::cout << progress << "%" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const QString &msg)
+void Observer::updatePipelineMessage(const std::string &msg)
 {
-  qDebug() << msg ;
+  std::cout << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -83,7 +83,7 @@ void Observer::updatePipelineMessage(const QString &msg)
 // -----------------------------------------------------------------------------
 void Observer::updatePipelineMessage(const char* msg)
 {
-  qDebug() << msg ;
+  std::cout << msg << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -91,37 +91,37 @@ void Observer::updatePipelineMessage(const char* msg)
 // -----------------------------------------------------------------------------
 void Observer::sendPipelineMessage(PipelineMessage &msg)
 {
-  QString ss;
+  std::stringstream ss;
   if(msg.getMessageType() == PipelineMessage::Error)
   {
-    ss.append(msg.generateErrorString());
+    ss << msg.generateErrorString();
   }
   else if(msg.getMessageType() == PipelineMessage::Warning)
   {
-    ss.append(msg.generateWarningString());
+    ss << msg.generateWarningString();
   }
   else if(msg.getMessageType() == PipelineMessage::StatusMessage)
   {
-    ss.append(msg.generateStatusString());
+    ss << msg.generateStatusString();
   }
   else if(msg.getMessageType() == PipelineMessage::StatusValue)
   {
-    ss.append(msg.getProgressValue()).append("%");
+    ss << msg.getProgressValue() << "%";
   }
   else if(msg.getMessageType() == PipelineMessage::StatusMessageAndValue)
   {
-    QString ss = QObject::tr("%1 %  %2").arg(msg.getProgressValue()).arg(msg.generateStatusString());
+    ss << msg.getProgressValue() << "%" << " " << msg.generateStatusString();
   }
-  qDebug() << ss;
+  std::cout << ss.str() << std::endl;
 
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::sendPipelineMessages(QVector<PipelineMessage> msgs)
+void Observer::sendPipelineMessages(std::vector<PipelineMessage> msgs)
 {
-  for (QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
+  for (std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter )
   {
     sendPipelineMessage(*iter);
   }

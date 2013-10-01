@@ -42,17 +42,17 @@ const float GammaConstant = 5.27183797467291f;
 int writeOutputAsTiff(unsigned char* segData,
                           int width,
                           int height,
-                      const QString &outputFile,
-                      const QString &imageDescription)
+                      const std::string &outputFile,
+                      const std::string &imageDescription)
 {
 
 
-  QStringstream ss;
+  std::stringstream ss;
   ss.setf(std::ios::fixed);
   ss.fill('0');
   ss.width(4);
 
-  QString fileName = outputFile;
+  std::string fileName = outputFile;
   TIFF *image;
   image = TIFFOpen(fileName.c_str(), "w");
   if (image == NULL)
@@ -77,7 +77,7 @@ int writeOutputAsTiff(unsigned char* segData,
 #else
   err = TIFFSetField(image, TIFFTAG_COMPRESSION, COMPRESSION_NONE);
 #endif
-//  QString datetime = tifDateTime();
+//  std::string datetime = tifDateTime();
 //  err = TIFFSetField(image, TIFFTAG_DATETIME, datetime.c_str());
   // String based tags
   if (fileName.length() > 0)
@@ -96,7 +96,7 @@ int writeOutputAsTiff(unsigned char* segData,
 
   // Insert Resolution Units here if possible
 
-  QString software("LibTiff");
+  std::string software("LibTiff");
 
   err = TIFFSetField(image, TIFFTAG_SOFTWARE, software.c_str());
 
@@ -348,12 +348,12 @@ int main(int argc, char **argv)
     std::cout << "Nees 1 argument which is an output filename." << std::endl;
   }
 
-  QString outputFile(argv[1]);
+  std::string outputFile(argv[1]);
   size_t width = Detail::TRI_WIDTH;
   size_t height = Detail::TRI_HEIGHT;
 
   unsigned char* image = createTriangle(width, height);
-  int err = writeOutputAsTiff(image, width, height, outputFile, QString("Crystal Orientation Color Legend"));
+  int err = writeOutputAsTiff(image, width, height, outputFile, std::string("Crystal Orientation Color Legend"));
   freeMemory(image);
 
   return err;

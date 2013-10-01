@@ -44,7 +44,7 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 namespace Detail {
   namespace QualityMetricFilter

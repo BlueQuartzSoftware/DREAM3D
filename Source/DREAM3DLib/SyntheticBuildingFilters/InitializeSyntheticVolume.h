@@ -40,7 +40,7 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class InitializeSyntheticVolume InitializeSyntheticVolume.h DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h
@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ShapeTypesArrayName)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
-    virtual const QString getHumanLabel() {return "Initialize Synthetic Volume";}
+    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const std::string getHumanLabel() {return "Initialize Synthetic Volume";}
 
 
     DREAM3D_INSTANCE_STRING_PROPERTY(InputFile)
@@ -78,7 +78,7 @@ class DREAM3DLib_EXPORT InitializeSyntheticVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(float, XRes)
     DREAM3D_INSTANCE_PROPERTY(float, YRes)
     DREAM3D_INSTANCE_PROPERTY(float, ZRes)
-    DREAM3D_INSTANCE_PROPERTY(QVector<uint32_t>, ShapeTypes)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<uint32_t>, ShapeTypes)
 
 
     virtual void setupFilterParameters();

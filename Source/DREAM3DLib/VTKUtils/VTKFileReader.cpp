@@ -43,9 +43,8 @@
 
 #include <boost/shared_ptr.hpp>
 
-
-#include <QtCore/QFile>
-#include <QtCore/QByteArray>
+#include "MXA/Common/LogTime.h"
+#include "MXA/Common/MXAEndian.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -138,7 +137,7 @@ int VTKFileReader::readHeader()
 {
 
   int err = 0;
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
     setErrorCondition(-1);
     PipelineMessage em (getHumanLabel(), "FileName was not set and must be valid", -1);
@@ -154,55 +153,55 @@ int VTKFileReader::readHeader()
     return -1;
   }
 
-  QFile in(getInputFile());
-  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
+  std::ifstream instream;
+  instream.open(getInputFile().c_str(), std::ios_base::binary);
+  if (!instream.is_open())
   {
-    QString msg = QObject::tr("VTF file could not be opened: %1").arg(getInputFile());
-    addErrorMessage(getHumanLabel(), msg, getErrorCondition());
-    return -100;
+    std::cout << logTime() << " vtk file could not be opened: " << getInputFile() << std::endl;
+    return -1;
   }
-
-  QByteArray buf;
-  buf = in.readLine(); // Read Line 1 - VTK Version Info
-
-  buf = in.readLine(); // Read Line 2 - User Comment
-  setComment(QString(buf.trimmed()));
-
-  buf = in.readLine(); // Read Line 3 - BINARY or ASCII
-  QString fileType(buf);
-  if (fileType.startsWith("BINARY") == true)
+  char buf[kBufferSize];
+  instream.getline(buf, kBufferSize); // Read Line 1 - VTK Version Info
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 2 - User Comment
+  setComment(std::string(buf));
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 3 - BINARY or ASCII
+  std::string fileType(buf);
+  if (fileType.find("BINARY", 0) == 0)
   {
     setFileIsBinary(true);
   }
-  else if (fileType.startsWith("ASCII") == true)
+  else if (fileType.find("ASCII", 0) == 0)
   {
     setFileIsBinary(false);
   }
   else
   {
     err = -1;
-    qDebug()
+    std::cout << logTime()
         << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        ;
+        << std::endl;
     return err;
   }
-
-
-  QList<QByteArray> tokens;
-  buf = in.readLine(); // Read Line 4 - Type of Dataset
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 4 - Type of Dataset
   {
-    tokens = buf.split(' ');
-    setDatasetType(QString(tokens[1]));
+    char text[256];
+    int n = sscanf(buf, "%s %s", text, &(text[16]) );
+    if (n < 2)
+    {
+      std::cout << "Error Reading the type of data set. Was expecting 2 fields but got " << n << std::endl;
+      return -1;
+    }
+    std::string dataset(&(text[16]));
+    setDatasetType(dataset);
   }
 
-
-  buf = in.readLine(); // Read Line 5 which is the Dimension values
-  bool ok = false;
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 5 which is the Dimension values
   int64_t dims[3];
-  tokens = buf.split(' ');
-  dims[0] = tokens[1].toLongLong(&ok, 10);
-  dims[1] = tokens[2].toLongLong(&ok, 10);
-  dims[2] = tokens[3].toLongLong(&ok, 10);
+  err = parse64_3V(buf, dims, 0);
 #if   (CMP_SIZEOF_SSIZE_T==4)
     int64_t max = std::numeric_limits<size_t>::max();
 #else
@@ -211,19 +210,22 @@ int VTKFileReader::readHeader()
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg(dims[0] * dims[1] * dims[2]);
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s, err);
+    addErrorMessage(getHumanLabel(), s.str(), err);
     return err;
   }
 
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    QString s = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version. dim[0]=%1  dim[1]=%2im[2]=%3")\
-    .arg(dims[0]).arg(dims[1]).arg(dims[2]);
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
-    addErrorMessage(getHumanLabel(), s, -1);
+    addErrorMessage(getHumanLabel(), s.str(), -1);
     return err;
   }
 
@@ -231,25 +233,21 @@ int VTKFileReader::readHeader()
   getVolumeDataContainer()->setDimensions(dcDims);
 
 
-
-  buf = in.readLine(); // Read Line 6 which is the Origin values
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 6 which is the Origin values
   float origin[3];
-  tokens = buf.split(' ');
-  origin[0] = tokens[1].toFloat(&ok);
-  origin[1] = tokens[2].toFloat(&ok);
-  origin[2] = tokens[3].toFloat(&ok);
+  err = parseFloat3V(buf, origin, 0.0f);
   getVolumeDataContainer()->setOrigin(origin);
 
-
-  buf = in.readLine(); // Read Line 7 which is the Scaling values
+  ::memset(buf, 0, kBufferSize);
+  instream.getline(buf, kBufferSize); // Read Line 7 which is the Scaling values
   float resolution[3];
-  tokens = buf.split(' ');
-  resolution[0] = tokens[1].toFloat(&ok);
-  resolution[1] = tokens[2].toFloat(&ok);
-  resolution[2] = tokens[3].toFloat(&ok);
+  err = parseFloat3V(buf, resolution, 1.0f);
   getVolumeDataContainer()->setResolution(resolution);
 
+  ::memset(buf, 0, kBufferSize);
 
+  instream.close();
   return err;
 
 }

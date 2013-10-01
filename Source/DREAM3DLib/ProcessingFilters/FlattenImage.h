@@ -66,9 +66,9 @@ class DREAM3DLib_EXPORT FlattenImage : public AbstractFilter
 
     virtual void preflight();
 
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
-    virtual const QString getHumanLabel() { return "Flatten Image"; }
+    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ImageFilters; }
+    virtual const std::string getHumanLabel() { return "Flatten Image"; }
 
     virtual void setupFilterParameters();
     /**

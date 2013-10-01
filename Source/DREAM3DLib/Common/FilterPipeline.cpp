@@ -30,10 +30,9 @@
 
 #include "FilterPipeline.h"
 
-
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/MXA.h"
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXADir.h"
 
 
 // -----------------------------------------------------------------------------
@@ -180,7 +179,7 @@ bool FilterPipeline::empty()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const QString &name)
+AbstractFilter::Pointer FilterPipeline::removeFirstFilterByName(const std::string &name)
 {
   AbstractFilter::Pointer f = AbstractFilter::NullPointer();
   for(FilterContainerType::iterator it = m_Pipeline.begin(); it != m_Pipeline.end(); ++it)
@@ -252,7 +251,7 @@ int FilterPipeline::preflightPipeline()
   m->addObserver(static_cast<Observer*>(this));
   setErrorCondition(0);
   int preflightError = 0;
-
+  std::stringstream ss;
   int err = 0;
 
   // Start looping through the Pipeline and preflight everything
@@ -266,12 +265,12 @@ int FilterPipeline::preflightPipeline()
     (*filter)->setVolumeDataContainer(NULL);
     (*filter)->setSurfaceDataContainer(NULL);
     (*filter)->setVertexDataContainer(NULL);
-    QVector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
+    std::vector<PipelineMessage> msgs = (*filter)->getPipelineMessages();
     // Loop through all the messages making sure they are all error messages. If they are all
     // warning messages we are going to let the preflight pass. Hopefully if the warning
     // turns into an error the filter will handle it correctly and gracefully fail with
     // a nice message to the user.
-    for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+    for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
     {
        if ( (*iter).getMessageType() == PipelineMessage::Error)
         {
@@ -291,10 +290,10 @@ int FilterPipeline::preflightPipeline()
   }
 
 #if 0
-  QList<QString> cellNames = m->getCellArrayNameList();
-  for (QList<QString>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
+  std::list<std::string> cellNames = m->getCellArrayNameList();
+  for (std::list<std::string>::iterator name = cellNames.begin(); name != cellNames.end(); ++name )
   {
-    qDebug() << *name ;
+    std::cout << *name << std::endl;
   }
 #endif
   return preflightError;
@@ -334,7 +333,7 @@ void FilterPipeline::execute()
 
   // Start looping through the Pipeline
   float progress = 0.0f;
-
+  std::stringstream ss;
 
 // Start a Benchmark Clock so we can keep track of each filter's execution time
   DEFINE_CLOCK;
@@ -346,13 +345,15 @@ void FilterPipeline::execute()
     progValue.setMessageType(PipelineMessage::StatusValue);
     progValue.setProgressValue(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
     sendPipelineMessage(progValue);
+    //pipelineProgress(static_cast<int>( progress / (m_Pipeline.size() + 1) * 100.0f ));
 
-    QString ss = QObject::tr("[%1/%2] %3 ").arg(progress).arg(m_Pipeline.size()).arg( (*iter)->getHumanLabel());
-
+    ss.str("");
+    ss << "[" << progress << "/" << m_Pipeline.size() << "] " << (*iter)->getHumanLabel() << " ";
+  //  std::cout << ss.str() << std::endl;
     progValue.setMessageType(PipelineMessage::StatusMessage);
-    progValue.setMessageText(ss);
+    progValue.setMessageText(ss.str());
     sendPipelineMessage(progValue);
-    (*iter)->setMessagePrefix(ss);
+    (*iter)->setMessagePrefix(ss.str());
     (*iter)->addObserver(static_cast<Observer*>(this));
     (*iter)->setVolumeDataContainer(dataContainer.get());
     (*iter)->setSurfaceDataContainer(sm.get());
@@ -378,8 +379,9 @@ void FilterPipeline::execute()
     {
       break;
     }
-    ss = QObject::tr("%1 Filter Complete").arg((*iter)->getNameOfClass());
-    END_CLOCK(ss);
+    ss.str("");
+     ss << (*iter)->getNameOfClass() << " Filter Complete";
+    END_CLOCK(ss.str());
   }
 
   PipelineMessage completMessage("", "Pipeline Complete", 0, PipelineMessage::StatusMessage, -1);
@@ -389,12 +391,12 @@ void FilterPipeline::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FilterPipeline::printFilterNames(QDataStream &out)
+void FilterPipeline::printFilterNames(std::ostream &out)
 {
-  out << "---------------------------------------------------------------------" ;
+  out << "---------------------------------------------------------------------" << std::endl;
   for (FilterContainerType::iterator iter = m_Pipeline.begin(); iter != m_Pipeline.end(); ++iter )
   {
-    out << (*iter)->getNameOfClass() ;
+    out << (*iter)->getNameOfClass() << std::endl;
   }
-  out << "---------------------------------------------------------------------" ;
+  out << "---------------------------------------------------------------------" << std::endl;
 }

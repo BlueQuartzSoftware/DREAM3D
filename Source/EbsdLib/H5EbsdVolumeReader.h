@@ -37,9 +37,9 @@
 #ifndef _H5EBSDVOLUMEREADER_H_
 #define _H5EBSDVOLUMEREADER_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtCore/QSet>
+#include <string>
+#include <vector>
+#include <set>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -110,14 +110,14 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     * @brief Returns the pointer to the data for a given field
     * @param fieldName The name of the field to return the pointer to.
     */
-    virtual void* getPointerByName(const QString &fieldName);
+    virtual void* getPointerByName(const std::string &fieldName);
 
     /**
     * @brief Returns an enumeration value that depicts the numerical
     * primitive type that the data is stored as (Int, Float, etc).
     * @param fieldName The name of the field.
     */
-    virtual Ebsd::NumType getPointerType(const QString &fieldName);
+    virtual Ebsd::NumType getPointerType(const std::string &fieldName);
 
     /** @brief Allocates the proper amount of memory (after reading the header portion of the file)
     * and then splats '0' across all the bytes of the memory allocation
@@ -132,8 +132,8 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
      * @brief Sets the names of the arrays to read out of the file
      * @param names
      */
-    virtual void setArraysToRead(QSet<QString> names);
-    virtual QSet<QString> getArraysToRead();
+    virtual void setArraysToRead(std::set<std::string> names);
+    virtual std::set<std::string> getArraysToRead();
 
     /**
      * @brief Over rides the setArraysToReads to tell the reader to load ALL the data from the HDF5 file. If the
@@ -147,7 +147,7 @@ class EbsdLib_EXPORT H5EbsdVolumeReader : public H5EbsdVolumeInfo
     H5EbsdVolumeReader();
 
   private:
-    QSet<QString>         m_ArrayNames;
+    std::set<std::string> m_ArrayNames;
     bool                  m_ReadAllArrays;
 
 

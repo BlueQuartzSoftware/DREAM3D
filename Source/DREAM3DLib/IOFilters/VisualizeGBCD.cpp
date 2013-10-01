@@ -40,12 +40,11 @@
 #include <algorithm>
 #include <limits>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 
 
@@ -84,7 +83,7 @@ VisualizeGBCD::~VisualizeGBCD()
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Axis Angles");
@@ -161,15 +160,14 @@ int VisualizeGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-
-  if(getOutputFile().isEmpty() == true)
+  if(getOutputFile().empty() == true)
   {
-
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss.str("");
+    ss << ClassName() << " needs the Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
@@ -205,9 +203,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       }
       else
       {
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }
@@ -229,7 +227,7 @@ void VisualizeGBCD::preflight()
 void VisualizeGBCD::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -494,26 +492,25 @@ void VisualizeGBCD::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-
-  if(!parentPath.mkpath("."))
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
   {
-
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
+    ss.str("");
+    ss << "Error creating parent path '" << parentPath << "'";
     setErrorCondition(-998);
-    notifyErrorMessage(ss, getErrorCondition());
+    notifyErrorMessage(ss.str(), getErrorCondition());
     return;
   }
 
   {
     FILE* f = NULL;
-    f = fopen(m_OutputFile.toLatin1().data(), "wb");
+    f = fopen(m_OutputFile.c_str(), "wb");
     if(NULL == f)
     {
 
-      QString ss = QObject::tr("Could not open GBCD viz file %1 for writing. Please check access permissions and the path to the output location exists").arg(m_OutputFile);
-      notifyErrorMessage(ss, getErrorCondition());
+      ss.str("");
+      ss << "Could not open GBCD viz file " << m_OutputFile << " for writing. Please check access permissions and the path to the output location exists";
+      notifyErrorMessage(ss.str(), getErrorCondition());
       return;
     }
 
@@ -545,7 +542,7 @@ void VisualizeGBCD::execute()
         for (int64_t i = 0; i < (xpoints); i++)
         {
           t = float(poleFigure[(j*xpoints)+i]);
-          DREAM3D::Endian::FromSystemToBig::convert(t);
+          MXA::Endian::FromSystemToBig::convert<float>(t);
           gn[count] = t;
           count++;
         }
@@ -553,7 +550,7 @@ void VisualizeGBCD::execute()
       int64_t totalWritten = fwrite(gn, sizeof(float), (total), f);
       delete[] gn;
       if (totalWritten != (total))  {
-        qDebug() << "Error Writing Binary VTK Data into file " << m_OutputFile ;
+        std::cout << "Error Writing Binary VTK Data into file " << m_OutputFile << std::endl;
         fclose(f);
       }
     }

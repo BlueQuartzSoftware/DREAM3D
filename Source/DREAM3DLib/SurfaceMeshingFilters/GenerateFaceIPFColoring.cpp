@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateFaceIPFColoring.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -226,7 +226,7 @@ GenerateFaceIPFColoring::~GenerateFaceIPFColoring()
 // -----------------------------------------------------------------------------
 void GenerateFaceIPFColoring::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -258,9 +258,8 @@ int GenerateFaceIPFColoring::writeFilterParameters(AbstractFilterParametersWrite
 void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -283,9 +282,9 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, uint8_t, UInt8ArrayType, 0, fields, 6)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
+          GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceIPFColors, ss, uint8_t, UInt8ArrayType, 0, fields, 6)
     }
   }
 }
@@ -296,8 +295,8 @@ void GenerateFaceIPFColoring::dataCheckSurfaceMesh(bool preflight, size_t voxels
 void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   if(NULL == m)
   {
     addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
@@ -305,10 +304,10 @@ void GenerateFaceIPFColoring::dataCheckVoxel(bool preflight, size_t voxels, size
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
         typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -329,7 +328,7 @@ void GenerateFaceIPFColoring::preflight()
 void GenerateFaceIPFColoring::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   VolumeDataContainer* m = getVolumeDataContainer();

@@ -35,9 +35,6 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "ConvertEulerAngles.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -46,7 +43,7 @@
 #endif
 
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 class ConvertEulerAnglesImpl
 {
@@ -105,14 +102,14 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
     option->setPropertyName("ConversionType");
     option->setWidgetType(FilterParameter::ChoiceWidget);
     option->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("Degrees To Radians");
     choices.push_back("Radians To Degrees");
     option->setChoices(choices);
@@ -151,10 +148,10 @@ int ConvertEulerAngles::writeFilterParameters(AbstractFilterParametersWriter* wr
 void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -203,7 +200,7 @@ void ConvertEulerAngles::execute()
   }
 
   totalPoints = totalPoints * 3;
-  //  qDebug() << "ConvertEulerAngles: " << m_ConversionFactor ;
+  //  std::cout << "ConvertEulerAngles: " << m_ConversionFactor << std::endl;
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
   if (doParallel == true)
   {

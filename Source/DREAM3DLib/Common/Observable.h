@@ -31,7 +31,7 @@
 #ifndef OBSERVABLE_H_
 #define OBSERVABLE_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -78,26 +78,26 @@ class DREAM3DLib_EXPORT Observable
 
     virtual void notifyMessage(PipelineMessage &msg);
 
-    void notifyErrorMessage(QString errDesc, int errCode);
+    void notifyErrorMessage(std::string errDesc, int errCode);
 
-    void notifyWarningMessage(QString warnDesc, int warnCode);
+    void notifyWarningMessage(std::string warnDesc, int warnCode);
 
-    void notifyStatusMessage(QString statusDesc);
+    void notifyStatusMessage(std::string statusDesc);
 
     void notifyProgressValue(int status);
 
-    void notifyStatusAndProgress(QString statusDesc, int statusVal);
+    void notifyStatusAndProgress(std::string statusDesc, int statusVal);
 
     virtual std::vector<Observer*> getObservers();
 
     virtual void setObservers(std::vector<Observer*> obs);
 
-    virtual void setMessagePrefix(const QString &str);
-    virtual QString getMessagePrefix();
+    virtual void setMessagePrefix(const std::string &str);
+    virtual std::string getMessagePrefix();
 
   private:
     std::vector<Observer*> m_Observers;
-    QString m_Prefix;
+    std::string m_Prefix;
 
     Observable(const Observable&); // Copy Constructor Not Implemented
     void operator=(const Observable&); // Operator '=' Not Implemented

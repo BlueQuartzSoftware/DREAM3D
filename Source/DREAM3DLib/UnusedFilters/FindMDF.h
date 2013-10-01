@@ -38,21 +38,21 @@
 #define FINDMDF_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataContainers/VoxelDataContainer.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/Common/VoxelDataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class FindMDF FindMDF.h DREAM3DLib/GenericFilters/FindMDF.h
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT FindMDF : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(TotalSurfaceAreasArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find MDF"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getHumanLabel() { return "Find MDF"; }
 
     /**
     * @brief This method will write the options to a file

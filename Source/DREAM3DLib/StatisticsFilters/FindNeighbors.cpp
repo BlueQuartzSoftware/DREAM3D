@@ -38,10 +38,10 @@
 
 #include <sstream>
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -95,12 +95,12 @@ int FindNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, int8_t, Int8ArrayType, 0, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, SurfaceVoxels, ss, int8_t, Int8ArrayType, 0, voxels, 1)
 
   // Field Data
   // Do this whole block FIRST otherwise the side effect is that a call to m->getNumFieldTuples will = 0
@@ -116,7 +116,7 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     neighborlistPtr->setNumNeighborsArrayName(m_NumNeighborsArrayName);
     m->addFieldData(m_NeighborListArrayName, neighborlistPtr);
     if (neighborlistPtr.get() == NULL) {
-      QString ss = QObject::tr("NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter");
+      ss << "NeighborLists Array Not Initialized at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
     }
     m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>* >
@@ -146,10 +146,10 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     m->addFieldData(m_SharedSurfaceAreaListArrayName, sharedSurfaceAreaListPtr);
     if (sharedSurfaceAreaListPtr.get() == NULL)
     {
-
-      QString ss = QObject::tr("SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter");
+      ss.str("");
+      ss << "SurfaceAreaLists Array Not Initialized correctly at Beginning of FindNeighbors Filter" << std::endl;
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, -308);
+      addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
     m_SharedSurfaceAreaList = NeighborList<float>::SafeObjectDownCast<IDataArray*, NeighborList<float>*>
                                  (m->getFieldData(m_SharedSurfaceAreaListArrayName).get());
@@ -165,8 +165,8 @@ void FindNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 
@@ -184,8 +184,8 @@ void FindNeighbors::preflight()
 void FindNeighbors::execute()
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -240,8 +240,9 @@ void FindNeighbors::execute()
   neighborsurfacearealist.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Initializing Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(i)/totalFields)*100);
- //   notifyStatusMessage(ss);
+    std::stringstream ss;
+    ss << "Finding Neighbors - Initializing Neighbor Lists - " << (static_cast<float>(i)/totalFields)*100 << " Percent Complete";
+ //   notifyStatusMessage(ss.str());
     m_NumNeighbors[i] = 0;
     neighborlist[i].resize(nListSize);
     neighborsurfacearealist[i].resize(nListSize, -1.0);
@@ -252,8 +253,9 @@ void FindNeighbors::execute()
 
   for (int64_t j = 0; j < totalPoints; j++)
   {
-    QString ss = QObject::tr("Finding Neighbors - Determining Neighbor Lists - %1 Percent Complete").arg((static_cast<float>(j)/totalPoints)*100);
- //   notifyStatusMessage(ss);
+    std::stringstream ss;
+    ss << "Finding Neighbors - Determining Neighbor Lists - " << (static_cast<float>(j)/totalPoints)*100 << " Percent Complete";
+ //   notifyStatusMessage(ss.str());
     onsurf = 0;
     grain = m_GrainIds[j];
     if(grain > 0)
@@ -297,11 +299,11 @@ void FindNeighbors::execute()
 
   for (size_t i = 1; i < m->getNumFieldTuples(); i++)
   {
+    std::stringstream ss;
+    ss << "Finding Neighbors - Calculating Surface Areas - " << ((float)i/totalFields)*100 << " Percent Complete";
+  //  notifyStatusMessage(ss.str());
 
-    QString ss = QObject::tr("Finding Neighbors - Calculating Surface Areas - %1 Percent Complete").arg(((float)i/totalFields)*100);
-  //  notifyStatusMessage(ss);
-
-    QMap<int, int> neighToCount;
+    std::map<int, int> neighToCount;
     int numneighs = static_cast<int>( neighborlist[i].size() );
 
     // this increments the voxel counts for each grain
@@ -310,19 +312,16 @@ void FindNeighbors::execute()
       neighToCount[neighborlist[i][j]]++;
     }
 
-
-    QMap<int, int>::Iterator iter = neighToCount.find(0);
-    neighToCount.erase(iter);
-    iter = neighToCount.find(-1);
-    neighToCount.erase(iter);
+    neighToCount.erase(0);
+    neighToCount.erase(-1);
     //Resize the grains neighbor list to zero
     neighborlist[i].resize(0);
     neighborsurfacearealist[i].resize(0);
 
-    for (QMap<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
+    for (std::map<int, int>::iterator iter = neighToCount.begin(); iter != neighToCount.end(); ++iter)
     {
-      int neigh = iter.key(); // get the neighbor grain
-      int number = iter.value(); // get the number of voxels
+      int neigh = iter->first; // get the neighbor grain
+      int number = iter->second; // get the number of voxels
       float area = number * m->getXRes() * m->getYRes();
 
       // Push the neighbor grain id back onto the list so we stay synced up

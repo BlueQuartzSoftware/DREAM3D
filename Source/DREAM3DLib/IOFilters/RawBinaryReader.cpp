@@ -38,13 +38,11 @@
 #include <stdio.h>
 
 
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
+#include "MXA/MXA.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Common/IO/MXAFileReader64.h"
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
-
 
 #define RBR_FILE_NOT_OPEN -1000
 #define RBR_FILE_TOO_SMALL -1010
@@ -98,11 +96,10 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, int skipHeaderBytes)
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename, int skipHeaderBytes)
 {
   int err = 0;
-  QFileInfo fi(filename);
-  uint64_t fileSize = fi.size();
+  uint64_t fileSize = MXAFileInfo::fileSize(filename);
   size_t allocatedBytes = p->GetSize() * sizeof(T);
   err = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, skipHeaderBytes);
 
@@ -112,7 +109,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, in
   }
 
 
-  FILE* f = fopen(filename.toLatin1().data(), "rb");
+  FILE* f = fopen(filename.c_str(), "rb");
   if (NULL == f)
   {
     return RBR_FILE_NOT_OPEN;
@@ -141,7 +138,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const QString &filename, in
     {
       return RBR_READ_EOF;
     }
-  // Don't read junk at the end of the file
+	// Don't read junk at the end of the file
     else if (numRead == numElements)
     {
       break;
@@ -192,7 +189,7 @@ RawBinaryReader::~RawBinaryReader()
 // -----------------------------------------------------------------------------
 void RawBinaryReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   {
@@ -210,7 +207,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("ScalarType");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("signed   int 8  bit");
     choices.push_back("unsigned int 8  bit");
     choices.push_back("signed   int 16 bit");
@@ -246,7 +243,7 @@ void RawBinaryReader::setupFilterParameters()
     parameter->setPropertyName("Endian");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("Little");
     choices.push_back("Big");
     parameter->setChoices(choices);
@@ -358,52 +355,52 @@ int RawBinaryReader::writeFilterParameters(AbstractFilterParametersWriter* write
 void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if(m_OutputArrayName.isEmpty() == true)
+  if(m_OutputArrayName.empty() == true)
   {
-
-    QString ss = QObject::tr("The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.");
+    ss.str("");
+    ss << "The Output Array Name is blank (empty) and a value must be filled in for the pipeline to complete.";
     setErrorCondition(-398);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   if (m_NumberOfComponents < 1)
   {
-
-    QString ss = QObject::tr("The number of components must be larger than Zero");
+    ss.str("");
+    ss << "The number of components must be larger than Zero";
     setErrorCondition(-391);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   if (m_Dimensionality < 1)
   {
-
-    QString ss = QObject::tr("The dimensionality must be larger than Zero");
+    ss.str("");
+    ss << "The dimensionality must be larger than Zero";
     setErrorCondition(-389);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   if (  m_Dimensions.x == 0 || m_Dimensions.y == 0 || m_Dimensions.z == 0)
   {
-
-    QString ss = QObject::tr("One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).");
+    ss.str("");
+    ss << "One of the dimensions has a size less than or Equal to Zero (0). The minimum size must be greater than One (1).";
     setErrorCondition(-390);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   if (true == preflight)
@@ -462,22 +459,22 @@ void RawBinaryReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
     }
 
     // Sanity Check Allocated Bytes versus size of file
-    uint64_t fileSize = fi.size();
+    uint64_t fileSize = MXAFileInfo::fileSize(m_InputFile);
     int check = SanityCheckFileSizeVersusAllocatedSize(allocatedBytes, fileSize, m_SkipHeaderBytes);
     if (check == -1)
     {
-
-      QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %2. This condition would cause an error reading the input file."
-      " Please adjust the input parameters to match the size of the file or select a different data file.").arg(fileSize).arg(allocatedBytes);
+      ss.str("");
+      ss << "The file size is " << fileSize << " but the number of bytes needed to fill the array is " << allocatedBytes << ". This condition would cause an error reading the input file.";
+      ss << " Please adjust the input parameters to match the size of the file or select a different data file.";
       setErrorCondition(RBR_FILE_TOO_SMALL);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     }
     else if (check == 1)
     {
-
-      QString ss = QObject::tr("The file size is %1 but the number of bytes needed to fill the array is %1 which is less than the size of the file."
-      " DREAM3D will read only the first part of the file into the array.").arg(fileSize).arg(allocatedBytes);
-      addWarningMessage(getHumanLabel(), ss, RBR_FILE_TOO_BIG);
+      ss.str("");
+      ss << "The file size is " << fileSize << " but the number of bytes needed to fill the array is " << allocatedBytes << " which is less than the size of the file.";
+      ss << " DREAM3D will read only the first part of the file into the array.";
+      addWarningMessage(getHumanLabel(), ss.str(), RBR_FILE_TOO_BIG);
     }
 
     m->addCellData(p->GetName(), p);
@@ -505,13 +502,13 @@ void RawBinaryReader::preflight()
 void RawBinaryReader::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);

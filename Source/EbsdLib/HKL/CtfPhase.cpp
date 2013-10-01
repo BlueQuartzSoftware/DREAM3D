@@ -61,63 +61,28 @@ CtfPhase::~CtfPhase()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CtfPhase::convertEuropeanDecimals(QByteArray &line)
+void CtfPhase::parsePhase(const std::vector<std::string> &tokens)
 {
-  // Filter the line to convert European command style decimals to US/UK style points
-  //  QVector<char> cLine(line.size()+1);
-  //  ::memcpy( &(cLine.front()), line.c_str(), line.size() + 1);
-  for (int c = 0; c < line.size(); ++c)
-  {
-    if(line.at(c) == ',')
-    {
-      line[c] = '.';
-    }
-  }
-
-}
-
-
-// -----------------------------------------------------------------------------
-//
-// -----------------------------------------------------------------------------
-void CtfPhase::parsePhase(QByteArray &line)
-{
-  bool ok = false;
-  QList<QByteArray> tokens = line.split('\t'); // the line is segmented by Tabs
-  convertEuropeanDecimals(tokens[0]);
-  convertEuropeanDecimals(tokens[1]);
-  // The lattice constants and lattice angles are ';' delimited
-  m_LatticeConstants.resize(6);
-  // The first set of values are the lattice constants
-
-  QList<QByteArray> latConst = tokens[0].split(';');
-  m_LatticeConstants[0] = latConst[0].toFloat(&ok);
-  m_LatticeConstants[1] = latConst[1].toFloat(&ok);
-  m_LatticeConstants[2] = latConst[2].toFloat(&ok);
-  // The second set of values are the lattice angles
-  latConst = tokens[1].split(';');
-  m_LatticeConstants[3] = latConst[0].toFloat(&ok);
-  m_LatticeConstants[4] = latConst[1].toFloat(&ok);
-  m_LatticeConstants[5] = latConst[2].toFloat(&ok);
-
-  // 3rd set is the Name of the phase
+  m_LatticeConstants = tokenize<float>(tokens[0], ';');
+  std::vector<float> angles = tokenize<float>(tokens[1], ';');
+  m_LatticeConstants.push_back(angles[0]);
+  m_LatticeConstants.push_back(angles[1]);
+  m_LatticeConstants.push_back(angles[2]);
   m_PhaseName = tokens[2];
-
-  // 4th set is the Symmetry group
-  m_LaueGroup = static_cast<Ebsd::Ctf::LaueGroupTable>(tokens[3].toInt(&ok, 10));
-
-  if(tokens.size() == 5)
+  unsigned int sym = 999;
+  stringToNum<unsigned int>(sym, tokens[3]);
+  m_LaueGroup = static_cast<Ebsd::Ctf::LaueGroupTable>(sym);
+  if(tokens.size() == 8)
   {
-    m_Comment = tokens[4];
-  }
-  else if(tokens.size() == 8)
-  {
-    m_SpaceGroup = tokens[4].toInt(&ok, 10);
+    stringToNum<int>(m_SpaceGroup, tokens[4]);
     m_Internal1 = tokens[5];
     m_Internal2 = tokens[6];
     m_Comment = tokens[7];
   }
-
+  if(tokens.size() == 5)
+  {
+    m_Comment = tokens[4];
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -125,14 +90,14 @@ void CtfPhase::parsePhase(QByteArray &line)
 // -----------------------------------------------------------------------------
 void CtfPhase::printSelf(std::ostream &stream)
 {
-  stream << Ebsd::Ctf::LatticeConstants.toStdString() << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
+  stream << Ebsd::Ctf::LatticeConstants << " " << m_LatticeConstants[0] << ", " << m_LatticeConstants[1] << ", " << m_LatticeConstants[2] << " "
   << m_LatticeConstants[3] << ", " << m_LatticeConstants[4] << ", " << m_LatticeConstants[5] << std::endl;
-  stream << Ebsd::Ctf::PhaseName.toStdString() << " " << m_PhaseName.toStdString() << std::endl;
-  stream << Ebsd::Ctf::LaueGroup.toStdString() << " " << m_LaueGroup << std::endl;
-  stream << Ebsd::Ctf::SpaceGroup.toStdString() << " " << m_SpaceGroup << std::endl;
-  stream << Ebsd::Ctf::Internal1.toStdString() << " " << m_Internal1.toStdString() << std::endl;
-  stream << Ebsd::Ctf::Internal2.toStdString() << " " << m_Internal2.toStdString() << std::endl;
-  stream << Ebsd::Ctf::Comment.toStdString() << " " << m_Comment.toStdString() << std::endl;
+  stream << Ebsd::Ctf::PhaseName << " " << m_PhaseName << std::endl;
+  stream << Ebsd::Ctf::LaueGroup << " " << m_LaueGroup << std::endl;
+  stream << Ebsd::Ctf::SpaceGroup << " " << m_SpaceGroup << std::endl;
+  stream << Ebsd::Ctf::Internal1 << " " << m_Internal1 << std::endl;
+  stream << Ebsd::Ctf::Internal2 << " " << m_Internal2 << std::endl;
+  stream << Ebsd::Ctf::Comment << " " << m_Comment << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -178,7 +143,7 @@ unsigned int CtfPhase::determineCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString CtfPhase::getMaterialName()
+std::string CtfPhase::getMaterialName()
 {
   return m_PhaseName;
 }

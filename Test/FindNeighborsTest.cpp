@@ -41,8 +41,7 @@
 
 #include "MXA/MXA.h"
 #include "MXA/Common/LogTime.h"
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXADir.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
@@ -90,19 +89,19 @@
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  QFile::remove(UnitTest::FindNeighborTest::OutputFile);
-  QFile::remove(UnitTest::FindNeighborTest::VtkOutputFile);
+  MXADir::remove(UnitTest::FindNeighborTest::OutputFile);
+  MXADir::remove(UnitTest::FindNeighborTest::VtkOutputFile);
 }
 
 
-void updateProgressAndMessage(const QString &msg, int prog)
+void updateProgressAndMessage(const std::string &msg, int prog)
 {
   std::cout << prog << "% - " << msg << std::endl;
 }
 
-QString getH5EbsdFile()
+std::string getH5EbsdFile()
 {
-  QString s = UnitTest::DataDir + MXADir::Separator + "AdjTi6246MicroTensile.h5ebsd";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "AdjTi6246MicroTensile.h5ebsd";
   return s;
 }
 
@@ -164,7 +163,7 @@ void pipelineProgress(int value)
   std::cout << value << "%" << std::endl;
 }
 
-void pipelineProgressMessage(const QString &msg)
+void pipelineProgressMessage(const std::string &msg)
 {
   std::cout << msg << std::endl;
 }
@@ -202,9 +201,8 @@ void TestFindNeighbors()
   xtal->SetValue(0, Ebsd::CrystalStructure::UnknownCrystalStructure);
   xtal->SetValue(1, Ebsd::CrystalStructure::Cubic);
 
-  QString m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
-  QDir dir(m_OutputDirectory);
-dir.mkpath(".");
+  std::string m_OutputDirectory = MXADir::toNativeSeparators(UnitTest::FindNeighborTest::TestDir);
+  MXADir::mkdir(m_OutputDirectory, true);
 
  // updateProgressAndMessage(("Loading Slices"), 10);
   ReadH5Ebsd::Pointer read_h5ebsd = ReadH5Ebsd::New();

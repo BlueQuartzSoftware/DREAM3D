@@ -36,7 +36,7 @@
 
 #include "StatsGeneratorUI.h"
 
-#include <QtCore/QSet>
+
 #include <QtCore/QFileInfo>
 #include <QtCore/QFile>
 #include <QtCore/QDir>
@@ -49,14 +49,13 @@
 #include <QtGui/QDesktopServices>
 
 
-
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
@@ -552,7 +551,7 @@ void StatsGeneratorUI::openRecentFile()
   QAction *action = qobject_cast<QAction * > (sender());
   if (action)
   {
-    //std::cout << "Opening Recent file: " << action->data().toString() << std::endl;
+    //std::cout << "Opening Recent file: " << action->data().toString().toStdString() << std::endl;
     QString file = action->data().toString();
     openFile(file);
   }
@@ -698,14 +697,9 @@ void StatsGeneratorUI::on_actionSave_triggered()
     }
   }
 
-
-  hid_t fileId = QH5Utilities::createFile (m_FilePath);
-    // This will make sure if we return early from this method that the HDF5 File is properly closed.
-  HDF5ScopedFileSentinel scopedFileSentinel(&fileId, false);
-
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
   writer->setVolumeDataContainer(m.get());
-  writer->setOutputFile(m_FilePath);
+  writer->setOutputFile(m_FilePath.toStdString());
   writer->setWriteVolumeData(true);
   writer->setWriteSurfaceData(false);
   writer->setWriteEdgeData(false);
@@ -805,7 +799,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   m_FilePath = h5file;
   m_FileSelected = true;
 
-  QString path;
+  std::string path;
 
 
   // Delete any existing phases from the GUI
@@ -813,7 +807,7 @@ void StatsGeneratorUI::openFile(QString h5file)
 
   // Instantiate a Reader object
 
-  QSet<QString> selectedArrays;
+  std::set<std::string> selectedArrays;
   selectedArrays.insert(DREAM3D::EnsembleData::Statistics);
   selectedArrays.insert(DREAM3D::EnsembleData::PhaseTypes);
   selectedArrays.insert(DREAM3D::EnsembleData::CrystalStructures);
@@ -821,7 +815,7 @@ void StatsGeneratorUI::openFile(QString h5file)
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   DataContainerReader::Pointer reader = DataContainerReader::New();
-  reader->setInputFile(m_FilePath);
+  reader->setInputFile(m_FilePath.toStdString());
   reader->setVolumeDataContainer(m.get());
   reader->setReadVolumeData(true);
   reader->setReadSurfaceData(false);
@@ -836,7 +830,6 @@ void StatsGeneratorUI::openFile(QString h5file)
     this->statusBar()->showMessage("Error Reading the DREAM3D Data File");
     return;
   }
-
 
   // Get the number of Phases
   size_t ensembles = m->getNumEnsembleTuples();
@@ -932,7 +925,7 @@ void StatsGeneratorUI::adjustWindowTitle()
 void StatsGeneratorUI::on_actionAbout_triggered()
 {
   QString msg ("StatsGenerator Version ");
-  msg.append(DREAM3DLib::Version::Complete());
+  msg.append(DREAM3DLib::Version::Complete().c_str());
   msg.append("\n\nThe Primary Developers are:\n");
   msg.append("Dr. Michael Groeber\n  US Air Force Research Laboratory\n  michael.groeber@wpafb.af.mil\n");
   msg.append("Mr. Michael Jackson\n  BlueQuartz Software\n  mike.jackson@bluequartz.net\n\n");
@@ -949,7 +942,7 @@ void StatsGeneratorUI::on_actionLicense_Information_triggered()
   ApplicationAboutBoxDialog about(StatsGenerator::LicenseList, this);
   QString an = QCoreApplication::applicationName();
   QString version("");
-  version.append(DREAM3DLib::Version::PackageComplete());
+  version.append(DREAM3DLib::Version::PackageComplete().c_str());
   about.setApplicationInfo(an, version);
   about.exec();
 }
@@ -1038,8 +1031,8 @@ void StatsGeneratorUI::on_actionStatsGenerator_Help_triggered()
    bool didOpen = QDesktopServices::openUrl(url);
    if(false == didOpen)
    {
-   //  std::cout << "Could not open URL: " << url.path() << std::endl;
-       displayDialogBox(("Error Opening Help File"),
+   //  std::cout << "Could not open URL: " << url.path().toStdString() << std::endl;
+       displayDialogBox(QString::fromStdString("Error Opening Help File"),
          QString::fromAscii("DREAM3D could not open the help file path ") + url.path(),
          QMessageBox::Critical);
    }

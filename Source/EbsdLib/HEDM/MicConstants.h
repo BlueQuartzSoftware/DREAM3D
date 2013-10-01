@@ -40,11 +40,11 @@
 #ifndef MicCONSTANTS_H_
 #define MicCONSTANTS_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <string>
+#include <vector>
 
 #define DECLARE_STRING_CONST(var)\
-  const QString var(#var);
+  const std::string var(#var);
 
 
 /**
@@ -63,14 +63,14 @@ namespace Ebsd {
 
  namespace Mic
  {
-   const QString Manufacturer("HEDM");
+   const std::string Manufacturer("HEDM");
 
   DECLARE_STRING_CONST(Cubic)
   DECLARE_STRING_CONST(Hexagonal)
   DECLARE_STRING_CONST(OrthoRhombic)
   DECLARE_STRING_CONST(Tetragonal)
 
-   const QString FileExt("mic");
+   const std::string FileExt("mic");
 
   DECLARE_STRING_CONST(InfileBasename)
   DECLARE_STRING_CONST(InfileSerialLength)
@@ -151,19 +151,19 @@ namespace Ebsd {
   DECLARE_STRING_CONST(YRes)
   DECLARE_STRING_CONST(PhaseName)
 
-   const QString Euler1("Euler1");
-   const QString Euler2("Euler2");
-   const QString Euler3("Euler3");
-   const QString X("X");
-   const QString Y("Y");
-   const QString Confidence("Confidence");
-   const QString Phase("Phase");
-   const QString Level("Level");
-   const QString Up("Up");
+   const std::string Euler1("Euler1");
+   const std::string Euler2("Euler2");
+   const std::string Euler3("Euler3");
+   const std::string X("X");
+   const std::string Y("Y");
+   const std::string Confidence("Confidence");
+   const std::string Phase("Phase");
+   const std::string Level("Level");
+   const std::string Up("Up");
 
-//   const QString ZStep(Mic_Z_STEP);
-//   const QString ZPos(Mic_Z_POS);
-//   const QString ZMax(Mic_Z_MAX);
+//   const std::string ZStep(Mic_Z_STEP);
+//   const std::string ZPos(Mic_Z_POS);
+//   const std::string ZMax(Mic_Z_MAX);
 
  }
 }

@@ -35,23 +35,22 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
 #include <iostream>
+#include <string>
+#include <vector>
 #include <fstream>
-
-#include <QtCore/QString>
-#include <QtCore/QVector>
-
-#include <QtCore/QMap>
+#include <map>
 
 #include <tclap/CmdLine.h>
 #include <tclap/ValueArg.h>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
+
+#include "MXA/Common/LogTime.h"
 
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
-#include "DREAM3DLib/IOFilters/PhReader.h"
 
 
 #define APPEND_DATA_TRUE 1
@@ -71,7 +70,43 @@ class EulerSet
 };
 
 
+/*
+  void tokenize(const string& str, std::vector<string>& tokens, const
+  string& delimiters = " ")
+  ====================================================================
+  Taken from http://www.oopweb.com/CPP/Documents/CPPHOWTO/Volume/C++Programming-HOWTO-7.html
 
+  "A very common operation with strings, is to tokenize it with a
+  delimiter of your own choice. This way you can easily split the
+  string up in smaller pieces, without fiddling with the find()
+  methods too much. In C, you could use strtok() for character arrays,
+  but no equal function exists for strings. This means you have to
+  make your own. Here is a couple of suggestions, use what suits your
+  best."
+  ====================================================================
+*/
+void tokenize(const std::string& str,
+                      std::vector<std::string>& tokens,
+                      const std::string& delimiters = " ")
+{
+    // Skip delimiters at beginning.
+  std::string::size_type lastPos = str.find_first_not_of(delimiters, 0);
+
+    // Find first "non-delimiter".
+  std::string::size_type pos     = str.find_first_of(delimiters, lastPos);
+
+    while (std::string::npos != pos || std::string::npos != lastPos)
+    {
+        // Found a token, add it to the vector.
+        tokens.push_back(str.substr(lastPos, pos - lastPos));
+
+        // Skip delimiters.  Note the "not_of"
+        lastPos = str.find_first_not_of(delimiters, pos);
+
+        // Find next "non-delimiter"
+        pos = str.find_first_of(delimiters, lastPos);
+    }
+}
 
 /**
  *
@@ -81,53 +116,106 @@ class EulerSet
  * @param ny Y Dimension
  * @param nz Z Dimension
  */
-int  ReadPHFile(QString FileName, QVector<int> &data, int &nx, int &ny, int &nz)
+int  ReadPHFile(std::string FileName, std::vector<int> &data, int &nx, int &ny, int &nz)
 {
-  VolumeDataContainer::Pointer m = VolumeDataContainer::New();
-  PhReader::Pointer reader = PhReader::New();
-  reader->setVolumeDataContainer(m.get());
-  reader->setInputFile(FileName);
-  reader->execute();
-  if (reader->getErrorCondition() < 0)
+  std::string line;
+  line.resize(1024);
+
+  std::string delimeters(", ;\t"); /* delimeters to split the data */
+  std::vector<std::string> tokens; /* vector to store the split data */
+  //std::vector<int> data; /* vector to store the data */
+
+  int error, spin; /* dummy variables */
+  //int nx, ny, nz;
+
+  std::ifstream InFile;
+  InFile.open(FileName.c_str(), std::ios_base::binary);
+  if (!InFile)
   {
-    qDebug() << "Error Reading the Ph File '" << FileName << "' Error Code:" << reader->getErrorCondition();
+    std::cout << "Failed to open: " << FileName << std::endl;
     return -1;
   }
 
-  Int32ArrayType* grainIds = Int32ArrayType::SafePointerDownCast(m->getCellData(DREAM3D::CellData::GrainIds).get());
-  size_t count = grainIds->GetNumberOfTuples();
+  getline(InFile, line);
 
-  data.resize(count);
-  for(size_t i = 0; i < count; ++i)
+  tokenize(line, tokens, delimeters);
+
+  // Process the header information from the PH file.
+  error = 0;
+  error += sscanf(tokens[0].c_str(), "%d", &nx);
+  error += sscanf(tokens[1].c_str(), "%d", &ny);
+  error += sscanf(tokens[2].c_str(), "%d", &nz);
+  if (error < 0)
   {
-    data[i] = grainIds->GetValue(i);
+    std::cout << "Error parsing Dimensions from ph file. The line that is being parsed was \n'" <<
+       line << "'" <<  std::endl;
+    return -1;
+  }
+  tokens.clear();
+
+  //  cout << "INFO: PH file grid size: " << nx << "\t" << ny << "\t" << nz << endl;;
+
+  //MCgrid3D* grid = new grid(nx,ny,nz);
+
+  // Get the remaining two lines of the header and ignore
+  getline(InFile, line, '\n');
+  getline(InFile, line, '\n');
+
+  //The PH file has a unique format of 20 entries on each line. I have
+  //now idea who initiated this insanity but I am about to propetuate
+  //it.
+  //
+  //The most simple thing todo is to read the entire dataset into one
+  //long vector and then read that vector to assign values to the grid
+
+  while (getline(InFile, line, '\n') != NULL)
+  {
+    tokens.clear();
+    error = 0;
+    tokenize(line, tokens, delimeters);
+    //        cout << line << endl;
+    //        for(int i=0; i < tokens.size(); i++ )
+    //              cout << setw(6) << tokens[i];
+    //        cout << endl;
+
+    for (size_t in_spins = 0; in_spins < tokens.size(); in_spins++)
+    {
+      error += sscanf(tokens[in_spins].c_str(), "%d", &spin);
+      data.push_back(spin);
+    }
+    //        if(error != 20)
+    //              {
+    //                cout << "ERROR: Invalid number of line entries in PH file" << endl;
+    //              }
   }
 
+  tokens.clear();
 
+  InFile.close();
   return 0;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int openHDF5File(const QString m_FileName, bool appendData)
+int openHDF5File(const std::string m_FileName, bool appendData)
 {
   // Try to open a file to append data into
     if (APPEND_DATA_TRUE == appendData)
     {
-      m_FileId = QH5Utilities::openFile(m_FileName, false);
+      m_FileId = H5Utilities::openFile(m_FileName, false);
     }
     // No file was found or we are writing new data only to a clean file
     if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
     {
-      m_FileId = QH5Utilities::createFile (m_FileName);
+      m_FileId = H5Utilities::createFile (m_FileName);
     }
 
     //Something went wrong either opening or creating the file. Error messages have
     // Alread been written at this point so just return.
     if (m_FileId < 0)
     {
-       qDebug() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName<< "]";
+       std::cout << logTime() << "The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_FileName<< "]" << std::endl;
     }
     return m_FileId;
 
@@ -139,49 +227,50 @@ int openHDF5File(const QString m_FileName, bool appendData)
 int closeHDF5File()
 {
   // Close the file when we are finished with it
-  return QH5Utilities::closeFile(m_FileId);
+  return H5Utilities::closeFile(m_FileId);
 }
 
 /**
  *
  */
 template<typename T>
-int writeScalarData(const QString &hdfPath,
-                    const QVector<T> &scalar_data,
-                    const QString &name,
+int writeScalarData(const std::string &hdfPath,
+                    const std::vector<T> &scalar_data,
+                    const char *label,
                     int numComp, int32_t rank, hsize_t* dims)
 {
-  hid_t gid = H5Gopen(m_FileId, hdfPath.toLatin1().data(), H5P_DEFAULT );
+  hid_t gid = H5Gopen(m_FileId, hdfPath.c_str(), H5P_DEFAULT );
   if (gid < 0)
   {
-    qDebug() << "Error opening Group " << hdfPath;
+    std::cout << "Error opening Group " << hdfPath << std::endl;
     return gid;
   }
-  herr_t err = QH5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
+  herr_t err = H5Utilities::createGroupsFromPath(H5_SCALAR_DATA_GROUP_NAME, gid);
   if (err < 0)
   {
-    qDebug() << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME;
+    std::cout << "Error creating HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
     return err;
   }
   hid_t cellGroupId = H5Gopen(gid, H5_SCALAR_DATA_GROUP_NAME, H5P_DEFAULT );
   if(err < 0)
   {
-    qDebug() << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME;
+    std::cout << "Error writing string attribute to HDF Group " << H5_SCALAR_DATA_GROUP_NAME << std::endl;
     return err;
   }
 
   T* data = const_cast<T*>(&(scalar_data.front()));
 
 
-  err = QH5Lite::replacePointerDataset(cellGroupId, name, rank, dims, data);
+  std::string name (label);
+  err = H5Lite::replacePointerDataset(cellGroupId, name, rank, dims, data);
   if (err < 0)
   {
-    qDebug() << "Error writing array with name: " << name;
+    std::cout << "Error writing array with name: " << std::string (label) << std::endl;
   }
-  err = QH5Lite::writeScalarAttribute(cellGroupId, name, QString(H5_NUMCOMPONENTS), numComp);
+  err = H5Lite::writeScalarAttribute(cellGroupId, name, std::string(H5_NUMCOMPONENTS), numComp);
   if (err < 0)
   {
-    qDebug() << "Error writing dataset " << name;
+    std::cout << "Error writing dataset " << label << std::endl;
   }
   err = H5Gclose(cellGroupId);
 
@@ -198,7 +287,7 @@ int writeScalarData(const QString &hdfPath,
  * @param nz
  * @return
  */
-int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, int &ny, int &nz)
+int writePhDataToHDF5File(const std::string &h5File, std::vector<int> &data, int &nx, int &ny, int &nz)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
@@ -209,10 +298,10 @@ int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, in
   { totalPoints };
 
   int numComp = 1;
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::GrainIds.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::GrainIds.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -223,15 +312,15 @@ int writePhDataToHDF5File(const QString &h5File, QVector<int> &data, int &nx, in
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int writeEulerDataToHDF5File(const QString &h5File, QVector<float> &data, int numComp, int32_t rank, hsize_t* dims)
+int writeEulerDataToHDF5File(const std::string &h5File, std::vector<float> &data, int numComp, int32_t rank, hsize_t* dims)
 {
   int err = 0;
   err = openHDF5File(h5File, true);
 
-  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles, numComp, rank, dims);
+  err = writeScalarData(DREAM3D::HDF5::VolumeDataContainerName, data, DREAM3D::CellData::EulerAngles.c_str(), numComp, rank, dims);
   if (err < 0)
   {
-    qDebug() << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles << "' to " << DREAM3D::HDF5::VolumeDataContainerName;
+    std::cout << "Error Writing Scalars '" << DREAM3D::CellData::EulerAngles.c_str() << "' to " << DREAM3D::HDF5::VolumeDataContainerName << std::endl;
     return err;
   }
   // Close the file when we are done with it.
@@ -244,13 +333,13 @@ int writeEulerDataToHDF5File(const QString &h5File, QVector<float> &data, int nu
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int ReadEulerFile(const QString &filename, QMap<int, EulerSet> &gidToEulerMap)
+int ReadEulerFile(const std::string &filename, std::map<int, EulerSet> &gidToEulerMap)
 {
   int err = -1;
-  FILE* f = fopen(filename.toLatin1().data(), "rb");
+  FILE* f = fopen(filename.c_str(), "rb");
   if (NULL == f)
   {
-    qDebug() << "Could not open Euler Angle File '" << filename << "'";
+    std::cout << "Could not open Euler Angle File '" << filename << "'" << std::endl;
     return err;
   }
   err = 1;
@@ -273,12 +362,12 @@ int ReadEulerFile(const QString &filename, QMap<int, EulerSet> &gidToEulerMap)
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-  qDebug() << "Starting Ph to HDF5 Merging...";
+  std::cout << "Starting Ph to HDF5 Merging..." << std::endl;
 
   try
   {
     // Handle program options passed on command line.
-    TCLAP::CmdLine cmd("PhToHDF5", ' ', DREAM3DLib::Version::Complete().toStdString());
+    TCLAP::CmdLine cmd("PhToHDF5", ' ', DREAM3DLib::Version::Complete());
 
     TCLAP::ValueArg<std::string> phFileArg( "p", "phfile", "Ph Input File", true, "", "Ph Input File");
     cmd.add(phFileArg);
@@ -293,61 +382,61 @@ int main(int argc, char **argv)
     cmd.parse(argc, argv);
     if (argc == 1)
     {
-      qDebug() << "PhToHDF5 program was not provided any arguments. Use the --help argument to show the help listing.";
+      std::cout << "PhToHDF5 program was not provided any arguments. Use the --help argument to show the help listing." << std::endl;
       return EXIT_FAILURE;
     }
 
 
-    QString phFile = QString::fromStdString(phFileArg.getValue());
-    QString h5File = QString::fromStdString(h5InputFileArg.getValue());
+    std::string phFile = phFileArg.getValue();
+    std::string h5File = h5InputFileArg.getValue();
 
-    QVector<int> voxels;
+    std::vector<int> voxels;
     int nx = 0;
     int ny = 0;
     int nz = 0;
 
-    qDebug() << "Merging the GrainID data from " << phFile;
-    qDebug() << "  into";
-    qDebug() << "file: " << h5File;
+    std::cout << "Merging the GrainID data from " << phFile << std::endl;
+    std::cout << "  into" << std::endl;
+    std::cout << "file: " << h5File << std::endl;
 
 
-    qDebug() << "Reading the Ph data file....";
+    std::cout << "Reading the Ph data file...." << std::endl;
     int err = ReadPHFile(phFile, voxels, nx, ny, nz);
     if (err < 0)
     {
      return EXIT_FAILURE;
     }
-    qDebug() << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz;
+    std::cout << "Ph File has dimensions: " << nx << " x " << ny << " x " << nz << std::endl;
 
 
-    qDebug() << "Now Overwriting the GrainID data set in the HDF5 file....";
+    std::cout << "Now Overwriting the GrainID data set in the HDF5 file...." << std::endl;
     err = writePhDataToHDF5File(h5File, voxels, nz, ny, nz);
     if (err < 0)
     {
-     qDebug() << "There was an error writing the grain id data. Check other errors for possible clues.";
+     std::cout << "There was an error writing the grain id data. Check other errors for possible clues." << std::endl;
      return EXIT_FAILURE;
     }
-    qDebug() << "+ Done Writing the Grain ID Data.";
+    std::cout << "+ Done Writing the Grain ID Data." << std::endl;
 
 
-    QMap<int, EulerSet> gidToEulerMap;
+    std::map<int, EulerSet> gidToEulerMap;
     if (angleFileArg.getValue().empty() == false)
     {
-      qDebug() << "Reading the Euler Angle Data....";
-      err = ReadEulerFile(QString::fromStdString(angleFileArg.getValue()), gidToEulerMap);
+      std::cout << "Reading the Euler Angle Data...." << std::endl;
+      err = ReadEulerFile(angleFileArg.getValue(), gidToEulerMap);
       if (err < 0)
       {
-        qDebug() << "Error Reading the Euler Angle File";
+        std::cout << "Error Reading the Euler Angle File" << std::endl;
         return EXIT_FAILURE;
       }
 
     // Over Write the Euler Angles if the Euler File was supplied
 
-      qDebug() << "Now Over Writing the Euler Angles data in the HDF5 file.....";
+      std::cout << "Now Over Writing the Euler Angles data in the HDF5 file....." << std::endl;
       int totalPoints = nx * ny * nz;
       int numComp = 3;
       // Loop over each Voxel getting its Grain ID and then setting the Euler Angle
-      QVector<float> dataf(totalPoints * 3);
+      std::vector<float> dataf(totalPoints * 3);
       for (int i = 0; i < totalPoints; ++i)
       {
         EulerSet& angle = gidToEulerMap[voxels[i]];
@@ -361,19 +450,19 @@ int main(int argc, char **argv)
       err = writeEulerDataToHDF5File(h5File, dataf, numComp, rank, dims);
       if (err < 0)
       {
-       qDebug() << "There was an error writing the Euler Angle data. Check other errors for possible clues.";
+       std::cout << "There was an error writing the Euler Angle data. Check other errors for possible clues." << std::endl;
        return EXIT_FAILURE;
       }
-      qDebug() << "+ Done Writing the Euler Angle Data.";
+      std::cout << "+ Done Writing the Euler Angle Data." << std::endl;
     }
 
   }
   catch (TCLAP::ArgException &e) // catch any exceptions
   {
-    std::cerr << " error: " << e.error() << " for arg " << e.argId();
+    std::cerr << logTime() << " error: " << e.error() << " for arg " << e.argId() << std::endl;
     return EXIT_FAILURE;
   }
-  qDebug() << "Successfully completed the merge.";
+  std::cout << "Successfully completed the merge." << std::endl;
 
   return EXIT_SUCCESS;
 }

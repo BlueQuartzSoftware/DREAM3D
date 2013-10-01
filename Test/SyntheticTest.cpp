@@ -37,15 +37,14 @@
 
 #include <string>
 
-#include <QtCore/QString>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/StructArray.hpp"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Common/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"
@@ -57,7 +56,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::SyntheticTest::OutputFile);
+//  MXADir::remove(UnitTest::SyntheticTest::OutputFile);
 #endif
 }
 

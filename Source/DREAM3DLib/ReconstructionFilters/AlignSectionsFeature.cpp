@@ -36,15 +36,15 @@
 
 #include "AlignSectionsFeature.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -114,17 +114,17 @@ int AlignSectionsFeature::writeFilterParameters(AbstractFilterParametersWriter* 
 void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-     addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -168,14 +168,14 @@ void AlignSectionsFeature::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsFeature::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().toLatin1().data());
+    outFile.open(getAlignmentShiftFileName().c_str());
   }
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -210,9 +210,9 @@ void AlignSectionsFeature::find_shifts(QVector<int> &xshifts, QVector<int> &yshi
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
-  //  notifyStatusMessage(ss);
+    std::stringstream ss;
+    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+  //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     oldxshift = -1;

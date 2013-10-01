@@ -56,9 +56,9 @@ TexturePreset::~TexturePreset()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
+std::vector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 {
-  QVector<TexturePreset::Pointer> textures;
+  std::vector<TexturePreset::Pointer> textures;
   ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Cubic_High, 35.0, 45.0, 0.0)
   ADD_NEW_TEXTURE( "S",  Ebsd::CrystalStructure::Cubic_High, 59.0, 37.0, 63.0)
   ADD_NEW_TEXTURE( "Copper", Ebsd::CrystalStructure::Cubic_High, 90.0, 35.0, 45.0)
@@ -79,9 +79,9 @@ QVector<TexturePreset::Pointer> CubicTexturePresets::getTextures()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<TexturePreset::Pointer> HexTexturePresets::getTextures()
+std::vector<TexturePreset::Pointer> HexTexturePresets::getTextures()
 {
-  QVector<TexturePreset::Pointer> textures;
+  std::vector<TexturePreset::Pointer> textures;
 //  ADD_NEW_TEXTURE( "Brass", Ebsd::CrystalStructure::Hexagonal, 35.0, 45.0, 0.0)
 
   return textures;

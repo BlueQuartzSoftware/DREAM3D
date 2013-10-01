@@ -36,7 +36,7 @@
 #ifndef _MeshEdgeNeighbors_hpp_H_
 #define _MeshEdgeNeighbors_hpp_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
 #include <boost/shared_array.hpp>
@@ -44,7 +44,7 @@
 //-- DREAM3D Includes
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 /**
@@ -137,11 +137,11 @@ class MeshEdgeNeighbors
       // Build up the Face Adjacency list now that we have the cell links
       for(size_t t = 0; t < nEdges; ++t)
       {
-        //   qDebug() << "Analyzing Face " << t;
+        //   std::cout << "Analyzing Face " << t << std::endl;
         DREAM3D::Mesh::Edge_t& seedEdge = *(edges->GetPointer(t));
         for(size_t v = 0; v < 3; ++v)
         {
-          //   qDebug() << " vert " << v;
+          //   std::cout << " vert " << v << std::endl;
           int nTris = cellLinks->getNumberOfFaces(seedEdge.verts[v]);
           int* vertIdxs = cellLinks->getFaceListPointer(seedEdge.verts[v]);
 
@@ -149,7 +149,7 @@ class MeshEdgeNeighbors
           {
             if (vertIdxs[vt] == static_cast<int>(t) ) { continue; } // This is the same triangle as our "source" triangle
             if (visited[vertIdxs[vt]] == true) { continue; } // We already added this triangle so loop again
-            //      qDebug() << "   Comparing Face " << vertIdxs[vt];
+            //      std::cout << "   Comparing Face " << vertIdxs[vt] << std::endl;
             DREAM3D::Mesh::Face_t& vertTri = *(faces->GetPointer(vertIdxs[vt]));
             int vCount = 0;
             // Loop over all the vertex indices of this triangle and try to match 2 of them to the current loop triangle
@@ -182,7 +182,7 @@ class MeshEdgeNeighbors
             // into the list of Face Indices as neighbors for the source triangle.
             if (vCount == 2)
             {
-              //qDebug() << "       Neighbor: " << vertIdxs[vt];
+              //std::cout << "       Neighbor: " << vertIdxs[vt] << std::endl;
               // Use the current count of neighbors as the index
               // into the loop_neighbors vector and place the value of the vertex triangle at that index
               loop_neighbors[this->Array[t].ncells] = vertIdxs[vt];

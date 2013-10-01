@@ -41,7 +41,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -59,9 +59,8 @@
 class DefaultStatsPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(DefaultStatsPreset)
-    DREAM3D_STATIC_NEW_MACRO(DefaultStatsPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
+    MXA_SHARED_POINTERS(DefaultStatsPreset)
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, DefaultStatsPreset)
     virtual ~DefaultStatsPreset();
 
 

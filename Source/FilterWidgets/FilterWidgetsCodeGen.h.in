@@ -39,7 +39,7 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FILTER_INCLUDE_PREFIX()
+std::string FILTER_INCLUDE_PREFIX()
 {
   return "@FILTER_INCLUDE_PREFIX@";
 }
@@ -48,7 +48,7 @@ QString FILTER_INCLUDE_PREFIX()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FILTER_WIDGETS_BINARY_DIR()
+std::string FILTER_WIDGETS_BINARY_DIR()
 {
   return "@FILTER_WIDGETS_BINARY_DIR@";
 }
@@ -56,7 +56,7 @@ QString FILTER_WIDGETS_BINARY_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FILTER_WIDGETS_SOURCE_DIR()
+std::string FILTER_WIDGETS_SOURCE_DIR()
 {
   return "@FILTER_WIDGETS_SOURCE_DIR@";
 }
@@ -64,7 +64,7 @@ QString FILTER_WIDGETS_SOURCE_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FILTER_WIDGETS_TEMP_DIR()
+std::string FILTER_WIDGETS_TEMP_DIR()
 {
   return "@FILTER_WIDGETS_TEMP_DIR@";
 }
@@ -72,7 +72,7 @@ QString FILTER_WIDGETS_TEMP_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString FILTER_WIDGETS_DOCS_DIR()
+std::string FILTER_WIDGETS_DOCS_DIR()
 {
   return "@FILTER_WIDGETS_DOCS_DIR@";
 }
@@ -80,7 +80,7 @@ QString FILTER_WIDGETS_DOCS_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DREAM3D_SOURCE_DIR()
+std::string DREAM3D_SOURCE_DIR()
 {
   return "@DREAM3D_SOURCE_DIR@";
 }
@@ -89,7 +89,7 @@ QString DREAM3D_SOURCE_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DREAM3D_BINARY_DIR()
+std::string DREAM3D_BINARY_DIR()
 {
   return "@DREAM3DProj_BINARY_DIR@";
 }
@@ -98,7 +98,7 @@ QString DREAM3D_BINARY_DIR()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString DREAM3DLIB_SOURCE_DIR()
+std::string DREAM3DLIB_SOURCE_DIR()
 {
   return "@DREAM3DLib_SOURCE_DIR@";
 }

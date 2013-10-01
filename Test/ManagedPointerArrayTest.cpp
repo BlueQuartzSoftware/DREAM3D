@@ -37,11 +37,10 @@
 #include <stdlib.h>
 
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 
 
 #include "UnitTestSupport.hpp"

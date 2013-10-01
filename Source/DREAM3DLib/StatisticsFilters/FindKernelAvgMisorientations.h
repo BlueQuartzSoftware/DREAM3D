@@ -38,15 +38,15 @@
 #define FindKernelAvgMisorientations_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class FindKernelAvgMisorientations FindKernelAvgMisorientations.h DREAM3DLib/GenericFilters/FindKernelAvgMisorientations.h
@@ -73,9 +73,9 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Kernel Average Misorientations"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getHumanLabel() { return "Find Kernel Average Misorientations"; }
 
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, KernelSize)
@@ -104,7 +104,7 @@ class DREAM3DLib_EXPORT FindKernelAvgMisorientations : public AbstractFilter
     FindKernelAvgMisorientations();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     int32_t* m_GrainIds;
     int32_t* m_CellPhases;

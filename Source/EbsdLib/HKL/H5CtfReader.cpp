@@ -37,11 +37,13 @@
 
 #include "H5CtfReader.h"
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
-
+#include "EbsdLib/Utilities/StringUtils.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdMacros.h"
+#include "EbsdLib/Utilities/StringUtils.h"
+
 #include "EbsdLib/HKL/CtfConstants.h"
 
 #if defined (H5Support_NAMESPACE)
@@ -71,30 +73,30 @@ H5CtfReader::~H5CtfReader()
 int H5CtfReader::readHeaderOnly()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if (m_HDF5Path.empty() == true)
   {
-    qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
+    std::cout << "H5CtfReader Error: HDF5 Path is empty." << std::endl;
     return -1;
   }
 
-  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'";
+    std::cout << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'" << std::endl;
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
-    err = QH5Utilities::closeFile(fileId);
+    std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
+    err = H5Utilities::closeFile(fileId);
     return -1;
   }
 
   // Read all the header information
   err = readHeader(gid);
-  err = QH5Utilities::closeFile(fileId);
+  err = H5Utilities::closeFile(fileId);
   return err;
 }
 
@@ -104,37 +106,37 @@ int H5CtfReader::readHeaderOnly()
 int H5CtfReader::readFile()
 {
   int err = -1;
-  if (m_HDF5Path.isEmpty() == true)
+  if (m_HDF5Path.empty() == true)
   {
-    qDebug() << "H5CtfReader Error: HDF5 Path is empty.";
+    std::cout << "H5CtfReader Error: HDF5 Path is empty." << std::endl;
     return -1;
   }
 
-  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'";
+    std::cout << "H5CtfReader Error: Could not open HDF5 file '" << getFileName() << "'" << std::endl;
     return -1;
   }
 
-  hid_t gid = H5Gopen(fileId, m_HDF5Path.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, m_HDF5Path.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'";
-    err = QH5Utilities::closeFile(fileId);
+    std::cout << "H5CtfReader Error: Could not open path '" << m_HDF5Path << "'" << std::endl;
+    err = H5Utilities::closeFile(fileId);
     return -1;
   }
 
   // Read all the header information
- // qDebug() << "H5CtfReader:: reading Header .. ";
+ // std::cout << "H5CtfReader:: reading Header .. " << std::endl;
   err = readHeader(gid);
 
   // Read and transform data
- // qDebug() << "H5CtfReader:: Reading Data .. ";
+ // std::cout << "H5CtfReader:: Reading Data .. " << std::endl;
   err = readData(gid);
 
   err = H5Gclose(gid);
-  err = QH5Utilities::closeFile(fileId);
+  err = H5Utilities::closeFile(fileId);
 
   return err;
 }
@@ -145,19 +147,17 @@ int H5CtfReader::readFile()
 // -----------------------------------------------------------------------------
 int H5CtfReader::readHeader(hid_t parId)
 {
-  QString sBuf;
-  QTextStream ss(&sBuf);
   int err = -1;
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Header.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open 'Header' Group";
+    std::cout << "H5CtfReader Error: Could not open 'Header' Group" << std::endl;
     return -1;
   }
 
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Prj, Ebsd::Ctf::Prj)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Author, Ebsd::Ctf::Author)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, JobMode, Ebsd::Ctf::JobMode)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Prj, Ebsd::Ctf::Prj)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Author, Ebsd::Ctf::Author)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, JobMode, Ebsd::Ctf::JobMode)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, XCells, Ebsd::Ctf::XCells)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, YCells, Ebsd::Ctf::YCells)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, XStep, Ebsd::Ctf::XStep)
@@ -165,7 +165,7 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE1, Ebsd::Ctf::AcqE1)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE2, Ebsd::Ctf::AcqE2)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, AcqE3, Ebsd::Ctf::AcqE3)
-  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, QString, Euler, Ebsd::Ctf::Euler)
+  READ_EBSD_HEADER_STRING_DATA("H5CtfReader", CtfStringHeaderEntry, std::string, Euler, Ebsd::Ctf::Euler)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Mag, Ebsd::Ctf::Mag)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Coverage, Ebsd::Ctf::Coverage)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<int>, int, Device, Ebsd::Ctf::Device)
@@ -173,32 +173,30 @@ int H5CtfReader::readHeader(hid_t parId)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAngle, Ebsd::Ctf::TiltAngle)
   READ_EBSD_HEADER_DATA("H5CtfReader", CtfHeaderEntry<float>, float, TiltAxis, Ebsd::Ctf::TiltAxis)
 
-  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.toAscii().data(), H5P_DEFAULT);
+  hid_t phasesGid = H5Gopen(gid, Ebsd::H5::Phases.c_str(), H5P_DEFAULT);
   if (phasesGid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?";
+    std::cout << "H5CtfReader Error: Could not open Header/Phases HDF Group. Is this an older file?" << std::endl;
     H5Gclose(gid);
     return -1;
   }
 
-  QList<QString> names;
-  err = QH5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
+  std::list<std::string> names;
+  err = H5Utilities::getGroupObjects(phasesGid, H5Utilities::H5Support_GROUP, names);
   if (err < 0 || names.size() == 0)
   {
-    qDebug() << "H5CtfReader Error: There were no Phase groups present in the HDF5 file";
+    std::cout << "H5CtfReader Error: There were no Phase groups present in the HDF5 file" << std::endl;
     H5Gclose(phasesGid);
     H5Gclose(gid);
     return -1;
   }
-  bool ok = false;
   m_Phases.clear();
-  for (int p = 0; p < names.size(); ++p)
+  for (std::list<std::string>::iterator phaseGroupName = names.begin(); phaseGroupName != names.end(); ++phaseGroupName )
   {
-    QString phaseGroupName = names[p];
-    hid_t pid = H5Gopen(phasesGid, phaseGroupName.toAscii().data(), H5P_DEFAULT);
+    hid_t pid = H5Gopen(phasesGid, (*phaseGroupName).c_str(), H5P_DEFAULT);
     CtfPhase::Pointer m_CurrentPhase = CtfPhase::New();
 
-    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, float, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
+    READ_PHASE_HEADER_ARRAY("H5CtfReader", pid, std::vector<float>, Ebsd::Ctf::LatticeConstants, LatticeConstants, m_CurrentPhase);
     READ_PHASE_STRING_DATA("H5CtfReader", pid, Ebsd::Ctf::PhaseName, PhaseName, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, Ebsd::Ctf::LaueGroupTable, int, Ebsd::Ctf::LaueGroup, LaueGroup, m_CurrentPhase)
     READ_PHASE_HEADER_DATA_CAST("H5CtfReader", pid, int, int, Ebsd::Ctf::SpaceGroup, SpaceGroup, m_CurrentPhase)
@@ -208,15 +206,16 @@ int H5CtfReader::readHeader(hid_t parId)
 
     // For HKL Imports, the phase index is the HDF5 Group Name for this phase so
     // convert the phaseGroupName string variable into an integer
-    int pIndex = phaseGroupName.toInt(&ok, 10);
+    int pIndex = 0;
+    StringUtils::stringToNum(pIndex, *phaseGroupName);
     m_CurrentPhase->setPhaseIndex(pIndex);
     m_Phases.push_back(m_CurrentPhase);
     err = H5Gclose(pid);
   }
   err = H5Gclose(phasesGid);
 
-  QString completeHeader;
-  err = QH5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
+  std::string completeHeader;
+  err = H5Lite::readStringDataset(gid, Ebsd::H5::OriginalHeader, completeHeader);
   setOriginalHeader(completeHeader);
 
   err = H5Gclose(gid);
@@ -239,17 +238,17 @@ int H5CtfReader::readData(hid_t parId)
 
 
 
-  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(parId, Ebsd::H5::Data.c_str(), H5P_DEFAULT);
   if (gid < 0)
   {
-    qDebug() << "H5CtfReader Error: Could not open 'Data' Group";
+    std::cout << "H5CtfReader Error: Could not open 'Data' Group" << std::endl;
     return -1;
   }
 
   Ebsd::NumType numType = Ebsd::UnknownNumType;
-  QList<QString> columnNames;
-  err = QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
-  for (QList<QString>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
+  std::list<std::string> columnNames;
+  err = H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET, columnNames);
+  for (std::list<std::string>::iterator iter = columnNames.begin(); iter != columnNames.end(); ++iter )
   {
     if (m_ReadAllArrays == true || m_ArrayNames.find(*iter) != m_ArrayNames.end())
     {
@@ -261,7 +260,7 @@ int H5CtfReader::readData(hid_t parId)
         {
           BOOST_ASSERT(false);
         } // We are going to crash here. I would rather crash than have bad data
-        err = QH5Lite::readPointerDataset(gid, *iter, dataPtr);
+        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
         setPointerByName(*iter, dataPtr);
       }
       else if(numType == Ebsd::Float)
@@ -271,7 +270,7 @@ int H5CtfReader::readData(hid_t parId)
         {
           BOOST_ASSERT(false);
         } // We are going to crash here. I would rather crash than have bad data
-        err = QH5Lite::readPointerDataset(gid, *iter, dataPtr);
+        err = H5Lite::readPointerDataset(gid, *iter, dataPtr);
         setPointerByName(*iter, dataPtr);
       }
       else
@@ -290,7 +289,7 @@ int H5CtfReader::readData(hid_t parId)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void H5CtfReader::setArraysToRead(QSet<QString> names)
+void H5CtfReader::setArraysToRead(std::set<std::string> names)
 {
   m_ArrayNames = names;
 }

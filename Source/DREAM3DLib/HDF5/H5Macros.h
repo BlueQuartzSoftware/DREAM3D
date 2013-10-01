@@ -38,14 +38,14 @@
 
 
 #define OPEN_HDF5_FILE(fileId, filename)\
-  hid_t fileId = QH5Utilities::openFile(filename, false);\
+  hid_t fileId = H5Utilities::openFile(filename, false);\
   if (fileId < 0) { return fileId; }
 
 
 #define OPEN_RECONSTRUCTION_GROUP(gid, name, fileId)\
   hid_t gid = H5Gopen(fileId, name, H5P_DEFAULT);\
   if (gid < 0) { \
-    err = QH5Utilities::closeFile(fileId);\
+    err = H5Utilities::closeFile(fileId);\
     return -1; }
 
 

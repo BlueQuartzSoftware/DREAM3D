@@ -39,8 +39,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
+#include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
 
 /**
  * @class ModifiedLambertProjection ModifiedLambertProjection.h DREAM3DLib/Common/ModifiedLambertProjection.h
@@ -215,10 +216,10 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
       void operator()() const
       {
         ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-//        size_t dims[3] = {m_Config->lambertDim, m_Config->lambertDim, 1 };
-//        float res[3] = {1.0, 1.0, 1.0};
-//        DoubleArrayType::Pointer north = lambert->getNorthSquare();
-//        VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->GetName() + ".vtk", north.get(), dims, res, "double", true);
+        size_t dims[3] = {m_Config->lambertDim, m_Config->lambertDim, 1 };
+        float res[3] = {1.0, 1.0, 1.0};
+        DoubleArrayType::Pointer north = lambert->getNorthSquare();
+        VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->GetName() + ".vtk", north.get(), dims, res, "double", true);
         lambert->normalizeSquaresToMRD();
         m_Intensity->Resize(m_Config->imageDim * m_Config->imageDim);
         m_Intensity->SetNumberOfComponents(1);

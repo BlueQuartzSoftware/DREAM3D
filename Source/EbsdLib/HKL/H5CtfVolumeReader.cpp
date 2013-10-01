@@ -38,8 +38,10 @@
 
 #include <cmath>
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
+
+#include "EbsdLib/Utilities/StringUtils.h"
 
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/HKL/H5CtfReader.h"
@@ -95,7 +97,7 @@ void H5CtfVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  QSet<QString> arrayNames = getArraysToRead();
+  std::set<std::string> arrayNames = getArraysToRead();
 
   H5CTFREADER_ALLOCATE_ARRAY(Phase, int)
   H5CTFREADER_ALLOCATE_ARRAY(X, float)
@@ -132,7 +134,7 @@ void H5CtfVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5CtfVolumeReader::getPointerByName(const QString &fieldName)
+void* H5CtfVolumeReader::getPointerByName(const std::string &fieldName)
 {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return static_cast<void*>(m_Phase);}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return static_cast<void*>(m_X);}
@@ -151,7 +153,7 @@ void* H5CtfVolumeReader::getPointerByName(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5CtfVolumeReader::getPointerType(const std::string &fieldName)
   {
   if (fieldName.compare(Ebsd::Ctf::Phase) == 0) { return Ebsd::Int32;}
   if (fieldName.compare(Ebsd::Ctf::X) == 0) { return Ebsd::Float;}
@@ -170,15 +172,15 @@ Ebsd::NumType H5CtfVolumeReader::getPointerType(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
+std::vector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
 {
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  QString index = QString::number(getZStart());
+  std::string index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if (fileId < 0)
   {
     std::cout << "Error" << std::endl;
@@ -186,7 +188,7 @@ QVector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   }
   herr_t err = 0;
 
-  hid_t gid = H5Gopen(fileId, index.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5CtfReader::Pointer reader = H5CtfReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
@@ -194,12 +196,12 @@ QVector<CtfPhase::Pointer> H5CtfVolumeReader::getPhases()
   {
     std::cout  << "Error reading the header information from the .h5ebsd file" << std::endl;
     err = H5Gclose(gid);
-    err = QH5Utilities::closeFile(fileId);
+    err = H5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
   err = H5Gclose(gid);
-  err = QH5Utilities::closeFile(fileId);
+  err = H5Utilities::closeFile(fileId);
   return m_Phases;
 }
 
@@ -236,7 +238,7 @@ int H5CtfVolumeReader::loadData(int64_t xpoints,
   {
     H5CtfReader::Pointer reader = H5CtfReader::New();
     reader->setFileName(getFileName());
-    reader->setHDF5Path(QString::number(slice + getSliceStart()));
+    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
     reader->setSampleTransformationAngle(getSampleTransformationAngle());
     reader->setSampleTransformationAxis(getSampleTransformationAxis());

@@ -36,16 +36,15 @@
 
 #include "AlignSectionsMisorientation.h"
 
-#include <QtCore/QtDebug>
-#include <vector>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
@@ -69,7 +68,7 @@ AlignSectionsMisorientation::AlignSectionsMisorientation() :
   m_GoodVoxels(NULL),
   m_CrystalStructures(NULL)
 {
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  Seed = MXA::getMilliSeconds();
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -93,7 +92,7 @@ void AlignSectionsMisorientation::setupFilterParameters()
   //AlignSections::setupFilterParameters();
   // Now append our options
 
-  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
+  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
 
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -158,25 +157,25 @@ int AlignSectionsMisorientation::writeFilterParameters(AbstractFilterParametersW
 void AlignSectionsMisorientation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
 
-
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
 
@@ -225,14 +224,14 @@ void AlignSectionsMisorientation::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsMisorientation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().toLatin1().data());
+    outFile.open(getAlignmentShiftFileName().c_str());
   }
 
   size_t udims[3] = {0,0,0};
@@ -276,9 +275,10 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
+    std::stringstream ss;
     progInt = ((float)iter/dims[2])*100.0f;
-    QString ss = QObject::tr("Determining Shifts - %1% Complete").arg(progInt);
-    notifyStatusMessage(ss);
+    ss << "Determining Shifts - " << progInt << "% Complete";
+    notifyStatusMessage(ss.str());
     if (getCancel() == true)
     {
       return;
@@ -366,7 +366,7 @@ void AlignSectionsMisorientation::find_shifts(QVector<int> &xshifts, QVector<int
     xshifts[iter] = xshifts[iter-1] + newxshift;
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if (getWriteAlignmentShifts() == true) {
-      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] ;
+      outFile << slice << "	" << slice+1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
   }
   if (getWriteAlignmentShifts() == true) {

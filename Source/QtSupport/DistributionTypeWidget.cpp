@@ -63,9 +63,9 @@ DistributionTypeWidget::~DistributionTypeWidget()
 void DistributionTypeWidget::setupGui()
 {
 
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution);
+  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
 
 }
 

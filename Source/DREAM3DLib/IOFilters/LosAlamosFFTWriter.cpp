@@ -36,19 +36,16 @@
 
 #include "LosAlamosFFTWriter.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "EbsdLib/TSL/AngConstants.h"
 
 #include "DREAM3DLib/DREAM3DVersion.h"
-
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -79,7 +76,7 @@ LosAlamosFFTWriter::~LosAlamosFFTWriter()
 // -----------------------------------------------------------------------------
 void LosAlamosFFTWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -123,18 +120,20 @@ int LosAlamosFFTWriter::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LosAlamosFFTWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  if(getOutputFile().isEmpty() == true)
+  if(getOutputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss.str("");
+    ss << ClassName() << " needs the Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -161,13 +160,13 @@ int LosAlamosFFTWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
-
+  std::stringstream ss;
   int64_t totalPoints = m->getTotalPoints();
   size_t numgrains = m->getNumFieldTuples();
   size_t numensembles = m->getNumEnsembleTuples();
@@ -190,22 +189,22 @@ int LosAlamosFFTWriter::writeFile()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(getOutputFile());
-  QDir parentPath(fi.path());
-  if(!parentPath.mkpath("."))
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
   {
-
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    ss.str("");
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  FILE* f = fopen(getOutputFile().toLatin1().data(), "wb");
+  FILE* f = fopen(getOutputFile().c_str(), "wb");
   if(NULL == f)
   {
-    QString ss = QObject::tr("Error Opening File for writing '%1'").arg(getOutputFile());
-    notifyErrorMessage(ss, -1);
+    ss.str("");
+    ss << "Error Opening File for writing '" << getOutputFile() << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }

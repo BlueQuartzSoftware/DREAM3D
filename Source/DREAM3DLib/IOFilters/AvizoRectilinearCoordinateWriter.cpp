@@ -36,22 +36,20 @@
 #include "AvizoRectilinearCoordinateWriter.h"
 
 
+#include "MXA/Common/LogTime.h"
 
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QDateTime>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 AvizoRectilinearCoordinateWriter::AvizoRectilinearCoordinateWriter() :
-  AbstractFilter(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_WriteGrainIds(true),
-  m_WriteBinaryFile(false),
-  m_GrainIds(NULL)
+AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_WriteGrainIds(true),
+m_WriteBinaryFile(false),
+m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -68,14 +66,14 @@ AvizoRectilinearCoordinateWriter::~AvizoRectilinearCoordinateWriter()
 // -----------------------------------------------------------------------------
 void AvizoRectilinearCoordinateWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
     option->setPropertyName("OutputFile");
     option->setWidgetType(FilterParameter::OutputFileWidget);
-    option->setFileExtension("*.am");
-    option->setFileType("Amira Mesh");
+  option->setFileExtension("*.am");
+  option->setFileType("Amira Mesh");
     option->setValueType("string");
     parameters.push_back(option);
   }
@@ -94,10 +92,10 @@ void AvizoRectilinearCoordinateWriter::readFilterParameters(AbstractFilterParame
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -119,18 +117,18 @@ int AvizoRectilinearCoordinateWriter::writeFilterParameters(AbstractFilterParame
 void AvizoRectilinearCoordinateWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  if(m_OutputFile.isEmpty() == true)
+  if(m_OutputFile.empty() == true)
   {
-    QString ss = QObject::tr("The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss << "The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
 }
 
@@ -163,17 +161,15 @@ void AvizoRectilinearCoordinateWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(m_OutputFile);
-  QString parentPath = fi.path();
-  QDir dir;
-  if(!dir.mkpath(parentPath))
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
-
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
@@ -181,20 +177,20 @@ void AvizoRectilinearCoordinateWriter::execute()
 
   dataCheck(false, totalPoints, totalFields, totalEnsembleTuples);
 
-
-  QFile writer(getOutputFile());
-  if (!writer.open(QIODevice::WriteOnly | QIODevice::Text))
+  MXAFileWriter64 writer(m_OutputFile);
+  if(false == writer.initWriter())
   {
-    QString ss = QObject::tr("Avizo Output file could not be opened: %1").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
+    std::stringstream ss;
+    ss << "Error opening file '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
     return;
   }
 
-  QDataStream out(&writer);
-  generateHeader(out);
+  std::string header = generateHeader();
+  writer.writeString(header);
 
-  err = writeData(out);
+  err = writeData(writer);
 
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
@@ -204,8 +200,9 @@ void AvizoRectilinearCoordinateWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
+std::string AvizoRectilinearCoordinateWriter::generateHeader()
 {
+  std::stringstream ss;
   if(m_WriteBinaryFile == true)
   {
 #ifdef CMP_WORDS_BIGENDIAN
@@ -222,13 +219,13 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "# Dimensions in x-, y-, and z-direction\n";
   size_t x = 0, y = 0, z = 0;
   getVolumeDataContainer()->getDimensions(x, y, z);
-  ss << "define Lattice " << (qint64)x << " " << (qint64)y << (qint64)z << "\n";
-  ss << "define Coordinates " << (qint64)(x + y + z) << "\n\n";
+  ss << "define Lattice " << x << " " << y << " " << z << "\n";
+  ss << "define Coordinates " << (x + y + z) << "\n\n";
 
   ss << "Parameters {\n";
   ss << "     DREAM3DParams {\n";
   ss << "         Author \"DREAM3D\",\n";
-  ss << "         DateTime \"" << QDateTime::currentDateTime().toString() << "\"\n";
+  ss << "         DateTime \"" << tifDateTime() << "\"\n";
   ss << "     }\n";
 
   ss << "     Units {\n";
@@ -246,12 +243,14 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
   ss << "Coordinates { float xyz } = @2\n\n";
 
   ss << "# Data section follows\n";
+
+  return ss.str();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
+int AvizoRectilinearCoordinateWriter::writeData(MXAFileWriter64 &writer)
 {
   size_t dims[3];
   getVolumeDataContainer()->getDimensions(dims);
@@ -259,46 +258,46 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
   getVolumeDataContainer()->getOrigin(origin);
   float res[3];
   getVolumeDataContainer()->getResolution(res);
+  char newLine = '\n';
 
-  QString start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
-  out << start;
+  std::string start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
+  writer.writeString(start);
   if (true == m_WriteBinaryFile)
   {
-    out.writeRawData(reinterpret_cast<char*>(m_GrainIds), getVolumeDataContainer()->getTotalPoints() * sizeof(int32_t));
-    //writer.writeArray(m_GrainIds, getVolumeDataContainer()->getTotalPoints());
-    out << "\n";
+    writer.writeArray(m_GrainIds, getVolumeDataContainer()->getTotalPoints());
+    writer.writeValue<char>( &newLine); // This puts a new line character
   }
   else
   {
     // The "20 Items" is purely arbitrary and is put in to try and save some space in the ASCII file
     int64_t totalPoints = getVolumeDataContainer()->getTotalPoints();
     int count = 0;
-    QString ss;
+    std::stringstream ss;
     for (int64_t i = 0; i < totalPoints; ++i)
     {
-      out << m_GrainIds[i];
+      ss << m_GrainIds[i];
       if(count < 20)
       {
-        ss = ss.append(" ");
+        ss << " ";
         count++;
       }
       else
       {
-        out << "\n";
-        out << ss;
-        ss.clear();
+        ss << "\n";
+        writer.writeString(ss.str());
+        ss.str("");
         count = 0;
       }
     }
-    ss = ss.append("\n"); // Make sure there is a new line at the end of the data block
+    ss << "\n"; // Make sure there is a new line at the end of the data block
     // Pick up any remaining data that was not written because we did not have 20 items on a line.
-    out << ss;
+    writer.writeString(ss.str());
   }
 
 
 
   start = "@2 # x coordinates, then y, then z\n";
-  out << start;
+  writer.writeString(start);
   if (true == m_WriteBinaryFile)
   {
     for (int d = 0; d < 3; ++d)
@@ -308,19 +307,21 @@ int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
       {
         coords[i] = origin[d] + (res[d] * i);
       }
-      out.writeRawData(reinterpret_cast<char*>(&(coords.front())), dims[d] * sizeof(float));
-      out << "\n"; // This puts a new line character
+      writer.writeArray(&(coords.front()), dims[d]);
+      writer.writeValue<char>( &newLine); // This puts a new line character
     }
   }
   else
   {
     for (int d = 0; d < 3; ++d)
     {
+      std::stringstream ss;
       for (size_t i = 0; i < dims[d]; ++i)
       {
-        out << (origin[d] + (res[d] * i)) << " ";
+        ss << (origin[d] + (res[d] * i)) << " ";
       }
-      out << "\n";
+      ss << "\n";
+      writer.writeString(ss.str());
     }
   }
 

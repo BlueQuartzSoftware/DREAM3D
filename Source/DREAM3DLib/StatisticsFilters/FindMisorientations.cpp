@@ -36,7 +36,7 @@
 
 #include "FindMisorientations.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -96,22 +96,22 @@ int FindMisorientations::writeFilterParameters(AbstractFilterParametersWriter* w
 void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   IDataArray::Pointer neighborListPtr = m->getFieldData(m_NeighborListArrayName);
   if (NULL == neighborListPtr.get())
   {
-
-    QString ss = QObject::tr("NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline.");
+    ss.str("");
+    ss << "NeighborLists are not available and are required for this filter to run. A filter that generates NeighborLists needs to be placed before this filter in the pipeline." << std::endl;
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
@@ -128,10 +128,10 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
     m_MisorientationList = misorientationListPtr.get();
     if (misorientationListPtr.get() == NULL)
     {
-
-      QString ss = QObject::tr("MisorientationLists Array Not Initialized correctly");
+      ss.str("");
+      ss << "MisorientationLists Array Not Initialized correctly" << std::endl;
       setErrorCondition(-308);
-      addErrorMessage(getHumanLabel(), ss, -308);
+      addErrorMessage(getHumanLabel(), ss.str(), -308);
     }
   }
   else
@@ -141,7 +141,7 @@ void FindMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

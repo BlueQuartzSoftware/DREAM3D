@@ -88,7 +88,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     DREAM3D_INSTANCE_PROPERTY(float, SampleTransformationAngle)
     DREAM3D_INSTANCE_PROPERTY(float, EulerTransformationAngle)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, EbsdFileList)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, EbsdFileList)
     /**
      * @brief Enables or Disables all the widgets in a list
      * @param b
@@ -113,7 +113,7 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     Ebsd::RefFrameZDir getRefFrameZDir();
     void setRefFrameZDir(Ebsd::RefFrameZDir ref);
 
-    QVector<QString> generateFileList(int start, int end, bool &hasMissingFiles,
+    std::vector<std::string> generateFileList(int start, int end, bool &hasMissingFiles,
                                               bool stackLowToHigh, QString filename);
 
     virtual void openHtmlHelpFile();
@@ -152,8 +152,8 @@ class QEbsdToH5EbsdWidget : public QFilterWidget, private Ui::QEbsdToH5EbsdWidge
     bool m_HKLchecked;
     bool m_HEDMchecked;
     bool m_NoTranschecked;
-    QVector<float> m_SampleTransformationAxis;
-    QVector<float> m_EulerTransformationAxis;
+    std::vector<float> m_SampleTransformationAxis;
+    std::vector<float> m_EulerTransformationAxis;
 
     bool verifyPathExists(QString outFilePath, QLineEdit* lineEdit);
 

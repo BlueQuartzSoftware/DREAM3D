@@ -13,7 +13,7 @@
 #ifndef H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
 #define H_CENTIPEDE_BASICS_EXCEPTIONS_EXCEPTION
 
-#include <QtCore/QString>
+#include <string>
 
 namespace m3c_basics { namespace exceptions {
 
@@ -21,11 +21,11 @@ class Exception
 {
 	//#################### PRIVATE VARIABLES ####################
 private:
-	QString m_cause;
+	std::string m_cause;
 
 	//#################### CONSTRUCTORS ####################
 public:
-	explicit Exception(const QString& cause)
+	explicit Exception(const std::string& cause)
 	:	m_cause(cause)
 	{}
 
@@ -34,7 +34,7 @@ public:
 	virtual ~Exception() {}
 
 	//#################### PUBLIC METHODS ####################
-	virtual const QString& error() const
+	virtual const std::string& error() const
 	{
 		return m_cause;
 	}

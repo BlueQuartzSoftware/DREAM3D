@@ -37,13 +37,13 @@
 
 #include "FieldInfoReader.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
-#include <QtCore/QFileInfo>
+#include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 // -----------------------------------------------------------------------------
@@ -82,7 +82,7 @@ FieldInfoReader::~FieldInfoReader()
 // -----------------------------------------------------------------------------
 void FieldInfoReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Field Info File");
@@ -146,32 +146,32 @@ void FieldInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, si
 {
 
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist.");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if (m_CreateCellLevelArrays)
   {
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
   }
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -197,9 +197,9 @@ int  FieldInfoReader::readFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -207,13 +207,13 @@ int  FieldInfoReader::readFile()
 
 
   std::ifstream inFile;
-  inFile.open(getInputFile().toLatin1().data(), std::ios_base::binary);
+  inFile.open(getInputFile().c_str(), std::ios_base::binary);
   if(!inFile)
   {
-
-   QString ss = QObject::tr("Failed to open: %1").arg(getInputFile());
+    std::stringstream ss;
+    ss << "Failed to open: " << getInputFile();
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return -1;
   }
   int numgrains;
@@ -288,7 +288,7 @@ int  FieldInfoReader::readFile()
     }
     dataCheck(false, totalPoints, totalFields, m->getNumEnsembleTuples());
 
-
+    std::stringstream ss;
 
     // Find the unique set of grain ids
     for (size_t i = 1; i < totalFields; ++i)

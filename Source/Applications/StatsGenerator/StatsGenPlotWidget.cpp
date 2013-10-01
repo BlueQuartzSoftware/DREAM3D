@@ -65,7 +65,7 @@
 #include <qwt_plot_canvas.h>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 #include "StatsGenerator/TableModels/SGBetaTableModel.h"
 #include "StatsGenerator/TableModels/SGLogNormalTableModel.h"
@@ -229,34 +229,34 @@ VectorOfFloatArray StatsGenPlotWidget::getStatisticsData()
   FloatArrayType::Pointer col1;
   FloatArrayType::Pointer col2;
 
-  QVector<float> v0;
-  QVector<float> v1;
-  QVector<float> v2;
+  std::vector<float> v0;
+  std::vector<float> v1;
+  std::vector<float> v2;
   Q_ASSERT(m_PhaseIndex >= 0);
 
   // Create a new Table Model
   switch(m_DistributionType)
   {
   case DREAM3D::DistributionType::Beta:
-    v0 = m_TableModel->getData(SGBetaTableModel::Alpha);
-    v1 = m_TableModel->getData(SGBetaTableModel::Beta);
+    v0 = m_TableModel->getData(SGBetaTableModel::Alpha).toStdVector();
+    v1 = m_TableModel->getData(SGBetaTableModel::Beta).toStdVector();
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Beta);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::LogNormal:
-    v0 = m_TableModel->getData(SGLogNormalTableModel::Average);
-    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev);
+    v0 = m_TableModel->getData(SGLogNormalTableModel::Average).toStdVector();
+    v1 = m_TableModel->getData(SGLogNormalTableModel::StdDev).toStdVector();
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Average);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::StandardDeviation);
     data.push_back(col0);
     data.push_back(col1);
     break;
   case DREAM3D::DistributionType::Power:
-    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha);
-    v1 = m_TableModel->getData(SGPowerLawTableModel::K);
-    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta);
+    v0 = m_TableModel->getData(SGPowerLawTableModel::Alpha).toStdVector();
+    v1 = m_TableModel->getData(SGPowerLawTableModel::K).toStdVector();
+    v2 = m_TableModel->getData(SGPowerLawTableModel::Beta).toStdVector();
     col0 = FloatArrayType::FromStdVector(v0, DREAM3D::HDF5::Alpha);
     col1 = FloatArrayType::FromStdVector(v1, DREAM3D::HDF5::Exp_k);
     col2 = FloatArrayType::FromStdVector(v2, DREAM3D::HDF5::Beta);
@@ -380,9 +380,9 @@ void StatsGenPlotWidget::setYAxisName(QString name)
 void StatsGenPlotWidget::setupGui()
 {
   distributionTypeCombo->blockSignals(true);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution);
-  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution);
+  distributionTypeCombo->addItem(DREAM3D::HDF5::BetaDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::LogNormalDistribution.c_str());
+  distributionTypeCombo->addItem(DREAM3D::HDF5::PowerLawDistribution.c_str());
   distributionTypeCombo->blockSignals(false);
 
 
@@ -492,7 +492,7 @@ void StatsGenPlotWidget::createBetaCurve(int tableRow, float &xMax, float &yMax)
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-
+  
   err = StatsGen::GenBetaPlotData<QwtArray<float > > (alpha, beta, x, y, size);
   if (err == 1)
   {
@@ -539,7 +539,7 @@ void StatsGenPlotWidget::createLogNormalCurve(int tableRow, float &xMax, float &
   int size = 256;
   QwtArray<float > x;
   QwtArray<float > y;
-
+  
   err = StatsGen::GenLogNormalPlotData<QwtArray<float > > (avg, stdDev, x, y, size);
   if (err == 1)
   {
@@ -586,7 +586,7 @@ void StatsGenPlotWidget::createPowerCurve(int tableRow, float &xMax, float &yMax
   int size = 256;
   QwtArray<float> x;
   QwtArray<float> y;
-
+  
   err = StatsGen::GenPowerLawPlotData<QwtArray<float > > (alpha, k, beta, x, y, size);
   if (err == 1)
   {
@@ -644,16 +644,16 @@ void StatsGenPlotWidget::setBins(QVector<float> &binNumbers)
     switch(m_StatsType)
     {
       case DREAM3D::Reconstruction::Grain_SizeVBoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions);
+        msg.append(DREAM3D::HDF5::Grain_SizeVBoverA_Distributions.c_str());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVCoverA:
-        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions);
+        msg.append(DREAM3D::HDF5::Grain_SizeVCoverA_Distributions.c_str());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVNeighbors:
-        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions);
+        msg.append(DREAM3D::HDF5::Grain_SizeVNeighbors_Distributions.c_str());
         break;
       case DREAM3D::Reconstruction::Grain_SizeVOmega3:
-        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions);
+        msg.append(DREAM3D::HDF5::Grain_SizeVOmega3_Distributions.c_str());
         break;
       default:
         msg.append("Unknown");

@@ -37,15 +37,17 @@
 #include "LaplacianSmoothing.h"
 
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QtEndian>
+#include <stdio.h>
+#include <sstream>
 
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
+#include "DREAM3DLib/DREAM3DLib.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
@@ -107,7 +109,7 @@ class LaplacianSmoothingImpl
         newVert.pos[2] = currentVert.pos[2];
         // Get the Triangles for this vertex
         MeshLinks::FaceList& list = m_MeshLinks->getFaceList(v);
-        QSet<int32_t> neighbours;
+        std::set<int32_t> neighbours;
         // Create the unique List of Vertices that are directly connected to this vertex (vert)
         for(int32_t t = 0; t < list.ncells; ++t )
         {
@@ -115,13 +117,12 @@ class LaplacianSmoothingImpl
           neighbours.insert(faces[list.cells[t]].verts[1]);
           neighbours.insert(faces[list.cells[t]].verts[2]);
         }
-        QSet<int32_t>::iterator it = neighbours.find(v);
-        neighbours.erase(it); // Remove the current vertex id from the list as we don't need it
+        neighbours.erase(v); // Remove the current vertex id from the list as we don't need it
 
         DREAM3D::Mesh::Float_t konst1 = lambdas[v]/neighbours.size();
 
         // Now that we have our connectivity iterate over the vertices generating a new position
-        for(QSet<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
+        for(std::set<int32_t>::iterator iter = neighbours.begin(); iter != neighbours.end(); ++iter)
         {
           DREAM3D::Mesh::Vert_t& vert = vertices[*iter];
 
@@ -178,7 +179,7 @@ LaplacianSmoothing::~LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -298,9 +299,8 @@ int LaplacianSmoothing::writeFilterParameters(AbstractFilterParametersWriter* wr
 void LaplacianSmoothing::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -350,7 +350,7 @@ void LaplacianSmoothing::preflight()
 void LaplacianSmoothing::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
 
   dataCheck(false, 0, 0, 0);
@@ -470,16 +470,16 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   // Get a Pointer to the Lambda array for conveneince
   DataArray<float>::Pointer lambdas = getLambdaArray();
   float* lambda = lambdas->GetPointer(0);
-  
+  std::stringstream ss;
 
   //  Generate the Unique Edges
   if (m_DoConnectivityFilter == true)
   {
     // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-
-    QString ss =QObject::tr("%1|->Generating Unique Edge Ids |->").arg(getMessagePrefix());
-    conn->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << "|->Generating Unique Edge Ids |->";
+    conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setVolumeDataContainer(getVolumeDataContainer());
     conn->setSurfaceDataContainer(getSurfaceDataContainer());
@@ -522,9 +522,9 @@ int LaplacianSmoothing::edgeBasedSmoothing()
   for (int q = 0; q < m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
-
-    QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(ss);
+    ss.str("");
+    ss << "Iteration " << q;
+    notifyStatusMessage(ss.str());
     for (int i = 0; i < nedges; i++)
     {
       int in_edge = 2*i;
@@ -562,8 +562,9 @@ int LaplacianSmoothing::edgeBasedSmoothing()
 
     if(m_GenerateIterationOutputFiles)
     {
-      QString testFile = "LaplacianSmoothing_"  + QString::number(q) + ".vtk";
-      writeVTKFile(testFile);
+      std::stringstream testFile;
+      testFile << "LaplacianSmoothing_" << q << ".vtk";
+      writeVTKFile(testFile.str());
     }
   }
 
@@ -645,13 +646,13 @@ int LaplacianSmoothing::vertexBasedSmoothing()
   newPositionsPtr->initializeWithZeros();
 
 
-  
+  std::stringstream ss;
   for (int q=0; q<m_IterationSteps; q++)
   {
     if (getCancel() == true) { return -1; }
-
-    QString ss = QObject::tr("Iteration %1").arg(q);
-    notifyStatusMessage(ss);
+    ss.str("");
+    ss << "Iteration " << q;
+    notifyStatusMessage(ss.str());
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
     if (doParallel == true)
     {
@@ -670,13 +671,19 @@ int LaplacianSmoothing::vertexBasedSmoothing()
     ::memcpy(vertsPtr->GetPointer(0), newPositionsPtr->GetPointer(0), sizeof(DREAM3D::Mesh::Vert_t) * vertsPtr->GetNumberOfTuples());
     // -----------
 #if OUTPUT_DEBUG_VTK_FILES
-    QString testFile;
-    testFile = "/tmp/Laplacian_" + QString::number(q) + ".vtk";
-    writeVTKFile(testFile);
+    std::stringstream testFile;
+    testFile << "/tmp/Laplacian_" << q << ".vtk";
+    writeVTKFile(testFile.str());
 #endif
   }
   return 1;
 }
+
+
+
+
+
+
 
 
 #if OUTPUT_DEBUG_VTK_FILES
@@ -703,7 +710,7 @@ namespace Detail {
 // -----------------------------------------------------------------------------
 // This is just here for some debugging issues.
 // -----------------------------------------------------------------------------
-void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
+void LaplacianSmoothing::writeVTKFile(const std::string &outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -712,18 +719,18 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
   bool m_WriteBinaryFile = true;
-  
+  std::stringstream ss;
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
   DataArray<int32_t>* faceLabelsPtr = DataArray<int32_t>::SafePointerDownCast(flPtr.get());
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   FILE* vtkFile = NULL;
-  vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
+  vtkFile = fopen(outputVtkFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
-
-    QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
+    ss.str("");
+    ss << "Error creating file '" << outputVtkFile << "'";
     return;
   }
   Detail::ScopedFileMonitor vtkFileMonitor(vtkFile);
@@ -754,9 +761,9 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
       pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
-        DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -789,8 +796,8 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
   //  int start = 3094380;
   //  int end = 3094450;
   //  int triangleCount = end - start;
-  qDebug() << "---------------------------------------------------------------------------" ;
-  qDebug() << outputVtkFile ;
+  std::cout << "---------------------------------------------------------------------------" << std::endl;
+  std::cout << outputVtkFile << std::endl;
   fprintf(vtkFile, "\nPOLYGONS %d %d\n", triangleCount, (triangleCount * 4));
   for (int tid = 0; tid < end; ++tid)
   {
@@ -800,17 +807,16 @@ void LaplacianSmoothing::writeVTKFile(const QString &outputVtkFile)
       tData[1] = triangles[tid].verts[0];
       tData[2] = triangles[tid].verts[1];
       tData[3] = triangles[tid].verts[2];
-      //      qDebug() << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  ;
-      //      qDebug() << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  ;
-      //      qDebug() << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  ;
+      //      std::cout << tid << "\n  " << nodes[tData[1]].coord[0] << " " << nodes[tData[1]].coord[1]  << " " << nodes[tData[1]].coord[2]  << std::endl;
+      //      std::cout << "  " << nodes[tData[2]].coord[0] << " " << nodes[tData[2]].coord[1]  << " " << nodes[tData[2]].coord[2]  << std::endl;
+      //      std::cout << "  " << nodes[tData[3]].coord[0] << " " << nodes[tData[3]].coord[1]  << " " << nodes[tData[3]].coord[2]  << std::endl;
       if (m_WriteBinaryFile == true)
       {
         tData[0] = 3; // Push on the total number of entries for this entry
-        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
-        DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
-        DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
-        DREAM3D::Endian::FromSystemToBig::convert(tData[3]);
-
+        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+        MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+        MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+        MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
       else

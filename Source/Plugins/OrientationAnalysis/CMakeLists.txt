@@ -136,7 +136,7 @@ add_executable(${PLUGIN_NAME}WidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/Filte
                                             ${${PLUGIN_NAME}_BINARY_DIR}/FilterWidgetCodeGen.h
                                             ${${PLUGIN_NAME}_Project_SRCS}
                                             )
-target_link_libraries(${PLUGIN_NAME}WidgetCodeGen  EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
+target_link_libraries(${PLUGIN_NAME}WidgetCodeGen MXA EbsdLib DREAM3DLib ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} QtSupport)
 
 
 # Now run the code to generate the header files which will over write the place
@@ -239,7 +239,7 @@ add_library(${PLUGIN_NAME} MODULE ${${PLUGIN_NAME}_Project_SRCS})
 # --------------------------------------------------------------------
 # Link the plugin with other DREAM3D Libraries.
 target_link_libraries(${PLUGIN_NAME}
-
+                    MXA
                     DREAM3DLib
                     ${QT_QTCORE_LIBRARY}
                     ${QT_QTGUI_LIBRARY}

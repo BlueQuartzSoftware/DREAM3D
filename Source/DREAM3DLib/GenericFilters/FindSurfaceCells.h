@@ -37,14 +37,14 @@
 #define FindSurfaceCells_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /*
  *
@@ -65,9 +65,9 @@ class DREAM3DLib_EXPORT FindSurfaceCells : public AbstractFilter
 
      DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
 
-     virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
-     virtual const QString getHumanLabel() { return "Find Boundary Cells"; }
+     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::SpatialFilters; }
+     virtual const std::string getHumanLabel() { return "Find Boundary Cells"; }
 
 	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
     

@@ -116,7 +116,7 @@ ScaleVolume::~ScaleVolume()
 // -----------------------------------------------------------------------------
 void ScaleVolume::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Apply to Voxel Volume");
@@ -248,7 +248,7 @@ void ScaleVolume::execute()
     return;
   }
   setErrorCondition(0);
-  
+  std::stringstream ss;
 
 
   if (m_ApplyToVoxelVolume ==true)
@@ -279,7 +279,7 @@ void ScaleVolume::execute()
 void ScaleVolume::updateSurfaceMesh()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)

@@ -36,10 +36,11 @@
 
 #include "DataContainerReader.h"
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
-#include <QtCore/QFileInfo>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/StringUtils.h"
 
 #include "DREAM3DLib/IOFilters/VolumeDataContainerReader.h"
 #include "DREAM3DLib/IOFilters/SurfaceDataContainerReader.h"
@@ -78,7 +79,7 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -158,46 +159,49 @@ int DataContainerReader::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
+  std::stringstream ss;
   int32_t err = 0;
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  std::string m_FileVersion;
+  float fVersion;
+  bool check;
+
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist.");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
     // Read the Meta Data and Array names from the file
-    hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+    hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file as Read Only
     if(fileId < 0)
     {
-      QString ss = QObject::tr(": Error opening input file '%1'").arg(ClassName());
+      ss.str("");
+      ss << ": Error opening input file '" << m_InputFile << "'";
       setErrorCondition(-150);
-      addErrorMessage(getHumanLabel(), ss, err);
+      addErrorMessage(getHumanLabel(), ss.str(), err);
       return;
     }
+
     //Check to see if version of .dream3d file is prior to new data container names
-    QString fileVersion;
-    err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
-    bool check;
-    float fVersion = fileVersion.toFloat(&check);
+    err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, m_FileVersion);
+    check = StringUtils::stringToNum(fVersion, m_FileVersion);
     if(fVersion < 5.0 || err < 0)
     {
-      QH5Utilities::closeFile(fileId);
-      fileId = QH5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
-      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT, H5P_DEFAULT);
-      err = QH5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
-      QH5Utilities::closeFile(fileId);
-      fileId = QH5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+      err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+      err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+      err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+      H5Utilities::closeFile(fileId);
+      fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
     }
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
@@ -210,8 +214,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       volumeReader->setHdfFileId(fileId);
       volumeReader->setVolumeDataContainer(getVolumeDataContainer());
       volumeReader->setObservers(getObservers());
-      QString ss = getMessagePrefix() + " |--> Reading Volume Data ";
-      volumeReader->setMessagePrefix(ss);
+      ss.str("");
+      ss << getMessagePrefix() << " |--> Reading Volume Data ";
+      volumeReader->setMessagePrefix(ss.str());
       volumeReader->preflight();
       if (volumeReader->getErrorCondition() < 0)
       {
@@ -228,8 +233,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       smReader->setHdfFileId(fileId);
       smReader->setSurfaceDataContainer(getSurfaceDataContainer());
       smReader->setObservers(getObservers());
-      QString ss = getMessagePrefix() + " |--> Reading Surface Data ";
-      smReader->setMessagePrefix(ss);
+      ss.str("");
+      ss << getMessagePrefix() << " |--> Reading Surface Data ";
+      smReader->setMessagePrefix(ss.str());
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
@@ -246,8 +252,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       eReader->setHdfFileId(fileId);
       eReader->setEdgeDataContainer(getEdgeDataContainer());
       eReader->setObservers(getObservers());
-      QString ss = getMessagePrefix() + " |--> Reading Surface Data ";
-      eReader->setMessagePrefix(ss);
+      ss.str("");
+      ss << getMessagePrefix() << " |--> Reading Surface Data ";
+      eReader->setMessagePrefix(ss.str());
       eReader->preflight();
       if (eReader->getErrorCondition() < 0)
       {
@@ -264,8 +271,9 @@ void DataContainerReader::dataCheck(bool preflight, size_t volumes, size_t field
       smReader->setHdfFileId(fileId);
       smReader->setVertexDataContainer(getVertexDataContainer());
       smReader->setObservers(getObservers());
-      QString ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-      smReader->setMessagePrefix(ss);
+      ss.str("");
+      ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
+      smReader->setMessagePrefix(ss.str());
       smReader->preflight();
       if (smReader->getErrorCondition() < 0)
       {
@@ -291,15 +299,16 @@ void DataContainerReader::preflight()
 void DataContainerReader::execute()
 {
   int32_t err = 0;
-
+  std::stringstream ss;
   // dataCheck(false, 1, 1, 1);
 
-  hid_t fileId = QH5Utilities::openFile(m_InputFile, true); // Open the file Read Only
+  hid_t fileId = H5Utilities::openFile(m_InputFile, true); // Open the file Read Only
   if(fileId < 0)
   {
-    QString ss =QObject::tr(": Error opening input file '%1'").arg(m_InputFile);
+    ss.str("");
+    ss << ": Error opening input file '" << m_InputFile << "'";
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
@@ -307,9 +316,21 @@ void DataContainerReader::execute()
   HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
 
   // Read our File Version string to the Root "/" group
-  QString fileVersion;
+  std::string fileVersion;
+  float fVersion;
 
-  err = QH5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  err = H5Lite::readStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, fileVersion);
+  bool check = StringUtils::stringToNum(fVersion, fileVersion);
+  if(fVersion < 5.0 || err < 0)
+  {
+    H5Utilities::closeFile(fileId);
+    fileId = H5Utilities::openFile(m_InputFile, false); // Re-Open the file as Read/Write
+    err = H5Lmove(fileId, "VoxelDataContainer", fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT);
+    err = H5Lmove(fileId, "SurfaceMeshDataContainer", fileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT, H5P_DEFAULT); 
+    err = H5Lite::writeStringAttribute(fileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+    H5Utilities::closeFile(fileId);
+    fileId = H5Utilities::openFile(m_InputFile, true); // Re-Open the file as Read Only
+  }
 
   err = readExistingPipelineFromFile(fileId);
 
@@ -327,8 +348,9 @@ void DataContainerReader::execute()
     volumeReader->setReadAllArrays(m_ReadAllArrays);
     volumeReader->setVolumeDataContainer(getVolumeDataContainer());
     volumeReader->setObservers(getObservers());
-    QString ss = getMessagePrefix() + " |--> Reading Volume Data ";
-    volumeReader->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Reading Volume Data ";
+    volumeReader->setMessagePrefix(ss.str());
     volumeReader->execute();
     if (volumeReader->getErrorCondition() < 0)
     {
@@ -350,8 +372,9 @@ void DataContainerReader::execute()
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setSurfaceDataContainer(getSurfaceDataContainer());
     smReader->setObservers(getObservers());
-    QString ss = getMessagePrefix() + " |--> Reading Surface Data ";
-    smReader->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Reading Surface Data ";
+    smReader->setMessagePrefix(ss.str());
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
@@ -373,8 +396,9 @@ void DataContainerReader::execute()
     eReader->setReadAllArrays(m_ReadAllArrays);
     eReader->setEdgeDataContainer(getEdgeDataContainer());
     eReader->setObservers(getObservers());
-    QString ss = getMessagePrefix() + " |--> Reading Surface Data ";
-    eReader->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Reading Surface Data ";
+    eReader->setMessagePrefix(ss.str());
     eReader->preflight();
     if (eReader->getErrorCondition() < 0)
     {
@@ -394,8 +418,9 @@ void DataContainerReader::execute()
     smReader->setReadAllArrays(m_ReadAllArrays);
     smReader->setVertexDataContainer(getVertexDataContainer());
     smReader->setObservers(getObservers());
-    QString ss = getMessagePrefix() + " |--> Reading Solid Mesh Data ";
-    smReader->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Reading Solid Mesh Data ";
+    smReader->setMessagePrefix(ss.str());
     smReader->execute();
     if (smReader->getErrorCondition() < 0)
     {
@@ -418,20 +443,20 @@ int DataContainerReader::readExistingPipelineFromFile(hid_t fileId)
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
 
   // HDF5: Open the "Pipeline" Group
-  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t pipelineGroupId = H5Gopen(fileId, DREAM3D::HDF5::PipelineGroupName.c_str(), H5P_DEFAULT);
   reader->setGroupId(pipelineGroupId);
 
-  // Use QH5Lite to ask how many "groups" are in the "Pipeline Group"
-  QList<QString> groupList;
-  err = QH5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
+  // Use H5Lite to ask how many "groups" are in the "Pipeline Group"
+  std::list<std::string> groupList;
+  err = H5Utilities::getGroupObjects(pipelineGroupId, H5Utilities::H5Support_GROUP, groupList);
 
   // Loop over the items getting the "ClassName" attribute from each group
-  QString classNameStr = "";
+  std::string classNameStr = "";
   for (int i=0; i<groupList.size(); i++)
   {
-    QString ss = QString::number(i, 10);
-
-    err = QH5Lite::readStringAttribute(pipelineGroupId, ss, "ClassName", classNameStr);
+    std::stringstream ss;
+    ss << i;
+    err = H5Lite::readStringAttribute(pipelineGroupId, ss.str(), "ClassName", classNameStr);
 #if (__APPLE__)
 #warning DOES THIS FILTER MANAGER GET THE CORRECT SINGLETON?
 #endif
@@ -472,12 +497,12 @@ int DataContainerReader::writeExistingPipelineToFile(AbstractFilterParametersWri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedCellArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+void DataContainerReader::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedCellArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeFaceArrays = selectedFaceArrays;
@@ -491,11 +516,11 @@ void DataContainerReader::setVolumeSelectedArrayNames(QSet<QString> selectedVert
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFaceArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+void DataContainerReader::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -508,10 +533,10 @@ void DataContainerReader::setSurfaceSelectedArrayNames(QSet<QString> selectedVer
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                           QSet<QString> selectedEdgeArrays,
-                                                           QSet<QString> selectedFieldArrays,
-                                                           QSet<QString> selectedEnsembleArrays)
+void DataContainerReader::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -523,15 +548,16 @@ void DataContainerReader::setEdgeSelectedArrayNames(QSet<QString> selectedVertex
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerReader::setVertexSelectedArrayNames(QSet<QString> selectedVertexArrays,
-                                                         QSet<QString> selectedFieldArrays,
-                                                         QSet<QString> selectedEnsembleArrays)
+void DataContainerReader::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                         std::set<std::string> selectedFieldArrays,
+                                                         std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;
   m_SelectedVertexEnsembleArrays = selectedEnsembleArrays;
   m_ReadAllArrays = false;
 }
+
 
 
 

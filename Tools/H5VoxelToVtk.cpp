@@ -44,11 +44,14 @@
 
 #include <iostream>
 #include <limits>
-#include <QString>
-#include <QVector>
+#include <string>
+#include <vector>
+
+#include "MXA/MXA.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/VTKUtils/VTKWriterMacros.h"
 #include "DREAM3DLib/VTKUtils/VTKFileWriters.hpp"
@@ -72,43 +75,43 @@ typedef struct {
 
 
 
-void updateProgressAndMessage(const QString &msg, int prog)
+void updateProgressAndMessage(const std::string &msg, int prog)
 {
-  qDebug() << prog << "% - " << msg ;
+  std::cout << prog << "% - " << msg << std::endl;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 void pipelineProgress(int value)
 {
-  qDebug() << value << "%" ;
+  std::cout << value << "%" << std::endl;
 }
 
-void pipelineProgressMessage(const QString &msg)
+void pipelineProgressMessage(const std::string &msg)
 {
-  qDebug() << msg ;
+  std::cout << msg << std::endl;
 }
 
 void pipelineErrorMessage(const char* message)
 {
-  qDebug() << "Error Message: " << message ;
+  std::cout << "Error Message: " << message << std::endl;
 }
 
 void setErrorCondition(int err) {
-  qDebug() << "Error Condition: " << err ;
+  std::cout << "Error Condition: " << err << std::endl;
 }
 
 void pipelineFinished()
 {
-  qDebug() << "Pipeline Complete." ;
+  std::cout << "Pipeline Complete." << std::endl;
 }
 
-void setErrorMessage(const QString &msg)
+void setErrorMessage(const std::string &msg)
 {
-  qDebug() << msg ;
+  std::cout << msg << std::endl;
 }
 
-QString getNameOfClass()
+std::string getNameOfClass()
 {
   return "H5VoxelToVtk";
 }
@@ -118,15 +121,15 @@ QString getNameOfClass()
 // -----------------------------------------------------------------------------
 int main(int argc, char **argv)
 {
-  qDebug() << "Starting Conversion of H5Voxel to VTK with Grain ID and IPF Colors" ;
+  std::cout << "Starting Conversion of H5Voxel to VTK with Grain ID and IPF Colors" << std::endl;
   if (argc < 3)
   {
-    qDebug() << "This program takes 2 arguments: Input .h5voxel file and output vtk file." ;
+    std::cout << "This program takes 2 arguments: Input .h5voxel file and output vtk file." << std::endl;
     return EXIT_FAILURE;
   }
 
 
-  QString iFile = argv[1];
+  std::string iFile = argv[1];
 
   int err = 0;
 
@@ -164,25 +167,30 @@ int main(int argc, char **argv)
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
-    QString ss = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.")
-    .arg(dims[0] * dims[1] * dims[2]);
+    std::stringstream s;
+    s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
+                << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
-    setErrorMessage(ss);
+    setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
 
   if (dims[0] > max || dims[1] > max || dims[2] > max)
   {
     err = -1;
-    QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-    " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+    std::stringstream s;
+    s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
-    setErrorMessage(ss);
+    setErrorMessage(s.str());
     return EXIT_FAILURE;
   }
   /* ************ End Sanity Check *************************** */
 
-  qDebug() << "Writing VTK file" ;
+
+  std::stringstream ss;
+
+  std::cout << "Writing VTK file" << std::endl;
 
   FILE* f = fopen(argv[2], "wb");
 
@@ -198,10 +206,9 @@ int main(int argc, char **argv)
   int32_t* m_GrainIds = NULL;
   m_GrainIds = m->getCellDataSizeCheck<int32_t, Int32ArrayType, AbstractFilter>(DREAM3D::CellData::GrainIds, totalPoints, 1, NULL);
     if (0 == m_GrainIds ) {
-      QString ss = QObject::tr("Filter %1 requires the data array 'DREAM3D::CellData::GrainIds' to already be created prior to execution.")
-      .arg(getNameOfClass());
+      ss << "Filter " << getNameOfClass() << " requires the data array '" <<
+      "DREAM3D" << "::" << "CellData" << "::" <<  "GrainIds" << "' to already be created prior to execution." << std::endl;
       setErrorCondition(-300);
-      setErrorMessage(ss);
     }
 
   WRITE_VTK_GRAIN_IDS_ASCII(m, DREAM3D::CellData::GrainIds, m_GrainIds)
@@ -209,6 +216,6 @@ int main(int argc, char **argv)
   fclose(f);
 
 
-  qDebug() << "Done Converting" ;
+  std::cout << "Done Converting" << std::endl;
   return EXIT_SUCCESS;
 }

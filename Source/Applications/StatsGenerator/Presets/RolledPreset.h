@@ -40,7 +40,7 @@
 #include <string>
 
 //-- MXA Includes
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 //-- StatsGen Includes
 #include "AbstractMicrostructurePresetFactory.h"
@@ -58,9 +58,8 @@
 class RolledPreset : public AbstractMicrostructurePreset
 {
   public:
-    DREAM3D_SHARED_POINTERS(RolledPreset)
-    DREAM3D_STATIC_NEW_MACRO(RolledPreset)
-    DREAM3D_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
+    MXA_SHARED_POINTERS(RolledPreset)
+    MXA_STATIC_NEW_SUPERCLASS(AbstractMicrostructurePreset, RolledPreset)
     virtual ~RolledPreset();
 
     void displayUserInputDialog();
@@ -72,8 +71,8 @@ class RolledPreset : public AbstractMicrostructurePreset
     void initializeAxisODFTableModel(SGAxisODFWidget* widget);
 
 
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio1)
-    DREAM3D_INSTANCE_PROPERTY(float, AspectRatio2)
+    MXA_INSTANCE_PROPERTY(float, AspectRatio1)
+    MXA_INSTANCE_PROPERTY(float, AspectRatio2)
 
   protected:
     RolledPreset();

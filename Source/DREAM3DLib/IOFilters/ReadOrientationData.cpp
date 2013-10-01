@@ -40,7 +40,7 @@
 #include <vector>
 #include <sstream>
 
-#include <QtCore/QFileInfo>
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngFields.h"
@@ -87,7 +87,7 @@ ReadOrientationData::~ReadOrientationData()
 // -----------------------------------------------------------------------------
 void ReadOrientationData::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
 
   /*   For an input file use this code*/
   {
@@ -133,34 +133,36 @@ int ReadOrientationData::writeFilterParameters(AbstractFilterParametersWriter* w
 void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    ss.str("");
+    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
-  QFileInfo fi(m_InputFile);
-  if (m_InputFile.isEmpty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
+  if (m_InputFile.empty() == true && m_Manufacturer == Ebsd::UnknownManufacturer)
   {
-
-    QString ss = QObject::tr("%1: Either the H5Ebsd file must exist or the Manufacturer must be set").arg(getHumanLabel());
+    ss.str("");
+    ss << getHumanLabel() << ": Either the H5Ebsd file must exist or the Manufacturer must be set";
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(m_InputFile) == false)
   {
-    QString ss = QObject::tr("The input file does not exist");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (m_InputFile.isEmpty() == false)
+  else if (m_InputFile.empty() == false)
   {
     int64_t dims[3];
 
-    QString ext = fi.suffix();
-    QVector<QString> names;
+    std::string ext = MXAFileInfo::extension(m_InputFile);
+    std::vector<std::string> names;
     if(ext.compare(Ebsd::Ang::FileExt) == 0)
     {
       AngReader reader;
@@ -173,7 +175,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       AngFields fields;
-      names = fields.getFilterFields<QVector<QString> > ();
+      names = fields.getFilterFields<std::vector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -206,7 +208,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       }
       m->setOrigin(0.0f, 0.0f, 0.0f);
       CtfFields fields;
-      names = fields.getFilterFields<QVector<QString> > ();
+      names = fields.getFilterFields<std::vector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -233,7 +235,7 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
       m->setResolution(reader.getXStep(), reader.getYStep(), 1.0);
       m->setOrigin(0.0f, 0.0f, 0.0f);
       MicFields fields;
-      names = fields.getFilterFields<QVector<QString> > ();
+      names = fields.getFilterFields<std::vector<std::string> > ();
       for (size_t i = 0; i < names.size(); ++i)
       {
         if (reader.getPointerType(names[i]) == Ebsd::Int32)
@@ -251,21 +253,22 @@ void ReadOrientationData::dataCheck(bool preflight, size_t voxels, size_t fields
     else
     {
       setErrorCondition(-997);
-      QString ss = QObject::tr("The File extension '%1' was not recognized. Currently .ang or .ctf are the only recognized file extensions").arg(ext);
-      addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+      ss.str("");
+      ss << "The File extension '" << ext << "' was not recognized. Currently .ang or .ctf are the only recognized file extensions";
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
 
       return;
     }
 
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+        CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
-    typedef DataArray<unsigned int> XTalStructArrayType;
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, 6)
+        typedef DataArray<unsigned int> XTalStructArrayType;
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+        CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
 
-    StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
+        StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
     m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
 
     ADD_HELP_INDEX_ENTRY(EnsembleData, MaterialName, XTalStructArrayType, 1);
@@ -288,18 +291,18 @@ void ReadOrientationData::preflight()
 void ReadOrientationData::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
-  QFileInfo fi(getInputFile());
-  QString ext = fi.suffix();
+
+  std::string ext = MXAFileInfo::extension(m_InputFile);
   if(ext.compare(Ebsd::Ang::FileExt) == 0)
   {
     readAngFile();

@@ -37,14 +37,14 @@
 #define UpdateCellQuats_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /*
@@ -63,9 +63,9 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const QString getHumanLabel() { return "Update Cell Quaternions"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getHumanLabel() { return "Update Cell Quaternions"; }
 
     /**
     * @brief This method will write the options to a file
@@ -88,7 +88,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
    private:
     float* m_Quats;
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

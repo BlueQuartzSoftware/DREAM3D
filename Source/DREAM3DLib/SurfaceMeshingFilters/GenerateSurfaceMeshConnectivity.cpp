@@ -65,7 +65,7 @@ GenerateSurfaceMeshConnectivity::~GenerateSurfaceMeshConnectivity()
 // -----------------------------------------------------------------------------
 void GenerateSurfaceMeshConnectivity::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
 
   /*   For a simple true/false boolean use this code*/
@@ -133,9 +133,8 @@ int GenerateSurfaceMeshConnectivity::writeFilterParameters(AbstractFilterParamet
 void GenerateSurfaceMeshConnectivity::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -176,13 +175,13 @@ void GenerateSurfaceMeshConnectivity::preflight()
 void GenerateSurfaceMeshConnectivity::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);
@@ -208,9 +207,9 @@ void GenerateSurfaceMeshConnectivity::execute()
   {
     // There was no Edge connectivity before this filter so delete it when we are done with it
     GenerateUniqueEdges::Pointer conn = GenerateUniqueEdges::New();
-
-    QString ss = QObject::tr("%1 |->Generating Unique Edge Ids |->").arg(getMessagePrefix());
-    conn->setMessagePrefix(ss);
+    ss.str("");
+    ss << getMessagePrefix() << " |->Generating Unique Edge Ids |->";
+    conn->setMessagePrefix(ss.str());
     conn->setObservers(getObservers());
     conn->setVolumeDataContainer(getVolumeDataContainer());
     conn->setSurfaceDataContainer(getSurfaceDataContainer());

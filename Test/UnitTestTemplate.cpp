@@ -42,7 +42,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::XXXX::OutputFile);
+  MXADir::remove(UnitTest::XXXX::OutputFile);
 #endif
 }
 

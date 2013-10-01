@@ -36,18 +36,16 @@
 #include "FindGBCD.h"
 
 
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+
 
 /**
  * @brief The CalculateAreasImpl class
@@ -66,7 +64,7 @@ class CalculateGBCDImpl
     int* m_GBCDsizes;
     float* m_GBCDlimits;
     unsigned int* m_CrystalStructures;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateGBCDImpl(size_t i, size_t numMisoReps, int32_t* Labels, double* Normals, float* Eulers, int32_t* Phases, unsigned int* CrystalStructures,
@@ -320,7 +318,7 @@ FindGBCD::~FindGBCD()
 // -----------------------------------------------------------------------------
 void FindGBCD::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("GBCDRes");
@@ -364,9 +362,8 @@ int FindGBCD::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", -383);
@@ -389,12 +386,12 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, 5)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 1, ensembles, 5)
     }
 
   }
@@ -406,8 +403,8 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
 void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   if(NULL == m)
   {
     addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
@@ -415,10 +412,10 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -439,6 +436,7 @@ void FindGBCD::preflight()
 void FindGBCD::execute()
 {
   int err = 0;
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -541,7 +539,7 @@ void FindGBCD::execute()
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
 
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
   for(int i=0;i<m->getNumEnsembleTuples();i++)
   {
     m_GBCDdimensions[5*i+0] = m_GBCDsizes[0];
@@ -551,19 +549,20 @@ void FindGBCD::execute()
     m_GBCDdimensions[5*i+4] = m_GBCDsizes[4];
   }
 
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
   float timeDiff = 0.0f;
-  millis =  QDateTime::currentMSecsSinceEpoch();
+  millis = MXA::getMilliSeconds();
   startMillis = millis;
   int lastIteration = 0;
   int numIterationsPerTime = 0;
   int hemisphere = 0;
 
   double totalFaceArea[2] = {0.0,0.0};
-  QString ss = QObject::tr("Calculating GBCD: 0/%1 Completed").arg(totalFaces);
+  ss.str("");
+  ss << "Calculating GBCD: 0/" << totalFaces << " Completed";
   for(size_t i=0;i<totalFaces;i=i+faceChunkSize)
   {
 
@@ -587,18 +586,19 @@ void FindGBCD::execute()
       serial.generate(i, i+faceChunkSize);
     }
 
-    QString ss = QObject::tr("Calculating GBCD: Triangles %1/%2 Completed").arg(i).arg(totalFaces);
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    ss.str("");
+    ss << "Calculating GBCD: Triangles " << i << "/" << totalFaces << " Completed";
+    currentMillis = MXA::getMilliSeconds();
     if (currentMillis - millis > 1000)
     {
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalFaces - i) / timeDiff;
-      QString ss = QObject::tr(" || Est. Time Remain: %1").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
-      millis = QDateTime::currentMSecsSinceEpoch();
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      millis = MXA::getMilliSeconds();
       numIterationsPerTime = i - lastIteration;
       lastIteration = i;
     }
-    notifyStatusMessage(ss);
+    notifyStatusMessage(ss.str());
 
     for(int j=0;j<faceChunkSize;j++)
     {
@@ -612,8 +612,9 @@ void FindGBCD::execute()
     }
   }
 
-  ss = QObject::tr("Starting GBCD Normalization");
-  notifyStatusMessage(ss);
+  ss.str("");
+  ss << "Starting GBCD Normalization";
+  notifyStatusMessage(ss.str());
 
   int totalBins = m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4];
   double MRDfactor[2] = {double(totalBins)/totalFaceArea[0],double(totalBins)/totalFaceArea[1]};

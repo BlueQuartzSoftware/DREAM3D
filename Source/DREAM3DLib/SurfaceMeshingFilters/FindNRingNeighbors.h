@@ -33,13 +33,13 @@
 #ifndef _FindNRingNeighbors_H_
 #define _FindNRingNeighbors_H_
 
-#include <QtCore/QSet>
-#include <QtCore/QString>
+#include <set>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
 
 
 /**
@@ -84,8 +84,8 @@ class FindNRingNeighbors
 
     /**
      * @brief generate
-     * @param node2Triangle - Map of QSets. The "key" for the map is the Node Id and the
-     * "value" for each key is a QSet that is the set of triangle ids that that particular
+     * @param node2Triangle - Map of std::sets. The "key" for the map is the Node Id and the
+     * "value" for each key is a std::set that is the set of triangle ids that that particular
      * node is a part of.
      */
     void generate();
@@ -99,7 +99,7 @@ class FindNRingNeighbors
      * @param node2Triangle
      * @param twoRingNeighbors
      */
-    void writeVTKFile(const QString &outputFile);
+    void writeVTKFile(const std::string &outputFile);
 
   protected:
       FindNRingNeighbors();

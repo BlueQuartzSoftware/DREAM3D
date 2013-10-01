@@ -36,8 +36,8 @@
 
 #include "H5MatrixStatsDataDelegate.h"
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
 
 // -----------------------------------------------------------------------------
@@ -95,7 +95,7 @@ int H5MatrixStatsDataDelegate::writeMatrixStatsData(MatrixStatsData* data, hid_t
 int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -104,7 +104,7 @@ int H5MatrixStatsDataDelegate::writePhaseFraction(MatrixStatsData* data, hid_t p
 int H5MatrixStatsDataDelegate::readPhaseFraction(MatrixStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }

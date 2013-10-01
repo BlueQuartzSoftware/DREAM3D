@@ -38,9 +38,8 @@
 #include "VtkRectilinearGridWriter.h"
 
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "EbsdLib/TSL/AngFields.h"
 #include "EbsdLib/HKL/CtfFields.h"
@@ -50,43 +49,43 @@
 //
 // -----------------------------------------------------------------------------
 VtkRectilinearGridWriter::VtkRectilinearGridWriter() :
-  AbstractFilter(),
-  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
-  m_BCArrayName(Ebsd::Ctf::BC),
-  m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
-  m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
-  m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
-  m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
-  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-  m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
-  m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
-  m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
-  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-  m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
-  m_WriteGrainIds(false),
-  m_WriteParentIds(false),
-  m_WritePhaseIds(false),
-  m_WriteBandContrasts(false),
-  m_WriteConfidenceIndicies(false),
-  m_WriteImageQualities(false),
-  m_WriteGoodVoxels(false),
-  m_WriteGlobAlpha(false),
-  m_WriteGrainReferenceMisorientations(false),
-  m_WriteGrainReferenceCAxisMisorientations(false),
-  m_WriteKernelAverageMisorientations(false),
-  //m_WriteIPFColors(false),
-  m_WriteGBEuclideanDistanceMap(false),
-  m_WriteTJEuclideanDistanceMap(false),
-  m_WriteQPEuclideanDistanceMap(false),
-  m_WriteSchmidFactors(false),
-  m_WriteGrainSizes(false),
-  m_WriteEulerAngles(false),
-  m_WriteBinaryFile(false)
+AbstractFilter(),
+m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+m_ParentIdsArrayName(DREAM3D::CellData::ParentIds),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_GlobAlphaArrayName(DREAM3D::CellData::GlobAlpha),
+m_BCArrayName(Ebsd::Ctf::BC),
+m_ConfidenceIndexArrayName(Ebsd::Ang::ConfidenceIndex),
+m_ImageQualityArrayName(Ebsd::Ang::ImageQuality),
+m_GrainReferenceMisorientationsArrayName(DREAM3D::CellData::GrainReferenceMisorientations),
+m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
+m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
+m_GBEuclideanDistancesArrayName(DREAM3D::CellData::GBEuclideanDistances),
+m_TJEuclideanDistancesArrayName(DREAM3D::CellData::TJEuclideanDistances),
+m_QPEuclideanDistancesArrayName(DREAM3D::CellData::QPEuclideanDistances),
+m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+m_SchmidsArrayName(DREAM3D::FieldData::Schmids),
+m_WriteGrainIds(false),
+m_WriteParentIds(false),
+m_WritePhaseIds(false),
+m_WriteBandContrasts(false),
+m_WriteConfidenceIndicies(false),
+m_WriteImageQualities(false),
+m_WriteGoodVoxels(false),
+m_WriteGlobAlpha(false),
+m_WriteGrainReferenceMisorientations(false),
+m_WriteGrainReferenceCAxisMisorientations(false),
+m_WriteKernelAverageMisorientations(false),
+//m_WriteIPFColors(false),
+m_WriteGBEuclideanDistanceMap(false),
+m_WriteTJEuclideanDistanceMap(false),
+m_WriteQPEuclideanDistanceMap(false),
+m_WriteSchmidFactors(false),
+m_WriteGrainSizes(false),
+m_WriteEulerAngles(false),
+m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -104,7 +103,7 @@ VtkRectilinearGridWriter::~VtkRectilinearGridWriter()
 // -----------------------------------------------------------------------------
 void VtkRectilinearGridWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -202,14 +201,14 @@ void VtkRectilinearGridWriter::setupFilterParameters()
     option->setValueType("bool");
     parameters.push_back(option);
   }
-  //  {
-  //    FilterParameter::Pointer option = FilterParameter::New();
-  //    option->setHumanLabel("Write IPF Colors");
-  //    option->setPropertyName("WriteIPFColors");
-  //    option->setWidgetType(FilterParameter::BooleanWidget);
-  //    option->setValueType("bool");
-  //    parameters.push_back(option);
-  //  }
+//  {
+//    FilterParameter::Pointer option = FilterParameter::New();
+//    option->setHumanLabel("Write IPF Colors");
+//    option->setPropertyName("WriteIPFColors");
+//    option->setWidgetType(FilterParameter::BooleanWidget);
+//    option->setValueType("bool");
+//    parameters.push_back(option);
+//  }
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Schmid Factors");
@@ -274,7 +273,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteGrainIds( reader->readValue("WriteGrainIds", false) );
   setWriteParentIds( reader->readValue("WriteParentIds", false) );
@@ -287,7 +286,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setWriteGrainReferenceCAxisMisorientations( reader->readValue("WriteGrainReferenceCAxisMisorientations", false) );
   setWriteGoodVoxels( reader->readValue("WriteGoodVoxels", false) );
   setWriteGlobAlpha( reader->readValue("WriteGlobAlpha", false) );
-  //  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
+//  setWriteIPFColors( reader->readValue("WriteIPFColors", false) );
   setWriteSchmidFactors( reader->readValue("WriteSchmidFactors", false) );
   setWriteGBEuclideanDistanceMap( reader->readValue("WriteGBEuclideanDistanceMap", false) );
   setWriteTJEuclideanDistanceMap( reader->readValue("WriteTJEuclideanDistanceMap", false) );
@@ -295,7 +294,7 @@ void VtkRectilinearGridWriter::readFilterParameters(AbstractFilterParametersRead
   setWriteGrainSizes( reader->readValue("WriteGrainSizes", false) );
   setWriteEulerAngles( reader->readValue("WriteEulerAngles", false) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", false) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -320,7 +319,7 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
   writer->writeValue("WriteGrainReferenceMisorientations", getWriteGrainReferenceMisorientations() );
   writer->writeValue("WriteGrainReferenceCAxisMisorientations", getWriteGrainReferenceCAxisMisorientations() );
   writer->writeValue("WriteKernelAverageMisorientations", getWriteKernelAverageMisorientations() );
-  //  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
+//  writer->writeValue("WriteIPFColors", getWriteIPFColors() );
   writer->writeValue("WriteSchmidFactors", getWriteSchmidFactors() );
   writer->writeValue("WriteGrainSizes", getWriteGrainSizes() );
   writer->writeValue("WriteBinaryFile", getWriteBinaryFile() );
@@ -334,106 +333,107 @@ int VtkRectilinearGridWriter::writeFilterParameters(AbstractFilterParametersWrit
 void VtkRectilinearGridWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  if(m_OutputFile.isEmpty() == true)
+  if(m_OutputFile.empty() == true)
   {
-    QString ss = QObject::tr("The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss << "The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
   // Make sure what we are checking is an actual file name and not a directory
-  QFileInfo fi(m_OutputFile);
-  if (fi.isDir() == false)
+  if (MXAFileInfo::isDirectory(m_OutputFile) == false)
   {
-    QDir parentPath = fi.path();
-    if (parentPath.exists() == false)
+    std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+    if (MXADir::exists(parentPath) == false)
     {
-      QString ss = QObject::tr("The directory path for the output file does not exist.");
-      addWarningMessage(getHumanLabel(), ss, -1);
+      ss.str("");
+      ss <<  "The directory path for the output file does not exist.";
+      addWarningMessage(getHumanLabel(), ss.str(), -1);
     }
   }
   else
   {
-    QString ss = QObject::tr("The output file path is a path to an existing directory. Please change the path to point to a file");
-    addErrorMessage(getHumanLabel(), ss, -1);
-    setErrorCondition(-1);
+      ss.str("");
+      ss <<  "The output file path is a path to an existing directory. Please change the path to point to a file";
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
+      setErrorCondition(-1);
   }
 
   if(m_WriteGrainIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteParentIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ParentIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WritePhaseIds == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteGoodVoxels == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
   }
   if(m_WriteGlobAlpha == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, -303, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GlobAlpha, ss, -303, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteKernelAverageMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, KernelAverageMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGrainReferenceMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteGrainReferenceCAxisMisorientations == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, -303, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, ss, -303, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteBandContrasts == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, -304, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, BC, ss, -304, int32_t, Int32ArrayType, voxels, 1)
   }
   if(m_WriteConfidenceIndicies == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -304, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -304, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteImageQualities == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, -304, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageQuality, ss, -304, float, FloatArrayType, voxels, 1)
   }
-  //  if(m_WriteIPFColors == true)
-  //  {
-  //    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
-  //  }
+//  if(m_WriteIPFColors == true)
+//  {
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
+//  }
   if(m_WriteGBEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteTJEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteQPEuclideanDistanceMap == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, -305, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, -305, float, FloatArrayType, voxels, 1)
   }
   if(m_WriteSchmidFactors == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Schmids, ss, -305, float, FloatArrayType, fields, 1)
   }
   if(m_WriteEulerAngles == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -305, float, FloatArrayType, voxels, 3)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -305, float, FloatArrayType, voxels, 3)
   }
 
   if(m_WriteGrainSizes == true)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -305, float, FloatArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -305, float, FloatArrayType, fields, 1)
   }
 }
 
@@ -461,16 +461,14 @@ void VtkRectilinearGridWriter::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(m_OutputFile);
-  QString parentPath = fi.path();
-  QDir dir;
-  if(!dir.mkpath(parentPath))
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
   {
-
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
-    setErrorCondition(-1);
-    return;
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
+      setErrorCondition(-1);
+      return;
   }
 
   int64_t totalPoints = m->getTotalPoints();
@@ -583,12 +581,12 @@ void VtkRectilinearGridWriter::execute()
     scalarsToWrite.push_back(w0);
   }
 
-  //  if(m_WriteIPFColors == true)
-  //  {
-  //    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VolumeDataContainer>(m));
-  //    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
-  //    scalarsToWrite.push_back(w0);
-  //  }
+//  if(m_WriteIPFColors == true)
+//  {
+//    VtkScalarWriter* w0 = static_cast<VtkScalarWriter*>(new VoxelIPFColorScalarWriter<VolumeDataContainer>(m));
+//    w0->m_WriteBinaryFiles = m_WriteBinaryFile;
+//    scalarsToWrite.push_back(w0);
+//  }
 
   if (m_WriteEulerAngles == true)
   {
@@ -621,9 +619,9 @@ void VtkRectilinearGridWriter::execute()
 
   if (err < 0)
   {
-
-    QString ss = QObject::tr("Error writing output vtk file '%1'\n ").arg(m_OutputFile);
-    addErrorMessage(getHumanLabel(), ss, err);
+    std::stringstream ss;
+    ss << "Error writing output vtk file '" << m_OutputFile << "'\n ";
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     setErrorCondition(-1);
   }
 
@@ -634,11 +632,11 @@ void VtkRectilinearGridWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
+int VtkRectilinearGridWriter::write(const std::string &file, VolumeDataContainer* r, std::vector<VtkScalarWriter*> &scalars)
 {
   int err = 0;
   FILE* f = NULL;
-  f = fopen(file.toLatin1().data(), "wb");
+  f = fopen(file.c_str(), "wb");
   if(NULL == f)
   {
     return -1;
@@ -661,14 +659,14 @@ int VtkRectilinearGridWriter::write(const QString &file, VolumeDataContainer* r,
   size_t total = r->getXPoints() * r->getYPoints() * r->getZPoints();
   fprintf(f, "CELL_DATA %d\n", (int)total);
 
-
+  std::stringstream ss;
   int index = 0;
   // Now loop on all of our Scalars and write those arrays as CELL_DATA
   for (std::vector<VtkScalarWriter*>::iterator iter = scalars.begin(); iter != scalars.end(); ++iter)
   {
-
-    QString ss = QObject::tr("Writing Scalar %1 of %2").arg(index++).arg(scalars.size());
-    notifyStatusMessage(ss);
+    ss.str("");
+    ss << "Writing Scalar " << index++ << " of " << scalars.size();
+    notifyStatusMessage(ss.str());
     err = (*iter)->writeScalars(f);
     if(err < 0)
     {

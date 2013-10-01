@@ -32,19 +32,14 @@
 #include <stdlib.h>
 
 #include <iostream>
+#include <string>
 
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QVector>
-#include <QtCore/QString>
-
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Common/GbcdDataArray.hpp"
 
 #include "UnitTestSupport.hpp"
 
@@ -72,7 +67,7 @@
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::DataArrayTest::TestFile);
+  MXADir::remove(UnitTest::DataArrayTest::TestFile);
 #endif
 }
 
@@ -147,7 +142,7 @@ void __TestEraseElements()
       array->SetComponent(i, 0, static_cast<T>(i) );
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(1);
 
@@ -169,7 +164,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(6);
     eraseElements.push_back(8);
@@ -195,7 +190,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(6);
     eraseElements.push_back(9);
@@ -220,7 +215,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(3);
     eraseElements.push_back(4);
     eraseElements.push_back(5);
@@ -245,7 +240,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(0);
     eraseElements.push_back(9);
 
@@ -268,7 +263,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(7);
     eraseElements.push_back(8);
     eraseElements.push_back(9);
@@ -290,7 +285,7 @@ void __TestEraseElements()
       array->SetComponent(i, 1, static_cast<T>(i));
     }
 
-    QVector<size_t> eraseElements;
+    std::vector<size_t> eraseElements;
     eraseElements.push_back(10);
     int err = array->EraseTuples(eraseElements);
     DREAM3D_REQUIRE_EQUAL(err , -100)
@@ -431,7 +426,7 @@ void __TestNeighborList()
   }
 
   // Remove the front 2 elements and test
-  QVector<size_t> eraseElements;
+  std::vector<size_t> eraseElements;
   eraseElements.push_back(0);
   eraseElements.push_back(1);
 
@@ -525,22 +520,22 @@ void TestGbcdDataArray()
   size_t retDims[5];
   m_GBCD->GetGbcdDimension(retDims);
   DREAM3D_REQUIRE_EQUAL(retDims[0], dims[0])
-  DREAM3D_REQUIRE_EQUAL(retDims[1], dims[1])
-  DREAM3D_REQUIRE_EQUAL(retDims[2], dims[2])
-  DREAM3D_REQUIRE_EQUAL(retDims[3], dims[3])
-  DREAM3D_REQUIRE_EQUAL(retDims[4], dims[4])
-  DREAM3D_REQUIRE_EQUAL(false, m_GBCD->isAllocated())
+      DREAM3D_REQUIRE_EQUAL(retDims[1], dims[1])
+      DREAM3D_REQUIRE_EQUAL(retDims[2], dims[2])
+      DREAM3D_REQUIRE_EQUAL(retDims[3], dims[3])
+      DREAM3D_REQUIRE_EQUAL(retDims[4], dims[4])
+      DREAM3D_REQUIRE_EQUAL(false, m_GBCD->isAllocated())
 
-  DREAM3D_REQUIRE_EQUAL(size, m_GBCD->GetSize())
+      DREAM3D_REQUIRE_EQUAL(size, m_GBCD->GetSize())
 
-  // This will test writing an array that has not been allocated which should return an
-  // negative error code.
+      // This will test writing an array that has not been allocated which should return an
+      // negative error code.
   {
-    hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
+    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
     DREAM3D_REQUIRE(fid > 0)
         int err = m_GBCD->writeH5Data(fid);
     DREAM3D_REQUIRE(err < 0)
-        QH5Utilities::closeFile(fid);
+        H5Utilities::closeFile(fid);
   }
 
   // Now allocate all the memory we need
@@ -571,20 +566,20 @@ void TestGbcdDataArray()
   // This will test writing an array that has been allocated which should return an
   // Zero or Positive error code.
   {
-    hid_t fid = QH5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
+    hid_t fid = H5Utilities::createFile(UnitTest::DataArrayTest::TestFile);
     DREAM3D_REQUIRE(fid > 0)
         int err = m_GBCD->writeH5Data(fid);
     DREAM3D_REQUIRE(err >= 0)
-        QH5Utilities::closeFile(fid);
+        H5Utilities::closeFile(fid);
   }
 
   {
-    hid_t fid = QH5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
+    hid_t fid = H5Utilities::openFile(UnitTest::DataArrayTest::TestFile, true);
     DREAM3D_REQUIRE(fid > 0)
         m_GBCD->initializeWithZeros();
     int err = m_GBCD->readH5Data(fid);
     DREAM3D_REQUIRE(err >= 0)
-        QH5Utilities::closeFile(fid);
+        H5Utilities::closeFile(fid);
     ptr = m_GBCD->GetPointer(0);
     idx = 0;
     // Now dump some actual data in the arrays
@@ -617,8 +612,7 @@ int main(int argc, char **argv)
 {
   int err = EXIT_SUCCESS;
 
-  QDir dir(UnitTest::DataArrayTest::TestDir);
-dir.mkpath(".");
+  MXADir::mkdir(UnitTest::DataArrayTest::TestDir, true);
 
 #if !REMOVE_TEST_FILES
   DREAM3D_REGISTER_TEST( RemoveTestFiles() )

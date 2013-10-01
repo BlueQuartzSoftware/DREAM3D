@@ -30,7 +30,7 @@
 #ifndef DATAPARSER_HPP_
 #define DATAPARSER_HPP_
 
-#include <QtCore/QString>
+#include <string>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 
@@ -42,17 +42,7 @@ class DataParser
 
     virtual ~DataParser() {}
 
-    virtual bool allocateArray(size_t numberOfElements) { (void)(numberOfElements); return false;}
-    virtual void* getVoidPointer(){ return NULL; }
-    virtual void  setVoidPointer(void* p){}
-
-    EBSD_INSTANCE_PROPERTY(bool, ManageMemory)
-    EBSD_INSTANCE_PROPERTY(size_t, Size)
-    EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
-    EBSD_INSTANCE_PROPERTY(int, ColumnIndex)
-
-
-    virtual void parse(const QByteArray &token, size_t index){}
+    virtual void parse(const std::string &token, size_t offset)=0;
   protected:
     DataParser(){}
 
@@ -69,57 +59,31 @@ class Int32Parser : public DataParser
   public:
     EBSD_SHARED_POINTERS(Int32Parser)
     EBSD_TYPE_MACRO(Int32Parser)
-    static Pointer New(int32_t* ptr, size_t size, const QString &name, int index)
+    static Pointer New(int32_t* ptr, size_t size, const std::string &name)
     {
-      Pointer sharedPtr (new Int32Parser(ptr, size, name, index));
+      Pointer sharedPtr (new Int32Parser(ptr, size, name));
       return sharedPtr;
     }
 
-    virtual ~Int32Parser()
-    {
-      if (m_Ptr != NULL && getManageMemory() == true)
-      {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(m_Ptr );
-#else
-        free(m_Ptr);
-#endif
-        m_Ptr = NULL;
-      }
-    }
+    virtual ~Int32Parser() {}
 
     EBSD_INSTANCE_PROPERTY(int32_t*, Ptr)
+    EBSD_INSTANCE_PROPERTY(size_t, Size)
+    EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
-    virtual bool allocateArray(size_t numberOfElements)
+    virtual void parse(const std::string &token, size_t offset)
     {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-      m_Ptr = static_cast<int32_t*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      m_Ptr = static_cast<int32_t*>(malloc(sizeof(int32_t) * numberOfElements));
-#endif
-      return (m_Ptr != NULL);
+      int value;
+      sscanf( token.c_str(), "%d", &value);
+      m_Ptr[offset] = value;
     }
-
-    virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }
-    virtual void  setVoidPointer(void* p) { m_Ptr = reinterpret_cast<int32_t*>(p); }
-
-    int32_t* getPointer(size_t offset) { return m_Ptr + offset; }
-
-
-    virtual void parse(const QByteArray &token, size_t index)
-    {
-      bool ok = false;
-      m_Ptr[index] = token.toInt(&ok, 10);
-    }
-
   protected:
-    Int32Parser(int32_t* ptr, size_t size, const QString &name, int index) :
-      m_Ptr(ptr)
+    Int32Parser(int32_t* ptr, size_t size, const std::string &name) :
+      m_Ptr(ptr),
+      m_Size(size),
+      m_ColumnName(name)
     {
-      setManageMemory(true);
-      setSize(size);
-      setColumnName(name);
-      setColumnIndex(index);
+     // std::cout << m_ColumnName << " Pointer: " << m_Ptr << std::endl;
     }
 
   private:
@@ -137,58 +101,33 @@ class FloatParser : public DataParser
   public:
     EBSD_SHARED_POINTERS(FloatParser)
     EBSD_TYPE_MACRO(FloatParser)
-    static Pointer New(float* ptr, size_t size, const QString &name, int index)
+    static Pointer New(float* ptr, size_t size, const std::string &name)
     {
-      Pointer sharedPtr (new FloatParser(ptr, size, name, index));
+      Pointer sharedPtr (new FloatParser(ptr, size, name));
       return sharedPtr;
     }
 
-    virtual ~FloatParser()
-    {
-      if (m_Ptr != NULL && getManageMemory() == true)
-      {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-        _mm_free(m_Ptr );
-#else
-        free(m_Ptr);
-#endif
-        m_Ptr = NULL;
-      }
-    }
+    virtual ~FloatParser() {}
 
     EBSD_INSTANCE_PROPERTY(float*, Ptr)
+    EBSD_INSTANCE_PROPERTY(size_t, Size)
+    EBSD_INSTANCE_STRING_PROPERTY(ColumnName)
 
-    virtual bool allocateArray(size_t numberOfElements)
+    virtual void parse(const std::string &token, size_t offset)
     {
-#if defined ( DREAM3D_USE_SSE ) && defined ( __SSE2__ )
-      m_Ptr = static_cast<float*>( _mm_malloc (numberOfElements * sizeof(T), 16) );
-#else
-      m_Ptr = static_cast<float*>(malloc(sizeof(float) * numberOfElements));
-#endif
-      return (m_Ptr != NULL);
+      float value;
+      sscanf( token.c_str(), "%f", &value);
+      m_Ptr[offset] = value;
+      //printf("%s: %f\n", m_ColumnName.c_str(), value);
     }
-
-    virtual void* getVoidPointer() { return reinterpret_cast<void*>(m_Ptr); }
-    virtual void  setVoidPointer(void* p) { m_Ptr = reinterpret_cast<float*>(p); }
-
-    float* getPointer(size_t offset) { return m_Ptr + offset; }
-
-    virtual void parse(const QByteArray &token, size_t index)
-    {
-      bool ok = false;
-      m_Ptr[index] = token.toFloat(&ok);
-    }
-
   protected:
-    FloatParser(float* ptr, size_t size, const QString &name, int index) :
-      m_Ptr(ptr)
+    FloatParser(float* ptr, size_t size, const std::string &name) :
+      m_Ptr(ptr),
+      m_Size(size),
+      m_ColumnName(name)
     {
-      setManageMemory(true);
-      setSize(size);
-      setColumnName(name);
-      setColumnIndex(index);
+     // std::cout << m_ColumnName << " Pointer: " << m_Ptr << std::endl;
     }
-
   private:
 
     FloatParser(const FloatParser&); // Copy Constructor Not Implemented

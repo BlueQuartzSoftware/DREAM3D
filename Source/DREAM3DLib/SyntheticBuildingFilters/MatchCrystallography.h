@@ -37,7 +37,7 @@
 #ifndef MATCHCRYSTALLOGRAPHY_H_
 #define MATCHCRYSTALLOGRAPHY_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <numeric>
 #include <limits>
 
@@ -47,14 +47,14 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 
 /**
  * @class MatchCrystallography MatchCrystallography.h DREAM3DLib/SyntheticBuilderFilters/MatchCrystallography.h
@@ -97,9 +97,9 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
 
-    virtual const QString getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
-    virtual const QString getHumanLabel() {return "Match Crystallography";}
+    virtual const std::string getGroupName() {return DREAM3D::FilterGroups::SyntheticBuildingFilters;}
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getHumanLabel() {return "Match Crystallography";}
 
     virtual void setupFilterParameters();
     /**
@@ -171,7 +171,7 @@ class DREAM3DLib_EXPORT MatchCrystallography : public AbstractFilter
 
     std::vector<std::vector<float> > misorientationlists;
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

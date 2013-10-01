@@ -39,12 +39,12 @@
 
 #include <vector>
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -74,7 +74,7 @@ SurfaceDataContainerReader::~SurfaceDataContainerReader()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainerReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   setFilterParameters(parameters);
 }
 
@@ -85,7 +85,7 @@ void SurfaceDataContainerReader::readFilterParameters(AbstractFilterParametersRe
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  ////!!##
+////!!##
   reader->closeFilterGroup();
 }
 
@@ -108,7 +108,7 @@ int SurfaceDataContainerReader::writeFilterParameters(AbstractFilterParametersWr
 void SurfaceDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-
+  std::stringstream ss;
   SurfaceDataContainer* m = getSurfaceDataContainer();
 
   if(NULL == m)
@@ -149,7 +149,7 @@ void SurfaceDataContainerReader::preflight()
 void SurfaceDataContainerReader::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
 
   dataCheck(false, 1, 1, 1);
@@ -166,29 +166,29 @@ void SurfaceDataContainerReader::execute()
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherData(bool preflight)
 {
-  
+  std::stringstream ss;
 
   if(m_HdfFileId < 0)
   {
-
-    QString ss = QObject::tr(": Error opening input file");
+    ss.str("");
+    ss << ": Error opening input file";
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return -1;
   }
 
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.toLatin1().data(), H5P_DEFAULT );
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::SurfaceDataContainerName.c_str(), H5P_DEFAULT );
   if (dcGid < 0)
   {
-
-    QString ss = QObject::tr("Error opening Group %1").arg(DREAM3D::HDF5::SurfaceDataContainerName);
+    ss.str("");
+    ss << "Error opening Group " << DREAM3D::HDF5::SurfaceDataContainerName << std::endl;
     setErrorCondition(-61);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
   }
 
   HDF_ERROR_HANDLER_OFF
-      int err = 0;
+  int err = 0;
 
   err = gatherVertexData(dcGid, preflight);
 
@@ -209,7 +209,7 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
 
   HDF_ERROR_HANDLER_ON
 
-      return err;
+  return err;
 }
 
 // -----------------------------------------------------------------------------
@@ -217,15 +217,15 @@ int SurfaceDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 {
-  QVector<QString> readNames;
-  herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
-  if(err < 0)
-  {
-    err |= H5Gclose(dcGid);
-    setErrorCondition(err);
-    return -1;
-  }
-  return 0;
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -233,15 +233,15 @@ int SurfaceDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int SurfaceDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
 {
-  QVector<QString> readNames;
-  herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
-  if(err < 0)
-  {
-    err |= H5Gclose(dcGid);
-    setErrorCondition(err);
-    return -1;
-  }
-  return 0;
+    std::vector<std::string> readNames;
+    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
+    if(err < 0)
+    {
+      err |= H5Gclose(dcGid);
+      setErrorCondition(err);
+      return -1;
+    }
+    return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -250,13 +250,13 @@ int SurfaceDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
 int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
 {
   int err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
 
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
     if (err >= 0) // The Vertices Data set existed so add a dummy to the Data Container
     {
       DREAM3D::Mesh::VertList_t::Pointer vertices = DREAM3D::Mesh::VertList_t::CreateArray(1, DREAM3D::VertexData::SurfaceMeshNodes);
@@ -277,7 +277,7 @@ int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
   }
 
   // Read all the Vertex Attribute data
-  QVector<QString> readNames;
+  std::vector<std::string> readNames;
   err = readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -293,12 +293,12 @@ int SurfaceDataContainerReader::gatherVertexData(hid_t dcGid, bool preflight)
 int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
 {
   int err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
   if (true == preflight)
   {
-    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
+    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
     if (err >= 0)
     {
       DREAM3D::Mesh::FaceListPointer_t triangles = DREAM3D::Mesh::FaceList_t::CreateArray(1, DREAM3D::FaceData::SurfaceMeshFaces);
@@ -317,7 +317,7 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
   }
 
   // Read all the Face Attribute data
-  QVector<QString> readNames;
+  std::vector<std::string> readNames;
   err = readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -333,26 +333,26 @@ int SurfaceDataContainerReader::gatherFaceData(hid_t dcGid, bool preflight)
 int SurfaceDataContainerReader::gatherEdgeData(hid_t dcGid, bool preflight)
 {
   int err = 0;
-  //  QVector<hsize_t> dims;
-  //  H5T_class_t type_class;
-  //  size_t type_size;
+//  std::vector<hsize_t> dims;
+//  H5T_class_t type_class;
+//  size_t type_size;
 
-  //  if (true == preflight)
-  //  {
-  //    err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
-  //    if (err >= 0)
-  //    {
-  //      StructArray<DREAM3D::Mesh::Edge_t>::Pointer edges = StructArray<DREAM3D::Mesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
-  //      getSurfaceDataContainer()->setEdges(edges);
-  //    }
-  //  }
-  //  else
-  //  {
-  //    err = readEdges(dcGid);
-  //  }
+//  if (true == preflight)
+//  {
+//    err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::EdgesName, dims, type_class, type_size);
+//    if (err >= 0)
+//    {
+//      StructArray<DREAM3D::Mesh::Edge_t>::Pointer edges = StructArray<DREAM3D::Mesh::Edge_t>::CreateArray(1, DREAM3D::EdgeData::SurfaceMeshEdges);
+//      getSurfaceDataContainer()->setEdges(edges);
+//    }
+//  }
+//  else
+//  {
+//    err = readEdges(dcGid);
+//  }
 
   // Read all the Edge Attribute data
-  QVector<QString> readNames;
+  std::vector<std::string> readNames;
   err = readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
   if(err == -154) // The group was not in the file so just ignore that error
   {
@@ -368,10 +368,10 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
 {
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   herr_t err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::VerticesName, dims, type_class, type_size);
   if (err < 0)
   {
     setErrorCondition(err);
@@ -381,9 +381,8 @@ int SurfaceDataContainerReader::readVertices(hid_t dcGid)
   // Allocate the data
   DREAM3D::Mesh::VertList_t::Pointer verticesPtr = DREAM3D::Mesh::VertList_t::CreateArray(dims[0],  DREAM3D::VertexData::SurfaceMeshNodes);
   // Read the data
-
   DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
-  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
+  err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
   if (err < 0) {
     setErrorCondition(err);
     notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
@@ -408,10 +407,10 @@ int SurfaceDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
 
   size_t nVerts = verticesPtr->GetNumberOfTuples();
   herr_t err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size = 0;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshLinksName, dims, type_class, type_size);
   if (err < 0)
   {
     return err;
@@ -425,7 +424,7 @@ int SurfaceDataContainerReader::readMeshLinks(hid_t dcGid, bool preflight)
   {
     //Read the array into the buffer
     std::vector<uint8_t> buffer;
-    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
+    err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshLinksName, buffer);
     if (err < 0)
     {
       setErrorCondition(err);
@@ -457,11 +456,11 @@ int SurfaceDataContainerReader::readFaces(hid_t dcGid)
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
   herr_t err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size;
   // Get the size of the data set so we know what to allocate
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::FacesName, dims, type_class, type_size);
   if (err < 0)
   {
     setErrorCondition(err);
@@ -469,12 +468,11 @@ int SurfaceDataContainerReader::readFaces(hid_t dcGid)
     return err;
   }
   // Allocate the Face_t structures
-
   DREAM3D::Mesh::FaceList_t::Pointer facesPtr = DREAM3D::Mesh::FaceList_t::CreateArray(dims[0], DREAM3D::FaceData::SurfaceMeshFaces);
   // We need this to properly use H5Lite because the data is stored as int32_t in 5 columns
   int32_t* data = reinterpret_cast<int32_t*>(facesPtr->GetPointer(0));
   // Read the data from the file
-  err = QH5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
+  err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::FacesName, data);
   if (err < 0) {
     setErrorCondition(err);
     notifyErrorMessage("Error Writing Face List to DREAM3D file", getErrorCondition());
@@ -502,10 +500,10 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
 
   size_t nFaces= facesPtr->GetNumberOfTuples();
   herr_t err = 0;
-  QVector<hsize_t> dims;
+  std::vector<hsize_t> dims;
   H5T_class_t type_class;
   size_t type_size = 0;
-  err = QH5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, dims, type_class, type_size);
+  err = H5Lite::getDatasetInfo(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, dims, type_class, type_size);
   if (err < 0)
   {
     return err;
@@ -519,7 +517,7 @@ int SurfaceDataContainerReader::readMeshTriangleNeighborLists(hid_t dcGid, bool 
   {
     //Read the array into the buffer
     std::vector<uint8_t> buffer;
-    err = QH5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, buffer);
+    err = H5Lite::readVectorDataset(dcGid, DREAM3D::HDF5::MeshFaceNeighborLists, buffer);
     if (err < 0)
     {
       setErrorCondition(err);
@@ -562,34 +560,34 @@ int SurfaceDataContainerReader::readEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                                  QVector<QString> &namesRead,
-                                                                  QSet<QString> &namesToRead)
+int SurfaceDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead)
 {
-  
+  std::stringstream ss;
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
   if(gid < 0)
   {
     return -154;
   }
 
   NameListType names;
-  QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() ;
-  QString classType;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    QSet<QString>::iterator contains = namesToRead.find(*iter);
+    std::set<std::string>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
-    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType ;
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.startsWith("DataArray") == true)
+    if(classType.find("DataArray") == 0)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }

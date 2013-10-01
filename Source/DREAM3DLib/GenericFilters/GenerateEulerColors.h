@@ -36,11 +36,11 @@
 #ifndef _GenerateEulerColors_H_
 #define _GenerateEulerColors_H_
 
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -75,14 +75,14 @@ class DREAM3DLib_EXPORT GenerateEulerColors : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Generate Euler Colors"; }
+    virtual const std::string getHumanLabel() { return "Generate Euler Colors"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

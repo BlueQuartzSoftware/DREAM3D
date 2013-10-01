@@ -37,13 +37,13 @@
 #ifndef _DXREADER_H_
 #define _DXREADER_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
-#include <QtCore/QFile>
+#include <fstream>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FileReader.h"
 
 /**
@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     //------ Created Cell Data
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read Dx File (Grain Ids)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getHumanLabel() { return "Read Dx File (Grain Ids)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
+    
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT DxReader : public FileReader
   private:
     int32_t* m_GrainIds;
     size_t m_Dims[3];
-    QFile  m_InStream;
+    std::ifstream  m_InStream;
 
     DxReader(const DxReader&); // Copy Constructor Not Implemented
     void operator=(const DxReader&); // Operator '=' Not Implemented

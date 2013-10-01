@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
- * BlueQuartz Software nor the names of its contributors may be used to endorse
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
+ * BlueQuartz Software nor the names of its contributors may be used to endorse 
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -37,7 +37,7 @@
 #ifndef MICROSTRUCTUREPRESETMANAGER_H_
 #define MICROSTRUCTUREPRESETMANAGER_H_
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include "MXA/Common/MXASetGetMacros.h"
 
 #include "AbstractMicrostructurePresetFactory.h"
 #include "AbstractMicrostructurePreset.h"
@@ -57,8 +57,8 @@
 class MicrostructurePresetManager
 {
   public:
-    DREAM3D_SHARED_POINTERS(MicrostructurePresetManager)
-    DREAM3D_TYPE_MACRO(MicrostructurePresetManager)
+    MXA_SHARED_POINTERS(MicrostructurePresetManager)
+    MXA_TYPE_MACRO(MicrostructurePresetManager)
 
     virtual ~MicrostructurePresetManager();
 
@@ -92,7 +92,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    static AbstractMicrostructurePreset::Pointer createNewPreset (const QString &className);
+    static AbstractMicrostructurePreset::Pointer createNewPreset (const std::string &className);
 
     // -----------------------------------------------------------------------------
     //  Public Methods
@@ -106,7 +106,7 @@ class MicrostructurePresetManager
     * a null ImportDelegate so check the return value with the boost::shared_ptr.get()
     * method to check the value of the wrapped pointer.
     */
-    virtual AbstractMicrostructurePreset::Pointer createPreset (const QString &className);
+    virtual AbstractMicrostructurePreset::Pointer createPreset (const std::string &className);
 
     /**
     * @brief Registers a Specific DataImportFactory. Usually you would use the
@@ -120,7 +120,7 @@ class MicrostructurePresetManager
     * @brief Attempts to return the ImportDelegateFactory for a given class name.
     * @param classname The name of the class to find the factory for OR the display name of the class
     */
-    virtual AbstractMicrostructurePresetFactory::Pointer getFactory(const QString &classname);
+    virtual AbstractMicrostructurePresetFactory::Pointer getFactory(const std::string &classname);
 
     virtual AbstractMicrostructurePresetFactory::Collection getFactories() { return _factories; }
 

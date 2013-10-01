@@ -35,13 +35,13 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "BinaryNodesTrianglesReader.h"
 
-#include <QtCore/QtDebug>
-#include <QtCore/QString>
+#include <iostream>
+#include <string>
 #include <sstream>
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/Common/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -67,8 +67,8 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
-  {
+  std::vector<FilterParameter::Pointer> parameters;
+    {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");
     option->setPropertyName("BinaryNodesFile");
@@ -76,7 +76,7 @@ void BinaryNodesTrianglesReader::setupFilterParameters()
     option->setValueType("string");
     parameters.push_back(option);
   }
-  {
+    {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Triangles Input File");
     option->setPropertyName("BinaryTrianglesFile");
@@ -96,7 +96,7 @@ void BinaryNodesTrianglesReader::readFilterParameters(AbstractFilterParametersRe
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  ////!!##
+////!!##
   reader->closeFilterGroup();
 }
 
@@ -108,8 +108,8 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
   writer->openFilterGroup(this, index);
   /* Place code that will write the inputs values into a file. reference the
    AbstractFilterParametersWriter class for the proper API to use. */
-  writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
-  writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
+ writer->writeValue("BinaryNodesFile", getBinaryNodesFile() );
+ writer->writeValue("BinaryTrianglesFile", getBinaryTrianglesFile() );
   writer->closeFilterGroup();
   return ++index; // we want to return the next index that was just written to
 }
@@ -120,6 +120,7 @@ int BinaryNodesTrianglesReader::writeFilterParameters(AbstractFilterParametersWr
 void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -128,18 +129,20 @@ void BinaryNodesTrianglesReader::dataCheck(bool preflight, size_t voxels, size_t
     addErrorMessage(getHumanLabel(), "SurfaceDataContainer is missing", getErrorCondition());
   }
 
-  if (getBinaryNodesFile().isEmpty() == true)
+  if (getBinaryNodesFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
+    std::stringstream ss;
+    ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  if (getBinaryNodesFile().isEmpty() == true)
+  if (getBinaryNodesFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Binary Nodes File path set and it was not.").arg(ClassName());
+    std::stringstream ss;
+    ss << ClassName() << " needs the Binary Nodes File path set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
 }
@@ -161,7 +164,7 @@ void BinaryNodesTrianglesReader::preflight()
 void BinaryNodesTrianglesReader::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
 
   /* Make sure everything is in place */
@@ -187,11 +190,13 @@ int BinaryNodesTrianglesReader::read()
   int err = 0;
   setErrorCondition(err);
 
+  std::stringstream s;
   // Open the Nodes file for reading
-  FILE* nodesFile = fopen(m_BinaryNodesFile.toLatin1().data(), "rb+");
+  FILE* nodesFile = fopen(m_BinaryNodesFile.c_str(), "rb+");
   if(nodesFile == NULL)
   {
-    QString ss = QObject::tr("Error opening nodes file '%1'").arg(m_BinaryNodesFile);
+    s.str("");
+    s << "Error opening nodes file '" << m_BinaryNodesFile << "'";
     setErrorCondition(786);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
@@ -208,22 +213,24 @@ int BinaryNodesTrianglesReader::read()
   fLength = ftell(nodesFile);
   if(0 != fLength)
   {
-    QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after nodes count.'%2'").arg(getNameOfClass()).arg(m_BinaryNodesFile);
+    s.str("");
+    s << getNameOfClass() << ": Error Could not rewind to beginning of file after nodes count.'" << m_BinaryNodesFile << "'";
     setErrorCondition(787);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
     //    notifyMessage(em);
     return getErrorCondition();
   }
-  {
-    QString ss = QObject::tr("Calc Node Count from Nodes.bin File: ").arg(nNodes);
-    notifyStatusMessage(ss);
-  }
+  s.str("");
+  s << "Calc Node Count from Nodes.bin File: " << nNodes;
+  notifyStatusMessage(s.str());
+
   // Open the triangles file for reading
-  FILE* triFile = fopen(m_BinaryTrianglesFile.toLatin1().data(), "rb+");
+  FILE* triFile = fopen(m_BinaryTrianglesFile.c_str(), "rb+");
   if(triFile == NULL)
   {
-    QString ss = QObject::tr("%1: Error opening Triangles file '%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
+    s.str("");
+    s << getNameOfClass() << ": Error opening Triangles file '" << m_BinaryTrianglesFile << "'";
     setErrorCondition(788);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
@@ -240,19 +247,18 @@ int BinaryNodesTrianglesReader::read()
   fLength = ftell(triFile);
   if(0 != fLength)
   {
-
-    QString ss = QObject::tr("%1: Error Could not rewind to beginning of file after triangles count.'%2'").arg(getNameOfClass()).arg(m_BinaryTrianglesFile);
+    s.str("");
+    s << getNameOfClass() << ": Error Could not rewind to beginning of file after triangles count.'" << m_BinaryTrianglesFile << "'";
     setErrorCondition(789);
     //    PipelineMessage em (getHumanLabel(), s.str(), -1);
     //    addErrorMessage(em);
     //    notifyMessage(em);
     return getErrorCondition();
   }
+  s.str("");
+  s << "Calc Triangle Count from Triangles.bin File: " << nTriangles;
+  notifyStatusMessage(s.str());
 
-  {
-    QString ss = QObject::tr("Calc Triangle Count from Triangles.bin File: ").arg(nTriangles);
-    notifyStatusMessage(ss);
-  }
   // Allocate all the nodes
   typedef DREAM3D::Mesh::Vert_t Vert_t;
   StructArray<Vert_t>::Pointer m_NodeListPtr = StructArray<Vert_t>::CreateArray(nNodes, DREAM3D::VertexData::SurfaceMeshNodes);
@@ -262,10 +268,9 @@ int BinaryNodesTrianglesReader::read()
   nodeTypePtr->initializeWithZeros();
   int8_t* nodeType = nodeTypePtr->GetPointer(0);
 
-  {
-    QString ss  = QObject::tr("Reading Nodes file into Memory");
-    notifyStatusMessage(ss);
-  }
+  s.str("");
+  s << "Reading Nodes file into Memory";
+  notifyStatusMessage(s.str());
   size_t nread = 0;
   SurfaceMesh::NodesFile::NodesFileRecord_t nRecord;
 
@@ -284,10 +289,9 @@ int BinaryNodesTrianglesReader::read()
     nodeType[nRecord.nodeId] = nRecord.nodeKind;
   }
 
-  {
-    QString ss = QObject::tr("Reading Triangles file into Memory");
-    notifyStatusMessage(ss);
-  }
+  s.str("");
+  s << "Reading Triangles file into Memory";
+  notifyStatusMessage(s.str());
 
   // Allocate all the Triangle Objects
   typedef DREAM3D::Mesh::Face_t Face_t;
@@ -323,6 +327,10 @@ int BinaryNodesTrianglesReader::read()
   sm->setFaces(m_TriangleListPtr);
   sm->addFaceData(faceLabelPtr->GetName(), faceLabelPtr);
   sm->addVertexData(nodeTypePtr->GetName(), nodeTypePtr);
+
+
+
+
 
   // The ScopedFileMonitor classes will take care of closing the files
 

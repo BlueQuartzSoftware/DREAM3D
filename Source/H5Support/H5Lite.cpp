@@ -37,10 +37,14 @@
 
 #include <string.h>
 
+#ifdef H5LITE_USE_MXA_CONSTRUCTS
+#include <MXA/Base/IMXAArray.h>
+#include <MXA/DataWrappers/MXAAsciiStringData.h>
+#endif
+
 #if defined (H5Support_NAMESPACE)
 using namespace H5Support_NAMESPACE;
 #endif
-
 
 /*-------------------------------------------------------------------------
  * Function: find_dataset
@@ -111,6 +115,7 @@ herr_t find_attr(hid_t loc_id, const char *name, const H5A_info_t* info, void *o
 
  return ret;
 }
+
 
 // -----------------------------------------------------------------------------
 //  Protected Constructor
@@ -449,10 +454,9 @@ herr_t H5Lite::writeStringAttribute(hid_t loc_id,
 }
 
 // -----------------------------------------------------------------------------
-//  Reads a String dataset into a std::string
+//  Reads a String dataset
 // -----------------------------------------------------------------------------
-herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std::string &data)
-{
+herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std::string &data) {
   hid_t did; // dataset id
   hid_t tid; //type id
   herr_t err = 0;
@@ -487,7 +491,7 @@ herr_t H5Lite::readStringDataset(hid_t loc_id, const std::string& dsetName, std:
 // -----------------------------------------------------------------------------
 herr_t H5Lite::readStringDataset(hid_t loc_id,
                                  const std::string &dsetName,
-                                 char *data)
+                                 uint8_t* data)
 {
   hid_t did; // dataset id
   hid_t tid; //type id
@@ -586,7 +590,7 @@ herr_t H5Lite::readStringAttribute(hid_t loc_id, const std::string& objName, con
 herr_t H5Lite::readStringAttribute(hid_t loc_id,
                                    const std::string& objName,
                                    const std::string& attrName,
-                                   char *data)
+                                   uint8_t* data)
 {
 
  /* identifiers */
@@ -679,6 +683,7 @@ herr_t H5Lite::getDatasetNDims( hid_t loc_id, const std::string& dsetName, hid_t
   }
   return retErr;
 }
+
 
 // -----------------------------------------------------------------------------
 //
@@ -917,7 +922,7 @@ herr_t H5Lite::getAttributeInfo(hid_t loc_id,
  return retErr;
 }
 
-#ifdef H5LITE_USE_DREAM3D_CONSTRUCTS
+#ifdef H5LITE_USE_MXA_CONSTRUCTS
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------

@@ -96,7 +96,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES  ${QT_QTCORE_LIBRARY} EbsdLib
+    LINK_LIBRARIES EbsdLib
 )
 
 # Create a Command line tool for the CtfReaderTest
@@ -110,7 +110,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES  ${QT_QTCORE_LIBRARY} EbsdLib
+    LINK_LIBRARIES EbsdLib
 )
 
 # Create a Command line tool for the CtfReaderTest
@@ -124,7 +124,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY}
+
 )
 
 
@@ -139,7 +139,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} DREAM3DLib
+    LINK_LIBRARIES DREAM3DLib
 )
 
 
@@ -154,7 +154,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} DREAM3DLib
+    LINK_LIBRARIES DREAM3DLib
 )
 
 # Create a Command line tool for the PipelineRunner
@@ -168,7 +168,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} DREAM3DLib
+    LINK_LIBRARIES DREAM3DLib
 )
 
 
@@ -182,7 +182,7 @@ COMPILE_TOOL(
     BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
     COMPONENT     Applications
     INSTALL_DEST  "${install_dir}"
-    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} EbsdLib  DREAM3DLib
+    LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${QT_QTGUI_LIBRARY} EbsdLib MXA DREAM3DLib
 )
 
 
@@ -234,7 +234,7 @@ if(COMPILE_EBSD_TO_TIFF)
         BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
         COMPONENT     Applications
         INSTALL_DEST  "${install_dir}"
-        LINK_LIBRARIES  ${QT_QTCORE_LIBRARY} ${TIFF_LIBRARY} EbsdLib DREAM3DLib
+        LINK_LIBRARIES  ${TIFF_LIBRARY} EbsdLib MXA DREAM3DLib
     )
 
 
@@ -249,7 +249,7 @@ if(COMPILE_EBSD_TO_TIFF)
         BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
         COMPONENT     Applications
         INSTALL_DEST  "${install_dir}"
-        LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${TIFF_LIBRARY}
+        LINK_LIBRARIES MXA ${TIFF_LIBRARY}
     )
 
     # create a tool to generate the IPF Triangle
@@ -263,6 +263,6 @@ if(COMPILE_EBSD_TO_TIFF)
        BINARY_DIR    ${${PROJECT_NAME}_BINARY_DIR}
        COMPONENT     Applications
        INSTALL_DEST  "${install_dir}"
-       LINK_LIBRARIES ${QT_QTCORE_LIBRARY} ${TIFF_LIBRARY}
+       LINK_LIBRARIES ${TIFF_LIBRARY}
    )
 endif()

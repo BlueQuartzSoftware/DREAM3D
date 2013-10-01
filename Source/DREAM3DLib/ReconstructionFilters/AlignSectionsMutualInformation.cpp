@@ -36,15 +36,15 @@
 
 #include "AlignSectionsMutualInformation.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include "DREAM3DLib/GenericFilters/FindCellQuats.h"
 
@@ -63,19 +63,19 @@
 //
 // -----------------------------------------------------------------------------
 AlignSectionsMutualInformation::AlignSectionsMutualInformation() :
-  AlignSections(),
-  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-  m_QuatsArrayName(DREAM3D::CellData::Quats),
-  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-  m_MisorientationTolerance(5.0f),
-  m_GrainIds(NULL),
-  m_Quats(NULL),
-  m_CellPhases(NULL),
-  m_GoodVoxels(NULL),
-  m_CrystalStructures(NULL)
+AlignSections(),
+m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+m_QuatsArrayName(DREAM3D::CellData::Quats),
+m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+m_MisorientationTolerance(5.0f),
+m_GrainIds(NULL),
+m_Quats(NULL),
+m_CellPhases(NULL),
+m_GoodVoxels(NULL),
+m_CrystalStructures(NULL)
 {
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  Seed = MXA::getMilliSeconds();
 
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -99,7 +99,7 @@ void AlignSectionsMutualInformation::setupFilterParameters()
   // Run the superclass first.
   //AlignSections::setupFilterParameters();
   // Now append our options
-  QVector<FilterParameter::Pointer> parameters = getFilterParameters();
+  std::vector<FilterParameter::Pointer> parameters = getFilterParameters();
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Tolerance");
@@ -119,9 +119,9 @@ void AlignSectionsMutualInformation::readFilterParameters(AbstractFilterParamete
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMisorientationTolerance( reader->readValue("MisorientationTolerance", getMisorientationTolerance()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -143,24 +143,24 @@ int AlignSectionsMutualInformation::writeFilterParameters(AbstractFilterParamete
 void AlignSectionsMutualInformation::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().isEmpty() == true)
+  if(true == getWriteAlignmentShifts() && getAlignmentShiftFileName().empty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -301, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -301, float, FloatArrayType, voxels, 4)
 
 
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302,  int32_t, Int32ArrayType, voxels, 1)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302,  int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
 }
 
@@ -204,21 +204,21 @@ void AlignSectionsMutualInformation::execute()
   AlignSections::execute();
 
   // If there is an error set this to something negative and also set a message
-  notifyStatusMessage("Aligning Sections Complete");
+ notifyStatusMessage("Aligning Sections Complete");
 }
 
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSectionsMutualInformation::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   //int64_t totalPoints = m->totalPoints();
 
   std::ofstream outFile;
   if (getWriteAlignmentShifts() == true) {
-    outFile.open(getAlignmentShiftFileName().toLatin1().data());
+    outFile.open(getAlignmentShiftFileName().c_str());
   }
 
   size_t udims[3] = {0,0,0};
@@ -246,17 +246,17 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
   int oldyshift = 0;
   float count = 0;
   int slice = 0;
-  //  int xspot, yspot;
-  //  float w;
+//  int xspot, yspot;
+//  float w;
 
-  //  float q1[5];
-  //  float q2[5];
+//  float q1[5];
+//  float q2[5];
   int refgnum, curgnum;
   int refposition = 0;
   int curposition = 0;
-  //  DimType newPosition;
+//  DimType newPosition;
 
-  //  unsigned int  phase2;
+//  unsigned int  phase2;
 
   form_grains_sections();
 
@@ -268,8 +268,9 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
   }
   for (DimType iter = 1; iter < dims[2]; iter++)
   {
-    QString ss = QObject::tr("Aligning Sections - Determining Shifts - %1 Percent Complete").arg(((float)iter/dims[2])*100);
-    //  notifyStatusMessage(ss);
+    std::stringstream ss;
+    ss << "Aligning Sections - Determining Shifts - " << ((float)iter/dims[2])*100 << " Percent Complete";
+  //  notifyStatusMessage(ss.str());
     mindisorientation = 100000000;
     slice = static_cast<int>( (dims[2] - 1) - iter );
     graincount1 = graincounts[slice];
@@ -280,13 +281,13 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
 
     for (int a = 0; a < graincount1; a++)
     {
-      mutualinfo1[a] = 0.0f;
-      mutualinfo12[a] = new float[graincount2];
-      for (int b = 0; b < graincount2; b++)
-      {
-        mutualinfo12[a][b] = 0.0f;
-        mutualinfo2[b] = 0.0f;
-      }
+        mutualinfo1[a] = 0.0f;
+        mutualinfo12[a] = new float[graincount2];
+        for (int b = 0; b < graincount2; b++)
+        {
+          mutualinfo12[a][b] = 0.0f;
+          mutualinfo2[b] = 0.0f;
+        }
     }
     oldxshift = -1;
     oldyshift = -1;
@@ -310,7 +311,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
           disorientation = 0;
           count = 0;
           if(misorients[k + oldxshift + size_t(dims[0] / 2)][j + oldyshift + (size_t)(dims[1] / 2)] == 0 && abs(k + oldxshift) < (dims[0] / 2)
-             && (j + oldyshift) < (dims[1] / 2))
+              && (j + oldyshift) < (dims[1] / 2))
           {
             for (DimType l = 0; l < dims[1]; l = l + 4)
             {
@@ -324,9 +325,9 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
                   curgnum = m_GrainIds[curposition];
                   if(curgnum >= 0 && refgnum >= 0)
                   {
-                    mutualinfo12[curgnum][refgnum]++;
-                    mutualinfo1[curgnum]++;
-                    mutualinfo2[refgnum]++;
+                      mutualinfo12[curgnum][refgnum]++;
+                      mutualinfo1[curgnum]++;
+                      mutualinfo2[refgnum]++;
                     count++;
                   }
                 }
@@ -343,33 +344,33 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
             float hab = 0;
             for (int b = 0; b < graincount1; b++)
             {
-              mutualinfo1[b] = mutualinfo1[b] / float(count);
-              if(mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
+                mutualinfo1[b] = mutualinfo1[b] / float(count);
+                if(mutualinfo1[b] != 0) ha = ha + mutualinfo1[b] * log(mutualinfo1[b]);
             }
             for (int c = 0; c < graincount2; c++)
             {
-              mutualinfo2[c] = mutualinfo2[c] / float(count);
-              if(mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
+                mutualinfo2[c] = mutualinfo2[c] / float(count);
+                if(mutualinfo2[c] != 0) hb = hb + mutualinfo2[c] * log(mutualinfo2[c]);
             }
             for (int b = 0; b < graincount1; b++)
             {
-              for (int c = 0; c < graincount2; c++)
-              {
-                mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
-                if(mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
-                float value = 0;
-                if(mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
-                if(value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
-              }
+                for (int c = 0; c < graincount2; c++)
+                {
+                  mutualinfo12[b][c] = mutualinfo12[b][c] / float(count);
+                  if(mutualinfo12[b][c] != 0) hab = hab + mutualinfo12[b][c] * log(mutualinfo12[b][c]);
+                  float value = 0;
+                  if(mutualinfo1[b] > 0 && mutualinfo2[c] > 0) value = (mutualinfo12[b][c] / (mutualinfo1[b] * mutualinfo2[c]));
+                  if(value != 0) disorientation = disorientation + (mutualinfo12[b][c] * log(value));
+                }
             }
             for (int b = 0; b < graincount1; b++)
             {
-              for (int c = 0; c < graincount2; c++)
-              {
-                mutualinfo12[b][c] = 0;
-                mutualinfo1[b] = 0;
-                mutualinfo2[c] = 0;
-              }
+                for (int c = 0; c < graincount2; c++)
+                {
+                  mutualinfo12[b][c] = 0;
+                  mutualinfo1[b] = 0;
+                  mutualinfo2[c] = 0;
+                }
             }
             disorientation = static_cast<float>( 1.0 / disorientation );
             misorients[k + oldxshift + int(dims[0] / 2)][j + oldyshift + int(dims[1] / 2)] = disorientation;
@@ -387,7 +388,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
     yshifts[iter] = yshifts[iter-1] + newyshift;
     if(getWriteAlignmentShifts() == true)
     {
-      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] ;
+      outFile << slice << "	" << slice + 1 << "	" << newxshift << "	" << newyshift << "	" << xshifts[iter] << "	" << yshifts[iter] << std::endl;
     }
     delete[] mutualinfo1;
     delete[] mutualinfo2;
@@ -415,7 +416,7 @@ void AlignSectionsMutualInformation::find_shifts(QVector<int> &xshifts, QVector<
 void AlignSectionsMutualInformation::form_grains_sections()
 {
   DREAM3D_RANDOMNG_NEW()
-      VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getVolumeDataContainer();
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -430,7 +431,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
     static_cast<DimType>(udims[2]),
   };
 
-  // int64_t totalPoints = m->totalPoints();
+ // int64_t totalPoints = m->totalPoints();
 
 
   int point = 0;
@@ -442,7 +443,7 @@ void AlignSectionsMutualInformation::form_grains_sections()
   QuatF q1;
   QuatF q2;
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
-  //  float qs[5];
+//  float qs[5];
   float w;
   float n1;
   float n2;
@@ -469,8 +470,8 @@ void AlignSectionsMutualInformation::form_grains_sections()
   unsigned int phase1, phase2;
   for (DimType slice = 0; slice < dims[2]; slice++)
   {
-
-    QString ss = QObject::tr("Aligning Sections - Identifying Grains on Sections - %1 Percent Complete").arg(((float)slice/dims[2])*100);
+    std::stringstream ss;
+    ss << "Aligning Sections - Identifying Grains on Sections - " << ((float)slice/dims[2])*100 << " Percent Complete";
     graincount = 1;
     noseeds = 0;
     while (noseeds == 0)
@@ -509,11 +510,11 @@ void AlignSectionsMutualInformation::form_grains_sections()
           col = currentpoint % dims[0];
           row = (currentpoint / dims[0]) % dims[1];
           QuaternionMathF::Copy(quats[currentpoint], q1);
-          //          q1[0] = 1;
-          //          q1[1] = m_Quats[currentpoint * 5 + 1];
-          //          q1[2] = m_Quats[currentpoint * 5 + 2];
-          //          q1[3] = m_Quats[currentpoint * 5 + 3];
-          //          q1[4] = m_Quats[currentpoint * 5 + 4];
+//          q1[0] = 1;
+//          q1[1] = m_Quats[currentpoint * 5 + 1];
+//          q1[2] = m_Quats[currentpoint * 5 + 2];
+//          q1[3] = m_Quats[currentpoint * 5 + 3];
+//          q1[4] = m_Quats[currentpoint * 5 + 4];
           phase1 = m_CrystalStructures[m_CellPhases[currentpoint]];
           for (int i = 0; i < 4; i++)
           {
@@ -527,11 +528,11 @@ void AlignSectionsMutualInformation::form_grains_sections()
             {
               w = 10000.0;
               QuaternionMathF::Copy(quats[neighbor], q2);
-              //              q2[0] = 1;
-              //              q2[1] = m_Quats[neighbor * 5 + 1];
-              //              q2[2] = m_Quats[neighbor * 5 + 2];
-              //              q2[3] = m_Quats[neighbor * 5 + 3];
-              //              q2[4] = m_Quats[neighbor * 5 + 4];
+//              q2[0] = 1;
+//              q2[1] = m_Quats[neighbor * 5 + 1];
+//              q2[2] = m_Quats[neighbor * 5 + 2];
+//              q2[3] = m_Quats[neighbor * 5 + 3];
+//              q2[4] = m_Quats[neighbor * 5 + 4];
               phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
               if(phase1 == phase2)
               {

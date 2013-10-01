@@ -41,9 +41,9 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FileWriter.h"
-#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
+#include "DREAM3DLib/Common/StringDataArray.hpp"
 
 /**
  * @class LosAlamosFFTWriter LosAlamosFFTWriter.h DREAM3DLib/IOFilters/LosAlamosFFTWriter.h
@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT LosAlamosFFTWriter : public FileWriter
     DREAM3D_INSTANCE_STRING_PROPERTY(CellEulerAnglesArrayName)
 
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
-    virtual const QString getHumanLabel() { return "Write Los Alamos FFT File"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getHumanLabel() { return "Write Los Alamos FFT File"; }
 
     virtual void setupFilterParameters();
     /**

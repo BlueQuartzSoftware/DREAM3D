@@ -237,7 +237,7 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 {
 
   FilterWidgetManager::Pointer wm = FilterWidgetManager::Instance();
-  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName);
+  IFilterWidgetFactory::Pointer wf = wm->getFactoryForFilter(filterName.toStdString());
   if (NULL == wf) { return NULL;}
   QFilterWidget* w = wf->createWidget();
   if (index < 0) // If the programmer wants to add it to the end of the list
@@ -287,10 +287,10 @@ QFilterWidget* PipelineViewWidget::addFilter(QString filterName, int index)
 
 #define CONVERT_STD_LIST_TO_QLIST(dataContainer, type, filterWidget)\
 {\
-  QList<QString> theList = dataContainer->get##type##ArrayNameList();\
+  std::list<std::string> theList = dataContainer->get##type##ArrayNameList();\
   QList<QString> list;\
-  for(QList<QString>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
-    list << (*iter);\
+  for(std::list<std::string>::iterator iter = theList.begin(); iter != theList.end(); ++iter)  {\
+    list << QString::fromStdString(*iter);\
   }\
   PipelineArraySelectionWidget* ptr = filterWidget->getPipelineArraySelectionWidget();\
   if (NULL != ptr) { ptr->setPossible##type##ArrayNames(list); }\
@@ -316,7 +316,7 @@ void PipelineViewWidget::preflightPipeline()
   EdgeDataContainer::Pointer e = EdgeDataContainer::New();
   VertexDataContainer::Pointer v = VertexDataContainer::New();
 
-  
+  std::stringstream ss;
 
 
   // Build up the pipeline
@@ -340,11 +340,11 @@ void PipelineViewWidget::preflightPipeline()
 
       filter->preflight();
       int err = filter->getErrorCondition();
-      QVector<PipelineMessage> msgs = filter->getPipelineMessages();
+      std::vector<PipelineMessage> msgs = filter->getPipelineMessages();
       if(msgs.size() > 0 || err < 0)
       {
         preflightErrorMessage(msgs);
-        for(QVector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
+        for(std::vector<PipelineMessage>::iterator iter = msgs.begin(); iter != msgs.end(); ++iter)
         {
           if ( (*iter).getMessageType() == PipelineMessage::Error)
           {
@@ -379,22 +379,22 @@ void PipelineViewWidget::preflightPipeline()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PipelineViewWidget::preflightErrorMessage(QVector<PipelineMessage> errorStream)
+void PipelineViewWidget::preflightErrorMessage(std::vector<PipelineMessage> errorStream)
 {
   if(NULL != errorTableWidget)
   {
 
    // int rc = errorTableWidget->rowCount();
 
-    for (QVector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
+    for (std::vector<PipelineMessage>::size_type i = 0; i < errorStream.size(); ++i)
     {
       emit preflightHasMessage(errorStream.at(i));
 
     #if 0
       errorTableWidget->insertRow(rc);
 
-      QString filterName = (errorStream.at(i).getFilterName());
-      QString errorDescription = (errorStream.at(i).getMessageText());
+      QString filterName = QString::fromStdString(errorStream.at(i).getFilterName());
+      QString errorDescription = QString::fromStdString(errorStream.at(i).getMessageText());
       int errorCode = errorStream.at(i).getMessageCode();
 
       QTableWidgetItem* filterNameWidgetItem = new QTableWidgetItem(filterName);
@@ -485,17 +485,17 @@ void PipelineViewWidget::dragEnterEvent( QDragEnterEvent* event)
   QFilterWidget* w = qobject_cast<QFilterWidget*>(childAt(event->pos()));
   if (w != NULL)
   {
-    qDebug() << "QFilterWidget Found: " << w->getFilter()->getNameOfClass() << "\n";
+    std::cout << "QFilterWidget Found: " << w->getFilter()->getNameOfClass() << std::endl;
   }
   QVBoxLayout* l = qobject_cast<QVBoxLayout*>(childAt(event->pos()));
   if (l != NULL)
   {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << "\n";
+    std::cout << "PipelineViewWidget::dragEnterEvent: Found the QVBoxLayout" << std::endl;
   }
   PipelineViewWidget* o = qobject_cast<PipelineViewWidget*>(childAt(event->pos()));
   if (o != NULL)
   {
-    qDebug() << "PipelineViewWidget::dragEnterEvent: " << o->objectName() << "\n";
+    std::cout << "PipelineViewWidget::dragEnterEvent: " << o->objectName().toStdString() << std::endl;
   }
 #endif
 }

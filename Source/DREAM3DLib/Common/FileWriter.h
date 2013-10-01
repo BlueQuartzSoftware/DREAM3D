@@ -40,31 +40,31 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
-/*
+  /*
    *
    */
-class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
-{
-  public:
-    DREAM3D_SHARED_POINTERS(FileWriter)
-    DREAM3D_STATIC_NEW_MACRO(FileWriter)
-    DREAM3D_TYPE_MACRO_SUPER(FileWriter, AbstractFilter)
+  class DREAM3DLib_EXPORT FileWriter : public AbstractFilter
+  {
+    public:
+      DREAM3D_SHARED_POINTERS(FileWriter)
+      DREAM3D_STATIC_NEW_MACRO(FileWriter)
+      DREAM3D_TYPE_MACRO_SUPER(FileWriter, AbstractFilter)
 
-    virtual ~FileWriter();
+      virtual ~FileWriter();
 
-    DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
+      DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
-    virtual void execute();
+      virtual void execute();
 
-  protected:
-    FileWriter();
+    protected:
+      FileWriter();
 
-    virtual int writeHeader();
-    virtual int writeFile();
+      virtual int writeHeader();
+      virtual int writeFile();
 
-  private:
-    FileWriter(const FileWriter&); // Copy Constructor Not Implemented
-    void operator=(const FileWriter&); // Operator '=' Not Implemented
-};
+    private:
+      FileWriter(const FileWriter&); // Copy Constructor Not Implemented
+      void operator=(const FileWriter&); // Operator '=' Not Implemented
+  };
 
 #endif /* FILEWRITER_H_ */

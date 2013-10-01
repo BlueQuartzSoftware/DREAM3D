@@ -38,14 +38,14 @@
 #define MERGECOLONIES_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/NeighborList.hpp"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/NeighborList.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 /**
@@ -79,9 +79,9 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-    virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
-    virtual const QString getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const std::string getHumanLabel() { return "Reconstruct Prior Beta Grains"; }
 
     DREAM3D_INSTANCE_PROPERTY(float, AxisTolerance)
     DREAM3D_INSTANCE_PROPERTY(float, AngleTolerance)
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT MergeColonies : public AbstractFilter
     std::vector<int> parentnumbers;
     int numParents;
 
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

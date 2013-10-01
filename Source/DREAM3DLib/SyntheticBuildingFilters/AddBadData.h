@@ -37,17 +37,17 @@
 #ifndef AddBadData_H_
 #define AddBadData_H_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsData.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 
 /**
@@ -69,9 +69,9 @@ class DREAM3DLib_EXPORT AddBadData : public AbstractFilter
 	//------ Required Cell Data
 	DREAM3D_INSTANCE_STRING_PROPERTY(GBEuclideanDistancesArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
-    virtual const QString getHumanLabel() { return "Add Bad Data"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
+	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MiscFilters; }
+    virtual const std::string getHumanLabel() { return "Add Bad Data"; }
 
     DREAM3D_INSTANCE_PROPERTY(bool, PoissonNoise)
     DREAM3D_INSTANCE_PROPERTY(float, PoissonVolFraction)

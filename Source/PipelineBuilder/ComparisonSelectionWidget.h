@@ -46,11 +46,11 @@
 
 #include "ui_ComparisonSelectionWidget.h"
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
-#include "DREAM3DLib/FilterParameters/FilterParameter.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/EdgeDataContainer.h"
+#include "DREAM3DLib/Common/VertexDataContainer.h"
+#include "DREAM3DLib/Common/FilterParameter.h"
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
 
@@ -108,7 +108,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @brief setComparisons
      * @param comparisons
      */
-    virtual void setComparisons(QVector<ComparisonInput_t> comparisons);
+    virtual void setComparisons(std::vector<ComparisonInput_t> comparisons);
 
     /**
      * @brief writeOptions
@@ -126,7 +126,7 @@ class PipelineBuilderLib_EXPORT ComparisonSelectionWidget : public QWidget, priv
      * @brief getComparisonInputs
      * @return
      */
-    QVector<ComparisonInput_t> getComparisonInputs();
+    std::vector<ComparisonInput_t> getComparisonInputs();
 
   signals:
     void parametersChanged();

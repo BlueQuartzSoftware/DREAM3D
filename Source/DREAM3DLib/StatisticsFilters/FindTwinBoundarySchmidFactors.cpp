@@ -36,16 +36,6 @@
 
 #include "FindTwinBoundarySchmidFactors.h"
 
-
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
-#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range.h>
@@ -53,10 +43,17 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/Constants.h"
 
-/**
- * @brief The CalculateTwinBoundarySchmidFactorsImpl class
- */
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
+#include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
+
+
+
+
 class CalculateTwinBoundarySchmidFactorsImpl
 {
     int32_t* m_Labels;
@@ -65,7 +62,7 @@ class CalculateTwinBoundarySchmidFactorsImpl
     bool* m_TwinBoundary;
     float* m_TwinBoundarySchmidFactors;
     float* m_LoadDir;
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
   public:
     CalculateTwinBoundarySchmidFactorsImpl(float* LoadingDir, int32_t* Labels, double* Normals, float* Quats, bool* TwinBoundary, float* TwinBoundarySchmidFactors) :
@@ -251,7 +248,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Twin Boundary Info File");
@@ -301,15 +298,15 @@ int FindTwinBoundarySchmidFactors::writeFilterParameters(AbstractFilterParameter
 void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -318,14 +315,13 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels
 void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, -388, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, float, FloatArrayType, 0, fields, 3)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, ss, -388, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, ss, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------
@@ -392,12 +388,12 @@ void FindTwinBoundarySchmidFactors::execute()
 
 
   std::ofstream outFile;
-  outFile.open(m_TwinBoundarySchmidFactorsFile.toLatin1().data(), std::ios_base::binary);
+  outFile.open(m_TwinBoundarySchmidFactorsFile.c_str(), std::ios_base::binary);
 
-  outFile << "Grain1	Grain2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" ;
+  outFile << "Grain1	Grain2	IsTwin	Plane	Schmid1	Schmid2	Schmid3" << std::endl;
   for (size_t i = 0; i < numTriangles; i++)
   {
-    outFile << m_SurfaceMeshFaceLabels[2*i] << "  " << m_SurfaceMeshFaceLabels[2*i+1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+2] ;
+    outFile << m_SurfaceMeshFaceLabels[2*i] << "  " << m_SurfaceMeshFaceLabels[2*i+1] << "  " << m_SurfaceMeshTwinBoundary[i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+1] << "  " << m_SurfaceMeshTwinBoundarySchmidFactors[3*i+2] << std::endl;
   }
   outFile.close();
 

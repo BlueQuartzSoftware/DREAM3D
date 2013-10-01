@@ -38,18 +38,26 @@
 #include <stdio.h>
 
 #include <iostream>
+#include <string>
 
-#include <QtCore/QString>
+#include <QtCore/QDir>
 #include <QtCore/QFileInfo>
 #include <QtCore/QString>
 #include <QtCore/QDebug>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
 
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 #include <QtGui/QImage>
 #include <QtGui/QColor>
+
+
+#include "QtSupport/PoleFigureImageUtilities.h"
+
+
+#include "MXA/MXA.h"
+#include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/TSL/AngReader.h"
@@ -57,8 +65,7 @@
 
 
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/CubicLowOps.h"
@@ -71,11 +78,11 @@
 #include "DREAM3DLib/OrientationOps/TetragonalLowOps.h"
 #include "DREAM3DLib/OrientationOps/TriclinicOps.h"
 #include "DREAM3DLib/OrientationOps/MonoclinicOps.h"
+
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"
+
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
-
-#include "QtSupport/PoleFigureImageUtilities.h"
 
 #define SET_DIRECTION(i, j, k)\
   direction[0] = i; direction[1] = j; direction[2] = k;
@@ -118,7 +125,7 @@ WritePoleFigure::~WritePoleFigure()
 // -----------------------------------------------------------------------------
 void WritePoleFigure::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
@@ -136,7 +143,7 @@ void WritePoleFigure::setupFilterParameters()
     parameter->setPropertyName("ImageFormat");
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("unsigned int");
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back("tif");
     choices.push_back("bmp");
     choices.push_back("png");
@@ -230,35 +237,37 @@ int WritePoleFigure::writeFilterParameters(AbstractFilterParametersWriter* write
 void WritePoleFigure::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   /* Example code for preflighting looking for a valid string for the output file
    * but not necessarily the fact that the file exists: Example code to make sure
    * we have something in a string before proceeding.*/
-  QDir path(getOutputPath());
 
-  if (m_OutputPath.isEmpty() == true)
+  if (m_OutputPath.empty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Output Directory is Not set correctly", getErrorCondition());
   }
-  else if (path.exists() == false)
+
+  else if (MXADir::exists(m_OutputPath) == false)
   {
-    QString ss = QObject::tr("The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist. DREAM3D will attempt to create this path during execution of the filter.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if(m_CellEulerAnglesArrayName.isEmpty() == true)
+  if(m_CellEulerAnglesArrayName.empty() == true)
   {
     setErrorCondition(-1004);
     addErrorMessage(getHumanLabel(), "Input Euler Array name is empty", getErrorCondition());
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
-    GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
+        GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-    typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+        typedef DataArray<unsigned int> XTalStructArrayType;
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 
 }
@@ -278,7 +287,7 @@ void WritePoleFigure::preflight()
 //
 // -----------------------------------------------------------------------------
 template<typename Ops>
-QVector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
+std::vector<UInt8ArrayType::Pointer> makePoleFigures(PoleFigureConfiguration_t &config)
 {
   Ops ops;
   return ops.generatePoleFigure(config);
@@ -310,12 +319,12 @@ void WritePoleFigure::execute()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QDir path(getOutputPath());
-
-  if(!path.mkpath(".") )
+  std::string parentPath = MXAFileInfo::parentPath(getOutputPath());
+  if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(path.absolutePath());
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -381,7 +390,7 @@ void WritePoleFigure::execute()
     }
     if (subEulers->GetNumberOfTuples() == 0) { continue; } // Skip because we have no Pole Figure data
 
-    QVector<UInt8ArrayType::Pointer> figures;
+    std::vector<UInt8ArrayType::Pointer> figures;
 
     PoleFigureConfiguration_t config;
     config.eulers = subEulers.get();
@@ -455,7 +464,7 @@ void WritePoleFigure::execute()
 // -----------------------------------------------------------------------------
 QString WritePoleFigure::generateVtkPath( QString label)
 {
-  QString path = m_OutputPath + "/" + m_ImagePrefix + label;
+  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
 
   path.append(".vtk");
 
@@ -474,7 +483,7 @@ QString WritePoleFigure::generateVtkPath( QString label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType *poleFigurePtr, int dimension)
+void WritePoleFigure::writeVtkFile(const std::string filename, DoubleArrayType *poleFigurePtr, int dimension)
 {
 
   notifyStatusMessage("Writing VTK File");
@@ -498,18 +507,20 @@ void WritePoleFigure::writeVtkFile(const QString filename, DoubleArrayType *pole
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dimension, QString label)
+void WritePoleFigure::writeImage(const std::string outputPath, QImage image, int dimension, QString label)
 {
-  QString ss = QObject::tr("Writing Image %1").arg(outputPath);
-  notifyStatusMessage(ss);
+  std::stringstream ss;
+  ss << "Writing Image " << outputPath;
+  notifyStatusMessage(ss.str());
 
   QString filename = generateImagePath(label);
   bool saved = image.save(filename);
   if(!saved)
   {
     setErrorCondition(-90011);
-    QString ss = QObject::tr("The Pole Figure image file '%1' was not saved.").arg(filename);
-    notifyErrorMessage(ss, getErrorCondition());
+    ss.str("");
+    ss << "The Pole Figure image file '" << filename.toStdString() << "' was not saved.";
+    notifyErrorMessage(ss.str(), getErrorCondition());
   }
 }
 
@@ -519,7 +530,7 @@ void WritePoleFigure::writeImage(const QString outputPath, QImage image, int dim
 // -----------------------------------------------------------------------------
 QString WritePoleFigure::generateImagePath( QString label)
 {
-  QString path = m_OutputPath + "/" + m_ImagePrefix + label;
+  QString path = QString::fromStdString(m_OutputPath) + QDir::separator() + QString::fromStdString(m_ImagePrefix) + label;
   if(m_ImageFormat == TifImageType)
   {
     path.append(".tif");

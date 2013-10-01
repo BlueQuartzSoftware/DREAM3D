@@ -38,14 +38,14 @@
 #define FindLargestCrossSections_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class FindLargestCrossSections FindLargestCrossSections.h DREAM3DLib/GenericFilters/FindLargestCrossSections.h
@@ -70,9 +70,9 @@ class DREAM3DLib_EXPORT FindLargestCrossSections : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(unsigned int, Plane)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
-    virtual const QString getHumanLabel() { return "Find Field Largest Cross-Section Areas"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getHumanLabel() { return "Find Field Largest Cross-Section Areas"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

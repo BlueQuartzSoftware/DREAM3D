@@ -43,7 +43,7 @@ set(_PublicFilters
   VtkRectilinearGridWriter
   YSChoiAbaqusReader
   RawBinaryReader
-#  VtkGrainIdReader
+  VtkGrainIdReader
 #  SolidMeshToVtk
   SPParksWriter
   VisualizeGBCD
@@ -72,6 +72,9 @@ set(_PrivateFilters
   VolumeDataContainerWriter
   VolumeDataContainerReader
 
+  EdgeDataContainerWriter
+  EdgeDataContainerReader
+
   SurfaceDataContainerWriter
   SurfaceDataContainerReader
 
@@ -79,8 +82,6 @@ set(_PrivateFilters
   VertexDataContainerReader
   GBCDTriangleDumper
 
-  EdgeDataContainerWriter
-  EdgeDataContainerReader
 )
 
 #-----------------

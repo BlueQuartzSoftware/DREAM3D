@@ -37,8 +37,8 @@
 #ifndef H5EBSDVOLUMEREADER_H_
 #define H5EBSDVOLUMEREADER_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <string>
+#include <vector>
 
 #include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
@@ -135,7 +135,7 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
      * @brief Returns the Manufacturer of the EBSD system
      * @return The Manufacturer string
      */
-    virtual QString getManufacturer();
+    virtual std::string getManufacturer();
 
     /**
      * @brief Convenience method that returns the number of Z Slices of data
@@ -160,9 +160,9 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     virtual Ebsd::RefFrameZDir getStackingOrder();
 
     virtual float getSampleTransformationAngle();
-    virtual QVector<float> getSampleTransformationAxis();
+    virtual std::vector<float> getSampleTransformationAxis();
     virtual float getEulerTransformationAngle();
-    virtual QVector<float> getEulerTransformationAxis();
+    virtual std::vector<float> getEulerTransformationAxis();
 
     /**
      * @brief updateToLatestVersion This will apply various attribute and data set updates to bring the
@@ -188,11 +188,11 @@ class  EbsdLib_EXPORT H5EbsdVolumeInfo
     Ebsd::RefFrameZDir   m_StackingOrder;
     int m_NumPhases;
     float m_SampleTransformationAngle;
-    QVector<float> m_SampleTransformationAxis;
+    std::vector<float> m_SampleTransformationAxis;
     float m_EulerTransformationAngle;
-    QVector<float> m_EulerTransformationAxis;
+    std::vector<float> m_EulerTransformationAxis;
 
-    QString m_Manufacturer;
+    std::string m_Manufacturer;
 
     H5EbsdVolumeInfo(const H5EbsdVolumeInfo&); //Not Implemented
     void operator=(const H5EbsdVolumeInfo&); //Not Implemented

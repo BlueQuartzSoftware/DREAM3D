@@ -37,10 +37,9 @@
 #include "WriteAbaqusSurfaceMesh.h"
 
 #include <stdio.h>
-
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QFileInfo>
+#include "MXA/MXA.h"
+#include "MXA/Utilities/MXADir.h"
+#include "MXA/Utilities/MXAFileInfo.h"
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
@@ -68,7 +67,7 @@ WriteAbaqusSurfaceMesh::~WriteAbaqusSurfaceMesh()
 // -----------------------------------------------------------------------------
 void WriteAbaqusSurfaceMesh::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -111,7 +110,7 @@ int WriteAbaqusSurfaceMesh::writeFilterParameters(AbstractFilterParametersWriter
 void WriteAbaqusSurfaceMesh::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  if (m_OutputFile.isEmpty() == true)
+  if (m_OutputFile.empty() == true)
   {
     setErrorCondition(-1003);
     addErrorMessage(getHumanLabel(), "Stl Output Directory is Not set correctly", -1003);
@@ -154,7 +153,7 @@ void WriteAbaqusSurfaceMesh::preflight()
 void WriteAbaqusSurfaceMesh::execute()
 {
   int err = 0;
-
+  std::stringstream ss;
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -173,13 +172,12 @@ void WriteAbaqusSurfaceMesh::execute()
 
    // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if(!parentPath.mkpath("."))
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
   {
-
-      QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-      notifyErrorMessage(ss, -1);
+      std::stringstream ss;
+      ss << "Error creating parent path '" << parentPath << "'";
+      notifyErrorMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
   }
@@ -193,14 +191,14 @@ void WriteAbaqusSurfaceMesh::execute()
   int32_t* faceLabels = faceLabelsPtr->GetPointer(0);
 
   // Store all the unique Spins
-  QSet<int> uniqueSpins;
+  std::set<int> uniqueSpins;
   for (int i = 0; i < trianglePtr->GetNumberOfTuples(); i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
     uniqueSpins.insert(faceLabels[i*2+1]);
   }
 
-  FILE* f = fopen(m_OutputFile.toLatin1().data(), "wb");
+  FILE* f = fopen(m_OutputFile.c_str(), "wb");
   ScopedFileMonitor fileMonitor(f);
 
   err = writeHeader(f, nodesPtr->GetNumberOfTuples(), trianglePtr->GetNumberOfTuples(), uniqueSpins.size()-1);
@@ -224,7 +222,7 @@ int WriteAbaqusSurfaceMesh::writeHeader(FILE* f, int nodeCount, int triCount, in
     return -1;
   }
   fprintf(f, "*HEADING\n");
-  fprintf(f, "** File Created with DREAM3D Version %s.%s\n", DREAM3DLib::Version::Major().toLatin1().data(), DREAM3DLib::Version::Minor().toLatin1().data());
+  fprintf(f, "** File Created with DREAM3D Version %s.%s\n", DREAM3DLib::Version::Major().c_str(), DREAM3DLib::Version::Minor().c_str());
   fprintf(f, "**Number of Nodes: %d     Number of Triangles: %d   Number of Grains: %d\n", nodeCount, triCount, grainCount);
   fprintf(f, "*PREPRINT,ECHO=NO,HISTORY=NO,MODEL=NO\n");
   return 0;
@@ -286,7 +284,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
 
   int err = 0;
 
-
+  std::stringstream ss;
 
   DREAM3D::Mesh::VertListPointer_t nodesPtr = getSurfaceDataContainer()->getVertices();
   DREAM3D::Mesh::FaceListPointer_t trianglePtr = getSurfaceDataContainer()->getFaces();
@@ -301,7 +299,7 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int nTriangles = trianglePtr->GetNumberOfTuples();
 
   // Store all the unique Spins
-  QSet<int> uniqueSpins;
+  std::set<int> uniqueSpins;
   for (int i = 0; i < nTriangles; i++)
   {
     uniqueSpins.insert(faceLabels[i*2]);
@@ -311,17 +309,17 @@ int WriteAbaqusSurfaceMesh::writeGrains(FILE* f)
   int spin = 0;
 
   //Loop over the unique Spins
-  for (QSet<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
+  for (std::set<int>::iterator spinIter = uniqueSpins.begin(); spinIter != uniqueSpins.end(); ++spinIter )
   {
     spin = *spinIter;
     if(spin < 0) { continue; }
 
     fprintf(f, "*ELSET, ELSET=Grain%d\n", spin);
 
-    {
-      QString ss = QObject::tr("Writing ELSET for Grain Id %1").arg(spin);
-      notifyStatusMessage(ss);
-    }
+    ss.str("");
+    ss << "Writing ELSET for Grain Id " << spin;
+    notifyStatusMessage(ss.str());
+
 
     // Loop over all the triangles for this spin
     int lineCount = 0;

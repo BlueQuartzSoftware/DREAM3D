@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -81,7 +81,7 @@ MinNeighbors::~MinNeighbors()
 // -----------------------------------------------------------------------------
 void MinNeighbors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Number Neighbors");
@@ -121,13 +121,13 @@ int MinNeighbors::writeFilterParameters(AbstractFilterParametersWriter* writer, 
 void MinNeighbors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
-
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, NumNeighbors, ss, -304, int32_t, Int32ArrayType, fields, 1)
 
 
 }
@@ -277,7 +277,7 @@ void MinNeighbors::assign_badpoints()
 		    for (int i = 0; i < dims[0]; i++)
 		    {
 			  count = kstride+jstride+i;
-			  
+			  std::stringstream ss;
 			  grainname = m_GrainIds[count];
 			  if (grainname < 0)
 			  {
@@ -329,16 +329,16 @@ void MinNeighbors::assign_badpoints()
 		  }
 		}
 	}
-    QList<QString> voxelArrayNames = m->getCellArrayNameList();
+    std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
       grainname = m_GrainIds[j];
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor >= 0 && m_GrainIds[neighbor] >= 0)
       {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
+            std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(neighbor, j);
           }
@@ -371,7 +371,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	
+	std::stringstream ss;
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

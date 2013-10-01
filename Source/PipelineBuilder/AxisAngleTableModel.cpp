@@ -67,7 +67,7 @@ AxisAngleTableModel::~AxisAngleTableModel()
 // -----------------------------------------------------------------------------
 Qt::ItemFlags AxisAngleTableModel::flags(const QModelIndex &index) const
 {
-  //  qDebug() << "AxisAngleTableModel::flags" << "\n";
+  //  std::cout << "AxisAngleTableModel::flags" << std::endl;
   if (!index.isValid())
   {
     return Qt::NoItemFlags;
@@ -203,7 +203,7 @@ bool AxisAngleTableModel::setHeaderData(int col, Qt::Orientation o, const QVaria
 // -----------------------------------------------------------------------------
 bool AxisAngleTableModel::setData(const QModelIndex & index, const QVariant & value, int role)
 {
-  // qDebug() << "AxisAngleTableModel::setData " << value.toString() << "\n";
+  // std::cout << "AxisAngleTableModel::setData " << value.toString().toStdString() << std::endl;
   if (!index.isValid() || role != Qt::EditRole || index.row() < 0 || index.row() >= m_Angles.count() || index.column() < 0 || index.column()
       >= m_ColumnCount)
   {
@@ -392,10 +392,10 @@ void AxisAngleTableModel::setTableData(QVector<float> angles, QVector<float> axi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AxisAngleTableModel::setRowData(int row, float angle, QString axis)
+void AxisAngleTableModel::setRowData(int row, float angle, std::string axis)
 {
    m_Angles[row] = angle;
-   m_Axis[row] = (axis);
+   m_Axis[row] = QString::fromStdString(axis);
 }
 
 // -----------------------------------------------------------------------------

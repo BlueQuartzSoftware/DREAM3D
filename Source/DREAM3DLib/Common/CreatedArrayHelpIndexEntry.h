@@ -36,8 +36,8 @@
 #ifndef _CreatedArrayHelpIndexEntry_H_
 #define _CreatedArrayHelpIndexEntry_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <string>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -49,7 +49,7 @@ class DREAM3DLib_EXPORT CreatedArrayHelpIndexEntry
     DREAM3D_STATIC_NEW_MACRO(CreatedArrayHelpIndexEntry)
     DREAM3D_TYPE_MACRO(CreatedArrayHelpIndexEntry)
 
-    typedef QVector<Pointer> VectorType;
+    typedef std::vector<Pointer> VectorType;
 
     virtual ~CreatedArrayHelpIndexEntry();
 

@@ -36,15 +36,15 @@
 
 #include "AlignSections.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -83,7 +83,7 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");
@@ -133,13 +133,13 @@ int AlignSections::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void AlignSections::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
 
-
-  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.isEmpty() == true)
+  if(true == m_WriteAlignmentShifts && m_AlignmentShiftFileName.empty() == true)
   {
-    QString ss = QObject::tr("The Alignment Shift file name must be set before executing this filter.");
+    ss << "The Alignment Shift file name must be set before executing this filter.";
     setErrorCondition(-1);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
   }
 
 
@@ -164,9 +164,9 @@ void AlignSections::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-
-    QString ss = QObject::tr(" DataContainer was NULL");
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
 
@@ -198,25 +198,27 @@ void AlignSections::execute()
   DimType currentPosition;
   //  unsigned int  phase2;
 
-  QVector<int> xshifts(dims[2], 0);
-  QVector<int> yshifts(dims[2],0);
+  std::vector<int> xshifts;
+  std::vector<int> yshifts;
+  xshifts.resize(dims[2],0);
+  yshifts.resize(dims[2],0);
 
   find_shifts(xshifts, yshifts);
 
-  QList<QString> voxelArrayNames = m->getCellArrayNameList();
+  std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
   DimType progIncrement = dims[2]/100;
   DimType prog = 1;
   int progressInt = 0;
-
+  std::stringstream ss;
 
   for (DimType i = 1; i < dims[2]; i++)
   {
     if (i > prog)
     {
-
+      ss.str("");
       progressInt = ((float)i/dims[2])*100.0;
-      QString ss = QObject::tr("Transferring Cell Data - %1% Complete").arg(progressInt);
-      notifyStatusMessage(ss);
+      ss << "Transferring Cell Data - " << progressInt << "% Complete";
+      notifyStatusMessage(ss.str());
       prog = prog + progIncrement;
     }
     if (getCancel() == true)
@@ -237,9 +239,9 @@ void AlignSections::execute()
         if((yspot + yshifts[i]) >= 0 && (yspot + yshifts[i]) <= dims[1] - 1 && (xspot + xshifts[i]) >= 0
            && (xspot + xshifts[i]) <= dims[0] - 1)
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
+            std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->CopyTuple(currentPosition, newPosition);
           }
@@ -247,9 +249,9 @@ void AlignSections::execute()
         if((yspot + yshifts[i]) < 0 || (yspot + yshifts[i]) > dims[1] - 1 || (xspot + xshifts[i]) < 0
            || (xspot + xshifts[i]) > dims[0] - 1)
         {
-          for(QList<QString>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
           {
-            QString name = *iter;
+            std::string name = *iter;
             IDataArray::Pointer p = m->getCellData(*iter);
             p->InitializeTuple(newPosition, 0.0);          }
         }
@@ -265,7 +267,7 @@ void AlignSections::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void AlignSections::find_shifts(QVector<int> &xshifts, QVector<int> &yshifts)
+void AlignSections::find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts)
 {
 
 }

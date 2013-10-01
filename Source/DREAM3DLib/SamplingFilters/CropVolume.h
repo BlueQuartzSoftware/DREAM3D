@@ -37,14 +37,14 @@
 #ifndef CROPVOLUME_H_
 #define CROPVOLUME_H_
 
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class CropVolume CropVolume.h DREAM3DLib/SyntheticBuilderFilters/CropVolume.h
@@ -77,9 +77,9 @@ class DREAM3DLib_EXPORT CropVolume : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, UpdateOrigin)
 
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
-  virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
-    virtual const QString getHumanLabel() { return "Crop Volume"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SamplingFilters; }
+  virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::CropCutFilters; }
+    virtual const std::string getHumanLabel() { return "Crop Volume"; }
 
     virtual void setupFilterParameters();
     /**

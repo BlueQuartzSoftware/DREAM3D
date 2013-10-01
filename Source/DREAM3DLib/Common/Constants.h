@@ -42,7 +42,7 @@
 
 
 
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -57,278 +57,281 @@ namespace DREAM3D
 
   namespace FilterGroups
   {
-    const QString GenericFilters("Generic");
-    const QString IOFilters("IO");
-    const QString ProcessingFilters("Processing");
-    const QString ReconstructionFilters("Reconstruction");
-    const QString SamplingFilters("Sampling");
-    const QString StatisticsFilters("Statistics");
-    const QString CustomFilters("Custom");
-    const QString SyntheticBuildingFilters("SyntheticBuilding");
-    const QString SurfaceMeshingFilters("SurfaceMeshing");
-    const QString SolidMeshingFilters("SolidMeshing");
+    const std::string GenericFilters("Generic");
+    const std::string IOFilters("IO");
+    const std::string ProcessingFilters("Processing");
+    const std::string ReconstructionFilters("Reconstruction");
+    const std::string SamplingFilters("Sampling");
+    const std::string StatisticsFilters("Statistics");
+    const std::string CustomFilters("Custom");
+    const std::string SyntheticBuildingFilters("SyntheticBuilding");
+    const std::string SurfaceMeshingFilters("SurfaceMeshing");
+    const std::string SolidMeshingFilters("SolidMeshing");
   }
 
   namespace FilterSubGroups
   {
-    const QString EnsembleStatsFilters("Ensemble");
-    const QString MemoryManagementFilters("Memory/Management");
-    const QString SpatialFilters("Spatial");
-    const QString OutputFilters("Output");
-    const QString InputFilters("Input");
-    const QString ImageFilters("Image");
-    const QString CleanupFilters("Cleanup");
-    const QString ThresholdFilters("Threshold");
-    const QString RegularizationFilters("Regularization");
-    const QString ConversionFilters("Conversion");
-    const QString AlignmentFilters("Alignment");
-    const QString SegmentationFilters("Segmentation");
-    const QString GroupingFilters("Grouping");
-    const QString CropCutFilters("Croping/Cutting");
-    const QString RotationTransformationFilters("Rotating/Transforming");
-    const QString ResolutionFilters("Resolution");
-    const QString MorphologicalFilters("Morphological");
-    const QString CrystallographicFilters("Crystallographic");
-    const QString PackingFilters("Packing");
-    const QString CrystallographyFilters("Crystallography");
-    const QString GenerationFilters("Generation");
-    const QString SmoothingFilters("Smoothing");
-    const QString CurvatureFilters("Curvature");
-    const QString ConnectivityArrangementFilters("Connectivity/Arrangement");
-    const QString MiscFilters("Misc");
+    const std::string EnsembleStatsFilters("Ensemble");
+    const std::string MemoryManagementFilters("Memory/Management");
+    const std::string SpatialFilters("Spatial");
+    const std::string OutputFilters("Output");
+    const std::string InputFilters("Input");
+    const std::string ImageFilters("Image");
+    const std::string CleanupFilters("Cleanup");
+    const std::string ThresholdFilters("Threshold");
+    const std::string RegularizationFilters("Regularization");
+    const std::string ConversionFilters("Conversion");
+    const std::string AlignmentFilters("Alignment");
+    const std::string SegmentationFilters("Segmentation");
+    const std::string GroupingFilters("Grouping");
+    const std::string CropCutFilters("Croping/Cutting");
+    const std::string RotationTransformationFilters("Rotating/Transforming");
+    const std::string ResolutionFilters("Resolution");
+    const std::string MorphologicalFilters("Morphological");
+    const std::string CrystallographicFilters("Crystallographic");
+    const std::string PackingFilters("Packing");
+    const std::string CrystallographyFilters("Crystallography");
+    const std::string GenerationFilters("Generation");
+    const std::string SmoothingFilters("Smoothing");
+    const std::string CurvatureFilters("Curvature");
+    const std::string ConnectivityArrangementFilters("Connectivity/Arrangement");
+    const std::string MiscFilters("Misc");
   }
 
   namespace CellData
   {
-    const QString GrainIds("GrainIds");
-    const QString FarFieldZoneIds("FarFieldZoneIds");
-    const QString FarFieldQuats("FarFieldQuats");
-    const QString ParentIds("ParentIds");
-    const QString MicroTexVolFrac("MicroTexVolFrac");
-    const QString Phases("Phases");
-    const QString CellPhases("Phases");
-    const QString BandContrast("BandContrast");
-    const QString EulerAngles("EulerAngles");
-    const QString SurfaceVoxels("SurfaceVoxels");
-    const QString Quats("Quats");
-    const QString GoodVoxels("GoodVoxels");
-    const QString NearestNeighbors("NearestNeighbors");
-    const QString GBEuclideanDistances("GBEuclideanDistances");
-    const QString TJEuclideanDistances("TJEuclideanDistances");
-    const QString QPEuclideanDistances("QPEuclideanDistances");
-    const QString GrainReferenceMisorientations("GrainReferenceMisorientations");
-    const QString GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
-    const QString KernelAverageMisorientations("KernelAverageMisorientations");
-    const QString ImageQualityNoSpace("ImageQuality");
-    const QString ImageQuality("Image Quality");
-    const QString ConfidenceIndexNoSpace("ConfidenceIndex");
-    const QString ConfidenceIndex("Confidence Index");
-    const QString IPFColor("IPFColor");
-    const QString MisorientationColor("MisorientationColor");
-    const QString RodriguesColor("RodriguesColor");
-    const QString EulerColor("EulerColor");
-    const QString GlobAlpha("GlobAlpha");
-    const QString BC("BandContrasts");
-    const QString ImageData("ImageData");
-    const QString FlatImageData("FlatImageData");
-    const QString SolidMeshNodes("SolidMeshNodes");
-    const QString SolidMeshTetrahedrons("SolidMeshTetrahedrons");
+    const std::string GrainIds("GrainIds");
+    const std::string FarFieldZoneIds("FarFieldZoneIds");
+    const std::string FarFieldQuats("FarFieldQuats");
+    const std::string ParentIds("ParentIds");
+    const std::string MicroTexVolFrac("MicroTexVolFrac");
+    const std::string Phases("Phases");
+    const std::string CellPhases("Phases");
+    const std::string BandContrast("BandContrast");
+    const std::string EulerAngles("EulerAngles");
+ //   const std::string CellEulerAngles("CellEulerAngles");
+    const std::string SurfaceVoxels("SurfaceVoxels");
+    const std::string Quats("Quats");
+    const std::string GoodVoxels("GoodVoxels");
+    const std::string NearestNeighbors("NearestNeighbors");
+    const std::string GBEuclideanDistances("GBEuclideanDistances");
+    const std::string TJEuclideanDistances("TJEuclideanDistances");
+    const std::string QPEuclideanDistances("QPEuclideanDistances");
+    const std::string GrainReferenceMisorientations("GrainReferenceMisorientations");
+    const std::string GrainReferenceCAxisMisorientations("GrainReferenceCAxisMisorientations");
+    const std::string KernelAverageMisorientations("KernelAverageMisorientations");
+    const std::string ImageQualityNoSpace("ImageQuality");
+    const std::string ImageQuality("Image Quality");
+    const std::string ConfidenceIndexNoSpace("ConfidenceIndex");
+    const std::string ConfidenceIndex("Confidence Index");
+    const std::string IPFColor("IPFColor");
+    const std::string MisorientationColor("MisorientationColor");
+    const std::string RodriguesColor("RodriguesColor");
+    const std::string EulerColor("EulerColor");
+    const std::string GlobAlpha("GlobAlpha");
+    const std::string BC("BandContrasts");
+    const std::string ImageData("ImageData");
+    const std::string FlatImageData("FlatImageData");
+
+    const std::string SolidMeshNodes("SolidMeshNodes");
+    const std::string SolidMeshTetrahedrons("SolidMeshTetrahedrons");
   }
 
   namespace FieldData
   {
-    const QString Active("Active");
-    const QString GoodFields("GoodFields");
-    const QString Phases("Phases");
-    const QString FieldPhases("Phases");
-    const QString F1("F1");
-    const QString F1spt("F1spt");
-    const QString F7("F7");
-    const QString mPrime("mPrime");
-    const QString EulerAngles("EulerAngles");
-    const QString SurfaceVoxelFractions("SurfaceVoxelFractions");
-    const QString AxisEulerAngles("AxisEulerAngles");
-    const QString SurfaceFields("SurfaceFields");
-    const QString BiasedFields("BiasedFields");
-    const QString NumNeighbors("NumNeighbors");
-    const QString RGBs("RGBs");
-    const QString ElasticStrains("ElasticStrains");
-    const QString FarFieldOrientations("FarFieldOrientations");
-    const QString Centroids("Centroids");
-    const QString NumCells("NumCells");
-    const QString ParentIds("ParentIds");
-    const QString Volumes("Volumes");
-    const QString EquivalentDiameters("EquivalentDiameters");
-    const QString Schmids("Schmids");
-    const QString SlipSystems("SlipSystems");
-    const QString LargestCrossSections("LargestCrossSections");
-    const QString AspectRatios("AspectRatios");
-    const QString AxisLengths("AxisLengths");
-    const QString Omega3s("Omega3s");
-    const QString AvgCAxes("AvgCAxes");
-    const QString AvgQuats("AvgQuats");
-    const QString Poles("Poles");
-    const QString Neighborhoods("Neighborhoods");
-    const QString GrainAvgMisorientations("GrainAvgMisorientations");
-    const QString GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
-    const QString GrainStdevCAxisMisorientations("GrainStdevCAxisMisorientations");
-    const QString KernelAvgMisorientations("KernelAvgMisorientations");
-    const QString NeighborList("NeighborList");
-    const QString NeighborhoodList("NeighborhoodList");
-    const QString MisorientationList("MisorientationList");
-    const QString SharedSurfaceAreaList("SharedSurfaceAreaList");
-    const QString LMG("LMG");
-    const QString MicroTextureRegionNumCells("MicroTextureRegionNumCells");
-    const QString MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
-    const QString Clusters("Clusters");
-    const QString ClusteringList("ClusteringList");
-    const QString BasalLoadingFactor("BasalLoadingFactor");
-
+    const std::string Active("Active");
+    const std::string GoodFields("GoodFields");
+    const std::string Phases("Phases");
+    const std::string FieldPhases("Phases");
+    const std::string F1("F1");
+    const std::string F1spt("F1spt");
+    const std::string F7("F7");
+    const std::string mPrime("mPrime");
+    const std::string EulerAngles("EulerAngles");
+  //  const std::string FieldEulerAngles("FieldEulerAngles");
+    const std::string SurfaceVoxelFractions("SurfaceVoxelFractions");
+    const std::string AxisEulerAngles("AxisEulerAngles");
+    const std::string SurfaceFields("SurfaceFields");
+    const std::string BiasedFields("BiasedFields");
+    const std::string NumNeighbors("NumNeighbors");
+    const std::string RGBs("RGBs");
+    const std::string ElasticStrains("ElasticStrains");
+    const std::string FarFieldOrientations("FarFieldOrientations");
+    const std::string Centroids("Centroids");
+    const std::string NumCells("NumCells");
+    const std::string ParentIds("ParentIds");
+    const std::string Volumes("Volumes");
+    const std::string EquivalentDiameters("EquivalentDiameters");
+    const std::string Schmids("Schmids");
+    const std::string SlipSystems("SlipSystems");
+    const std::string LargestCrossSections("LargestCrossSections");
+    const std::string AspectRatios("AspectRatios");
+    const std::string AxisLengths("AxisLengths");
+    const std::string Omega3s("Omega3s");
+    const std::string AvgCAxes("AvgCAxes");
+    const std::string AvgQuats("AvgQuats");
+    const std::string Poles("Poles");
+    const std::string Neighborhoods("Neighborhoods");
+    const std::string GrainAvgMisorientations("GrainAvgMisorientations");
+    const std::string GrainAvgCAxisMisorientations("GrainAvgCAxisMisorientations");
+    const std::string GrainStdevCAxisMisorientations("GrainStdevCAxisMisorientations");
+    const std::string KernelAvgMisorientations("KernelAvgMisorientations");
+    const std::string NeighborList("NeighborList");
+    const std::string NeighborhoodList("NeighborhoodList");
+    const std::string MisorientationList("MisorientationList");
+    const std::string SharedSurfaceAreaList("SharedSurfaceAreaList");
+    const std::string LMG("LMG");
+    const std::string BasalLoadingFactor("BasalLoadingFactor");
+    const std::string Clusters("Clusters");
+    const std::string ClusteringList("ClusteringList");
   }
 
   namespace EnsembleData
   {
-    const QString NumFields("NumFields");
-    const QString VolFractions("VolFractions");
-    const QString TotalSurfaceAreas("TotalSurfaceAreas");
-    const QString CrystalStructures("CrystalStructures");
-    const QString PhaseTypes("PhaseTypes");
-    const QString BravaisLattice("BravaisLattice");
-    const QString PrecipitateFractions("PrecipitateFractions");
-    const QString ShapeTypes("ShapeTypes");
-    const QString Statistics("Statistics");
-    const QString PhaseName("PhaseName");
-    const QString MaterialName("MaterialName");
-    const QString LatticeConstants("LatticeConstants");
-    const QString GBCD("GBCD");
-    const QString GBCDdimensions("GBCDdimensions");
+    const std::string NumFields("NumFields");
+    const std::string VolFractions("VolFractions");
+    const std::string TotalSurfaceAreas("TotalSurfaceAreas");
+    const std::string CrystalStructures("CrystalStructures");
+    const std::string PhaseTypes("PhaseTypes");
+    const std::string BravaisLattice("BravaisLattice");
+    const std::string PrecipitateFractions("PrecipitateFractions");
+    const std::string ShapeTypes("ShapeTypes");
+    const std::string Statistics("Statistics");
+    const std::string PhaseName("PhaseName");
+    const std::string MaterialName("MaterialName");
+    const std::string LatticeConstants("LatticeConstants");
+    const std::string GBCD("GBCD");
+    const std::string GBCDdimensions("GBCDdimensions");
   }
 
 
   namespace VertexData
   {
-    const QString SurfaceMeshNodes("SurfaceMeshNodes");
-    const QString SurfaceMeshNodeType("SurfaceMeshNodeType");
-    const QString SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
-    const QString SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
+    const std::string SurfaceMeshNodes("SurfaceMeshNodes");
+    const std::string SurfaceMeshNodeType("SurfaceMeshNodeType");
+    const std::string SurfaceMeshNodeNormals("SurfaceMeshNodeNormals");
+    const std::string SurfaceMeshNodeFaces("SurfaceMeshNodeFaces");
   }
 
   namespace FaceData
   {
-    const QString SurfaceMeshFaces("SurfaceMeshFaces");
-    const QString SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
-    const QString SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
-    const QString SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
-    const QString SurfaceMeshF1s("SurfaceMeshF1s");
-    const QString SurfaceMeshF1spts("SurfaceMeshF1spts");
-    const QString SurfaceMeshF7s("SurfaceMeshF7s");
-    const QString SurfaceMeshmPrimes("SurfaceMeshmPrimes");
-    const QString SurfaceMeshVoxels("SurfaceMeshVoxels");
-    const QString SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
-    const QString SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
-    const QString SurfaceMeshTwinBoundary("SurfaceMeshTwinBoundary");
-    const QString SurfaceMeshTwinBoundaryIncoherence("SurfaceMeshTwinBoundaryIncoherence");
-    const QString SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
-    const QString SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
-    const QString SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
-    const QString SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
-    const QString SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
-    const QString SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
-    const QString SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
-    const QString SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
-    const QString SurfaceMeshPrincipalDirection1("PrincipalDirection1");
-    const QString SurfaceMeshPrincipalDirection2("PrincipalDirection2");
+    const std::string SurfaceMeshFaces("SurfaceMeshFaces");
+    const std::string SurfaceMeshFaceIPFColors("SurfaceMeshFaceIPFColors");
+    const std::string SurfaceMeshFaceMisorientationColors("SurfaceMeshFaceMisorientationColors");
+    const std::string SurfaceMeshFaceLabels("SurfaceMeshFaceLabels");
+    const std::string SurfaceMeshF1s("SurfaceMeshF1s");
+    const std::string SurfaceMeshF1spts("SurfaceMeshF1spts");
+    const std::string SurfaceMeshF7s("SurfaceMeshF7s");
+    const std::string SurfaceMeshmPrimes("SurfaceMeshmPrimes");
+    const std::string SurfaceMeshVoxels("SurfaceMeshVoxels");
+    const std::string SurfaceMeshFaceCentroids("SurfaceMeshFaceCentroids");
+    const std::string SurfaceMeshFaceAreas("SurfaceMeshFaceAreas");
+    const std::string SurfaceMeshTwinBoundary("SurfaceMeshTwinBoundary");
+    const std::string SurfaceMeshTwinBoundaryIncoherence("SurfaceMeshTwinBoundaryIncoherence");
+    const std::string SurfaceMeshTwinBoundarySchmidFactors("SurfaceMeshTwinBoundarySchmidFactors");
+    const std::string SurfaceMeshFaceDihedralAngles("SurfaceMeshFaceDihedralAngles");
+    const std::string SurfaceMeshFaceNormals("SurfaceMeshFaceNormals");
+    const std::string SurfaceMeshGrainFaceId("SurfaceMeshGrainFaceId");
+    const std::string SurfaceMeshGaussianCurvatures("SurfaceMeshGaussianCurvatures");
+    const std::string SurfaceMeshMeanCurvatures("SurfaceMeshMeanCurvatures");
+    const std::string SurfaceMeshPrincipalCurvature1("PrincipalCurvature1");
+    const std::string SurfaceMeshPrincipalCurvature2("PrincipalCurvature2");
+    const std::string SurfaceMeshPrincipalDirection1("PrincipalDirection1");
+    const std::string SurfaceMeshPrincipalDirection2("PrincipalDirection2");
   }
 
   namespace EdgeData
   {
-    const QString SurfaceMeshEdges("SurfaceMeshEdges");
-    const QString SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
-    const QString SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
-    const QString SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
-    const QString SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
+    const std::string SurfaceMeshEdges("SurfaceMeshEdges");
+    const std::string SurfaceMeshUniqueEdges("SurfaceMeshUniqueEdges");
+    const std::string SurfaceMeshInternalEdges("SurfaceMeshInternalEdges");
+    const std::string SurfaceMeshTriangleEdges("SurfaceMeshTriangleEdges");
+    const std::string SurfaceMeshEdgeFaces("SurfaceMeshEdgeFaces");
   }
 
 
   namespace HDF5
   {
-    const QString FileVersionName("FileVersion");
-    const QString FileVersion("5.0");
-    const QString DataContainerName("DataContainer");
-    const QString VolumeDataContainerName("VolumeDataContainer");
-    const QString SurfaceDataContainerName("SurfaceDataContainer");
-    const QString VertexDataContainerName("VertexDataContainer");
-    const QString EdgeDataContainerName("EdgeDataContainer");
-    const QString VoxelDataName("VoxelData");
-    const QString PipelineGroupName("Pipeline");
-    const QString ObjectType("ObjectType");
-    const QString NumComponents("NumComponents");
+    const std::string FileVersionName("FileVersion");
+    const std::string FileVersion("5.0");
+    const std::string DataContainerName("DataContainer");
+    const std::string VolumeDataContainerName("VolumeDataContainer");
+    const std::string SurfaceDataContainerName("SurfaceDataContainer");
+    const std::string VertexDataContainerName("VertexDataContainer");
+    const std::string EdgeDataContainerName("EdgeDataContainer");
+    const std::string VoxelDataName("VoxelData");
+    const std::string PipelineGroupName("Pipeline");
+    const std::string ObjectType("ObjectType");
+    const std::string NumComponents("NumComponents");
 
-    const QString VerticesName("Vertices");
-    const QString FacesName("Faces");
-    const QString EdgesName("Edges");
-    const QString MeshLinksName("MeshLinks");
-    const QString MeshFaceNeighborLists("MeshFaceNeighborLists");
+    const std::string VerticesName("Vertices");
+    const std::string FacesName("Faces");
+    const std::string EdgesName("Edges");
+    const std::string MeshLinksName("MeshLinks");
+    const std::string MeshFaceNeighborLists("MeshFaceNeighborLists");
+
+    //  const std::string Grain_ID("Grain_ID");
+    // const std::string SchmidFactor ("SchmidFactor");
+    const std::string Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
+    const std::string KernelAvgDisorientation( "KernelAvgDisorientation");
+    const std::string GrainAvgDisorientation ("GrainAvgDisorientation");
+    //  const std::string ImageQuality( "ImageQuality");
+
+    // const std::string Phase("Phase");
+    const std::string GBCD("GBCD");
+    const std::string Statistics("Statistics");
+    const std::string AxisOrientation("AxisOrientation");
+    const std::string AxisODFWeights("AxisODF-Weights");
+    const std::string ODF("ODF");
+    const std::string ODFWeights("ODF-Weights");
+    const std::string Euler1("Euler 1");
+    const std::string Euler2("Euler 2");
+    const std::string Euler3("Euler 3");
+    const std::string Weight("Weight");
+    const std::string Sigma("Sigma");
+    const std::string MisorientationBins("MisorientationBins");
+    const std::string MDFWeights("MDF-Weights");
+    const std::string Angle("Angle");
+    const std::string Axis("Axis");
+    const std::string MicroTextureBins("MicroTextureBins");
+    const std::string Stats("Stats");
+    const std::string BoundaryArea("BoundaryArea");
+    const std::string PhaseFraction("PhaseFraction");
+    const std::string CrystalStructure("CrystalStructure");
+    const std::string PhaseType("PhaseType");
+    const std::string PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
+    const std::string ParentPhase("Parent Phase");
+    const std::string Grain_Diameter_Info("Grain_Diameter_Info");
+    const std::string Grain_Size_Distribution("GrainSize Distribution");
+    const std::string Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
+    const std::string Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
+    const std::string Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
+    const std::string Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
+    const std::string StatsType("StatsType");
+
+    const std::string StatsData("StatsData");
+    const std::string PrimaryStatsData("PrimaryStatsData");
+    const std::string PrecipitateStatsData("PrecipitateStatsData");
+    const std::string BoundaryStatsData("BoundaryStatsData");
+    const std::string MatrixStatsData("MatrixStatsData");
+    const std::string TransformationStatsData("TransformationStatsData");
 
 
-    const QString Neighbor_Grain_ID_List( "Neighbor_Grain_ID_List");
-    const QString KernelAvgDisorientation( "KernelAvgDisorientation");
-    const QString GrainAvgDisorientation ("GrainAvgDisorientation");
+    const std::string BinNumber("BinNumber");
 
-    const QString GBCD("GBCD");
-    const QString Statistics("Statistics");
-    const QString AxisOrientation("AxisOrientation");
-    const QString AxisODFWeights("AxisODF-Weights");
-    const QString ODF("ODF");
-    const QString ODFWeights("ODF-Weights");
-    const QString Euler1("Euler 1");
-    const QString Euler2("Euler 2");
-    const QString Euler3("Euler 3");
-    const QString Weight("Weight");
-    const QString Sigma("Sigma");
-    const QString MisorientationBins("MisorientationBins");
-    const QString MDFWeights("MDF-Weights");
-    const QString Angle("Angle");
-    const QString Axis("Axis");
-    const QString MicroTextureBins("MicroTextureBins");
-    const QString Stats("Stats");
-    const QString BoundaryArea("BoundaryArea");
-    const QString PhaseFraction("PhaseFraction");
-    const QString CrystalStructure("CrystalStructure");
-    const QString PhaseType("PhaseType");
-    const QString PrecipitateBoundaryFraction("Precipitate Boundary Fraction");
-    const QString ParentPhase("Parent Phase");
-    const QString Grain_Diameter_Info("Grain_Diameter_Info");
-    const QString Grain_Size_Distribution("GrainSize Distribution");
-    const QString Grain_SizeVBoverA_Distributions("GrainSize Vs B Over A Distributions");
-    const QString Grain_SizeVCoverA_Distributions("GrainSize Vs C Over A Distributions");
-    const QString Grain_SizeVNeighbors_Distributions("GrainSize Vs Neighbors Distributions");
-    const QString Grain_SizeVOmega3_Distributions("GrainSize Vs Omega3 Distributions");
-    const QString StatsType("StatsType");
+    const std::string Average("Average");
+    const std::string StandardDeviation("Standard Deviation");
 
-    const QString StatsData("StatsData");
-    const QString PrimaryStatsData("PrimaryStatsData");
-    const QString PrecipitateStatsData("PrecipitateStatsData");
-    const QString BoundaryStatsData("BoundaryStatsData");
-    const QString MatrixStatsData("MatrixStatsData");
-    const QString TransformationStatsData("TransformationStatsData");
+    const std::string Alpha("Alpha");
+    const std::string Beta("Beta");
+    const std::string Exp_k("K");
+    const std::string MinimumValue("Minimum Value");
 
-
-    const QString BinNumber("BinNumber");
-
-    const QString Average("Average");
-    const QString StandardDeviation("Standard Deviation");
-
-    const QString Alpha("Alpha");
-    const QString Beta("Beta");
-    const QString Exp_k("K");
-    const QString MinimumValue("Minimum Value");
-
-    const QString UnknownDistribution("Unknown Distribution");
-    const QString DistributionType("Distribution Type");
-    const QString BetaDistribution("Beta Distribution");
-    const QString LogNormalDistribution("Log Normal Distribution");
-    const QString PowerLawDistribution("Power Law Distribution");
+    const std::string UnknownDistribution("Unknown Distribution");
+    const std::string DistributionType("Distribution Type");
+    const std::string BetaDistribution("Beta Distribution");
+    const std::string LogNormalDistribution("Log Normal Distribution");
+    const std::string PowerLawDistribution("Power Law Distribution");
 
     enum ColumnCount
     {
@@ -348,11 +351,11 @@ namespace DREAM3D
     const unsigned int BoundaryPhase = 4;              //!<
     const unsigned int UnknownPhaseType = 999;    //!<
 
-    const QString Primary("Primary");
-    const QString Precipitate("Precipitate");
-    const QString Transformation("Transformation");
-    const QString Matrix("Matrix");
-    const QString Boundary("Boundary");
+    const std::string Primary("Primary");
+    const std::string Precipitate("Precipitate");
+    const std::string Transformation("Transformation");
+    const std::string Matrix("Matrix");
+    const std::string Boundary("Boundary");
   }
 
   namespace AlignmentMethod
@@ -447,48 +450,48 @@ namespace DREAM3D
   namespace Reconstruction
   {
     /*    Reconstruction related */
-    const QString H5VoxelFile("VoxelData.h5voxel");
+    const std::string H5VoxelFile("VoxelData.h5voxel");
 
-    const QString VisualizationVizFile("Visualization.vtk");//11
-    const QString DownSampledVizFile("DownSampled_Visualization.vtk");//11
-    const QString HDF5GrainFile("Grains.h5grain");
+    const std::string VisualizationVizFile("Visualization.vtk");//11
+    const std::string DownSampledVizFile("DownSampled_Visualization.vtk");//11
+    const std::string HDF5GrainFile("Grains.h5grain");
   }
 
   namespace GrainData
   {
-    const QString GrainID("Grain_ID");
-    const QString PhaseID("Phase_ID");
-    const QString Phi1("Phi1");
-    const QString PHI("PHI");
-    const QString Phi2("Phi2");
-    const QString EquivDiam("Equiv_Diameter");
-    const QString B_Over_A("b/a");
-    const QString C_Over_A("c/a");
-    const QString Omega3("Omega3");
-    const QString SurfaceGrain("Surface_Grain");
-    const QString OutsideBoundingBox("Outside_Bounding_Box");
-    const QString NumNeighbors("No_Neighbors");
+    const std::string GrainID("Grain_ID");
+    const std::string PhaseID("Phase_ID");
+    const std::string Phi1("Phi1");
+    const std::string PHI("PHI");
+    const std::string Phi2("Phi2");
+    const std::string EquivDiam("Equiv_Diameter");
+    const std::string B_Over_A("b/a");
+    const std::string C_Over_A("c/a");
+    const std::string Omega3("Omega3");
+    const std::string SurfaceGrain("Surface_Grain");
+    const std::string OutsideBoundingBox("Outside_Bounding_Box");
+    const std::string NumNeighbors("No_Neighbors");
     const char Delimiter = ',';
   }
 
   namespace SyntheticBuilder
   {
-    const QString GrainDataFile("GrainData.csv");
-    const QString H5VoxelFile("VoxelData.h5voxel");
+    const std::string GrainDataFile("GrainData.csv");
+    const std::string H5VoxelFile("VoxelData.h5voxel");
 
-    const QString VisualizationVizFile("Visualization.vtk");
-    const QString HDF5GrainFile("Grains.h5grain");
+    const std::string VisualizationVizFile("Visualization.vtk");
+    const std::string HDF5GrainFile("Grains.h5grain");
 
-    const QString ErrorFile("Error.txt");
-    const QString VtkFile("Test.vtk");
+    const std::string ErrorFile("Error.txt");
+    const std::string VtkFile("Test.vtk");
   }
 
   namespace MicroStats {
-    const QString H5StatisticsFile("Results.h5stats");
-    const QString GrainDataFile("GrainData.csv");//14
-    const QString DeformationStatsFile("Deformation_Stats.txt");
-    const QString IPFDeformVTKFile("IPF_DeformationData.vtk");
-    const QString VoxelDataName("VoxelData");
+    const std::string H5StatisticsFile("Results.h5stats");
+    const std::string GrainDataFile("GrainData.csv");//14
+    const std::string DeformationStatsFile("Deformation_Stats.txt");
+    const std::string IPFDeformVTKFile("IPF_DeformationData.vtk");
+    const std::string VoxelDataName("VoxelData");
   }
 
   /*   Surface Meshing Related   */
@@ -512,19 +515,19 @@ namespace DREAM3D
 
   namespace SolidMeshing {
     /* Solid Meshing Related */
-    const QString MeshFile("solid_mesh_v5_1.vtk");
-    const QString MeshFile2("solid_mesh_v5_2.vtk");
-    const QString ElementQualityFile("element_quality_measures_v5.txt");
-    const QString VoxelsFile("voxels_v5.txt");
+    const std::string MeshFile("solid_mesh_v5_1.vtk");
+    const std::string MeshFile2("solid_mesh_v5_2.vtk");
+    const std::string ElementQualityFile("element_quality_measures_v5.txt");
+    const std::string VoxelsFile("voxels_v5.txt");
   }
 
   namespace Comparison
   {
     namespace Strings
     {
-      const QString LessThan("<");
-      const QString GreaterThan(">");
-      const QString Equal("=");
+      const std::string LessThan("<");
+      const std::string GreaterThan(">");
+      const std::string Equal("=");
     }
     enum Enumeration
     {

@@ -35,15 +35,12 @@
 #include <stdio.h>
 #include <sstream>
 
+#include "MXA/Common/MXAEndian.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-#include <QtCore/QtEndian>
-
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Utilities/DREAM3DEndian.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 
 
@@ -51,7 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::FindNRingNeighbors() :
-  m_SurfaceDataContainer(NULL),
+m_SurfaceDataContainer(NULL),
   m_TriangleId(-1),
   m_RegionId0(0),
   m_RegionId1(0),
@@ -122,8 +119,8 @@ void FindNRingNeighbors::generate()
 #if 1
   if ( check0 == false && check1 == false)
   {
-    qDebug() << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 ;
-    qDebug() << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] ;
+    std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
+    std::cout << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << std::endl;
     return;
   }
 #endif
@@ -164,12 +161,12 @@ void FindNRingNeighbors::generate()
     }
   }
 
-  //  if (m_TriangleId == 1000)
-  //  {
-  //    
-  //    QString ss = QObject::tr("/tmp/%1_RingNeighborhood.vtk").arg(m_Ring);
-  //    writeVTKFile(ss.str());
-  //  }
+//  if (m_TriangleId == 1000)
+//  {
+//    std::stringstream ss;
+//    ss << "/tmp/" << m_Ring << "_RingNeighborhood.vtk";
+//    writeVTKFile(ss.str());
+//  }
 
 }
 
@@ -177,7 +174,7 @@ void FindNRingNeighbors::generate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
+void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -186,15 +183,15 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   DREAM3D::Mesh::VertList_t& nodes = *(nodesPtr);
   int nNodes = nodes.GetNumberOfTuples();
 
-  
+  std::stringstream ss;
 
 
   FILE* vtkFile = NULL;
-  vtkFile = fopen(outputVtkFile.toLatin1().data(), "wb");
+  vtkFile = fopen(outputVtkFile.c_str(), "wb");
   if (NULL == vtkFile)
   {
-
-    QString ss = QObject::tr("Error creating file '%1'").arg(outputVtkFile);
+    ss.str("");
+    ss << "Error creating file '" << outputVtkFile << "'";
     return;
   }
   ScopedFileMonitor vtkFileMonitor(vtkFile);
@@ -225,9 +222,9 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
       pos[2] = static_cast<float>(n.pos[2]);
       if (m_WriteBinaryFile == true)
       {
-        DREAM3D::Endian::FromSystemToBig::convert(pos[0]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[1]);
-        DREAM3D::Endian::FromSystemToBig::convert(pos[2]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[0]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[1]);
+        MXA::Endian::FromSystemToBig::convert<float>(pos[2]);
         totalWritten = fwrite(pos, sizeof(float), 3, vtkFile);
         if (totalWritten != sizeof(float) * 3)
         {
@@ -253,7 +250,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
   }
   // Write the CELLS Data
   fprintf(vtkFile, "POLYGONS %d %d\n", triangleCount, (triangleCount * 4));
-  for (QSet<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
+  for (std::set<int32_t>::iterator iter = m_NRingTriangles.begin(); iter != m_NRingTriangles.end(); ++iter)
   {
     int32_t tid = *iter;
     tData[1] = triangles[tid].verts[0];
@@ -262,10 +259,10 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
     if (m_WriteBinaryFile == true)
     {
       tData[0] = 3; // Push on the total number of entries for this entry
-      DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
-      DREAM3D::Endian::FromSystemToBig::convert(tData[1]);
-      DREAM3D::Endian::FromSystemToBig::convert(tData[2]);
-      DREAM3D::Endian::FromSystemToBig::convert(tData[3]);
+      MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
+      MXA::Endian::FromSystemToBig::convert<int>(tData[1]); // Index of Vertex 0
+      MXA::Endian::FromSystemToBig::convert<int>(tData[2]); // Index of Vertex 1
+      MXA::Endian::FromSystemToBig::convert<int>(tData[3]); // Index of Vertex 2
       fwrite(tData, sizeof(int), 4, vtkFile);
       if (false == m_WriteConformalMesh)
       {
@@ -273,7 +270,7 @@ void FindNRingNeighbors::writeVTKFile(const QString &outputVtkFile)
         tData[1] = tData[3];
         tData[3] = tData[0];
         tData[0] = 3;
-        DREAM3D::Endian::FromSystemToBig::convert(tData[0]);
+        MXA::Endian::FromSystemToBig::convert<int>(tData[0]);
         fwrite(tData, sizeof(int), 4, vtkFile);
       }
     }

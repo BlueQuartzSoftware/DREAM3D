@@ -37,14 +37,14 @@
 #include "GenerateUniqueEdges.h"
 
 
-#include <QtCore/QSet>
+#include <set>
 
 
-#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
 
 
 
-typedef QSet<int64_t>  EdgeSet_t;
+typedef std::set<int64_t>  EdgeSet_t;
 typedef EdgeSet_t::iterator EdgesIdSetIterator_t;
 
 
@@ -73,7 +73,7 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -108,9 +108,8 @@ int GenerateUniqueEdges::writeFilterParameters(AbstractFilterParametersWriter* w
 void GenerateUniqueEdges::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
-
   if(NULL == sm)
   {
     setErrorCondition(-383);
@@ -156,7 +155,7 @@ void GenerateUniqueEdges::preflight()
 void GenerateUniqueEdges::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   SurfaceDataContainer* m = getSurfaceDataContainer();
   if(NULL == m)
@@ -229,7 +228,7 @@ void GenerateUniqueEdges::generateUniqueEdgeIds()
   }
 
   notifyStatusMessage("Stage 1 of 2");
- // qDebug() << "uedges_id_set size: " << uedges_id_set.size() ;
+ // std::cout << "uedges_id_set size: " << uedges_id_set.size() << std::endl;
   DataArray<int>::Pointer uniqueEdgesArrayPtr = DataArray<int>::CreateArray(uedges_id_set.size(), 2, m_SurfaceMeshUniqueEdgesArrayName);
   int32_t* surfaceMeshUniqueEdges = uniqueEdgesArrayPtr->GetPointer(0);
   int index = 0;
@@ -271,9 +270,9 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
 
   // need to make a list of triangle edges
   // each triangle has three edges, made up of two pairs of vertices
-  QMap<int64_t, int> uedges_id_map;
+  std::map<int64_t, int> uedges_id_map;
 
-  QMap<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
+  std::map<int64_t, DREAM3D::Mesh::UniqueFaceIds_t > edgeTriangleSet;
 
   int edge_id = 0;
   int cur_edge_id = 0;
@@ -281,18 +280,18 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   struct  { int32_t v0; int32_t v1; } edge;
   int64_t* u64Edge = reinterpret_cast<int64_t*>(&edge); // This pointer is a 64 bit integer interpretation of the above struct variable
 
-  typedef QMap<int64_t, int>::iterator EdgesIdMapIterator_t;
+  typedef std::map<int64_t, int>::iterator EdgesIdMapIterator_t;
 
   float curPercent = 0.0;
-  
+  std::stringstream ss;
 
   for(int i = 0; i < ntri; ++i)
   {
     if ( static_cast<float>(i)/static_cast<float>(ntri) * 100.0f > (curPercent) )
     {
-
-      QString ss = QObject::tr("Stage 1/2: %1% Complete").arg((static_cast<float>(i)/static_cast<float>(ntri) * 100.0f));
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Stage 1/2: " << (static_cast<float>(i)/static_cast<float>(ntri) * 100.0f) << "% Complete";
+      notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
     if (getCancel() == true) { return; }
@@ -312,7 +311,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[0] = iter.value();
+//      tri.e_id[0] = (*iter).second;
     }
     edgeTriangleSet[*u64Edge].insert(i);
 
@@ -330,7 +329,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[1] = iter.value();
+//      tri.e_id[1] = (*iter).second;
     }
     edgeTriangleSet[*u64Edge].insert(i);
 
@@ -348,7 +347,7 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
     }
     else
     {
-//      tri.e_id[2] = iter.value();
+//      tri.e_id[2] = (*iter).second;
     }
     edgeTriangleSet[*u64Edge].insert(i);
   }
@@ -367,21 +366,21 @@ void GenerateUniqueEdges::generateEdgeTriangleConnectivity()
   float total = static_cast<float>(uedges_id_map.size());
 
 
-  for(QMap<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
+  for(std::map<int64_t, int>::iterator iter = uedges_id_map.begin(); iter != uedges_id_map.end(); ++iter)
   {
 
     if ( progIndex/total * 100.0f > (curPercent) )
     {
-
-      QString ss = QObject::tr("Stage 2/2: %1% Complete").arg((progIndex/total * 100.0f));
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Stage 2/2: " << (progIndex/total * 100.0f) << "% Complete";
+      notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }
     progIndex++;
     if (getCancel() == true) { return; }
 
-    *u64Edge = iter.key();
-    index = iter.value();
+    *u64Edge = iter->first;
+    index = iter->second;
     m_SurfaceMeshUniqueEdges[index*2] = edge.v0;
     m_SurfaceMeshUniqueEdges[index*2 + 1] = edge.v1;
 

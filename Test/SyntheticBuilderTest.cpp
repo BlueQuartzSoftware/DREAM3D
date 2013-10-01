@@ -35,8 +35,7 @@
 #include <string>
 
 #include "MXA/Common/LogTime.h"
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -64,9 +63,9 @@
 
 
 
-QString m_H5StatsFile("");
-QString m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
-QString m_OutputFilePrefix("");
+std::string m_H5StatsFile("");
+std::string m_OutputDirectory = UnitTest::SyntheticBuilderTest::TestDir;
+std::string m_OutputFilePrefix("");
 size_t m_XPoints = 150;
 size_t m_YPoints = 150;
 size_t m_ZPoints = 150;
@@ -81,7 +80,7 @@ double m_NeighborhoodErrorWeight = 1.0f;
 double m_FractionPrecipitates = 0.0f;
 
 bool m_PeriodicBoundary = false;
-QString m_StructureFile("");
+std::string m_StructureFile("");
 bool m_AlreadyFormed = false;
 
 int m_Precipitates = 0;
@@ -98,9 +97,9 @@ bool m_WriteHDF5GrainFile = false;
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString getH5StatsFile()
+std::string getH5StatsFile()
 {
-  QString s = UnitTest::DataDir + MXADir::Separator + "3Phase.h5";
+  std::string s = UnitTest::DataDir + MXADir::Separator + "3Phase.h5";
   return s;
 }
 
@@ -123,9 +122,9 @@ void setErrorCondition(int err)
 // -----------------------------------------------------------------------------
 void RemoveTestFiles()
 {
-  QFile::remove(UnitTest::SyntheticBuilderTest::CsvFile);
-  QFile::remove(UnitTest::SyntheticBuilderTest::OutputFile);
-  QFile::remove(UnitTest::SyntheticBuilderTest::VtkOutputFile);
+  MXADir::remove(UnitTest::SyntheticBuilderTest::CsvFile);
+  MXADir::remove(UnitTest::SyntheticBuilderTest::OutputFile);
+  MXADir::remove(UnitTest::SyntheticBuilderTest::VtkOutputFile);
 }
 
 // -----------------------------------------------------------------------------
@@ -134,8 +133,7 @@ void RemoveTestFiles()
 void TestSyntheticBuilder()
 {
 
-  QDir dir(m_OutputDirectory);
-dir.mkpath(".");
+  MXADir::mkdir(m_OutputDirectory, true);
 
   Observer* observer = new Observer;
 

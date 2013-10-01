@@ -36,7 +36,7 @@
 
 #include "FindSurfaceGrains.h"
 
-#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -82,14 +82,14 @@ int FindSurfaceGrains::writeFilterParameters(AbstractFilterParametersWriter* wri
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -105,20 +105,22 @@ void FindSurfaceGrains::preflight()
 // -----------------------------------------------------------------------------
 void FindSurfaceGrains::execute()
 {
-
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    setErrorCondition(-1);
+    std::stringstream ss;
+    ss << " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -1);
     return;
   }
   setErrorCondition(0);
 
   int64_t totalPoints = m->getTotalPoints();
   size_t totalFields = m->getNumFieldTuples();
-  QString ss = QObject::tr("FSG Points - %1, Fields - %2").arg(totalPoints).arg(totalFields);
-  notifyStatusMessage(ss);
+  ss << "FSG Points - " << totalPoints << ", Fields - " << totalFields;
+  notifyStatusMessage(ss.str());
   dataCheck(false, totalPoints, totalFields, 1);
   if (getErrorCondition() < 0)
   {

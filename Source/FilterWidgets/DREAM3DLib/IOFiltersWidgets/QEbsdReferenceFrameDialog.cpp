@@ -50,8 +50,8 @@
 #include <QtGui/QPainter>
 #include <QtGui/QFont>
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/IOFilters/ReadOrientationData.h"
 #include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
 #include "DREAM3DLib/ProcessingFilters/ConvertEulerAngles.h"
@@ -197,7 +197,7 @@ void QEbsdReferenceFrameDialog::loadEbsdData()
   VolumeDataContainer::Pointer m = VolumeDataContainer::New();
 
   ReadOrientationData::Pointer reader = ReadOrientationData::New();
-  reader->setInputFile(m_EbsdFileName);
+  reader->setInputFile(m_EbsdFileName.toStdString());
   reader->setVolumeDataContainer(m.get());
   reader->execute();
   int err = reader->getErrorCondition();

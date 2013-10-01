@@ -116,9 +116,9 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<QString> selectedCellArrays,
-                                                    std::set<QString> selectedFieldArrays,
-                                                    std::set<QString> selectedEnsembleArrays)
+void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
+                                                    std::set<std::string> selectedFieldArrays,
+                                                    std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -128,11 +128,11 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<QString> selecte
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                           std::set<QString> selectedFaceArrays,
-                                                           std::set<QString> selectedEdgeArrays,
-                                                           std::set<QString> selectedFieldArrays,
-                                                           std::set<QString> selectedEnsembleArrays)
+void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays,
+                                                           std::set<std::string> selectedFieldArrays,
+                                                           std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -144,9 +144,9 @@ void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<QString> s
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ArraySelectionExample::setSolidMeshSelectedArrayNames(std::set<QString> selectedVertexArrays,
-                                                        std::set<QString> selectedFaceArrays,
-                                                        std::set<QString> selectedEdgeArrays)
+void ArraySelectionExample::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
+                                                        std::set<std::string> selectedFaceArrays,
+                                                        std::set<std::string> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;

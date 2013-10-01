@@ -39,7 +39,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/ThresholdFilterHelper.h"
 
 
@@ -65,7 +65,7 @@ MultiThresholdCells::~MultiThresholdCells()
 // -----------------------------------------------------------------------------
 void MultiThresholdCells::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
@@ -73,7 +73,7 @@ void MultiThresholdCells::setupFilterParameters()
     parameter->setWidgetType(FilterParameter::ChoiceWidget);
     parameter->setValueType("string");
     parameter->setEditable(true);
-    QVector<QString> choices;
+    std::vector<std::string> choices;
     choices.push_back(DREAM3D::CellData::GoodVoxels);
     parameter->setChoices(choices);
     parameters.push_back(parameter);
@@ -124,12 +124,12 @@ int MultiThresholdCells::writeFilterParameters(AbstractFilterParametersWriter* w
 void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   //  for(int i = 0; i < m_ComparisonInputs.size(); ++i)
   //  {
   //    ComparisonInput_t& input = m_ComparisonInputs[i];
-  //    qDebug() << input.arrayName << "  " << input.compOperator << "  " << input.compValue ;
+  //    std::cout << input.arrayName << "  " << input.compOperator << "  " << input.compValue << std::endl;
   //  }
   if (m_ComparisonInputs.size() == 0)
   {
@@ -137,7 +137,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
     notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
 }
 
 
@@ -157,13 +157,13 @@ void MultiThresholdCells::preflight()
 void MultiThresholdCells::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
-  if (NULL == m)
+  if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   setErrorCondition(0);

@@ -39,13 +39,13 @@
 
 #include <stdio.h>
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 #include <sstream>
 
-#include <QtCore/QFileInfo>
+#include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 
 #define BUF_SIZE 1024
 
@@ -85,7 +85,7 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 void PhReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -151,46 +151,46 @@ void PhReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t en
 {
 
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
   m->setOrigin(m_Origin.x, m_Origin.y, m_Origin.z);
 
-  if (getInputFile().isEmpty() == false && fi.exists() == true)
+// We need to read the header of the input file to get the dimensions
+  m_InStream = fopen(getInputFile().c_str(), "r");
+  if(m_InStream == NULL)
   {
-    // We need to read the header of the input file to get the dimensions
-    m_InStream = fopen(getInputFile().toLatin1().data(), "r");
-    if(m_InStream == NULL)
-    {
-      setErrorCondition(-48802);
-      notifyErrorMessage("Error opening input file", getErrorCondition());
-      return;
-    }
-    int error = readHeader();
-    fclose(m_InStream);
-    m_InStream = NULL;
-    if (error < 0)
-    {
-      setErrorCondition(error);
-      QString ss = QObject::tr("Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?");
-      addErrorMessage(getHumanLabel(), ss, -48010);
-    }
+    setErrorCondition(-48802);
+    notifyErrorMessage("Error opening input file", getErrorCondition());
+    return;
+  }
+
+
+  int error = readHeader();
+  fclose(m_InStream);
+  m_InStream = NULL;
+  if (error < 0)
+  {
+    setErrorCondition(error);
+    ss.clear();
+    ss << "Error occurred trying to parse the dimensions from the input file. Is the input file a Ph file?";
+    addErrorMessage(getHumanLabel(), ss.str(), -48010);
   }
 }
 
@@ -212,17 +212,17 @@ void PhReader::execute()
    */
   if (NULL == getVolumeDataContainer())
   {
-
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__LINE__).arg(__FILE__);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
     setErrorCondition(-48020);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
   }
 
-
+  std::stringstream ss;
   int err = 0;
 
-  m_InStream = fopen(getInputFile().toLatin1().data(), "r");
+  m_InStream = fopen(getInputFile().c_str(), "r");
   if(m_InStream == NULL)
   {
     setErrorCondition(-48030);

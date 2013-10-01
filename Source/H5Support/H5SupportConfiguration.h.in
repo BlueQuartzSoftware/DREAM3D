@@ -12,9 +12,6 @@
 /* Define the namespace we are going to use for the H5Support Codes */
 #cmakedefine H5Support_NAMESPACE @H5Support_NAMESPACE@
 
-/* Define if H5Support is using Qt classes in addition to STL classes */
-#cmakedefine H5Support_USE_QT @H5Support_USE_QT@
-
 /* Include the Overall Configuration header file */
 #include "@PROJECT_NAME@/@CMP_CONFIGURATION_FILE_NAME@"
 

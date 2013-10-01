@@ -36,18 +36,17 @@
 
 #include "DxWriter.h"
 
-#include <QtCore/QtDebug>
+#include <iostream>
 #include <fstream>
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
 DxWriter::DxWriter() :
-  FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
+    FileWriter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_AddSurfaceLayer(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -65,7 +64,7 @@ DxWriter::~DxWriter()
 // -----------------------------------------------------------------------------
 void DxWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -94,10 +93,10 @@ void DxWriter::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setAddSurfaceLayer( reader->readValue("AddSurfaceLayer", getAddSurfaceLayer()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -119,29 +118,30 @@ int DxWriter::writeFilterParameters(AbstractFilterParametersWriter* writer, int 
 void DxWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
-  if (getOutputFile().isEmpty() == true)
+  if (getOutputFile().empty() == true)
   {
-    QString ss = QObject::tr( ": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss <<  ": The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
-  QFileInfo fi(getOutputFile());
-  QDir parentPath = fi.path();
-  if (parentPath.exists() == false)
+
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if (MXADir::exists(parentPath) == false)
   {
-    QString ss = QObject::tr( "The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
 
-  if (fi.suffix().compare("") == 0)
+  if (MXAFileInfo::extension(getOutputFile()).compare("") == 0)
   {
     setOutputFile(getOutputFile().append(".dx"));
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -168,8 +168,9 @@ int DxWriter::writeFile()
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    QString ss = QObject::tr("DataContainer Pointer was NULL and Must be valid.%1(%2)").arg(__FILE__).arg(__LINE__);
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
@@ -194,31 +195,26 @@ int DxWriter::writeFile()
 #endif
   DimType dims[3] =
   { static_cast<DimType>(udims[0]), static_cast<DimType>(udims[1]), static_cast<DimType>(udims[2]), };
-  // qDebug() << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] ;
+  // std::cout << "Write Dx Grain File:  x, y, z: " << dims[0] << " " << dims[1] << " " << dims[2] << std::endl;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(getOutputFile());
-
-  QDir dir(fi.path());
-  if(!dir.mkpath("."))
+  std::string parentPath = MXAFileInfo::parentPath(getOutputFile());
+  if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(dir.path());
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return -1;
   }
 
-  QFile file(getOutputFile());
-  if (!file.open(QIODevice::WriteOnly | QIODevice::Text))
+  std::ofstream out(getOutputFile().c_str(), std::ios_base::binary);
+  if(out.is_open() == false)
   {
-    QString ss = QObject::tr("DxWriter Input file could not be opened: %1").arg(getOutputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(ss, getErrorCondition());
-    return -100;
+    return -1;
   }
 
-  QTextStream out(&file);
   DimType fileXDim = dims[0];
   DimType fileYDim = dims[1];
   DimType fileZDim = dims[2];
@@ -239,15 +235,15 @@ int DxWriter::writeFile()
   }
   totalPoints = fileXDim * fileYDim * fileZDim;
   //Write the header
-  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
-  out << "origin 0 0 0" << "\n";
-  out << "delta  1 0 0" << "\n";
-  out << "delta  0 1 0" << "\n";
-  out << "delta  0 0 1" << "\n";
-  out << "\n";
-  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << "\n";
-  out << "\n";
-  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << "\n";
+  out << "object 1 class gridpositions counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
+  out << "origin 0 0 0" << std::endl;
+  out << "delta  1 0 0" << std::endl;
+  out << "delta  0 1 0" << std::endl;
+  out << "delta  0 0 1" << std::endl;
+  out << std::endl;
+  out << "object 2 class gridconnections counts " << posZDim << " " << posYDim << " " << posXDim << std::endl;
+  out << std::endl;
+  out << "object 3 class array type int rank 0 items " << totalPoints << " data follows" << std::endl;
 
   // Add a complete layer of surface voxels
   size_t rnIndex = 1;
@@ -259,7 +255,7 @@ int DxWriter::writeFile()
       if(rnIndex == 20)
       {
         rnIndex = 0;
-        out << "\n";
+        out << std::endl;
       }
       rnIndex++;
     }
@@ -275,7 +271,7 @@ int DxWriter::writeFile()
       {
         out << "-4 ";
       }
-      out << "\n";
+      out << std::endl;
     }
     for (DimType y = 0; y < dims[1]; ++y)
     {
@@ -302,7 +298,7 @@ int DxWriter::writeFile()
       {
         out << "-6 ";
       }
-      out << "\n";
+      out << std::endl;
     }
     // Add a trailing surface Row for this plane if needed
     if(m_AddSurfaceLayer)
@@ -311,7 +307,7 @@ int DxWriter::writeFile()
       {
         out << "-7 ";
       }
-      out << "\n";
+      out << std::endl;
     }
   }
 
@@ -324,23 +320,23 @@ int DxWriter::writeFile()
       out << "-8 ";
       if(rnIndex == 20)
       {
-        out << "\n";
+        out << std::endl;
         rnIndex = 0;
       }
       rnIndex++;
     }
   }
-  out << "\n";
-  out << "attribute \"dep\" string \"connections\"" << "\n";
-  out << "\n";
-  out << "object \"DREAM3D Generated\" class field" << "\n";
-  out << "component  \"positions\"    value 1" << "\n";
-  out << "component  \"connections\"  value 2" << "\n";
-  out << "component  \"data\"         value 3" << "\n";
-  out << "" << "\n";
-  out << "end" << "\n";
+  out << std::endl;
+  out << "attribute \"dep\" string \"connections\"" << std::endl;
+  out << std::endl;
+  out << "object \"DREAM3D Generated\" class field" << std::endl;
+  out << "component  \"positions\"    value 1" << std::endl;
+  out << "component  \"connections\"  value 2" << std::endl;
+  out << "component  \"data\"         value 3" << std::endl;
+  out << "" << std::endl;
+  out << "end" << std::endl;
 
-  file.close();
+  out.close();
 #if 0
   out.open("/tmp/m3cmesh.raw", std::ios_base::binary);
   out.write((const char*)(&dims[0]), 4);

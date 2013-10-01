@@ -5,11 +5,11 @@
 #ifndef _GenericFilter_H_
 #define _GenericFilter_H_
 
-#include <QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -42,9 +42,9 @@ class GenericFilter : public AbstractFilter
 
     DREAM3D_INSTANCE_PROPERTY(IntVec3Widget_t, Dimensions)
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, Origin)
-    DREAM3D_INSTANCE_PROPERTY(QVector<AxisAngleInput_t>, TestAxisAngleRotations)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<AxisAngleInput_t>, TestAxisAngleRotations)
 
-    DREAM3D_INSTANCE_PROPERTY(QVector<QString>, StrVector)
+    DREAM3D_INSTANCE_PROPERTY(std::vector<std::string>, StrVector)
 
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelCellArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(SelectedVoxelFieldArrayName)
@@ -62,19 +62,19 @@ class GenericFilter : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return "ExamplePlugin"; }
+    virtual const std::string getGroupName() { return "ExamplePlugin"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "GenericFilter"; }
+    virtual const std::string getHumanLabel() { return "GenericFilter"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI and helps to sort the filters into
     * a subgroup. It should be readable and understandable by humans.
     */
-    virtual const QString getSubGroupName() { return "Misc"; }
+    virtual const std::string getSubGroupName() { return "Misc"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

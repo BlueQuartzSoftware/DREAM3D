@@ -36,7 +36,7 @@
 
 #include "FindSlipTransmissionMetrics.h"
 
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -107,22 +107,22 @@ int FindSlipTransmissionMetrics::writeFilterParameters(AbstractFilterParametersW
 void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-
   //int err = 0;
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
 
   // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
   m_NeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
   if(m_NeighborList == NULL)
   {
-
-    QString ss = QObject::tr("NeighborLists Array Not Initialized correctly");
+    ss.str("");
+    ss << "NeighborLists Array Not Initialized correctly" << std::endl;
     setErrorCondition(-305);
-    addErrorMessage(getHumanLabel(), ss, -305);
+    addErrorMessage(getHumanLabel(), ss.str(), -305);
   }
 
   NeighborList<float>::Pointer f1Ptr = NeighborList<float>::New();
@@ -131,9 +131,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1, f1Ptr);
   if (f1Ptr.get() == NULL)
   {
-    QString ss = QObject::tr("F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
+    ss << "F1 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f1sptPtr = NeighborList<float>::New();
@@ -142,9 +142,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F1spt, f1sptPtr);
   if (f1sptPtr.get() == NULL)
   {
-    QString ss = QObject::tr("F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
+    ss << "F1spt Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer f7Ptr = NeighborList<float>::New();
@@ -153,9 +153,9 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::F7, f7Ptr);
   if (f7Ptr.get() == NULL)
   {
-    QString ss = QObject::tr("F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
+    ss << "F7 Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   NeighborList<float>::Pointer mPrimePtr = NeighborList<float>::New();
@@ -164,13 +164,13 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
   m->addFieldData(DREAM3D::FieldData::mPrime, mPrimePtr);
   if (mPrimePtr.get() == NULL)
   {
-    QString ss = QObject::tr("mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter");
+    ss << "mPrime Array Not Initialized At Beginning of FindSlipTransmissionMetrics Filter" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

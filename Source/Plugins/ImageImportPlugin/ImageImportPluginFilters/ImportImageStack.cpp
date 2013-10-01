@@ -80,7 +80,7 @@ ImportImageStack::~ImportImageStack()
 // -----------------------------------------------------------------------------
 void ImportImageStack::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> options;
+  std::vector<FilterParameter::Pointer> options;
 
 
 
@@ -109,7 +109,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
@@ -126,23 +126,25 @@ int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writ
 void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if (m_ImageFileList.size() == 0)
   {
-    QString ss = QObject::tr("No files have been selected for import. Have you set the input directory?");
+    ss.str("");
+    ss << "No files have been selected for import. Have you set the input directory?";
     setErrorCondition(-11);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
     // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, uint8_t, UInt8ArrayType, 0, voxels, 1)
-        // If we have RGB or RGBA Images then we are going to have to change things a bit.
-        // We should read the file and see what we have? Of course Qt is going to read it up into
-        // an RGB array by default
-        int err = 0;
-    QImageReader reader(m_ImageFileList[0]);
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+    // If we have RGB or RGBA Images then we are going to have to change things a bit.
+    // We should read the file and see what we have? Of course Qt is going to read it up into
+    // an RGB array by default
+    int err = 0;
+    QImageReader reader(QString::fromStdString(m_ImageFileList[0]));
     QSize imageDims = reader.size();
     int64_t dims[3] = {imageDims.width(), imageDims.height(), m_ImageFileList.size()};
     /* Sanity check what we are trying to load to make sure it can fit in our address space.
@@ -157,19 +159,21 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
     if(dims[0] * dims[1] * dims[2] > max)
     {
       err = -1;
-      QString s = QObject::tr("The total number of elements '%1' is greater than this program can hold. Try the 64 bit version.").arg((dims[0] * dims[1] * dims[2]));
+      std::stringstream s;
+      s << "The total number of elements '" << (dims[0] * dims[1] * dims[2]) << "' is greater than this program can hold. Try the 64 bit version.";
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), s, err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
       return;
     }
 
     if(dims[0] > max || dims[1] > max || dims[2] > max)
     {
       err = -1;
-      QString ss = QObject::tr("One of the dimensions is greater than the max index for this sysem. Try the 64 bit version."
-                               " dim[0]=%1  dim[1]=%2  dim[2]=%3").arg(dims[0]).arg(dims[1]).arg(dims[2]);
+      std::stringstream s;
+      s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
+      s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
       setErrorCondition(err);
-      addErrorMessage(getHumanLabel(), ss, err);
+      addErrorMessage(getHumanLabel(), s.str(), -1);
       return;
     }
     /* ************ End Sanity Check *************************** */
@@ -208,6 +212,7 @@ void ImportImageStack::execute()
     return;
   }
   setErrorCondition(0);
+  std::stringstream ss;
 
 
   m->setResolution(m_Resolution.x, m_Resolution.y, m_Resolution.z);
@@ -226,13 +231,14 @@ void ImportImageStack::execute()
 
   int64_t z = m_ZStartIndex;
   int64_t zSpot;
-  for (QVector<QString>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
+  for (std::vector<std::string>::iterator filepath = m_ImageFileList.begin(); filepath != m_ImageFileList.end(); ++filepath)
   {
-    QString imageFName = *filepath;
-    QString ss  = QObject::tr("Importing file %1").arg(imageFName);
-    notifyStatusMessage(ss);
+    std::string imageFName = *filepath;
+    ss.str("");
+    ss << "Importing file " << imageFName;
+    notifyStatusMessage(ss.str());
 
-    QImage image(imageFName);
+    QImage image(QString::fromStdString(imageFName));
     if (image.isNull() == true)
     {
       setErrorCondition(-14000);

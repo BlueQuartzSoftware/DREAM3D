@@ -88,7 +88,7 @@ QFilterWidget(parent)
   yRes->setText(QString::number(resolution.y));
   zRes->setText(QString::number(resolution.z));
 
-  setTitle(filter->getHumanLabel());
+  setTitle(QString::fromStdString(filter->getHumanLabel()));
   checkIOFiles();
 }
 
@@ -105,7 +105,7 @@ QImportImageStackWidget::~QImportImageStackWidget()
 // -----------------------------------------------------------------------------
 QString QImportImageStackWidget::getFilterGroup()
 {
-    return DREAM3D::FilterGroups::GenericFilters;
+    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -132,11 +132,11 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
-  QVector<QString> realFileList;
-  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> realFileList;
+  for(std::vector<std::string>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath = fileList[i];
+    QString filePath = QString::fromStdString(fileList[i]);
     QFileInfo fi(filePath);
     if (fi.exists())
     {
@@ -171,7 +171,7 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
-  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()));
+  w->setOutputFile(QDir::toNativeSeparators(m_OutputFile->text()).toStdString());
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
@@ -184,7 +184,7 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
   bool hasMissingFiles = false;
 
   // Now generate all the file names in the "Low to High" order because that is what the importer is expecting
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, true, filename);
 
   w->setEbsdFileList(fileList);
 
@@ -345,7 +345,7 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 bool QImportImageStackWidget::verifyPathExists(QString outFilePath, QLineEdit* lineEdit)
 {
-//  std::cout << "outFilePath: " << outFilePath << std::endl;
+//  std::cout << "outFilePath: " << outFilePath.toStdString() << std::endl;
   QFileInfo fileinfo(outFilePath);
   if (false == fileinfo.exists() )
   {
@@ -487,11 +487,11 @@ void QImportImageStackWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<QString> QImportImageStackWidget::generateFileList(int start, int end, bool &hasMissingFiles,
+std::vector<std::string> QImportImageStackWidget::generateFileList(int start, int end, bool &hasMissingFiles,
                                                bool stackLowToHigh, QString filename)
 {
   int index = 0;
-  QVector<QString> fileList;
+  std::vector<std::string> fileList;
 
   for (int i = 0; i < (end-start)+1; ++i)
     {
@@ -508,7 +508,7 @@ QVector<QString> QImportImageStackWidget::generateFileList(int start, int end, b
           .arg(m_FileSuffix->text()).arg(m_FileExt->text());
       QString filePath = m_InputDir->text() + QDir::separator() + filename;
       filePath = QDir::toNativeSeparators(filePath);
-      fileList.push_back(filePath);
+      fileList.push_back(filePath.toStdString());
     }
   return fileList;
 }
@@ -531,14 +531,14 @@ void QImportImageStackWidget::m_generateExampleEbsdInputFile()
   bool hasMissingFiles = false;
 
   // Now generate all the file names the user is asking for and populate the table
-  QVector<QString> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
+  std::vector<std::string> fileList = generateFileList(start, end, hasMissingFiles, m_StackLowToHigh->isChecked(), filename);
 
   m_FileListView->clear();
   QIcon greenDot = QIcon(QString(":/green-dot.png"));
   QIcon redDot = QIcon(QString(":/red-dot.png"));
-  for(QVector<QString>::size_type i = 0; i < fileList.size(); ++i)
+  for(std::vector<std::string>::size_type i = 0; i < fileList.size(); ++i)
   {
-    QString filePath(fileList.at(i));
+    QString filePath(fileList.at(i).c_str());
     QFileInfo fi(filePath);
     QListWidgetItem* item = new QListWidgetItem( filePath, m_FileListView);
     if (fi.exists() == true)
@@ -631,7 +631,7 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
       pos = 0;
       list.clear();
       QString fn = fi.baseName();
-      QString fns = fn;
+      std::string fns = fn.toStdString();
       int length =  fn.length();
       digitEnd = length-1;
       while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')

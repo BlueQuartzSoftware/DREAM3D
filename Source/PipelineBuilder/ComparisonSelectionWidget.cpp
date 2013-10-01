@@ -61,9 +61,9 @@ ComparisonSelectionWidget::~ComparisonSelectionWidget()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
+std::vector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
 {
-  QVector<ComparisonInput_t> comps;
+  std::vector<ComparisonInput_t> comps;
   if (m_ComparisonSelectionTableModel == NULL) { return comps; }
 
   int filterCount = m_ComparisonSelectionTableModel->rowCount();
@@ -75,7 +75,7 @@ QVector<ComparisonInput_t> ComparisonSelectionWidget::getComparisonInputs()
   for(int i = 0; i < filterCount; ++i)
   {
     ComparisonInput_t comp;
-    comp.arrayName = fieldNames[i];
+    comp.arrayName = fieldNames[i].toStdString();
     comp.compOperator = fieldOperators[i];
     comp.compValue = fieldValues[i];
     comps.push_back(comp);
@@ -134,7 +134,7 @@ void ComparisonSelectionWidget::on_addComparison_clicked()
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::on_removeComparison_clicked()
 {
-  //qDebug() << "on_removeComparisonSelection_clicked" << "\n";
+  //std::cout << "on_removeComparisonSelection_clicked" << std::endl;
   QItemSelectionModel *selectionModel = m_ComparisonSelectionTableView->selectionModel();
   if (!selectionModel->hasSelection()) return;
   QModelIndex index = selectionModel->currentIndex();
@@ -163,15 +163,15 @@ void ComparisonSelectionWidget::populateArrayNames(VolumeDataContainer::Pointer 
     populateVolumeArrayNames(vldc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= FaceListType)
-  {
+  { 
     populateSurfaceArrayNames(sdc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= EdgeListType)
-  {
+  { 
     populateEdgeArrayNames(edc);
   }
   else if (m_ArrayListType >= FieldListType && m_ArrayListType <= VertexListType)
-  {
+  { 
     populateVertexArrayNames(vdc);
   }
 
@@ -186,7 +186,7 @@ void ComparisonSelectionWidget::populateArrayNames(VolumeDataContainer::Pointer 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> comparisons)
+void ComparisonSelectionWidget::setComparisons(std::vector<ComparisonInput_t> comparisons)
 {
   qint32 count = comparisons.size();
 
@@ -196,7 +196,7 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
   //bool ok = false;
   for(int i = 0; i < count; ++i)
   {
-    arrayNames[i] = (comparisons[i].arrayName);
+    arrayNames[i] = QString::fromStdString(comparisons[i].arrayName);
     compOperators[i] = comparisons[i].compOperator;
     compValues[i] = comparisons[i].compValue;
   }
@@ -209,7 +209,7 @@ void ComparisonSelectionWidget::setComparisons(QVector<ComparisonInput_t> compar
 void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Pointer vldc)
 {
 
-  QList<QString> cellNames;
+  std::list<std::string> cellNames;
   if (m_ArrayListType == VertexListType)
   {
     cellNames = vldc->getVertexArrayNameList();
@@ -242,7 +242,7 @@ void ComparisonSelectionWidget::populateVolumeArrayNames(VolumeDataContainer::Po
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::Pointer sdc)
 {
-  QList<QString> cellNames;
+  std::list<std::string> cellNames;
   if (m_ArrayListType == VertexListType)
   {
     cellNames = sdc->getVertexArrayNameList();
@@ -271,7 +271,7 @@ void ComparisonSelectionWidget::populateSurfaceArrayNames(SurfaceDataContainer::
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointer edc)
 {
-  QList<QString> cellNames;
+  std::list<std::string> cellNames;
   if (m_ArrayListType == VertexListType)
   {
     cellNames = edc->getVertexArrayNameList();
@@ -296,7 +296,7 @@ void ComparisonSelectionWidget::populateEdgeArrayNames(EdgeDataContainer::Pointe
 // -----------------------------------------------------------------------------
 void ComparisonSelectionWidget::populateVertexArrayNames(VertexDataContainer::Pointer vdc)
 {
-  QList<QString> cellNames;
+  std::list<std::string> cellNames;
   if (m_ArrayListType == VertexListType)
   {
     cellNames = vdc->getVertexArrayNameList();

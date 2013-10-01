@@ -34,20 +34,14 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _CTFHEADERENTRY_H_
-#define _CTFHEADERENTRY_H_
+
 
 
 #include <string.h>
+#include <iostream>
 
-#include "H5Support/QH5Lite.h"
-
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
-#include <QtCore/QtDebug>
-
-#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdHeaderEntry.h"
 
 
@@ -69,28 +63,29 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 
     virtual ~CtfHeaderEntry() {}
 
-    QString getKey() { return m_key; }
-    QString getHDFType() { T value = static_cast<T>(0); return QH5Lite::HDFTypeForPrimitiveAsStr(value); }
+    std::string getKey() { return m_key; }
+    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
 
-    void parseValue(QByteArray &value)
+    void parseValue(char* value, size_t start, size_t length)
     {
       // Simple Naieve filter to remove European style decimals that use a comma
-      for (int c = 0; c < value.size(); ++c)
+      for (size_t c = start; c < length; ++c)
       {
-        if (value.at(c) == ',') { value[c] = '.';}
+        if (value[c] == ',') { value[c] = '.';}
       }
-      QTextStream ss(&value);
+      std::string data( &(value[start]), strlen(value) - start);
+      std::stringstream ss(data);
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value << std::endl;
+      out << m_key << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
     void setValue(T value) { m_value = value;}
 
   protected:
-    CtfHeaderEntry(const QString &key) :
+    CtfHeaderEntry(const std::string &key) :
       m_value(0),
       m_key(key)
     {
@@ -100,7 +95,7 @@ class EbsdLib_EXPORT CtfHeaderEntry : public EbsdHeaderEntry
 
   private:
     T m_value;
-    QString m_key;
+    std::string m_key;
 
     CtfHeaderEntry(const CtfHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const CtfHeaderEntry&); // Operator '=' Not Implemented
@@ -121,26 +116,26 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
     virtual ~CtfStringHeaderEntry() {}
 
-    QString getKey() { return m_key; }
-    QString getHDFType() { return "H5T_STRING"; }
+    std::string getKey() { return m_key; }
+    std::string getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(QByteArray &value)
+    void parseValue(char* value, size_t start, size_t length)
     {
-      m_value = QString(value);
+      m_value = std::string(value);
     }
 
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
+      out << m_key << "  " << m_value << std::endl;
     }
 
-    QString getValue() { return m_value; }
-    void setValue(const QString &value)
+    std::string getValue() { return m_value; }
+    void setValue(const std::string &value)
     {
       m_value = value;
     }
 
   protected:
-    CtfStringHeaderEntry(const QString &key) :
+    CtfStringHeaderEntry(const std::string &key) :
       m_key(key)
     {
     }
@@ -148,8 +143,8 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
     CtfStringHeaderEntry() {}
 
   private:
-    QString m_value;
-    QString m_key;
+    std::string m_value;
+    std::string m_key;
 
     CtfStringHeaderEntry(const CtfStringHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const CtfStringHeaderEntry&); // Operator '=' Not Implemented
@@ -157,5 +152,8 @@ class CtfStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-#endif /* _CTFHEADERENTRY_H_ */
+
+
+
+
 

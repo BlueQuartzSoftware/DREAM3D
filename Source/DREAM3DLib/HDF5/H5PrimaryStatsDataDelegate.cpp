@@ -36,8 +36,8 @@
 
 #include "H5PrimaryStatsDataDelegate.h"
 
-#include "H5Support/QH5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Lite.h"
+#include "H5Support/H5Utilities.h"
 
 
 // -----------------------------------------------------------------------------
@@ -306,7 +306,7 @@ int H5PrimaryStatsDataDelegate::writeVectorOfArrays(hid_t pid,
   size_t numColumns = colData.size();
   for (size_t c = 0; c < numColumns; ++c)
   {
-    //qDebug() << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] ;
+    //std::cout << "Writing Dataset:" << hdf5GroupName << "/" << columnHeaders[c] << std::endl;
     err = -1;
     if(NULL != colData[c].get() && colData[c]->GetSize() > 0)
     {
@@ -319,9 +319,9 @@ int H5PrimaryStatsDataDelegate::writeVectorOfArrays(hid_t pid,
     }
     else
     {
-      qDebug() << ":Null Data Column had no data. Did you create the data?" ;
-      qDebug() << "  File: " << __FILE__ ;
-      qDebug() << "  Line: " << __LINE__ ;
+      std::cout << ":Null Data Column had no data. Did you create the data?" << std::endl;
+      std::cout << "  File: " << __FILE__ << std::endl;
+      std::cout << "  Line: " << __LINE__ << std::endl;
       break;
     }
 
@@ -364,7 +364,7 @@ int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data
   mdfWeights.push_back(axis);
   mdfWeights.push_back(weight);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
+  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::MDFWeights);
   if (groupId > 0)
   {
     err = readVectorOfArrays(groupId, mdfWeights);
@@ -373,7 +373,7 @@ int H5PrimaryStatsDataDelegate::readMDFWeights(hid_t pid, PrimaryStatsData* data
       data->setMDF_Weights(mdfWeights);
     }
   }
-  err = QH5Utilities::closeHDF5Object(groupId);
+  err = H5Utilities::closeHDF5Object(groupId);
   return err;
 }
 
@@ -398,7 +398,7 @@ int H5PrimaryStatsDataDelegate::readODFWeights(hid_t pid, PrimaryStatsData* data
   odfWeights.push_back(weight);
   odfWeights.push_back(sigma);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
+  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::ODFWeights);
   if(groupId > 0)
   {
     err = readVectorOfArrays(groupId, odfWeights);
@@ -407,7 +407,7 @@ int H5PrimaryStatsDataDelegate::readODFWeights(hid_t pid, PrimaryStatsData* data
       data->setODF_Weights(odfWeights);
     }
   }
-  err |= QH5Utilities::closeHDF5Object(groupId);
+  err |= H5Utilities::closeHDF5Object(groupId);
 
   return err;
 }
@@ -434,7 +434,7 @@ int H5PrimaryStatsDataDelegate::readAxisODFWeights(hid_t pid, PrimaryStatsData* 
   odfWeights.push_back(sigma);
   odfWeights.push_back(weight);
 
-  hid_t groupId = QH5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
+  hid_t groupId = H5Utilities::openHDF5Object(pid, DREAM3D::HDF5::AxisODFWeights);
   if (groupId > 0)
   {
     err = readVectorOfArrays(groupId, odfWeights);
@@ -443,7 +443,7 @@ int H5PrimaryStatsDataDelegate::readAxisODFWeights(hid_t pid, PrimaryStatsData* 
       data->setAxisODF_Weights(odfWeights);
     }
   }
-  err |= QH5Utilities::closeHDF5Object(groupId);
+  err |= H5Utilities::closeHDF5Object(groupId);
 
   return err;
 }
@@ -451,13 +451,13 @@ int H5PrimaryStatsDataDelegate::readAxisODFWeights(hid_t pid, PrimaryStatsData* 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const QString &hdf5GroupName,
+int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
                                           VectorOfFloatArray colData)
 {
   herr_t err = 0;
   if (colData.size() == 0) { return err; }
   // Create the Group Folder
-  hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
+  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
     err = writeVectorOfArrays(disId, colData);
@@ -473,13 +473,13 @@ int H5PrimaryStatsDataDelegate::writeWeightsData(hid_t pid, const QString &hdf5G
 // -----------------------------------------------------------------------------
 int H5PrimaryStatsDataDelegate::writeDistributionData(hid_t pid,
                                                uint32_t disType,
-                                               const QString &hdf5GroupName,
+                                               const std::string &hdf5GroupName,
                                                VectorOfFloatArray colData)
 {
   herr_t err = 0;
   herr_t retErr = 0;
 
-  QString disTypeStr;
+  std::string disTypeStr;
   switch(disType)
   {
     case DREAM3D::DistributionType::Beta:
@@ -499,10 +499,10 @@ int H5PrimaryStatsDataDelegate::writeDistributionData(hid_t pid,
   }
 
   // Create the Group Folder
-  hid_t disId = QH5Utilities::createGroup(pid, hdf5GroupName);
+  hid_t disId = H5Utilities::createGroup(pid, hdf5GroupName);
   if (disId > 0)
   {
-    err = QH5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+    err = H5Lite::writeStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
     if(err >= 0)
     {
       err |= writeVectorOfArrays(disId, colData);
@@ -525,13 +525,13 @@ int H5PrimaryStatsDataDelegate::writeDistributionData(hid_t pid,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const QString &hdf5GroupName)
+uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const std::string &hdf5GroupName)
 {
   int err = 0;
   uint32_t dType = DREAM3D::DistributionType::UnknownDistributionType;
 
-  QString disTypeStr;
-  err = QH5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
+  std::string disTypeStr;
+  err = H5Lite::readStringAttribute(pid, hdf5GroupName, DREAM3D::HDF5::DistributionType, disTypeStr);
 
   if (disTypeStr.compare(DREAM3D::HDF5::BetaDistribution) == 0)
   {
@@ -553,11 +553,11 @@ uint32_t H5PrimaryStatsDataDelegate::readDistributionType(hid_t pid, const QStri
 //
 // -----------------------------------------------------------------------------
 int H5PrimaryStatsDataDelegate::readDistributionData(hid_t pid,
-                                              const QString &hdf5GroupName,
+                                              const std::string &hdf5GroupName,
                                               VectorOfFloatArray colData)
 {
   int err = 0;
-  hid_t disId = QH5Utilities::openHDF5Object(pid, hdf5GroupName);
+  hid_t disId = H5Utilities::openHDF5Object(pid, hdf5GroupName);
   if(disId < 0)
   {
     return -1;
@@ -569,7 +569,7 @@ int H5PrimaryStatsDataDelegate::readDistributionData(hid_t pid,
     err |= d->readH5Data(disId);
   }
 
-  err |= QH5Utilities::closeHDF5Object(disId);
+  err |= H5Utilities::closeHDF5Object(disId);
   return err;
 }
 
@@ -579,7 +579,7 @@ int H5PrimaryStatsDataDelegate::readDistributionData(hid_t pid,
 int H5PrimaryStatsDataDelegate::writeBoundaryArea(PrimaryStatsData* data, hid_t pid)
 {
   float BoundaryArea = data->getBoundaryArea();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
 }
 
 // -----------------------------------------------------------------------------
@@ -588,7 +588,7 @@ int H5PrimaryStatsDataDelegate::writeBoundaryArea(PrimaryStatsData* data, hid_t 
 int H5PrimaryStatsDataDelegate::readBoundaryArea(PrimaryStatsData* data, hid_t pid)
 {
   float BoundaryArea = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::BoundaryArea, BoundaryArea);
   data->setBoundaryArea(BoundaryArea);
   return err;
 }
@@ -598,7 +598,7 @@ int H5PrimaryStatsDataDelegate::readBoundaryArea(PrimaryStatsData* data, hid_t p
 int H5PrimaryStatsDataDelegate::writePhaseFraction(PrimaryStatsData* data, hid_t pid)
 {
   float phaseFraction = data->getPhaseFraction();
-  return QH5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  return H5Lite::writeScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
 }
 
 // -----------------------------------------------------------------------------
@@ -607,7 +607,7 @@ int H5PrimaryStatsDataDelegate::writePhaseFraction(PrimaryStatsData* data, hid_t
 int H5PrimaryStatsDataDelegate::readPhaseFraction(PrimaryStatsData* data, hid_t pid)
 {
   float phaseFraction = 0.0f;
-  int err = QH5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
+  int err = H5Lite::readScalarDataset(pid, DREAM3D::HDF5::PhaseFraction, phaseFraction);
   data->setPhaseFraction(phaseFraction);
   return err;
 }
@@ -626,7 +626,7 @@ int H5PrimaryStatsDataDelegate::writeGrainDiameterInfo(PrimaryStatsData* data, h
   float grainDiameterInfo[3];
   data->getGrainDiameterInfo(grainDiameterInfo);
 
-  return QH5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
+  return H5Lite::writePointerDataset(pid, DREAM3D::HDF5::Grain_Diameter_Info, rank, dims, grainDiameterInfo);
 }
 
 // -----------------------------------------------------------------------------
@@ -641,7 +641,7 @@ int H5PrimaryStatsDataDelegate::readGrainDiameterInfo(PrimaryStatsData* data, hi
   float grainDiameterInfo[3] =
   { 0.0f, 0.0f, 0.0f };
 
-  err = QH5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
+  err = H5Lite::readPointerDataset(groupId, DREAM3D::HDF5::Grain_Diameter_Info, grainDiameterInfo);
   data->setGrainDiameterInfo(grainDiameterInfo);
   return err;
 }

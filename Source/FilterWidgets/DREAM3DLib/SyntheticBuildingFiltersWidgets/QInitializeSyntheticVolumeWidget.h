@@ -46,7 +46,7 @@
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
 
 #include "PipelineBuilder/QFilterWidget.h"

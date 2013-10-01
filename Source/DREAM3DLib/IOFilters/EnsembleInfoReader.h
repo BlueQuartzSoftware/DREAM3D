@@ -38,12 +38,12 @@
 #ifndef _EnsembleInfoReader_h_
 #define _EnsembleInfoReader_h_
 
-#include <QtCore/QString>
+#include <string>
 #include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DataArray.hpp"
 #include "DREAM3DLib/Common/FileReader.h"
 
 /**
@@ -68,9 +68,9 @@ class DREAM3DLib_EXPORT EnsembleInfoReader : public FileReader
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
-    virtual const QString getHumanLabel() { return "Read Ensemble Info File"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getHumanLabel() { return "Read Ensemble Info File"; }
 
     virtual void setupFilterParameters();
     /**

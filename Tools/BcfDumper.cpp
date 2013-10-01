@@ -31,7 +31,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#include <QVector>
+#include <vector>
 #include <sstream>
 #include <iostream>
 
@@ -39,8 +39,7 @@
 #include "MXA/Common/LogTime.h"
 #include "MXA/Common/IO/MXAFileReader64.h"
 #include "MXA/Common/MXAMath.h"
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXADir.h"
 #include "MXA/Utilities/MXAFileInfo.h"
 
 #include "TiffUtilities.h"
@@ -84,18 +83,18 @@ namespace Bcf
 {
   static const size_t MapDescHeaderByteSize = 25;
   static const size_t IndexResultByteSize = 30;
-  static const QString FrameDescriptionFileName("FrameDescription");
-  static const QString FrameDataFileName("FrameData");
-  static const QString IndexingResultsFileName("IndexingResults");
+  static const std::string FrameDescriptionFileName("FrameDescription");
+  static const std::string FrameDataFileName("FrameData");
+  static const std::string IndexingResultsFileName("IndexingResults");
 }
 
 // -----------------------------------------------------------------------------
 // Returns -1 on error, 0 on Success
 // -----------------------------------------------------------------------------
-int parseMapSize(const QString inputDir, MapDescription_t* mapDesc )
+int parseMapSize(const std::string inputDir, MapDescription_t* mapDesc )
 {
 
-    QString frameDescPath = inputDir;
+    std::string frameDescPath = inputDir;
     frameDescPath += MXADir::Separator + Bcf::FrameDescriptionFileName;
 
     MXAFileReader64 reader(frameDescPath);
@@ -118,11 +117,11 @@ int parseMapSize(const QString inputDir, MapDescription_t* mapDesc )
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int extractPatterns(const QString &inputDir, const QString &outputDir, MapDescription_t* mapDesc)
+int extractPatterns(const std::string &inputDir, const std::string &outputDir, MapDescription_t* mapDesc)
 {
     int err = 0;
     // Generate our file path to read
-    QString frameDataPath = inputDir;
+    std::string frameDataPath = inputDir;
     frameDataPath += MXADir::Separator + Bcf::FrameDataFileName;
 
     // Make sure the output path is available.
@@ -137,12 +136,12 @@ int extractPatterns(const QString &inputDir, const QString &outputDir, MapDescri
     }
 
     EBSPHeader_t header;
-    QVector<uint8_t> outImage;
+    std::vector<uint8_t> outImage;
     size_t ebspPixelCount = 0;
     TiffUtilities tiffUtil;
-    QStringstream ss;
+    std::stringstream ss;
 
-    QStringstream comment;
+    std::stringstream comment;
     for (int i = 0; i < mapDesc->totalPoints; ++i)
     {
         ::memset(reinterpret_cast<uint8_t*>(&header), 0xAB, Bcf::MapDescHeaderByteSize);
@@ -175,11 +174,11 @@ int extractPatterns(const QString &inputDir, const QString &outputDir, MapDescri
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int extractIndexingResults(const QString &inputDir, const QString &outputFile, MapDescription_t* mapDesc)
+int extractIndexingResults(const std::string &inputDir, const std::string &outputFile, MapDescription_t* mapDesc)
 {
     int err = 0;
     // Generate our file path to read
-    QString indexResults = inputDir;
+    std::string indexResults = inputDir;
     indexResults += MXADir::Separator + Bcf::IndexingResultsFileName;
     MXAFileReader64 reader(indexResults);
 
@@ -228,10 +227,10 @@ int extractIndexingResults(const QString &inputDir, const QString &outputFile, M
     float radToDeg = 1.0f;
 #endif
     
-    QString parentPath = MXAFileInfo::parentPath(outputFile);
+    std::string parentPath = MXAFileInfo::parentPath(outputFile);
     if(!MXADir::mkdir(parentPath, true))
     {
-      QStringstream ss;
+      std::stringstream ss;
       ss << "Error creating parent path '" << parentPath << "'";
       std::cout << ss.str() << std::endl;
       return -1;
@@ -303,9 +302,9 @@ int main(int argc, char **argv)
 
 
 
-    QString inputDir(argv[1]);
-    QString outputDir(argv[2]);
-    QString ebsdIndexOutputFile(argv[3]);
+    std::string inputDir(argv[1]);
+    std::string outputDir(argv[2]);
+    std::string ebsdIndexOutputFile(argv[3]);
 
     // Read the "FrameDescription" header which tells us how many points are in the Map
     MapDescription_t mapDesc;

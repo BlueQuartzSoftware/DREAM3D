@@ -30,7 +30,7 @@
 #ifndef _AIMIMAGEGRAPHICSDELEGATE_H_
 #define _AIMIMAGEGRAPHICSDELEGATE_H_
 
-#include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
+#include <MXA/Common/MXASetGetMacros.h>
 
 //-- Qt Includes
 #include <QtCore/QObject>
@@ -67,14 +67,14 @@ class AIMImageGraphicsDelegate : public QObject
   virtual ~AIMImageGraphicsDelegate();
 
 
-  DREAM3D_INSTANCE_PROPERTY(QMainWindow*, MainWindow)
-  DREAM3D_INSTANCE_PROPERTY(QGraphicsView*, GraphicsView)
-  DREAM3D_INSTANCE_PROPERTY(QGraphicsScene*, GraphicsScene)
+  MXA_INSTANCE_PROPERTY(QMainWindow*, MainWindow)
+  MXA_INSTANCE_PROPERTY(QGraphicsView*, GraphicsView)
+  MXA_INSTANCE_PROPERTY(QGraphicsScene*, GraphicsScene)
 
 
-  DREAM3D_INSTANCE_PROPERTY(QImage, CachedImage)
-  DREAM3D_INSTANCE_PROPERTY(QImage, OverlayImage)
-  DREAM3D_INSTANCE_PROPERTY(bool, CompositeImages)
+  MXA_INSTANCE_PROPERTY(QImage, CachedImage)
+  MXA_INSTANCE_PROPERTY(QImage, OverlayImage)
+  MXA_INSTANCE_PROPERTY(bool, CompositeImages)
 
 
   /**

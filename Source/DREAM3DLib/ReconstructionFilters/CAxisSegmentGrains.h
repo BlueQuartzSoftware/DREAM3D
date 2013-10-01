@@ -38,15 +38,15 @@
 #define CAxisSegmentGrains_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "DREAM3DLib/ReconstructionFilters/SegmentGrains.h"
@@ -81,9 +81,9 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     DREAM3D_INSTANCE_PROPERTY(float, MisorientationTolerance)
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeGrainIds)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const QString getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
-    virtual const QString getHumanLabel() { return "Segment Fields (C-Axis Misorientation)"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::SegmentationFilters;}
+    virtual const std::string getHumanLabel() { return "Segment Fields (C-Axis Misorientation)"; }
 
     virtual void setupFilterParameters();
     /**
@@ -111,7 +111,7 @@ class DREAM3DLib_EXPORT CAxisSegmentGrains : public SegmentGrains
     CAxisSegmentGrains();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
 
     int32_t* m_GrainIds;
     float* m_Quats;

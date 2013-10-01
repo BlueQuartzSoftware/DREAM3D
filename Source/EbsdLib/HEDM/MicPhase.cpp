@@ -57,6 +57,7 @@ MicPhase::~MicPhase()
 {
 }
 
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -65,46 +66,117 @@ void MicPhase::printSelf(std::ostream &stream)
 
 
 }
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void MicPhase::parseString(char* value, size_t start, size_t length, std::string &data)
+{
+  if (value[start] == ':')
+  {
+    ++start;
+  } // move past the ":" character
+  while (value[start] == ' ' || value[start] == '\t')
+  {
+    ++start;
+  }
+
+  size_t len = strlen(value);
+  // Strip off training new line and carriage returns
+  if (value[len-1] == '\r' || value[len-1] == '\n')
+  {
+    len--;
+  }
+  if (value[len-1] == '\r' || value[len-1] == '\n')
+  {
+    len--;
+  }
+  std::string data2(&(value[start]), len - start);
+  data = data2;
+}
+
+/**
+     * @brief Converts a string to a number
+     */
+template<typename T>
+bool stringToNum(T &t, const std::string &s)
+{
+  // Filter the line to convert European comma style decimals to US/UK style points
+  std::vector<char> cLine(s.size()+1);
+  ::memcpy( &(cLine.front()), s.c_str(), s.size() + 1);
+  for (size_t c = 0; c < cLine.size(); ++c)
+  {
+    if (cLine[c] == ',') { cLine[c] = '.';}
+  }
+  std::istringstream iss(std::string( &(cLine.front()) ) );
+  return !(iss >> t).fail();
+}
+
+/**
+* @brief Parses a header line into string "tokens"
+*/
+template<typename T>
+std::vector<T> tokenize(const std::string &values, char delimiter)
+{
+  std::vector<T> output;
+  std::string::size_type start = 0;
+  std::string::size_type pos = 0;
+  while(pos != std::string::npos && pos != values.size() - 1)
+  {
+    pos = values.find(delimiter, start);
+    T value = 0;
+    stringToNum(value, values.substr(start, pos-start));
+    output.push_back(value);
+    if (pos != std::string::npos)
+    {
+      start = pos + 1;
+    }
+  }
+  return output;
+}
+
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseLatticeConstants(QByteArray &data)
+void MicPhase::parseLatticeConstants(char* value, size_t start, size_t length)
 {
-  bool ok = false;
-  QList<QByteArray> tokens = data.split(',');
+  std::string data;
+  parseString(value, start, length, data);
+  std::vector<float> constants = tokenize<float>(data, ',');
   m_LatticeConstants.resize(6);
-  m_LatticeConstants[0] = tokens[0].toFloat(&ok);
-  m_LatticeConstants[1] = tokens[1].toFloat(&ok);
-  m_LatticeConstants[2] = tokens[2].toFloat(&ok);
+  m_LatticeConstants[0] = constants[0];
+  m_LatticeConstants[1] = constants[1];
+  m_LatticeConstants[2] = constants[2];
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseLatticeAngles(QByteArray &data)
+void MicPhase::parseLatticeAngles(char* value, size_t start, size_t length)
 {
-  bool ok = false;
-  QList<QByteArray> tokens = data.split(',');
-  m_LatticeConstants.resize(6);
-  m_LatticeConstants[3] = tokens[0].toFloat(&ok);
-  m_LatticeConstants[4] = tokens[1].toFloat(&ok);
-  m_LatticeConstants[5] = tokens[2].toFloat(&ok);
+  std::string data;
+  parseString(value, start, length, data);
+  std::vector<float> constants = tokenize<float>(data, ',');
+    m_LatticeConstants[3] = constants[0];
+  m_LatticeConstants[4] = constants[1];
+  m_LatticeConstants[5] = constants[2];
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseBasisAtoms(QByteArray &data)
+void MicPhase::parseBasisAtoms(char* value, size_t start, size_t length)
 {
-  bool ok = false;
-  QList<QByteArray> tokens = data.split(' ');
-  m_BasisAtoms = tokens[0].toInt(&ok, 10);
+  std::string data;
+  parseString(value, start, length, data);
+  m_BasisAtoms = data;
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void MicPhase::parseZandCoordinates(QByteArray &data)
+void MicPhase::parseZandCoordinates(char* value, size_t start, size_t length)
 {
-  m_ZandCoordinates.push_back(QString::fromAscii(data));
+  std::string data;
+  parseString(value, start, length, data);
+  m_ZandCoordinates.push_back(data);
 }
 // -----------------------------------------------------------------------------
 //
@@ -123,9 +195,9 @@ unsigned int MicPhase::determineCrystalStructure()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString MicPhase::getMaterialName()
+std::string MicPhase::getMaterialName()
 {
-  QString name = "Nickel";
+  std::string name = "Nickel";
   m_PhaseName = name;
 
   return m_PhaseName;

@@ -37,30 +37,31 @@
 #include "PackPrimaryPhases.h"
 
 
-
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
-
-#include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
-#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
-#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
-#include "DREAM3DLib/ShapeOps/CylinderOps.h"
-#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
-#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
-#include "DREAM3DLib/Utilities/TimeUtilities.h"
-#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
-#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
-
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
 #include <tbb/parallel_for.h>
 #include <tbb/blocked_range3d.h>
 #include <tbb/partitioner.h>
 #include <tbb/task_scheduler_init.h>
 #endif
+
+
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
+
+#include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/Math/MatrixMath.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/ShapeOps/CubeOctohedronOps.h"
+#include "DREAM3DLib/ShapeOps/CylinderOps.h"
+#include "DREAM3DLib/ShapeOps/EllipsoidOps.h"
+#include "DREAM3DLib/ShapeOps/SuperEllipsoidOps.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
+#include "DREAM3DLib/GenericFilters/RenumberGrains.h"
+#include "DREAM3DLib/IOFilters/FieldDataCSVWriter.h"
+#include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 
 
@@ -279,7 +280,7 @@ PackPrimaryPhases::PackPrimaryPhases() :
   m_HalfPackingRes[0] = m_HalfPackingRes[1] = m_HalfPackingRes[2] = 1.0f;
   m_OneOverHalfPackingRes[0] = m_OneOverHalfPackingRes[1] = m_OneOverHalfPackingRes[2] = 1.0f;
 
-  Seed = QDateTime::currentMSecsSinceEpoch();
+  Seed = MXA::getMilliSeconds();
   setupFilterParameters();
 }
 
@@ -295,7 +296,7 @@ PackPrimaryPhases::~PackPrimaryPhases()
 // -----------------------------------------------------------------------------
 void PackPrimaryPhases::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");
@@ -357,35 +358,36 @@ int PackPrimaryPhases::writeFilterParameters(AbstractFilterParametersWriter* wri
 void PackPrimaryPhases::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-
   //Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType, voxels, 1)
 
   //Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, int32_t, Int32ArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, float, FloatArrayType, 0, fields, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Omega3s, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AxisLengths, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, float, FloatArrayType, 0, fields, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Neighborhoods, ss, int32_t, Int32ArrayType, 0, fields, 1)
 
   //Ensemble Data
   typedef DataArray<unsigned int> PhaseTypeArrayType;
   typedef DataArray<unsigned int> ShapeTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -302, unsigned int, PhaseTypeArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, ShapeTypes, ss, -305, unsigned int, ShapeTypeArrayType, ensembles, 1)
   m_StatsDataArray = StatsDataArray::SafeObjectDownCast<IDataArray*, StatsDataArray*>(m->getEnsembleData(DREAM3D::EnsembleData::Statistics).get());
   if(m_StatsDataArray == NULL)
   {
-    QString ss = QObject::tr("Stats Array Not Initialized correctly");
+    ss.str("");
+    ss << "Stats Array Not Initialized correctly" << std::endl;
     setErrorCondition(-308);
-    addErrorMessage(getHumanLabel(), ss, -308);
+    addErrorMessage(getHumanLabel(), ss.str(), -308);
   }
 
 }
@@ -397,10 +399,11 @@ void PackPrimaryPhases::preflight()
 {
   dataCheck(true, 1, 1, 1);
 
-  if (m_WriteGoalAttributes == true && getCsvOutputFile().isEmpty() == true)
+  if (m_WriteGoalAttributes == true && getCsvOutputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Csv Output File Set and it was not.").arg(ClassName());
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss << ClassName() << " needs the Csv Output File Set and it was not.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-387);
   }
 
@@ -415,15 +418,15 @@ void PackPrimaryPhases::execute()
 
   bool writeErrorFile = true;
   std::ofstream outFile;
-  if(m_ErrorOutputFile.isEmpty() == false)
+  if(m_ErrorOutputFile.empty() == false)
   {
-    outFile.open(m_ErrorOutputFile.toLatin1().data(), std::ios_base::binary);
+    outFile.open(m_ErrorOutputFile.c_str(), std::ios_base::binary);
     writeErrorFile = true;
   }
 
   int err = 0;
   setErrorCondition(err);
-  unsigned long long int Seed = QDateTime::currentMSecsSinceEpoch();
+  unsigned long long int Seed = MXA::getMilliSeconds();
   DREAM3D_RANDOMNG_NEW_SEEDED(Seed);
 
   int64_t totalPoints = m->getTotalPoints();
@@ -470,7 +473,7 @@ void PackPrimaryPhases::execute()
   totalprimaryvol = totalprimaryvol*(m->getXRes()*m->getYRes()*m->getZRes());
 
   size_t numensembles = m->getNumEnsembleTuples();
-
+  std::stringstream ss;
 
   // float change1, change2;
   float change = 0.0f;
@@ -495,11 +498,10 @@ void PackPrimaryPhases::execute()
       PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
       if (NULL == pp)
       {
-        QString ss = QObject::tr("Tried to cast a statsDataArray[%1].get() to a PrimaryStatsData* "
-        "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[%2] = %3 does not match up "
-        "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n")
-        .arg(i).arg(i).arg(m_PhaseTypes[i]);
-        PipelineMessage em (getHumanLabel(), ss, -666);
+        ss << "Tried to cast a statsDataArray[" << i << "].get() to a PrimaryStatsData* ";
+        ss << "pointer but this resulted in a NULL pointer. The value at m_PhaseTypes[" << i << "] = " << m_PhaseTypes[i] <<  " does not match up ";
+        ss << "with the type of pointer stored in the StatsDataArray (PrimaryStatsData)\n";
+        PipelineMessage em (getHumanLabel(), ss.str(), -666);
         addErrorMessage(em);
         setErrorCondition(-666);
         return;
@@ -564,8 +566,9 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
-    QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    ss.str("");
+    ss << "Filter Cancelled.";
+    notifyWarningMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -598,8 +601,9 @@ void PackPrimaryPhases::execute()
       change = (currentsizedisterror) - (oldsizedisterror);
       if(change > 0 || currentsizedisterror > (1.0 - (float(iter) * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
       {
-        QString ss = QObject::tr("Packing Grains (1/2) - Generating Grain #%1").arg(gid);
-        notifyStatusMessage(ss);
+        std::stringstream ss;
+        ss << "Packing Grains (1/2) - Generating Grain #" << gid;
+        notifyStatusMessage(ss.str());
         if (gid + 1 >= static_cast<int>(m->getNumFieldTuples()))
         {
           m->resizeFieldDataArrays(gid + 1);
@@ -615,8 +619,9 @@ void PackPrimaryPhases::execute()
       }
       if (getCancel() == true)
       {
-        QString ss = QObject::tr("Filter Cancelled.");
-        notifyWarningMessage(ss, -1);
+        ss.str("");
+        ss << "Filter Cancelled.";
+        notifyWarningMessage(ss.str(), -1);
         setErrorCondition(-1);
         return;
       }
@@ -646,8 +651,9 @@ void PackPrimaryPhases::execute()
         change = (currentsizedisterror) - (oldsizedisterror);
         if(change > 0 || currentsizedisterror > (1.0 - (iter * 0.001)) || curphasevol[j] < (0.75* factor * curphasetotalvol))
         {
-          QString ss = QObject::tr("Packing Grains (2/2) - Generating Grain #").arg(gid);
-          notifyStatusMessage(ss);
+          std::stringstream ss;
+          ss << "Packing Grains (2/2) - Generating Grain #" << gid;
+          notifyStatusMessage(ss.str());
           if (gid + 1 >= static_cast<int>(m->getNumFieldTuples()) )
           {
             m->resizeFieldDataArrays(gid + 1);
@@ -663,8 +669,9 @@ void PackPrimaryPhases::execute()
         }
         if (getCancel() == true)
         {
-          QString ss = QObject::tr("Filter Cancelled.");
-          notifyWarningMessage(ss, -1);
+          ss.str("");
+          ss << "Filter Cancelled.";
+          notifyWarningMessage(ss.str(), -1);
           setErrorCondition(-1);
           return;
         }
@@ -677,9 +684,9 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
-
-    QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    ss.str("");
+    ss << "Filter Cancelled.";
+    notifyWarningMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -735,9 +742,9 @@ void PackPrimaryPhases::execute()
 
   if (getCancel() == true)
   {
-
-    QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    ss.str("");
+    ss << "Filter Cancelled.";
+    notifyWarningMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -763,9 +770,9 @@ void PackPrimaryPhases::execute()
   {
     if ((int)i > progGrain + progGrainInc)
     {
-
-      QString ss = QObject::tr("Placing Grain #%1/%2").arg(i).arg(numgrains);
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Placing Grain #" << i << "/" << numgrains;
+      notifyStatusMessage(ss.str());
       progGrain = i;
     }
 
@@ -809,9 +816,9 @@ void PackPrimaryPhases::execute()
 
     if (getCancel() == true)
     {
-
-      QString ss = QObject::tr("Filter Cancelled.");
-      notifyWarningMessage(ss, -1);
+      ss.str("");
+      ss << "Filter Cancelled.";
+      notifyWarningMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
     }
@@ -820,7 +827,7 @@ void PackPrimaryPhases::execute()
   notifyStatusMessage("Determining Neighbors");
   progGrain = 0;
   progGrainInc = numgrains * .01;
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
   uint64_t startMillis = millis;
   uint64_t estimatedTime = 0;
@@ -829,15 +836,16 @@ void PackPrimaryPhases::execute()
   // determine neighborhoods and initial neighbor distribution errors
   for (size_t i = firstPrimaryField; i < numgrains; i++)
   {
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    currentMillis = MXA::getMilliSeconds();
     if (currentMillis - millis > 1000)
     {
-
+      ss.str("");
+      ss << "Determining Neighbors " << i << "/" << numgrains;
       timeDiff = ((float)i / (float)(currentMillis - startMillis));
       estimatedTime = (float)(numgrains - i) / timeDiff;
-      QString ss = QObject::tr("Determining Neighbors %1/%2 | Est. Time Remain: %3").arg(i).arg(numgrains).arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime));
-      notifyStatusMessage(ss);
-      millis = QDateTime::currentMSecsSinceEpoch();
+      ss << " Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      notifyStatusMessage(ss.str());
+      millis = MXA::getMilliSeconds();
     }
     determine_neighbors(i, 1);
   }
@@ -845,7 +853,7 @@ void PackPrimaryPhases::execute()
   // begin swaping/moving/adding/removing grains to try to improve packing
   int totalAdjustments = static_cast<int>(10 * (numgrains-1));
 
-  millis = QDateTime::currentMSecsSinceEpoch();
+  millis = MXA::getMilliSeconds();
   startMillis = millis;
   bool good;
   float xshift, yshift, zshift;
@@ -853,18 +861,19 @@ void PackPrimaryPhases::execute()
   int numIterationsPerTime = 0;
   for (int iteration = 0; iteration < totalAdjustments; ++iteration)
   {
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    currentMillis = MXA::getMilliSeconds();
     if (currentMillis - millis > 1000)
     {
-
-      QString ss = QObject::tr("Swapping/Moving/Adding/Removing Grains Iteration %1/%2").arg(iteration).arg(totalAdjustments);
+      ss.str("");
+      ss << "Swapping/Moving/Adding/Removing Grains Iteration " << iteration << "/" << totalAdjustments;
       timeDiff = ((float)iteration / (float)(currentMillis - startMillis));
       estimatedTime = (float)(totalAdjustments - iteration) / timeDiff;
 
-      ss = QObject::tr(" || Est. Time Remain: %1 || Iterations/Sec: %2").arg(DREAM3D::convertMillisToHrsMinSecs(estimatedTime)).arg(timeDiff * 1000);
-      notifyStatusMessage(ss);
+      ss << " || Est. Time Remain: " << MXA::convertMillisToHrsMinSecs(estimatedTime);
+      ss << " || Iterations/Sec: " << timeDiff * 1000;
+      notifyStatusMessage(ss.str());
 
-      millis = QDateTime::currentMSecsSinceEpoch();
+      millis = MXA::getMilliSeconds();
 
       numIterationsPerTime = iteration - lastIteration;
       lastIteration = iteration;
@@ -873,9 +882,9 @@ void PackPrimaryPhases::execute()
 
     if (getCancel() == true)
     {
-
-      QString ss = QObject::tr("Filter Cancelled.");
-      notifyWarningMessage(ss, -1);
+      ss.str("");
+      ss << "Filter Cancelled.";
+      notifyWarningMessage(ss.str(), -1);
       setErrorCondition(-1);
       return;
     }
@@ -885,7 +894,7 @@ void PackPrimaryPhases::execute()
     if(writeErrorFile == true && iteration % 25 == 0)
     {
       outFile << iteration << " " << fillingerror << "  " << oldsizedisterror << "  " << oldneighborhooderror << "  " << numgrains << " " << acceptedmoves
-              ;
+              << std::endl;
     }
 
     // JUMP - this option moves one grain to a random spot in the volume
@@ -1017,7 +1026,7 @@ void PackPrimaryPhases::execute()
 
   notifyStatusMessage("Packing Grains - Grain Adjustment Complete");
 
-  if(m_VtkOutputFile.isEmpty() == false)
+  if(m_VtkOutputFile.empty() == false)
   {
     err = writeVtkFile(grainOwnersPtr->GetPointer(0), exclusionZonesPtr->GetPointer(0));
     if(err < 0)
@@ -1075,27 +1084,27 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
 {
   size_t grainOwnersIdx = 0;
   std::ofstream outFile;
-  outFile.open(m_VtkOutputFile.toLatin1().data(), std::ios_base::binary);
+  outFile.open(m_VtkOutputFile.c_str(), std::ios_base::binary);
   if(outFile.is_open() == false)
   {
-    qDebug() << "m_VtkOutputFile: " << m_VtkOutputFile ;
+    std::cout << "m_VtkOutputFile: " << m_VtkOutputFile << std::endl;
     PipelineMessage em (getHumanLabel(), "Could not open Vtk File for writing from PackGrains", -1);
     addErrorMessage(em);
     setErrorCondition(-55);
     return -1;
   }
-  outFile << "# vtk DataFile Version 2.0" ;
-  outFile << "DREAM.3D Generated from PackPrimaryPhases Filter" ;
-  outFile << "ASCII" ;
-  outFile << "DATASET STRUCTURED_POINTS" ;
-  outFile << "DIMENSIONS " << m_PackingPoints[0] << " " << m_PackingPoints[1] << " " << m_PackingPoints[2] ;
-  outFile << "ORIGIN 0.0 0.0 0.0" ;
-  outFile << "SPACING " << m_PackingRes[0] << " " << m_PackingRes[1] << " " << m_PackingRes[2] ;
-  outFile << "POINT_DATA " << m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2] ;
+  outFile << "# vtk DataFile Version 2.0" << std::endl;
+  outFile << "DREAM.3D Generated from PackPrimaryPhases Filter" << std::endl;
+  outFile << "ASCII" << std::endl;
+  outFile << "DATASET STRUCTURED_POINTS" << std::endl;
+  outFile << "DIMENSIONS " << m_PackingPoints[0] << " " << m_PackingPoints[1] << " " << m_PackingPoints[2] << std::endl;
+  outFile << "ORIGIN 0.0 0.0 0.0" << std::endl;
+  outFile << "SPACING " << m_PackingRes[0] << " " << m_PackingRes[1] << " " << m_PackingRes[2] << std::endl;
+  outFile << "POINT_DATA " << m_PackingPoints[0] * m_PackingPoints[1] * m_PackingPoints[2] << std::endl;
   outFile << "\n";
   outFile << "\n";
-  outFile << "SCALARS NumOwners int  1" ;
-  outFile << "LOOKUP_TABLE default" ;
+  outFile << "SCALARS NumOwners int  1" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   for (int i = 0; i < (m_PackingPoints[2]); i++)
   {
     for (int j = 0; j < (m_PackingPoints[1]); j++)
@@ -1104,7 +1113,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
       {
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*i) + (m_PackingPoints[0]*j) + k;
         int name = grainOwners[grainOwnersIdx];
-        if(i % 20 == 0 && i > 0) outFile << "\n";
+        if(i % 20 == 0 && i > 0) outFile << std::endl;
         outFile << "     ";
         if(name < 100) outFile << " ";
         if(name < 10) outFile << " ";
@@ -1112,8 +1121,8 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
       }
     }
   }
-  outFile << "SCALARS ExclusionZone int  1" ;
-  outFile << "LOOKUP_TABLE default" ;
+  outFile << "SCALARS ExclusionZone int  1" << std::endl;
+  outFile << "LOOKUP_TABLE default" << std::endl;
   for (int i = 0; i < (m_PackingPoints[2]); i++)
   {
     for (int j = 0; j < (m_PackingPoints[1]); j++)
@@ -1122,7 +1131,7 @@ int PackPrimaryPhases::writeVtkFile(int32_t* grainOwners, bool* exclusionZones)
       {
         grainOwnersIdx = (m_PackingPoints[0]*m_PackingPoints[1]*i) + (m_PackingPoints[0]*j) + k;
         bool val = exclusionZones[grainOwnersIdx];
-        if(i % 20 == 0 && i > 0) outFile << "\n";
+        if(i % 20 == 0 && i > 0) outFile << std::endl;
         outFile << "       ";
         if(val == true) outFile << 1;
         else outFile << 0;
@@ -1711,12 +1720,12 @@ void PackPrimaryPhases::insert_grain(size_t gnum)
   unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[gnum]];
 
   // init any values for each of the Shape Ops
-  for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
+  for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops)
   {
-    ops.value()->init();
+    (*ops).second->init();
   }
   // Create our Argument Map
-  QMap<ShapeOps::ArgName, float> shapeArgMap;
+  std::map<ShapeOps::ArgName, float> shapeArgMap;
   shapeArgMap[ShapeOps::Omega3] = omega3;
   shapeArgMap[ShapeOps::VolCur] = volcur;
   shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1796,7 +1805,7 @@ void PackPrimaryPhases::assign_voxels()
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totpoints = m->getTotalPoints();
 
-
+  std::stringstream ss;
 
   size_t udims[3] = {0,0,0};
   m->getDimensions(udims);
@@ -1833,21 +1842,21 @@ void PackPrimaryPhases::assign_voxels()
   ellipfuncsPtr->initializeWithValues(-1);
 
   float grainsPerTime = 0;
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
 
   for (size_t i = firstPrimaryField; i < m->getNumFieldTuples(); i++)
   {
     grainsPerTime++;
-    currentMillis = QDateTime::currentMSecsSinceEpoch();
+    currentMillis = MXA::getMilliSeconds();
     if (currentMillis - millis > 1000)
     {
       float rate = grainsPerTime / ( (float)(currentMillis-millis) ) * 1000.0f;
-
-      QString ss = QObject::tr("Assign Voxels & Gaps|| Grains Checked: %1 || Grains/Second: %2").arg(i).arg((int)rate);
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Assign Voxels & Gaps|| Grains Checked: " << i << " || Grains/Second: " << (int)rate;
+      notifyStatusMessage(ss.str());
       grainsPerTime = 0;
-      millis = QDateTime::currentMSecsSinceEpoch();
+      millis = MXA::getMilliSeconds();
     }
     float volcur = m_Volumes[i];
     float bovera = m_AxisLengths[3*i+1];
@@ -1861,12 +1870,12 @@ void PackPrimaryPhases::assign_voxels()
     unsigned int shapeclass = m_ShapeTypes[m_FieldPhases[i]];
 
     // init any values for each of the Shape Ops
-    for (QMap<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
+    for (std::map<unsigned int, ShapeOps*>::iterator ops = m_ShapeOps.begin(); ops != m_ShapeOps.end(); ++ops )
     {
-      ops.value()->init();
+      (*ops).second->init();
     }
     // Create our Argument Map
-    QMap<ShapeOps::ArgName, float> shapeArgMap;
+    std::map<ShapeOps::ArgName, float> shapeArgMap;
     shapeArgMap[ShapeOps::Omega3] = omega3;
     shapeArgMap[ShapeOps::VolCur] = volcur;
     shapeArgMap[ShapeOps::B_OverA] = bovera;
@@ -1961,9 +1970,9 @@ void PackPrimaryPhases::assign_voxels()
   dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
   if (getCancel() == true)
   {
-
-    QString ss = QObject::tr("Filter Cancelled.");
-    notifyWarningMessage(ss, -1);
+    ss.str("");
+    ss << "Filter Cancelled.";
+    notifyWarningMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -1987,7 +1996,7 @@ void PackPrimaryPhases::assign_gaps_only()
 {
   notifyStatusMessage("Assigning Gaps");
 
-
+  std::stringstream ss;
 
   VolumeDataContainer* m = getVolumeDataContainer();
 
@@ -2018,7 +2027,7 @@ void PackPrimaryPhases::assign_gaps_only()
   neighborsPtr->initializeWithValues(-1);
 
   std::vector<int > n(m->getNumFieldTuples() + 1,0);
-  uint64_t millis = QDateTime::currentMSecsSinceEpoch();
+  uint64_t millis = MXA::getMilliSeconds();
   uint64_t currentMillis = millis;
 
   while (count != 0)
@@ -2038,13 +2047,13 @@ void PackPrimaryPhases::assign_gaps_only()
           if (grainname < 0)
           {
             count++;
-            currentMillis = QDateTime::currentMSecsSinceEpoch();
+            currentMillis = MXA::getMilliSeconds();
             if (currentMillis - millis > 1000)
             {
-
-              QString ss = QObject::tr("Assign Gaps || Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
-              notifyStatusMessage(ss);
-              millis = QDateTime::currentMSecsSinceEpoch();
+              ss.str("");
+              ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
+              notifyStatusMessage(ss.str());
+              millis = MXA::getMilliSeconds();
             }
             current = 0;
             most = 0;
@@ -2107,8 +2116,8 @@ void PackPrimaryPhases::assign_gaps_only()
     {
       for(int i = 0; i < 1000; i++)
       {
-
-        QString ss = QObject::tr("Assign Gaps|| Cycle#: %1 || Remaining Unassigned Voxel Count: %2").arg(counter).arg(count);
+        ss.str("");
+        ss << "Assign Gaps|| Cycle#: " << counter << " || Remaining Unassigned Voxel Count: " << count;
       }
     }
   }
@@ -2378,74 +2387,68 @@ void PackPrimaryPhases::write_goal_attributes()
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(m_CsvOutputFile);
-  QDir parentPath = fi.path();
-  if(!parentPath.mkpath("."))
+  std::string parentPath = MXAFileInfo::parentPath(m_CsvOutputFile);
+  if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath.absolutePath());
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
 
-    QFile outFile(getCsvOutputFile());
-  if (!outFile.open(QIODevice::WriteOnly))
-  {
-    QString msg = QObject::tr("CSV Output file could not be opened: %1").arg(getCsvOutputFile());
-    setErrorCondition(-200);
-    notifyErrorMessage(msg, getErrorCondition());
-    return;
-  }
+  std::string filename = getCsvOutputFile();
 
-  QTextStream dStream(&outFile);
-
+  std::ofstream outFile;
+  outFile.open(filename.c_str(), std::ios_base::binary);
   char space = DREAM3D::GrainData::Delimiter;
   // Write the total number of grains
-  dStream << m->getNumFieldTuples()-firstPrimaryField;
+  outFile << m->getNumFieldTuples()-firstPrimaryField << std::endl;
   // Get all the names of the arrays from the Data Container
-  QList<QString> headers = m->getFieldArrayNameList();
+  std::list<std::string> headers = m->getFieldArrayNameList();
 
-  QVector<IDataArray::Pointer> data;
+  std::vector<IDataArray::Pointer> data;
 
   //For checking if an array is a neighborlist
   NeighborList<int>::Pointer neighborlistPtr = NeighborList<int>::New();
 
   // Print the GrainIds Header before the rest of the headers
-  dStream << DREAM3D::GrainData::GrainID;
+  outFile << DREAM3D::GrainData::GrainID;
   // Loop throught the list and print the rest of the headers, ignoring those we don't want
-  for(QList<QString>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
+  for(std::list<std::string>::iterator iter = headers.begin(); iter != headers.end(); ++iter)
   {
     // Only get the array if the name does NOT match those listed
     IDataArray::Pointer p = m->getFieldData(*iter);
     if(p->getNameOfClass().compare(neighborlistPtr->getNameOfClass()) != 0)
     {
       if (p->GetNumberOfComponents() == 1) {
-        dStream << space << (*iter);
+        outFile << space << (*iter);
       }
       else // There are more than a single component so we need to add multiple header values
       {
         for(int k = 0; k < p->GetNumberOfComponents(); ++k)
         {
-          dStream << space << (*iter) << "_" << k;
+          outFile << space << (*iter) << "_" << k;
         }
       }
       // Get the IDataArray from the DataContainer
       data.push_back(p);
     }
   }
-  dStream << "\n";
+  outFile << std::endl;
 
   // Get the number of tuples in the arrays
   size_t numTuples = data[0]->GetNumberOfTuples();
+  std::stringstream ss;
   float threshold = 0.0f;
 
   // Skip the first grain
   for(size_t i = firstPrimaryField; i < numTuples; ++i)
   {
     if (((float)i / numTuples) * 100.0f > threshold) {
-
-      QString ss = QObject::tr("Writing Field Data - %1% Complete").arg(((float)i / numTuples) * 100);
-      notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Writing Field Data - " << ((float)i / numTuples) * 100 << "% Complete";
+      notifyStatusMessage(ss.str());
       threshold = threshold + 5.0f;
       if (threshold < ((float)i / numTuples) * 100.0f) {
         threshold = ((float)i / numTuples) * 100.0f;
@@ -2453,13 +2456,13 @@ void PackPrimaryPhases::write_goal_attributes()
     }
 
     // Print the grain id
-    dStream << i;
+    outFile << i;
     // Print a row of data
-    for(qint32 p = 0; p < data.size(); ++p)
+    for( std::vector<IDataArray::Pointer>::iterator p = data.begin(); p != data.end(); ++p)
     {
-      dStream << space;
-      data[p]->printTuple(dStream, i, space);
+      outFile << space;
+      (*p)->printTuple(outFile, i, space);
     }
-    dStream << "\n";
+    outFile << std::endl;
   }
 }

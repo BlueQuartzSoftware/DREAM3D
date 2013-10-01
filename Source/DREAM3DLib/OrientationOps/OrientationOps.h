@@ -33,17 +33,18 @@
 #ifndef _OrientationOps_H_
 #define _OrientationOps_H_
 
+#include <vector>
 
-#include <QtCore/QVector>
-#include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-
-#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
+#include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/Utilities/PoleFigureUtilities.h"
 
 /*
@@ -68,7 +69,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * index into the vector is the value of the constant at EBSD::CrystalStructure::***
      * @return Vector of OrientationOps subclasses.
      */
-    static QVector<OrientationOps::Pointer> getOrientationOpsVector();
+    static std::vector<OrientationOps::Pointer> getOrientationOpsVector();
 
     /**
      * @brief getODFSize Returns the number of elements in the ODF array
@@ -98,7 +99,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * @brief getSymmetryName Returns the name of the symmetry
      * @return
      */
-    virtual QString getSymmetryName() = 0;
+    virtual std::string getSymmetryName() = 0;
 
     /**
      * @brief getMisoQuat Finds the misorientation
@@ -182,10 +183,10 @@ class DREAM3DLib_EXPORT OrientationOps
      * @param eulers The Euler Angles to generate the pole figure from.
      * @param imageSize The size in Pixels of the final RGB Image.
      * @param numColors The number of colors to use in the RGB Image. Less colors can give the effect of contouring.
-     * @return A QVector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
+     * @return A std::vector of UInt8ArrayType pointers where each one represents a 2D RGB array that can be used to initialize
      * an image object from other libraries and written out to disk.
      */
-    virtual QVector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
+    virtual std::vector<UInt8ArrayType::Pointer> generatePoleFigure(PoleFigureConfiguration_t &config) = 0;
 
   protected:
     OrientationOps();

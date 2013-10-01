@@ -37,11 +37,11 @@
 #ifndef _VerifyTriangleWinding_H_
 #define _VerifyTriangleWinding_H_
 
-#include <QtCore/QString>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/SurfaceMeshFilter.h"
 
 /**
@@ -68,22 +68,22 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     // DREAM3D_INSTANCE_STRING_PROPERTY(OutputFile)
 
 
-    typedef QMap<int, QSet<int> >   LabelFaceMap_t;
-    typedef std::vector<int32_t>    FaceList_t;
+    typedef std::map<int, std::set<int> >                      LabelFaceMap_t;
+    typedef std::vector<int32_t>                               FaceList_t;
 
     /**
     * @brief This returns the group that the filter belonds to. You can select
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
-    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SurfaceMeshingFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::ConnectivityArrangementFilters; }
 
    /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Verify Triangle Winding"; }
+    virtual const std::string getHumanLabel() { return "Verify Triangle Winding"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -96,7 +96,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-
+    
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -146,7 +146,7 @@ class DREAM3DLib_EXPORT VerifyTriangleWinding : public SurfaceMeshFilter
      * @param triangleIndices
      * @return
      */
-    int32_t getSeedTriangle(int32_t label, QSet<int32_t> &triangleIndices);
+    int32_t getSeedTriangle(int32_t label, std::set<int32_t> &triangleIndices);
 
 
   private:

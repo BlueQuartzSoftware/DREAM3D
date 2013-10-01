@@ -37,7 +37,7 @@
 #ifndef _EbsdConstants_h_
 #define _EbsdConstants_h_
 
-#include <QtCore/QString>
+#include <string>
 
 /**
  * @file EbsdConstants.h
@@ -57,37 +57,37 @@ namespace Ebsd
 
 
   namespace H5 {
-    const QString OriginalHeader("OriginalHeader");
-    const QString ZStartIndex("ZStartIndex");
-    const QString ZEndIndex("ZEndIndex");
-    const QString ZResolution("Z Resolution");
-    const QString StackingOrder("Stacking Order");
-    const QString SampleTransformationAngle("SampleTransformationAngle");
-    const QString SampleTransformationAxis("SampleTransformationAxis");
-    const QString EulerTransformationAngle("EulerTransformationAngle");
-    const QString EulerTransformationAxis("EulerTransformationAxis");
+    const std::string OriginalHeader("OriginalHeader");
+    const std::string ZStartIndex("ZStartIndex");
+    const std::string ZEndIndex("ZEndIndex");
+    const std::string ZResolution("Z Resolution");
+    const std::string StackingOrder("Stacking Order");
+    const std::string SampleTransformationAngle("SampleTransformationAngle");
+    const std::string SampleTransformationAxis("SampleTransformationAxis");
+    const std::string EulerTransformationAngle("EulerTransformationAngle");
+    const std::string EulerTransformationAxis("EulerTransformationAxis");
 
-    const QString Manufacturer("Manufacturer");
-    const QString OriginalFile("OriginalFile");
-    const QString Index("Index");
-    const QString Header("Header");
-    const QString Phases("Phases");
-    const QString Data("Data");
+    const std::string Manufacturer("Manufacturer");
+    const std::string OriginalFile("OriginalFile");
+    const std::string Index("Index");
+    const std::string Header("Header");
+    const std::string Phases("Phases");
+    const std::string Data("Data");
 
 
     // Each Manufacturer has their own naming scheme for these variables but for
     // DREAM.3D we are going to settle on using these names for consistency
-    const QString XResolution("X Resolution");
-    const QString YResolution("Y Resolution");
+    const std::string XResolution("X Resolution");
+    const std::string YResolution("Y Resolution");
 
     // We store the Maximum number of X and Y Points for the given volume. This
     // allows us to store slices that have different XY voxel dimensions.
-    const QString XPoints("Max X Points");
-    const QString YPoints("Max Y Points");
+    const std::string XPoints("Max X Points");
+    const std::string YPoints("Max Y Points");
 
-    const QString FileVersionStr("FileVersion");
+    const std::string FileVersionStr("FileVersion");
     const unsigned int FileVersion = 5;
-    const QString EbsdLibVersionStr("EbsdLibVersion");
+    const std::string EbsdLibVersionStr("EbsdLibVersion");
   }
 
   /** @brief Constants defined for the 5 orientation options */
@@ -109,21 +109,21 @@ namespace Ebsd
   };
 
   namespace StackingOrder {
-    const QString LowToHigh("Low To High");
-    const QString HighToLow("High To Low");
-    const QString UnknownStackingOrder("Unknown Stacking Order");
+    const std::string LowToHigh("Low To High");
+    const std::string HighToLow("High To Low");
+    const std::string UnknownStackingOrder("Unknown Stacking Order");
 
     class Utils
     {
       public:
-        static QString getStringForEnum(RefFrameZDir v)
+        static std::string getStringForEnum(RefFrameZDir v)
         {
           if (LowtoHigh == v) return Ebsd::StackingOrder::LowToHigh;
           if (HightoLow == v) return Ebsd::StackingOrder::HighToLow;
           return Ebsd::StackingOrder::UnknownStackingOrder;
         }
 
-        static RefFrameZDir getEnumForString(const QString &v)
+        static RefFrameZDir getEnumForString(const std::string &v)
         {
           if (Ebsd::StackingOrder::LowToHigh.compare(v) == 0) return LowtoHigh;
           if (Ebsd::StackingOrder::HighToLow.compare(v) == 0) return HightoLow;
@@ -161,9 +161,9 @@ namespace Ebsd
 
   namespace BravaisLattice
   {
-    const QString Unknown("Unknown");
-    const QString Cubic("Cubic");
-    const QString Hexagonal("Hexagonal");
+    const std::string Unknown("Unknown");
+    const std::string Cubic("Cubic");
+    const std::string Hexagonal("Hexagonal");
   }
 
   enum NumType {

@@ -199,7 +199,7 @@ void QFilterWidget::actionRemoveFilter_triggered()
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFilterGroup()
 {
-  return (DREAM3D::FilterGroups::GenericFilters);
+  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -207,7 +207,7 @@ QString QFilterWidget::getFilterGroup()
 // -----------------------------------------------------------------------------
 QString QFilterWidget::getFilterSubGroup()
 {
-  return (DREAM3D::FilterSubGroups::MiscFilters);
+  return QString::fromStdString(DREAM3D::FilterSubGroups::MiscFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -422,7 +422,7 @@ void QFilterWidget::setupGui()
   setSizePolicy(sizePolicy2);
 
 
-  setTitle((getFilter(true)->getHumanLabel()));
+  setTitle(QString::fromStdString(getFilter(true)->getHumanLabel()));
 #if 0
   QVBoxLayout* vertLayout_0 = new QVBoxLayout(this);
 
@@ -455,54 +455,54 @@ void QFilterWidget::setupGui()
   setIsSelected(false);
   bool ok = false;
 
-  QVector<FilterParameter::Pointer> options = getFilter(true)->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(true)->getFilterParameters();
   int optIndex = 0;
-  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
 
-    QString labelName = (option->getHumanLabel());
-    if (option->getUnits().isEmpty() == false)
+    QString labelName = QString::fromStdString(option->getHumanLabel());
+    if (option->getUnits().empty() == false)
     {
-      labelName.append(" (").append((option->getUnits())).append(")");
+      labelName.append(" (").append(QString::fromStdString(option->getUnits())).append(")");
     }
     QLabel* label = new QLabel(labelName, this);
 
     if (wType == FilterParameter::StringWidget)
     {
       QLineEdit* le = new QLineEdit(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
 
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditStringValue(const QString &)));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
     else if (wType == FilterParameter::IntWidget)
     {
       QLineEdit* le = new QLineEdit(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QIntValidator* ival = new QIntValidator(this);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditIntValue()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
     else if (wType == FilterParameter::DoubleWidget)
     {
       QLineEdit* le = new QLineEdit(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
       QDoubleValidator* ival = new QDoubleValidator(this);
       ival->setDecimals(8);
       le->setValidator(ival);
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(textChanged(QString)), this, SLOT(updateQLineEditDoubleValue()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setText(v.toString());
     }
     else if (wType == FilterParameter::InputFileWidget)
@@ -511,14 +511,14 @@ void QFilterWidget::setupGui()
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
-      fp->setObjectName((option->getPropertyName()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
       theSlot.append("set");
-      theSlot.append((option->getPropertyName()));
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-      // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot<< "\n";
+      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
       QObject::connect( com, SIGNAL(activated(const QString &)),
                         this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
@@ -526,12 +526,12 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select...");
-      btn->setObjectName(("btn_" + option->getPropertyName() ));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName() ));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectInputFile()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
     else if (wType == FilterParameter::InputPathWidget)
@@ -540,14 +540,14 @@ void QFilterWidget::setupGui()
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
-      fp->setObjectName((option->getPropertyName()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
       theSlot.append("set");
-      theSlot.append((option->getPropertyName()));
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
-      // qDebug() << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot<< "\n";
+      // std::cout << getFilter()->getNameOfClass() << " - Slot Generated: " << theSlot.toStdString() << std::endl;
       QObject::connect( com, SIGNAL(activated(const QString &)),
                         this, theSlot.toAscii());
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
@@ -558,12 +558,12 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select Folder");
-      btn->setObjectName(("btn_" + option->getPropertyName() ));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName() ));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectInputPath()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
     else if (wType == FilterParameter::OutputFileWidget)
@@ -573,23 +573,23 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(label, 0, 0, 1, 1);
 
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
-      fp->setObjectName((option->getPropertyName()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
       theSlot.append("set");
-      theSlot.append((option->getPropertyName()));
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
                         this, theSlot.toAscii());
       gridLayout->addWidget(fp, 0, 1, 1, 1);
       QPushButton* btn = new QPushButton("Save As...");
-      btn->setObjectName(("btn_" + option->getPropertyName()));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName()));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputFile()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
     else if (wType == FilterParameter::OutputPathWidget)
@@ -598,12 +598,12 @@ void QFilterWidget::setupGui()
       gridLayout->setContentsMargins(0,0,0,0);
       gridLayout->addWidget(label, 0, 0, 1, 1);
       QFSDropLineEdit* fp = new QFSDropLineEdit(this);
-      fp->setObjectName((option->getPropertyName()));
+      fp->setObjectName(QString::fromStdString(option->getPropertyName()));
       QR3DFileCompleter* com = new QR3DFileCompleter(this, false);
       fp->setCompleter(com);
       QString theSlot("1");
       theSlot.append("set");
-      theSlot.append((option->getPropertyName()));
+      theSlot.append(QString::fromStdString(option->getPropertyName()));
       theSlot.append("(const QString &)");
 
       QObject::connect( fp, SIGNAL(textChanged(const QString &)),
@@ -611,22 +611,22 @@ void QFilterWidget::setupGui()
       gridLayout->addWidget(fp, 0, 1, 1, 1);
 
       QPushButton* btn = new QPushButton("Select Folder...");
-      btn->setObjectName(("btn_" + option->getPropertyName()));
+      btn->setObjectName(QString::fromStdString("btn_" + option->getPropertyName()));
       gridLayout->addWidget(btn, 0, 2, 1, 1);
 
       vertLayout->addLayout(gridLayout);
       connect(btn, SIGNAL(clicked()), this, SLOT(selectOutputPath()));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       fp->setText(v.toString());
     }
     else if (wType == FilterParameter::BooleanWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QCheckBox* le = new QCheckBox(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(stateChanged(int)), this, SLOT(updateQCheckBoxValue(int)));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setChecked(v.toBool());
     }
 #if 0
@@ -634,7 +634,7 @@ void QFilterWidget::setupGui()
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QSpinBox* le = new QSpinBox(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
       ConstrainedFilterParameter<int>* filtOpt = dynamic_cast<ConstrainedFilterParameter<int>* >(option);
       if (filtOpt)
       {
@@ -643,14 +643,14 @@ void QFilterWidget::setupGui()
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(int)), this, SLOT(updateQSpinBoxValue(int)));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toInt());
     }
     else if (wType == FilterParameter::DoubleConstrainedWidget)
     {
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QDoubleSpinBox* le = new QDoubleSpinBox(this);
-      le->setObjectName((option->getPropertyName()));
+      le->setObjectName(QString::fromStdString(option->getPropertyName()));
       ConstrainedFilterParameter<float>* filtOpt = dynamic_cast<ConstrainedFilterParameter<float>* >(option);
       if (filtOpt)
       {
@@ -659,7 +659,7 @@ void QFilterWidget::setupGui()
       }
       frmLayout->setWidget(optIndex, QFormLayout::FieldRole, le);
       connect(le, SIGNAL(valueChanged(double)), this, SLOT(updateQDoubleSpinBoxValue(double)));
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      QVariant v = property(option->getPropertyName().c_str());
       le->setValue(v.toDouble());
     }
 #endif
@@ -670,13 +670,13 @@ void QFilterWidget::setupGui()
       frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
       QComboBox* cb = new QComboBox(this);
       cb->setEditable(choiceFilterParameter->getEditable());
-      cb->setObjectName((option->getPropertyName()));
-      QVector<QString> choices = choiceFilterParameter->getChoices();
-      QVariant v = property(option->getPropertyName().toLatin1().data());
+      cb->setObjectName(QString::fromStdString(option->getPropertyName()));
+      std::vector<std::string> choices = choiceFilterParameter->getChoices();
+      QVariant v = property(option->getPropertyName().c_str());
       int selectedIndex = -1;
       for(unsigned int i = 0; i < choices.size(); ++i)
       {
-        QString choice = (choices[i]);
+        QString choice = QString::fromStdString(choices[i]);
         cb->addItem(choice);
         QString strChoice = v.toString();
 
@@ -695,7 +695,7 @@ void QFilterWidget::setupGui()
         connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
         cb->setCurrentIndex(selectedIndex);
-        bool success = setProperty(option->getPropertyName().toLatin1().data(), cb->currentText());
+        bool success = setProperty(option->getPropertyName().c_str(), cb->currentText());
         if (success == false)
         {
           BOOST_ASSERT(false);
@@ -713,7 +713,7 @@ void QFilterWidget::setupGui()
           uintValue = 0;
         }
         cb->setCurrentIndex(uintValue);
-        setProperty(option->getPropertyName().toLatin1().data(), uintValue);
+        setProperty(option->getPropertyName().c_str(), uintValue);
       }
     }
     else if (wType == FilterParameter::VolumeVertexArrayNameSelectionWidget)
@@ -821,8 +821,8 @@ void QFilterWidget::setupIntVec3Widget(QFormLayout* frmLayout, int optIndex,
                                        FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
-  QString prop = (option->getPropertyName());
-  QVariant v = property(option->getPropertyName().toLatin1().data());
+  QString prop = QString::fromStdString(option->getPropertyName());
+  QVariant v = property(option->getPropertyName().c_str());
   IntVec3Widget_t v3 = v.value<IntVec3Widget_t>();
 
   QHBoxLayout* horizontalLayout = new QHBoxLayout();
@@ -862,8 +862,8 @@ void QFilterWidget::setupFloatVec3Widget(QFormLayout* frmLayout, int optIndex,
                                          FilterParameter* option, QLabel* label )
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
-  QString prop = (option->getPropertyName());
-  QVariant v = property(option->getPropertyName().toLatin1().data());
+  QString prop = QString::fromStdString(option->getPropertyName());
+  QVariant v = property(option->getPropertyName().c_str());
   FloatVec3Widget_t v3 = v.value<FloatVec3Widget_t>();
 
   QHBoxLayout* horizontalLayout = new QHBoxLayout();
@@ -908,7 +908,7 @@ void QFilterWidget::setupAxisAngleWidget(QFormLayout* frmLayout, int optIndex,
 {
   label->deleteLater();
   AxisAngleWidget* w = new AxisAngleWidget(this);
-  w->setObjectName(((option->getPropertyName())));
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
   connect(w, SIGNAL(AxisAnglesChanged()), this, SLOT(updateAxisAngleWidget()));
 }
@@ -922,7 +922,7 @@ void QFilterWidget::setupVertexArrayNameChoiceWidget(QFormLayout* frmLayout, int
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
@@ -936,7 +936,7 @@ void QFilterWidget::setupEdgeArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
@@ -950,7 +950,7 @@ void QFilterWidget::setupFaceArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
@@ -964,7 +964,7 @@ void QFilterWidget::setupCellArrayNameChoiceWidget(QFormLayout* frmLayout, int o
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 
@@ -978,7 +978,7 @@ void QFilterWidget::setupFieldArrayNameChoiceWidget(QFormLayout* frmLayout, int 
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
@@ -991,7 +991,7 @@ void QFilterWidget::setupEnsembleArrayNameChoiceWidget(QFormLayout* frmLayout, i
 {
   frmLayout->setWidget(optIndex, QFormLayout::LabelRole, label);
   QComboBox* cb = new QComboBox(this);
-  cb->setObjectName((option->getPropertyName()));
+  cb->setObjectName(QString::fromStdString(option->getPropertyName()));
   frmLayout->setWidget(optIndex, QFormLayout::FieldRole, cb);
   connect(cb, SIGNAL( currentIndexChanged(int)), this, SLOT(updateArrayNameComboBoxValue(int)));
 }
@@ -1005,7 +1005,7 @@ void QFilterWidget::setupArraySelectionWidget(QFormLayout* frmLayout, int optInd
 {
   label->deleteLater();
   ArraySelectionWidget* w = new ArraySelectionWidget(this);
-  w->setObjectName(((option->getPropertyName())));
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
   connect(w, SIGNAL(arrayListsChanged()), this, SLOT(updateArraySelectionWidget()));
 }
@@ -1047,7 +1047,7 @@ void QFilterWidget::setupComparisonArraysWidget(QFormLayout* frmLayout, int optI
 
 
   w->setHumanLabel(label->text());
-  w->setObjectName(((option->getPropertyName())));
+  w->setObjectName((QString::fromStdString(option->getPropertyName())));
   frmLayout->setWidget(optIndex, QFormLayout::SpanningRole, w);
   connect(w, SIGNAL(parametersChanged()), this, SLOT(updateComparisonSelectionWidget()));
   label->deleteLater();
@@ -1194,8 +1194,8 @@ AbstractFilter::Pointer QFilterWidget::getFilter(bool defaultValues)
 void QFilterWidget::updateQLineEditIntValue()
 {
   QObject* whoSent = sender();
-  //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
-  //      << whoSent->objectName()<< "\n";
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -1204,7 +1204,7 @@ void QFilterWidget::updateQLineEditIntValue()
       value = 0;
       le->setText("0");
     }
-    setProperty(whoSent->objectName().toLatin1().data(), value);
+    setProperty(whoSent->objectName().toStdString().c_str(), value);
   }
 }
 
@@ -1214,8 +1214,8 @@ void QFilterWidget::updateQLineEditIntValue()
 void QFilterWidget::updateQLineEditDoubleValue()
 {
   QObject* whoSent = sender();
-  //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
-  //     << whoSent->objectName()<< "\n";
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //     << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le) {
     bool ok = false;
@@ -1224,7 +1224,7 @@ void QFilterWidget::updateQLineEditDoubleValue()
       value = 0;
       le->setText("0");
     }
-    setProperty(whoSent->objectName().toLatin1().data(), value);
+    setProperty(whoSent->objectName().toStdString().c_str(), value);
   }
 }
 
@@ -1238,8 +1238,8 @@ void QFilterWidget::selectInputFile()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName);
-  QString ext = getFileExtension(propName);
+  QString Ftype = getFileType(propName.toStdString());
+  QString ext = getFileExtension(propName.toStdString());
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString file = QFileDialog::getOpenFileName(this, tr("Select Input File"), defaultName, s);
@@ -1254,20 +1254,20 @@ void QFilterWidget::selectInputFile()
   QFileInfo fi(file);
   m_OpenDialogLastDirectory = fi.path();
 
-  ok = setProperty(propName.toLatin1().data(), file);
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) { }
   else
   {
-    //  qDebug() << "QPushButton '" << title() <<  "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
-  QVector<FilterParameter::Pointer> opts = f->getFilterParameters();
-  for (QVector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(propName) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QLineEdit* lb = qFindChild<QLineEdit*>(this, ((*iter)->getPropertyName()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -1302,20 +1302,20 @@ void QFilterWidget::selectInputPath()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  ok = setProperty(propName.toLatin1().data(), file);
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) { }
   else
   {
-    //  qDebug() << "QPushButton '" << title() <<  "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
-  QVector<FilterParameter::Pointer> opts = f->getFilterParameters();
-  for (QVector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(propName) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QLineEdit* lb = qFindChild<QLineEdit*>(this, ((*iter)->getPropertyName()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -1334,8 +1334,8 @@ void QFilterWidget::selectOutputFile()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  QString Ftype = getFileType(propName);
-  QString ext = getFileExtension(propName);
+  QString Ftype = getFileType(propName.toStdString());
+  QString ext = getFileExtension(propName.toStdString());
   QString s = Ftype + QString(" Files (") + ext + QString(");;All Files(*.*)");
   QString defaultName = m_OpenDialogLastDirectory + QDir::separator() + "Untitled";
   QString file = QFileDialog::getSaveFileName(this, tr("Save File As"), defaultName, s);
@@ -1352,23 +1352,23 @@ void QFilterWidget::selectOutputFile()
 
   bool ok = false;
 
-  ok = setProperty(propName.toLatin1().data(), file);
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) {}
   else
   {
-    //  qDebug() << "QPushButton '" << title() <<  "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
   // Get the options for that filter
-  QVector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   // Loop on all the filter options to find the filter option we want to set
-  for (QVector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(propName) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QLineEdit* lb = qFindChild<QLineEdit*>(this, ((*iter)->getPropertyName()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -1404,23 +1404,23 @@ void QFilterWidget::selectOutputPath()
   QString propName = whoSent->objectName();
   propName = propName.remove(0, 4);
 
-  ok = setProperty(propName.toLatin1().data(), file);
+  ok = setProperty(propName.toStdString().c_str(), file);
   if (true == ok) {}
   else
   {
-    //  qDebug() << "QPushButton '" << title() <<  "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+    //  std::cout << "QPushButton '" << title().toStdString() <<  "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set."<< std::endl;
   }
 
   // Now we need to find the specific filter that we are trying to set the value into
   AbstractFilter::Pointer f = getFilter(false);
   // Get the options for that filter
-  QVector<FilterParameter::Pointer> opts = f->getFilterParameters();
+  std::vector<FilterParameter::Pointer> opts = f->getFilterParameters();
   // Loop on all the filter options to find the filter option we want to set
-  for (QVector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
+  for (std::vector<FilterParameter::Pointer>::iterator iter = opts.begin(); iter != opts.end(); ++iter)
   {
-    if((*iter)->getPropertyName().compare(propName) == 0)
+    if((*iter)->getPropertyName().compare(propName.toStdString()) == 0)
     {
-      QLineEdit* lb = qFindChild<QLineEdit*>(this, ((*iter)->getPropertyName()));
+      QLineEdit* lb = qFindChild<QLineEdit*>(this, QString::fromStdString((*iter)->getPropertyName()));
       if(lb)
       {
         lb->setText(file);
@@ -1439,16 +1439,16 @@ void QFilterWidget::selectOutputPath()
 void QFilterWidget::updateComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: " << whoSent->objectName()<< "\n";
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
     bool ok = false;
-    ok = setProperty(whoSent->objectName().toLatin1().data(), v);
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), v);
     if (true == ok) { }
     else
     {
-      qDebug() << "QComboBox '" << title() << "'Property: '" << whoSent->objectName() << "' was NOT set." << "\n";
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
   }
 }
@@ -1460,17 +1460,17 @@ void QFilterWidget::updateComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(int v)
 {
   QObject* whoSent = sender();
-  // qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: " << whoSent->objectName()<< "\n";
+  // std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
     bool ok = false;
     QString text = cb->itemText(v);
-    ok = setProperty(whoSent->objectName().toLatin1().data(), text);
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), text);
     if (true == ok) { }
     else
     {
-      qDebug() << "QComboBox '" << title() << "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
   }
 }
@@ -1481,16 +1481,16 @@ void QFilterWidget::updateArrayNameComboBoxValue(int v)
 void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 {
   QObject* whoSent = sender();
-  //qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: " << whoSent->objectName()<< "\n";
+  //std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: " << whoSent->objectName().toStdString() << std::endl;
   QComboBox* cb = qobject_cast<QComboBox*>(whoSent);
   if(cb)
   {
     bool ok = false;
-    ok = setProperty(whoSent->objectName().toLatin1().data(), text);
+    ok = setProperty(whoSent->objectName().toStdString().c_str(), text);
     if (true == ok) { }
     else
     {
-      qDebug() << "QComboBox '" << title() << "'Property: '" << whoSent->objectName() << "' was NOT set."<< "\n";
+      std::cout << "QComboBox '" << title().toStdString() << "'Property: '" << whoSent->objectName().toStdString() << "' was NOT set." << std::endl;
     }
   }
 }
@@ -1501,12 +1501,12 @@ void QFilterWidget::updateArrayNameComboBoxValue(const QString &text)
 void QFilterWidget::updateQLineEditStringValue(const QString &v)
 {
   QObject* whoSent = sender();
-  //  qDebug() << "Filter: " << title() << " Getting updated from whoSent Name: "
-  //      << whoSent->objectName()<< "\n";
+  //  std::cout << "Filter: " << title().toStdString() << " Getting updated from whoSent Name: "
+  //      << whoSent->objectName().toStdString() << std::endl;
   QLineEdit* le = qobject_cast<QLineEdit*>(whoSent);
   if(le)
   {
-    setProperty(whoSent->objectName().toLatin1().data(), le->text());
+    setProperty(whoSent->objectName().toStdString().c_str(), le->text());
   }
 }
 
@@ -1533,12 +1533,12 @@ void QFilterWidget::updateQDoubleSpinBoxValue(double v)
 void QFilterWidget::updateQCheckBoxValue(int v)
 {
   QObject* whoSent = sender();
-  //  qDebug() << "Filter: " << title() << "->Property: " << whoSent->objectName()
-  //      << " via QCheckBox." << "\n";
+  //  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+  //      << " via QCheckBox." <<  std::endl;
   QCheckBox* le = qobject_cast<QCheckBox*>(whoSent);
   if(le)
   {
-    setProperty(whoSent->objectName().toLatin1().data(), le->isChecked());
+    setProperty(whoSent->objectName().toStdString().c_str(), le->isChecked());
   }
 }
 
@@ -1548,8 +1548,8 @@ void QFilterWidget::updateQCheckBoxValue(int v)
 void QFilterWidget::updateLineEdit(const QString &v)
 {
   QObject* whoSent = sender();
-  qDebug() << "Filter: " << title() << "->Property: " << whoSent->objectName()
-            << " via QLineEdit." << "\n";
+  std::cout << "Filter: " << title().toStdString() << "->Property: " << whoSent->objectName().toStdString()
+            << " via QLineEdit." <<  std::endl;
   BOOST_ASSERT(false);
 }
 
@@ -1683,11 +1683,11 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 
   //  if(drag->exec(Qt::CopyAction | Qt::MoveAction, Qt::CopyAction) == Qt::MoveAction)
   //  {
-  //    qDebug() << "Drag should close the widget because it was MOVE"<< "\n";
+  //    std::cout << "Drag should close the widget because it was MOVE" << std::endl;
   //  }
   //  else
   //  {
-  //    qDebug() << "Drag should leave Widget alone because it was COPY"<< "\n";
+  //    std::cout << "Drag should leave Widget alone because it was COPY" << std::endl;
   //  }
   drag->exec(Qt::MoveAction);
 }
@@ -1695,16 +1695,16 @@ void QFilterWidget::mouseMoveEvent(QMouseEvent *event)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QFilterWidget::getFileExtension(QString propName)
+QString QFilterWidget::getFileExtension(std::string propName)
 {
-  QVector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
   //  int optIndex = 0;
-  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
     if(option->getPropertyName().compare(propName) == 0)
     {
-      return (option->getFileExtension());
+      return QString::fromStdString(option->getFileExtension());
     }
   }
   return QString("");
@@ -1713,16 +1713,16 @@ QString QFilterWidget::getFileExtension(QString propName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString QFilterWidget::getFileType(QString propName)
+QString QFilterWidget::getFileType(std::string propName)
 {
-  QVector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
   //int optIndex = 0;
-  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
     if(option->getPropertyName().compare(propName) == 0)
     {
-      return (option->getFileType());
+      return QString::fromStdString(option->getFileType());
     }
   }
   return QString("");
@@ -1734,12 +1734,12 @@ QString QFilterWidget::getFileType(QString propName)
 void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
   // This section will update any combo boxes that are "Array Name" lists for the Voxel arrays.
-  QVector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
-  for (QVector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
+  std::vector<FilterParameter::Pointer> options = getFilter(false)->getFilterParameters();
+  for (std::vector<FilterParameter::Pointer>::iterator iter = options.begin(); iter != options.end(); ++iter )
   {
     FilterParameter* option = (*iter).get();
     FilterParameter::WidgetType wType = option->getWidgetType();
-    QString propertyName = (option->getPropertyName());
+    QString propertyName = QString::fromStdString(option->getPropertyName());
 
     switch(wType)
     {
@@ -1811,13 +1811,13 @@ void QFilterWidget::preflightAboutToExecute(VolumeDataContainer::Pointer vldc, S
 // -----------------------------------------------------------------------------
 void QFilterWidget::preflightDoneExecuting(VolumeDataContainer::Pointer vldc, SurfaceDataContainer::Pointer sdc, EdgeDataContainer::Pointer edc, VertexDataContainer::Pointer vdc)
 {
-  //  qDebug() << "void QFilterWidget::preflightDoneExecuting(...)"<< "\n";
+  //  std::cout << "void QFilterWidget::preflightDoneExecuting(...)" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QFilterWidget::updateArrayNameComboBox(const QList<QString> &arrayNames, QString propertyName)
+void QFilterWidget::updateArrayNameComboBox(const std::list<std::string> &arrayNames, QString propertyName)
 {
   //if (arrayNames.size() == 0) { return; }
   QComboBox* cb = qFindChild<QComboBox*>(this, propertyName);
@@ -1826,9 +1826,9 @@ void QFilterWidget::updateArrayNameComboBox(const QList<QString> &arrayNames, QS
   cb->blockSignals(true);
   cb->clear();
   int index = 0;
-  for(QList<QString>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
+  for(std::list<std::string>::const_iterator iter = arrayNames.begin(); iter != arrayNames.end(); ++iter)
   {
-    QString name = (*iter);
+    QString name = QString::fromStdString(*iter);
     cb->addItem(name);
     if (name.compare(selectedName) == 0)
     {

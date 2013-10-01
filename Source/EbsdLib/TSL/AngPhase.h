@@ -41,9 +41,8 @@
 #ifndef ANGPHASE_H_
 #define ANGPHASE_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
-#include <QtCore/QTextStream>
+#include <string>
+#include <vector>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -93,10 +92,10 @@ class EbsdLib_EXPORT HKLFamily
      * @brief Prints this class to the output stream. Useful for debuggin
      * @param stream The stream to print to
      */
-    void printSelf(QTextStream &stream)
+    void printSelf(std::ostream &stream)
     {
       stream << Ebsd::Ang::HKLFamilies;
-      stream << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << "\n";
+      std::cout << " " << h << " " << k << " " << l << " " << s1 << " " << diffractionIntensity << " " << s2 << std::endl;
     }
 
     /**
@@ -161,23 +160,23 @@ class EbsdLib_EXPORT AngPhase
     EBSD_INSTANCE_STRING_PROPERTY(Formula)
     EBSD_INSTANCE_STRING_PROPERTY(Info)
     EBSD_INSTANCE_PROPERTY(uint32_t, Symmetry)
-    EBSD_INSTANCE_PROPERTY(QVector<float>, LatticeConstants)
+    EBSD_INSTANCE_PROPERTY(std::vector<float>, LatticeConstants)
     EBSD_INSTANCE_PROPERTY(int, NumberFamilies)
-    EBSD_INSTANCE_PROPERTY(QVector<HKLFamily::Pointer>, HKLFamilies)
-    EBSD_INSTANCE_PROPERTY(QVector<int>, Categories)
+    EBSD_INSTANCE_PROPERTY(std::vector<HKLFamily::Pointer>, HKLFamilies)
+    EBSD_INSTANCE_PROPERTY(std::vector<int>, Categories)
 
 
-  //  void parsePhase(char* value, size_t start, size_t length);
-    void parseMaterialName(QList<QByteArray> tokens);
-    void parseFormula(QList<QByteArray> tokens);
-    void parseInfo(QList<QByteArray> tokens);
-  //  void parseSymmetry(char* value, size_t start, size_t length);
-    void parseLatticeConstants(QList<QByteArray> tokens);
-  //  void parseNumberFamilies(char* value, size_t start, size_t length);
-    void parseHKLFamilies(QList<QByteArray> tokens);
-    void parseCategories(QList<QByteArray> tokens);
+    void parsePhase(char* value, size_t start, size_t length);
+    void parseMaterialName(char* value, size_t start, size_t length);
+    void parseFormula(char* value, size_t start, size_t length);
+    void parseInfo(char* value, size_t start, size_t length);
+    void parseSymmetry(char* value, size_t start, size_t length);
+    void parseLatticeConstants(char* value, size_t start, size_t length);
+    void parseNumberFamilies(char* value, size_t start, size_t length);
+    void parseHKLFamilies(char* value, size_t start, size_t length);
+    void parseCategories(char* value, size_t start, size_t length);
 
-    void printSelf(QTextStream &stream);
+    void printSelf(std::ostream &stream);
 
     /**
      * @brief Returns the type of crystal structure for this phase.

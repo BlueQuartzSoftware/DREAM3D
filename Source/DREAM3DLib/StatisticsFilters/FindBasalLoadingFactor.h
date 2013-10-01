@@ -1,19 +1,19 @@
 #ifndef FINDBASALLOADINGFACTOR_H_
 #define FINDBASALLOADINGFACTOR_H_
 
-#include <QtCore/QVector>
-#include <QtCore/QString>
+#include <vector>
+#include <string>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
 #include "DREAM3DLib/OrientationOps/OrthoRhombicOps.h"
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
 
 /**
  * @class FindBasalLoadingFactor FindBasalLoadingFactor.h DREAM3DLib/GenericFilters/FindBasalLoadingFactor.h
@@ -40,9 +40,9 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-     virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
-    virtual const QString getHumanLabel() { return "Find Basal Loading Factors"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
+     virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const std::string getHumanLabel() { return "Find Basal Loading Factors"; }
 
     DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, LoadingDir)
 
@@ -66,7 +66,7 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     FindBasalLoadingFactor();
 
   private:
-    QVector<OrientationOps::Pointer> m_OrientationOps;
+    std::vector<OrientationOps::Pointer> m_OrientationOps;
     CubicOps::Pointer m_CubicOps;
     HexagonalOps::Pointer m_HexOps;
     OrthoRhombicOps::Pointer m_OrthoOps;

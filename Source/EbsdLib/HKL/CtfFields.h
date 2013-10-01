@@ -37,14 +37,13 @@
 #ifndef CTFFIELDS_H_
 #define CTFFIELDS_H_
 
-#include <QtCore/QString>
-#include <QtCore/QVector>
+#include <string>
+#include <vector>
 
-#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/EbsdConstants.h"
 #include "EbsdLib/EbsdSetGetMacros.h"
+#include "EbsdLib/EbsdLib.h"
 #include "EbsdLib/AbstractEbsdFields.h"
-
 #include "EbsdLib/HKL/CtfConstants.h"
 
 /**
@@ -62,18 +61,18 @@ class EbsdLib_EXPORT CtfFields : public AbstractEbsdFields
     virtual ~CtfFields();
     EBSD_TYPE_MACRO_SUPER(CtfFields, AbstractEbsdFields)
 
-    virtual QVector<QString> getFieldNames();
+    virtual std::vector<std::string> getFieldNames();
 
     template<typename T>
     T getFilterFields()
     {
       T fields;
-      fields.push_back(Ebsd::Ctf::Bands);
-      fields.push_back(Ebsd::Ctf::Error);
+      fields.push_back(Ebsd::Ctf::Bands.c_str());
+      fields.push_back(Ebsd::Ctf::Error.c_str());
 
-      fields.push_back(Ebsd::Ctf::MAD);
-      fields.push_back(Ebsd::Ctf::BC);
-      fields.push_back(Ebsd::Ctf::BS);
+      fields.push_back(Ebsd::Ctf::MAD.c_str());
+      fields.push_back(Ebsd::Ctf::BC.c_str());
+      fields.push_back(Ebsd::Ctf::BS.c_str());
 
       return fields;
     }

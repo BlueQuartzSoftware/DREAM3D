@@ -63,9 +63,9 @@ class DREAM3DLib_EXPORT RotateEulerRefFrame : public AbstractFilter
      DREAM3D_INSTANCE_PROPERTY(FloatVec3Widget_t, RotationAxis)
     DREAM3D_INSTANCE_PROPERTY(float, RotationAngle)
 
-    virtual const QString getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
-    virtual const QString getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
-    virtual const QString getHumanLabel() { return "Rotate Euler Reference Frame"; }
+    virtual const std::string getGroupName()  { return DREAM3D::FilterGroups::ProcessingFilters; }
+    virtual const std::string getSubGroupName()  { return DREAM3D::FilterSubGroups::ConversionFilters; }
+    virtual const std::string getHumanLabel() { return "Rotate Euler Reference Frame"; }
 
     virtual void setupFilterParameters();
     /**

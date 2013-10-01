@@ -36,12 +36,11 @@
 
 #include "DataContainerWriter.h"
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
-#include <QtCore/QFileInfo>
-#include <QtCore/QDir>
-#include <QtCore/QFile>
+#include "MXA/Utilities/MXAFileInfo.h"
+#include "MXA/Utilities/MXADir.h"
 
 #include "EbsdLib/EbsdConstants.h"
 
@@ -86,7 +85,7 @@ DataContainerWriter::~DataContainerWriter()
 // -----------------------------------------------------------------------------
 void DataContainerWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -149,14 +148,14 @@ void DataContainerWriter::readFilterParameters(AbstractFilterParametersReader* r
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteVolumeData( reader->readValue("WriteVolumeData", getWriteVolumeData()) );
   setWriteEdgeData( reader->readValue("WriteEdgeData", getWriteEdgeData() ) );
   setWriteSurfaceData( reader->readValue("WriteSurfaceData", getWriteSurfaceData() ) );
   setWriteVertexData( reader->readValue("WriteVertexData", getWriteVertexData() ) );
   setWriteXdmfFile( reader->readValue("WriteXdmfFile", getWriteXdmfFile()) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -182,23 +181,24 @@ int DataContainerWriter::writeFilterParameters(AbstractFilterParametersWriter* w
 void DataContainerWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
 
-
-  if (m_OutputFile.isEmpty() == true)
+  if (m_OutputFile.empty() == true)
   {
-    QString ss = QObject::tr(": The output file must be set before executing this filter.");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss <<  ": The output file must be set before executing this filter.";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
   }
 
-  QFileInfo fi(m_OutputFile);
-  QDir parentPath(fi.path());
-  if (parentPath.exists() == false)
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if (MXADir::exists(parentPath) == false)
   {
-    QString ss = QObject::tr("The directory path for the output file does not exist.");
-    addWarningMessage(getHumanLabel(), ss, -1);
+    ss.str("");
+    ss <<  "The directory path for the output file does not exist.";
+    addWarningMessage(getHumanLabel(), ss.str(), -1);
   }
-  if (fi.suffix().compare("") == 0)
+
+  if (MXAFileInfo::extension(m_OutputFile).compare("") == 0)
   {
     m_OutputFile.append(".dream3d");
   }
@@ -222,26 +222,25 @@ void DataContainerWriter::execute()
   if (NULL == m)
   {
     setErrorCondition(-1);
-
-    QString ss = QObject::tr("DataContainer was NULL");
-    notifyErrorMessage(ss, -10);
+    std::stringstream ss;
+    ss <<  " DataContainer was NULL";
+    notifyErrorMessage(ss.str(), -10);
     return;
   }
   setErrorCondition(0);
   dataCheck(false, 1, 1, 1);
 
-
+  std::stringstream ss;
   int err = 0;
 
   // Make sure any directory path is also available as the user may have just typed
   // in a path without actually creating the full path
-  QFileInfo fi(m_OutputFile);
-  QString parentPath = fi.path();
-  QDir dir;
-  if(!dir.mkpath(parentPath))
+  std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
+  if(!MXADir::mkdir(parentPath, true))
   {
-    QString ss = QObject::tr("Error creating parent path '%1'").arg(parentPath);
-    notifyErrorMessage(ss, -1);
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
     setErrorCondition(-1);
     return;
   }
@@ -249,9 +248,10 @@ void DataContainerWriter::execute()
   err = openFile(false); // Do NOT append to any existing file
   if (err < 0)
   {
-    QString ss = QObject::tr(": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[%1]").arg(m_OutputFile);
+    ss.str("");
+    ss <<  ": The hdf5 file could not be opened or created.\n The Given filename was:\n\t[" << m_OutputFile<< "]";
     setErrorCondition(-59);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return;
   }
 
@@ -259,26 +259,23 @@ void DataContainerWriter::execute()
   HDF5ScopedFileSentinel scopedFileSentinel(&m_FileId, true);
 
   // Write our File Version string to the Root "/" group
-  QH5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
+  H5Lite::writeStringAttribute(m_FileId, "/", DREAM3D::HDF5::FileVersionName, DREAM3D::HDF5::FileVersion);
 
-  QFile xdmfFile;
-  QTextStream out(&xdmfFile);
+  std::ofstream xdmf;
   if (m_WriteXdmfFile == true)
   {
-    QFileInfo fi(m_OutputFile);
-    QString name = fi.baseName();
-    if(parentPath.isEmpty() == true)
+    std::string name = MXAFileInfo::fileNameWithOutExtension(m_OutputFile);
+    if(parentPath.empty() == true)
     {
       name = name + ".xdmf";
     }
     else
     {
-      name =  parentPath + "/" + name + ".xdmf";
+      name = parentPath + MXAFileInfo::Separator + name + ".xdmf";
     }
-    xdmfFile.setFileName(name);
-    if (xdmfFile.open(QIODevice::WriteOnly | QIODevice::Text))
-    {
-      writeXdmfHeader(out);
+    xdmf.open(name.c_str(), std::ios_base::binary);
+    if (xdmf.is_open() == true) {
+      writeXdmfHeader(xdmf);
     }
   }
 
@@ -293,10 +290,10 @@ void DataContainerWriter::execute()
     writer->setVolumeDataContainer(getVolumeDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
-    writer->setXdmfOStream(&out);
-
-    QString ss = QObject::tr("%1 |--> Writing Voxel Data ").arg(getMessagePrefix());
-    writer->setMessagePrefix(ss);
+    writer->setXdmfOStream(&xdmf);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing Voxel Data ";
+    writer->setMessagePrefix(ss.str());
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
@@ -313,10 +310,10 @@ void DataContainerWriter::execute()
     writer->setSurfaceDataContainer(getSurfaceDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
-    writer->setXdmfOStream(&out);
-
-    QString ss = QObject::tr("%1 |--> Writing Surface Mesh Data ").arg(getMessagePrefix());
-    writer->setMessagePrefix(ss);
+    writer->setXdmfOStream(&xdmf);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing SurfaceMesh Data ";
+    writer->setMessagePrefix(ss.str());
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
@@ -332,10 +329,10 @@ void DataContainerWriter::execute()
     writer->setVertexDataContainer(getVertexDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
-    writer->setXdmfOStream(&out);
-
-    QString ss = QObject::tr("%1 |--> Writing Vertex Data ").arg(getMessagePrefix());
-    writer->setMessagePrefix(ss);
+    writer->setXdmfOStream(&xdmf);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing Vertex Data ";
+    writer->setMessagePrefix(ss.str());
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
@@ -351,10 +348,10 @@ void DataContainerWriter::execute()
     writer->setEdgeDataContainer(getEdgeDataContainer());
     writer->setObservers(getObservers());
     writer->setWriteXdmfFile(getWriteXdmfFile());
-    writer->setXdmfOStream(&out);
-
-    QString ss = QObject::tr("%1 |--> Writing Edge Data ").arg(getMessagePrefix());
-    writer->setMessagePrefix(ss);
+    writer->setXdmfOStream(&xdmf);
+    ss.str("");
+    ss << getMessagePrefix() << " |--> Writing Edge Data ";
+    writer->setMessagePrefix(ss.str());
     writer->execute();
     if (writer->getErrorCondition() < 0)
     {
@@ -365,7 +362,7 @@ void DataContainerWriter::execute()
 
   if (m_WriteXdmfFile == true)
   {
-      writeXdmfFooter(out);
+    writeXdmfFooter(xdmf);
   }
 
 
@@ -375,21 +372,21 @@ void DataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfHeader(QTextStream &xdmf)
+void DataContainerWriter::writeXdmfHeader(std::ostream &xdmf)
 {
-  xdmf << "<?xml version=\"1.0\"?>" << "\n";
-  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << "\n";
-  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << "\n";
-  xdmf << " <Domain>" << "\n";
+  xdmf << "<?xml version=\"1.0\"?>" << std::endl;
+  xdmf << "<!DOCTYPE Xdmf SYSTEM \"Xdmf.dtd\"[]>" << std::endl;
+  xdmf << "<Xdmf xmlns:xi=\"http://www.w3.org/2003/XInclude\" Version=\"2.2\">" << std::endl;
+  xdmf << " <Domain>" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void DataContainerWriter::writeXdmfFooter(QTextStream &xdmf)
+void DataContainerWriter::writeXdmfFooter(std::ostream &xdmf)
 {
-  xdmf << " </Domain>" << "\n";
-  xdmf << "</Xdmf>" << "\n";
+  xdmf << " </Domain>" << std::endl;
+  xdmf << "</Xdmf>" << std::endl;
 }
 
 // -----------------------------------------------------------------------------
@@ -400,7 +397,7 @@ int DataContainerWriter::writePipeline()
 
   // WRITE THE PIPELINE TO THE HDF5 FILE
   H5FilterParametersWriter::Pointer parametersWriter = H5FilterParametersWriter::New();
-  hid_t pipelineGroupId = QH5Utilities::createGroup(m_FileId, DREAM3D::HDF5::PipelineGroupName);
+  hid_t pipelineGroupId = H5Utilities::createGroup(m_FileId, DREAM3D::HDF5::PipelineGroupName);
   parametersWriter->setGroupId(pipelineGroupId);
 
 
@@ -442,12 +439,12 @@ int DataContainerWriter::openFile(bool appendData)
   // Try to open a file to append data into
   if (APPEND_DATA_TRUE == appendData)
   {
-    m_FileId = QH5Utilities::openFile(m_OutputFile, false);
+    m_FileId = H5Utilities::openFile(m_OutputFile, false);
   }
   // No file was found or we are writing new data only to a clean file
   if (APPEND_DATA_FALSE == appendData || m_FileId < 0)
   {
-    m_FileId = QH5Utilities::createFile (m_OutputFile);
+    m_FileId = H5Utilities::createFile (m_OutputFile);
   }
   return m_FileId;
 }
@@ -458,6 +455,6 @@ int DataContainerWriter::openFile(bool appendData)
 int DataContainerWriter::closeFile()
 {
   // Close the file when we are finished with it
-  return QH5Utilities::closeFile(m_FileId);
+  return H5Utilities::closeFile(m_FileId);
 }
 

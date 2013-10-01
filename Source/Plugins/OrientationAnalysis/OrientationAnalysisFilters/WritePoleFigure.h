@@ -36,13 +36,13 @@
 #ifndef _WritePoleFigure_H_
 #define _WritePoleFigure_H_
 
-#include <QString>
+#include <string>
 
 #include <QtCore/QString>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/Common/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -91,19 +91,19 @@ class DREAM3DLib_EXPORT WritePoleFigure : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const QString getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
 
     /**
      * @brief getSubGroupName This returns the subgroup within the main group for this filter.
      * @return
      */
-    virtual const QString getSubGroupName() { return "Output"; }
+    virtual const std::string getSubGroupName() { return "Output"; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const QString getHumanLabel() { return "Write Pole Figure Image"; }
+    virtual const std::string getHumanLabel() { return "Write Pole Figure Image"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters
@@ -165,10 +165,10 @@ class DREAM3DLib_EXPORT WritePoleFigure : public AbstractFilter
     void generateOrthorhombicPoleFigures(FloatArrayType *eulers, int phaseIndex);
 
     QString generateVtkPath( QString label);
-    void writeVtkFile(const QString filename,  DoubleArrayType* poleFigurePtr, int dimension);
+    void writeVtkFile(const std::string filename,  DoubleArrayType* poleFigurePtr, int dimension);
 
     QString generateImagePath( QString label);
-    void writeImage(const QString outputPath, QImage image, int dimension, QString label);
+    void writeImage(const std::string outputPath, QImage image, int dimension, QString label);
 
 
     QImage createQImageFromRgbaArray(UInt8ArrayType* poleFigurePtr, int imageDimension, QString imageLabel, bool includeOverlay);

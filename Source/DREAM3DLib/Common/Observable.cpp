@@ -71,7 +71,7 @@ void Observable::removeObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setMessagePrefix(const QString &str)
+void Observable::setMessagePrefix(const std::string &str)
 {
   m_Prefix = str;
 }
@@ -79,7 +79,7 @@ void Observable::setMessagePrefix(const QString &str)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QString Observable::getMessagePrefix()
+std::string Observable::getMessagePrefix()
 {
   return m_Prefix;
 }
@@ -92,7 +92,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
     // If the programmer set a prefix (which FilterPipeline does) we are going to
     // use the prefix in place of the 'FilterName' because this gives us more
     // information to use and display to the user.
-    if (m_Prefix.isEmpty() == false)
+    if (m_Prefix.empty() == false)
     {
        msg.setMessagePrefix(m_Prefix);
     }
@@ -105,7 +105,7 @@ void Observable::notifyMessage(PipelineMessage &msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyErrorMessage(QString errDesc, int errCode) {
+void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
 		PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
 		notifyMessage(errorMsg);
 }
@@ -113,7 +113,7 @@ void Observable::notifyErrorMessage(QString errDesc, int errCode) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyWarningMessage(QString warnDesc, int warnCode) {
+void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
   PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
   notifyMessage(warningMsg);
 }
@@ -121,7 +121,7 @@ void Observable::notifyWarningMessage(QString warnDesc, int warnCode) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusMessage(QString statusDesc) {
+void Observable::notifyStatusMessage(std::string statusDesc) {
   PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
   notifyMessage(statusMsg);
 }
@@ -137,7 +137,7 @@ void Observable::notifyProgressValue(int statusVal) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusAndProgress(QString statusDesc, int statusVal) {
+void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
   PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
   notifyMessage(statusUpdate);
 }

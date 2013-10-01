@@ -483,7 +483,7 @@ QImage generateAxisODFPoleFigure(const PoleFigureData &data)
 void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
 {
   int err = 0;
-  // std::cout << "SGAxisODFWidget[" << objectName() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
+  // std::cout << "SGAxisODFWidget[" << objectName().toStdString() << "]::on_m_CalculateODFBtn_clicked" << std::endl;
   QwtArray<float> e1s;
   QwtArray<float> e2s;
   QwtArray<float> e3s;
@@ -527,7 +527,7 @@ void SGAxisODFWidget::on_m_CalculateODFBtn_clicked()
   config.lambertDim = lamberSize;
   config.numColors = numColors;
 
-  QVector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
+  std::vector<UInt8ArrayType::Pointer> figures = ops.generatePoleFigure(config);
   {
     // Now create a QImage that is mirrored vertically and has the Axis overlay applied to it
     QImage image = PoleFigureImageUtilities::CreateQImageFromRgbaArray(figures[0].get(), imageSize, true);
@@ -619,9 +619,9 @@ void SGAxisODFWidget::on_loadODFTextureBtn_clicked()
   else
   {
     size_t numOrients = 0;
-    QString filename = file;
+    std::string filename = file.toStdString();
     std::ifstream inFile;
-    inFile.open(filename.toLatin1().data());
+    inFile.open(filename.c_str());
 
     inFile >> numOrients;
 

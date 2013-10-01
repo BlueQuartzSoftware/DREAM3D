@@ -29,6 +29,8 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "AIMImageGraphicsDelegate.h"
 
+//-- MXA Includes
+#include <MXA/Common/LogTime.h>
 
 //-- STL includes
 #include <iostream>

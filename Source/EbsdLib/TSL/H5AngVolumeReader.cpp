@@ -38,12 +38,11 @@
 
 #include <cmath>
 
-#include <QtCore/QString>
-
 #include "H5Support/H5Lite.h"
-#include "H5Support/QH5Utilities.h"
+#include "H5Support/H5Utilities.h"
 
 #include "EbsdLib/EbsdConstants.h"
+#include "EbsdLib/Utilities/StringUtils.h"
 #include "EbsdLib/TSL/H5AngReader.h"
 
 #if defined (H5Support_NAMESPACE)
@@ -95,7 +94,7 @@ void H5AngVolumeReader::initPointers(size_t numElements)
   setNumberOfElements(numElements);
   size_t numBytes = numElements * sizeof(float);
   bool readAllArrays = getReadAllArrays();
-  QSet<QString> arrayNames = getArraysToRead();
+  std::set<std::string> arrayNames = getArraysToRead();
 
   H5ANGREADER_ALLOCATE_ARRAY(Phi1, float)
   H5ANGREADER_ALLOCATE_ARRAY(Phi, float)
@@ -129,7 +128,7 @@ void H5AngVolumeReader::deletePointers()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void* H5AngVolumeReader::getPointerByName(const QString &fieldName)
+void* H5AngVolumeReader::getPointerByName(const std::string &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return static_cast<void*>(m_Phi1);}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return static_cast<void*>(m_Phi);}
@@ -147,7 +146,7 @@ void* H5AngVolumeReader::getPointerByName(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &fieldName)
+Ebsd::NumType H5AngVolumeReader::getPointerType(const std::string &fieldName)
 {
   if (fieldName.compare(Ebsd::Ang::Phi1) == 0) { return Ebsd::Float;}
   if (fieldName.compare(Ebsd::Ang::Phi) == 0) { return Ebsd::Float;}
@@ -166,15 +165,15 @@ Ebsd::NumType H5AngVolumeReader::getPointerType(const QString &fieldName)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QVector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
+std::vector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
 {
   m_Phases.clear();
 
   // Get the first valid index of a z slice
-  QString index = QString::number(getZStart());
+  std::string index = StringUtils::numToString(getZStart());
 
   // Open the hdf5 file and read the data
-  hid_t fileId = QH5Utilities::openFile(getFileName(), true);
+  hid_t fileId = H5Utilities::openFile(getFileName(), true);
   if(fileId < 0)
   {
     setErrorMessage("Error: Could not open .h5ebsd file for reading.");
@@ -183,7 +182,7 @@ QVector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
   }
   herr_t err = 0;
 
-  hid_t gid = H5Gopen(fileId, index.toAscii().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(fileId, index.c_str(), H5P_DEFAULT);
   H5AngReader::Pointer reader = H5AngReader::New();
   reader->setHDF5Path(index);
   err = reader->readHeader(gid);
@@ -192,12 +191,12 @@ QVector<AngPhase::Pointer> H5AngVolumeReader::getPhases()
     setErrorMessage(reader->getErrorMessage());
     setErrorCode(reader->getErrorCode());
     err = H5Gclose(gid);
-    err = QH5Utilities::closeFile(fileId);
+    err = H5Utilities::closeFile(fileId);
     return m_Phases;
   }
   m_Phases = reader->getPhases();
   err = H5Gclose(gid);
-  err = QH5Utilities::closeFile(fileId);
+  err = H5Utilities::closeFile(fileId);
   return m_Phases;
 }
 
@@ -234,7 +233,7 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
   {
     H5AngReader::Pointer reader = H5AngReader::New();
     reader->setFileName(getFileName());
-    reader->setHDF5Path(QString::number(slice + getSliceStart()));
+    reader->setHDF5Path(StringUtils::numToString(slice + getSliceStart()));
     reader->setUserZDir(getStackingOrder());
     reader->setSampleTransformationAngle(getSampleTransformationAngle());
     reader->setSampleTransformationAxis(getSampleTransformationAxis());
@@ -253,7 +252,6 @@ int H5AngVolumeReader::loadData(int64_t xpoints,
     xpointsslice = reader->getNumEvenCols();
     ypointsslice = reader->getNumRows();
     float* euler1Ptr = reader->getPhi1Pointer();
-    if (NULL == euler1Ptr) { setErrorCode(-99090); setErrorMessage("Euler1 Pointer was NULL from Reader"); return getErrorCode(); }
     float* euler2Ptr = reader->getPhiPointer();
     float* euler3Ptr = reader->getPhi2Pointer();
     float* xPtr = reader->getXPositionPointer();

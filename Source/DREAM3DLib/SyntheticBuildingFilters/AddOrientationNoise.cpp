@@ -36,16 +36,15 @@
 
 #include "AddOrientationNoise.h"
 
-#include <QtCore/QMap>
+#include <map>
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Math/DREAM3DMath.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
-#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
 
 
 
@@ -72,7 +71,7 @@ AddOrientationNoise::~AddOrientationNoise()
 // -----------------------------------------------------------------------------
 void AddOrientationNoise::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Magnitude of Orientation Noise");
@@ -115,11 +114,11 @@ int AddOrientationNoise::writeFilterParameters(AbstractFilterParametersWriter* w
 void AddOrientationNoise::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -300, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -300, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------

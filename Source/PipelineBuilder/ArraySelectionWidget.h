@@ -41,10 +41,10 @@
 
 #include "ui_ArraySelectionWidget.h"
 
-#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
-#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
-#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
+#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/Common/EdgeDataContainer.h"
+#include "DREAM3DLib/Common/VertexDataContainer.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 
@@ -250,14 +250,14 @@ class PipelineBuilderLib_EXPORT ArraySelectionWidget : public QTabWidget, privat
 
     virtual void populateArrayList(QListWidget* listWidget, QStringList &arrayNames, QCheckBox *cb = NULL);
     virtual void populateArrayList(QListWidget* listWidget,
-                                    QList<QString> &arrayNames, QCheckBox *cb = NULL);
+                                    std::list<std::string> &arrayNames, QCheckBox *cb = NULL);
 
     /**
      * @brief Returns the list of selected Array Names
      */
-    virtual QSet<QString> getSelectedArrays(QListWidget* listWidget);
-    virtual void setSelectedArrays(QSet<QString> names, QListWidget* listWidget);
-    virtual QSet<QString> getNonSelectedArrays(QListWidget* listWidget);
+    virtual std::set<std::string> getSelectedArrays(QListWidget* listWidget);
+    virtual void setSelectedArrays(std::set<std::string> names, QListWidget* listWidget);
+    virtual std::set<std::string> getNonSelectedArrays(QListWidget* listWidget);
     virtual void clearArraySelectionLists();
 
     void writeSelections(QSettings &prefs, QString name, QString prefix, QListWidget* widget);

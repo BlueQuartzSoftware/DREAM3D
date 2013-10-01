@@ -38,12 +38,12 @@
 
 
 
-#include "H5Support/QH5Utilities.h"
-#include "H5Support/QH5Lite.h"
+#include "H5Support/H5Utilities.h"
+#include "H5Support/H5Lite.h"
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
-#include "DREAM3DLib/DataArrays/StatsDataArray.h"
+#include "DREAM3DLib/Common/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -74,7 +74,7 @@ VolumeDataContainerReader::~VolumeDataContainerReader()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
 
   setFilterParameters(parameters);
 }
@@ -109,7 +109,7 @@ int VolumeDataContainerReader::writeFilterParameters(AbstractFilterParametersWri
 void VolumeDataContainerReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   if(NULL == m)
@@ -154,13 +154,15 @@ void VolumeDataContainerReader::execute()
   if(NULL == m)
   {
     setErrorCondition(-1);
-    QString ss = QObject::tr("DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    std::stringstream ss;
+    ss <<" DataContainer was NULL";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   setErrorCondition(0);
   //dataCheck(false, 1, 1, 1);
   int err = 0;
+  std::stringstream ss;
 
   // Clear out everything from the data container before we start.
   int64_t volDims[3] =
@@ -200,20 +202,20 @@ void VolumeDataContainerReader::execute()
 int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t volDims[3], float spacing[3], float origin[3])
 {
   int err = 0;
-  
+  std::stringstream ss;
 
-  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
+  hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+    dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
   }
   if(dcGid < 0)
   {
-    err = QH5Utilities::closeFile(fileId);
-
-    QString ss = QObject::tr(": Error opening group '%1'").arg(DREAM3D::HDF5::VolumeDataContainerName);
+    err = H5Utilities::closeFile(fileId);
+    ss.str("");
+    ss <<": Error opening group '" << DREAM3D::HDF5::VolumeDataContainerName << "'";
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, -150);
+    addErrorMessage(getHumanLabel(), ss.str(), -150);
     return -1;
   }
 
@@ -229,7 +231,7 @@ int VolumeDataContainerReader::getSizeResolutionOrigin(hid_t fileId, int64_t vol
 // -----------------------------------------------------------------------------
 int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], float spacing[3], float origin[3])
 {
-  int err = QH5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
+  int err = H5Lite::readPointerDataset(dcGid, H5_DIMENSIONS, volDims);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Dimensions", err);
@@ -238,7 +240,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
     return -1;
   }
 
-  err = QH5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
+  err = H5Lite::readPointerDataset(dcGid, H5_SPACING, spacing);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Spacing (Resolution)", err);
@@ -247,7 +249,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
     return -1;
   }
 
-  err = QH5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
+  err = H5Lite::readPointerDataset(dcGid, H5_ORIGIN, origin);
   if(err < 0)
   {
     PipelineMessage em (getHumanLabel(), "DataContainerReader Error Reading the Origin", err);
@@ -264,7 +266,7 @@ int VolumeDataContainerReader::gatherMetaData(hid_t dcGid, int64_t volDims[3], f
 int VolumeDataContainerReader::gatherData(bool preflight)
 {
   int err = 0;
-  
+  std::stringstream ss;
   int64_t volDims[3] =
   { 0, 0, 0 };
   float spacing[3] =
@@ -275,23 +277,23 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_HdfFileId < 0)
   {
-
-    QString ss = QObject::tr(": Error opening input file");
+    ss.str("");
+    ss << ": Error opening input file";
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return -1;
   }
-  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.toLatin1().data(), 0);
+  hid_t dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::VolumeDataContainerName.c_str(), 0);
   if (dcGid < 0) // Check to see if this was a Version 3 or earlier file
   {
-    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
+    dcGid = H5Gopen(m_HdfFileId, DREAM3D::HDF5::DataContainerName.c_str(), 0);
   }
   if(dcGid < 0)
   {
-
-    QString ss = QObject::tr(": Error opening group '%1'. Is the .dream3d file a version 4 data file?").arg(DREAM3D::HDF5::VolumeDataContainerName);
+    ss.str("");
+    ss << ": Error opening group '" << DREAM3D::HDF5::VolumeDataContainerName << "'. Is the .dream3d file a version 4 data file?";
     setErrorCondition(-150);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return -1;
   }
 
@@ -311,7 +313,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadVertexData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_VERTEX_DATA_GROUP_NAME, preflight, readNames, m_VertexArraysToRead);
     if(err < 0)
     {
@@ -323,7 +325,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEdgeData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_EDGE_DATA_GROUP_NAME, preflight, readNames, m_EdgeArraysToRead);
     if(err < 0)
     {
@@ -335,7 +337,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFaceData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_FACE_DATA_GROUP_NAME, preflight, readNames, m_FaceArraysToRead);
     if(err < 0)
     {
@@ -347,7 +349,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadCellData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_CELL_DATA_GROUP_NAME, preflight, readNames, m_CellArraysToRead);
     if(err < 0)
     {
@@ -359,7 +361,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadFieldData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
     if(err < 0)
     {
@@ -371,7 +373,7 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 
   if(m_ReadEnsembleData == true)
   {
-    QVector<QString> readNames;
+    std::vector<std::string> readNames;
     err |= readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
     if(err < 0)
     {
@@ -390,37 +392,38 @@ int VolumeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupName, bool preflight,
-                                                QVector<QString> &namesRead,
-                                                QSet<QString> &namesToRead)
+int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
+                                                std::vector<std::string> &namesRead,
+                                                std::set<std::string> &namesToRead)
 {
+  std::stringstream ss;
   int err = 0;
   //Read the Cell Data
-  hid_t gid = H5Gopen(dcGid, groupName.toLatin1().data(), H5P_DEFAULT);
+  hid_t gid = H5Gopen(dcGid, groupName.c_str(), H5P_DEFAULT);
   if(err < 0)
   {
-
-    QString ss = QObject::tr("Error opening HDF5 Group %1").arg(groupName);
+    ss.str("");
+    ss << "Error opening HDF5 Group " << groupName << std::endl;
     setErrorCondition(-154);
-    addErrorMessage(getHumanLabel(), ss, err);
+    addErrorMessage(getHumanLabel(), ss.str(), err);
     return -154;
   }
 
   NameListType names;
-  QH5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
-  //  qDebug() << "Number of Items in " << groupName << " Group: " << names.size() ;
-  QString classType;
+  H5Utilities::getGroupObjects(gid, H5Utilities::H5Support_DATASET | H5Utilities::H5Support_ANY, names);
+  //  std::cout << "Number of Items in " << groupName << " Group: " << names.size() << std::endl;
+  std::string classType;
   for (NameListType::iterator iter = names.begin(); iter != names.end(); ++iter)
   {
-    QSet<QString>::iterator contains = namesToRead.find(*iter);
+    std::set<std::string>::iterator contains = namesToRead.find(*iter);
     if (contains == namesToRead.end() && false == preflight && m_ReadAllArrays == false) { continue; } // Do not read this item if it is NOT in the set of arrays to read
     namesRead.push_back(*iter);
     classType.clear();
-    QH5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
-    //   qDebug() << groupName << " Array: " << *iter << " with C++ ClassType of " << classType ;
+    H5Lite::readStringAttribute(gid, *iter, DREAM3D::HDF5::ObjectType, classType);
+    //   std::cout << groupName << " Array: " << *iter << " with C++ ClassType of " << classType << std::endl;
     IDataArray::Pointer dPtr = IDataArray::NullPointer();
 
-    if(classType.startsWith("DataArray") == true)
+    if(classType.find("DataArray") == 0)
     {
       dPtr = H5DataArrayReader::readIDataArray(gid, *iter, preflight);
     }
@@ -432,7 +435,7 @@ int VolumeDataContainerReader::readGroupsData(hid_t dcGid, const QString &groupN
     {
 
     }
-    else if(classType.startsWith("NeighborList<T>") == true)
+    else if(classType.compare("NeighborList<T>") == 0)
     {
       dPtr = H5DataArrayReader::readNeighborListData(gid, *iter, preflight);
     }

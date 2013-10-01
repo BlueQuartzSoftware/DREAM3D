@@ -36,16 +36,19 @@
 
 // C++ Includes
 #include <iomanip>
+#include <iostream>
+#include <string>
+#include <sstream>
 
-#include <QtCore/QtDebug>
-#include <QtCore/QString>
-#include <QtCore/QMap>
-#include <QtCore/QFileInfo>
-#include <QtCore/QFile>
+#include <map>
+
+#include "MXA/Common/LogTime.h"
+#include "MXA/Utilities/MXAFileInfo.h"
+
 
 #include "DREAM3DLib/Common/Constants.h"
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Math/OrientationMath.h"
 
 #define DIMS "DIMENSIONS"
 #define RES "SPACING"
@@ -86,7 +89,7 @@ YSChoiAbaqusReader::~YSChoiAbaqusReader()
 // -----------------------------------------------------------------------------
 void YSChoiAbaqusReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");
@@ -113,10 +116,10 @@ void YSChoiAbaqusReader::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setInputGrainInfoFile( reader->readValue( "InputGrainInfoFile", getInputGrainInfoFile() ) );
-  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -138,73 +141,61 @@ int YSChoiAbaqusReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 void YSChoiAbaqusReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
+  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  QFileInfo fi(getInputFile());
-  if (getInputFile().isEmpty() == true)
+  if (getInputFile().empty() == true)
   {
-    QString ss = QObject::tr("%1 needs the Input File Set and it was not.").arg(ClassName());
+    ss << ClassName() << " needs the Input File Set and it was not.";
     setErrorCondition(-387);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
-  else if (fi.exists() == false)
+  else if (MXAFileInfo::exists(getInputFile()) == false)
   {
-    QString ss = QObject::tr("The input file does not exist");
+    ss << "The input file does not exist.";
     setErrorCondition(-388);
-    addErrorMessage(getHumanLabel(), ss, getErrorCondition());
+    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
   else
   {
-    bool ok = false;
-    //const unsigned int size(1024);
+    const unsigned int size(1024);
+    char buf[size];
     // Read header from data file to figure out how many points there are
-    QFile in(getInputFile());
-    if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
-    {
-      QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-      setErrorCondition(-100);
-      notifyErrorMessage(msg, getErrorCondition());
-      return;
-    }
-    QString word;
+    std::ifstream in(getInputFile().c_str());
+    std::string word;
     bool headerdone = false;
     int xpoints, ypoints, zpoints;
     float resx, resy, resz;
     while (headerdone == false)
     {
-      QByteArray buf = in.readLine();
-
-      if (buf.startsWith(DIMS))
+      in.getline(buf, size);
+      std::string line = buf;
+      in >> word;
+      if (DIMS == word)
       {
-        QList<QByteArray> tokens = buf.split(' ');
-        xpoints = tokens[1].toInt(&ok, 10);
-        ypoints = tokens[2].toInt(&ok, 10);
-        zpoints = tokens[3].toInt(&ok, 10);
+        in >> xpoints >> ypoints >> zpoints;
         size_t dims[3] = {xpoints, ypoints, zpoints};
         m->setDimensions(dims);
         m->setOrigin(0,0,0);
       }
       if (RES == word)
       {
-        QList<QByteArray> tokens = buf.split(' ');
-        resx = tokens[1].toInt(&ok, 10);
-        resy = tokens[2].toInt(&ok, 10);
-        resz = tokens[3].toInt(&ok, 10);
+        in >> resx >> resy >> resz;
         float res[3] = {resx, resy, resz};
         m->setResolution(res);
       }
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, float, FloatArrayType, 0, voxels, 4)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, float, FloatArrayType, 0, fields, 4)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 1, voxels, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, float, FloatArrayType, 0, voxels, 4)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
+  typedef DataArray<unsigned int> XTalStructArrayType;
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
 }
 
 void YSChoiAbaqusReader::preflight()
@@ -215,72 +206,48 @@ void YSChoiAbaqusReader::execute()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  int xpoints, ypoints, zpoints, totalpoints = 0;
+  int xpoints, ypoints, zpoints, totalpoints;
   float resx, resy, resz;
   float ***mat;
-  //const unsigned int size(1024);
+  const unsigned int size(1024);
+  char buf[size];
   // Read header from data file to figure out how many points there are
-  QFile in(getInputFile());
-  if (!in.open(QIODevice::ReadOnly | QIODevice::Text))
-  {
-    QString msg = QObject::tr("Abaqus file could not be opened: %1").arg(getInputFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
-    return;
-  }
-
-  QString word;
-  bool ok = false;
+  std::ifstream in(getInputFile().c_str());
+  std::string word;
   bool headerdone = false;
   while (headerdone == false)
   {
-    QByteArray buf = in.readLine();
-
-    if (buf.startsWith(DIMS))
+    in.getline(buf, size);
+    std::string line = buf;
+    in >> word;
+    if (DIMS == word)
     {
-      QList<QByteArray> tokens = buf.split(' ');
-      xpoints = tokens[1].toInt(&ok, 10);
-      ypoints = tokens[2].toInt(&ok, 10);
-      zpoints = tokens[3].toInt(&ok, 10);
+      in >> xpoints >> ypoints >> zpoints;
       size_t dims[3] = {xpoints, ypoints, zpoints};
       m->setDimensions(dims);
       m->setOrigin(0,0,0);
-
+      totalpoints = xpoints * ypoints * zpoints;
+      mat = new float **[totalpoints];
     }
-    if (buf.startsWith(RES))
+    if (RES == word)
     {
-      QList<QByteArray> tokens = buf.split(' ');
-      resx = tokens[1].toInt(&ok, 10);
-      resy = tokens[2].toInt(&ok, 10);
-      resz = tokens[3].toInt(&ok, 10);
+      in >> resx >> resy >> resz;
       float res[3] = {resx, resy, resz};
       m->setResolution(res);
     }
-    if (buf.startsWith(LOOKUP))
+    if (LOOKUP == word)
     {
       headerdone = true;
-      word = QString(buf);
+      in >> word;
     }
   }
   // Read header from grian info file to figure out how many grains there are
-
-  QFile in2(getInputGrainInfoFile());
-  if (!in2.open(QIODevice::ReadOnly | QIODevice::Text))
-  {
-    QString msg = QObject::tr("Abaqus Grain Info file could not be opened: %1").arg(getInputGrainInfoFile());
-    setErrorCondition(-100);
-    notifyErrorMessage(msg, getErrorCondition());
-    return;
-  }
-
+  std::ifstream in2(getInputGrainInfoFile().c_str());
   int numgrains;
-
-  QByteArray buf = in2.readLine();
-  numgrains = buf.toInt(&ok, 10);
-  buf = in2.readLine();
-  QList<QByteArray> tokens = buf.split(' ');
-//  in2 >> word >> word >> word >> word >> word >> word;
-  totalpoints = m->getNumCellTuples();
+  in2 >> numgrains;
+  in2.getline(buf, size);
+  std::string line = buf;
+  in2 >> word >> word >> word >> word >> word >> word;
   dataCheck(false, totalpoints, numgrains+1, 2);
   //Read data file
   int gnum = 0;
@@ -295,7 +262,7 @@ void YSChoiAbaqusReader::execute()
       mat[i][j] = new float [3];
     }
     onedge = false;
-    gnum = tokens[6].toInt(&ok, 10);
+    in >> gnum;
     col = i % xpoints;
     row = (i / xpoints) % ypoints;
     plane = i / (xpoints * ypoints);
@@ -310,25 +277,26 @@ void YSChoiAbaqusReader::execute()
       headerdone = false;
       while (headerdone == false)
       {
-        buf = in2.readLine();
-
-        if (buf.startsWith(LOOKUP))
+        in.getline(buf, size);
+        std::string line = buf;
+        in >> word;
+        if (LOOKUP == word)
         {
           headerdone = true;
-          //in >> word;
+          in >> word;
         }
       }
       for (int i = 0; i < totalpoints; i++)
       {
         onedge = 0;
-        value = buf.toInt(&ok, 10);
+        in >> value;
         mat[i][iter1][iter2] = value;
       }
     }
   }
   //Read grain info
   int numpoints;
-  //float q0, q1, q2, q3;
+  float q0, q1, q2, q3;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
   avgQuats[0].x = 0.0;
   avgQuats[0].y = 0.0;
@@ -337,15 +305,11 @@ void YSChoiAbaqusReader::execute()
 
   for (int i = 1; i < numgrains+1; i++)
   {
-    buf = in2.readLine();
-    tokens = buf.split(' ');
-    //in2 >> gnum >> numpoints >> q0 >> q1 >> q2 >> q3;
-    gnum = tokens[0].toInt(&ok, 10);
-    numpoints = tokens[1].toInt(&ok, 10);
-    avgQuats[i].x = tokens[2].toFloat(&ok);
-    avgQuats[i].y = tokens[3].toFloat(&ok);
-    avgQuats[i].z = tokens[4].toFloat(&ok);
-    avgQuats[i].w = tokens[5].toFloat(&ok);
+    in2 >> gnum >> numpoints >> q0 >> q1 >> q2 >> q3;
+    avgQuats[i].x = q1;
+    avgQuats[i].y = q2;
+    avgQuats[i].z = q3;
+    avgQuats[i].w = q0;
   }
   float ea1, ea2, ea3;
   QuatF q;
@@ -366,10 +330,10 @@ void YSChoiAbaqusReader::execute()
     q.y = static_cast<float>( (g[2][0]-g[0][2])/(4.0*q.w) );
     q.z = static_cast<float>( (g[0][1]-g[1][0])/(4.0*q.w) );
     QuaternionMathF::Copy(q, quats[i]);
-    //    m_Quats[5*i+1] = q[1];
-    //    m_Quats[5*i+2] = q[2];
-    //    m_Quats[5*i+3] = q[3];
-    //    m_Quats[5*i+4] = q[4];
+//    m_Quats[5*i+1] = q[1];
+//    m_Quats[5*i+2] = q[2];
+//    m_Quats[5*i+3] = q[3];
+//    m_Quats[5*i+4] = q[4];
     OrientationMath::QuattoEuler(q, ea1, ea2, ea3);
     m_CellEulerAngles[3*i] = ea1;
     m_CellEulerAngles[3*i + 1] = ea2;

@@ -58,17 +58,17 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
       return new Widget;
     }
 
-    QString getFilterGroup()
+    std::string getFilterGroup()
     {
       return m_GroupName;
     }
 
-    QString getFilterSubGroup()
+    std::string getFilterSubGroup()
     {
       return m_SubGroupName;
     }
 
-    QString getFilterHumanLabel()
+    std::string getFilterHumanLabel()
     {
       return m_HumanName;
     }
@@ -88,9 +88,9 @@ class QFilterWidgetFactory : public IFilterWidgetFactory
     }
 
   private:
-    QString m_GroupName;
-    QString m_SubGroupName;
-    QString m_HumanName;
+    std::string m_GroupName;
+    std::string m_SubGroupName;
+    std::string m_HumanName;
 
     QFilterWidgetFactory(const QFilterWidgetFactory&); // Copy Constructor Not Implemented
     void operator=(const QFilterWidgetFactory&); // Operator '=' Not Implemented

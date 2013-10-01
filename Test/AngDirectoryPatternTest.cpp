@@ -60,19 +60,19 @@ void GrainTest()
 
 
 
-void test(const QString &curAbsFile,
-                 const QString &mosDirPrefix,
-                 const QString &zeissExportDirSuffix)
+void test(const std::string &curAbsFile,
+                 const std::string &mosDirPrefix,
+                 const std::string &zeissExportDirSuffix)
 {
-  QString fn = MXAFileSystemPath::filename(curAbsFile);
+  std::string fn = MXAFileSystemPath::filename(curAbsFile);
   //std::cout << logTime() << "Found: '" << *dir_iter << "'" << std::endl;
-  QString::size_type front = fn.find_first_of(mosDirPrefix);
-  QString::size_type back = fn.find_last_of(zeissExportDirSuffix);
-  if (front != QString::npos && back != QString::npos)
+  std::string::size_type front = fn.find_first_of(mosDirPrefix);
+  std::string::size_type back = fn.find_last_of(zeissExportDirSuffix);
+  if (front != std::string::npos && back != std::string::npos)
   {
     std::cout << "FileName: " << fn << std::endl;
-    QString::size_type length = fn.length() - mosDirPrefix.size() - zeissExportDirSuffix.size();
-    QString::size_type pos = mosDirPrefix.size();
+    std::string::size_type length = fn.length() - mosDirPrefix.size() - zeissExportDirSuffix.size();
+    std::string::size_type pos = mosDirPrefix.size();
 
     std::cout << "Dirty String: '" << fn.substr(pos, length) << "'" << std::endl;
     const char* data = fn.data();
@@ -82,7 +82,7 @@ void test(const QString &curAbsFile,
       --length;
     }
     std::cout << "Clean String: '" << fn.substr(pos, length) << "'" <<  std::endl;
-    QString sliceValue = fn.substr( pos, length );
+    std::string sliceValue = fn.substr( pos, length );
   }
 
 }
@@ -98,7 +98,7 @@ int main(int argc, char **argv)
 
   AngDirectoryPatterns::Pointer p = AngDirectoryPatterns::New("/Users/Shared/Data/AIMBlades/ANG_Series", "Slice_", 0);
 
-  QString dirName = "/Users/Shared/Data/AIMBlades/ANG_Series";
+  std::string dirName = "/Users/Shared/Data/AIMBlades/ANG_Series";
   std::cout << p->generateAngFileName(9) << std::endl;
 
 

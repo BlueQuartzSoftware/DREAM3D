@@ -37,9 +37,9 @@
 #include "SegmentGrains.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-
+#include "DREAM3DLib/Common/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/Common/DREAM3DRandom.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 #include "DREAM3DLib/OrientationOps/HexagonalOps.h"
@@ -100,7 +100,7 @@ int SegmentGrains::writeFilterParameters(AbstractFilterParametersWriter* writer,
 void SegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+  std::stringstream ss;
 
 }
 
@@ -118,14 +118,13 @@ void SegmentGrains::preflight()
 void SegmentGrains::execute()
 {
   setErrorCondition(0);
-  
   VolumeDataContainer* m = getVolumeDataContainer();
-
+  std::stringstream ss;
   if(NULL == m)
   {
     setErrorCondition(-1);
-    QString ss = QObject::tr(" DataContainer was NULL");
-    addErrorMessage(getHumanLabel(), ss, -1);
+    ss << " DataContainer was NULL";
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
   // int64_t totalPoints = m->getTotalPoints();
@@ -198,9 +197,9 @@ void SegmentGrains::execute()
       voxelslist.clear();
       voxelslist.resize(initialVoxelsListSize, -1);
       gnum++;
-      
-      QString ss = QObject::tr("Total Grains: %1").arg(gnum);
-      if(gnum%100 == 0) notifyStatusMessage(ss);
+      ss.str("");
+      ss << "Total Grains: " << gnum;
+      if(gnum%100 == 0) notifyStatusMessage(ss.str());
     }
   }
 

@@ -33,15 +33,12 @@
  *                           FA8650-07-D-5800
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-#ifndef _AngHeaderEntry_H_
-#define _AngHeaderEntry_H_
+
+
 
 
 #include <string.h>
-
-#include <QtCore/QString>
-#include <QtCore/QTextStream>
-#include <QtCore/QtDebug>
+#include <iostream>
 
 #include "EbsdLib/EbsdSetGetMacros.h"
 #include "EbsdLib/EbsdLib.h"
@@ -65,26 +62,24 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 
     virtual ~AngHeaderEntry() {}
 
-    QString getKey() { return m_key; }
-    QString getHDFType() {
-      T value = static_cast<T>(0);
-      return QString::fromStdString(H5Lite::HDFTypeForPrimitiveAsStr(value));
-    }
-    void parseValue(QByteArray &value)
+    std::string getKey() { return m_key; }
+    std::string getHDFType() { T value = static_cast<T>(0); return H5Lite::HDFTypeForPrimitiveAsStr(value); }
+    void parseValue(char* value, size_t start, size_t length)
     {
-      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
-      QTextStream ss(&value);
+      if (value[start] == ':') { ++start; } // move past the ":" character
+      std::string data( &(value[start]), strlen(value) - start);
+      std::stringstream ss(data);
       ss >> m_value;
     }
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value << std::endl;
+      out << m_key << "  " << m_value << std::endl;
     }
 
     T getValue() { return m_value; }
     void setValue(T value) { m_value = value;}
 
   protected:
-    AngHeaderEntry(const QString &key) :
+    AngHeaderEntry(const std::string &key) :
       m_value(0),
       m_key(key)
     {
@@ -94,7 +89,7 @@ class EbsdLib_EXPORT AngHeaderEntry : public EbsdHeaderEntry
 
   private:
     T m_value;
-    QString m_key;
+    std::string m_key;
 
     AngHeaderEntry(const AngHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const AngHeaderEntry&); // Operator '=' Not Implemented
@@ -115,27 +110,31 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
     virtual ~AngStringHeaderEntry() {}
 
-    QString getKey() { return m_key; }
-    QString getHDFType() { return "H5T_STRING"; }
+    std::string getKey() { return m_key; }
+    std::string getHDFType() { return "H5T_STRING"; }
 
-    void parseValue(QByteArray &value)
+    void parseValue(char* value, size_t start, size_t length)
     {
-      if (value[0] == ':') { value = value.mid(1); } // move past the ":" character
-      value = value.trimmed(); // remove leading/trailing white space
-      m_value = QString(value);
+      if (value[start] == ':') { ++start; } // move past the ":" character
+      while(value[start] == ' ')
+      {
+        ++start;
+      }
+      std::string data( &(value[start]), strlen(value) - start);
+      m_value = data;
     }
     void print(std::ostream &out) {
-      out << m_key.toStdString() << "  " << m_value.toStdString() << std::endl;
+      out << m_key << "  " << m_value << std::endl;
     }
 
-    QString getValue() { return m_value; }
-    void setValue(const QString &value)
+    std::string getValue() { return m_value; }
+    void setValue(const std::string &value)
     {
       m_value = value;
     }
 
   protected:
-    AngStringHeaderEntry(const QString &key) :
+    AngStringHeaderEntry(const std::string &key) :
       m_key(key)
     {
     }
@@ -143,8 +142,8 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
     AngStringHeaderEntry() {}
 
   private:
-    QString m_value;
-    QString m_key;
+    std::string m_value;
+    std::string m_key;
 
     AngStringHeaderEntry(const AngStringHeaderEntry&); // Copy Constructor Not Implemented
     void operator=(const AngStringHeaderEntry&); // Operator '=' Not Implemented
@@ -154,5 +153,6 @@ class AngStringHeaderEntry : public EbsdHeaderEntry
 
 
 
-#endif /* _AngHeaderEntry_H_ */
+
+
 
