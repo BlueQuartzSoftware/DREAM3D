@@ -8,9 +8,9 @@ IO Filters
 
 This filter reads an STRUCTURED_POINTS type of 3D array from a legacy .vtk file specifically looking for the **Field** Ids array but the user can set the name of the array to try and read.
 
-    # vtk DataFile Version 2.0    GrainIds Stored in Vtk File    ASCII    DATASET STRUCTURED_POINTS    DIMENSIONS 3 4 6    SPACING 1 1 1    ORIGIN 0 0 0    POINT_DATA 72    SCALARS GrainIds char 1 
+    # vtk DataFile Version 2.0    GrainIds Stored in Vtk File    ASCII    DATASET STRUCTURED_POINTS    DIMENSIONS 3 4 6    SPACING 1 1 1    ORIGIN 0 0 0    POINT_DATA 72    SCALARS GrainIds char 1 
     LOOKUP_TABLE default 
-    0 0 0 0 0 0 0 0 0 0 0 0    0 5 10 15 20 25 25 20 15
+    0 0 0 0 0 0 0 0 0 0 0 0    0 5 10 15 20 25 25 20 15
     10 5 0 0 10 20 30 40 50 
     50 40 30 20 10 0 0 10 20 
     30 40 50 50 40 30 20 10 0 

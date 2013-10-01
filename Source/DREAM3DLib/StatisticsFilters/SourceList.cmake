@@ -41,6 +41,7 @@ set(_PublicFilters
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
   GenerateEnsembleStatistics
+  FindFieldClustering
 )
 
 
