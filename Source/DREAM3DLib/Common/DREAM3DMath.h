@@ -65,6 +65,7 @@ lacking still.
 #endif
 
 #include <math.h>
+#include <vector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 
@@ -185,6 +186,14 @@ class DREAM3DMath
     static DREAM3DLib_EXPORT float incompletebetafe(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetafe2(float, float, float, float, float);
     static DREAM3DLib_EXPORT float incompletebetaps(float, float, float, float);
+    /**
+     * @brief generates a linearly space array between 2 numbers (inclusive, assumes first number <= second number) [as matlabs linspace]
+     * @param first number
+     * @param second number
+     * @param length of return array
+     * @return
+     */
+    static DREAM3DLib_EXPORT std::vector<double> linspace(double, double, int);
 
   protected:
     DREAM3DMath();
