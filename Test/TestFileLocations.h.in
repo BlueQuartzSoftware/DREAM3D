@@ -136,14 +136,6 @@ namespace UnitTest
     const QString OutputFile("@TEST_TEMP_DIR_NATIVE@SyntheticTestOutput.dream3d");
   }
 
-  namespace FilterParametersRWTest
-  {
-    const QString TestDir("@TEST_TEMP_DIR_NATIVE@FilterParametersRWTest");
-    const QString OutputFile("@TEST_TEMP_DIR_NATIVE@FilterParametersRWTest@DIR_SEP@Output.h5");
-    const QString TestFile_1("@TEST_TEMP_DIR_NATIVE@FilterParametersRWTest@DIR_SEP@TestFile_1.h5");
-    const QString TestFile_2("@TEST_TEMP_DIR_NATIVE@FilterParametersRWTest@DIR_SEP@TestFile_2.h5");
-    const QString TestFile_3("@TEST_TEMP_DIR_NATIVE@FilterParametersRWTest@DIR_SEP@TestFile_3.h5");
-  }
 
   namespace PFTest
   {

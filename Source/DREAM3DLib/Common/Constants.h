@@ -137,7 +137,6 @@ namespace DREAM3D
 
   namespace FieldData
   {
-
     const QString Active("Active");
     const QString GoodFields("GoodFields");
     const QString Phases("Phases");
@@ -181,9 +180,10 @@ namespace DREAM3D
     const QString LMG("LMG");
     const QString MicroTextureRegionNumCells("MicroTextureRegionNumCells");
     const QString MicroTextureRegionFractionOccupied("MicroTextureRegionFractionOccupied");
-
-
+    const QString Clusters("Clusters");
+    const QString ClusteringList("ClusteringList");
     const QString BasalLoadingFactor("BasalLoadingFactor");
+
   }
 
   namespace EnsembleData

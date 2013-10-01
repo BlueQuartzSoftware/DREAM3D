@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include <iostream>
-#include <vector>
+#include <QVector>
 #include <string>
 #include <map>
 
@@ -67,7 +67,7 @@ void GenHexMDFPlotData()
 
 
   // Allocate a new vector to hold the mdf data
-  std::vector<float> mdf(HexagonalOps::k_MdfSize);
+  QVector<float> mdf(HexagonalOps::k_MdfSize);
   // Calculate the MDF Data using the ODF data and the rows from the MDF Table model
   Texture::CalculateMDFData<float, HexagonalOps>(angles.data(), axes.data(), weights.data(), odf.data(), mdf.data(), angles.size());
 

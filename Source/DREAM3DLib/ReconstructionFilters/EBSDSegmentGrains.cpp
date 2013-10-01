@@ -324,7 +324,6 @@ bool EBSDSegmentGrains::determineGrouping(int64_t referencepoint, int64_t neighb
     phase2 = m_CrystalStructures[m_CellPhases[neighborpoint]];
     QuaternionMathF::Copy(quats[neighborpoint], q2);
 
-
     if (m_CellPhases[referencepoint] == m_CellPhases[neighborpoint]) w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
     if (w < m_MisorientationTolerance)
     {

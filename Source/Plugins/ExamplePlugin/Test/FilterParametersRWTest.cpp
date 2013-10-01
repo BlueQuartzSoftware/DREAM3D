@@ -47,7 +47,7 @@
 #include "H5Support/QH5Utilities.h"
 
 #include "UnitTestSupport.hpp"
-#include "TestFileLocations.h"
+#include "Test/ExamplePluginTestFileLocations.h"
 
 #include "ExamplePluginFilters/GenericExample.h"
 #include "ExamplePluginFilters/ThresholdExample.h"
@@ -183,7 +183,7 @@ FilterPipeline::Pointer m_PipelineFromFile;
 void RemoveTestFiles()
 {
 #if REMOVE_TEST_FILES
-  QFile::remove(UnitTest::FilterParametersRWTest::OutputFile);
+  QFile::remove(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 #endif
 }
 
@@ -278,7 +278,7 @@ void ArraySelectionExampleTest()
   filt->setSelectedVertexEnsembleArrays(set11);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -290,7 +290,7 @@ void ArraySelectionExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ArraySelectionExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -500,7 +500,7 @@ void GenericExampleTest()
   filt->setCrystalSymmetryRotations(axisAngleInputsVector);
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -512,7 +512,7 @@ void GenericExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = GenericExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -630,7 +630,7 @@ void ThresholdExampleTest()
 
 
   DataContainerWriter::Pointer writer = DataContainerWriter::New();
-  writer->setOutputFile(UnitTest::FilterParametersRWTest::OutputFile);
+  writer->setOutputFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
 
   pipeline->pushBack(filt);
   pipeline->pushBack(writer);
@@ -642,7 +642,7 @@ void ThresholdExampleTest()
 
   // We are done writing a file, now we need to read the file using raw HDF5 codes
   filt = ThresholdExample::New();
-  hid_t fid = QH5Utilities::openFile(UnitTest::FilterParametersRWTest::OutputFile);
+  hid_t fid = QH5Utilities::openFile(ExamplePluginTest::FilterParametersRWTest::OutputFile);
   DREAM3D_REQUIRED(fid, >, 0)
 
   H5FilterParametersReader::Pointer reader = H5FilterParametersReader::New();
@@ -962,13 +962,13 @@ int main(int argc, char **argv)
       DREAM3D_REGISTER_TEST( ThresholdExampleTest() )
       //DREAM3D_REGISTER_TEST( FilterManagerTest() )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_1, "", Test1) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_1, "", Test1) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_2, UnitTest::FilterParametersRWTest::TestFile_1, Test2) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_2, ExamplePluginTest::FilterParametersRWTest::TestFile_1, Test2) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(UnitTest::FilterParametersRWTest::TestFile_3, UnitTest::FilterParametersRWTest::TestFile_2, Test3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineTest(ExamplePluginTest::FilterParametersRWTest::TestFile_3, ExamplePluginTest::FilterParametersRWTest::TestFile_2, Test3) )
 
-      //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(UnitTest::FilterParametersRWTest::TestFile_3) )
+      //DREAM3D_REGISTER_TEST( ExistingPipelineCheck(ExamplePluginTest::FilterParametersRWTest::TestFile_3) )
 
 #if 1
     #if REMOVE_TEST_FILES

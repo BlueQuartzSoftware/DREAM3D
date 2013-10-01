@@ -140,7 +140,7 @@ int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParameters
 void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
@@ -175,7 +175,7 @@ void GenerateMisorientationColors::preflight()
 void GenerateMisorientationColors::execute()
 {
   int err = 0;
-  
+
   setErrorCondition(err);
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
@@ -233,6 +233,9 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
+  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, 1, "NotSupportedArray");
+  notSupported->initializeWithZeros();
+
   // Write the Misorientation Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -243,15 +246,42 @@ void GenerateMisorientationColors::execute()
     m_MisorientationColor[index + 2] = 0;
     cellQuat = quats[i];
 
+    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+    {
+      uint32_t idx = m_CrystalStructures[phase];
+      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure) {
+        idx = 12;
+      }
+      notSupported->SetValue(idx, 1);
+      m_MisorientationColor[index] = 0;
+      m_MisorientationColor[index + 1] = 0;
+      m_MisorientationColor[index + 2] = 0;
+
+    }
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+    else if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+             && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
       argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
       m_MisorientationColor[index] = RgbColor::dRed(argb);
       m_MisorientationColor[index + 1] = RgbColor::dGreen(argb);
       m_MisorientationColor[index + 2] = RgbColor::dBlue(argb);
     }
+  }
+
+  for(size_t i = 0; i < notSupported->GetNumberOfTuples() - 1; i++)
+  {
+    if (notSupported->GetValue(i) == 1)
+    {
+      QString ss = QObject::tr("The Symmetry of %1 is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.").arg(ops[i]->getSymmetryName());
+      notifyWarningMessage(ss, -500);
+    }
+  }
+
+  if (notSupported->GetValue(12) == 1)
+  {
+    QString ss = QObject::tr("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
+    notifyWarningMessage(ss, -500);
   }
 
   /* Let the GUI know we are done with this filter */

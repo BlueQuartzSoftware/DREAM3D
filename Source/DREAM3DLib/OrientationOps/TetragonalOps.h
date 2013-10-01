@@ -75,6 +75,7 @@ class DREAM3DLib_EXPORT TetragonalOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
+    QString getSymmetryName() { return "Tetragonal-High 4/mmm"; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);

@@ -95,6 +95,12 @@ class DREAM3DLib_EXPORT OrientationOps
     virtual int getNumSymOps() = 0;
 
     /**
+     * @brief getSymmetryName Returns the name of the symmetry
+     * @return
+     */
+    virtual QString getSymmetryName() = 0;
+
+    /**
      * @brief getMisoQuat Finds the misorientation
      * @param q1
      * @param q2
