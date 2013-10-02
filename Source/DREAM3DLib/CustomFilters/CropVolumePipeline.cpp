@@ -103,7 +103,7 @@ CropVolumePipeline::~CropVolumePipeline()
 void CropVolumePipeline::setupFilterParameters()
 {
     // Now append our options
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");

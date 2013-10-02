@@ -178,7 +178,7 @@ LaplacianSmoothing::~LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();

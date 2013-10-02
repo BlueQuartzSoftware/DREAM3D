@@ -88,7 +88,7 @@ ReadOrientationData::~ReadOrientationData()
 // -----------------------------------------------------------------------------
 void ReadOrientationData::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   /*   For an input file use this code*/
   {

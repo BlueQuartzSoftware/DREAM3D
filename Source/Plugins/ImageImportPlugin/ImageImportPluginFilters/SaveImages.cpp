@@ -68,7 +68,7 @@ SaveImages::~SaveImages()
 // -----------------------------------------------------------------------------
 void SaveImages::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {

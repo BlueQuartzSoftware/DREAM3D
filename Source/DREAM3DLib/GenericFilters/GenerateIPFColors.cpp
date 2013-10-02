@@ -87,7 +87,7 @@ GenerateIPFColors::~GenerateIPFColors()
 // -----------------------------------------------------------------------------
 void GenerateIPFColors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 

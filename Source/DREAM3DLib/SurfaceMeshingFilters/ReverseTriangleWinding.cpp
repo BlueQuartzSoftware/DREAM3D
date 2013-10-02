@@ -116,7 +116,7 @@ ReverseTriangleWinding::~ReverseTriangleWinding()
 // -----------------------------------------------------------------------------
 void ReverseTriangleWinding::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* For String input use this code */
   /* {

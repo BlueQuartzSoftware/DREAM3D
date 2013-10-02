@@ -84,7 +84,7 @@ GenerateRodriguesColors::~GenerateRodriguesColors()
 // -----------------------------------------------------------------------------
 void GenerateRodriguesColors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

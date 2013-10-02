@@ -137,7 +137,7 @@ StandardizeEulerAngles::~StandardizeEulerAngles()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

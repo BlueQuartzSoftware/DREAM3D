@@ -103,7 +103,7 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");

@@ -91,7 +91,7 @@ EbsdToH5Ebsd::~EbsdToH5Ebsd()
 // -----------------------------------------------------------------------------
 void EbsdToH5Ebsd::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

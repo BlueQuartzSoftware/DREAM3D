@@ -72,7 +72,7 @@ GenerateEulerColors::~GenerateEulerColors()
 // -----------------------------------------------------------------------------
 void GenerateEulerColors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

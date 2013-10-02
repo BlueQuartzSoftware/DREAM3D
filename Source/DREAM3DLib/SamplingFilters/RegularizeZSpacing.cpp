@@ -73,7 +73,7 @@ RegularizeZSpacing::~RegularizeZSpacing()
 // -----------------------------------------------------------------------------
 void RegularizeZSpacing::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Z Positions File");

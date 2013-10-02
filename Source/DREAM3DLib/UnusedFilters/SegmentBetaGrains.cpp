@@ -159,7 +159,7 @@ SegmentBetaGrains::~SegmentBetaGrains()
 // -----------------------------------------------------------------------------
 void SegmentBetaGrains::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");

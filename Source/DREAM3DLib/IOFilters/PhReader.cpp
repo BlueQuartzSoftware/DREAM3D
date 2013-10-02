@@ -86,7 +86,7 @@ PhReader::~PhReader()
 // -----------------------------------------------------------------------------
 void PhReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");

@@ -72,7 +72,7 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

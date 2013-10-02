@@ -86,7 +86,7 @@ InitializeSyntheticVolume::~InitializeSyntheticVolume()
 // -----------------------------------------------------------------------------
 void InitializeSyntheticVolume::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

@@ -82,7 +82,7 @@ BadDataNeighborOrientationCheck::~BadDataNeighborOrientationCheck()
 // -----------------------------------------------------------------------------
 void BadDataNeighborOrientationCheck::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");

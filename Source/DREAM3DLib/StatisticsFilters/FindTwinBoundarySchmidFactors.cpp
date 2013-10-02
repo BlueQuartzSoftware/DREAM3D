@@ -250,7 +250,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Twin Boundary Info File");

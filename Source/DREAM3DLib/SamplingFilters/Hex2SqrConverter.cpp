@@ -80,7 +80,7 @@ Hex2SqrConverter::~Hex2SqrConverter()
 // -----------------------------------------------------------------------------
 void Hex2SqrConverter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

@@ -69,7 +69,7 @@ FindLargestCrossSections::~FindLargestCrossSections()
 // -----------------------------------------------------------------------------
 void FindLargestCrossSections::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Plane of Interest");

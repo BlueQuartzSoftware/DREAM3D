@@ -43,7 +43,7 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 

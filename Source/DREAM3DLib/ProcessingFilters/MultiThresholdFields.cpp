@@ -66,7 +66,7 @@ MultiThresholdFields::~MultiThresholdFields()
 // -----------------------------------------------------------------------------
 void MultiThresholdFields::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");

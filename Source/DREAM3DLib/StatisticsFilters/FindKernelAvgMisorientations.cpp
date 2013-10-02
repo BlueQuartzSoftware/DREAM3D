@@ -81,7 +81,7 @@ FindKernelAvgMisorientations::~FindKernelAvgMisorientations()
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Kernel Radius");

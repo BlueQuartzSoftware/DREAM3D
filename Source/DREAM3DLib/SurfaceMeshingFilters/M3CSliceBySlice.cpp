@@ -348,7 +348,7 @@ M3CSliceBySlice::~M3CSliceBySlice()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Delete Temp Files");

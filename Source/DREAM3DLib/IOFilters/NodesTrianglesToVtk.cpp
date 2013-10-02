@@ -68,7 +68,7 @@ NodesTrianglesToVtk::~NodesTrianglesToVtk()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToVtk::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Nodes File");

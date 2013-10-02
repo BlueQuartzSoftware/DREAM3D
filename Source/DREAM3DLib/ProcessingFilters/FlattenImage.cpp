@@ -113,7 +113,7 @@ FlattenImage::~FlattenImage()
 // -----------------------------------------------------------------------------
 void FlattenImage::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Flattening Method");

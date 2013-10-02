@@ -193,7 +193,7 @@ RawBinaryReader::~RawBinaryReader()
 // -----------------------------------------------------------------------------
 void RawBinaryReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
 
   {

@@ -63,7 +63,7 @@ GenerateNodeTriangleConnectivity::~GenerateNodeTriangleConnectivity()
 // -----------------------------------------------------------------------------
 void GenerateNodeTriangleConnectivity::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

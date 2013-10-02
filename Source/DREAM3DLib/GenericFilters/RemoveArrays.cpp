@@ -64,7 +64,7 @@ RemoveArrays::~RemoveArrays()
 // -----------------------------------------------------------------------------
 void RemoveArrays::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer parameter = FilterParameter::New();
     parameter->setHumanLabel("Arrays to Delete");
