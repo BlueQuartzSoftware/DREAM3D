@@ -73,20 +73,6 @@ set(_PrivateFilters
   GBCDTriangleDumper
   FileReader
   FileWriter
-
-
-  VolumeDataContainerWriter
-  VolumeDataContainerReader
-
-  EdgeDataContainerWriter
-  EdgeDataContainerReader
-
-  SurfaceDataContainerWriter
-  SurfaceDataContainerReader
-
-  VertexDataContainerWriter
-  VertexDataContainerReader
-
 )
 
 #-----------------

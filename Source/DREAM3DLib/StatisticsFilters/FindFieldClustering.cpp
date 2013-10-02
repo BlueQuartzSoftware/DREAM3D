@@ -65,7 +65,6 @@ int FindFieldClustering::writeFilterParameters(AbstractFilterParametersWriter* w
 void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Field Data
@@ -146,7 +145,7 @@ void FindFieldClustering::execute()
 // -----------------------------------------------------------------------------
 void FindFieldClustering::find_clustering()
 {
-  std::stringstream ss;
+  QStringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   float x, y, z;

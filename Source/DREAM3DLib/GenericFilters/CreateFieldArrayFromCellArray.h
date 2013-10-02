@@ -6,7 +6,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 
 
@@ -35,14 +35,14 @@ class DREAM3DLib_EXPORT CreateFieldArrayFromCellArray : public AbstractFilter
     * a different group if you want. The string returned here will be displayed
     * in the GUI for the filter
     */
-    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
+    virtual const QString getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::MemoryManagementFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
     * and understandable by humans.
     */
-    virtual const std::string getHumanLabel() { return "Create Field Array From Cell Array"; }
+    virtual const QString getHumanLabel() { return "Create Field Array From Cell Array"; }
 
     /**
     * @brief This method will instantiate all the end user settable options/parameters

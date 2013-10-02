@@ -25,7 +25,7 @@ CreateFieldArrayFromCellArray::~CreateFieldArrayFromCellArray()
 // -----------------------------------------------------------------------------
 void CreateFieldArrayFromCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
@@ -69,12 +69,11 @@ int CreateFieldArrayFromCellArray::writeFilterParameters(AbstractFilterParameter
 void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
-  if(m_SelectedCellArrayName.empty() == true)
+  if(m_SelectedCellArrayName.isEmpty() == true)
   {
     setErrorCondition(-11000);
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
@@ -103,7 +102,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t fields, 
 {
 
 
-  std::string fieldArrayName = inputData->GetName();
+  QString fieldArrayName = inputData->GetName();
 
   DataArray<T>* cell = DataArray<T>::SafePointerDownCast(inputData.get());
   if (NULL == cell)
@@ -112,13 +111,13 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t fields, 
   }
   typename DataArray<T>::Pointer field = DataArray<T>::CreateArray(fields, inputData->GetNumberOfComponents(), fieldArrayName);
 
-  T* fPtr = field->GetPointer(0);
-  T* cPtr = cell->GetPointer(0);
+  T* fPtr = field->getPointer(0);
+  T* cPtr = cell->getPointer(0);
 
   int32_t numComp = cell->GetNumberOfComponents();
   int32_t grainIdx = 0;
 
-  int64_t cells = inputData->GetNumberOfTuples();
+  int64_t cells = inputData->getNumberOfTuples();
   for(int64_t i = 0; i < cells; ++i)
   {
     // Get the grain id (or what ever the user has selected as their "Grain" identifier
@@ -156,7 +155,7 @@ void CreateFieldArrayFromCellArray::execute()
     return;
   }
   //int err = 0;
-  std::stringstream ss;
+  QStringstream ss;
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())
@@ -168,7 +167,7 @@ void CreateFieldArrayFromCellArray::execute()
     return;
   }
 
-  std::string dType = inputData->getTypeAsString();
+  QString dType = inputData->getTypeAsString();
   IDataArray::Pointer p = IDataArray::NullPointer();
   if (dType.compare("int8_t") == 0)
   {

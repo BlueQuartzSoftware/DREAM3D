@@ -68,24 +68,24 @@ class DREAM3DLib_EXPORT FindGrainReferenceCAxisMisorientations : public Abstract
     virtual ~FindGrainReferenceCAxisMisorientations();
     DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
-	//------ Created Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
-	//------ Required Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgCAxisMisorientationsArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
+    //------ Created Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainReferenceCAxisMisorientationsArrayName)
+    //------ Required Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(AvgCAxesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainAvgCAxisMisorientationsArrayName)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
+    virtual const QString getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographicFilters; }
     virtual const QString getHumanLabel() { return "Find Field Reference C-Axis Misorientations"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

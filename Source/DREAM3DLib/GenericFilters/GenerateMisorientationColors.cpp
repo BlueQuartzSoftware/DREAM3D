@@ -84,7 +84,7 @@ GenerateMisorientationColors::~GenerateMisorientationColors()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -286,7 +286,7 @@ void GenerateMisorientationColors::execute()
     std::string msg("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
     notifyWarningMessage(msg, -500);
   }
-  
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

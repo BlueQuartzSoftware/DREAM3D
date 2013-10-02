@@ -2,7 +2,7 @@
 #include "FindBasalLoadingFactor.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/StatisticsFilters/FindAvgOrientations.h"
@@ -83,7 +83,7 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  std::stringstream ss;
+  QStringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
   GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
