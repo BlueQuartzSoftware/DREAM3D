@@ -41,8 +41,8 @@
 #include "DREAM3DLib/Common/IDataArrayFilter.h"
 #include "DREAM3DLib/Common/FilterParameter.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 /**
  * @brief The ThresholdFilterHelper class

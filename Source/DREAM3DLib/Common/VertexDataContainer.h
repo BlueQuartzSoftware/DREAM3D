@@ -55,9 +55,9 @@
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/Common/DataContainerMacros.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/Observable.h"
-#include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/Common/MeshStructs.h"
 
 

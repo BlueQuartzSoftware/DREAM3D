@@ -43,7 +43,7 @@
 
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
 
 // -----------------------------------------------------------------------------

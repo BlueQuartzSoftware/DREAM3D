@@ -54,7 +54,7 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
-#include "DREAM3DLib/Common/StringDataArray.hpp"
+#include "DREAM3DLib/DataArrays/StringDataArray.hpp"
 
 class H5EbsdVolumeReader;
 

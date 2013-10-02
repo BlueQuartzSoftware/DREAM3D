@@ -79,6 +79,7 @@ endMacro()
 
 # Add in our NON-Filter classes
 D3DCompileDir(Common)
+D3DCompileDir(DataArrays)
 D3DCompileDir(HDF5)
 D3DCompileDir(Math)
 D3DCompileDir(OrientationOps)

@@ -36,7 +36,7 @@
 
 
 #include "IDataArrayFilter.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 
 // -----------------------------------------------------------------------------

@@ -55,7 +55,7 @@
 
 #include "DREAM3DLib/DREAM3DVersion.h"
 #include "DREAM3DLib/Common/VolumeDataContainer.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
