@@ -752,3 +752,21 @@ void DREAM3DMath::boundI(int &val, int min, int max)
   if(val < min) val = min;
   else if(val > max) val = max;
 }
+
+std::vector<double> DREAM3DMath::linspace(double minVal, double maxVal, int dim)
+{
+    std::vector<double> result;
+    if(dim==1)
+    {
+        result.push_back(maxVal);
+    }
+    else if(dim>1)
+    {
+        double spacing = (maxVal-minVal)/(dim-1);
+        for(int i=0; i<dim; i++)
+        {
+            result.push_back(minVal+spacing*i);
+        }
+    }
+    return result;
+}
