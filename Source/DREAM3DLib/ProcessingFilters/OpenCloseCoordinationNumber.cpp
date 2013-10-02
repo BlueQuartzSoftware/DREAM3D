@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -75,7 +75,7 @@ OpenCloseCoordinationNumber::~OpenCloseCoordinationNumber()
 // -----------------------------------------------------------------------------
 void OpenCloseCoordinationNumber::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Coordination Number to Consider");
@@ -129,7 +129,7 @@ void OpenCloseCoordinationNumber::dataCheck(bool preflight, size_t voxels, size_
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 }
 
 

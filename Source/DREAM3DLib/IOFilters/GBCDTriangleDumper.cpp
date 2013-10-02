@@ -36,7 +36,7 @@
 #include "GBCDTriangleDumper.h"
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 // -----------------------------------------------------------------------------
@@ -68,7 +68,7 @@ GBCDTriangleDumper::~GBCDTriangleDumper()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   {
     FilterParameter::Pointer option = FilterParameter::New();
@@ -148,9 +148,9 @@ void GBCDTriangleDumper::dataCheckSurfaceMesh(bool preflight, size_t voxels, siz
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
     }
 
   }
@@ -171,10 +171,10 @@ void GBCDTriangleDumper::dataCheckVoxel(bool preflight, size_t voxels, size_t fi
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-  //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
+  //      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
  //       typedef DataArray<unsigned int> XTalStructArrayType;
- //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+ //   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 

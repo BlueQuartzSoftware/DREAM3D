@@ -39,7 +39,7 @@
 #include <sstream>
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/IDataArray.h"
+#include "DREAM3DLib/DataArrays/IDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -83,7 +83,7 @@ void DecimateSolidMesh::dataCheck(bool preflight, size_t voxels, size_t fields, 
 // -----------------------------------------------------------------------------
 void DecimateSolidMesh::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Goal Number of Elements");

@@ -65,7 +65,7 @@
 
 
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
 
@@ -97,7 +97,7 @@ WriteIPFStandardTriangle::~WriteIPFStandardTriangle()
 // -----------------------------------------------------------------------------
 void WriteIPFStandardTriangle::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();

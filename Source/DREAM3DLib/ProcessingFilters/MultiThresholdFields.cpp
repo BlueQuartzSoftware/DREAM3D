@@ -39,7 +39,7 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/AbstractFilterParametersWriter.h"
+#include "DREAM3DLib/FilterParameters/AbstractFilterParametersWriter.h"
 #include "DREAM3DLib/Common/ThresholdFilterHelper.h"
 
 
@@ -65,7 +65,7 @@ MultiThresholdFields::~MultiThresholdFields()
 // -----------------------------------------------------------------------------
 void MultiThresholdFields::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
@@ -137,7 +137,7 @@ void MultiThresholdFields::dataCheck(bool preflight, size_t voxels, size_t field
     notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, bool, BoolArrayType, true, fields, 1)
 }
 
 

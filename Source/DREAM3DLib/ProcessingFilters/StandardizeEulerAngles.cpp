@@ -43,7 +43,7 @@
 #endif
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -136,7 +136,7 @@ StandardizeEulerAngles::~StandardizeEulerAngles()
 // -----------------------------------------------------------------------------
 void StandardizeEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }
@@ -171,11 +171,11 @@ void StandardizeEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fie
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
-      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
+      GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
       addWarningMessage(getHumanLabel(), "This filter is possibly unfinished. Use at your own risk", -666);
 }

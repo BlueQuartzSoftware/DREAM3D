@@ -40,9 +40,9 @@
 #include <vector>
 #include <set>
 
-#include "DREAM3DLib/Common/DataArray.hpp"
-#include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
 

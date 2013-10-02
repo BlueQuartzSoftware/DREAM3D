@@ -44,7 +44,7 @@
 #endif
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
@@ -248,7 +248,7 @@ FindTwinBoundarySchmidFactors::~FindTwinBoundarySchmidFactors()
 // -----------------------------------------------------------------------------
 void FindTwinBoundarySchmidFactors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Twin Boundary Info File");
@@ -301,12 +301,12 @@ void FindTwinBoundarySchmidFactors::dataCheckVoxel(bool preflight, size_t voxels
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------
@@ -318,10 +318,10 @@ void FindTwinBoundarySchmidFactors::dataCheckSurfaceMesh(bool preflight, size_t 
   std::stringstream ss;
   SurfaceDataContainer* sm = getSurfaceDataContainer();
 
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, ss, -388, bool, BoolArrayType, fields, 1)
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, ss, float, FloatArrayType, 0, fields, 3)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
+  GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundary, -388, bool, BoolArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTwinBoundarySchmidFactors, float, FloatArrayType, 0, fields, 3)
 }
 
 // -----------------------------------------------------------------------------

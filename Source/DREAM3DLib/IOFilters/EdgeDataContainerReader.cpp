@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/HDF5/VTKH5Constants.h"
 #include "DREAM3DLib/HDF5/H5DataArrayReader.h"
-#include "DREAM3DLib/Common/StatsDataArray.h"
+#include "DREAM3DLib/DataArrays/StatsDataArray.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -73,7 +73,7 @@ EdgeDataContainerReader::~EdgeDataContainerReader()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

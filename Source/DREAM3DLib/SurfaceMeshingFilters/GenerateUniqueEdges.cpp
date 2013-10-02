@@ -40,7 +40,7 @@
 #include <set>
 
 
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 
 
 
@@ -73,7 +73,7 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

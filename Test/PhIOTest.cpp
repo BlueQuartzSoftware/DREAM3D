@@ -43,7 +43,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/Common/FilterPipeline.h"
 #include "DREAM3DLib/IOFilters/PhWriter.h"
 #include "DREAM3DLib/IOFilters/PhReader.h"
@@ -122,7 +122,7 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       std::stringstream ss;
       VolumeDataContainer* m = getVolumeDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented

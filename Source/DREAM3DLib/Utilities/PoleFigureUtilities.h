@@ -37,7 +37,7 @@
 #define _PoleFigureUtilities_H_
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 typedef struct {
   FloatArrayType* eulers;

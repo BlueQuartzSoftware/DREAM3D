@@ -63,7 +63,7 @@ SingleThresholdFields::~SingleThresholdFields()
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Field Array Name");
@@ -147,7 +147,7 @@ void SingleThresholdFields::dataCheck(bool preflight, size_t voxels, size_t fiel
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Output, bool, BoolArrayType, true, fields, 1)
 
   if(m_SelectedFieldArrayName.empty() == true)
   {

@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 
 
@@ -103,7 +103,7 @@ void IdentifySample::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -301, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -301, bool, BoolArrayType, voxels, 1)
 }
 
 

@@ -36,7 +36,7 @@
 
 #include "FindEuclideanDistMap.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
@@ -273,12 +273,12 @@ void FindEuclideanDistMap::dataCheck(bool preflight, size_t voxels, size_t field
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, ss, int32_t, Int32ArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, ss, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, NearestNeighbors, int32_t, Int32ArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, TJEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, QPEuclideanDistances, float, FloatArrayType, -1, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

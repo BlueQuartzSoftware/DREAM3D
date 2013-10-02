@@ -59,7 +59,7 @@
 
 // DREAM3DLib includes
 #include "DREAM3DLib/DREAM3DVersion.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 
 #include "FilterWidgets/FilterWidgetsLib.h"

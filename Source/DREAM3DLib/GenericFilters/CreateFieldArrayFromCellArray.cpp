@@ -25,7 +25,7 @@ CreateFieldArrayFromCellArray::~CreateFieldArrayFromCellArray()
 // -----------------------------------------------------------------------------
 void CreateFieldArrayFromCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");
@@ -72,7 +72,7 @@ void CreateFieldArrayFromCellArray::dataCheck(bool preflight, size_t voxels, siz
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
 
   if(m_SelectedCellArrayName.empty() == true)
   {

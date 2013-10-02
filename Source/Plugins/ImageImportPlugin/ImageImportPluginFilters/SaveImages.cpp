@@ -71,7 +71,7 @@ SaveImages::~SaveImages()
 // -----------------------------------------------------------------------------
 void SaveImages::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   /* To Display a Combobox with a list of current Voxel Cell Arrays in it */
   {
@@ -179,7 +179,7 @@ void SaveImages::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   }
   else
   {
-    GET_PREREQ_DATA_2(m, CellData, Colors, ss, -300, uint8_t, UInt8ArrayType, voxels, 3)
+    GET_PREREQ_DATA_2(m, CellData, Colors, -300, uint8_t, UInt8ArrayType, voxels, 3)
   }
 
 }

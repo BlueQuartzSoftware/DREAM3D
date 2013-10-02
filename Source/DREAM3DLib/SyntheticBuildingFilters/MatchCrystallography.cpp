@@ -36,13 +36,13 @@
 
 #include "MatchCrystallography.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/Common/Texture.hpp"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
-#include "DREAM3DLib/Common/PrecipitateStatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/PrecipitateStatsData.h"
 
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/OrientationOps/CubicOps.h"
@@ -105,7 +105,7 @@ MatchCrystallography::~MatchCrystallography()
 // -----------------------------------------------------------------------------
 void MatchCrystallography::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Maximum Number of Iterations (Swaps)");
@@ -151,18 +151,18 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   VolumeDataContainer* m = getVolumeDataContainer();
   //int err = 0;
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1)
-      CREATE_NON_PREREQ_DATA( m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
 
       // Field Data
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
 
-      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -303, int32_t, Int32ArrayType, fields, 1)
+      GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -303, int32_t, Int32ArrayType, fields, 1)
 
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, ss, float, FloatArrayType, 0, fields, 1)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, float, FloatArrayType, 0, fields, 3)
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, float, FloatArrayType, 0, fields, 4)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Volumes, float, FloatArrayType, 0, fields, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, float, FloatArrayType, 0, fields, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, float, FloatArrayType, 0, fields, 4)
 
 
 
@@ -205,9 +205,9 @@ void MatchCrystallography::dataCheck(bool preflight, size_t voxels, size_t field
   // Ensemble Data
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PhaseTypeArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -307, unsigned int, XTalStructArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
-      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, ss, -308, int32_t, Int32ArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -307, unsigned int, XTalStructArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, -307, unsigned int, PhaseTypeArrayType, ensembles, 1)
+      GET_PREREQ_DATA(m, DREAM3D, EnsembleData, NumFields, -308, int32_t, Int32ArrayType, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

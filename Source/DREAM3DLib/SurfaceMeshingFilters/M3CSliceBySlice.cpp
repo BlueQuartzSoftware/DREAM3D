@@ -350,7 +350,7 @@ M3CSliceBySlice::~M3CSliceBySlice()
 // -----------------------------------------------------------------------------
 void M3CSliceBySlice::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Delete Temp Files");
@@ -396,7 +396,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
 
   SurfaceDataContainer* sm = getSurfaceDataContainer();
   if(NULL == sm)
@@ -410,7 +410,7 @@ void M3CSliceBySlice::dataCheck(bool preflight, size_t voxels, size_t fields, si
 
 
     int8_t* m_SurfaceMeshNodeType;
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
 
     DataArray<int32_t>::Pointer labels = DataArray<int32_t>::CreateArray(1, 2, DREAM3D::FaceData::SurfaceMeshFaceLabels);
     sm->addFaceData(labels->GetName(), labels);

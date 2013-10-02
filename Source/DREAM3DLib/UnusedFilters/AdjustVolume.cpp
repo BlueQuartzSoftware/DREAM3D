@@ -36,9 +36,9 @@
 
 #include "AdjustVolume.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DataContainerMacros.h"
+#include "DREAM3DLib/DataContainers/DataContainerMacros.h"
 #include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
 
 
@@ -75,7 +75,7 @@ AdjustVolume::~AdjustVolume()
 
 void AdjustVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Max Iterations");
@@ -115,9 +115,9 @@ void AdjustVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, float, FloatArrayType, 0, fields, 1)
 }
 
 

@@ -40,7 +40,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/ManagedArrayOfArrays.hpp"
+#include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
 
 
 #include "UnitTestSupport.hpp"

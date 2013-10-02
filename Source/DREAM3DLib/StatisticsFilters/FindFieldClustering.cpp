@@ -1,6 +1,6 @@
 #include "FindFieldClustering.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/StatisticsFilters/FindSizes.h"
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
@@ -100,13 +100,13 @@ void FindFieldClustering::dataCheck(bool preflight, size_t voxels, size_t fields
     addCreatedArrayHelpIndexEntry(e);
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, ss, -302, float, FloatArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, EquivalentDiameters, -302, float, FloatArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -304, int32_t, Int32ArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -304, int32_t, Int32ArrayType, fields, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -305, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -305, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Clusters, ss, int32_t, Int32ArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Clusters, int32_t, Int32ArrayType, 0, fields, 1)
 }
 
 

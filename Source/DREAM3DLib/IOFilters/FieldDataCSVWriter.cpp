@@ -40,10 +40,10 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/MXADir.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
-#include "DREAM3DLib/Common/NeighborList.hpp"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
+#include "DREAM3DLib/DataArrays/NeighborList.hpp"
 
 
 
@@ -72,7 +72,7 @@ FieldDataCSVWriter::~FieldDataCSVWriter()
 // -----------------------------------------------------------------------------
 void FieldDataCSVWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");

@@ -44,7 +44,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 
 /**
  * @class H5StatsDataDelegate H5StatsDataDelegate.h DREAM3DLib/HDF5/H5StatsDataDelegate.h

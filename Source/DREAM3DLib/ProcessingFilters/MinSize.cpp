@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 #include "DREAM3DLib/GenericFilters/RenumberGrains.h"
@@ -76,7 +76,7 @@ MinSize::~MinSize()
 // -----------------------------------------------------------------------------
 void MinSize::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -123,9 +123,9 @@ void MinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1);
 }
 
 // -----------------------------------------------------------------------------

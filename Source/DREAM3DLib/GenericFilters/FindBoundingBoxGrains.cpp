@@ -36,7 +36,7 @@
 
 #include "FindBoundingBoxGrains.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/GenericFilters/FindSurfaceGrains.h"
 #include "DREAM3DLib/GenericFilters/FindGrainCentroids.h"
@@ -90,7 +90,7 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -301, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   if(getErrorCondition() == -301)
   {
 	setErrorCondition(0);
@@ -99,9 +99,9 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	find_graincentroids->setVolumeDataContainer(getVolumeDataContainer());
 	if(preflight == true) find_graincentroids->preflight();
 	if(preflight == false) find_graincentroids->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, ss, -301, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, Centroids, -301, float, FloatArrayType, fields, 3)
   }
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
   if(getErrorCondition() == -302)
   {
 	setErrorCondition(0);
@@ -110,10 +110,10 @@ void FindBoundingBoxGrains::dataCheck(bool preflight, size_t voxels, size_t fiel
 	find_surfacegrains->setVolumeDataContainer(getVolumeDataContainer());
 	if(preflight == true) find_surfacegrains->preflight();
 	if(preflight == false) find_surfacegrains->execute();
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, -302, bool, BoolArrayType, fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -302, bool, BoolArrayType, fields, 1)
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BiasedFields, bool, BoolArrayType, false, fields, 1)
 }
 
 

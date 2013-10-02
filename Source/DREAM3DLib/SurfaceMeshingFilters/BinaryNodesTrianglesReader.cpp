@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"
@@ -67,7 +67,7 @@ BinaryNodesTrianglesReader::~BinaryNodesTrianglesReader()
 // -----------------------------------------------------------------------------
 void BinaryNodesTrianglesReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
     {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Binary Nodes Input File");

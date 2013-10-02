@@ -41,7 +41,7 @@
 #include <QtGui/QFont>
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Utilities/ColorTable.h"
 #include "DREAM3DLib/Utilities/ImageUtilities.h"
 

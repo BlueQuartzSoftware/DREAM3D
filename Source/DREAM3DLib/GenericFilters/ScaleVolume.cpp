@@ -116,7 +116,7 @@ ScaleVolume::~ScaleVolume()
 // -----------------------------------------------------------------------------
 void ScaleVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Apply to Voxel Volume");

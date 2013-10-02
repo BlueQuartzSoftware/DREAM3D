@@ -44,7 +44,7 @@
 #endif
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 /**
@@ -318,7 +318,7 @@ FindGBCD::~FindGBCD()
 // -----------------------------------------------------------------------------
 void FindGBCD::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("GBCDRes");
@@ -386,12 +386,12 @@ void FindGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t fields
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, ss, -387, double, DoubleArrayType, fields, 3)
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, ss, -388, double, DoubleArrayType, fields, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceNormals, -387, double, DoubleArrayType, fields, 3)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceAreas, -388, double, DoubleArrayType, fields, 1)
 
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, ensembles, 1)
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, int32_t, Int32ArrayType, 1, ensembles, 5)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, double, DoubleArrayType, 0, ensembles, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, int32_t, Int32ArrayType, 1, ensembles, 5)
     }
 
   }
@@ -412,10 +412,10 @@ void FindGBCD::dataCheckVoxel(bool preflight, size_t voxels, size_t fields, size
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, ss, -301, float, FloatArrayType, fields, 3)
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldEulerAngles, -301, float, FloatArrayType, fields, 3)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
     typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 
@@ -539,7 +539,7 @@ void FindGBCD::execute()
   m_GBCDdeltas[4] = (m_GBCDlimits[9]-m_GBCDlimits[4])/float(m_GBCDsizes[4]);
 
 
-  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
+  CREATE_NON_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, double, DoubleArrayType, 0, m->getNumEnsembleTuples(), m_GBCDsizes[0]*m_GBCDsizes[1]*m_GBCDsizes[2]*m_GBCDsizes[3]*m_GBCDsizes[4]*2)
   for(int i=0;i<m->getNumEnsembleTuples();i++)
   {
     m_GBCDdimensions[5*i+0] = m_GBCDsizes[0];

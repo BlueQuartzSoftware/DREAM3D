@@ -43,7 +43,7 @@
 
 #include "MXA/Utilities/MXAFileInfo.h"
 
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 
 // -----------------------------------------------------------------------------
 //
@@ -72,7 +72,7 @@ EnsembleInfoReader::~EnsembleInfoReader()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Ensemble Info File");
@@ -115,7 +115,6 @@ int EnsembleInfoReader::writeFilterParameters(AbstractFilterParametersWriter* wr
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
-
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
@@ -135,8 +134,8 @@ void EnsembleInfoReader::dataCheck(bool preflight, size_t voxels, size_t fields,
 
   typedef DataArray<unsigned int> XTalStructArrayType;
   typedef DataArray<unsigned int> PTypeArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, ss, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::Cubic_High, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, PhaseTypes, unsigned int, PTypeArrayType, DREAM3D::PhaseType::PrimaryPhase, ensembles, 1)
 }
 
 // -----------------------------------------------------------------------------

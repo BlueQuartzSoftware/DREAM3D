@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "TriangleNormalFilter.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -125,7 +125,7 @@ TriangleNormalFilter::~TriangleNormalFilter()
 // -----------------------------------------------------------------------------
 void TriangleNormalFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 
@@ -184,7 +184,7 @@ void TriangleNormalFilter::dataCheck(bool preflight, size_t voxels, size_t field
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, ss, double, DoubleArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleNormals, double, DoubleArrayType, 0, voxels, 3)
     }
   }
 }

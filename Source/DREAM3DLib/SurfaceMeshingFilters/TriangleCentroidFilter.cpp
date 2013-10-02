@@ -43,7 +43,7 @@
 #include <tbb/task_scheduler_init.h>
 #endif
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 /**
  * @brief The CalculateCentroidsImpl class
@@ -110,7 +110,7 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 
@@ -169,7 +169,7 @@ void TriangleCentroidFilter::dataCheck(bool preflight, size_t voxels, size_t fie
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, ss, double, DoubleArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleCentroids, double, DoubleArrayType, 0, voxels, 3)
     }
 
   }

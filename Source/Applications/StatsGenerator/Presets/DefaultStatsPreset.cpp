@@ -46,7 +46,7 @@
 #include "StatsGenerator/TableModels/SGPowerLawTableModel.h"
 #include "StatsGenerator/TableModels/SGODFTableModel.h"
 
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 // -----------------------------------------------------------------------------
 //

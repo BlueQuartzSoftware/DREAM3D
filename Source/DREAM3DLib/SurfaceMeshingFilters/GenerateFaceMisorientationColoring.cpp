@@ -35,7 +35,7 @@
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 #include "GenerateFaceMisorientationColoring.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/TriangleOps.h"
@@ -205,7 +205,7 @@ GenerateFaceMisorientationColoring::~GenerateFaceMisorientationColoring()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 
@@ -261,8 +261,8 @@ void GenerateFaceMisorientationColoring::dataCheckSurfaceMesh(bool preflight, si
     }
     else
     {
-      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, ss, -386, int32_t, Int32ArrayType, fields, 2)
-          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, ss, float, FloatArrayType, 0, fields, 3)
+      GET_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceLabels, -386, int32_t, Int32ArrayType, fields, 2)
+          CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshFaceMisorientationColors, float, FloatArrayType, 0, fields, 3)
     }
   }
 }
@@ -282,10 +282,10 @@ void GenerateFaceMisorientationColoring::dataCheckVoxel(bool preflight, size_t v
   }
   else
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
-        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType,  fields, 1)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
+        GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -302, int32_t, Int32ArrayType,  fields, 1)
         typedef DataArray<unsigned int> XTalStructArrayType;
-    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+    GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
   }
 }
 

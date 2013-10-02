@@ -43,7 +43,7 @@
 #endif
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/MatrixMath.h"
 
@@ -178,7 +178,7 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");

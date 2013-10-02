@@ -44,7 +44,7 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Utilities/AngleFileLoader.h"
+#include "DREAM3DLib/Utilities/IO/AngleFileLoader.h"
 
 
 #include "UnitTestSupport.hpp"

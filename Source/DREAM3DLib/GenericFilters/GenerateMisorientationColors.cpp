@@ -84,7 +84,7 @@ GenerateMisorientationColors::~GenerateMisorientationColors()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -144,20 +144,20 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
+    std::stringstream ss;
     ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     return;
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 

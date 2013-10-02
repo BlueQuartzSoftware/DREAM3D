@@ -44,8 +44,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/Observer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinks.hpp"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"

@@ -54,9 +54,9 @@
 #include <iomanip>
 #include <limits>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
-#include "DREAM3DLib/Common/StructArray.hpp"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFunctions.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshLinearAlgebra.h"
@@ -172,7 +172,7 @@ MovingFiniteElementSmoothing::~MovingFiniteElementSmoothing()
 // -----------------------------------------------------------------------------
 void MovingFiniteElementSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Iteration Steps");
@@ -282,7 +282,7 @@ void MovingFiniteElementSmoothing::dataCheck(bool preflight, size_t voxels, size
     {
       // Check for Node Type Array
       int size = sm->getVertices()->GetNumberOfTuples();
-      GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, ss, -390, int8_t, Int8ArrayType, size, 1)
+      GET_PREREQ_DATA(sm, DREAM3D, VertexData, SurfaceMeshNodeType, -390, int8_t, Int8ArrayType, size, 1)
     }
 
 

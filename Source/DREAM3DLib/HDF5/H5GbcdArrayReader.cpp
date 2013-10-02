@@ -40,7 +40,7 @@
 
 #include "H5Support/H5Utilities.h"
 
-#include "DREAM3DLib/Common/GbcdDataArray.hpp"
+#include "DREAM3DLib/DataArrays/GbcdDataArray.hpp"
 
 
 

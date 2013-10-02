@@ -139,7 +139,7 @@ void ImportImageStack::dataCheck(bool preflight, size_t voxels, size_t fields, s
   else
   {
     // This would be for a gray scale image
-    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, uint8_t, UInt8ArrayType, 0, voxels, 1)
+    CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, ImageData, uint8_t, UInt8ArrayType, 0, voxels, 1)
     // If we have RGB or RGBA Images then we are going to have to change things a bit.
     // We should read the file and see what we have? Of course Qt is going to read it up into
     // an RGB array by default

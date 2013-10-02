@@ -42,7 +42,7 @@
 
 #include "ui_AxisAngleWidget.h"
 
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 #include "PipelineBuilder/PipelineBuilderDLLExport.h"
 #include "AxisAngleTableModel.h"

@@ -60,7 +60,7 @@ RenameFieldArray::~RenameFieldArray()
 // -----------------------------------------------------------------------------
 void RenameFieldArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Field Array Name");

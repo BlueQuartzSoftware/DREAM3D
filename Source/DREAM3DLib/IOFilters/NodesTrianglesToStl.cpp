@@ -42,8 +42,8 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 // -----------------------------------------------------------------------------
 //
@@ -67,7 +67,7 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Nodes File");

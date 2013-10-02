@@ -47,7 +47,7 @@
 
 #include "PipelineBuilderDLLExport.h"
 
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 Q_DECLARE_METATYPE(IntVec3Widget_t)
 Q_DECLARE_METATYPE(FloatVec3Widget_t)

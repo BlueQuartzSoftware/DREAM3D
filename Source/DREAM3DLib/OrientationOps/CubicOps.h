@@ -42,7 +42,7 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-#include "DREAM3DLib/Common/DataArray.hpp"
+#include "DREAM3DLib/DataArrays/DataArray.hpp"
 #include "DREAM3DLib/OrientationOps/OrientationOps.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 
@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      * @param width of produced image (in pixels)
      * @return
      */
-    virtual UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float, int, int, int);
+    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
 
 
   protected:

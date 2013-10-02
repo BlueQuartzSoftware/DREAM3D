@@ -38,8 +38,8 @@
 
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/GenericFilters/FindGrainPhases.h"
 
@@ -75,7 +75,7 @@ NeighborCICorrelation::~NeighborCICorrelation()
 // -----------------------------------------------------------------------------
 void NeighborCICorrelation::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MinConfidence");
@@ -130,7 +130,7 @@ void NeighborCICorrelation::dataCheck(bool preflight, size_t voxels, size_t fiel
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, ss, -301, float, FloatArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ConfidenceIndex, -301, float, FloatArrayType, voxels, 1)
 }
 
 

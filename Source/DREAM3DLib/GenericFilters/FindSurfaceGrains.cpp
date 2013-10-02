@@ -36,7 +36,7 @@
 
 #include "FindSurfaceGrains.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/Constants.h"
 
 // -----------------------------------------------------------------------------
@@ -86,10 +86,10 @@ void FindSurfaceGrains::dataCheck(bool preflight, size_t voxels, size_t fields, 
   VolumeDataContainer* m = getVolumeDataContainer();
 
   // Cell Data
-  GET_PREREQ_DATA( m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
 
   // Field Data
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, ss, bool, BoolArrayType, false, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, bool, BoolArrayType, false, fields, 1)
 }
 
 // -----------------------------------------------------------------------------

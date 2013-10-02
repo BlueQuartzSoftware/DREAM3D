@@ -43,8 +43,8 @@
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/StructArray.hpp"
-#include "DREAM3DLib/Common/FilterParameter.h"
+#include "DREAM3DLib/DataArrays/StructArray.hpp"
+#include "DREAM3DLib/FilterParameters/FilterParameter.h"
 
 
 #include "UnitTestSupport.hpp"

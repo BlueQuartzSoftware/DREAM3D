@@ -52,8 +52,8 @@
 #include "EbsdLib/HEDM/H5MicVolumeReader.h"
 
 #include "DREAM3DLib/Common/Constants.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 
 #include "DREAM3DLib/ProcessingFilters/RotateEulerRefFrame.h"
 #include "DREAM3DLib/SamplingFilters/RotateSampleRefFrame.h"
@@ -212,7 +212,7 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   VolumeDataContainer* m = getVolumeDataContainer();
   if (NULL == m)
   {
-    ss.str("");
+    std::stringstream ss;
     ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
     setErrorCondition(-1);
     addErrorMessage(getHumanLabel(), ss.str(), -1);
@@ -349,13 +349,13 @@ void ReadH5Ebsd::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
     }
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, float, FloatArrayType, 0, voxels, 3)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, float, FloatArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, int32_t, Int32ArrayType, 0, voxels, 1)
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, float, FloatArrayType, 0.0, ensembles, 6)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, unsigned int, XTalStructArrayType, Ebsd::CrystalStructure::UnknownCrystalStructure, ensembles, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, float, FloatArrayType, 0.0, ensembles, 6)
 
   StringDataArray::Pointer materialNames = StringDataArray::CreateArray(1, DREAM3D::EnsembleData::MaterialName);
   m->addEnsembleData( DREAM3D::EnsembleData::MaterialName, materialNames);
@@ -495,8 +495,8 @@ void ReadH5Ebsd::execute()
 
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, m->getNumEnsembleTuples(), 1)
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, ss, -305, float, FloatArrayType, m->getNumEnsembleTuples(), 6)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, m->getNumEnsembleTuples(), 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, LatticeConstants, -305, float, FloatArrayType, m->getNumEnsembleTuples(), 6)
 
   // Copy the data from the pointers embedded in the reader object into our data container (Cell array).
   if(manufacturer.compare(Ebsd::Ang::Manufacturer) == 0)

@@ -43,7 +43,7 @@
 #endif
 
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 class ConvertEulerAnglesImpl
 {
@@ -102,7 +102,7 @@ ConvertEulerAngles::~ConvertEulerAngles()
 // -----------------------------------------------------------------------------
 void ConvertEulerAngles::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Conversion Type");
@@ -151,7 +151,7 @@ void ConvertEulerAngles::dataCheck(bool preflight, size_t voxels, size_t fields,
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, ss, -301, float, FloatArrayType, voxels, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellEulerAngles, -301, float, FloatArrayType, voxels, 3)
 }
 
 // -----------------------------------------------------------------------------

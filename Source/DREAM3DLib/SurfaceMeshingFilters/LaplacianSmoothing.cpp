@@ -46,8 +46,8 @@
 #include "MXA/Utilities/MXADir.h"
 
 #include "DREAM3DLib/DREAM3DLib.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/GenerateUniqueEdges.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
 
@@ -179,7 +179,7 @@ LaplacianSmoothing::~LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();
