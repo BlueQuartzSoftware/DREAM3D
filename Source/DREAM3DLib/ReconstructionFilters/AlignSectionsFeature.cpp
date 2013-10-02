@@ -124,7 +124,7 @@ void AlignSectionsFeature::dataCheck(bool preflight, size_t voxels, size_t field
      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, ss, -303, bool, BoolArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GoodVoxels, -303, bool, BoolArrayType, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

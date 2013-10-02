@@ -179,7 +179,7 @@ LaplacianSmoothing::~LaplacianSmoothing()
 // -----------------------------------------------------------------------------
 void LaplacianSmoothing::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
   {
     FilterParameter::Pointer option = FilterParameter::New();

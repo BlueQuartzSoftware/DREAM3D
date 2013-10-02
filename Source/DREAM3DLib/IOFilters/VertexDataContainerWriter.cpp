@@ -88,7 +88,7 @@ VertexDataContainerWriter::~VertexDataContainerWriter()
 // -----------------------------------------------------------------------------
 void VertexDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

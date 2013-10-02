@@ -74,7 +74,7 @@ VolumeDataContainerReader::~VolumeDataContainerReader()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

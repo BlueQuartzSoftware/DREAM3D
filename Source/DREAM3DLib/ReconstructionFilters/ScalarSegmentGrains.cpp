@@ -154,7 +154,7 @@ ScalarSegmentGrains::~ScalarSegmentGrains()
 // -----------------------------------------------------------------------------
 void ScalarSegmentGrains::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -229,8 +229,8 @@ void ScalarSegmentGrains::dataCheck(bool preflight, size_t voxels, size_t fields
     addErrorMessage(getHumanLabel(), "An array from the Voxel Data Container must be selected.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, ss, bool, BoolArrayType, true, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, Active, bool, BoolArrayType, true, fields, 1)
 
 }
 

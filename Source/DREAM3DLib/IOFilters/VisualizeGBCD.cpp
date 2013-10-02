@@ -83,7 +83,7 @@ VisualizeGBCD::~VisualizeGBCD()
 // -----------------------------------------------------------------------------
 void VisualizeGBCD::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Misorientation Axis Angles");
@@ -203,9 +203,9 @@ void VisualizeGBCD::dataCheckSurfaceMesh(bool preflight, size_t voxels, size_t f
       }
       else
       {
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, ss, -301, int32_t, Int32ArrayType, ensembles, 5)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCDdimensions, -301, int32_t, Int32ArrayType, ensembles, 5)
         int numComp = iDataArray->GetNumberOfComponents();
-        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, ss, -301, double, DoubleArrayType, ensembles, numComp)
+        GET_PREREQ_DATA(sm, DREAM3D, EnsembleData, GBCD, -301, double, DoubleArrayType, ensembles, numComp)
       }
     }
   }

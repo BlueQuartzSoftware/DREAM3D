@@ -84,7 +84,7 @@ GoldfeatherReader::~GoldfeatherReader()
 // -----------------------------------------------------------------------------
 void GoldfeatherReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /*   For an input file use this code*/
    {
     FilterParameter::Pointer parameter = FilterParameter::New();

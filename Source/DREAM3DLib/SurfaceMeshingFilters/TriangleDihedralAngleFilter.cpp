@@ -140,7 +140,7 @@ TriangleDihedralAngleFilter::~TriangleDihedralAngleFilter()
 // -----------------------------------------------------------------------------
 void TriangleDihedralAngleFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 
@@ -199,7 +199,7 @@ void TriangleDihedralAngleFilter::dataCheck(bool preflight, size_t voxels, size_
     }
     else
     {
-      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleDihedralAngles, ss, double, DoubleArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(sm, DREAM3D, FaceData, SurfaceMeshTriangleDihedralAngles, double, DoubleArrayType, 0, voxels, 1)
     }
 
   }

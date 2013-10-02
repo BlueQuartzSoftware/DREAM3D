@@ -60,7 +60,7 @@ RenameCellArray::~RenameCellArray()
 // -----------------------------------------------------------------------------
 void RenameCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Cell Array Name");

@@ -82,7 +82,7 @@ AlignSectionsList::~AlignSectionsList()
 void AlignSectionsList::setupFilterParameters()
 {
   // Now append our options
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input File");

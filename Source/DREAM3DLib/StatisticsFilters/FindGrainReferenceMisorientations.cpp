@@ -88,7 +88,7 @@ FindGrainReferenceMisorientations::~FindGrainReferenceMisorientations()
 // -----------------------------------------------------------------------------
 void FindGrainReferenceMisorientations::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Reference Orientation");
@@ -135,26 +135,26 @@ void FindGrainReferenceMisorientations::dataCheck(bool preflight, size_t voxels,
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -300, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -300, int32_t, Int32ArrayType,  voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, ss, float, FloatArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceMisorientations, float, FloatArrayType, 0, voxels, 1)
 
   if(m_ReferenceOrientation == 0)
   {
-    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -303, float, FloatArrayType, fields, 4)
+    GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, -303, float, FloatArrayType, fields, 4)
   }
   else if(m_ReferenceOrientation == 1)
   {
-    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, ss, -301, float, FloatArrayType, voxels, 1)
+    GET_PREREQ_DATA(m, DREAM3D, CellData, GBEuclideanDistances, -301, float, FloatArrayType, voxels, 1)
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, ss, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgMisorientations, float, FloatArrayType, 0, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 

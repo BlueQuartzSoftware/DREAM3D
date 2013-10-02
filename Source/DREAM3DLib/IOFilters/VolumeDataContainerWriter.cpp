@@ -70,7 +70,7 @@ VolumeDataContainerWriter::~VolumeDataContainerWriter()
 // -----------------------------------------------------------------------------
 void VolumeDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

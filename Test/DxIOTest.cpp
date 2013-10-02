@@ -119,7 +119,7 @@ class GenerateGrainIds : public AbstractFilter
       setErrorCondition(0);
       std::stringstream ss;
       VolumeDataContainer* m = getVolumeDataContainer();
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, int32_t, Int32ArrayType, 0, voxels, 1)
     }
 
     GenerateGrainIds(const GenerateGrainIds&); // Copy Constructor Not Implemented

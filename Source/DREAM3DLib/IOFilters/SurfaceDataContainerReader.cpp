@@ -74,7 +74,7 @@ SurfaceDataContainerReader::~SurfaceDataContainerReader()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

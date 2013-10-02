@@ -65,7 +65,7 @@ SingleThresholdCells::~SingleThresholdCells()
 // -----------------------------------------------------------------------------
 void SingleThresholdCells::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Cell Array Name");
@@ -149,7 +149,7 @@ void SingleThresholdCells::dataCheck(bool preflight, size_t voxels, size_t field
   setErrorCondition(0);
   std::stringstream ss;
   VolumeDataContainer* m = getVolumeDataContainer();
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
 
   if(m_SelectedCellArrayName.empty() == true)
   {

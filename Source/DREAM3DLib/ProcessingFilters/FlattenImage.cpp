@@ -112,7 +112,7 @@ FlattenImage::~FlattenImage()
 // -----------------------------------------------------------------------------
 void FlattenImage::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Flattening Method");
@@ -174,15 +174,15 @@ void FlattenImage::dataCheck(bool preflight, size_t voxels, size_t fields, size_
     }
   }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -301, unsigned char, UCharArrayType, voxels, numImageComp)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -301, unsigned char, UCharArrayType, voxels, numImageComp)
 //  if(err == -301)
 //  {
 //    setErrorCondition(0);
 //    err = 0;
-//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, ss, -302, unsigned char, UCharArrayType, voxels, 3)
+//    GET_PREREQ_DATA(m, DREAM3D, CellData, ImageData, -302, unsigned char, UCharArrayType, voxels, 3)
 //  }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, ss, int32_t, Int32ArrayType, 0, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, FlatImageData, int32_t, Int32ArrayType, 0, voxels, 1)
 }
 
 // -----------------------------------------------------------------------------

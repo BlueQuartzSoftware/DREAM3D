@@ -70,7 +70,7 @@ ClearData::~ClearData()
 // -----------------------------------------------------------------------------
 void ClearData::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min");

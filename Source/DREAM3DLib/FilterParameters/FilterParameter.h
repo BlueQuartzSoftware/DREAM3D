@@ -39,6 +39,7 @@
 
 #include <vector>
 
+
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
@@ -135,6 +136,10 @@ class FilterParameter
     void operator=(const FilterParameter&); // Operator '=' Not Implemented
 };
 
+
+typedef std::vector<FilterParameter::Pointer> FilterParameterVector;
+
+
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
@@ -207,5 +212,7 @@ class ComparisonFilterParameter : public FilterParameter
     ComparisonFilterParameter(const ComparisonFilterParameter&); // Copy Constructor Not Implemented
     void operator=(const ComparisonFilterParameter&); // Operator '=' Not Implemented
 };
+
+
 
 #endif /* _FilterParameter_H_ */

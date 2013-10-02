@@ -90,7 +90,7 @@ SurfaceDataContainerWriter::~SurfaceDataContainerWriter()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainerWriter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

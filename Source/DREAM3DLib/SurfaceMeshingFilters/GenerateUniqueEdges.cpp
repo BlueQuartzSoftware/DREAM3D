@@ -73,7 +73,7 @@ GenerateUniqueEdges::~GenerateUniqueEdges()
 // -----------------------------------------------------------------------------
 void GenerateUniqueEdges::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

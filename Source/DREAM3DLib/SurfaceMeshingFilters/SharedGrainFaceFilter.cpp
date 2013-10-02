@@ -62,7 +62,7 @@ SharedGrainFaceFilter::~SharedGrainFaceFilter()
 // -----------------------------------------------------------------------------
 void SharedGrainFaceFilter::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

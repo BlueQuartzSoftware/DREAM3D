@@ -178,7 +178,7 @@ RotateSampleRefFrame::~RotateSampleRefFrame()
 // -----------------------------------------------------------------------------
 void RotateSampleRefFrame::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");

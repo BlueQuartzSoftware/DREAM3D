@@ -72,7 +72,7 @@ M3CEntireVolume::~M3CEntireVolume()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
    {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Add Surface Layer");
@@ -116,7 +116,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
   std::stringstream ss;
   VoxelDataContainer* m = getVoxelDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, ss, -300, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -300, int32_t, Int32ArrayType, voxels, 1);
 
 
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
@@ -131,7 +131,7 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
     StructArray<ISegment>::Pointer internalEdges = StructArray<ISegment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshInternalEdges);
 
-    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, ss, int8_t, Int8ArrayType, 0, 1, 1)
+    CREATE_NON_PREREQ_DATA(sm, DREAM3D, CellData, SurfaceMeshNodeType, int8_t, Int8ArrayType, 0, 1, 1)
 
     sm->setNodes(vertices);
     sm->setTriangles(triangles);

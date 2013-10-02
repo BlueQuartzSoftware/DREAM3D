@@ -230,7 +230,7 @@ VerifyTriangleWinding::~VerifyTriangleWinding()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

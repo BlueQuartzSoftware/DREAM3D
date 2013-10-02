@@ -79,7 +79,7 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

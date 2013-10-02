@@ -59,7 +59,7 @@ LinkFieldMapToCellArray::~LinkFieldMapToCellArray()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");

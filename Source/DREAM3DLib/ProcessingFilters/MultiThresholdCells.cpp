@@ -65,7 +65,7 @@ MultiThresholdCells::~MultiThresholdCells()
 // -----------------------------------------------------------------------------
 void MultiThresholdCells::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer parameter = ChoiceFilterParameter::New();
     parameter->setHumanLabel("Output Array Name");
@@ -137,7 +137,7 @@ void MultiThresholdCells::dataCheck(bool preflight, size_t voxels, size_t fields
     notifyErrorMessage("You must add at least 1 comparison array.", getErrorCondition());
   }
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, ss, bool, BoolArrayType, true, voxels, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, Output, bool, BoolArrayType, true, voxels, 1)
 }
 
 

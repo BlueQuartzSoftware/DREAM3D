@@ -71,7 +71,7 @@ ChangeResolution::~ChangeResolution()
 // -----------------------------------------------------------------------------
 void ChangeResolution::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 

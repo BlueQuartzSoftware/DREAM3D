@@ -83,7 +83,7 @@ AlignSections::~AlignSections()
 // -----------------------------------------------------------------------------
 void AlignSections::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Write Alignment Shift File");

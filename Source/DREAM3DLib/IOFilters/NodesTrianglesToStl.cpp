@@ -67,7 +67,7 @@ NodesTrianglesToStl::~NodesTrianglesToStl()
 // -----------------------------------------------------------------------------
 void NodesTrianglesToStl::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Nodes File");

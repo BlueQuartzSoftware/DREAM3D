@@ -189,7 +189,7 @@ RawBinaryReader::~RawBinaryReader()
 // -----------------------------------------------------------------------------
 void RawBinaryReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   /* Place all your option initialization code here */
 
   {

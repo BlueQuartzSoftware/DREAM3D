@@ -73,7 +73,7 @@ EdgeDataContainerReader::~EdgeDataContainerReader()
 // -----------------------------------------------------------------------------
 void EdgeDataContainerReader::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 
