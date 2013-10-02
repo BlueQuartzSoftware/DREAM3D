@@ -218,7 +218,6 @@ QString EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const
   QString dimStr = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents());
   QString dimStrHalf = QString::number(array->getNumberOfTuples()) + QString(" ") + QString::number(array->GetNumberOfComponents()/2);
 
-
   if((numComp%2) == 1)
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";

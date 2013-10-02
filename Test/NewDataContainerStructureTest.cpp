@@ -650,7 +650,6 @@ void RunPipeline3()
   DataContainerReader::Pointer dcr = DataContainerReader::New();
   dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\SynthTestOut2.dream3d");
   dcr->setReadVertexData(false);
-  dcr->setReadVertexData(false);
   dcr->setReadEdgeData(false);
   dcr->setReadSurfaceData(true);
   dcr->setReadAllVertexArrays(true);
@@ -738,6 +737,37 @@ void RunPipeline5()
   pipeline->run();
 }
 
+void RunPipeline6()
+{
+  FilterPipeline::Pointer pipeline = FilterPipeline::New();
+
+  DataContainerReader::Pointer dcr = DataContainerReader::New();
+  dcr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.dream3d");
+  dcr->setReadVertexData(false);
+  dcr->setReadEdgeData(true);
+  dcr->setReadSurfaceData(false);
+  dcr->setReadVolumeData(false);
+  dcr->setReadAllVertexArrays(true);
+  dcr->setReadAllEdgeArrays(true);
+  pipeline->pushBack(dcr);
+
+  DataContainerWriter::Pointer dcw = DataContainerWriter::New();
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1_BackOut.dream3d");
+  dcw->setWriteVolumeData(false);
+  dcw->setWriteSurfaceData(false);
+  dcw->setWriteEdgeData(true);
+  dcw->setWriteVertexData(false);
+  dcw->setWriteXdmfFile(true);
+  pipeline->pushBack(dcw);
+
+  int err = pipeline->preflightPipeline();
+  if(err < 0)
+  {
+    std::cout << "Failed Preflight" << std::endl;
+  }
+  pipeline->run();
+}
+
 // -----------------------------------------------------------------------------
 //  Use unit test framework
 // -----------------------------------------------------------------------------
@@ -753,7 +783,8 @@ int main(int argc, char **argv)
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
-  RunPipeline5();
+//  RunPipeline5();
+  RunPipeline6();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
