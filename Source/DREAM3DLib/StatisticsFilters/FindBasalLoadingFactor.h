@@ -30,6 +30,7 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     DREAM3D_TYPE_MACRO_SUPER(FindBasalLoadingFactor, AbstractFilter)
 
     virtual ~FindBasalLoadingFactor();
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
     //------ Required Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(AvgQuatsArrayName)
@@ -66,10 +67,10 @@ class DREAM3DLib_EXPORT FindBasalLoadingFactor : public AbstractFilter
     FindBasalLoadingFactor();
 
   private:
-    std::vector<OrientationOps::Pointer> m_OrientationOps;
-    CubicOps::Pointer m_CubicOps;
-    HexagonalOps::Pointer m_HexOps;
-    OrthoRhombicOps::Pointer m_OrthoOps;
+    QVector<OrientationOps::Pointer> m_OrientationOps;
+//    CubicOps::Pointer m_CubicOps;
+//    HexagonalOps::Pointer m_HexOps;
+//    OrthoRhombicOps::Pointer m_OrthoOps;
 
     float* m_BasalLoadingFactor;
     int32_t* m_FieldPhases;

@@ -53,12 +53,12 @@
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
-#include "DREAM3DLib\SyntheticBuildingFilters\InitializeSyntheticVolume.h"
-#include "DREAM3DLib\SyntheticBuildingFilters\PackPrimaryPhases.h"
-#include "DREAM3DLib\StatisticsFilters\FindNeighbors.h"
-#include "DREAM3DLib\StatisticsFilters\FindNumFields.h"
-#include "DREAM3DLib\SyntheticBuildingFilters\MatchCrystallography.h"
-#include "DREAM3DLib\GenericFilters\GenerateIPFColors.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/InitializeSyntheticVolume.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/PackPrimaryPhases.h"
+#include "DREAM3DLib/StatisticsFilters/FindNeighbors.h"
+#include "DREAM3DLib/StatisticsFilters/FindNumFields.h"
+#include "DREAM3DLib/SyntheticBuildingFilters/MatchCrystallography.h"
+#include "DREAM3DLib/GenericFilters/GenerateIPFColors.h"
 #include "DREAM3DLib/IOFilters/DataContainerWriter.h"
 
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"

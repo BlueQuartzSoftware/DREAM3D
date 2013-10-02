@@ -126,6 +126,8 @@ namespace DREAM3D
     const DREAM3D_STRING KernelAverageMisorientations("KernelAverageMisorientations");
     const DREAM3D_STRING MicroTexVolFrac("MicroTexVolFrac");
     const DREAM3D_STRING MisorientationColor("MisorientationColor");
+    const DREAM3D_STRING MTRdensity("MTRdensity");
+    const DREAM3D_STRING MTRgKAM("MTRgKAM");
     const DREAM3D_STRING NearestNeighbors("NearestNeighbors");
     const DREAM3D_STRING ParentIds("ParentIds");
     const DREAM3D_STRING Phases("Phases");
@@ -188,6 +190,8 @@ namespace DREAM3D
     const DREAM3D_STRING BasalLoadingFactor("BasalLoadingFactor");
     const DREAM3D_STRING Clusters("Clusters");
     const DREAM3D_STRING ClusteringList("ClusteringList");
+    const DREAM3D_STRING MTRdensity("MTRdensity");
+    const DREAM3D_STRING MTRgKAM("MTRgKAM");
   }
 
   namespace EnsembleData

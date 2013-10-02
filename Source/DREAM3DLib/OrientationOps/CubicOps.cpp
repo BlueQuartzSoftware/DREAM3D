@@ -1635,13 +1635,13 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
   return RgbColor::dRgb(255-RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
 }
 
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
-
-    BOOST_ASSERT(false);
-
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High Misorientation Triangle Legend");
-  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
+  uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
   double maxk = sqrt(2)-1;
   double maxdeg = 2*atan(sqrt(6*maxk*maxk-4*maxk+1));

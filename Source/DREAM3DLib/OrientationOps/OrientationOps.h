@@ -33,7 +33,8 @@
 #ifndef _OrientationOps_H_
 #define _OrientationOps_H_
 
-#include <vector>
+#include <QtCore/QVector>
+#include <QtCore/QString>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
@@ -99,7 +100,7 @@ class DREAM3DLib_EXPORT OrientationOps
      * @brief getSymmetryName Returns the name of the symmetry
      * @return
      */
-    virtual std::string getSymmetryName() = 0;
+    virtual QString getSymmetryName() = 0;
 
     /**
      * @brief getMisoQuat Finds the misorientation

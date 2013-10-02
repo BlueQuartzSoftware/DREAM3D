@@ -259,12 +259,13 @@ void AvizoRectilinearCoordinateWriter::generateHeader(QDataStream &ss)
 // -----------------------------------------------------------------------------
 int AvizoRectilinearCoordinateWriter::writeData(QDataStream &out)
 {
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   size_t dims[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getDimensions(dims);
+  m->getDimensions(dims);
   float origin[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getOrigin(origin);
+  m->getOrigin(origin);
   float res[3];
-  getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName())->getResolution(res);
+  m->getResolution(res);
 
   QString start("@1 # GrainIds in z, y, x with X moving fastest, then Y, then Z\n");
   out << start;

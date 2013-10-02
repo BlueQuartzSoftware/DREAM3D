@@ -14,6 +14,7 @@
 // -----------------------------------------------------------------------------
 FindBasalLoadingFactor::FindBasalLoadingFactor() :
   AbstractFilter(),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_AvgQuatsArrayName(DREAM3D::FieldData::AvgQuats),
   m_BasalLoadingFactorArrayName(DREAM3D::FieldData::BasalLoadingFactor),
   m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
@@ -42,7 +43,7 @@ FindBasalLoadingFactor::~FindBasalLoadingFactor()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::setupFilterParameters()
 {
-  std::vector<FilterParameter::Pointer> parameters;
+  QVector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -83,17 +84,17 @@ int FindBasalLoadingFactor::writeFilterParameters(AbstractFilterParametersWriter
 void FindBasalLoadingFactor::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QStringstream ss;
-  VolumeDataContainer* m = getVolumeDataContainer();
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgQuats, ss, -301, float, FloatArrayType, fields, 4)
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, BasalLoadingFactor, ss, float, FloatArrayType, 0, fields, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgQuats, -301, float, FloatArrayType, fields, 4)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, ss, -302, int32_t, Int32ArrayType, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, BasalLoadingFactor, float, FloatArrayType, 0, fields, 1)
+
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -302, int32_t, Int32ArrayType, fields, 1)
 
   typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -305, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
 }
 
 
@@ -110,7 +111,7 @@ void FindBasalLoadingFactor::preflight()
 // -----------------------------------------------------------------------------
 void FindBasalLoadingFactor::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -119,7 +120,7 @@ void FindBasalLoadingFactor::execute()
   }
   setErrorCondition(0);
 
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumCellFieldTuples(), m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
@@ -143,7 +144,7 @@ void FindBasalLoadingFactor::execute()
   sampleLoading[2] = m_LoadingDir.z;
   MatrixMath::Normalize3x1(sampleLoading);
 
-  size_t numgrains = m->getNumFieldTuples();
+  size_t numgrains = m->getNumCellFieldTuples();
   for (size_t i = 1; i < numgrains; i++)
   {
     QuaternionMathF::Copy(avgQuats[i], q1);

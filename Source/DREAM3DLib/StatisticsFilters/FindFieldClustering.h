@@ -27,6 +27,8 @@ class DREAM3DLib_EXPORT FindFieldClustering : public AbstractFilter
 
     virtual ~FindFieldClustering();
 
+    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
+
     //------ Required Cell Data
 
     //------ Required Field Data

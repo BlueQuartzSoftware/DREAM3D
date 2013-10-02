@@ -7,6 +7,7 @@
 CreateFieldArrayFromCellArray::CreateFieldArrayFromCellArray() :
   AbstractFilter(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_SelectedCellArrayName(""),
   m_GrainIds(NULL)
 {
@@ -139,7 +140,7 @@ IDataArray::Pointer copyCellData(IDataArray::Pointer inputData, int64_t fields, 
 // -----------------------------------------------------------------------------
 void CreateFieldArrayFromCellArray::execute()
 {
-  VolumeDataContainer* m = getVolumeDataContainer();
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
     setErrorCondition(-999);
@@ -148,22 +149,20 @@ void CreateFieldArrayFromCellArray::execute()
   }
   setErrorCondition(0);
   int64_t voxels = m->getTotalPoints();
-  int64_t fields = m->getNumFieldTuples();
-  dataCheck(false, voxels, fields, m->getNumEnsembleTuples());
+  int64_t fields = m->getNumCellFieldTuples();
+  dataCheck(false, voxels, fields, m->getNumCellEnsembleTuples());
   if (getErrorCondition() < 0)
   {
     return;
   }
-  //int err = 0;
-  QStringstream ss;
 
   IDataArray::Pointer inputData = m->getCellData(m_SelectedCellArrayName);
   if (NULL == inputData.get())
   {
-    ss.str("");
-    ss << "Selected array '" << m_SelectedCellArrayName << "' does not exist in the Voxel Data Container. Was it spelled correctly?";
+
+    QString ss = QObject::tr("Selected array '%1' does not exist in the Voxel Data Container. Was it spelled correctly?").arg(m_SelectedCellArrayName);
     setErrorCondition(-11001);
-    notifyErrorMessage(ss.str(), getErrorCondition());
+    notifyErrorMessage(ss, getErrorCondition());
     return;
   }
 
@@ -217,7 +216,7 @@ void CreateFieldArrayFromCellArray::execute()
 
   if (p.get() != NULL)
   {
-    m->addFieldData(p->GetName(), p);
+    m->addCellFieldData(p->GetName(), p);
 
   }
   else

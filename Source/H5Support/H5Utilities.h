@@ -46,8 +46,6 @@ public:
 
   virtual ~H5Utilities();
 
-
-  #if 1
   enum CustomHDFDataTypes {
    H5Support_GROUP = 1,
    H5Support_DATASET = 2,
@@ -55,7 +53,6 @@ public:
    H5Support_LINK = 8,
    H5Support_ANY = 15
   };
-  #endif
 
   // -----------HDF5 File Operations
   static H5Support_EXPORT hid_t openFile(const std::string &filename, bool readOnly=false);

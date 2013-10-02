@@ -39,7 +39,6 @@
 #include <QtCore/QFileInfo>
 
 #include "H5Support/QH5Utilities.h"
-#include "H5Support/H5Utilities.h"
 #include "H5Support/QH5Lite.h"
 #include "H5Support/HDF5ScopedFileSentinel.h"
 
@@ -322,7 +321,7 @@ void DataContainerReader::readData(bool preflight)
     hid_t dcGid = H5Gopen(fileId, DREAM3D::HDF5::DataContainerName.toLatin1().data(), 0);
 
     QList<QString> dcNames;
-    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::CustomHDFDataTypes::H5Support_GROUP, dcNames);
+    err = QH5Utilities::getGroupObjects(dcGid, H5Utilities::H5Support_GROUP, dcNames);
 
     // This will make sure if we return early from this method that the HDF5 File is properly closed.
     HDF5ScopedFileSentinel scopedFileSentinel(&fileId, true);
@@ -336,25 +335,25 @@ void DataContainerReader::readData(bool preflight)
       (dcType == DREAM3D::DataContainerType::EdgeDataContainer && m_ReadEdgeData == true) ||
       (dcType == DREAM3D::DataContainerType::VertexDataContainer && m_ReadVertexData == true))
       {
-        if(dcType == DREAM3D::DataContainerType::VolumeDataContainer) 
+        if(dcType == DREAM3D::DataContainerType::VolumeDataContainer)
         {
           VolumeDataContainer::Pointer dc = VolumeDataContainer::New();
           dc->setName(dcNames[iter]);
           getDataContainerArray()->pushBack(dc);
         }
-        if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer) 
+        if(dcType == DREAM3D::DataContainerType::SurfaceDataContainer)
         {
           SurfaceDataContainer::Pointer dc = SurfaceDataContainer::New();
           dc->setName(dcNames[iter]);
           getDataContainerArray()->pushBack(dc);
         }
-        if(dcType == DREAM3D::DataContainerType::EdgeDataContainer) 
+        if(dcType == DREAM3D::DataContainerType::EdgeDataContainer)
         {
           EdgeDataContainer::Pointer dc = EdgeDataContainer::New();
           dc->setName(dcNames[iter]);
           getDataContainerArray()->pushBack(dc);
         }
-        if(dcType == DREAM3D::DataContainerType::VertexDataContainer) 
+        if(dcType == DREAM3D::DataContainerType::VertexDataContainer)
         {
           VertexDataContainer::Pointer dc = VertexDataContainer::New();
           dc->setName(dcNames[iter]);

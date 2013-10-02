@@ -59,16 +59,16 @@ FindGrainReferenceCAxisMisorientations::FindGrainReferenceCAxisMisorientations()
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GrainReferenceCAxisMisorientationsArrayName(DREAM3D::CellData::GrainReferenceCAxisMisorientations),
+  m_GrainStdevCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainStdevCAxisMisorientations),
   m_AvgCAxesArrayName(DREAM3D::FieldData::AvgCAxes),
   m_GrainAvgCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainAvgCAxisMisorientations),
-  m_GrainStdevCAxisMisorientationsArrayName(DREAM3D::FieldData::GrainStdevCAxisMisorientations),
   m_GrainIds(NULL),
   m_CellPhases(NULL),
-  m_GrainReferenceCAxisMisorientations(NULL),
+  m_Quats(NULL),
   m_AvgCAxes(NULL),
+  m_GrainReferenceCAxisMisorientations(NULL),
   m_GrainAvgCAxisMisorientations(NULL),
-  m_GrainStdevCAxisMisorientations(NULL),
-  m_Quats(NULL)
+  m_GrainStdevCAxisMisorientations(NULL)
 {
   setupFilterParameters();
 }
@@ -113,7 +113,7 @@ int FindGrainReferenceCAxisMisorientations::writeFilterParameters(AbstractFilter
 void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
 
 
@@ -123,10 +123,10 @@ void FindGrainReferenceCAxisMisorientations::dataCheck(bool preflight, size_t vo
 
   CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, GrainReferenceCAxisMisorientations, float, FloatArrayType, 0, voxels, 1)
 
-  GET_PREREQ_DATA(m, DREAM3D, FieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, AvgCAxes, -303, float, FloatArrayType, fields, 3)
 
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
-  CREATE_NON_PREREQ_DATA(m, DREAM3D, FieldData, GrainStdevCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainAvgCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, GrainStdevCAxisMisorientations, float, FloatArrayType, 0, fields, 1)
 
 }
 
@@ -153,7 +153,7 @@ void FindGrainReferenceCAxisMisorientations::preflight()
 void FindGrainReferenceCAxisMisorientations::execute()
 {
   setErrorCondition(0);
-  
+
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
   if(NULL == m)
   {
@@ -171,7 +171,7 @@ void FindGrainReferenceCAxisMisorientations::execute()
     return;
   }
 
-  size_t numFields = m->getNumFieldTuples();
+  size_t numFields = m->getNumCellFieldTuples();
   int avgMisoComps = 3;
   FloatArrayType::Pointer avgmisoPtr = FloatArrayType::CreateArray(numFields, avgMisoComps, "AvgMiso_Temp");
   avgmisoPtr->initializeWithZeros();
@@ -259,9 +259,8 @@ void FindGrainReferenceCAxisMisorientations::execute()
   {
     if (i%1000 == 0)
     {
-      ss.str("");
-      ss << "Working On Grain " << i << " of " << totalFields;
-      notifyStatusMessage(ss.str());
+      QString ss = QObject::tr("Working On Grain %1 of %2").arg(i).arg(totalFields);
+      notifyStatusMessage(ss);
     }
     index = i * avgMisoComps;
     m_GrainAvgCAxisMisorientations[i] = avgmiso[index+1] / avgmiso[index];

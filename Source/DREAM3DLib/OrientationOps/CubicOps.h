@@ -70,7 +70,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
-    std::string getSymmetryName() { return "Cubic-High m3m"; }
+    QString getSymmetryName() { return "Cubic-High m3m"; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);
@@ -159,7 +159,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      * @param width of produced image (in pixels)
      * @return
      */
-    virtual UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float, int, int, int);
+    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
 
 
   protected:

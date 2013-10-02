@@ -541,7 +541,7 @@ void ReadH5Ebsd::execute()
 
       RotateEulerRefFrame::Pointer rot_Euler = RotateEulerRefFrame::New();
       rot_Euler->setObservers(this->getObservers());
-      rot_Euler->setVolumeDataContainer(getVolumeDataContainer());
+      rot_Euler->setDataContainerArray(getDataContainerArray());
       rot_Euler->setRotationAngle(m_EulerTransformationAngle);
       rot_Euler->setRotationAxis(eulerAxis);
       rot_Euler->execute();
