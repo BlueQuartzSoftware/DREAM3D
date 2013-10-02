@@ -54,7 +54,6 @@
 // -----------------------------------------------------------------------------
 GenerateMisorientationColors::GenerateMisorientationColors() :
   AbstractFilter(),
-  m_DataContainerName(DREAM3D::HDF5::VolumeDataContainerName),
   m_QuatsArrayName(DREAM3D::CellData::Quats),
   m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
   m_CellPhasesArrayName(DREAM3D::CellData::Phases),
@@ -85,7 +84,7 @@ GenerateMisorientationColors::~GenerateMisorientationColors()
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  std::vector<FilterParameter::Pointer> parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
 
@@ -141,16 +140,24 @@ int GenerateMisorientationColors::writeFilterParameters(AbstractFilterParameters
 void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
 {
   setErrorCondition(0);
-  QString ss;
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  std::stringstream ss;
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if (NULL == m)
+  {
+    ss.str("");
+    ss << getHumanLabel() << "The VolumeDataContainer was NULL and this is NOT allowed. There is an error in the programming. Please contact the developers";
+    setErrorCondition(-1);
+    addErrorMessage(getHumanLabel(), ss.str(), -1);
+    return;
+  }
 
-  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
-  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, ss, -302, int32_t, Int32ArrayType,  voxels, 1)
+  GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, ss, -303, float, FloatArrayType, voxels, 4)
 
       typedef DataArray<unsigned int> XTalStructArrayType;
-  GET_PREREQ_DATA(m, DREAM3D, CellEnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
+  GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, ss, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, 3)
+      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, ss, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
@@ -159,14 +166,8 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 void GenerateMisorientationColors::preflight()
 {
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
-  {
-    setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
-    return;
-  }
-
+  /* Place code here that sanity checks input arrays and input values. Look at some
+  * of the other DREAM3DLib/Filters/.cpp files for sample codes */
   dataCheck(true, 1, 1, 1);
 }
 
@@ -176,18 +177,18 @@ void GenerateMisorientationColors::preflight()
 void GenerateMisorientationColors::execute()
 {
   int err = 0;
-  
+  std::stringstream ss;
   setErrorCondition(err);
-  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-  if (NULL == m)
+  VolumeDataContainer* m = getVolumeDataContainer();
+  if(NULL == m)
   {
     setErrorCondition(-999);
-    notifyErrorMessage(QObject::tr("VolumeDataContainer was NULL. Returning from Execute Method for filter %1").arg(getHumanLabel()), getErrorCondition());
+    notifyErrorMessage("The Voxel DataContainer Object was NULL", -999);
     return;
   }
   int64_t totalPoints = m->getTotalPoints();
-  size_t totalFields = m->getNumCellFieldTuples();
-  size_t totalEnsembles = m->getNumCellEnsembleTuples();
+  size_t totalFields = m->getNumFieldTuples();
+  size_t totalEnsembles = m->getNumEnsembleTuples();
   dataCheck(false, totalPoints, totalFields, totalEnsembles);
   if (getErrorCondition() < 0)
   {
@@ -206,7 +207,7 @@ void GenerateMisorientationColors::execute()
   else
   {
     goodVoxels = BoolArrayType::SafePointerDownCast(gvPtr.get());
-    m_GoodVoxels = goodVoxels->getPointer(0);
+    m_GoodVoxels = goodVoxels->GetPointer(0);
   }
 
   int phase;
@@ -215,7 +216,7 @@ void GenerateMisorientationColors::execute()
   // Make sure we are dealing with a unit 1 vector.
   MatrixMath::Normalize3x1(m_ReferenceAxis.x, m_ReferenceAxis.y, m_ReferenceAxis.z);
   // Create 1 of every type of Ops class. This condenses the code below
-  QVector<OrientationOps::Pointer> ops;
+  std::vector<OrientationOps::Pointer> ops;
   ops.push_back(HexagonalOps::New());
   ops.push_back(CubicOps::New());
   ops.push_back(HexagonalLowOps::New());
@@ -234,6 +235,9 @@ void GenerateMisorientationColors::execute()
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
+  UInt8ArrayType::Pointer notSupported = UInt8ArrayType::CreateArray(13, 1, "NotSupportedArray");
+  notSupported->initializeWithZeros();
+
   // Write the Misorientation Coloring Cell Data
   for (int64_t i = 0; i < totalPoints; i++)
   {
@@ -244,9 +248,21 @@ void GenerateMisorientationColors::execute()
     m_MisorientationColor[index + 2] = 0;
     cellQuat = quats[i];
 
+    if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
+    {
+      uint32_t idx = m_CrystalStructures[phase];
+      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure) {
+        idx = 12;
+      }
+      notSupported->SetValue(idx, 1);
+      m_MisorientationColor[index] = 0;
+      m_MisorientationColor[index + 1] = 0;
+      m_MisorientationColor[index + 2] = 0;
+
+    }
     // Make sure we are using a valid Euler Angles with valid crystal symmetry
-    if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
-        && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
+    else if( (missingGoodVoxels == true || m_GoodVoxels[i] == true)
+             && m_CrystalStructures[phase] < Ebsd::CrystalStructure::LaueGroupEnd )
     {
       argb = ops[m_CrystalStructures[phase]]->generateMisorientationColor(cellQuat, refQuat);
       m_MisorientationColor[index] = RgbColor::dRed(argb);
@@ -255,6 +271,22 @@ void GenerateMisorientationColors::execute()
     }
   }
 
+  for(size_t i = 0; i < notSupported->GetNumberOfTuples() - 1; i++)
+  {
+    if (notSupported->GetValue(i) == 1)
+    {
+      std::string msg("The Symmetry of ");
+      msg.append(ops[i]->getSymmetryName()).append(" is not currently supported for Misorientation Coloring. Voxels with this symmetry have been set to black.");
+      notifyWarningMessage(msg, -500);
+    }
+  }
+
+  if (notSupported->GetValue(12) == 1)
+  {
+    std::string msg("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
+    notifyWarningMessage(msg, -500);
+  }
+  
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

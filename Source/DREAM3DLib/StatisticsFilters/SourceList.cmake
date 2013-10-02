@@ -18,29 +18,31 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}" "Statist
 # List your public filters here
 
 set(_PublicFilters
+  FindBasalLoadingFactor
   FindAvgCAxes
   FindAvgOrientations
   FindBoundaryStrengths
   FindEuclideanDistMap
+  FindFieldClustering
+  FindGBCD
   FindGrainReferenceCAxisMisorientations
   FindGrainReferenceMisorientations
   FindKernelAvgMisorientations
+  FindLargestCrossSections
+  FindMicroTextureRegions
   FindMisorientations
   FindNeighborhoods
   FindNeighbors
   FindNumFields
-  FindVolFractions
   FindSchmids
   FindShapes
   FindSizes
-  FindLargestCrossSections
-  FindSurfaceVoxelFractions
   FindSlipTransmissionMetrics
-  FindGBCD
+  FindSurfaceVoxelFractions
   FindTwinBoundaries
   FindTwinBoundarySchmidFactors
+  FindVolFractions
   GenerateEnsembleStatistics
-  FindMicroTextureRegions
 )
 
 

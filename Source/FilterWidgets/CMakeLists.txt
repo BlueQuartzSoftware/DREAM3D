@@ -55,6 +55,7 @@ add_executable(FilterWidgetCodeGen  ${FilterWidgetsLib_SOURCE_DIR}/FilterWidgetC
 target_link_libraries(FilterWidgetCodeGen  EbsdLib DREAM3DLib)
 
 
+
 # Now run the code to generate the header files which will over write the place
 # holder files that were generated from above
 add_custom_command(TARGET FilterWidgetCodeGen POST_BUILD
@@ -186,7 +187,6 @@ endif()
 
 add_library(FilterWidgetsLib STATIC ${Project_SRCS})
 target_link_libraries(FilterWidgetsLib
-
                     H5Support
                     EbsdLib
                     DREAM3DLib

@@ -69,6 +69,7 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
     virtual int getODFSize() { return k_OdfSize; }
     virtual int getMDFSize() { return k_MdfSize; }
     virtual int getNumSymOps() { return k_NumSymQuats; }
+    std::string getSymmetryName() { return "Hexagonal-High 6/mmm"; }
 
     virtual float getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3);
     virtual void getQuatSymOp(int i, QuatF &q);
@@ -77,6 +78,7 @@ class DREAM3DLib_EXPORT HexagonalOps : public OrientationOps
     virtual void getODFFZRod(float &r1, float &r2, float &r3);
     virtual void getMDFFZRod(float &r1, float &r2, float &r3);
     virtual void getNearestQuat(QuatF &q1, QuatF &q2);
+    virtual void getFZQuat(QuatF &qr);
     virtual int getMisoBin(float r1, float r2, float r3);
     virtual bool inUnitTriangle(float eta, float chi);
     virtual void determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3);

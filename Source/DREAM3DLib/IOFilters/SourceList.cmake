@@ -19,6 +19,7 @@ START_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Fil
 # List your public filters here
 
 set(_PublicFilters
+
   AvizoRectilinearCoordinateWriter
   AvizoUniformCoordinateWriter
   DataContainerReader
@@ -72,6 +73,20 @@ set(_PrivateFilters
   GBCDTriangleDumper
   FileReader
   FileWriter
+
+
+  VolumeDataContainerWriter
+  VolumeDataContainerReader
+
+  EdgeDataContainerWriter
+  EdgeDataContainerReader
+
+  SurfaceDataContainerWriter
+  SurfaceDataContainerReader
+
+  VertexDataContainerWriter
+  VertexDataContainerReader
+
 )
 
 #-----------------
@@ -81,6 +96,7 @@ foreach(f ${_PrivateFilters} )
                         ${_filterGroupName} ${f}
                         ${DREAM3DLib_FILTER_DOC_DIR}/${_filterGroupName}/${f}.md FALSE)
 endforeach()
+
 
 
 set(UTIL_FILES
@@ -111,6 +127,7 @@ set(UTIL_FILES
 foreach(file  ${UTIL_FILES})
   ADD_DREAM3D_SUPPORT_HEADER_SUBDIR(${DREAM3DLib_SOURCE_DIR} ${_filterGroupName} ${file} "util")
 endforeach()
+
 
 
 END_FILTER_GROUP(${FilterWidgetsLib_BINARY_DIR} "${_filterGroupName}"  "IO Filters")

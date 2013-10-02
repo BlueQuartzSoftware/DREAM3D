@@ -152,11 +152,14 @@ void FindAvgCAxes::execute()
     m_AvgCAxes[3*i+1] = 0.0;
     m_AvgCAxes[3*i+2] = 0.0;
   }
-  //  float qr[5];
+  float curCAxis[3];
+  size_t index;
+  float w;
   for(int i = 0; i < totalPoints; i++)
   {
     if(m_GrainIds[i] > 0)
     {
+      index = 3 * m_GrainIds[i];
       QuaternionMathF::Copy(quats[i], q1);
 
       OrientationMath::QuattoMat(q1, g1);
@@ -166,12 +169,16 @@ void FindAvgCAxes::execute()
       MatrixMath::Multiply3x3with3x1(g1t, caxis, c1);
       //normalize so that the magnitude is 1
       MatrixMath::Normalize3x1(c1);
-      if(c1[2] < 0) c1[0] = -c1[0], c1[1] = -c1[1], c1[2] = -c1[2];
-
+      curCAxis[0] = m_AvgCAxes[index] / counter[m_GrainIds[i]];
+      curCAxis[1] = m_AvgCAxes[index+1] / counter[m_GrainIds[i]];
+      curCAxis[2] = m_AvgCAxes[index+2] / counter[m_GrainIds[i]];
+      MatrixMath::Normalize3x1(curCAxis);
+      w = MatrixMath::CosThetaBetweenVectors(c1,curCAxis);
+      if (w < 0) MatrixMath::Multiply3x1withConstant(c1,-1);
       counter[m_GrainIds[i]]++;
-      m_AvgCAxes[3*m_GrainIds[i]] = m_AvgCAxes[3*m_GrainIds[i]] + c1[0];
-      m_AvgCAxes[3*m_GrainIds[i]+1] = m_AvgCAxes[3*m_GrainIds[i]+1] + c1[1];
-      m_AvgCAxes[3*m_GrainIds[i]+2] = m_AvgCAxes[3*m_GrainIds[i]+2] + c1[2];
+      m_AvgCAxes[index] += c1[0];
+      m_AvgCAxes[index+1] += c1[1];
+      m_AvgCAxes[index+2] += c1[2];
     }
   }
   for (size_t i = 1; i < numgrains; i++)
@@ -184,9 +191,9 @@ void FindAvgCAxes::execute()
     }
     else
     {
-      m_AvgCAxes[3*i] = m_AvgCAxes[3*i]/counter[i];
-      m_AvgCAxes[3*i+1] = m_AvgCAxes[3*i+1]/counter[i];
-      m_AvgCAxes[3*i+2] = m_AvgCAxes[3*i+2]/counter[i];
+      m_AvgCAxes[3*i] /= counter[i];
+      m_AvgCAxes[3*i+1] /= counter[i];
+      m_AvgCAxes[3*i+2] /= counter[i];
     }
   }
 

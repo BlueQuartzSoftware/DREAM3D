@@ -21,6 +21,7 @@ set(_PublicFilters
   AdjustVolumeOrigin
   ConvertData
   CopyFieldArrayToCellArray
+  CreateFieldArrayFromCellArray
   FindBoundingBoxGrains
   FindCellQuats
   FindGrainCentroids

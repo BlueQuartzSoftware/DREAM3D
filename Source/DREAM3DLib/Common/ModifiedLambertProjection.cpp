@@ -111,16 +111,18 @@ ModifiedLambertProjection::Pointer ModifiedLambertProjection::CreateProjectionFr
 #endif
 
     // Based on the XY coordinate, get the pointer index that the value corresponds to in the proper square
-    sqIndex = squareProj->getSquareIndex(sqCoord);
+//    sqIndex = squareProj->getSquareIndex(sqCoord);
     if (nhCheck == true)
     {
       //north increment by 1
-      squareProj->addValue(ModifiedLambertProjection::NorthSquare, sqIndex, 1.0);
+//      squareProj->addValue(ModifiedLambertProjection::NorthSquare, sqIndex, 1.0);
+      squareProj->addInterpolatedValues(ModifiedLambertProjection::NorthSquare, sqCoord, 1.0);
     }
     else
     {
       // south increment by 1
-      squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
+//      squareProj->addValue(ModifiedLambertProjection::SouthSquare, sqIndex, 1.0);
+      squareProj->addInterpolatedValues(ModifiedLambertProjection::SouthSquare, sqCoord, 1.0);
     }
   }
 #if WRITE_LAMBERT_SQUARE_COORD_VTK
@@ -173,6 +175,72 @@ int ModifiedLambertProjection::readHDF5Data(hid_t groupId)
 {
   int err = 0;
   return err;
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void ModifiedLambertProjection::addInterpolatedValues(Square square, float* sqCoord, double value)
+{
+  int abin1, bbin1;
+  int abin2, bbin2;
+  int abin3, bbin3;
+  int abin4, bbin4;
+  int abinSign, bbinSign;
+  float modX = (sqCoord[0] + m_HalfDimensionTimesStepSize ) / m_StepSize;
+  float modY = (sqCoord[1] + m_HalfDimensionTimesStepSize ) / m_StepSize;
+  int abin = (int) modX;
+  int bbin = (int) modY;
+  modX -= abin;
+  modY -= bbin;
+  modX -= 0.5;
+  modY -= 0.5;
+  if(modX == 0.0) abinSign = 1;
+  else abinSign = modX/fabs(modX);
+  if(modY == 0.0) bbinSign = 1;
+  else bbinSign = modY/fabs(modY);
+  abin1 = abin;
+  bbin1 = bbin;
+  abin2 = abin+abinSign;
+  bbin2 = bbin;
+  if(abin2 < 0 || abin2 > m_Dimension-1) abin2 = abin2 - (abinSign*m_Dimension), bbin2 = m_Dimension-bbin2-1;
+  abin3 = abin;
+  bbin3 = bbin+bbinSign;
+  if(bbin3 < 0 || bbin3 > m_Dimension-1) abin3 = m_Dimension-abin3-1, bbin3 = bbin3 - (bbinSign*m_Dimension);
+  abin4 = abin+abinSign;
+  bbin4 = bbin+bbinSign;
+  if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 >= 0 && bbin4 <= m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = m_Dimension-bbin4-1;
+  else if((abin4 >= 0 && abin4 <= m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = m_Dimension-abin4-1, bbin4 = bbin4 - (bbinSign*m_Dimension);
+  else if((abin4 < 0 || abin4 > m_Dimension-1) && (bbin4 < 0 || bbin4 > m_Dimension-1)) abin4 = abin4 - (abinSign*m_Dimension), bbin4 = bbin4 - (bbinSign*m_Dimension);
+  modX = fabs(modX);
+  modY = fabs(modY);
+
+  int index1 = bbin1 * m_Dimension + abin1;
+  int index2 = bbin2 * m_Dimension + abin2;
+  int index3 = bbin3 * m_Dimension + abin3;
+  int index4 = bbin4 * m_Dimension + abin4;
+  if (square == NorthSquare)
+  {
+    double v1 = m_NorthSquare->GetValue(index1) + value*(1.0-modX)*(1.0-modY);
+    double v2 = m_NorthSquare->GetValue(index2) + value*(modX)*(1.0-modY);
+    double v3 = m_NorthSquare->GetValue(index3) + value*(1.0-modX)*(modY);
+    double v4 = m_NorthSquare->GetValue(index4) + value*(modX)*(modY);
+    m_NorthSquare->SetValue(index1, v1);
+    m_NorthSquare->SetValue(index2, v2);
+    m_NorthSquare->SetValue(index3, v3);
+    m_NorthSquare->SetValue(index4, v4);
+  }
+  else
+  {
+    double v1 = m_SouthSquare->GetValue(index1) + value*(1.0-modX)*(1.0-modY);
+    double v2 = m_SouthSquare->GetValue(index2) + value*(modX)*(1.0-modY);
+    double v3 = m_SouthSquare->GetValue(index3) + value*(1.0-modX)*(modY);
+    double v4 = m_SouthSquare->GetValue(index4) + value*(modX)*(modY);
+    m_SouthSquare->SetValue(index1, v1);
+    m_SouthSquare->SetValue(index2, v2);
+    m_SouthSquare->SetValue(index3, v3);
+    m_SouthSquare->SetValue(index4, v4);
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -291,6 +359,12 @@ bool ModifiedLambertProjection::getSquareCoord(float* xyz, float* sqCoord)
   {
     adjust = -1.0;
     nhCheck = true;
+  }
+  if(xyz[0] == 0 && xyz[1] == 0)
+  {
+    sqCoord[0] = 0.0;
+    sqCoord[1] = 0.0;
+    return nhCheck;
   }
   if(fabs(xyz[0]) >= fabs(xyz[1]))
   {

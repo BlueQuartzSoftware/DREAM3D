@@ -531,6 +531,13 @@ void CubicOps::getNearestQuat(QuatF &q1, QuatF &q2)
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
+void CubicOps::getFZQuat(QuatF &qr)
+{
+  int numsym = 24;
+
+  _calcQuatNearestOrigin(CubicQuatSym, numsym, qr);
+}
+
 int CubicOps::getMisoBin(float r1, float r2, float r3)
 {
   float dim[3];
@@ -1196,10 +1203,11 @@ void _TripletSort(T a, T b, T c, T &x, T &y, T&z)
 bool CubicOps::inUnitTriangle(float eta, float chi)
 {
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
-  float arg;
-  if(etaDeg > 45.0) arg = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
-  else arg = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
-  float chiMax = acos(DREAM3DMath::boundF(arg,-1.0f,1.0f));
+  float chiMax;
+  if(etaDeg > 45.0) chiMax = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
+  else chiMax = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
+  DREAM3DMath::boundF(chiMax,-1.0f,1.0f);
+  chiMax = acos(chiMax);
   if( eta < 0.0 || eta > (45.0*DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax ) return false;
   return true;
 }
@@ -1257,10 +1265,11 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
   float etaMin = 0.0;
   float etaMax = 45.0;
   float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
-  float arg;
-  if(etaDeg > 45.0) arg = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
-  else arg = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
-  float chiMax = acos(DREAM3DMath::boundF(arg,-1.0f,1.0f));
+  float chiMax;
+  if(etaDeg > 45.0) chiMax = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
+  else chiMax = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
+  DREAM3DMath::boundF(chiMax,-1.0f,1.0f);
+  chiMax = acos(chiMax);
 
   _rgb[0] = 1.0 - chi/chiMax;
   _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
