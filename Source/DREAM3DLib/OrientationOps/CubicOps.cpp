@@ -1643,7 +1643,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High Misorientation Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->getPointer(0));
 
-  double maxk = sqrt(2)-1;
+  double maxk = DREAM3D::Constants::k_Sqrt2-1;
   double maxdeg = 2*atan(sqrt(6*maxk*maxk-4*maxk+1));
   double deg1=2*atan(sqrt(2*maxk*maxk));
 
@@ -1722,14 +1722,14 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
               if(theta<=theta2)
               {
                   phi1=asin(1/tan(theta));
-                  double k=(1-tan(A)*cos(theta))/(sqrt(2)*(tan(A)*sin(theta)));
+                  double k=(1-tan(A)*cos(theta))/(DREAM3D::Constants::k_Sqrt2*(tan(A)*sin(theta)));
                   if(k>1)k=1;
                   if(k<-1)k=-1;
                   phi2=asin(k)-M_PI_4;
               }
               else if(theta>theta2 && theta<theta3)
               {
-                  phi1=acos((sqrt(2)-1)/(tan(A)*sin(theta)));
+                  phi1=acos((DREAM3D::Constants::k_Sqrt2-1)/(tan(A)*sin(theta)));
                   phi2=M_PI_4;
               }
           }
@@ -1811,7 +1811,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   */
   double r=tan(A);
   std::vector<double> x, y, z;
-  y=DREAM3DMath::linspace(0, r/sqrt(2), 100);
+  y=DREAM3DMath::linspace(0, r/DREAM3D::Constants::k_Sqrt2, 100);
   for(int i=0; i<y.size(); i++)
   {
       double k=r*r-y[i]*y[i];
@@ -1827,7 +1827,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x=DREAM3DMath::linspace(r/sqrt(3), r, 100);
+  x=DREAM3DMath::linspace(r/DREAM3D::Constants::k_Sqrt3, r, 100);
   for(int i=0; i<x.size(); i++)
   {
       double k=r*r-x[i]*x[i];
@@ -1843,7 +1843,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x=DREAM3DMath::linspace(r/sqrt(3),r/sqrt(2),100);
+  x=DREAM3DMath::linspace(r/DREAM3D::Constants::k_Sqrt3,r/DREAM3D::Constants::k_Sqrt2,100);
   for(int i=0; i<x.size(); i++)
   {
       y.push_back(x[i]);
@@ -1884,9 +1884,9 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       }
       else
       {
-          d1.push_back(r/sqrt(3));
-          d2.push_back(r/sqrt(3));
-          d3.push_back(r/sqrt(3));
+          d1.push_back(r/DREAM3D::Constants::k_Sqrt3);
+          d2.push_back(r/DREAM3D::Constants::k_Sqrt3);
+          d3.push_back(r/DREAM3D::Constants::k_Sqrt3);
       }
   }
   ba=rodri2pair(d1, d2, d3);
@@ -2068,7 +2068,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       x.clear();
       y.clear();
       z.clear();
-      x = DREAM3DMath::linspace(r/sqrt(3),r,100);
+      x = DREAM3DMath::linspace(r/DREAM3D::Constants::k_Sqrt3,r,100);
       for(int i=0; i<x.size(); i++)
       {
           double k=(r*r-x[i]*x[i])/2;
@@ -2084,7 +2084,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       x.clear();
       y.clear();
       z.clear();
-      x = DREAM3DMath::linspace(r/sqrt(3),r/sqrt(2),100);
+      x = DREAM3DMath::linspace(r/DREAM3D::Constants::k_Sqrt3,r/DREAM3D::Constants::k_Sqrt2,100);
       for(int i=0; i<x.size(); i++)
       {
           y.push_back(x[i]);
@@ -2106,7 +2106,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       double theta3 = M_PI_2;
       double phi3 = acos(maxk/(tan(A)*sin(theta3)));
 
-      y = DREAM3DMath::linspace(r*sin(phi3),r/(sqrt(2)),100);
+      y = DREAM3DMath::linspace(r*sin(phi3),r/(DREAM3D::Constants::k_Sqrt2),100);
       for(int i=0; i<y.size(); i++)
       {
           x.push_back(sqrt(r*r - y[i]*y[i]));
@@ -2169,7 +2169,7 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
       double thetab = M_PI_2;
       double phi3 = acos(maxk/(tan(A)*sin(thetab)));
 
-      y = DREAM3DMath::linspace(r*sin(phi3),r/(sqrt(2)),100);
+      y = DREAM3DMath::linspace(r*sin(phi3),r/(DREAM3D::Constants::k_Sqrt2),100);
       for(int i=0; i<y.size(); i++)
       {
           z.push_back(0);
