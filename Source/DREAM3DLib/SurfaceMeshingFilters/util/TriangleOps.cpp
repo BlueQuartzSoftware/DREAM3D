@@ -37,7 +37,7 @@
 
 #include "DREAM3DLib/Math/MatrixMath.h"
 #include "DREAM3DLib/DataArrays/ManagedArrayOfArrays.hpp"
-#include "DREAM3DLib/Common/SurfaceDataContainer.h"
+#include "DREAM3DLib/DataContainers/SurfaceDataContainer.h"
 #include "DREAM3DLib/SurfaceMeshingFilters/MeshFaceNeighbors.hpp"
 
 namespace SM = DREAM3D::SurfaceMesh;

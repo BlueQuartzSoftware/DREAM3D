@@ -52,10 +52,10 @@
 #include "DREAM3DLib/Common/Constants.h"
 #include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Common/ShapeType.h"
-#include "DREAM3DLib/Common/DREAM3DRandom.h"
+#include "DREAM3DLib/Utilities/DREAM3DRandom.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/PrimaryStatsData.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/PrimaryStatsData.h"
 #include "DREAM3DLib/IOFilters/DataContainerReader.h"
 
 

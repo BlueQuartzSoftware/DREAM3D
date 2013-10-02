@@ -73,8 +73,8 @@
 #include "DREAM3DLib/Common/StatsGen.hpp"
 #include "DREAM3DLib/Common/AbstractFilter.h"
 #include "DREAM3DLib/DataArrays/StatsDataArray.h"
-#include "DREAM3DLib/Common/StatsData.h"
-#include "DREAM3DLib/Common/BoundaryStatsData.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
+#include "DREAM3DLib/StatsData/BoundaryStatsData.h"
 
 
 #define CHECK_ERROR_ON_WRITE(var, msg)\

@@ -16,7 +16,7 @@
 #include <ostream>
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Vector3.h"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 
 
 /**

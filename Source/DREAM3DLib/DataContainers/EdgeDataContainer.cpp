@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DLib/Common/EdgeDataContainer.h"
+#include "DREAM3DLib/DataContainers/EdgeDataContainer.h"
 
 // C Includes
 

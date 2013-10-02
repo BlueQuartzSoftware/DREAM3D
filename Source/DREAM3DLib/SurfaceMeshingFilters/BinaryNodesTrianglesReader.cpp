@@ -41,7 +41,7 @@
 
 
 #include "DREAM3DLib/Common/ScopedFileMonitor.hpp"
-#include "DREAM3DLib/Common/MeshStructs.h"
+#include "DREAM3DLib/DataContainers/MeshStructs.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 
 #include "BinaryNodesTrianglesReader.h"

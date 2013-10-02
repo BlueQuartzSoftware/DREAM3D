@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
  * @class CMUNodesTrianglesToStl CMUNodesTrianglesToStl.h MFESurfaceSmoothing/CMUNodesTrianglesToStl.h

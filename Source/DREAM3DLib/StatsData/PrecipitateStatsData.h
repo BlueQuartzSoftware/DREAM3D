@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _TransformationStatsDataTUPLE_H_
-#define _TransformationStatsDataTUPLE_H_
+#ifndef _PrecipitateStatsDataTUPLE_H_
+#define _PrecipitateStatsDataTUPLE_H_
 
 #include <hdf5.h>
 
@@ -43,12 +43,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 
 typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 
 /**
- * @class TransformationStatsData TransformationStatsData.h DREAM3DLib/Common/TransformationStatsData.h
+ * @class PrecipitateStatsData PrecipitateStatsData.h DREAM3DLib/Common/PrecipitateStatsData.h
  * @brief This class holds the statistical data for a single phase of a microstructure.
  * There are several statistics that are held by this class in a varying number of
  * storage types. Some types have specific ordering of the sub arrays with in them. Those
@@ -80,14 +80,14 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
  * @date Feb 9, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
+class DREAM3DLib_EXPORT PrecipitateStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(TransformationStatsData)
-    DREAM3D_STATIC_NEW_MACRO(TransformationStatsData)
-    DREAM3D_TYPE_MACRO_SUPER(TransformationStatsData, StatsData)
+    DREAM3D_SHARED_POINTERS(PrecipitateStatsData)
+    DREAM3D_STATIC_NEW_MACRO(PrecipitateStatsData)
+    DREAM3D_TYPE_MACRO_SUPER(PrecipitateStatsData, StatsData)
 
-    virtual ~TransformationStatsData();
+    virtual ~PrecipitateStatsData();
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -100,12 +100,12 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
       precision = 0;
     }
 
-    virtual std::string getStatsType();
-    virtual unsigned int getPhaseType();
-
     DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase)
+    DREAM3D_INSTANCE_PROPERTY(float, PrecipBoundaryFraction)
+
+    virtual std::string getStatsType();
+    virtual unsigned int getPhaseType();
 
    /**
      * @breif this will generate the Bin Numbers values;
@@ -168,11 +168,11 @@ class DREAM3DLib_EXPORT TransformationStatsData : public StatsData
     virtual int readHDF5Data(hid_t groupId);
 
   protected:
-    TransformationStatsData();
+    PrecipitateStatsData();
 
   private:
-    TransformationStatsData(const TransformationStatsData&); // Copy Constructor Not Implemented
-    void operator=(const TransformationStatsData&); // Operator '=' Not Implemented
+    PrecipitateStatsData(const PrecipitateStatsData&); // Copy Constructor Not Implemented
+    void operator=(const PrecipitateStatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* _TransformationStatsDataTUPLE_H_ */
+#endif /* _PrecipitateStatsDataTUPLE_H_ */

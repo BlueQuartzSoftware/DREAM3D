@@ -34,8 +34,8 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#ifndef _BoundaryStatsDataTUPLE_H_
-#define _BoundaryStatsDataTUPLE_H_
+#ifndef _MatrixStatsDataTUPLE_H_
+#define _MatrixStatsDataTUPLE_H_
 
 #include <hdf5.h>
 
@@ -43,12 +43,12 @@
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
 #include "DREAM3DLib/DataArrays/DataArray.hpp"
-#include "DREAM3DLib/Common/StatsData.h"
+#include "DREAM3DLib/StatsData/StatsData.h"
 
 typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
 
 /**
- * @class BoundaryStatsData BoundaryStatsData.h DREAM3DLib/Common/BoundaryStatsData.h
+ * @class MatrixStatsData MatrixStatsData.h DREAM3DLib/Common/MatrixStatsData.h
  * @brief This class holds the statistical data for a single phase of a microstructure.
  * There are several statistics that are held by this class in a varying number of
  * storage types. Some types have specific ordering of the sub arrays with in them. Those
@@ -80,14 +80,14 @@ typedef std::vector<FloatArrayType::Pointer> VectorOfFloatArray;
  * @date Feb 9, 2012
  * @version 1.0
  */
-class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
+class DREAM3DLib_EXPORT MatrixStatsData : public StatsData
 {
   public:
-    DREAM3D_SHARED_POINTERS(BoundaryStatsData)
-    DREAM3D_STATIC_NEW_MACRO(BoundaryStatsData)
-    DREAM3D_TYPE_MACRO_SUPER(BoundaryStatsData, StatsData)
+    DREAM3D_SHARED_POINTERS(MatrixStatsData)
+    DREAM3D_STATIC_NEW_MACRO(MatrixStatsData)
+    DREAM3D_TYPE_MACRO_SUPER(MatrixStatsData, StatsData)
 
-    virtual ~BoundaryStatsData();
+    virtual ~MatrixStatsData();
 
     /**
      * @brief GetTypeName Returns a string representation of the type of data that is stored by this class. This
@@ -100,36 +100,20 @@ class DREAM3DLib_EXPORT BoundaryStatsData : public StatsData
       precision = 0;
     }
 
-    /**
-     * @brief Creates the Vector of FloatArrayType for a give distribution type
-     * and sized according to numBins
-     * @param distributionType The type of distribution as laid out in the DREAM3D::DistributionType
-     * namespace which should be found in Constants.h.
-     * @param numBins The number of bins that the array should be sized to
-     * @return a VectorOfFloatArray object which could be empty if an unrecognized
-     * distribution type is passed in.
-     */
-    static VectorOfFloatArray CreateCorrelatedDistributionArrays(uint32_t distributionType, size_t numBins);
-    static FloatArrayType::Pointer CreateDistributionArrays(uint32_t distributionType);
-
-
-    DREAM3D_INSTANCE_PROPERTY(float, BoundaryArea)
     DREAM3D_INSTANCE_PROPERTY(float, PhaseFraction)
-    DREAM3D_INSTANCE_PROPERTY(float, ParentPhase)
 
     virtual void initialize();
 
     virtual int writeHDF5Data(hid_t groupId);
     virtual int readHDF5Data(hid_t groupId);
-
     virtual std::string getStatsType();
     virtual unsigned int getPhaseType();
   protected:
-    BoundaryStatsData();
+    MatrixStatsData();
 
   private:
-    BoundaryStatsData(const BoundaryStatsData&); // Copy Constructor Not Implemented
-    void operator=(const BoundaryStatsData&); // Operator '=' Not Implemented
+    MatrixStatsData(const MatrixStatsData&); // Copy Constructor Not Implemented
+    void operator=(const MatrixStatsData&); // Operator '=' Not Implemented
 };
 
-#endif /* _BoundaryStatsDataTUPLE_H_ */
+#endif /* _MatrixStatsDataTUPLE_H_ */

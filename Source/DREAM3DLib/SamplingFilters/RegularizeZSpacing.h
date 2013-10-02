@@ -44,7 +44,7 @@
 #include "DREAM3DLib/DataArrays/IDataArray.h"
 
 #include "DREAM3DLib/Common/AbstractFilter.h"
-#include "DREAM3DLib/Common/VolumeDataContainer.h"
+#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
 
 /**
  * @class RegularizeZSpacing RegularizeZSpacing.h DREAM3DLib/SyntheticBuilderFilters/RegularizeZSpacing.h

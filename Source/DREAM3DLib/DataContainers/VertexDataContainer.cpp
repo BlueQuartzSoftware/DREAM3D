@@ -34,7 +34,7 @@
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
 
-#include "DREAM3DLib/Common/VertexDataContainer.h"
+#include "DREAM3DLib/DataContainers/VertexDataContainer.h"
 
 // C Includes
 
