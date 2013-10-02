@@ -376,7 +376,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     totalCheckList.clear();
     microtexturevolume = 0.0f;
     totalCheckVolume = 0.0f;
-    if (misoCount > 0) m_MTRgKAM[i] = misoTotal / misoCount;
+    if (misoCount > 0) m_MTRgKAM[i] = misoTotal / misoCount * DREAM3D::Constants::k_180OverPi;
     else m_MTRgKAM[i] = -1.0f;
     misoTotal = 0.0f;
     misoCount = 0;
