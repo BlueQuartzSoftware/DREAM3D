@@ -38,7 +38,7 @@
 // to expose some of the constants needed below
 #include <limits>
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Common/ModifiedLambertProjection.h"
 #include "DREAM3DLib/IOFilters/VtkRectilinearGridWriter.h"

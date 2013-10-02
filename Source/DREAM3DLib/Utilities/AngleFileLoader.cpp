@@ -42,7 +42,7 @@
 #include "MXA/Utilities/MXAFileInfo.h"
 #include "MXA/Utilities/StringUtils.h"
 
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 #include "DREAM3DLib/Math/OrientationMath.h"
 #include "DREAM3DLib/Math/QuaternionMath.hpp"
 

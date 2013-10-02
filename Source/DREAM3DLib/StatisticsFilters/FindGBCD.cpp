@@ -44,7 +44,7 @@
 #endif
 
 #include "DREAM3DLib/Math/MatrixMath.h"
-#include "DREAM3DLib/Common/DREAM3DMath.h"
+#include "DREAM3DLib/Math/DREAM3DMath.h"
 
 
 /**

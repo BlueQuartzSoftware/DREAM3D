@@ -161,7 +161,7 @@ class DREAM3DLib_EXPORT CubicOps : public OrientationOps
      * @param width of produced image (in pixels)
      * @return
      */
-    virtual UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float, int, int, int);
+    virtual UInt8ArrayType::Pointer generateMisorientationTriangleLegend(float, int, int, int);
 
 
   protected:
