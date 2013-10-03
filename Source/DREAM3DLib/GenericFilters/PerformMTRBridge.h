@@ -38,6 +38,8 @@ class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(FieldParentIdsArrayName)
     DREAM3D_INSTANCE_STRING_PROPERTY(MTRgKAMArrayName)
     //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(avgMTRgKAMArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumGrainsPerParentArrayName)
     //------ Required Ensemble Data
     DREAM3D_INSTANCE_STRING_PROPERTY(CrystalStructuresArrayName)
 
@@ -68,12 +70,13 @@ class DREAM3DLib_EXPORT PerformMTRBridge : public AbstractFilter
     int32_t* m_CellParentIds;
     int32_t* m_FieldParentIds;
     float* m_MTRgKAM;
+    float* m_avgMTRgKAM;
+    int32_t* m_NumGrainsPerParent;
 
     unsigned int* m_CrystalStructures;
-
     std::vector<OrientationOps::Pointer> m_OrientationOps;
 
-    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
+    void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink);
 
 
     PerformMTRBridge(const PerformMTRBridge&); // Copy Constructor Not Implemented

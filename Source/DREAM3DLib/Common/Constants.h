@@ -151,6 +151,8 @@ namespace DREAM3D
     const DREAM3D_STRING mPrime("mPrime");
     const DREAM3D_STRING EulerAngles("EulerAngles");
     const DREAM3D_STRING MTRgKAM("MTRgKAM");
+    const DREAM3D_STRING avgMTRgKAM("avgMTRgKAM");
+    const DREAM3D_STRING NumGrainsPerParent("NumGrainsPerParent");
     const DREAM3D_STRING SurfaceVoxelFractions("SurfaceVoxelFractions");
     const DREAM3D_STRING AxisEulerAngles("AxisEulerAngles");
     const DREAM3D_STRING SurfaceFields("SurfaceFields");
