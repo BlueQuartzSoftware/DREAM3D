@@ -113,7 +113,7 @@ class DREAM3DLib_EXPORT PhaseType
     }
 
 
-    static void getPhaseTypeStrings(std::vector<std::string> &strings)
+    static void getPhaseTypeStrings(std::vector<std::string>& strings)
     {
       strings.clear();
       strings.push_back(PrimaryStr());
@@ -124,7 +124,7 @@ class DREAM3DLib_EXPORT PhaseType
       strings.push_back(UnknownPhaseTypeStr());
     }
 
-    static void getPhaseTypeEnums(std::vector<unsigned int> &types)
+    static void getPhaseTypeEnums(std::vector<unsigned int>& types)
     {
       types.clear();
       types.push_back(DREAM3D::PhaseType::PrimaryPhase);
@@ -135,7 +135,7 @@ class DREAM3DLib_EXPORT PhaseType
       types.push_back(DREAM3D::PhaseType::UnknownPhaseType);
     }
 
-    static void getPhaseTypeMap(std::map<int, std::string> &map)
+    static void getPhaseTypeMap(std::map<int, std::string>& map)
     {
       map.clear();
       map[DREAM3D::PhaseType::PrimaryPhase] = PrimaryStr();

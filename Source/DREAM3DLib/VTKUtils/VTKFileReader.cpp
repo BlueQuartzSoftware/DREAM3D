@@ -54,8 +54,8 @@
 //
 // -----------------------------------------------------------------------------
 VTKFileReader::VTKFileReader() :
-FileReader(),
-m_InputFile("")
+  FileReader(),
+  m_InputFile("")
 {
 }
 
@@ -101,7 +101,7 @@ size_t VTKFileReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int xDim, int yDim, int zDim)
+int VTKFileReader::ignoreData(std::ifstream& in, int byteSize, char* text, int xDim, int yDim, int zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -114,7 +114,8 @@ int VTKFileReader::ignoreData(std::ifstream &in, int byteSize, char* text, int x
   char cfloat [64] = "float";
   char cdouble [64] = " double";
   int err = 0;
-  if (strcmp(text, cunsigned_char) == 0 ) {
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
     err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
   }
   if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
@@ -180,8 +181,8 @@ int VTKFileReader::readHeader()
   {
     err = -1;
     std::cout << logTime()
-        << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
-        << std::endl;
+              << "The file type of the VTK legacy file could not be determined. It should be ASCII' or 'BINARY' and should appear on line 3 of the file."
+              << std::endl;
     return err;
   }
   ::memset(buf, 0, kBufferSize);
@@ -203,16 +204,16 @@ int VTKFileReader::readHeader()
   int64_t dims[3];
   err = parse64_3V(buf, dims, 0);
 #if   (CMP_SIZEOF_SSIZE_T==4)
-    int64_t max = std::numeric_limits<size_t>::max();
+  int64_t max = std::numeric_limits<size_t>::max();
 #else
-    int64_t max = std::numeric_limits<int64_t>::max();
+  int64_t max = std::numeric_limits<int64_t>::max();
 #endif
   if (dims[0] * dims[1] * dims[2] > max )
   {
     err = -1;
     std::stringstream s;
     s << "The total number of elements '" << (dims[0] * dims[1] * dims[2])
-                << "' is greater than this program can hold. Try the 64 bit version.";
+      << "' is greater than this program can hold. Try the 64 bit version.";
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), s.str(), err);
     return err;
@@ -223,7 +224,7 @@ int VTKFileReader::readHeader()
     err = -1;
     std::stringstream s;
     s << "One of the dimensions is greater than the max index for this sysem. Try the 64 bit version.";
-    s << " dim[0]="<< dims[0] << "  dim[1]="<<dims[1] << "  dim[2]=" << dims[2];
+    s << " dim[0]=" << dims[0] << "  dim[1]=" << dims[1] << "  dim[2]=" << dims[2];
     setErrorCondition(err);
     addErrorMessage(getHumanLabel(), s.str(), -1);
     return err;

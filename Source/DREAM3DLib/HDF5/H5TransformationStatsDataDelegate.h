@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT H5TransformationStatsDataDelegate : public H5StatsDataDe
     int writeBoundaryArea(TransformationStatsData* data, hid_t groupId);
     int readBoundaryArea(TransformationStatsData* data, hid_t groupId);
 
-	int writePhaseFraction(TransformationStatsData* data, hid_t groupId);
+    int writePhaseFraction(TransformationStatsData* data, hid_t groupId);
     int readPhaseFraction(TransformationStatsData* data, hid_t groupId);
 
     int writeParentPhase(TransformationStatsData* data, hid_t groupId);
@@ -89,19 +89,19 @@ class DREAM3DLib_EXPORT H5TransformationStatsDataDelegate : public H5StatsDataDe
     int readODFWeights(hid_t pid, TransformationStatsData* data);
     int readAxisODFWeights(hid_t pid, TransformationStatsData* data);
 
-    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
-                                              VectorOfFloatArray colData);
+    int writeWeightsData(hid_t pid, const std::string& hdf5GroupName,
+                         VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
                               uint32_t disType,
-                              const std::string &hdf5GroupName,
+                              const std::string& hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+    uint32_t readDistributionType(hid_t pid, const std::string& hdf5GroupName);
 
     int readDistributionData(hid_t pid,
-                              const std::string &hdf5GroupName,
-                              VectorOfFloatArray colData);
+                             const std::string& hdf5GroupName,
+                             VectorOfFloatArray colData);
 
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);

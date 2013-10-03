@@ -56,7 +56,7 @@ void Observer::updatePipelineProgressAndMessage(const char* msg, int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineProgressAndMessage(const std::string &msg, int progress)
+void Observer::updatePipelineProgressAndMessage(const std::string& msg, int progress)
 {
   std::cout << progress << "% " << msg << std::endl;
 }
@@ -73,7 +73,7 @@ void Observer::updatePipelineProgress(int progress)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::updatePipelineMessage(const std::string &msg)
+void Observer::updatePipelineMessage(const std::string& msg)
 {
   std::cout << msg << std::endl;
 }
@@ -89,7 +89,7 @@ void Observer::updatePipelineMessage(const char* msg)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observer::sendPipelineMessage(PipelineMessage &msg)
+void Observer::sendPipelineMessage(PipelineMessage& msg)
 {
   std::stringstream ss;
   if(msg.getMessageType() == PipelineMessage::Error)

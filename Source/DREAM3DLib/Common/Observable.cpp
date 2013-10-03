@@ -71,7 +71,7 @@ void Observable::removeObserver(Observer* observer)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::setMessagePrefix(const std::string &str)
+void Observable::setMessagePrefix(const std::string& str)
 {
   m_Prefix = str;
 }
@@ -87,33 +87,35 @@ std::string Observable::getMessagePrefix()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyMessage(PipelineMessage &msg)
+void Observable::notifyMessage(PipelineMessage& msg)
 {
-    // If the programmer set a prefix (which FilterPipeline does) we are going to
-    // use the prefix in place of the 'FilterName' because this gives us more
-    // information to use and display to the user.
-    if (m_Prefix.empty() == false)
-    {
-       msg.setMessagePrefix(m_Prefix);
-    }
-    for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
-    {
-        (*iter)->sendPipelineMessage(msg);
-    }
+  // If the programmer set a prefix (which FilterPipeline does) we are going to
+  // use the prefix in place of the 'FilterName' because this gives us more
+  // information to use and display to the user.
+  if (m_Prefix.empty() == false)
+  {
+    msg.setMessagePrefix(m_Prefix);
+  }
+  for (std::vector<Observer*>::iterator iter = m_Observers.begin(); iter != m_Observers.end(); ++iter)
+  {
+    (*iter)->sendPipelineMessage(msg);
+  }
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyErrorMessage(std::string errDesc, int errCode) {
-		PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
-		notifyMessage(errorMsg);
+void Observable::notifyErrorMessage(std::string errDesc, int errCode)
+{
+  PipelineMessage errorMsg(getNameOfClass(), errDesc, errCode, PipelineMessage::Error);
+  notifyMessage(errorMsg);
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
+void Observable::notifyWarningMessage(std::string warnDesc, int warnCode)
+{
   PipelineMessage warningMsg(getNameOfClass(), warnDesc, warnCode, PipelineMessage::Warning);
   notifyMessage(warningMsg);
 }
@@ -121,7 +123,8 @@ void Observable::notifyWarningMessage(std::string warnDesc, int warnCode) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusMessage(std::string statusDesc) {
+void Observable::notifyStatusMessage(std::string statusDesc)
+{
   PipelineMessage statusMsg(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessage);
   notifyMessage(statusMsg);
 }
@@ -129,7 +132,8 @@ void Observable::notifyStatusMessage(std::string statusDesc) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyProgressValue(int statusVal) {
+void Observable::notifyProgressValue(int statusVal)
+{
   PipelineMessage statusValueUpdate(getNameOfClass(), "", 0, PipelineMessage::StatusValue, statusVal);
   notifyMessage(statusValueUpdate);
 }
@@ -137,7 +141,8 @@ void Observable::notifyProgressValue(int statusVal) {
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal) {
+void Observable::notifyStatusAndProgress(std::string statusDesc, int statusVal)
+{
   PipelineMessage statusUpdate(getNameOfClass(), statusDesc, 0, PipelineMessage::StatusMessageAndValue, statusVal);
   notifyMessage(statusUpdate);
 }
@@ -163,7 +168,7 @@ std::vector<Observer*> Observable::getObservers()
   return this->m_Observers;
 }
 #if 0
-void Observable::getObservers(std::vector<Observer*> &observers)
+void Observable::getObservers(std::vector<Observer*>& observers)
 {
   observers.resize(m_Observers.size());
   for(size_t i = 0; i < m_Observers.size(); ++i)

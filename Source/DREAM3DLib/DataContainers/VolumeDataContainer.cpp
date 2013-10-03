@@ -55,16 +55,22 @@
 //
 // -----------------------------------------------------------------------------
 VolumeDataContainer::VolumeDataContainer() :
-m_NumVertexTuples(0),
-m_NumEdgeTuples(0),
-m_NumFaceTuples(0),
-m_NumCellTuples(0),
-m_NumFieldTuples(0),
-m_NumEnsembleTuples(0)
+  m_NumVertexTuples(0),
+  m_NumEdgeTuples(0),
+  m_NumFaceTuples(0),
+  m_NumCellTuples(0),
+  m_NumFieldTuples(0),
+  m_NumEnsembleTuples(0)
 {
-  m_Dimensions[0] = 0; m_Dimensions[1] = 0; m_Dimensions[2] = 0;
-  m_Resolution[0] = 1.0f; m_Resolution[1] = 1.0f; m_Resolution[2] = 1.0f;
-  m_Origin[0] = 0.0f; m_Origin[1] = 0.0f; m_Origin[2] = 0.0f;
+  m_Dimensions[0] = 0;
+  m_Dimensions[1] = 0;
+  m_Dimensions[2] = 0;
+  m_Resolution[0] = 1.0f;
+  m_Resolution[1] = 1.0f;
+  m_Resolution[2] = 1.0f;
+  m_Origin[0] = 0.0f;
+  m_Origin[1] = 0.0f;
+  m_Origin[2] = 0.0f;
 }
 
 // -----------------------------------------------------------------------------
@@ -89,7 +95,7 @@ DOES_DATASET_EXIST_DEFN(VolumeDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addVertexData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -105,7 +111,7 @@ void VolumeDataContainer::addVertexData(const std::string &name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -119,7 +125,7 @@ IDataArray::Pointer VolumeDataContainer::getVertexData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -135,13 +141,13 @@ IDataArray::Pointer VolumeDataContainer::removeVertexData(const std::string &nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameVertexData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameVertexData(const std::string& oldname, const std::string& newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(oldname);
   if ( it == m_VertexData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -182,7 +188,7 @@ int VolumeDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addEdgeData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -198,7 +204,7 @@ void VolumeDataContainer::addEdgeData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getEdgeData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -212,7 +218,7 @@ IDataArray::Pointer VolumeDataContainer::getEdgeData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeEdgeData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -228,13 +234,13 @@ IDataArray::Pointer VolumeDataContainer::removeEdgeData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameEdgeData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameEdgeData(const std::string& oldname, const std::string& newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(oldname);
   if ( it == m_EdgeData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -275,7 +281,7 @@ int VolumeDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addFaceData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -291,7 +297,7 @@ void VolumeDataContainer::addFaceData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getFaceData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getFaceData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -305,7 +311,7 @@ IDataArray::Pointer VolumeDataContainer::getFaceData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeFaceData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeFaceData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -321,13 +327,13 @@ IDataArray::Pointer VolumeDataContainer::removeFaceData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameFaceData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameFaceData(const std::string& oldname, const std::string& newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(oldname);
   if ( it == m_FaceData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -368,7 +374,7 @@ int VolumeDataContainer::getNumFaceArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addCellData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addCellData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -384,7 +390,7 @@ void VolumeDataContainer::addCellData(const std::string &name, IDataArray::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getCellData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getCellData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -398,7 +404,7 @@ IDataArray::Pointer VolumeDataContainer::getCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeCellData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeCellData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(name);
@@ -414,13 +420,13 @@ IDataArray::Pointer VolumeDataContainer::removeCellData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameCellData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameCellData(const std::string& oldname, const std::string& newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_CellData.find(oldname);
   if ( it == m_CellData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -463,7 +469,7 @@ int VolumeDataContainer::getNumCellArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -477,7 +483,7 @@ IDataArray::Pointer VolumeDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addFieldData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -493,7 +499,7 @@ void VolumeDataContainer::addFieldData(const std::string &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -509,13 +515,13 @@ IDataArray::Pointer VolumeDataContainer::removeFieldData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-bool VolumeDataContainer::renameFieldData(const std::string &oldname, const std::string &newname)
+bool VolumeDataContainer::renameFieldData(const std::string& oldname, const std::string& newname)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(oldname);
   if ( it == m_FieldData.end() )
   {
-	  return false;
+    return false;
   }
   IDataArray::Pointer p = (*it).second;
   p->SetName(newname);
@@ -558,7 +564,7 @@ int VolumeDataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 void VolumeDataContainer::resizeFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
@@ -571,7 +577,7 @@ void VolumeDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::getEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -585,7 +591,7 @@ IDataArray::Pointer VolumeDataContainer::getEnsembleData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VolumeDataContainer::addEnsembleData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -602,7 +608,7 @@ void VolumeDataContainer::addEnsembleData(const std::string &name, IDataArray::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VolumeDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VolumeDataContainer::removeEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);

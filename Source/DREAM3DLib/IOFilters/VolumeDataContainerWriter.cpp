@@ -244,7 +244,7 @@ void VolumeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VolumeDataContainerWriter::setXdmfOStream(std::ostream* xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -273,7 +273,7 @@ void VolumeDataContainerWriter::writeCellXdmfGridHeader(float* origin, float* sp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string &label)
+void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, const std::string& label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
@@ -294,7 +294,7 @@ void VolumeDataContainerWriter::writeFieldXdmfGridHeader(size_t numElements, con
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string &label)
+void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string& label)
 {
   if (false == m_WriteXdmfFile || NULL == m_XdmfPtr || NULL == getVolumeDataContainer())
   {
@@ -309,16 +309,17 @@ void VolumeDataContainerWriter::writeXdmfGridFooter(const std::string &label)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::writeMetaInfo(const std::string &hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
+int VolumeDataContainerWriter::writeMetaInfo(const std::string& hdfPath, int64_t volDims[3], float spacing[3], float origin[3])
 {
   herr_t err = 0;
   err = createVtkObjectGroup(hdfPath, H5_VTK_STRUCTURED_POINTS);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return err;
   }
   hid_t gid = H5Gopen(m_HdfFileId, hdfPath.c_str(), H5P_DEFAULT );
 
-  int32_t rank =1;
+  int32_t rank = 1;
   hsize_t dims[1] = {3};
   err = H5Lite::writePointerDataset(gid, H5_DIMENSIONS, rank, dims, volDims);
   if (err < 0)
@@ -600,7 +601,7 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
   std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -700,11 +701,11 @@ int VolumeDataContainerWriter::writeFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss.str());
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);
@@ -791,7 +792,7 @@ int VolumeDataContainerWriter::writeEnsembleData(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VolumeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VolumeDataContainerWriter::createVtkObjectGroup(const std::string& hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);

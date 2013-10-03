@@ -196,43 +196,43 @@ class DREAM3DLib_EXPORT ModifiedLambertProjection
 };
 
 
- /**
- * @class This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
- * off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
- * the Coords generated from Euler Angles. This all feeds into generating a pole figure.
- */
-  class GenerateIntensityMapImpl
-  {
-    public:
-      GenerateIntensityMapImpl(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
-        m_XYZCoords(xyzCoords),
-        m_Config(config),
-        m_Intensity(intensity)
-      {
+/**
+* @class This class is a wrapper around simply generating a stereo graphically projected intensity "image" (2D Array) based
+* off the intended final size of an image and a modified Lambert projection for a set of XYZ coordinates that represent
+* the Coords generated from Euler Angles. This all feeds into generating a pole figure.
+*/
+class GenerateIntensityMapImpl
+{
+  public:
+    GenerateIntensityMapImpl(FloatArrayType* xyzCoords, PoleFigureConfiguration_t* config, DoubleArrayType* intensity) :
+      m_XYZCoords(xyzCoords),
+      m_Config(config),
+      m_Intensity(intensity)
+    {
 
-      }
-      virtual ~GenerateIntensityMapImpl(){}
+    }
+    virtual ~GenerateIntensityMapImpl() {}
 
-      void operator()() const
-      {
-        ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
-        size_t dims[3] = {m_Config->lambertDim, m_Config->lambertDim, 1 };
-        float res[3] = {1.0, 1.0, 1.0};
-        DoubleArrayType::Pointer north = lambert->getNorthSquare();
-        VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->GetName() + ".vtk", north.get(), dims, res, "double", true);
-        lambert->normalizeSquaresToMRD();
-        m_Intensity->Resize(m_Config->imageDim * m_Config->imageDim);
-        m_Intensity->SetNumberOfComponents(1);
-        lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
-      }
+    void operator()() const
+    {
+      ModifiedLambertProjection::Pointer lambert = ModifiedLambertProjection::CreateProjectionFromXYZCoords(m_XYZCoords, m_Config->lambertDim, m_Config->sphereRadius);
+      size_t dims[3] = {m_Config->lambertDim, m_Config->lambertDim, 1 };
+      float res[3] = {1.0, 1.0, 1.0};
+      DoubleArrayType::Pointer north = lambert->getNorthSquare();
+      VtkRectilinearGridWriter::WriteDataArrayToFile("/tmp/NorthSquare_" + m_Intensity->GetName() + ".vtk", north.get(), dims, res, "double", true);
+      lambert->normalizeSquaresToMRD();
+      m_Intensity->Resize(m_Config->imageDim * m_Config->imageDim);
+      m_Intensity->SetNumberOfComponents(1);
+      lambert->createStereographicProjection(m_Config->imageDim, m_Intensity);
+    }
 
-    protected:
-      GenerateIntensityMapImpl(){}
+  protected:
+    GenerateIntensityMapImpl() {}
 
-    private:
-      FloatArrayType*     m_XYZCoords;
-      PoleFigureConfiguration_t* m_Config;
-      DoubleArrayType*    m_Intensity;
-  };
+  private:
+    FloatArrayType*     m_XYZCoords;
+    PoleFigureConfiguration_t* m_Config;
+    DoubleArrayType*    m_Intensity;
+};
 
 #endif /* _ModifiedLambertProjection_H_ */

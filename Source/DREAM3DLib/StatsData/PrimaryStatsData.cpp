@@ -100,12 +100,12 @@ FloatArrayType::Pointer PrimaryStatsData::generateBinNumbers()
   float d = grainDiameterInfo[2];
   while (d <= grainDiameterInfo[1])
   {
-  //  std::cout << d << std::endl;
+    //  std::cout << d << std::endl;
     bins.push_back(d);
     d = d + grainDiameterInfo[0];
   }
   // Copy this into the DataArray<float>
-  m_BinNumbers = FloatArrayType::CreateArray(bins.size(),DREAM3D::HDF5::BinNumber );
+  m_BinNumbers = FloatArrayType::CreateArray(bins.size(), DREAM3D::HDF5::BinNumber );
   ::memcpy(m_BinNumbers->GetVoidPointer(0), &(bins.front()), bins.size() * sizeof(float));
   return m_BinNumbers;
 }

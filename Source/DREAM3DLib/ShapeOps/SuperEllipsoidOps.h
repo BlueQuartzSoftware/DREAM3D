@@ -40,30 +40,30 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
-  {
-    public:
-      MXA_SHARED_POINTERS(SuperEllipsoidOps)
-      MXA_TYPE_MACRO(SuperEllipsoidOps)
-      MXA_STATIC_NEW_MACRO(SuperEllipsoidOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT SuperEllipsoidOps : public ShapeOps
+{
+  public:
+    MXA_SHARED_POINTERS(SuperEllipsoidOps)
+    MXA_TYPE_MACRO(SuperEllipsoidOps)
+    MXA_STATIC_NEW_MACRO(SuperEllipsoidOps)
 
-      virtual ~SuperEllipsoidOps();
+    virtual ~SuperEllipsoidOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+    virtual float radcur1(std::map<ArgName, float> args);
 
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() { Nvalue = 0.0f; }
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() { Nvalue = 0.0f; }
 
-    protected:
-      SuperEllipsoidOps();
-    private:
-      float Nvalue;
+  protected:
+    SuperEllipsoidOps();
+  private:
+    float Nvalue;
 
-      SuperEllipsoidOps(const SuperEllipsoidOps&); // Copy Constructor Not Implemented
-      void operator=(const SuperEllipsoidOps&); // Operator '=' Not Implemented
-  };
+    SuperEllipsoidOps(const SuperEllipsoidOps&); // Copy Constructor Not Implemented
+    void operator=(const SuperEllipsoidOps&); // Operator '=' Not Implemented
+};
 
 #endif /* SUPERELLIPSOIDOPS_H_ */

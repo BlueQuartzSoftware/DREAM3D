@@ -155,7 +155,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setXMin( reader->readValue("XMin", getXMin()) );
   setYMin( reader->readValue("YMin", getYMin()) );
   setZMin( reader->readValue("ZMin", getZMin()) );
@@ -164,7 +164,7 @@ void CropVolume::readFilterParameters(AbstractFilterParametersReader* reader, in
   setZMax( reader->readValue("ZMax", getZMax()) );
   setRenumberGrains( reader->readValue("RenumberGrains", false) );
   setUpdateOrigin( reader->readValue("UpdateOrigin", false) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -196,7 +196,7 @@ void CropVolume::dataCheck(bool preflight, size_t voxels, size_t fields, size_t 
   if(NULL == m)
   {
     setErrorCondition(-999);
-     addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
+    addErrorMessage(getHumanLabel(), "The DataContainer Object was NULL", -999);
     return;
   }
   if (m_RenumberGrains == true)
@@ -261,33 +261,33 @@ void CropVolume::preflight()
   if (getZMin() < 0)
   {
     ss.str("");
-    ss <<"Z Min (" << getZMin() << ") less than 0";
+    ss << "Z Min (" << getZMin() << ") less than 0";
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
-  if (getXMax() > (static_cast<int64_t>(m->getXPoints())-1))
+  if (getXMax() > (static_cast<int64_t>(m->getXPoints()) - 1))
   {
     ss.str("");
-    ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints())-1;
+    ss << "The X Max you entered of " << getXMax() << " is greater than your Max X Point of " << static_cast<int64_t>(m->getXPoints()) - 1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5555);
   }
-  if (getYMax() > (static_cast<int64_t>(m->getYPoints())-1))
+  if (getYMax() > (static_cast<int64_t>(m->getYPoints()) - 1))
   {
     ss.str("");
-    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints())-1;
+    ss << "The Y Max you entered of " << getYMax() << " is greater than your Max Y Point of " << static_cast<int64_t>(m->getYPoints()) - 1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5556);
   }
-  if (getZMax() > (static_cast<int64_t>(m->getZPoints())-1))
+  if (getZMax() > (static_cast<int64_t>(m->getZPoints()) - 1))
   {
     ss.str("");
-    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints())-1;
+    ss << "The Z Max you entered of " << getZMax() << ") greater than your Max Z Point of " << static_cast<int64_t>(m->getZPoints()) - 1;
     addErrorMessage(getHumanLabel(), ss.str(), -5555);
     setErrorCondition(-5557);
   }
 
-  m->setDimensions((getXMax()-getXMin())+1,(getYMax()-getYMin())+1,(getZMax()-getZMin())+1);
+  m->setDimensions((getXMax() - getXMin()) + 1, (getYMax() - getYMin()) + 1, (getZMax() - getZMin()) + 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -352,9 +352,9 @@ void CropVolume::execute()
     notifyWarningMessage(ss.str(), -950);
   }
 
-  int64_t m_XP = ( (m_XMax - m_XMin)+1 );
-  int64_t m_YP = ( (m_YMax - m_YMin)+1 );
-  int64_t m_ZP = ( (m_ZMax - m_ZMin)+1 );
+  int64_t m_XP = ( (m_XMax - m_XMin) + 1 );
+  int64_t m_YP = ( (m_YMax - m_YMin) + 1 );
+  int64_t m_ZP = ( (m_ZMax - m_ZMin) + 1 );
 
   int64_t col, row, plane;
   int64_t colold, rowold, planeold;
@@ -366,12 +366,12 @@ void CropVolume::execute()
     std::stringstream ss;
     ss << "Cropping Volume - Slice " << i << " of " << m_ZP <<  " Complete";
     notifyStatusMessage(ss.str());
-    planeold = (i + m_ZMin)*(m->getXPoints() * m->getYPoints());
+    planeold = (i + m_ZMin) * (m->getXPoints() * m->getYPoints());
     plane = (i * m_XP * m_YP);
     for (int64_t j = 0; j < m_YP; j++)
     {
-      rowold = (j + m_YMin)*m->getXPoints();
-      row = (j*m_XP);
+      rowold = (j + m_YMin) * m->getXPoints();
+      row = (j * m_XP);
       for (int64_t k = 0; k < m_XP; k++)
       {
         colold = (k + m_XMin);

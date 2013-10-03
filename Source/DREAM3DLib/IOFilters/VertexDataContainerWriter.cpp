@@ -48,20 +48,20 @@
 
 class H5GroupAutoCloser
 {
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
+  public:
+    H5GroupAutoCloser(hid_t* groupId) :
+      gid(groupId)
+    {}
 
-  virtual ~H5GroupAutoCloser()
-  {
-    if (*gid > 0)
+    virtual ~H5GroupAutoCloser()
     {
-      H5Gclose(*gid);
+      if (*gid > 0)
+      {
+        H5Gclose(*gid);
+      }
     }
-  }
   private:
-   hid_t* gid;
+    hid_t* gid;
 };
 
 // -----------------------------------------------------------------------------
@@ -188,7 +188,8 @@ void VertexDataContainerWriter::execute()
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(DREAM3D::HDF5::VertexDataContainerName, H5_VTK_POLYDATA);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return;
   }
 
@@ -237,7 +238,7 @@ void VertexDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void VertexDataContainerWriter::setXdmfOStream(std::ostream* xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -298,11 +299,11 @@ void VertexDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
-                                                                              const std::string &groupName,
-                                                                              IDataArray::Pointer array,
-                                                                              const std::string &centering,
-                                                                              int precision, const std::string &xdmfTypeName)
+std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string& attrType,
+    const std::string& groupName,
+    IDataArray::Pointer array,
+    const std::string& centering,
+    int precision, const std::string& xdmfTypeName)
 {
   std::stringstream out;
   std::stringstream dimStr;
@@ -336,16 +337,17 @@ std::string VertexDataContainerWriter::writeXdmfAttributeDataHelper(int numComp,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+void VertexDataContainerWriter::writeXdmfAttributeData(const std::string& groupName, IDataArray::Pointer array, const std::string& centering)
 {
 #if 0
-      <Attribute Name="Node Type" Center="Node">
-      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/VertexDataContainer/POINT_DATA/VertexMeshNodeType
-      </DataItem>
-    </Attribute>
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                              / VertexDataContainer / POINT_DATA / VertexMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
 #endif
-  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+                                                              if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   { return; }
 
 
@@ -362,9 +364,9 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupN
   }
   int numComp = array->GetNumberOfComponents();
   std::string attrType = "Scalar";
-  if(numComp > 2) attrType = "Vector";
+  if(numComp > 2) { attrType = "Vector"; }
 
-  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  std::string block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << std::endl;
 }
@@ -373,7 +375,7 @@ void VertexDataContainerWriter::writeXdmfAttributeData(const std::string &groupN
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VertexDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int VertexDataContainerWriter::createVtkObjectGroup(const std::string& hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
@@ -408,7 +410,8 @@ int VertexDataContainerWriter::writeVertices(hid_t dcGid)
   DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-  if (err < 0) {
+  if (err < 0)
+  {
     setErrorCondition(err);
     notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
   }
@@ -489,7 +492,7 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
   std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -589,11 +592,11 @@ int VertexDataContainerWriter::writeFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss.str());
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);

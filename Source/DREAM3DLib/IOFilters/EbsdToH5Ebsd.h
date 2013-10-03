@@ -89,7 +89,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     virtual void preflight();
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
     virtual const std::string getHumanLabel() { return "Import Orientation File(s) to H5Ebsd"; }
 
     virtual void setupFilterParameters();
@@ -98,7 +98,7 @@ class DREAM3DLib_EXPORT EbsdToH5Ebsd : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

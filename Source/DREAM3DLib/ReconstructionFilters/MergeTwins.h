@@ -85,12 +85,12 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     DREAM3D_INSTANCE_PROPERTY(bool, RandomizeParentIds)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::GroupingFilters;}
     virtual const std::string getHumanLabel() { return "Merge Twins"; }
 
     virtual void setupFilterParameters();
-  virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -100,7 +100,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     /**
      * @brief Reimplemented from @see AbstractFilter class
      */
-  virtual void execute();
+    virtual void execute();
     virtual void preflight();
 
 
@@ -122,7 +122,7 @@ class DREAM3DLib_EXPORT MergeTwins : public AbstractFilter
     unsigned int* m_CrystalStructures;
 
     std::vector<int> parentnumbers;
-  int numParents;
+    int numParents;
 
     unsigned long long int Seed;
     std::vector<OrientationOps::Pointer> m_OrientationOps;

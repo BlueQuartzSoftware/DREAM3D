@@ -124,17 +124,17 @@ class DREAM3DLib_EXPORT MatrixMath
      */
     static void Normalize3x1(float g[3]);
 
-     /**
-     * @brief Performs an "in place" normalization of the 3x1 vector. Double Precision Variant
-     * @param g
-     */
+    /**
+    * @brief Performs an "in place" normalization of the 3x1 vector. Double Precision Variant
+    * @param g
+    */
     static void Normalize3x1(double g[3]);
 
 
 //    static void NormalizeVector(double g[3]);
-    static void Normalize3x1(double &i, double &j, double &k);
+    static void Normalize3x1(double& i, double& j, double& k);
 //    static void NormalizeVector(float a[3]);
-    static void Normalize3x1(float &i, float &j, float &k);
+    static void Normalize3x1(float& i, float& j, float& k);
 
     /**
      * @brief Calculates the Cosine of the angle between 2 vectors. To get the actual angle the programmer should

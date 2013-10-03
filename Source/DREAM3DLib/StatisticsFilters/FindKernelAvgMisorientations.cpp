@@ -47,17 +47,17 @@
 //
 // -----------------------------------------------------------------------------
 FindKernelAvgMisorientations::FindKernelAvgMisorientations() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_KernelAverageMisorientations(NULL),
-m_Quats(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_KernelAverageMisorientationsArrayName(DREAM3D::CellData::KernelAverageMisorientations),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_KernelAverageMisorientations(NULL),
+  m_Quats(NULL),
+  m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -99,9 +99,9 @@ void FindKernelAvgMisorientations::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setKernelSize( reader->readValue("KernelSize", getKernelSize() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -142,7 +142,7 @@ void FindKernelAvgMisorientations::dataCheck(bool preflight, size_t voxels, size
 // -----------------------------------------------------------------------------
 void FindKernelAvgMisorientations::preflight()
 {
-  dataCheck(true, 1,1,1);
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -179,7 +179,7 @@ void FindKernelAvgMisorientations::execute()
   float n1, n2, n3;
   unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
   unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -217,19 +217,19 @@ void FindKernelAvgMisorientations::execute()
               {
                 good = 1;
                 neighbor = point + (jStride) + (kStride) + (l);
-                if(plane + j < 0) good = 0;
-                else if(plane + j > zPoints - 1) good = 0;
-                else if(row + k < 0) good = 0;
-                else if(row + k > yPoints - 1) good = 0;
-                else if(col + l < 0) good = 0;
-                else if(col + l > xPoints - 1) good = 0;
+                if(plane + j < 0) { good = 0; }
+                else if(plane + j > zPoints - 1) { good = 0; }
+                else if(row + k < 0) { good = 0; }
+                else if(row + k > yPoints - 1) { good = 0; }
+                else if(col + l < 0) { good = 0; }
+                else if(col + l > xPoints - 1) { good = 0; }
                 if(good == 1 && m_GrainIds[point] == m_GrainIds[neighbor])
                 {
                   w = 10000.0;
                   QuaternionMathF::Copy(quats[neighbor], q2);
                   phase2 = m_CrystalStructures[m_CellPhases[neighbor]];
                   w = m_OrientationOps[phase1]->getMisoQuat( q1, q2, n1, n2, n3);
-                  w = w *(180.0f/DREAM3D::Constants::k_Pi);
+                  w = w * (180.0f / DREAM3D::Constants::k_Pi);
                   totalmisorientation = totalmisorientation + w;
                   numVoxel++;
                 }
@@ -250,5 +250,5 @@ void FindKernelAvgMisorientations::execute()
     }
   }
 
- notifyStatusMessage("FindKernelAvgMisorientations Completed");
+  notifyStatusMessage("FindKernelAvgMisorientations Completed");
 }

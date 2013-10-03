@@ -48,7 +48,7 @@
 //
 // -----------------------------------------------------------------------------
 FindNRingNeighbors::FindNRingNeighbors() :
-m_SurfaceDataContainer(NULL),
+  m_SurfaceDataContainer(NULL),
   m_TriangleId(-1),
   m_RegionId0(0),
   m_RegionId1(0),
@@ -79,7 +79,7 @@ void FindNRingNeighbors::setRegionIds(int g, int r)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Mesh::UniqueFaceIds_t &FindNRingNeighbors::getNRingTriangles()
+DREAM3D::Mesh::UniqueFaceIds_t& FindNRingNeighbors::getNRingTriangles()
 {
   return m_NRingTriangles;
 }
@@ -100,11 +100,11 @@ void FindNRingNeighbors::generate()
   DREAM3D::Mesh::Face_t* triangles = trianglesPtr->GetPointer(0);
 
   // Make sure we have the proper connectivity built
-  MeshLinks::Pointer node2TrianglePtr =sm->getMeshLinks();
+  MeshLinks::Pointer node2TrianglePtr = sm->getMeshLinks();
   if (node2TrianglePtr.get() == NULL)
   {
     sm->buildMeshLinks();
-    node2TrianglePtr =sm->getMeshLinks();
+    node2TrianglePtr = sm->getMeshLinks();
   }
 
   IDataArray::Pointer flPtr = getSurfaceDataContainer()->getFaceData(DREAM3D::FaceData::SurfaceMeshFaceLabels);
@@ -113,14 +113,14 @@ void FindNRingNeighbors::generate()
 
 
   // Figure out these boolean values for a sanity check
-  bool check0 = faceLabels[m_TriangleId*2] == m_RegionId0 && faceLabels[m_TriangleId*2+1] == m_RegionId1;
-  bool check1 = faceLabels[m_TriangleId*2+1] == m_RegionId0 && faceLabels[m_TriangleId*2] == m_RegionId1;
+  bool check0 = faceLabels[m_TriangleId * 2] == m_RegionId0 && faceLabels[m_TriangleId * 2 + 1] == m_RegionId1;
+  bool check1 = faceLabels[m_TriangleId * 2 + 1] == m_RegionId0 && faceLabels[m_TriangleId * 2] == m_RegionId1;
 
 #if 1
   if ( check0 == false && check1 == false)
   {
     std::cout << "FindNRingNeighbors Seed triangle ID does not have a matching Region ID for " << m_RegionId0 << " & " << m_RegionId1 << std::endl;
-    std::cout << "Region Ids are: " << faceLabels[m_TriangleId*2] << " & " << faceLabels[m_TriangleId*2+1] << std::endl;
+    std::cout << "Region Ids are: " << faceLabels[m_TriangleId * 2] << " & " << faceLabels[m_TriangleId * 2 + 1] << std::endl;
     return;
   }
 #endif
@@ -150,8 +150,8 @@ void FindNRingNeighbors::generate()
         for(uint16_t t = 0; t < tCount; ++t)
         {
           int tid = data[t];
-          check0 = faceLabels[tid*2] == m_RegionId0 && faceLabels[tid*2+1] == m_RegionId1;
-          check1 = faceLabels[tid*2+1] == m_RegionId0 && faceLabels[tid*2] == m_RegionId1;
+          check0 = faceLabels[tid * 2] == m_RegionId0 && faceLabels[tid * 2 + 1] == m_RegionId1;
+          check1 = faceLabels[tid * 2 + 1] == m_RegionId0 && faceLabels[tid * 2] == m_RegionId1;
           if (check0 == true || check1 == true)
           {
             m_NRingTriangles.insert(static_cast<int>(tid) );
@@ -174,7 +174,7 @@ void FindNRingNeighbors::generate()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
+void FindNRingNeighbors::writeVTKFile(const std::string& outputVtkFile)
 {
 
   SurfaceDataContainer* m = getSurfaceDataContainer();
@@ -198,10 +198,12 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 
   fprintf(vtkFile, "# vtk DataFile Version 2.0\n");
   fprintf(vtkFile, "Data set from DREAM.3D Surface Meshing Module\n");
-  if (m_WriteBinaryFile) {
+  if (m_WriteBinaryFile)
+  {
     fprintf(vtkFile, "BINARY\n");
   }
-  else {
+  else
+  {
     fprintf(vtkFile, "ASCII\n");
   }
   fprintf(vtkFile, "DATASET POLYDATA\n");
@@ -231,7 +233,8 @@ void FindNRingNeighbors::writeVTKFile(const std::string &outputVtkFile)
 
         }
       }
-      else {
+      else
+      {
         fprintf(vtkFile, "%f %f %f\n", pos[0], pos[1], pos[2]); // Write the positions to the output file
       }
     }

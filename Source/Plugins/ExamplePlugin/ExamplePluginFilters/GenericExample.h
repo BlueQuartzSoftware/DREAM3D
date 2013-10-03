@@ -29,7 +29,7 @@ class GenericExample : public AbstractFilter
 
     virtual ~GenericExample();
 
-   /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
+    /* Place your input parameters here. You can use some of the DREAM3D Macros if you want to */
     DREAM3D_INSTANCE_STRING_PROPERTY(StlFilePrefix)
     DREAM3D_INSTANCE_PROPERTY(int, MaxIterations)
     DREAM3D_INSTANCE_PROPERTY(double, MisorientationTolerance)
@@ -103,9 +103,9 @@ class GenericExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

@@ -47,14 +47,14 @@
 //
 // -----------------------------------------------------------------------------
 FindSlicetoSliceRotations::FindSlicetoSliceRotations() :
-AbstractFilter(),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
-m_QuatsArrayName(DREAM3D::CellData::Quats),
-m_CellPhases(NULL),
-m_GoodVoxels(NULL),
-m_Quats(NULL),
-m_CrystalStructures(NULL)
+  AbstractFilter(),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_GoodVoxelsArrayName(DREAM3D::CellData::GoodVoxels),
+  m_QuatsArrayName(DREAM3D::CellData::Quats),
+  m_CellPhases(NULL),
+  m_GoodVoxels(NULL),
+  m_Quats(NULL),
+  m_CrystalStructures(NULL)
 {
   m_OrientationOps = OrientationOps::getOrientationOpsVector();
 
@@ -129,7 +129,7 @@ void FindSlicetoSliceRotations::dataCheck(bool preflight, size_t voxels, size_t 
 // -----------------------------------------------------------------------------
 void FindSlicetoSliceRotations::preflight()
 {
-  dataCheck(true, 1,1,1);
+  dataCheck(true, 1, 1, 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -164,7 +164,7 @@ void FindSlicetoSliceRotations::execute()
   float w, n1, n2, n3;
 //  unsigned int phase1 = Ebsd::CrystalStructure::UnknownCrystalStructure;
 //  unsigned int phase2 = Ebsd::CrystalStructure::UnknownCrystalStructure;
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
@@ -217,75 +217,75 @@ void FindSlicetoSliceRotations::execute()
 //        q1[2] = m_Quats[point*5 + 2];
 //        q1[3] = m_Quats[point*5 + 3];
 //        q1[4] = m_Quats[point*5 + 4];
-        if (plane < zPoints-1)
+        if (plane < zPoints - 1)
         {
-            outNeighbor = point + neighpoints[5];
-            if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
-            {
-                QuaternionMathF::Copy(quats[outNeighbor], q2);
+          outNeighbor = point + neighpoints[5];
+          if (m_CellPhases[point] == m_CellPhases[outNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[outNeighbor] == true)
+          {
+            QuaternionMathF::Copy(quats[outNeighbor], q2);
 //                q2[1] = m_Quats[outNeighbor*5 + 1];
 //                q2[2] = m_Quats[outNeighbor*5 + 2];
 //                q2[3] = m_Quats[outNeighbor*5 + 3];
 //                q2[4] = m_Quats[outNeighbor*5 + 4];
-                w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-                if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
-                {
-                    OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
-                    outPlaneAngle = outPlaneAngle + w;
-                    outPlaneAxisX = outPlaneAxisX + n1;
-                    outPlaneAxisY = outPlaneAxisY + n2;
-                    outPlaneAxisZ = outPlaneAxisZ + n3;
-                    outPlaneCount++;
-                }
+            w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+            if(w < 5.0f * DREAM3D::Constants::k_Pi / 180.0f)
+            {
+              OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
+              outPlaneAngle = outPlaneAngle + w;
+              outPlaneAxisX = outPlaneAxisX + n1;
+              outPlaneAxisY = outPlaneAxisY + n2;
+              outPlaneAxisZ = outPlaneAxisZ + n3;
+              outPlaneCount++;
             }
+          }
         }
         for(size_t i = 1; i < 5; i++)
         {
           good = true;
           inNeighbor = point + neighpoints[i];
-          if(i == 1 && row == 0) good = false;
-          if(i == 4 && row == (yPoints - 1)) good = false;
-          if(i == 2 && col == 0) good = false;
-          if(i == 3 && col == (xPoints - 1)) good = false;
+          if(i == 1 && row == 0) { good = false; }
+          if(i == 4 && row == (yPoints - 1)) { good = false; }
+          if(i == 2 && col == 0) { good = false; }
+          if(i == 3 && col == (xPoints - 1)) { good = false; }
           if(good == true && m_CellPhases[point] == m_CellPhases[inNeighbor] && m_CellPhases[point] > 0 && m_GoodVoxels[point] == true && m_GoodVoxels[inNeighbor] == true)
           {
-             QuaternionMathF::Copy(quats[inNeighbor], q2);
+            QuaternionMathF::Copy(quats[inNeighbor], q2);
 //             q2[1] = m_Quats[inNeighbor*5 + 1];
 //             q2[2] = m_Quats[inNeighbor*5 + 2];
 //             q2[3] = m_Quats[inNeighbor*5 + 3];
 //             q2[4] = m_Quats[inNeighbor*5 + 4];
-             w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
-             if(w < 5.0f*DREAM3D::Constants::k_Pi/180.0f)
-             {
-                OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
-                inPlaneAngle = inPlaneAngle + w;
-                inPlaneAxisX = inPlaneAxisX + n1;
-                inPlaneAxisY = inPlaneAxisY + n2;
-                inPlaneAxisZ = inPlaneAxisZ + n3;
-                inPlaneCount++;
-             }
+            w = m_OrientationOps[m_CrystalStructures[m_CellPhases[point]]]->getMisoQuat( q1, q2, n1, n2, n3);
+            if(w < 5.0f * DREAM3D::Constants::k_Pi / 180.0f)
+            {
+              OrientationMath::ChangeAxisReferenceFrame(q1, n1, n2, n3);
+              inPlaneAngle = inPlaneAngle + w;
+              inPlaneAxisX = inPlaneAxisX + n1;
+              inPlaneAxisY = inPlaneAxisY + n2;
+              inPlaneAxisZ = inPlaneAxisZ + n3;
+              inPlaneCount++;
+            }
           }
         }
       }
     }
     if(inPlaneCount > 0)
     {
-        inPlaneAngle = inPlaneAngle/inPlaneCount;
-        inPlaneAxisX = inPlaneAxisX/inPlaneCount;
-        inPlaneAxisY = inPlaneAxisY/inPlaneCount;
-        inPlaneAxisZ = inPlaneAxisZ/inPlaneCount;
+      inPlaneAngle = inPlaneAngle / inPlaneCount;
+      inPlaneAxisX = inPlaneAxisX / inPlaneCount;
+      inPlaneAxisY = inPlaneAxisY / inPlaneCount;
+      inPlaneAxisZ = inPlaneAxisZ / inPlaneCount;
     }
     if(outPlaneCount > 0)
     {
-        outPlaneAngle = outPlaneAngle/outPlaneCount;
-        outPlaneAxisX = outPlaneAxisX/outPlaneCount;
-        outPlaneAxisY = outPlaneAxisY/outPlaneCount;
-        outPlaneAxisZ = outPlaneAxisZ/outPlaneCount;
+      outPlaneAngle = outPlaneAngle / outPlaneCount;
+      outPlaneAxisX = outPlaneAxisX / outPlaneCount;
+      outPlaneAxisY = outPlaneAxisY / outPlaneCount;
+      outPlaneAxisZ = outPlaneAxisZ / outPlaneCount;
     }
     outFile << plane << "	" << inPlaneCount << "	" << inPlaneAngle << "	" << inPlaneAxisX << "	" << inPlaneAxisY << "	" << inPlaneAxisZ << "	" << outPlaneCount << "	" << outPlaneAngle << "	" << outPlaneAxisX << "	" << outPlaneAxisY << "	" << outPlaneAxisZ << std::endl;
   }
 
 
 
- notifyStatusMessage("FindSlicetoSliceRotations Completed");
+  notifyStatusMessage("FindSlicetoSliceRotations Completed");
 }

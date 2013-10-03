@@ -50,20 +50,20 @@
 
 class H5GroupAutoCloser
 {
-public:
-  H5GroupAutoCloser(hid_t* groupId) :
-  gid(groupId)
-  {}
+  public:
+    H5GroupAutoCloser(hid_t* groupId) :
+      gid(groupId)
+    {}
 
-  virtual ~H5GroupAutoCloser()
-  {
-    if (*gid > 0)
+    virtual ~H5GroupAutoCloser()
     {
-      H5Gclose(*gid);
+      if (*gid > 0)
+      {
+        H5Gclose(*gid);
+      }
     }
-  }
   private:
-   hid_t* gid;
+    hid_t* gid;
 };
 
 // -----------------------------------------------------------------------------
@@ -191,7 +191,8 @@ void EdgeDataContainerWriter::execute()
 
   // Add some VTK hints into the group
   err = createVtkObjectGroup(DREAM3D::HDF5::EdgeDataContainerName, H5_VTK_POLYDATA);
-  if (err < 0)  {
+  if (err < 0)
+  {
     return;
   }
 
@@ -259,7 +260,7 @@ void EdgeDataContainerWriter::execute()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::setXdmfOStream(std::ostream *xdmf)
+void EdgeDataContainerWriter::setXdmfOStream(std::ostream* xdmf)
 {
   m_XdmfPtr = xdmf;
 }
@@ -330,11 +331,11 @@ void EdgeDataContainerWriter::writeXdmfGridFooter()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string &attrType,
-                                                                              const std::string &groupName,
-                                                                              IDataArray::Pointer array,
-                                                                              const std::string &centering,
-                                                                              int precision, const std::string &xdmfTypeName)
+std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, const std::string& attrType,
+    const std::string& groupName,
+    IDataArray::Pointer array,
+    const std::string& centering,
+    int precision, const std::string& xdmfTypeName)
 {
   std::stringstream out;
   std::stringstream dimStr;
@@ -343,7 +344,7 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
   std::stringstream dimStr2;
   std::stringstream dimStr2half;
 
-  if((numComp%2) == 1)
+  if((numComp % 2) == 1)
   {
     out << "    <Attribute Name=\"" << array->GetName() << "\" ";
     out << "AttributeType=\"" << attrType << "\" ";
@@ -370,7 +371,7 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 0)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     dimStr1 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr1half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2);
     out << "Center=\"" << centering << "\">" << std::endl;
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr1half.str() <<  "\" ";
@@ -395,13 +396,13 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
     out << "    <Attribute Name=\"" << array->GetName() << " (Field 1)\" ";
     out << "AttributeType=\"" << attrType << "\" ";
     dimStr2 << array->GetNumberOfTuples() << " " << array->GetNumberOfComponents();
-    dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents()/2);
+    dimStr2half << array->GetNumberOfTuples() << " " << (array->GetNumberOfComponents() / 2);
     out << "Center=\"" << centering << "\">" << std::endl;
     // Open the <DataItem> Tag
     out << "      <DataItem ItemType=\"HyperSlab\" Dimensions=\"" << dimStr2half.str() <<  "\" ";
     out << "Type=\"HyperSlab\" " << "Name=\"" << array->GetName() << " (Field 1)\" >" << std::endl;
     out << "        <DataItem Dimensions=\"3 2\" " << "Format=\"XML\" >" << std::endl;
-    out << "          0        " << (array->GetNumberOfComponents()/2) << std::endl;
+    out << "          0        " << (array->GetNumberOfComponents() / 2) << std::endl;
     out << "          1        1" << std::endl;
     out << "          " << dimStr2half.str() << " </DataItem>" << std::endl;
     out << std::endl;
@@ -422,16 +423,17 @@ std::string EdgeDataContainerWriter::writeXdmfAttributeDataHelper(int numComp, c
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering)
+void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string& groupName, IDataArray::Pointer array, const std::string& centering)
 {
 #if 0
-      <Attribute Name="Node Type" Center="Node">
-      <DataItem Format="HDF" DataType="char" Precision="1" Dimensions="43029 1">
-        MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:/EdgeDataContainer/POINT_DATA/SurfaceMeshNodeType
-      </DataItem>
-    </Attribute>
+  < Attribute Name = "Node Type" Center = "Node" >
+                                          < DataItem Format = "HDF" DataType = "char" Precision = "1" Dimensions = "43029 1" >
+                                                            MC_IsoGG_50cubed_55grains_Bounded_Multi.dream3d:
+                                                              / EdgeDataContainer / POINT_DATA / SurfaceMeshNodeType
+                                                              < / DataItem >
+                                                              < / Attribute >
 #endif
-  if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
+                                                              if (m_WriteXdmfFile == false || m_XdmfPtr == NULL)
   { return; }
 
 
@@ -448,9 +450,9 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupNam
   }
   int numComp = array->GetNumberOfComponents();
   std::string attrType = "Scalar";
-  if(numComp > 2) attrType = "Vector";
+  if(numComp > 2) { attrType = "Vector"; }
 
-  std::string block = writeXdmfAttributeDataHelper(numComp,attrType,groupName,array,centering,precision,xdmfTypeName);
+  std::string block = writeXdmfAttributeDataHelper(numComp, attrType, groupName, array, centering, precision, xdmfTypeName);
 
   out << block << std::endl;
 }
@@ -459,7 +461,7 @@ void EdgeDataContainerWriter::writeXdmfAttributeData(const std::string &groupNam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerWriter::createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType)
+int EdgeDataContainerWriter::createVtkObjectGroup(const std::string& hdfGroupPath, const char* vtkDataObjectType)
 {
   // std::cout << "   vtkH5DataWriter::WritePoints()" << std::endl;
   herr_t err = H5Utilities::createGroupsFromPath(hdfGroupPath, m_HdfFileId);
@@ -494,7 +496,8 @@ int EdgeDataContainerWriter::writeVertices(hid_t dcGid)
   DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
 
   herr_t err = H5Lite::writePointerDataset(dcGid, DREAM3D::HDF5::VerticesName, rank, dims, data);
-  if (err < 0) {
+  if (err < 0)
+  {
     setErrorCondition(err);
     notifyErrorMessage("Error Writing Vertex List to DREAM3D file", getErrorCondition());
   }
@@ -539,8 +542,8 @@ int EdgeDataContainerWriter::writeMeshLinks(hid_t dcGid)
     int32_t* cells = links->getFaceListPointer(v);
     ::memcpy(bufPtr + offset, &ncells, sizeof(uint16_t));
     offset += sizeof(uint16_t);
-    ::memcpy(bufPtr + offset, cells, ncells*sizeof(int32_t) );
-    offset += ncells*sizeof(int32_t);
+    ::memcpy(bufPtr + offset, cells, ncells * sizeof(int32_t) );
+    offset += ncells * sizeof(int32_t);
   }
 
   int32_t rank = 1;
@@ -617,7 +620,7 @@ int EdgeDataContainerWriter::writeVertexAttributeData(hid_t dcGid)
 int EdgeDataContainerWriter::writeEdges(hid_t dcGid)
 {
   herr_t err = 0;
- // notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
+// notifyWarningMessage("Edge Data is NOT currently implemented. If you need this functionality please contact the authors.", -10995);
   return err;
 }
 
@@ -692,7 +695,7 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
   std::string xdmfGroupPath = std::string(":/") + VolumeDataContainer::ClassName() + std::string("/") + H5_FIELD_DATA_GROUP_NAME;
 #endif
 
-  int64_t volDims[3] = { 0,0,0 };
+  int64_t volDims[3] = { 0, 0, 0 };
 
 
   // Write the Field Data
@@ -792,11 +795,11 @@ int EdgeDataContainerWriter::writeFieldData(hid_t dcGid)
     volDims[0] = total;
     volDims[1] = 1;
     volDims[2] = 1;
-    #if WRITE_FIELD_XDMF
+#if WRITE_FIELD_XDMF
     ss.str("");
     ss << "Neighbor Data (" << total << ")";
     writeFieldXdmfGridHeader(total, ss.str());
-    #endif
+#endif
     for(VectorOfIDataArrays_t::iterator iter = arrays.begin(); iter < arrays.end(); ++iter)
     {
       err = (*iter)->writeH5Data(fieldGroupId);

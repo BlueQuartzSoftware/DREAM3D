@@ -80,7 +80,8 @@ class FilterFactory : public IFilterFactory
 
 
   protected:
-    FilterFactory() {
+    FilterFactory()
+    {
       typename T::Pointer w = T::New();
       m_GroupName = w->getGroupName();
       m_SubGroupName = w->getSubGroupName();

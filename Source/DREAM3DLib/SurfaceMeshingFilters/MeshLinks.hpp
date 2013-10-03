@@ -57,10 +57,11 @@ class MeshLinks
     DREAM3D_STATIC_NEW_MACRO(MeshLinks)
     DREAM3D_TYPE_MACRO(MeshLinks)
 
-    class FaceList {
+    class FaceList
+    {
       public:
-      uint16_t ncells;
-      int* cells;
+        uint16_t ncells;
+        int* cells;
     };
 
     // -----------------------------------------------------------------------------
@@ -73,7 +74,7 @@ class MeshLinks
         return;
       }
 
-      for (size_t i=0; i<this->Size; i++)
+      for (size_t i = 0; i < this->Size; i++)
       {
         if ( this->Array[i].cells != NULL )
         {
@@ -97,21 +98,24 @@ class MeshLinks
     //----------------------------------------------------------------------------
     // Description:
     // Get a link structure given a point id.
-    FaceList& getFaceList(size_t ptId) {
+    FaceList& getFaceList(size_t ptId)
+    {
       return this->Array[ptId];
     }
 
     //----------------------------------------------------------------------------
     // Description:
     // Get the number of cells using the point specified by ptId.
-    uint16_t getNumberOfFaces(size_t ptId) {
+    uint16_t getNumberOfFaces(size_t ptId)
+    {
       return this->Array[ptId].ncells;
     }
 
     //----------------------------------------------------------------------------
     // Description:
     // Return a list of cell ids using the point.
-    int* getFaceListPointer(size_t ptId) {
+    int* getFaceListPointer(size_t ptId)
+    {
       return this->Array[ptId].cells;
     }
 
@@ -140,7 +144,7 @@ class MeshLinks
     //
     // -----------------------------------------------------------------------------
     void generateMeshLinksFaces(DREAM3D::Mesh::VertListPointer_t nodes,
-                               DREAM3D::Mesh::FaceListPointer_t Faces )
+                                DREAM3D::Mesh::FaceListPointer_t Faces )
     {
 
       size_t numPts = nodes->GetNumberOfTuples();
@@ -157,7 +161,7 @@ class MeshLinks
       SharedShortArray_t linkLocPtr(new unsigned short[numPts]);
       linkLoc = linkLocPtr.get();
 
-      ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
+      ::memset(linkLoc, 0, numPts * sizeof(unsigned short));
 
 
       size_t pts[3];
@@ -165,10 +169,10 @@ class MeshLinks
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getFacePoints(Faces, cellId, npts, pts);
-        for (size_t j=0; j < npts; j++)
+        for (size_t j = 0; j < npts; j++)
         {
           this->incrementLinkCount(pts[j]);
         }
@@ -177,10 +181,10 @@ class MeshLinks
       // now allocate storage for the links
       this->allocateLinks(numPts);
 
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getFacePoints(Faces, cellId, npts, pts);
-        for (size_t j=0; j < npts; j++)
+        for (size_t j = 0; j < npts; j++)
         {
           this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -192,7 +196,7 @@ class MeshLinks
     //
     // -----------------------------------------------------------------------------
     void generateMeshLinksEdges(DREAM3D::Mesh::VertListPointer_t nodes,
-                               DREAM3D::Mesh::EdgeListPointer_t Edges )
+                                DREAM3D::Mesh::EdgeListPointer_t Edges )
     {
 
       size_t numPts = nodes->GetNumberOfTuples();
@@ -209,7 +213,7 @@ class MeshLinks
       SharedShortArray_t linkLocPtr(new unsigned short[numPts]);
       linkLoc = linkLocPtr.get();
 
-      ::memset(linkLoc, 0, numPts*sizeof(unsigned short));
+      ::memset(linkLoc, 0, numPts * sizeof(unsigned short));
 
 
       size_t pts[2];
@@ -217,10 +221,10 @@ class MeshLinks
 
       //vtkPolyData *pdata = static_cast<vtkPolyData *>(data);
       // traverse data to determine number of uses of each point
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getEdgePoints(Edges, cellId, npts, pts);
-        for (size_t j=0; j < npts; j++)
+        for (size_t j = 0; j < npts; j++)
         {
           this->incrementLinkCount(pts[j]);
         }
@@ -229,10 +233,10 @@ class MeshLinks
       // now allocate storage for the links
       this->allocateLinks(numPts);
 
-      for (cellId=0; cellId < numCells; cellId++)
+      for (cellId = 0; cellId < numCells; cellId++)
       {
         getEdgePoints(Edges, cellId, npts, pts);
-        for (size_t j=0; j < npts; j++)
+        for (size_t j = 0; j < npts; j++)
         {
           this->insertCellReference(pts[j], (linkLoc[pts[j]])++, cellId);
         }
@@ -243,7 +247,7 @@ class MeshLinks
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nVerts)
+    void deserializeLinks(std::vector<uint8_t>& buffer, size_t nVerts)
     {
       size_t offset = 0;
       allocate(nVerts); // Allocate all the links with 0 and NULL;
@@ -251,25 +255,25 @@ class MeshLinks
 
       // Walk the array and allocate all the array links to Zero and NULL
       uint16_t* ncells = NULL;
-     // int32_t* cells = NULL;
+      // int32_t* cells = NULL;
       for(size_t i = 0; i < nVerts; ++i)
       {
         ncells = reinterpret_cast<uint16_t*>(bufPtr + offset);
         this->Array[i].ncells = *ncells; // Set the number of cells in this link
         offset += 2;
         this->Array[i].cells = new int32_t[this->Array[i].ncells]; // Allocate a new chunk of memory to store the list
-        ::memcpy(this->Array[i].cells, bufPtr + offset, this->Array[i].ncells*sizeof(int32_t) ); // Copy from teh buffer into the new list memory
+        ::memcpy(this->Array[i].cells, bufPtr + offset, this->Array[i].ncells * sizeof(int32_t) ); // Copy from teh buffer into the new list memory
         offset += this->Array[i].ncells * sizeof(int32_t); // Increment the offset
       }
     }
 
   protected:
-    MeshLinks():Array(NULL),Size(0) {}
+    MeshLinks(): Array(NULL), Size(0) {}
 
     //----------------------------------------------------------------------------
-    void allocate(size_t sz, size_t ext=1000)
+    void allocate(size_t sz, size_t ext = 1000)
     {
-      static MeshLinks::FaceList linkInit = {0,NULL};
+      static MeshLinks::FaceList linkInit = {0, NULL};
 
 
       // This makes sure we deallocate any lists that have been created
@@ -291,7 +295,7 @@ class MeshLinks
       this->Array = new MeshLinks::FaceList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
-      for (size_t i=0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
       {
         this->Array[i] = linkInit;
       }
@@ -310,7 +314,7 @@ class MeshLinks
     // Allocate memory for the list of lists of cell ids.
     void allocateLinks(size_t n)
     {
-      for (size_t i=0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
       {
         this->Array[i].cells = new int[this->Array[i].ncells];
       }

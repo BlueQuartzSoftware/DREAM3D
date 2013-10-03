@@ -41,29 +41,29 @@
 #include "MXA/Common/MXASetGetMacros.h"
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
-  {
-    public:
-      MXA_SHARED_POINTERS(CylinderOps)
-      MXA_TYPE_MACRO(CylinderOps)
-      MXA_STATIC_NEW_MACRO(CylinderOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT CylinderOps : public ShapeOps
+{
+  public:
+    MXA_SHARED_POINTERS(CylinderOps)
+    MXA_TYPE_MACRO(CylinderOps)
+    MXA_STATIC_NEW_MACRO(CylinderOps)
 
 
-      virtual ~CylinderOps();
+    virtual ~CylinderOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() {  }
+    virtual float radcur1(std::map<ArgName, float> args);
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() {  }
 
-    protected:
-      CylinderOps();
-    private:
-      CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
-      void operator=(const CylinderOps&); // Operator '=' Not Implemented
+  protected:
+    CylinderOps();
+  private:
+    CylinderOps(const CylinderOps&); // Copy Constructor Not Implemented
+    void operator=(const CylinderOps&); // Operator '=' Not Implemented
 
-  };
+};
 
 #endif /* CYLINDEROPS_H_ */

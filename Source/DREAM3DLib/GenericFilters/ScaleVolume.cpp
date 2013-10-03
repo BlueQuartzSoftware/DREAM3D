@@ -62,7 +62,7 @@ class UpdateVerticesImpl
       m_ScaleFactor(scale)
     {
     }
-    virtual ~UpdateVerticesImpl(){}
+    virtual ~UpdateVerticesImpl() {}
 
     void generate(size_t start, size_t end) const
     {
@@ -70,15 +70,15 @@ class UpdateVerticesImpl
       DREAM3D::Mesh::Vert_t* nodes = m_Nodes->GetPointer(0);
       for (size_t i = start; i < end; i++)
       {
-        nodes[i].pos[0] = m_Min[0] + (nodes[i].pos[0] - m_Min[0])*m_ScaleFactor.x;
-        nodes[i].pos[1] = m_Min[1] + (nodes[i].pos[1] - m_Min[1])*m_ScaleFactor.y;
-        nodes[i].pos[2] = m_Min[2] + (nodes[i].pos[2] - m_Min[2])*m_ScaleFactor.z;
+        nodes[i].pos[0] = m_Min[0] + (nodes[i].pos[0] - m_Min[0]) * m_ScaleFactor.x;
+        nodes[i].pos[1] = m_Min[1] + (nodes[i].pos[1] - m_Min[1]) * m_ScaleFactor.y;
+        nodes[i].pos[2] = m_Min[2] + (nodes[i].pos[2] - m_Min[2]) * m_ScaleFactor.z;
       }
 
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -151,7 +151,7 @@ void ScaleVolume::setupFilterParameters()
     option->setPropertyName("ScaleFactor");
     option->setWidgetType(FilterParameter::FloatVec3Widget);
     option->setValueType("FloatVec3Widget_t");
- //   option->setUnits("Microns");
+//   option->setUnits("Microns");
     parameters.push_back(option);
   }
 
@@ -165,11 +165,11 @@ void ScaleVolume::readFilterParameters(AbstractFilterParametersReader* reader, i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setApplyToVoxelVolume( reader->readValue("ApplyToVoxelVolume", getApplyToVoxelVolume()) );
   setApplyToSurfaceMesh( reader->readValue("ApplyToSurfaceMesh", getApplyToSurfaceMesh()) );
   setScaleFactor( reader->readValue("ScaleFactor", getScaleFactor() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -251,7 +251,7 @@ void ScaleVolume::execute()
   std::stringstream ss;
 
 
-  if (m_ApplyToVoxelVolume ==true)
+  if (m_ApplyToVoxelVolume == true)
   {
     float resolution[3];
     m->getResolution(resolution);

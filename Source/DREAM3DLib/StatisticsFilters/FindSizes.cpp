@@ -46,15 +46,15 @@
 //
 // -----------------------------------------------------------------------------
 FindSizes::FindSizes() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
-m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
-m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-m_GrainIds(NULL),
-m_Volumes(NULL),
-m_EquivalentDiameters(NULL),
-m_NumCells(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_EquivalentDiametersArrayName(DREAM3D::FieldData::EquivalentDiameters),
+  m_NumCellsArrayName(DREAM3D::FieldData::NumCells),
+  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+  m_GrainIds(NULL),
+  m_Volumes(NULL),
+  m_EquivalentDiameters(NULL),
+  m_NumCells(NULL)
 {
   setupFilterParameters();
 }
@@ -77,8 +77,8 @@ void FindSizes::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -138,9 +138,9 @@ void FindSizes::execute()
   }
 
 
-  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) find_sizes();
-  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) find_sizes2D();
- notifyStatusMessage("FindSizes Completed");
+  if(m->getXPoints() > 1 && m->getYPoints() > 1 && m->getZPoints() > 1) { find_sizes(); }
+  if(m->getXPoints() == 1 || m->getYPoints() == 1 || m->getZPoints() == 1) { find_sizes2D(); }
+  notifyStatusMessage("FindSizes Completed");
 }
 
 // -----------------------------------------------------------------------------
@@ -171,7 +171,7 @@ void FindSizes::find_sizes()
     graincounts[gnum]++;
   }
   float res_scalar = m->getXRes() * m->getYRes() * m->getZRes();
-  float vol_term = static_cast<double>( (4.0/3.0)*DREAM3D::Constants::k_Pi );
+  float vol_term = static_cast<double>( (4.0 / 3.0) * DREAM3D::Constants::k_Pi );
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );
@@ -196,7 +196,7 @@ void FindSizes::find_sizes2D()
 
   for (size_t i = 0; i < numgrains; i++)
   {
-      graincounts[i] = 0.0f;
+    graincounts[i] = 0.0f;
   }
   for (int64_t j = 0; j < totalPoints; j++)
   {
@@ -204,9 +204,9 @@ void FindSizes::find_sizes2D()
     graincounts[gnum]++;
   }
   float res_scalar = 0;
-  if(m->getXPoints() == 1) res_scalar = m->getYRes() * m->getZRes();
-  else if(m->getYPoints() == 1) res_scalar = m->getXRes() * m->getZRes();
-  else if(m->getZPoints() == 1) res_scalar = m->getXRes() * m->getYRes();
+  if(m->getXPoints() == 1) { res_scalar = m->getYRes() * m->getZRes(); }
+  else if(m->getYPoints() == 1) { res_scalar = m->getXRes() * m->getZRes(); }
+  else if(m->getZPoints() == 1) { res_scalar = m->getXRes() * m->getYRes(); }
   for (size_t i = 1; i < numgrains; i++)
   {
     m_NumCells[i] = static_cast<int32_t>( graincounts[i] );

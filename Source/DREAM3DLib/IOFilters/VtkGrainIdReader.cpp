@@ -44,14 +44,14 @@
 //
 // -----------------------------------------------------------------------------
 VtkGrainIdReader::VtkGrainIdReader() :
-FileReader(),
-m_InputFile(""),
-m_Comment("DREAM3D Generated File"),
-m_DatasetType(""),
-m_FileIsBinary(true),
-m_GrainIdScalarName(DREAM3D::CellData::GrainIds),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_Comment("DREAM3D Generated File"),
+  m_DatasetType(""),
+  m_FileIsBinary(true),
+  m_GrainIdScalarName(DREAM3D::CellData::GrainIds),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -97,10 +97,10 @@ void VtkGrainIdReader::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setGrainIdScalarName( reader->readValue( "GrainIdScalarName", getGrainIdScalarName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -186,7 +186,7 @@ size_t VtkGrainIdReader::parseByteSize(char text[256])
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
+int VtkGrainIdReader::ignoreData(std::ifstream& in, int byteSize, char* text, size_t xDim, size_t yDim, size_t zDim)
 {
   char cunsigned_char [64] = "unsigned_char";
   char cchar [64] = "char";
@@ -199,7 +199,8 @@ int VtkGrainIdReader::ignoreData(std::ifstream &in, int byteSize, char* text, si
   char cfloat [64] = "float";
   char cdouble [64] = " double";
   int err = 0;
-  if (strcmp(text, cunsigned_char) == 0 ) {
+  if (strcmp(text, cunsigned_char) == 0 )
+  {
     err |= skipVolume<unsigned char>(in, byteSize, xDim, yDim, zDim);
   }
   if (strcmp(text, cchar) == 0 ) { err |= skipVolume<char>(in, byteSize, xDim, yDim, zDim);}
@@ -227,7 +228,7 @@ int VtkGrainIdReader::readHeader()
   if(NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     setErrorCondition(-51000);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
@@ -237,7 +238,7 @@ int VtkGrainIdReader::readHeader()
   if (getInputFile().empty() == true)
   {
     std::stringstream ss;
-    ss << "Input filename was empty" << __FILE__ << "("<<__LINE__<<")";
+    ss << "Input filename was empty" << __FILE__ << "(" << __LINE__ << ")";
     setErrorCondition(-51010);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return getErrorCondition();
@@ -287,9 +288,9 @@ int VtkGrainIdReader::readHeader()
     {
       std::stringstream ss;
       ss << "Error Reading the type of data set. Was expecting 2 fields but got " << n;
-    setErrorCondition(-51040);
-    addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
-    return getErrorCondition();
+      setErrorCondition(-51040);
+      addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
+      return getErrorCondition();
     }
     std::string dataset(&(text[16]));
     setDatasetType(dataset);
@@ -326,7 +327,7 @@ int VtkGrainIdReader::readHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int VtkGrainIdReader::parseCoordinateLine(const char* input, size_t &value)
+int VtkGrainIdReader::parseCoordinateLine(const char* input, size_t& value)
 {
   char text[256];
   char text1[256];
@@ -372,7 +373,7 @@ int VtkGrainIdReader::readFile()
 #if 0
   size_t dim = 0;
   // Now parse the X, coordinates.
- // ::memset(buf, 0, kBufferSize);
+// ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[0])
@@ -386,7 +387,7 @@ int VtkGrainIdReader::readFile()
   err = skipVolume<float>(instream, 4, dim, 1, 1, xscale);
 
   // Now parse the Y coordinates.
- // ::memset(buf, 0, kBufferSize);
+// ::memset(buf, 0, kBufferSize);
   err = readLine(instream, buf, kBufferSize);
   err = parseCoordinateLine(buf, dim);
   if (err < 0 || dim != dims[1])
@@ -448,7 +449,7 @@ int VtkGrainIdReader::readFile()
 
   readLine(instream, buf, kBufferSize);
 
- // int i = 0;
+// int i = 0;
   while (needGrainIds == true)
   {
     readLine(instream, buf, kBufferSize);
@@ -470,14 +471,14 @@ int VtkGrainIdReader::readFile()
       return -1;
     }
 
-   // readLine(instream, buf, kBufferSize); // Read Line 11
+    // readLine(instream, buf, kBufferSize); // Read Line 11
 
     // Check to make sure we are reading the correct set of scalars and if we are
     // NOT then read all this particular Scalar Data and try again
 
     if (m_GrainIdScalarName.compare(scalarName) == 0)
     {
-    //  std::map<int, int> grainIdMap;
+      //  std::map<int, int> grainIdMap;
       if (getFileIsBinary() == true)
       {
         // Splat 0xAB across the entire array. that way if the read messes up we
@@ -501,14 +502,14 @@ int VtkGrainIdReader::readFile()
         {
           instream >> grain_index;
           grainIds->SetValue(i, grain_index);
-       //   grainIdMap[grain_index]++;
+          //   grainIdMap[grain_index]++;
         }
       }
       needGrainIds = false;
     }
     else
     {
-        ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
+      ignoreData(instream, typeByteSize, text3, dims[0], dims[1], dims[2]);
     }
 
   }

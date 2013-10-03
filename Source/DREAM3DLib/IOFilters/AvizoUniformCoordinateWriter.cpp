@@ -45,7 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 AvizoUniformCoordinateWriter::AvizoUniformCoordinateWriter() :
-    AbstractFilter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_WriteGrainIds(true), m_WriteBinaryFile(false), m_GrainIds(NULL)
+  AbstractFilter(), m_GrainIdsArrayName(DREAM3D::CellData::GrainIds), m_WriteGrainIds(true), m_WriteBinaryFile(false), m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -89,10 +89,10 @@ void AvizoUniformCoordinateWriter::readFilterParameters(AbstractFilterParameters
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -248,7 +248,7 @@ std::string AvizoUniformCoordinateWriter::generateHeader()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64 &writer)
+int AvizoUniformCoordinateWriter::writeData(MXAFileWriter64& writer)
 {
   std::string start("@1\n");
   writer.writeString(start);

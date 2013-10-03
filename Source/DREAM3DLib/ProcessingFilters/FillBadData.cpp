@@ -53,12 +53,12 @@
 //
 // -----------------------------------------------------------------------------
 FillBadData::FillBadData() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_MinAllowedDefectSize(1),
-m_AlreadyChecked(NULL),
-m_Neighbors(NULL),
-m_GrainIds(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_MinAllowedDefectSize(1),
+  m_AlreadyChecked(NULL),
+  m_Neighbors(NULL),
+  m_GrainIds(NULL)
 {
   setupFilterParameters();
 }
@@ -82,7 +82,7 @@ void FillBadData::setupFilterParameters()
     option->setPropertyName("MinAllowedDefectSize");
     option->setWidgetType(FilterParameter::IntWidget);
     option->setValueType("int");
-	option->setUnits("Pixels");
+    option->setUnits("Pixels");
     parameters.push_back(option);
   }
 
@@ -93,9 +93,9 @@ void FillBadData::readFilterParameters(AbstractFilterParametersReader* reader, i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMinAllowedDefectSize( reader->readValue("MinAllowedDefectSize", getMinAllowedDefectSize()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -137,7 +137,7 @@ void FillBadData::preflight()
 void FillBadData::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+// int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -163,14 +163,15 @@ void FillBadData::execute()
   m_AlreadyChecked = alreadCheckedPtr->GetPointer(0);
   alreadCheckedPtr->initializeWithZeros();
 
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -199,61 +200,61 @@ void FillBadData::execute()
   for (int64_t iter = 0; iter < totalPoints; iter++)
   {
     m_AlreadyChecked[iter] = false;
-	if (m_GrainIds[iter] != 0) m_AlreadyChecked[iter] = true;
+    if (m_GrainIds[iter] != 0) { m_AlreadyChecked[iter] = true; }
   }
   for (int64_t i = 0; i < totalPoints; i++)
   {
-		if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
-		{
-			currentvlist.push_back( static_cast<int>(i) );
-			count = 0;
-			while(count < currentvlist.size())
-			{
-				index = currentvlist[count];
-				column = index % dims[0];
-				row = (index / dims[0]) % dims[1];
-				plane = index / (dims[0] * dims[1]);
-				for (DimType j = 0; j < 6; j++)
-				{
-					good = 1;
-					neighbor = index + neighpoints[j];
-					if (j == 0 && plane == 0) good = 0;
-					if (j == 5 && plane == (dims[2] - 1)) good = 0;
-					if (j == 1 && row == 0) good = 0;
-					if (j == 4 && row == (dims[1] - 1)) good = 0;
-					if (j == 2 && column == 0) good = 0;
-					if (j == 3 && column == (dims[0] - 1)) good = 0;
-					if (good == 1 && m_GrainIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
-					{
-						currentvlist.push_back(neighbor);
-						m_AlreadyChecked[neighbor] = true;
-					}
-				}
-				count++;
-			}
-			if((int)currentvlist.size() >= m_MinAllowedDefectSize)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = 0;
-				}
-			}
-			if((int)currentvlist.size() < m_MinAllowedDefectSize)
-			{
-				for (size_t k = 0; k < currentvlist.size(); k++)
-				{
-					m_GrainIds[currentvlist[k]] = -1;
-				}
-			}
-			currentvlist.clear();
-		}
+    if(m_AlreadyChecked[i] == false && m_GrainIds[i] == 0)
+    {
+      currentvlist.push_back( static_cast<int>(i) );
+      count = 0;
+      while(count < currentvlist.size())
+      {
+        index = currentvlist[count];
+        column = index % dims[0];
+        row = (index / dims[0]) % dims[1];
+        plane = index / (dims[0] * dims[1]);
+        for (DimType j = 0; j < 6; j++)
+        {
+          good = 1;
+          neighbor = index + neighpoints[j];
+          if (j == 0 && plane == 0) { good = 0; }
+          if (j == 5 && plane == (dims[2] - 1)) { good = 0; }
+          if (j == 1 && row == 0) { good = 0; }
+          if (j == 4 && row == (dims[1] - 1)) { good = 0; }
+          if (j == 2 && column == 0) { good = 0; }
+          if (j == 3 && column == (dims[0] - 1)) { good = 0; }
+          if (good == 1 && m_GrainIds[neighbor] == 0 && m_AlreadyChecked[neighbor] == false)
+          {
+            currentvlist.push_back(neighbor);
+            m_AlreadyChecked[neighbor] = true;
+          }
+        }
+        count++;
+      }
+      if((int)currentvlist.size() >= m_MinAllowedDefectSize)
+      {
+        for (size_t k = 0; k < currentvlist.size(); k++)
+        {
+          m_GrainIds[currentvlist[k]] = 0;
+        }
+      }
+      if((int)currentvlist.size() < m_MinAllowedDefectSize)
+      {
+        for (size_t k = 0; k < currentvlist.size(); k++)
+        {
+          m_GrainIds[currentvlist[k]] = -1;
+        }
+      }
+      currentvlist.clear();
+    }
   }
 
   int grainname, grain;
   int current = 0;
   int most = 0;
 
-  std::vector<int > n(numgrains + 1,0);
+  std::vector<int > n(numgrains + 1, 0);
   while (count != 0)
   {
     count = 0;
@@ -263,52 +264,52 @@ void FillBadData::execute()
       if (grainname < 0)
       {
         count++;
-		current = 0;
-		most = 0;
-		x = static_cast<float>(i % dims[0]);
+        current = 0;
+        most = 0;
+        x = static_cast<float>(i % dims[0]);
         y = static_cast<float>((i / dims[0]) % dims[1]);
         z = static_cast<float>(i / (dims[0] * dims[1]));
         for (int j = 0; j < 6; j++)
         {
           good = 1;
           neighpoint = i + neighpoints[j];
-          if (j == 0 && z == 0) good = 0;
-          if (j == 5 && z == (dims[2] - 1)) good = 0;
-          if (j == 1 && y == 0) good = 0;
-          if (j == 4 && y == (dims[1] - 1)) good = 0;
-          if (j == 2 && x == 0) good = 0;
-          if (j == 3 && x == (dims[0] - 1)) good = 0;
+          if (j == 0 && z == 0) { good = 0; }
+          if (j == 5 && z == (dims[2] - 1)) { good = 0; }
+          if (j == 1 && y == 0) { good = 0; }
+          if (j == 4 && y == (dims[1] - 1)) { good = 0; }
+          if (j == 2 && x == 0) { good = 0; }
+          if (j == 3 && x == (dims[0] - 1)) { good = 0; }
           if (good == 1)
           {
             grain = m_GrainIds[neighpoint];
-			if (grain > 0)
+            if (grain > 0)
             {
-				n[grain]++;
-				current = n[grain];
-				if (current > most)
-				{
-					most = current;
-					m_Neighbors[i] = neighpoint;
-				}
-			}
-		  }
-		}
-		for (int l = 0; l < 6; l++)
-		{
-		  good = 1;
+              n[grain]++;
+              current = n[grain];
+              if (current > most)
+              {
+                most = current;
+                m_Neighbors[i] = neighpoint;
+              }
+            }
+          }
+        }
+        for (int l = 0; l < 6; l++)
+        {
+          good = 1;
           neighpoint = i + neighpoints[l];
-		  if (l == 0 && z == 0) good = 0;
-		  if (l == 5 && z == (dims[2] - 1)) good = 0;
-		  if (l == 1 && y == 0) good = 0;
-		  if (l == 4 && y == (dims[1] - 1)) good = 0;
-		  if (l == 2 && x == 0) good = 0;
-		  if (l == 3 && x == (dims[0] - 1)) good = 0;
-		  if (good == 1)
-		  {
-			grain = m_GrainIds[neighpoint];
-			if(grain > 0) n[grain] = 0;
-		  }
-		}
+          if (l == 0 && z == 0) { good = 0; }
+          if (l == 5 && z == (dims[2] - 1)) { good = 0; }
+          if (l == 1 && y == 0) { good = 0; }
+          if (l == 4 && y == (dims[1] - 1)) { good = 0; }
+          if (l == 2 && x == 0) { good = 0; }
+          if (l == 3 && x == (dims[0] - 1)) { good = 0; }
+          if (good == 1)
+          {
+            grain = m_GrainIds[neighpoint];
+            if(grain > 0) { n[grain] = 0; }
+          }
+        }
       }
     }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
@@ -318,16 +319,16 @@ void FillBadData::execute()
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor != -1 && m_GrainIds[neighbor] > 0)
       {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-            p->CopyTuple(neighbor, j);
-          }
+        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          std::string name = *iter;
+          IDataArray::Pointer p = m->getCellData(*iter);
+          p->CopyTuple(neighbor, j);
+        }
       }
     }
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Filling Bad Data Complete");
+  notifyStatusMessage("Filling Bad Data Complete");
 }

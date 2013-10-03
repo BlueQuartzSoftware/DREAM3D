@@ -42,31 +42,31 @@
 
 
 
-  /*
-   *
-   */
-  class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
-  {
-    public:
-      MXA_SHARED_POINTERS(CubeOctohedronOps)
-      MXA_TYPE_MACRO(CubeOctohedronOps)
-      MXA_STATIC_NEW_MACRO(CubeOctohedronOps)
+/*
+ *
+ */
+class DREAM3DLib_EXPORT CubeOctohedronOps : public ShapeOps
+{
+  public:
+    MXA_SHARED_POINTERS(CubeOctohedronOps)
+    MXA_TYPE_MACRO(CubeOctohedronOps)
+    MXA_STATIC_NEW_MACRO(CubeOctohedronOps)
 
-      virtual ~CubeOctohedronOps();
+    virtual ~CubeOctohedronOps();
 
-      virtual float radcur1(std::map<ArgName, float> args);
+    virtual float radcur1(std::map<ArgName, float> args);
 
-      virtual float inside(float axis1comp, float axis2comp, float axis3comp);
-      virtual void init() { Gvalue = 0.0f; }
+    virtual float inside(float axis1comp, float axis2comp, float axis3comp);
+    virtual void init() { Gvalue = 0.0f; }
 
-    protected:
-      CubeOctohedronOps();
-    private:
-      float Gvalue;
+  protected:
+    CubeOctohedronOps();
+  private:
+    float Gvalue;
 
-      CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
-      void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
-  };
+    CubeOctohedronOps(const CubeOctohedronOps&); // Copy Constructor Not Implemented
+    void operator=(const CubeOctohedronOps&); // Operator '=' Not Implemented
+};
 
 
 #endif /* CUBOCTOHEDRONOPS_H_ */

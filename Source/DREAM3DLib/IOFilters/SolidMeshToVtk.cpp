@@ -45,8 +45,8 @@
 //
 // -----------------------------------------------------------------------------
 SolidMeshToVtk::SolidMeshToVtk() :
-AbstractFilter(),
-m_WriteBinaryFile(false)
+  AbstractFilter(),
+  m_WriteBinaryFile(false)
 {
   setupFilterParameters();
 }
@@ -64,22 +64,22 @@ SolidMeshToVtk::~SolidMeshToVtk()
 void SolidMeshToVtk::setupFilterParameters()
 {
   std::vector<FilterParameter::Pointer> options;
-{
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Output Vtk File");
-     option->setPropertyName("OutputVtkFile");
-     option->setWidgetType(FilterParameter::OutputFileWidget);
-     option->setValueType("string");
-     options.push_back(option);
-   }
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Write Binary Vtk File");
-     option->setPropertyName("WriteBinaryFile");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     options.push_back(option);
-   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Output Vtk File");
+    option->setPropertyName("OutputVtkFile");
+    option->setWidgetType(FilterParameter::OutputFileWidget);
+    option->setValueType("string");
+    options.push_back(option);
+  }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Write Binary Vtk File");
+    option->setPropertyName("WriteBinaryFile");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    options.push_back(option);
+  }
 
   setFilterParameters(options);
 }
@@ -91,10 +91,10 @@ void SolidMeshToVtk::readFilterParameters(AbstractFilterParametersReader* reader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputVtkFile( reader->readValue( "OutputVtkFile", getOutputVtkFile() ) );
   setWriteBinaryFile( reader->readValue("WriteBinaryFile", getWriteBinaryFile()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -127,8 +127,8 @@ void SolidMeshToVtk::dataCheck(bool preflight, size_t voxels, size_t fields, siz
   VolumeDataContainer* sm = getVolumeDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "VolumeDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
   else
   {
@@ -349,14 +349,14 @@ int SolidMeshToVtk::writePointData(FILE* vtkFile)
 
   for(int i = 0; i < numNodes; ++i)
   {
-      if(m_WriteBinaryFile == true)
-      {
+    if(m_WriteBinaryFile == true)
+    {
 
-      }
-      else
-      {
+    }
+    else
+    {
 
-      }
+    }
   }
   return err;
 }

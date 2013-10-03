@@ -101,7 +101,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -146,9 +146,9 @@ class DREAM3DLib_EXPORT EdgeDataContainerReader : public AbstractFilter
 //    int readEnsembleData(hid_t dcGid);
 
 
-    int readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead);
+    int readGroupsData(hid_t dcGid, const std::string& groupName, bool preflight,
+                       std::vector<std::string>& namesRead,
+                       std::set<std::string>& namesToRead);
 
 
   private:

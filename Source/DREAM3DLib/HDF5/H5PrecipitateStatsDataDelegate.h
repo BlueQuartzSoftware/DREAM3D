@@ -73,7 +73,7 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     int writeBoundaryArea(PrecipitateStatsData* data, hid_t groupId);
     int readBoundaryArea(PrecipitateStatsData* data, hid_t groupId);
 
-	int writePhaseFraction(PrecipitateStatsData* data, hid_t groupId);
+    int writePhaseFraction(PrecipitateStatsData* data, hid_t groupId);
     int readPhaseFraction(PrecipitateStatsData* data, hid_t groupId);
 
     int writePrecipBoundaryFraction(PrecipitateStatsData* data, hid_t groupId);
@@ -89,19 +89,19 @@ class DREAM3DLib_EXPORT H5PrecipitateStatsDataDelegate : public H5StatsDataDeleg
     int readODFWeights(hid_t pid, PrecipitateStatsData* data);
     int readAxisODFWeights(hid_t pid, PrecipitateStatsData* data);
 
-    int writeWeightsData(hid_t pid, const std::string &hdf5GroupName,
-                                              VectorOfFloatArray colData);
+    int writeWeightsData(hid_t pid, const std::string& hdf5GroupName,
+                         VectorOfFloatArray colData);
 
     int writeDistributionData(hid_t pid,
                               uint32_t disType,
-                              const std::string &hdf5GroupName,
+                              const std::string& hdf5GroupName,
                               VectorOfFloatArray colData);
 
-    uint32_t readDistributionType(hid_t pid, const std::string &hdf5GroupName);
+    uint32_t readDistributionType(hid_t pid, const std::string& hdf5GroupName);
 
     int readDistributionData(hid_t pid,
-                              const std::string &hdf5GroupName,
-                              VectorOfFloatArray colData);
+                             const std::string& hdf5GroupName,
+                             VectorOfFloatArray colData);
 
 
     int writeVectorOfArrays(hid_t pid, VectorOfFloatArray colData);

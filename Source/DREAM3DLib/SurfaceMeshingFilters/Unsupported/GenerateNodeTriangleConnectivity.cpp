@@ -168,7 +168,7 @@ void GenerateNodeTriangleConnectivity::execute()
   setErrorCondition(0);
 
   // Just to double check we have everything.
-  dataCheck(false, 0,0,0);
+  dataCheck(false, 0, 0, 0);
   if (getErrorCondition() < 0)
   {
     return;
@@ -232,10 +232,10 @@ void GenerateNodeTriangleConnectivity::generateConnectivity()
   // Loop over each entry in the map
   for(NodeTrianglesMap_t::iterator iter = m_Node2Triangle.begin(); iter != m_Node2Triangle.end(); ++iter)
   {
-    if ( progIndex/total * 100.0f > (curPercent) )
+    if ( progIndex / total * 100.0f > (curPercent) )
     {
       ss.str("");
-      ss << (progIndex/total * 100.0f) << "% Complete";
+      ss << (progIndex / total * 100.0f) << "% Complete";
       notifyStatusMessage(ss.str());
       curPercent += 5.0f;
     }

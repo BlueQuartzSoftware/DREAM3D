@@ -45,11 +45,11 @@
 //
 // -----------------------------------------------------------------------------
 FindNumFields::FindNumFields() :
-AbstractFilter(),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
-m_FieldPhases(NULL),
-m_NumFields(NULL)
+  AbstractFilter(),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_NumFieldsArrayName(DREAM3D::EnsembleData::NumFields),
+  m_FieldPhases(NULL),
+  m_NumFields(NULL)
 {
 
 }
@@ -65,8 +65,8 @@ void FindNumFields::readFilterParameters(AbstractFilterParametersReader* reader,
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

@@ -45,11 +45,11 @@
 //
 // -----------------------------------------------------------------------------
 FindVolFractions::FindVolFractions() :
-AbstractFilter(),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
-m_CellPhases(NULL),
-m_VolFractions(NULL)
+  AbstractFilter(),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_VolFractionsArrayName(DREAM3D::EnsembleData::VolFractions),
+  m_CellPhases(NULL),
+  m_VolFractions(NULL)
 {
 
 }
@@ -66,8 +66,8 @@ void FindVolFractions::readFilterParameters(AbstractFilterParametersReader* read
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

@@ -86,8 +86,8 @@ void FindSlipTransmissionMetrics::readFilterParameters(AbstractFilterParametersR
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -178,7 +178,7 @@ void FindSlipTransmissionMetrics::dataCheck(bool preflight, size_t voxels, size_
 // -----------------------------------------------------------------------------
 void FindSlipTransmissionMetrics::preflight()
 {
-  dataCheck(true, 1,1 ,1);
+  dataCheck(true, 1, 1 , 1);
 }
 
 // -----------------------------------------------------------------------------
@@ -231,10 +231,10 @@ void FindSlipTransmissionMetrics::execute()
   mPrimelists.resize(totalFields);
   for (int i = 1; i < totalFields; i++)
   {
-    F1lists[i].resize(neighborlist[i].size(),0);
-    F1sptlists[i].resize(neighborlist[i].size(),0);
-    F7lists[i].resize(neighborlist[i].size(),0);
-    mPrimelists[i].resize(neighborlist[i].size(),0);
+    F1lists[i].resize(neighborlist[i].size(), 0);
+    F1sptlists[i].resize(neighborlist[i].size(), 0);
+    F7lists[i].resize(neighborlist[i].size(), 0);
+    mPrimelists[i].resize(neighborlist[i].size(), 0);
     for (size_t j = 0; j < neighborlist[i].size(); j++)
     {
       nname = neighborlist[i][j];

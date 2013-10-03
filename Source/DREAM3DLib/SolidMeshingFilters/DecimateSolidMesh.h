@@ -54,38 +54,38 @@ class DREAM3DLib_EXPORT DecimateSolidMesh : public AbstractFilter
 {
   public:
     DREAM3D_SHARED_POINTERS(DecimateSolidMesh)
-     DREAM3D_STATIC_NEW_MACRO(DecimateSolidMesh)
-     DREAM3D_TYPE_MACRO_SUPER(DecimateSolidMesh, AbstractFilter)
+    DREAM3D_STATIC_NEW_MACRO(DecimateSolidMesh)
+    DREAM3D_TYPE_MACRO_SUPER(DecimateSolidMesh, AbstractFilter)
 
-     virtual ~DecimateSolidMesh();
+    virtual ~DecimateSolidMesh();
 
     DREAM3D_INSTANCE_PROPERTY(int, GoalElementNumber)
 
-		virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
-     virtual const std::string getHumanLabel() { return "Decimate Solid Mesh"; }
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SolidMeshingFilters; }
+    virtual const std::string getHumanLabel() { return "Decimate Solid Mesh"; }
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-	virtual void execute();
-     virtual void preflight();
+    virtual void execute();
+    virtual void preflight();
 
-   protected:
-     DecimateSolidMesh();
+  protected:
+    DecimateSolidMesh();
 
-   private:
-	std::vector<int> newNodeIds;
-	std::vector<bool> tetDone;
-	std::vector<int> nodeGrainIds;
-	std::vector<int> nodeEuclideanDistances;
+  private:
+    std::vector<int> newNodeIds;
+    std::vector<bool> tetDone;
+    std::vector<int> nodeGrainIds;
+    std::vector<int> nodeEuclideanDistances;
 
-	int updateNodesandTets(int currentTet, int killedNode, int newNode);
+    int updateNodesandTets(int currentTet, int killedNode, int newNode);
 
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 

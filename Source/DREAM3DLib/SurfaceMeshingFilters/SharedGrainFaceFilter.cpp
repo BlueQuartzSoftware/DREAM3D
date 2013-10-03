@@ -73,8 +73,8 @@ void SharedGrainFaceFilter::readFilterParameters(AbstractFilterParametersReader*
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -179,8 +179,8 @@ void SharedGrainFaceFilter::execute()
   // Loop through all the Triangles and figure out how many triangles we have in each one.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-    fl0 = faceLabels[t*2];
-    fl1 = faceLabels[t*2+1];
+    fl0 = faceLabels[t * 2];
+    fl1 = faceLabels[t * 2 + 1];
     if (fl0 < fl1)
     {
       faceId.g = fl0;
@@ -193,7 +193,7 @@ void SharedGrainFaceFilter::execute()
     }
 
     std::map<uint64_t, int>::iterator iter = faceSizeMap.find(*faceId_64);
-    if(iter==faceSizeMap.end())
+    if(iter == faceSizeMap.end())
     {
       faceSizeMap[*faceId_64] = 1;
       faceIdMap[*faceId_64] = index;
@@ -223,7 +223,7 @@ void SharedGrainFaceFilter::execute()
   // Loop through all the Triangles and assign each one to a unique Grain Face Id.
   for(size_t t = 0; t < totalPoints; ++t)
   {
-  #if 0
+#if 0
     Triangle& tri = triangles[t];
     if (tri.nSpin[0] < tri.nSpin[1])
     {
@@ -236,9 +236,9 @@ void SharedGrainFaceFilter::execute()
       faceId.r = tri.nSpin[0];
     }
     index = faceIdMap[*faceId_64];
-    #else
+#else
     index = grainFaceId->GetValue(t);
-    #endif
+#endif
     faces[index].push_back(t);
   }
 

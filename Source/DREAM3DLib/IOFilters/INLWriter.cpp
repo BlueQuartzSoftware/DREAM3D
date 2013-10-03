@@ -59,15 +59,15 @@
 //
 // -----------------------------------------------------------------------------
 INLWriter::INLWriter() :
-FileWriter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_CellPhasesArrayName(DREAM3D::CellData::Phases),
-m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
-m_GrainIds(NULL),
-m_CellPhases(NULL),
-m_CellEulerAngles(NULL)
+  FileWriter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_CellEulerAnglesArrayName(DREAM3D::CellData::EulerAngles),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_MaterialNamesArrayName(DREAM3D::EnsembleData::MaterialName),
+  m_GrainIds(NULL),
+  m_CellPhases(NULL),
+  m_CellEulerAngles(NULL)
 
 {
   setupFilterParameters();
@@ -107,9 +107,9 @@ void INLWriter::readFilterParameters(AbstractFilterParametersReader* reader, int
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -190,7 +190,7 @@ int INLWriter::writeFile()
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
@@ -249,21 +249,21 @@ int INLWriter::writeFile()
   fprintf(f, "# Y_MIN: %f\r\n", origin[1]);
   fprintf(f, "# Z_MIN: %f\r\n", origin[2]);
   fprintf(f, "#\r\n");
-  fprintf(f, "# X_MAX: %f\r\n", origin[0]+(dims[0]*res[0]));
-  fprintf(f, "# Y_MAX: %f\r\n", origin[1]+(dims[1]*res[1]));
-  fprintf(f, "# Z_MAX: %f\r\n", origin[2]+(dims[0]*res[2]));
+  fprintf(f, "# X_MAX: %f\r\n", origin[0] + (dims[0]*res[0]));
+  fprintf(f, "# Y_MAX: %f\r\n", origin[1] + (dims[1]*res[1]));
+  fprintf(f, "# Z_MAX: %f\r\n", origin[2] + (dims[0]*res[2]));
   fprintf(f, "#\r\n");
   fprintf(f, "# X_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[0]));
   fprintf(f, "# Y_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[1]));
   fprintf(f, "# Z_DIM: %llu\r\n", static_cast<unsigned long long int>(dims[2]));
   fprintf(f, "#\r\n");
 
- // IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
+// IDataArray::Pointer pDataPtr = m->getEnsembleData(DREAM3D::EnsembleData::PhaseTypes);
   IDataArray::Pointer materialNamePtr = m->getEnsembleData(DREAM3D::EnsembleData::MaterialName);
   StringDataArray* materialNames = StringDataArray::SafePointerDownCast(materialNamePtr.get());
   if (NULL == materialNames)
   {
-  fclose(f);
+    fclose(f);
     ss.str("");
     ss << "The MaterialNames Ensemble Array was not in the Data Container";
     notifyErrorMessage(ss.str(), -1111);
@@ -281,7 +281,7 @@ int INLWriter::writeFile()
     }
     else if(symmetry == Ebsd::CrystalStructure::Hexagonal_High)
     {
-     symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
+      symmetry = Ebsd::Ang::PhaseSymmetry::DiHexagonal;
     }
     else
     {
@@ -305,14 +305,14 @@ int INLWriter::writeFile()
 //  fprintf(f, "# Column 8: Phase ID\r\n");
 
 
-  fprintf(f,"# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
+  fprintf(f, "# phi1 PHI phi2 x y z GrainId PhaseId Symmetry\r\n");
 
   float phi1, phi, phi2;
   float xPos, yPos, zPos;
   int32_t grainId;
   int32_t phaseId;
 
- // unsigned char rgba[4] = {0,0,0,255};
+// unsigned char rgba[4] = {0,0,0,255};
   //float refDir[3] = {0.0f, 0.0f, 1.0f};
 
 
@@ -323,16 +323,16 @@ int INLWriter::writeFile()
     {
       for (size_t x = 0; x < dims[0]; ++x)
       {
-        index = (z*dims[0]*dims[1]) + (dims[0]*y) + x;
-        phi1 = m_CellEulerAngles[index*3];
-        phi = m_CellEulerAngles[index*3+1];
-        phi2 = m_CellEulerAngles[index*3+2];
+        index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
+        phi1 = m_CellEulerAngles[index * 3];
+        phi = m_CellEulerAngles[index * 3 + 1];
+        phi2 = m_CellEulerAngles[index * 3 + 2];
         xPos = origin[0] + (x * res[0]);
         yPos = origin[1] + (y * res[1]);
         zPos = origin[2] + (z * res[2]);
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
-       // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
+        // rgba[0] = 0; rgba[1] = 0; rgba[2] = 0; // Reset the color to black
         symmetry = m_CrystalStructures[phaseId];
         if(phaseId > 0)
         {
@@ -355,7 +355,7 @@ int INLWriter::writeFile()
         }
 
 
-        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n",phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
+        fprintf(f, "%f %f %f %f %f %f %d %d %d\r\n", phi1, phi, phi2, xPos, yPos, zPos, grainId, phaseId, symmetry);
       }
     }
   }

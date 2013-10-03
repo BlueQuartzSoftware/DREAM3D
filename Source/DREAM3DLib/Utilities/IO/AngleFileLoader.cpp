@@ -84,7 +84,7 @@ std::vector<std::string> AngleFileLoader::tokenize(char* buf, const char* delimi
   while(pos != std::string::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
-    output.push_back(values.substr(start, pos-start));
+    output.push_back(values.substr(start, pos - start));
     //   std::cout << "Adding: " << output.back() << std::endl;
     if (pos != std::string::npos)
     {
@@ -120,8 +120,8 @@ FloatArrayType::Pointer AngleFileLoader::loadData()
 
   // Make sure we have a valid angle representation
   if(m_AngleRepresentation != EulerAngles
-     && m_AngleRepresentation != QuaternionAngles
-     && m_AngleRepresentation != RodriguezAngles)
+      && m_AngleRepresentation != QuaternionAngles
+      && m_AngleRepresentation != RodriguezAngles)
   {
     setErrorMessage("The Angle representation was not set to anything know to this code");
     setErrorCode(-3);

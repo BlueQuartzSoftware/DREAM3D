@@ -87,7 +87,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::InputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -106,7 +106,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -138,7 +138,7 @@ class DREAM3DLib_EXPORT RawBinaryReader : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    IDataArray::Pointer					array;
+    IDataArray::Pointer         array;
 
     RawBinaryReader(const RawBinaryReader&); // Copy Constructor Not Implemented
     void operator=(const RawBinaryReader&); // Operator '=' Not Implemented

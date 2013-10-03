@@ -53,7 +53,8 @@
 
 namespace Detail
 {
-  enum NumType {
+  enum NumType
+  {
     Int8 = 0,
     UInt8,
     Int16,
@@ -82,10 +83,10 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize, int skipHeaderBytes)
+int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes, size_t fileSize, int skipHeaderBytes)
 {
-  if (fileSize-skipHeaderBytes < allocatedBytes) { return -1; }
-  else if (fileSize-skipHeaderBytes > allocatedBytes) { return 1; }
+  if (fileSize - skipHeaderBytes < allocatedBytes) { return -1; }
+  else if (fileSize - skipHeaderBytes > allocatedBytes) { return 1; }
   // File Size and Allocated Size are equal so we  are good to go
   return 0;
 }
@@ -96,7 +97,7 @@ int SanityCheckFileSizeVersusAllocatedSize(size_t allocatedBytes,size_t fileSize
 //
 // -----------------------------------------------------------------------------
 template<typename T>
-int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename, int skipHeaderBytes)
+int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string& filename, int skipHeaderBytes)
 {
   int err = 0;
   uint64_t fileSize = MXAFileInfo::fileSize(filename);
@@ -138,7 +139,7 @@ int ReadBinaryFile(typename DataArray<T>::Pointer p, const std::string &filename
     {
       return RBR_READ_EOF;
     }
-	// Don't read junk at the end of the file
+    // Don't read junk at the end of the file
     else if (numRead == numElements)
     {
       break;
@@ -310,7 +311,7 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setDimensionality( reader->readValue("Dimensionality", getDimensionality()) );
@@ -322,7 +323,7 @@ void RawBinaryReader::readFilterParameters(AbstractFilterParametersReader* reade
   setOverRideOriginResolution( reader->readValue("OverRideOriginResolution", getOverRideOriginResolution()) );
   setSkipHeaderBytes( reader->readValue("SkipHeaderBytes", getSkipHeaderBytes()) );
   setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -529,71 +530,101 @@ void RawBinaryReader::execute()
   {
     Int8ArrayType::Pointer p = Int8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int8_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::UInt8)
   {
     UInt8ArrayType::Pointer p = UInt8ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint8_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::Int16)
   {
     Int16ArrayType::Pointer p = Int16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int16_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::UInt16)
   {
     UInt16ArrayType::Pointer p = UInt16ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint16_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::Int32)
   {
     Int32ArrayType::Pointer p = Int32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int32_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::UInt32)
   {
     UInt32ArrayType::Pointer p = UInt32ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint32_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::Int64)
   {
     Int64ArrayType::Pointer p = Int64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<int64_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::UInt64)
   {
     UInt64ArrayType::Pointer p = UInt64ArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<uint64_t>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::Float)
   {
     FloatArrayType::Pointer p = FloatArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<float>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
   else if (m_ScalarType == Detail::Double)
   {
     DoubleArrayType::Pointer p = DoubleArrayType::CreateArray(voxels, m_NumberOfComponents, m_OutputArrayName);
     err = ReadBinaryFile<double>(p, m_InputFile, m_SkipHeaderBytes);
-    if (err >= 0 ) { SWAP_ARRAY(p)
-          array = p;}
+    if (err >= 0 )
+    {
+      SWAP_ARRAY(p)
+      array = p;
+    }
   }
 
   if (NULL != array.get())

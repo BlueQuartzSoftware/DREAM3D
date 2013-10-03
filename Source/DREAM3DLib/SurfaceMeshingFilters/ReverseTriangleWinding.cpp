@@ -55,7 +55,7 @@ class ReverseWindingImpl
     ReverseWindingImpl(DREAM3D::Mesh::FaceListPointer_t triangles) :
       m_Triangles(triangles)
     {}
-    virtual ~ReverseWindingImpl(){}
+    virtual ~ReverseWindingImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -82,7 +82,7 @@ class ReverseWindingImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -197,8 +197,8 @@ void ReverseTriangleWinding::readFilterParameters(AbstractFilterParametersReader
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

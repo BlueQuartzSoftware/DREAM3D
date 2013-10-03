@@ -213,15 +213,15 @@ int EdgeDataContainerReader::gatherData(bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 {
-    std::vector<std::string> readNames;
-    herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
+  std::vector<std::string> readNames;
+  herr_t err = readGroupsData(dcGid, H5_FIELD_DATA_GROUP_NAME, preflight, readNames, m_FieldArraysToRead);
+  if(err < 0)
+  {
+    err |= H5Gclose(dcGid);
+    setErrorCondition(err);
+    return -1;
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -229,15 +229,15 @@ int EdgeDataContainerReader::gatherFieldData(hid_t dcGid, bool preflight)
 // -----------------------------------------------------------------------------
 int EdgeDataContainerReader::gatherEnsembleData(hid_t dcGid, bool preflight)
 {
-    std::vector<std::string> readNames;
-    herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
-    if(err < 0)
-    {
-      err |= H5Gclose(dcGid);
-      setErrorCondition(err);
-      return -1;
-    }
-    return 0;
+  std::vector<std::string> readNames;
+  herr_t err = readGroupsData(dcGid, H5_ENSEMBLE_DATA_GROUP_NAME, preflight, readNames, m_EnsembleArraysToRead);
+  if(err < 0)
+  {
+    err |= H5Gclose(dcGid);
+    setErrorCondition(err);
+    return -1;
+  }
+  return 0;
 }
 
 // -----------------------------------------------------------------------------
@@ -339,7 +339,8 @@ int EdgeDataContainerReader::readVertices(hid_t dcGid)
   // Read the data
   DREAM3D::Mesh::Float_t* data = reinterpret_cast<DREAM3D::Mesh::Float_t*>(verticesPtr->GetPointer(0));
   err = H5Lite::readPointerDataset(dcGid, DREAM3D::HDF5::VerticesName, data);
-  if (err < 0) {
+  if (err < 0)
+  {
     setErrorCondition(err);
     notifyErrorMessage("Error Reading Vertex List to DREAM3D file", getErrorCondition());
   }
@@ -417,9 +418,9 @@ int EdgeDataContainerReader::readEdges(hid_t dcGid)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const std::string &groupName, bool preflight,
-                                                std::vector<std::string> &namesRead,
-                                                std::set<std::string> &namesToRead)
+int EdgeDataContainerReader::readGroupsData(hid_t dcGid, const std::string& groupName, bool preflight,
+                                            std::vector<std::string>& namesRead,
+                                            std::set<std::string>& namesToRead)
 {
   std::stringstream ss;
   int err = 0;

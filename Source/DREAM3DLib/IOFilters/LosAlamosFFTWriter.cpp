@@ -97,9 +97,9 @@ void LosAlamosFFTWriter::readFilterParameters(AbstractFilterParametersReader* re
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setOutputFile( reader->readValue( "OutputFile", getOutputFile() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -161,7 +161,7 @@ int LosAlamosFFTWriter::writeFile()
   if (NULL == m)
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     addErrorMessage(getHumanLabel(), ss.str(), -1);
     setErrorCondition(-1);
     return -1;
@@ -220,15 +220,15 @@ int LosAlamosFFTWriter::writeFile()
     {
       for (size_t x = 0; x < dims[0]; ++x)
       {
-        index = (z*dims[0]*dims[1]) + (dims[0]*y) + x;
-        phi1 = m_CellEulerAngles[index*3] * 180.0*DREAM3D::Constants::k_1OverPi;
-        phi = m_CellEulerAngles[index*3+1] * 180.0*DREAM3D::Constants::k_1OverPi;
-        phi2 = m_CellEulerAngles[index*3+2] * 180.0*DREAM3D::Constants::k_1OverPi;
+        index = (z * dims[0] * dims[1]) + (dims[0] * y) + x;
+        phi1 = m_CellEulerAngles[index * 3] * 180.0 * DREAM3D::Constants::k_1OverPi;
+        phi = m_CellEulerAngles[index * 3 + 1] * 180.0 * DREAM3D::Constants::k_1OverPi;
+        phi2 = m_CellEulerAngles[index * 3 + 2] * 180.0 * DREAM3D::Constants::k_1OverPi;
 
         grainId = m_GrainIds[index];
         phaseId = m_CellPhases[index];
 
-        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n",phi1, phi, phi2, x+1, y+1, z+1, grainId, phaseId);
+        fprintf(f, "%.3f %.3f %.3f %lu %lu %lu %d %d\n", phi1, phi, phi2, x + 1, y + 1, z + 1, grainId, phaseId);
       }
     }
   }

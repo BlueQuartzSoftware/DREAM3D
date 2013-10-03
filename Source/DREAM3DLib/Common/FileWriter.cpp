@@ -45,7 +45,7 @@
 //
 // -----------------------------------------------------------------------------
 FileWriter::FileWriter() :
-AbstractFilter()
+  AbstractFilter()
 {
 
 }
@@ -102,11 +102,11 @@ void FileWriter::execute()
   std::string parentPath = MXAFileInfo::parentPath(m_OutputFile);
   if(!MXADir::mkdir(parentPath, true))
   {
-      std::stringstream ss;
-      ss << "Error creating parent path '" << parentPath << "'";
-      notifyErrorMessage(ss.str(), -1);
-      setErrorCondition(-1);
-      return;
+    std::stringstream ss;
+    ss << "Error creating parent path '" << parentPath << "'";
+    notifyErrorMessage(ss.str(), -1);
+    setErrorCondition(-1);
+    return;
   }
 
 

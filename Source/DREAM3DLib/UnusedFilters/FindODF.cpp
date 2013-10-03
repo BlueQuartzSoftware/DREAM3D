@@ -44,20 +44,20 @@
 //
 // -----------------------------------------------------------------------------
 FindODF::FindODF()  :
-AbstractFilter(),
-m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
-m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
-m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
-m_VolumesArrayName(DREAM3D::FieldData::Volumes),
-m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
-m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
-m_PhaseTypes(NULL),
-m_Volumes(NULL),
-m_FieldEulerAngles(NULL),
-m_FieldPhases(NULL),
-m_SurfaceFields(NULL),
-m_CrystalStructures(NULL),
-m_StatsDataArray(NULL)
+  AbstractFilter(),
+  m_FieldEulerAnglesArrayName(DREAM3D::FieldData::EulerAngles),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_SurfaceFieldsArrayName(DREAM3D::FieldData::SurfaceFields),
+  m_VolumesArrayName(DREAM3D::FieldData::Volumes),
+  m_CrystalStructuresArrayName(DREAM3D::EnsembleData::CrystalStructures),
+  m_PhaseTypesArrayName(DREAM3D::EnsembleData::PhaseTypes),
+  m_PhaseTypes(NULL),
+  m_Volumes(NULL),
+  m_FieldEulerAngles(NULL),
+  m_FieldPhases(NULL),
+  m_SurfaceFields(NULL),
+  m_CrystalStructures(NULL),
+  m_StatsDataArray(NULL)
 {
   m_HexOps = HexagonalOps::New();
   m_OrientationOps.push_back(dynamic_cast<OrientationMath*> (m_HexOps.get()));
@@ -113,8 +113,8 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     FindGrainPhases::Pointer find_grainphases = FindGrainPhases::New();
     find_grainphases->setObservers(this->getObservers());
     find_grainphases->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_grainphases->preflight();
-    if(preflight == false) find_grainphases->execute();
+    if(preflight == true) { find_grainphases->preflight(); }
+    if(preflight == false) { find_grainphases->execute(); }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1)
 
@@ -127,8 +127,8 @@ void FindODF::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ens
     FindSurfaceGrains::Pointer find_surfacefields = FindSurfaceGrains::New();
     find_surfacefields->setObservers(this->getObservers());
     find_surfacefields->setVoxelDataContainer(getVoxelDataContainer());
-    if(preflight == true) find_surfacefields->preflight();
-    if(preflight == false) find_surfacefields->execute();
+    if(preflight == true) { find_surfacefields->preflight(); }
+    if(preflight == false) { find_surfacefields->execute(); }
   }
   GET_PREREQ_DATA(m, DREAM3D, FieldData, SurfaceFields, -303, bool, BoolArrayType, fields, 1)
 
@@ -191,27 +191,27 @@ void FindODF::execute()
   totalvol.resize(numensembles);
   eulerodf.resize(numensembles);
   unsigned long long dims = 0;
-  for(unsigned long long i=1;i<numensembles;i++)
+  for(unsigned long long i = 1; i < numensembles; i++)
   {
-	  totalvol[i] = 0;
-	  if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
-	  {
-	    dims = 36 * 36 * 12;
-		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
-	    for (unsigned long long j = 0; j < dims; j++)
-	    {
-			eulerodf[i]->SetValue(j, 0.0);
-	    }
-	  }
-	  else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
-	  {
-	    dims = 18 * 18 * 18;
-		eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
-	    for (unsigned long long j = 0; j < dims; j++)
-	    {
-			eulerodf[i]->SetValue(j, 0.0);
-	    }
-	  }
+    totalvol[i] = 0;
+    if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Hexagonal)
+    {
+      dims = 36 * 36 * 12;
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      for (unsigned long long j = 0; j < dims; j++)
+      {
+        eulerodf[i]->SetValue(j, 0.0);
+      }
+    }
+    else if (m_CrystalStructures[i] == Ebsd::CrystalStructure::Cubic)
+    {
+      dims = 18 * 18 * 18;
+      eulerodf[i] = FloatArrayType::CreateArray(dims, DREAM3D::HDF5::ODF);
+      for (unsigned long long j = 0; j < dims; j++)
+      {
+        eulerodf[i]->SetValue(j, 0.0);
+      }
+    }
   }
   float ea1, ea2, ea3;
   float r1, r2, r3;
@@ -226,9 +226,9 @@ void FindODF::execute()
   {
     if (m_SurfaceFields[i] == false)
     {
-      ea1 = m_FieldEulerAngles[3*i];
-      ea2 = m_FieldEulerAngles[3*i+1];
-      ea3 = m_FieldEulerAngles[3*i+2];
+      ea1 = m_FieldEulerAngles[3 * i];
+      ea2 = m_FieldEulerAngles[3 * i + 1];
+      ea3 = m_FieldEulerAngles[3 * i + 2];
       phase = m_CrystalStructures[m_FieldPhases[i]];
       OrientationMath::eulertoRod(r1, r2, r3, ea1, ea2, ea3);
       bin = m_OrientationOps[phase]->getOdfBin(r1, r2, r3);
@@ -237,24 +237,24 @@ void FindODF::execute()
   }
 //  int err;
 
-  for(size_t i = 1;i < numensembles;i++)
+  for(size_t i = 1; i < numensembles; i++)
   {
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
-	  {
-		  PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setODF(eulerodf[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
-	  {
-		  PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  pp->setODF(eulerodf[i]);
-	  }
-	  if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
-	  {
-		  TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
-		  tp->setODF(eulerodf[i]);
-	  }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrimaryPhase)
+    {
+      PrimaryStatsData* pp = PrimaryStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setODF(eulerodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::PrecipitatePhase)
+    {
+      PrecipitateStatsData* pp = PrecipitateStatsData::SafePointerDownCast(statsDataArray[i].get());
+      pp->setODF(eulerodf[i]);
+    }
+    if(m_PhaseTypes[i] == DREAM3D::PhaseType::TransformationPhase)
+    {
+      TransformationStatsData* tp = TransformationStatsData::SafePointerDownCast(statsDataArray[i].get());
+      tp->setODF(eulerodf[i]);
+    }
   }
 
- notifyStatusMessage("FindODF Completed");
+  notifyStatusMessage("FindODF Completed");
 }

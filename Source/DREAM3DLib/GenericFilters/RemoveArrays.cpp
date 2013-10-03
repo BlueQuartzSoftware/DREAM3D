@@ -212,11 +212,11 @@ void RemoveArrays::execute()
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedCellArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                               std::set<std::string> selectedEdgeArrays,
+                                               std::set<std::string> selectedFaceArrays,
+                                               std::set<std::string> selectedCellArrays,
+                                               std::set<std::string> selectedFieldArrays,
+                                               std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeCellArrays = selectedVertexArrays;
   m_SelectedVolumeCellArrays = selectedEdgeArrays;
@@ -230,10 +230,10 @@ void RemoveArrays::setVolumeSelectedArrayNames(std::set<std::string> selectedVer
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                                std::set<std::string> selectedEdgeArrays,
+                                                std::set<std::string> selectedFaceArrays,
+                                                std::set<std::string> selectedFieldArrays,
+                                                std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceEdgeArrays = selectedEdgeArrays;
@@ -243,9 +243,9 @@ void RemoveArrays::setSurfaceSelectedArrayNames(std::set<std::string> selectedVe
 }
 
 void RemoveArrays::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedEdgeVertexArrays = selectedVertexArrays;
   m_SelectedEdgeEdgeArrays = selectedEdgeArrays;
@@ -257,8 +257,8 @@ void RemoveArrays::setEdgeSelectedArrayNames(std::set<std::string> selectedVerte
 //
 // -----------------------------------------------------------------------------
 void RemoveArrays::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                     std::set<std::string> selectedFieldArrays,
-                                                     std::set<std::string> selectedEnsembleArrays)
+                                               std::set<std::string> selectedFieldArrays,
+                                               std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVertexVertexArrays = selectedVertexArrays;
   m_SelectedVertexFieldArrays = selectedFieldArrays;

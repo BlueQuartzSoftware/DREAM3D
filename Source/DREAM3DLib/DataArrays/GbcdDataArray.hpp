@@ -70,28 +70,29 @@ class GbcdDataArray : public IDataArray
 
     typedef std::vector<Pointer>   ContainterType;
 
-  enum NumType {
-    Int8 = 0,
-    UInt8,
-    Int16,
-    UInt16,
-    Int32,
-    UInt32,
-    Int64,
-    UInt64,
-    Float,
-    Double,
-    Bool,
-    UnknownNumType
-  };
+    enum NumType
+    {
+      Int8 = 0,
+      UInt8,
+      Int16,
+      UInt16,
+      Int32,
+      UInt32,
+      Int64,
+      UInt64,
+      Float,
+      Double,
+      Bool,
+      UnknownNumType
+    };
 
-  /**
-     * @brief Static constructor
-     * @param numElements The number of elements in the internal array.
-     * @param name The name of the array
-     * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
-     */
-    static Pointer CreateArray(size_t* dims, const std::string &name, bool allocateArray = true)
+    /**
+       * @brief Static constructor
+       * @param numElements The number of elements in the internal array.
+       * @param name The name of the array
+       * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
+       */
+    static Pointer CreateArray(size_t* dims, const std::string& name, bool allocateArray = true)
     {
       if (name.empty() == true)
       {
@@ -99,7 +100,8 @@ class GbcdDataArray : public IDataArray
       }
       GbcdDataArray<T>* d = new GbcdDataArray<T> (dims, true);
       if (allocateArray && d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return GbcdDataArray<T>::NullPointer();
       }
@@ -116,11 +118,12 @@ class GbcdDataArray : public IDataArray
      * @return Boost::Shared_Ptr wrapping an instance of GbcdDataArrayTemplate<T>
      */
     static Pointer CreateArray(size_t dim0, size_t dim1, size_t dim2, size_t dim3, size_t dim4,
-                              const std::string &name, bool allocateArray = true)
+                               const std::string& name, bool allocateArray = true)
     {
       GbcdDataArray<T>* d = new GbcdDataArray<T> (dim0, dim1, dim2, dim3, dim4, true);
       if (allocateArray && d->Allocate() < 0)
-      { // Could not allocate enough memory, reset the pointer to null and return
+      {
+        // Could not allocate enough memory, reset the pointer to null and return
         delete d;
         return GbcdDataArray<T>::NullPointer();
       }
@@ -136,7 +139,7 @@ class GbcdDataArray : public IDataArray
      * @param name The name of the array
      * @return Boost::Shared_Ptr wrapping an instance of DataArrayTemplate<T>
      */
-    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string &name)
+    virtual IDataArray::Pointer createNewArray(size_t numElements, int numComponents, const std::string& name)
     {
       IDataArray::Pointer p = GbcdDataArray<T>::CreateArray(numElements, numComponents, 1, 1, 1, name);
       return p;
@@ -175,7 +178,7 @@ class GbcdDataArray : public IDataArray
       dims[4] = m_Dims[4];
     }
 
-    virtual void GetGbcdDimension(size_t &dim0, size_t& dim1, size_t& dim2, size_t& dim3, size_t& dim4)
+    virtual void GetGbcdDimension(size_t& dim0, size_t& dim1, size_t& dim2, size_t& dim3, size_t& dim4)
     {
       dim0 = m_Dims[0];
       dim1 = m_Dims[1];
@@ -190,9 +193,9 @@ class GbcdDataArray : public IDataArray
      * can be a primitive like char, float, int or the name of a class.
      * @return
      */
-    void GetXdmfTypeAndSize(std::string &xdmfTypeName, int &precision)
+    void GetXdmfTypeAndSize(std::string& xdmfTypeName, int& precision)
     {
-   //   T value = 0x00;
+      //   T value = 0x00;
       xdmfTypeName = "UNKNOWN";
       precision = 0;
 //      if (typeid(value) == typeid(int8_t)) { xdmfTypeName = "Char"; precision = 1;}
@@ -248,7 +251,7 @@ class GbcdDataArray : public IDataArray
      * @brief Gives this array a human readable name
      * @param name The name of this array
      */
-    virtual void SetName(const std::string &name)
+    virtual void SetName(const std::string& name)
     {
       m_Name = name;
     }
@@ -370,7 +373,7 @@ class GbcdDataArray : public IDataArray
      * @param idxs The indices to remove
      * @return error code.
      */
-    virtual int EraseTuples(std::vector<size_t> &idxs)
+    virtual int EraseTuples(std::vector<size_t>& idxs)
     {
       int err = -1;
       return err;
@@ -493,12 +496,12 @@ class GbcdDataArray : public IDataArray
       return RawResize(numElements);
     }
 
-    virtual void printTuple(std::ostream &out, size_t i, char delimiter = ',')
+    virtual void printTuple(std::ostream& out, size_t i, char delimiter = ',')
     {
       BOOST_ASSERT(false);
     }
 
-    virtual void printComponent(std::ostream &out, size_t i, int j)
+    virtual void printComponent(std::ostream& out, size_t i, int j)
     {
       BOOST_ASSERT(false);
     }
@@ -523,60 +526,61 @@ class GbcdDataArray : public IDataArray
     std::string getTypeAsString()
     {
       T value = static_cast<T>(0);
-      if (typeid(value) == typeid(float)) return "float";
-      if (typeid(value) == typeid(double)) return "double";
+      if (typeid(value) == typeid(float)) { return "float"; }
+      if (typeid(value) == typeid(double)) { return "double"; }
 
-      if (typeid(value) == typeid(int8_t)) return "int8_t";
-      if (typeid(value) == typeid(uint8_t)) return "uint8_t";
+      if (typeid(value) == typeid(int8_t)) { return "int8_t"; }
+      if (typeid(value) == typeid(uint8_t)) { return "uint8_t"; }
 # if CMP_TYPE_CHAR_IS_SIGNED
-      if (typeid(value) == typeid(char)) return "char";
+      if (typeid(value) == typeid(char)) { return "char"; }
 #else
-      if (typeid(value) == typeid(char)) return "char";
+      if (typeid(value) == typeid(char)) { return "char"; }
 #endif
-      if (typeid(value) == typeid(signed char)) return "signed char";
-      if (typeid(value) == typeid(unsigned char)) return "unsigned char";
+      if (typeid(value) == typeid(signed char)) { return "signed char"; }
+      if (typeid(value) == typeid(unsigned char)) { return "unsigned char"; }
 
 
-      if (typeid(value) == typeid(int16_t)) return "int16_t";
-      if (typeid(value) == typeid(short)) return "short";
-      if (typeid(value) == typeid(signed short)) return "signed short";
-      if (typeid(value) == typeid(uint16_t)) return "uint16_t";
-      if (typeid(value) == typeid(unsigned short)) return "unsigned short";
+      if (typeid(value) == typeid(int16_t)) { return "int16_t"; }
+      if (typeid(value) == typeid(short)) { return "short"; }
+      if (typeid(value) == typeid(signed short)) { return "signed short"; }
+      if (typeid(value) == typeid(uint16_t)) { return "uint16_t"; }
+      if (typeid(value) == typeid(unsigned short)) { return "unsigned short"; }
 
 
-      if (typeid(value) == typeid(int32_t)) return "int32_t";
-      if (typeid(value) == typeid(uint32_t)) return "uint32_t";
+      if (typeid(value) == typeid(int32_t)) { return "int32_t"; }
+      if (typeid(value) == typeid(uint32_t)) { return "uint32_t"; }
 #if (CMP_SIZEOF_INT == 4)
-      if (typeid(value) == typeid(int)) return "int";
-      if (typeid(value) == typeid(signed int)) return "signed int";
-      if (typeid(value) == typeid(unsigned int)) return "unsigned int";
+      if (typeid(value) == typeid(int)) { return "int"; }
+      if (typeid(value) == typeid(signed int)) { return "signed int"; }
+      if (typeid(value) == typeid(unsigned int)) { return "unsigned int"; }
 #endif
 
 
 #if (CMP_SIZEOF_LONG == 4)
-      if (typeid(value) == typeid(long int)) return "long int";
-      if (typeid(value) == typeid(signed long int)) return "signed long int";
-      if (typeid(value) == typeid(unsigned long int)) return "unsigned long int";
+      if (typeid(value) == typeid(long int)) { return "long int"; }
+      if (typeid(value) == typeid(signed long int)) { return "signed long int"; }
+      if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #elif (CMP_SIZEOF_LONG == 8)
-      if (typeid(value) == typeid(long int)) return "long int";
-      if (typeid(value) == typeid(signed long int)) return "signed long int";
-      if (typeid(value) == typeid(unsigned long int)) return "unsigned long int";
+      if (typeid(value) == typeid(long int)) { return "long int"; }
+      if (typeid(value) == typeid(signed long int)) { return "signed long int"; }
+      if (typeid(value) == typeid(unsigned long int)) { return "unsigned long int"; }
 #endif
 
 
 #if (CMP_SIZEOF_LONG_LONG == 8)
-      if (typeid(value) == typeid(long long int)) return "long long int";
-      if (typeid(value) == typeid(signed long long int)) return "signed long long int";
-      if (typeid(value) == typeid(unsigned long long int)) return "unsigned long long int";
+      if (typeid(value) == typeid(long long int)) { return "long long int"; }
+      if (typeid(value) == typeid(signed long long int)) { return "signed long long int"; }
+      if (typeid(value) == typeid(unsigned long long int)) { return "unsigned long long int"; }
 #endif
-      if (typeid(value) == typeid(int64_t)) return "int64_t";
-      if (typeid(value) == typeid(uint64_t)) return "uint64_t";
+      if (typeid(value) == typeid(int64_t)) { return "int64_t"; }
+      if (typeid(value) == typeid(uint64_t)) { return "uint64_t"; }
 
-      if (typeid(value) == typeid(bool)) return "bool";
+      if (typeid(value) == typeid(bool)) { return "bool"; }
 
       // std::cout  << "Error: HDFTypeForPrimitive - Unknown Type: " << (typeid(value).name()) << std::endl;
       const char* name = typeid(value).name();
-      if (NULL != name && name[0] == 'l' ) {
+      if (NULL != name && name[0] == 'l' )
+      {
         std::cout << "You are using 'long int' as a type which is not 32/64 bit safe. Suggest you use one of the H5SupportTypes defined in <Common/H5SupportTypes.h> such as int32_t or uint32_t." << std::endl;
       }
       return "UnknownType";
@@ -600,8 +604,8 @@ class GbcdDataArray : public IDataArray
      * @param volDims
      * @return
      */
-    virtual int writeXdmfAttribute(std::ostream &out, int64_t* volDims, const std::string &hdfFileName, const std::string &groupPath,
-    const std::string &label)
+    virtual int writeXdmfAttribute(std::ostream& out, int64_t* volDims, const std::string& hdfFileName, const std::string& groupPath,
+                                   const std::string& label)
     {
       int err = -1;
       return err;
@@ -629,18 +633,18 @@ class GbcdDataArray : public IDataArray
       }
       ptr->GetGbcdDimension(this->m_Dims);
       this->Size = p->GetSize();
-      this->MaxId = (Size == 0) ? 0 : Size -1;
+      this->MaxId = (Size == 0) ? 0 : Size - 1;
       this->Array = reinterpret_cast<T*>(p->GetVoidPointer(0));
       p->releaseOwnership();
 
       return err;
     }
 
-   /**
-     * @brief operator []
-     * @param i
-     * @return
-     */
+    /**
+      * @brief operator []
+      * @param i
+      * @return
+      */
     inline T& operator[](size_t i)
     {
       BOOST_ASSERT(i < Size);
@@ -667,7 +671,7 @@ class GbcdDataArray : public IDataArray
       m_Dims[4] = dim4;
       Size = m_Dims[0] * m_Dims[1] * m_Dims[2] * m_Dims[3] * m_Dims[4];
 
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
 
@@ -689,7 +693,7 @@ class GbcdDataArray : public IDataArray
       m_Dims[3] = dims[3];
       m_Dims[4] = dims[4];
       Size = m_Dims[0] * m_Dims[1] * m_Dims[2] * m_Dims[3] * m_Dims[4];
-      MaxId = (Size > 0) ? Size - 1: Size;
+      MaxId = (Size > 0) ? Size - 1 : Size;
       //  MUD_FLAP_0 = MUD_FLAP_1 = MUD_FLAP_2 = MUD_FLAP_3 = MUD_FLAP_4 = MUD_FLAP_5 = 0xABABABABABABABABul;
     }
     /**
@@ -756,9 +760,9 @@ class GbcdDataArray : public IDataArray
       // OS X's realloc does not free memory if the new block is smaller.  This
       // is a very serious problem and causes huge amount of memory to be
       // wasted. Do not use realloc on the Mac.
-      bool dontUseRealloc=false;
+      bool dontUseRealloc = false;
 #if defined __APPLE__
-      dontUseRealloc=true;
+      dontUseRealloc = true;
 #endif
 
       // Allocate a new array if we DO NOT own the current array
@@ -796,7 +800,8 @@ class GbcdDataArray : public IDataArray
         }
 
         // Copy the data from the old array.
-        if (this->Array != NULL) {
+        if (this->Array != NULL)
+        {
           memcpy(newArray, this->Array, (newSize < this->Size ? newSize : this->Size) * sizeof(T));
         }
         // Free the old array
@@ -809,7 +814,7 @@ class GbcdDataArray : public IDataArray
       // This object has now allocated its memory and owns it.
       this->_ownsData = true;
 
-      this->MaxId = newSize-1;
+      this->MaxId = newSize - 1;
       this->m_IsAllocated = true;
       return this->Array;
     }

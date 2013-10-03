@@ -51,8 +51,8 @@
 //
 // -----------------------------------------------------------------------------
 VertexDataContainer::VertexDataContainer() :
-Observable(),
-m_NumVertexTuples(0)
+  Observable(),
+  m_NumVertexTuples(0)
 {
 
 }
@@ -75,7 +75,7 @@ DOES_DATASET_EXIST_DEFN(VertexDataContainer, EnsembleData)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void VertexDataContainer::addVertexData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -91,7 +91,7 @@ void VertexDataContainer::addVertexData(const std::string &name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::getVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -106,7 +106,7 @@ IDataArray::Pointer VertexDataContainer::getVertexData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::removeVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -151,7 +151,7 @@ int VertexDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::getFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -165,7 +165,7 @@ IDataArray::Pointer VertexDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void VertexDataContainer::addFieldData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -181,7 +181,7 @@ void VertexDataContainer::addFieldData(const std::string &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::removeFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -228,7 +228,7 @@ int VertexDataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 void VertexDataContainer::resizeFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
@@ -241,7 +241,7 @@ void VertexDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::getEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -255,7 +255,7 @@ IDataArray::Pointer VertexDataContainer::getEnsembleData(const std::string &name
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void VertexDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void VertexDataContainer::addEnsembleData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -271,7 +271,7 @@ void VertexDataContainer::addEnsembleData(const std::string &name, IDataArray::P
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer VertexDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer VertexDataContainer::removeEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -318,7 +318,7 @@ int VertexDataContainer::getNumEnsembleArrays()
 // -----------------------------------------------------------------------------
 void VertexDataContainer::resizeEnsembleDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;

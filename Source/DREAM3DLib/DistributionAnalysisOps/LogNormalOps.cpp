@@ -55,34 +55,34 @@ LogNormalOps::LogNormalOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+int LogNormalOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float avg = 0;
   float stddev = 0;
   if(data.size() > 1)
   {
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		avg = avg + log(data[i]);
-	  }
-	  avg = avg/float(data.size());
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		stddev = stddev + ((avg - log(data[i]))*(avg - log(data[i])));
-	  }
-	  stddev = stddev/float(data.size());
-	  stddev = sqrt(stddev);
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      avg = avg + log(data[i]);
+    }
+    avg = avg / float(data.size());
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      stddev = stddev + ((avg - log(data[i])) * (avg - log(data[i])));
+    }
+    stddev = stddev / float(data.size());
+    stddev = sqrt(stddev);
   }
   else if (data.size() == 1)
   {
-	  avg = data[0];
-	  stddev = 0;
+    avg = data[0];
+    stddev = 0;
   }
   else
   {
-	  avg = 0;
-	  stddev = 0;
+    avg = 0;
+    stddev = 0;
   }
   outputs->SetValue(0, avg);
   outputs->SetValue(1, stddev);
@@ -91,41 +91,41 @@ int LogNormalOps::calculateParameters(std::vector<float> &data, FloatArrayType::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int LogNormalOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;
   float stddev = 0;
   for(size_t i = 0; i < data.size(); i++)
   {
-	  avg = 0;
-	  stddev = 0;
-	  if(data[i].size() > 1)
-	  {	  
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			avg = avg + log(data[i][j]);
-		  }
-		  avg = avg/float(data[i].size());
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			stddev = stddev + ((avg - log(data[i][j]))*(avg - log(data[i][j])));
-		  }
-		  stddev = stddev/float(data[i].size());
-		  stddev = sqrt(stddev);
-	  }
-	  else if (data[i].size() == 1)
-	  {
-		  avg = data[i][0];
-		  stddev = 0;
-	  }
-	  else
-	  {
-		  avg = 0;
-		  stddev = 0;
-	  }
-	  outputs[0]->SetValue(i, avg);
-	  outputs[1]->SetValue(i, stddev);
+    avg = 0;
+    stddev = 0;
+    if(data[i].size() > 1)
+    {
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        avg = avg + log(data[i][j]);
+      }
+      avg = avg / float(data[i].size());
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        stddev = stddev + ((avg - log(data[i][j])) * (avg - log(data[i][j])));
+      }
+      stddev = stddev / float(data[i].size());
+      stddev = sqrt(stddev);
+    }
+    else if (data[i].size() == 1)
+    {
+      avg = data[i][0];
+      stddev = 0;
+    }
+    else
+    {
+      avg = 0;
+      stddev = 0;
+    }
+    outputs[0]->SetValue(i, avg);
+    outputs[1]->SetValue(i, stddev);
   }
   return err;
 }

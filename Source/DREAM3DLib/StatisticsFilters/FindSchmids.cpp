@@ -97,9 +97,9 @@ void FindSchmids::readFilterParameters(AbstractFilterParametersReader* reader, i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setLoadingDir( reader->readValue("LoadingDir", getLoadingDir() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -191,11 +191,11 @@ void FindSchmids::execute()
     m_OrientationOps[m_CrystalStructures[m_FieldPhases[i]]]->getSchmidFactorAndSS(crystalLoading[0], crystalLoading[1], crystalLoading[2], schmid, ss);
 
     m_Schmids[i] = schmid;
-    m_Poles[3*i] = int32_t(crystalLoading[0]*100);
-    m_Poles[3*i+1] = int32_t(crystalLoading[1]*100);
-    m_Poles[3*i+2] = int32_t(crystalLoading[2]*100);
+    m_Poles[3 * i] = int32_t(crystalLoading[0] * 100);
+    m_Poles[3 * i + 1] = int32_t(crystalLoading[1] * 100);
+    m_Poles[3 * i + 2] = int32_t(crystalLoading[2] * 100);
     m_SlipSystems[i] = ss;
   }
 
- notifyStatusMessage("FindSchmids Completed");
+  notifyStatusMessage("FindSchmids Completed");
 }

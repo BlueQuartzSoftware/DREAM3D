@@ -57,18 +57,18 @@ class FlattenImageImpl
       convBFactor(Bfactor),
       numComp(comp)
     {}
-    virtual ~FlattenImageImpl(){}
+    virtual ~FlattenImageImpl() {}
 
     void convert(size_t start, size_t end) const
     {
       for (size_t i = start; i < end; i++)
       {
-        m_FlatImageData[i] = int((m_ImageData[numComp*i] * convRFactor) + (m_ImageData[numComp*i+1] * convGFactor) + (m_ImageData[numComp*i+2] * convBFactor));
+        m_FlatImageData[i] = int((m_ImageData[numComp * i] * convRFactor) + (m_ImageData[numComp * i + 1] * convGFactor) + (m_ImageData[numComp * i + 2] * convBFactor));
       }
     }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       convert(r.begin(), r.end());
     }
@@ -136,9 +136,9 @@ void FlattenImage::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setFlattenMethod( reader->readValue("FlattenMethod", getFlattenMethod()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -220,9 +220,9 @@ void FlattenImage::execute()
   float Bfactor = 1.0;
   if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Average)
   {
-    Rfactor = 1.0/3.0;
-    Gfactor = 1.0/3.0;
-    Bfactor = 1.0/3.0;
+    Rfactor = 1.0 / 3.0;
+    Gfactor = 1.0 / 3.0;
+    Bfactor = 1.0 / 3.0;
   }
   else if (m_FlattenMethod == DREAM3D::FlattenImageMethod::Luminosity)
   {

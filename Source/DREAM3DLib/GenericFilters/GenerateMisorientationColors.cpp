@@ -64,10 +64,10 @@ GenerateMisorientationColors::GenerateMisorientationColors() :
   m_CrystalStructures(NULL),
   m_MisorientationColor(NULL)
 {
-  m_ReferenceAxis.x=0.0f;
-  m_ReferenceAxis.y=0.0f;
-  m_ReferenceAxis.z=1.0f;
-  m_ReferenceAngle=0.0f;
+  m_ReferenceAxis.x = 0.0f;
+  m_ReferenceAxis.y = 0.0f;
+  m_ReferenceAxis.z = 1.0f;
+  m_ReferenceAngle = 0.0f;
 
   setupFilterParameters();
 }
@@ -154,10 +154,10 @@ void GenerateMisorientationColors::dataCheck(bool preflight, size_t voxels, size
   GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -302, int32_t, Int32ArrayType,  voxels, 1)
   GET_PREREQ_DATA(m, DREAM3D, CellData, Quats, -303, float, FloatArrayType, voxels, 4)
 
-      typedef DataArray<unsigned int> XTalStructArrayType;
+  typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -304, unsigned int, XTalStructArrayType, ensembles, 1)
 
-      CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, 3)
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellData, MisorientationColor, uint8_t, UInt8ArrayType, 0, voxels, 3)
 }
 
 
@@ -231,7 +231,7 @@ void GenerateMisorientationColors::execute()
 
   QuatF* quats = reinterpret_cast<QuatF*>(m_Quats);
 
-  QuatF refQuat = {m_ReferenceAxis.x*sin(m_ReferenceAngle), m_ReferenceAxis.y*sin(m_ReferenceAngle), m_ReferenceAxis.z*sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
+  QuatF refQuat = {m_ReferenceAxis.x * sin(m_ReferenceAngle), m_ReferenceAxis.y * sin(m_ReferenceAngle), m_ReferenceAxis.z * sin(m_ReferenceAngle), cos(m_ReferenceAngle)};
   QuatF cellQuat = {0.0f, 0.0f, 0.0f, 1.0f};
   DREAM3D::Rgb argb = 0x00000000;
 
@@ -251,7 +251,8 @@ void GenerateMisorientationColors::execute()
     if(m_CrystalStructures[phase] != Ebsd::CrystalStructure::Cubic_High)
     {
       uint32_t idx = m_CrystalStructures[phase];
-      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure) {
+      if(idx == Ebsd::CrystalStructure::UnknownCrystalStructure)
+      {
         idx = 12;
       }
       notSupported->SetValue(idx, 1);
@@ -286,7 +287,7 @@ void GenerateMisorientationColors::execute()
     std::string msg("There were voxels with an unknown crystal symmetry due most likely being marked as a 'Bad Voxel'. These voxels have been colored black BUT black is a valid color for Misorientation coloring. Please understand this when visualizing your data.");
     notifyWarningMessage(msg, -500);
   }
-  
+
   /* Let the GUI know we are done with this filter */
   notifyStatusMessage("Complete");
 }

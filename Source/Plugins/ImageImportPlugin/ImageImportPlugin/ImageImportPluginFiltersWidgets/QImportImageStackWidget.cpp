@@ -65,8 +65,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-QImportImageStackWidget::QImportImageStackWidget(QWidget *parent) :
-QFilterWidget(parent)
+QImportImageStackWidget::QImportImageStackWidget(QWidget* parent) :
+  QFilterWidget(parent)
 {
 
   if ( getOpenDialogLastDirectory().isEmpty() )
@@ -105,7 +105,7 @@ QImportImageStackWidget::~QImportImageStackWidget()
 // -----------------------------------------------------------------------------
 QString QImportImageStackWidget::getFilterGroup()
 {
-    return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
+  return QString::fromStdString(DREAM3D::FilterGroups::GenericFilters);
 }
 
 // -----------------------------------------------------------------------------
@@ -123,8 +123,8 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
   filter->setRefFrameZDir( getRefFrameZDir() );
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -167,7 +167,7 @@ AbstractFilter::Pointer QImportImageStackWidget::getFilter(bool defaultValues)
 // -----------------------------------------------------------------------------
 QFilterWidget* QImportImageStackWidget::createDeepCopy()
 {
-  #if 0
+#if 0
   QFilterWidget* w = new QFilterWidget();
 
   bool ok = false;
@@ -175,8 +175,8 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
 
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-    .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-    .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -189,7 +189,7 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
   w->setEbsdFileList(fileList);
 
   return w;
-  #endif
+#endif
   return NULL;
 }
 
@@ -198,7 +198,8 @@ QFilterWidget* QImportImageStackWidget::createDeepCopy()
 // -----------------------------------------------------------------------------
 void QImportImageStackWidget::setWidgetListEnabled(bool b)
 {
-  foreach (QWidget* w, m_WidgetList) {
+  foreach (QWidget * w, m_WidgetList)
+  {
     w->setEnabled(b);
   }
 }
@@ -215,8 +216,8 @@ void QImportImageStackWidget::setupGui()
 
   QR3DFileCompleter* com = new QR3DFileCompleter(this, true);
   m_InputDir->setCompleter(com);
-  QObject::connect( com, SIGNAL(activated(const QString &)),
-           this, SLOT(on_m_InputDir_textChanged(const QString &)));
+  QObject::connect( com, SIGNAL(activated(const QString&)),
+                    this, SLOT(on_m_InputDir_textChanged(const QString&)));
 
   m_WidgetList << m_InputDir << m_InputDirBtn;
   m_WidgetList << m_FileExt << m_ErrorMessage << m_TotalDigits;
@@ -233,7 +234,7 @@ void QImportImageStackWidget::setupGui()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::writeOptions(QSettings &prefs)
+void QImportImageStackWidget::writeOptions(QSettings& prefs)
 {
   prefs.setValue("Filter_Name", "ImportImageStack");
   WRITE_STRING_SETTING(prefs, m_, InputDir)
@@ -281,7 +282,7 @@ void QImportImageStackWidget::writeOptions(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::readOptions(QSettings &prefs)
+void QImportImageStackWidget::readOptions(QSettings& prefs)
 {
   QString val;
   bool ok;
@@ -303,39 +304,39 @@ void QImportImageStackWidget::readOptions(QSettings &prefs)
   READ_CHECKBOX_SETTING(prefs, m_, StackLowToHigh, true)
   READ_CHECKBOX_SETTING(prefs, m_, StackHighToLow, false)
 
-    // ------------- Origin ----------------------------------
+  // ------------- Origin ----------------------------------
   {
-   QVariant p_Origin = prefs.value("Origin");
+    QVariant p_Origin = prefs.value("Origin");
 
-   FloatVec3Widget_t v3 = p_Origin.value<FloatVec3Widget_t>();
-   prefs.beginReadArray("Origin");
-   prefs.setArrayIndex(0);
-   v3.x = prefs.value("x", v3.x).toFloat(&ok);
-   xOrigin->setText(QString::number(v3.x));
-   prefs.setArrayIndex(1);
-   v3.y = prefs.value("y", v3.y).toFloat(&ok);
-   yOrigin->setText(QString::number(v3.y));
-   prefs.setArrayIndex(2);
-   v3.z = prefs.value("z", v3.z).toFloat(&ok);
-   zOrigin->setText(QString::number(v3.z));
-   prefs.endArray();
+    FloatVec3Widget_t v3 = p_Origin.value<FloatVec3Widget_t>();
+    prefs.beginReadArray("Origin");
+    prefs.setArrayIndex(0);
+    v3.x = prefs.value("x", v3.x).toFloat(&ok);
+    xOrigin->setText(QString::number(v3.x));
+    prefs.setArrayIndex(1);
+    v3.y = prefs.value("y", v3.y).toFloat(&ok);
+    yOrigin->setText(QString::number(v3.y));
+    prefs.setArrayIndex(2);
+    v3.z = prefs.value("z", v3.z).toFloat(&ok);
+    zOrigin->setText(QString::number(v3.z));
+    prefs.endArray();
   }
   // ------------- Resolution ----------------------------------
   {
-   QVariant p_Resolution = prefs.value("Resolution");
+    QVariant p_Resolution = prefs.value("Resolution");
 
-   FloatVec3Widget_t v3 = p_Resolution.value<FloatVec3Widget_t>();
-   prefs.beginReadArray("Resolution");
-   prefs.setArrayIndex(0);
-   v3.x = prefs.value("x", v3.x).toFloat(&ok);
-   xRes->setText(QString::number(v3.x));
-   prefs.setArrayIndex(1);
-   v3.y = prefs.value("y", v3.y).toFloat(&ok);
-   yRes->setText(QString::number(v3.y));
-   prefs.setArrayIndex(2);
-   v3.z = prefs.value("z", v3.z).toFloat(&ok);
-   zRes->setText(QString::number(v3.z));
-   prefs.endArray();
+    FloatVec3Widget_t v3 = p_Resolution.value<FloatVec3Widget_t>();
+    prefs.beginReadArray("Resolution");
+    prefs.setArrayIndex(0);
+    v3.x = prefs.value("x", v3.x).toFloat(&ok);
+    xRes->setText(QString::number(v3.x));
+    prefs.setArrayIndex(1);
+    v3.y = prefs.value("y", v3.y).toFloat(&ok);
+    yRes->setText(QString::number(v3.y));
+    prefs.setArrayIndex(2);
+    v3.z = prefs.value("z", v3.z).toFloat(&ok);
+    zRes->setText(QString::number(v3.z));
+    prefs.endArray();
   }
 }
 
@@ -364,9 +365,9 @@ bool QImportImageStackWidget::verifyPathExists(QString outFilePath, QLineEdit* l
 void QImportImageStackWidget::checkIOFiles()
 {
   if (true == this->verifyPathExists(m_InputDir->text(), this->m_InputDir))
-   {
-     m_findEbsdMaxSliceAndPrefix();
-   }
+  {
+    m_findEbsdMaxSliceAndPrefix();
+  }
 }
 
 // -----------------------------------------------------------------------------
@@ -391,7 +392,7 @@ void QImportImageStackWidget::on_m_InputDirBtn_clicked()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::on_m_InputDir_textChanged(const QString & text)
+void QImportImageStackWidget::on_m_InputDir_textChanged(const QString& text)
 {
   if (verifyPathExists(m_InputDir->text(), m_InputDir) )
   {
@@ -415,8 +416,8 @@ void QImportImageStackWidget::on_m_InputDir_textChanged(const QString & text)
 // -----------------------------------------------------------------------------
 Ebsd::RefFrameZDir QImportImageStackWidget::getRefFrameZDir()
 {
-  if (m_StackLowToHigh->isChecked()) return Ebsd::LowtoHigh;
-  if (m_StackHighToLow->isChecked()) return Ebsd::HightoLow;
+  if (m_StackLowToHigh->isChecked()) { return Ebsd::LowtoHigh; }
+  if (m_StackHighToLow->isChecked()) { return Ebsd::HightoLow; }
   return Ebsd::UnknownRefFrameZDirection;
 }
 
@@ -436,7 +437,7 @@ void QImportImageStackWidget::stackingOrderChanged(bool checked)
 void QImportImageStackWidget::on_m_ZEndIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-    emit parametersChanged();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -445,7 +446,7 @@ void QImportImageStackWidget::on_m_ZEndIndex_valueChanged(int value)
 void QImportImageStackWidget::on_m_ZStartIndex_valueChanged(int value)
 {
   m_generateExampleEbsdInputFile();
-    emit parametersChanged();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
@@ -453,14 +454,14 @@ void QImportImageStackWidget::on_m_ZStartIndex_valueChanged(int value)
 // -----------------------------------------------------------------------------
 void QImportImageStackWidget::on_m_TotalDigits_valueChanged(int value)
 {
-    m_generateExampleEbsdInputFile();
-      emit parametersChanged();
+  m_generateExampleEbsdInputFile();
+  emit parametersChanged();
 }
 
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::on_m_FileExt_textChanged(const QString &string)
+void QImportImageStackWidget::on_m_FileExt_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -469,7 +470,7 @@ void QImportImageStackWidget::on_m_FileExt_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::on_m_FileSuffix_textChanged(const QString &string)
+void QImportImageStackWidget::on_m_FileSuffix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -478,7 +479,7 @@ void QImportImageStackWidget::on_m_FileSuffix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void QImportImageStackWidget::on_m_FilePrefix_textChanged(const QString &string)
+void QImportImageStackWidget::on_m_FilePrefix_textChanged(const QString& string)
 {
   m_generateExampleEbsdInputFile();
   emit parametersChanged();
@@ -487,29 +488,29 @@ void QImportImageStackWidget::on_m_FilePrefix_textChanged(const QString &string)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<std::string> QImportImageStackWidget::generateFileList(int start, int end, bool &hasMissingFiles,
-                                               bool stackLowToHigh, QString filename)
+std::vector<std::string> QImportImageStackWidget::generateFileList(int start, int end, bool& hasMissingFiles,
+    bool stackLowToHigh, QString filename)
 {
   int index = 0;
   std::vector<std::string> fileList;
 
-  for (int i = 0; i < (end-start)+1; ++i)
+  for (int i = 0; i < (end - start) + 1; ++i)
+  {
+    if (stackLowToHigh)
     {
-      if (stackLowToHigh)
-      {
-         index = start + i;
-      }
-      else
-      {
-        index = end - i;
-      }
-      filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-          .arg(QString::number(index), m_TotalDigits->value(), '0')
-          .arg(m_FileSuffix->text()).arg(m_FileExt->text());
-      QString filePath = m_InputDir->text() + QDir::separator() + filename;
-      filePath = QDir::toNativeSeparators(filePath);
-      fileList.push_back(filePath.toStdString());
+      index = start + i;
     }
+    else
+    {
+      index = end - i;
+    }
+    filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
+               .arg(QString::number(index), m_TotalDigits->value(), '0')
+               .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+    QString filePath = m_InputDir->text() + QDir::separator() + filename;
+    filePath = QDir::toNativeSeparators(filePath);
+    fileList.push_back(filePath.toStdString());
+  }
   return fileList;
 }
 
@@ -522,8 +523,8 @@ void QImportImageStackWidget::m_generateExampleEbsdInputFile()
 {
 
   QString filename = QString("%1%2%3.%4").arg(m_FilePrefix->text())
-      .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
-      .arg(m_FileSuffix->text()).arg(m_FileExt->text());
+                     .arg(m_ZStartIndex->text(), m_TotalDigits->value(), '0')
+                     .arg(m_FileSuffix->text()).arg(m_FileExt->text());
   m_GeneratedFileNameExample->setText(filename);
 
   int start = m_ZStartIndex->value();
@@ -601,9 +602,9 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
 
   // Final check to make sure we have a valid file extension
   if (m_FileExt->text().isEmpty() == true)
-   {
+  {
     return;
-   }
+  }
 
   QString ext = "." + m_FileExt->text();
   QStringList filters;
@@ -633,8 +634,8 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
       QString fn = fi.baseName();
       std::string fns = fn.toStdString();
       int length =  fn.length();
-      digitEnd = length-1;
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      digitEnd = length - 1;
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         --digitEnd;
       }
@@ -648,14 +649,15 @@ void QImportImageStackWidget::m_findEbsdMaxSliceAndPrefix()
         fPrefix = fn.left(pos);
         pos += rx.matchedLength();
       }
-      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd]<='9')
+      while(digitEnd >= 0 && fn[digitEnd] >= '0' && fn[digitEnd] <= '9')
       {
         ++digitEnd;
       }
 
       if ( digitEnd - digitStart < minTotalDigits) { minTotalDigits = digitEnd - digitStart; }
       m_TotalDigits->setValue(minTotalDigits);
-      if (list.size() > 0) {
+      if (list.size() > 0)
+      {
         currValue = list.front().toInt(&ok);
         if (false == flag) { minSlice = currValue; flag = true;}
         if (currValue > maxSlice) { maxSlice = currValue; }

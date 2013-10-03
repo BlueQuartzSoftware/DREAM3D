@@ -42,7 +42,7 @@
 //
 // -----------------------------------------------------------------------------
 ArraySelectionExample::ArraySelectionExample() :
-AbstractFilter()
+  AbstractFilter()
 {
   setupFilterParameters();
 }
@@ -119,8 +119,8 @@ int ArraySelectionExample::writeFilterParameters(AbstractFilterParametersWriter*
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> selectedCellArrays,
-                                                    std::set<std::string> selectedFieldArrays,
-                                                    std::set<std::string> selectedEnsembleArrays)
+                                                       std::set<std::string> selectedFieldArrays,
+                                                       std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVoxelCellArrays = selectedCellArrays;
   m_SelectedVoxelFieldArrays = selectedFieldArrays;
@@ -131,10 +131,10 @@ void ArraySelectionExample::setVoxelSelectedArrayNames(std::set<std::string> sel
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+    std::set<std::string> selectedFaceArrays,
+    std::set<std::string> selectedEdgeArrays,
+    std::set<std::string> selectedFieldArrays,
+    std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedSurfaceMeshVertexArrays = selectedVertexArrays;
   m_SelectedSurfaceMeshFaceArrays = selectedFaceArrays;
@@ -147,8 +147,8 @@ void ArraySelectionExample::setSurfaceMeshSelectedArrayNames(std::set<std::strin
 //
 // -----------------------------------------------------------------------------
 void ArraySelectionExample::setSolidMeshSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                        std::set<std::string> selectedFaceArrays,
-                                                        std::set<std::string> selectedEdgeArrays)
+                                                           std::set<std::string> selectedFaceArrays,
+                                                           std::set<std::string> selectedEdgeArrays)
 {
   m_SelectedSolidMeshVertexArrays = selectedVertexArrays;
   m_SelectedSolidMeshFaceArrays = selectedFaceArrays;
@@ -209,5 +209,5 @@ void ArraySelectionExample::execute()
   /* Place all your code to execute your filter here. */
 
   /* Let the GUI know we are done with this filter */
-   notifyStatusMessage("Complete");
+  notifyStatusMessage("Complete");
 }

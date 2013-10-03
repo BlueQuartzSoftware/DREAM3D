@@ -27,8 +27,8 @@
 /* We are going to disable some warnings just to get a grip on all the warnings that get produced
 * during an MSVC build */
 #if defined (_MSC_VER) && defined (DREAM3D_DISABLE_MSVC_WARNINGS)
-#pragma warning(disable:4244) 
-#pragma warning(disable:4267) 
+#pragma warning(disable:4244)
+#pragma warning(disable:4267)
 #pragma warning(disable:4305)
 #endif
 

@@ -41,29 +41,29 @@
 class AppVersion
 {
   public:
-  AppVersion();
-  AppVersion(int majorNum, int minorNum, int patchNum);
+    AppVersion();
+    AppVersion(int majorNum, int minorNum, int patchNum);
 
-  AppVersion(const AppVersion&);
-  void operator=(const AppVersion&);
-  bool operator==(const AppVersion&);
-  bool operator>(const AppVersion&);
-  bool operator<(const AppVersion&);
+    AppVersion(const AppVersion&);
+    void operator=(const AppVersion&);
+    bool operator==(const AppVersion&);
+    bool operator>(const AppVersion&);
+    bool operator<(const AppVersion&);
 
-  virtual ~AppVersion();
+    virtual ~AppVersion();
 
-  int getMajorNum();
-  int getMinorNum();
-  int getPatchNum();
+    int getMajorNum();
+    int getMinorNum();
+    int getPatchNum();
 
-  void setMajorNum(int major);
-  void setMinorNum(int minor);
-  void setPatchNum(int patch);
+    void setMajorNum(int major);
+    void setMinorNum(int minor);
+    void setPatchNum(int patch);
 
   private:
-  int m_MajorNum;
-  int m_MinorNum;
-  int m_PatchNum;
+    int m_MajorNum;
+    int m_MinorNum;
+    int m_PatchNum;
 };
 
 #endif /* _AppVersion_H_ */

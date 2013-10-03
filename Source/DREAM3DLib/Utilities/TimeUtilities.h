@@ -43,9 +43,9 @@ namespace DREAM3D
 {
   inline QString convertMillisToHrsMinSecs(unsigned long long int millis)
   {
-    unsigned long long int Hours = millis / (1000*60*60);
-    unsigned long long intMinutes = (millis % (1000*60*60)) / (1000*60);
-    unsigned long long intSeconds = ((millis % (1000*60*60)) % (1000*60)) / 1000;
+    unsigned long long int Hours = millis / (1000 * 60 * 60);
+    unsigned long long intMinutes = (millis % (1000 * 60 * 60)) / (1000 * 60);
+    unsigned long long intSeconds = ((millis % (1000 * 60 * 60)) % (1000 * 60)) / 1000;
     QString str;
     QTextStream ss(&str);
 

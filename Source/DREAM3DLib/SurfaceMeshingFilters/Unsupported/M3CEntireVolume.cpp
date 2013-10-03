@@ -48,14 +48,14 @@
 //
 // -----------------------------------------------------------------------------
 M3CEntireVolume::M3CEntireVolume() :
-AbstractFilter(),
-m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
-m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
-m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_AddSurfaceLayer(true),
-m_GrainIds(NULL),
-m_SurfaceMeshNodeType(NULL)
+  AbstractFilter(),
+  m_SurfaceMeshEdgesArrayName(DREAM3D::CellData::SurfaceMeshEdges),
+  m_SurfaceMeshInternalEdgesArrayName(DREAM3D::CellData::SurfaceMeshInternalEdges),
+  m_SurfaceMeshNodeTypeArrayName(DREAM3D::CellData::SurfaceMeshNodeType),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_AddSurfaceLayer(true),
+  m_GrainIds(NULL),
+  m_SurfaceMeshNodeType(NULL)
 {
   setupFilterParameters();
 }
@@ -73,14 +73,14 @@ M3CEntireVolume::~M3CEntireVolume()
 void M3CEntireVolume::setupFilterParameters()
 {
   FilterParameterVector parameters;
-   {
-     FilterParameter::Pointer option = FilterParameter::New();
-     option->setHumanLabel("Add Surface Layer");
-     option->setPropertyName("AddSurfaceLayer");
-     option->setWidgetType(FilterParameter::BooleanWidget);
-     option->setValueType("bool");
-     parameters.push_back(option);
-   }
+  {
+    FilterParameter::Pointer option = FilterParameter::New();
+    option->setHumanLabel("Add Surface Layer");
+    option->setPropertyName("AddSurfaceLayer");
+    option->setWidgetType(FilterParameter::BooleanWidget);
+    option->setValueType("bool");
+    parameters.push_back(option);
+  }
   setFilterParameters(parameters);
 }
 
@@ -122,10 +122,11 @@ void M3CEntireVolume::dataCheck(bool preflight, size_t voxels, size_t fields, si
   SurfaceMeshDataContainer* sm = getSurfaceMeshDataContainer();
   if (NULL == sm)
   {
-      addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
-      setErrorCondition(-384);
+    addErrorMessage(getHumanLabel(), "SurfaceMeshDataContainer is missing", -383);
+    setErrorCondition(-384);
   }
-  else {
+  else
+  {
     StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshNodes);
     StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles = StructArray<SurfaceMesh::DataStructures::Face_t>::CreateArray(1, DREAM3D::CellData::SurfaceMeshTriangles);
     StructArray<Segment>::Pointer faceEdges = StructArray<Segment>::CreateArray(1, DREAM3D::CellData::SurfaceMeshEdges);
@@ -213,49 +214,51 @@ void M3CEntireVolume::execute()
 // -----------------------------------------------------------------------------
 static int edgeTable_2d[20][8] =
 {
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 2, -1, -1, -1, -1, -1, -1 },
-{ 1, 2, -1, -1, -1, -1, -1, -1 },
-{ 0, 4, 2, 4, 1, 4, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 3, 0, -1, -1, -1, -1, -1, -1 },
-{ 3, 1, -1, -1, -1, -1, -1, -1 },
-{ 3, 4, 0, 4, 1, 4, -1, -1 },
-{ 2, 3, -1, -1, -1, -1, -1, -1 },
-{ 3, 4, 0, 4, 2, 4, -1, -1 },
-{ 3, 4, 1, 4, 2, 4, -1, -1 },
-{ 3, 0, 1, 2, -1, -1, -1, -1 },
-{ 0, 1, 2, 3, -1, -1, -1, -1 },
-{ 0, 1, 2, 3, -1, -1, -1, -1 },
-{ 3, 0, 1, 2, -1, -1, -1, -1 },
-{ 3, 4, 1, 4, 0, 4, 2, 4 } };
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 0, 1, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 0, 2, -1, -1, -1, -1, -1, -1 },
+  { 1, 2, -1, -1, -1, -1, -1, -1 },
+  { 0, 4, 2, 4, 1, 4, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 3, 0, -1, -1, -1, -1, -1, -1 },
+  { 3, 1, -1, -1, -1, -1, -1, -1 },
+  { 3, 4, 0, 4, 1, 4, -1, -1 },
+  { 2, 3, -1, -1, -1, -1, -1, -1 },
+  { 3, 4, 0, 4, 2, 4, -1, -1 },
+  { 3, 4, 1, 4, 2, 4, -1, -1 },
+  { 3, 0, 1, 2, -1, -1, -1, -1 },
+  { 0, 1, 2, 3, -1, -1, -1, -1 },
+  { 0, 1, 2, 3, -1, -1, -1, -1 },
+  { 3, 0, 1, 2, -1, -1, -1, -1 },
+  { 3, 4, 1, 4, 0, 4, 2, 4 }
+};
 
 static int nsTable_2d[20][8] =
 {
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, -1, -1, -1, -1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, -1, -1, -1, -1, -1, -1, },
-{ 2, 1, -1, -1, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, 2, 1, -1, -1 },
-{ -1, -1, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, 1, 0, 2, 1, -1, -1 },
-{ 3, 2, -1, -1, -1, -1, -1, -1 },
-{ 0, 3, 1, 0, 3, 2, -1, -1 },
-{ 0, 3, 2, 1, 3, 2, -1, -1 },
-{ 0, 3, 2, 1, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, -1, -1, -1, -1 },
-{ 1, 0, 3, 2, -1, -1, -1, -1 },
-{ 0, 3, 2, 1, -1, -1, -1, -1 },
-{ 0, 3, 2, 1, 1, 0, 3, 2 } };
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 1, 0, -1, -1, -1, -1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 1, 0, -1, -1, -1, -1, -1, -1, },
+  { 2, 1, -1, -1, -1, -1, -1, -1 },
+  { 1, 0, 3, 2, 2, 1, -1, -1 },
+  { -1, -1, -1, -1, -1, -1, -1, -1 },
+  { 0, 3, -1, -1, -1, -1, -1, -1 },
+  { 0, 3, -1, -1, -1, -1, -1, -1 },
+  { 0, 3, 1, 0, 2, 1, -1, -1 },
+  { 3, 2, -1, -1, -1, -1, -1, -1 },
+  { 0, 3, 1, 0, 3, 2, -1, -1 },
+  { 0, 3, 2, 1, 3, 2, -1, -1 },
+  { 0, 3, 2, 1, -1, -1, -1, -1 },
+  { 1, 0, 3, 2, -1, -1, -1, -1 },
+  { 1, 0, 3, 2, -1, -1, -1, -1 },
+  { 0, 3, 2, 1, -1, -1, -1, -1 },
+  { 0, 3, 2, 1, 1, 0, 3, 2 }
+};
 
 // Functions...
 
@@ -283,7 +286,7 @@ int M3CEntireVolume::createMesh()
   m->getDimensions(dims);
 
   size_t fileDim[3] = {dims[0], dims[1], dims[2]};
-  size_t posDim[3] = {fileDim[0] + 1,fileDim[1] + 1, fileDim[2] + 1};
+  size_t posDim[3] = {fileDim[0] + 1, fileDim[1] + 1, fileDim[2] + 1};
 
 
   if(m_AddSurfaceLayer)
@@ -300,7 +303,7 @@ int M3CEntireVolume::createMesh()
 
   //Copy the data from the m_GrainIds Array into the "Voxel" Struct
   // Add a complete layer of surface voxels
-  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints+1, DREAM3D::CellData::SurfaceMeshVoxels);
+  DataArray<int32_t>::Pointer point = DataArray<int32_t>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMeshVoxels);
   point->initializeWithZeros();
 
   StructArray<VoxelCoord>::Pointer voxelCoords = StructArray<VoxelCoord>::CreateArray(totalPoints + 1, DREAM3D::CellData::SurfaceMeshVoxelCoords);
@@ -316,12 +319,12 @@ int M3CEntireVolume::createMesh()
 
   StructArray<Neighbor>::Pointer neighbors = StructArray<Neighbor>::CreateArray(NS + 1, DREAM3D::CellData::SurfaceMeshNeighbors);
   neighbors->initializeWithZeros();
-  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3*NS, DREAM3D::CellData::SurfaceMeshFaces);
+  StructArray<Face>::Pointer squares = StructArray<Face>::CreateArray(3 * NS, DREAM3D::CellData::SurfaceMeshFaces);
   squares->initializeWithZeros();
-  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodes);
+  StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer nodesPtr = StructArray<SurfaceMesh::DataStructures::Vert_t>::CreateArray(7 * NS, DREAM3D::CellData::SurfaceMeshNodes);
   nodesPtr->initializeWithZeros();
 
-  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7*NS, DREAM3D::CellData::SurfaceMeshNodeType);
+  DataArray<int8_t>::Pointer nodeKindPtr = DataArray<int8_t>::CreateArray(7 * NS, DREAM3D::CellData::SurfaceMeshNodeType);
   nodeKindPtr->initializeWithValues(0);
   m_SurfaceMeshNodeType = nodeKindPtr->GetPointer(0);
 
@@ -344,7 +347,8 @@ int M3CEntireVolume::createMesh()
 
   notifyStatusMessage("\nCounting number of total edges turned on...\n");
   nFEdge = get_number_fEdges(square, point, neigh, edgeTable_2d, NS);
-  ss.str(""); ss << "total number of face edges = " << nFEdge;
+  ss.str("");
+  ss << "total number of face edges = " << nFEdge;
   notifyStatusMessage(ss.str());
 
   // memory allocation for face edges...
@@ -398,7 +402,7 @@ int M3CEntireVolume::createMesh()
   arrange_spins(point, voxCoords, triangle, vertex, nTriangle, fileDim[0], NSP);
 
   notifyStatusMessage("\nAssigning new node IDs...\n");
-  DataArray<int32_t>::Pointer new_ids_for_nodes = DataArray<int32_t>::CreateArray(7*NS, 1, "NewIds_For_Nodes");
+  DataArray<int32_t>::Pointer new_ids_for_nodes = DataArray<int32_t>::CreateArray(7 * NS, 1, "NewIds_For_Nodes");
   new_ids_for_nodes->initializeWithValues(-1);
 
   nNodes = assign_new_nodeID(vertex, new_ids_for_nodes, NS);
@@ -431,75 +435,75 @@ int M3CEntireVolume::createMesh()
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Pointer new_ids_for_nodes,
-                                                                 DataArray<int8_t>::Pointer nodeKindPtr,
-                                                                StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer shortNodes,
-                                                                StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices,
-                                                                StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles,
-                                                                StructArray<Segment>::Pointer faceEdges,
-                                                                StructArray<ISegment>::Pointer internalEdges,
-                                                                int maxGrainId)
+                                                         DataArray<int8_t>::Pointer nodeKindPtr,
+                                                         StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer shortNodes,
+                                                         StructArray<SurfaceMesh::DataStructures::Vert_t>::Pointer vertices,
+                                                         StructArray<SurfaceMesh::DataStructures::Face_t>::Pointer triangles,
+                                                         StructArray<Segment>::Pointer faceEdges,
+                                                         StructArray<ISegment>::Pointer internalEdges,
+                                                         int maxGrainId)
 {
 
-    Node* nodes = shortNodes->GetPointer(0);
-    Node* v = vertices->GetPointer(0);
-    Triangle* t = triangles->GetPointer(0);
-    Segment* e = faceEdges->GetPointer(0);
-    ISegment* ie = internalEdges->GetPointer(0);
+  Node* nodes = shortNodes->GetPointer(0);
+  Node* v = vertices->GetPointer(0);
+  Triangle* t = triangles->GetPointer(0);
+  Segment* e = faceEdges->GetPointer(0);
+  ISegment* ie = internalEdges->GetPointer(0);
 
-    // Update the triangles with the new node ids (Which are offsets into an array of Node structs
-    size_t numTri = triangles->GetNumberOfTuples();
-    for(size_t i = 0; i < numTri; ++i)
+  // Update the triangles with the new node ids (Which are offsets into an array of Node structs
+  size_t numTri = triangles->GetNumberOfTuples();
+  for(size_t i = 0; i < numTri; ++i)
+  {
+    Triangle& tri = t[i];
+    tri.node_id[0] = new_ids_for_nodes->GetValue(tri.node_id[0]);
+    tri.node_id[1] = new_ids_for_nodes->GetValue(tri.node_id[1]);
+    tri.node_id[2] = new_ids_for_nodes->GetValue(tri.node_id[2]);
+    // Reset the MaxGrainId back to Zero to 'recover' those grains
+    if (tri.nSpin[0] == maxGrainId) { tri.nSpin[0] = 0; }
+    if (tri.nSpin[1] == maxGrainId) { tri.nSpin[1] = 0; }
+  }
+
+  // Update the Edges with teh new nodes ids
+  size_t numEdges = faceEdges->GetNumberOfTuples();
+  for(size_t i = 0; i < numEdges; ++i)
+  {
+    Segment& seg = e[i];
+    seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
+    seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
+    // Reset the MaxGrainId back to Zero to 'recover' those grains
+    if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+    if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
+  }
+
+  size_t numIEdges = internalEdges->GetNumberOfTuples();
+  for(size_t i = 0; i < numIEdges; ++i)
+  {
+    ISegment& seg = ie[i];
+    seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
+    seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
+    // Reset the MaxGrainId back to Zero to 'recover' those grains
+    if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
+    if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
+    if (seg.nSpin[2] == maxGrainId) { seg.nSpin[2] = 0; }
+    if (seg.nSpin[3] == maxGrainId) { seg.nSpin[3] = 0; }
+  }
+
+  size_t numNodes = vertices->GetNumberOfTuples();
+
+  int32_t* nodeNewIds = new_ids_for_nodes->GetPointer(0);
+  int offset = -1;
+  for(size_t i = 0; i < numNodes; ++i)
+  {
+    offset = nodeNewIds[i];
+    if (offset != -1)
     {
-        Triangle& tri = t[i];
-        tri.node_id[0] = new_ids_for_nodes->GetValue(tri.node_id[0]);
-        tri.node_id[1] = new_ids_for_nodes->GetValue(tri.node_id[1]);
-        tri.node_id[2] = new_ids_for_nodes->GetValue(tri.node_id[2]);
-        // Reset the MaxGrainId back to Zero to 'recover' those grains
-        if (tri.nSpin[0] == maxGrainId) { tri.nSpin[0] = 0; }
-        if (tri.nSpin[1] == maxGrainId) { tri.nSpin[1] = 0; }
-    }
-
-    // Update the Edges with teh new nodes ids
-    size_t numEdges = faceEdges->GetNumberOfTuples();
-    for(size_t i = 0; i < numEdges; ++i)
-    {
-      Segment& seg = e[i];
-      seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
-      seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
-      // Reset the MaxGrainId back to Zero to 'recover' those grains
-      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
-      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
-    }
-
-    size_t numIEdges = internalEdges->GetNumberOfTuples();
-    for(size_t i = 0; i < numIEdges; ++i)
-    {
-      ISegment& seg = ie[i];
-      seg.node_id[0] = new_ids_for_nodes->GetValue(seg.node_id[0]);
-      seg.node_id[1] = new_ids_for_nodes->GetValue(seg.node_id[1]);
-      // Reset the MaxGrainId back to Zero to 'recover' those grains
-      if (seg.nSpin[0] == maxGrainId) { seg.nSpin[0] = 0; }
-      if (seg.nSpin[1] == maxGrainId) { seg.nSpin[1] = 0; }
-      if (seg.nSpin[2] == maxGrainId) { seg.nSpin[2] = 0; }
-      if (seg.nSpin[3] == maxGrainId) { seg.nSpin[3] = 0; }
-    }
-
-    size_t numNodes = vertices->GetNumberOfTuples();
-
-    int32_t* nodeNewIds = new_ids_for_nodes->GetPointer(0);
-    int offset = -1;
-    for(size_t i = 0; i < numNodes; ++i)
-    {
-      offset = nodeNewIds[i];
-      if (offset != -1)
-      {
-        nodeKindPtr->SetValue(offset, m_SurfaceMeshNodeType[i]);
+      nodeKindPtr->SetValue(offset, m_SurfaceMeshNodeType[i]);
 //        nodes[offset].nodeKind = v[i].nodeKind;
-        nodes[offset].coord[0] = v[i].coord[0];
-        nodes[offset].coord[1] = v[i].coord[1];
-        nodes[offset].coord[2] = v[i].coord[2];
-      }
+      nodes[offset].coord[0] = v[i].coord[0];
+      nodes[offset].coord[1] = v[i].coord[1];
+      nodes[offset].coord[2] = v[i].coord[2];
     }
+  }
 }
 
 
@@ -507,9 +511,9 @@ void M3CEntireVolume::generate_update_nodes_edges_array( DataArray<int32_t>::Poi
 //
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3], size_t fileDim[3],
-                                                             int32_t* grainIds,
-                                                             DataArray<int32_t>::Pointer points,
-                                                             VoxelCoord* point)
+                                                    int32_t* grainIds,
+                                                    DataArray<int32_t>::Pointer points,
+                                                    VoxelCoord* point)
 {
   int maxGrainId = 0;
   int32_t* p = points->GetPointer(0);
@@ -521,7 +525,7 @@ int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3]
     for (size_t i = 0; i < totalPoints; ++i)
     {
       p[i + 1] = grainIds[i];
-      if (p[i+1] > maxGrainId) { maxGrainId = p[i+1]; }
+      if (p[i + 1] > maxGrainId) { maxGrainId = p[i + 1]; }
     }
   }
   else
@@ -605,7 +609,7 @@ int M3CEntireVolume::initialize_micro_from_grainIds(size_t dims[3], float res[3]
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-voxel* M3CEntireVolume::initialize_micro_from_dx_file(int &xDim, int &yDim, int &zDim, double dx, double dy, double dz, const std::string ifn)
+voxel* M3CEntireVolume::initialize_micro_from_dx_file(int& xDim, int& yDim, int& zDim, double dx, double dy, double dz, const std::string ifn)
 {
   int i, j, k;
   int id;
@@ -739,26 +743,26 @@ void M3CEntireVolume::get_neighbor_list(Neighbor* n, int ns, int nsp, int xDim, 
 void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8])
 {
 
-  FILE *f1, *f2;
+  FILE* f1, *f2;
   int j, k, dummy;
 
   // Read edge and spin table in 2d for bound case...
-  if( (f1=fopen("edgeTable_2d_4_3dMesh.txt", "r")) == NULL)
+  if( (f1 = fopen("edgeTable_2d_4_3dMesh.txt", "r")) == NULL)
   {
     printf("\nThe input file doesn't exist!\n");
     exit(1);
   }
-  if( (f2=fopen("neighspinTable_2d_4_3dMesh.txt", "r")) == NULL)
+  if( (f2 = fopen("neighspinTable_2d_4_3dMesh.txt", "r")) == NULL)
   {
     printf("\nThe input file doesn't exist!\n");
     exit(1);
   }
   // reading edges and spins...
-  for(j=0; j<20; j++)
+  for(j = 0; j < 20; j++)
   {
     fscanf(f1, "%d", &dummy);
     fscanf(f2, "%d", &dummy);
-    for(k=0; k<8; k++)
+    for(k = 0; k < 8; k++)
     {
       fscanf(f1, "%d", &eT2d[j][k]);
       fscanf(f2, "%d", &nsT2d[j][k]);
@@ -774,8 +778,8 @@ void read_edge_neighspin_table(int eT2d[20][8], int nsT2d[20][8])
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::initialize_nodes(VoxelCoord* p,
-                                               Node* v,
-                                               int ns, float dx, float dy, float dz)
+                                       Node* v,
+                                       int ns, float dx, float dy, float dz)
 {
   // this function finds the coordinates of possible nodes...
   int i;
@@ -804,14 +808,14 @@ void M3CEntireVolume::initialize_nodes(VoxelCoord* p,
     v[id + 1].coord[0] = tx;
     v[id + 1].coord[1] = ty + halfdy;
     v[id + 1].coord[2] = tz;
-    m_SurfaceMeshNodeType[id+1] = 0;
+    m_SurfaceMeshNodeType[id + 1] = 0;
 //    v[id + 1].newID = -1;
 
     v[id + 2].coord[0] = tx;
     v[id + 2].coord[1] = ty;
     v[id + 2].coord[2] = tz + halfdz;
     m_SurfaceMeshNodeType[id + 2] = 0;
- //   v[id + 2].newID = -1;
+//   v[id + 2].newID = -1;
 
     v[id + 3].coord[0] = tx + halfdx;
     v[id + 3].coord[1] = ty + halfdy;
@@ -835,7 +839,7 @@ void M3CEntireVolume::initialize_nodes(VoxelCoord* p,
     v[id + 6].coord[1] = ty + halfdy;
     v[id + 6].coord[2] = tz + halfdz;
     m_SurfaceMeshNodeType[id + 6] = 0;
- //   v[id + 6].newID = -1;
+//   v[id + 6].newID = -1;
     /*
      printf("\n%10d %5.2f %5.2f %5.2f\n", i, tx, ty, tz);
      printf("%10d %5.2f %5.2f %5.2f\n", id,   v[id].coord[0], v[id].coord[1], v[id].coord[2]);
@@ -854,8 +858,8 @@ void M3CEntireVolume::initialize_nodes(VoxelCoord* p,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::initialize_squares(Neighbor* n,
-                                                 Face* sq,
-                                                 int ns, int nsp)
+                                         Face* sq,
+                                         int ns, int nsp)
 {
 
 
@@ -916,9 +920,9 @@ void M3CEntireVolume::initialize_squares(Neighbor* n,
 //
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_number_fEdges(Face* sq,
-                                               DataArray<int32_t>::Pointer points,
-                                               Neighbor* n,
-                                               int eT2d[20][8], int ns)
+                                       DataArray<int32_t>::Pointer points,
+                                       Neighbor* n,
+                                       int eT2d[20][8], int ns)
 {
   int32_t* p = points->GetPointer(0);
 
@@ -933,7 +937,8 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
   sumEdge = 0;
   // There are 3*ns squares in total...
   for (k = 0; k < (3 * ns); k++)
-  { // for each square...
+  {
+    // for each square...
     // for the first node of each square, get site, spin and 4 sites of the square...
     csite = sq[k].site_id[0];
     cspin = p[csite];
@@ -944,7 +949,8 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
 
     atBulk = 0;
     for (m = 0; m < 4; m++)
-    { // if one of the corners of each square is - value,
+    {
+      // if one of the corners of each square is - value,
       tsite = tnsite[m]; // mark the square as atSurface --> atBulk = 1
       tnspin[m] = p[tsite];
       if(tnspin[m] < 0)
@@ -960,7 +966,8 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
 
     // Let's count the number of edges...
     if(atBulk != 4)
-    { // consider the effective square only...
+    {
+      // consider the effective square only...
 
       sqIndex = get_square_index(tnspin);
       // correction for anormal case...
@@ -986,12 +993,14 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
       {
         // Let's treat special cases for surface of the materials...
         if(atBulk == 3)
-        { // 3 negative spins, ex, -4, -4, -3, 1 = corners and edges of microstructure
+        {
+          // 3 negative spins, ex, -4, -4, -3, 1 = corners and edges of microstructure
           numCEdge = 2; // get rid of one edge...
           //printf("%5d  %3d %3d %3d %3d\n", 3, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
         }
         else if(atBulk == 2)
-        { // 2 negative spins and 2 different positive spin, ex, -4, -4, 1, 2
+        {
+          // 2 negative spins and 2 different positive spin, ex, -4, -4, 1, 2
           numCEdge = 3; // = faces of microstructure, all will be used...
           //printf("%5d  %3d %3d %3d %3d\n", 2, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
         }
@@ -1000,7 +1009,8 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
           notifyErrorMessage("one negative spin case is not supposed to happen! Wrong!", -1001);
         }
         else
-        { // positive spins only...normal case!
+        {
+          // positive spins only...normal case!
           numCEdge = 3;
         }
       }
@@ -1020,15 +1030,15 @@ int M3CEntireVolume::get_number_fEdges(Face* sq,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_nodes_fEdges(Face* sq,
-                                               DataArray<int32_t>::Pointer points,
-                                               Neighbor* n,
-                                               Node* v,
-                                               Segment* e,
-                                               int eT2d[20][8],
-                                               int nsT2d[20][8],
-                                               int ns,
-                                               int nsp,
-                                               int xDim)
+                                       DataArray<int32_t>::Pointer points,
+                                       Neighbor* n,
+                                       Node* v,
+                                       Segment* e,
+                                       int eT2d[20][8],
+                                       int nsT2d[20][8],
+                                       int ns,
+                                       int nsp,
+                                       int xDim)
 {
   int32_t* p = points->GetPointer(0);
   int j, k, m, ii;
@@ -1048,7 +1058,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
   eid = 0;
 
   for (k = 0; k < (3 * ns); k++)
-  { // for each square...
+  {
+    // for each square...
 
     cubeOrigin = k / 3 + 1;
     sqOrder = k % 3;
@@ -1075,7 +1086,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
 
     // Let's find the edges...
     if(atBulk != 4)
-    { // consider the square inside the bulk only...
+    {
+      // consider the square inside the bulk only...
 
       sqIndex = get_square_index(tnspin);
       // correction for anormal case...
@@ -1117,8 +1129,8 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
             {
               tn1 = nodeID[0];
               tn2 = nodeID[1];
-              assert(nodeID[0] < ns*7);
-              assert(nodeID[1] < ns*7);
+              assert(nodeID[0] < ns * 7);
+              assert(nodeID[1] < ns * 7);
               m_SurfaceMeshNodeType[tn1] = DREAM3D::SurfaceMesh::NodeType::Unused;// extra nodes from meshing the surface o f the box...
               m_SurfaceMeshNodeType[tn2] = DREAM3D::SurfaceMesh::NodeType::Unused; // we don't need them...
             }
@@ -1160,7 +1172,7 @@ void M3CEntireVolume::get_nodes_fEdges(Face* sq,
                 tnk = m_SurfaceMeshNodeType[tnode];
                 if(tnk != -1)
                 {
-                   m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
+                  m_SurfaceMeshNodeType[tnode] = DREAM3D::SurfaceMesh::NodeType::Default;
                 }
                 //printf("atBulk = %d and nk = %d  %3d %3d %3d %3d\n", atBulk, 2, tnspin[0], tnspin[1], tnspin[2], tnspin[3]);
               }
@@ -1258,9 +1270,9 @@ int M3CEntireVolume::get_square_index(int tns[4])
 //
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::treat_anomaly(int tnst[4],
-                                           DataArray<int32_t>::Pointer points,
-                                           Neighbor* n1,
-                                           int sqid)
+                                   DataArray<int32_t>::Pointer points,
+                                   Neighbor* n1,
+                                   int sqid)
 {
   int32_t* p1 = points->GetPointer(0);
 
@@ -1344,7 +1356,8 @@ int M3CEntireVolume::treat_anomaly(int tnst[4],
     tempFlag = 0;
   }
   else if(minid == 1 || minid == 3)
-  { // we can reverse this...let's try this later...
+  {
+    // we can reverse this...let's try this later...
     tempFlag = 0;
   }
   else
@@ -1358,7 +1371,7 @@ int M3CEntireVolume::treat_anomaly(int tnst[4],
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp1, int xDim1)
+void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int* nid, int nsp1, int xDim1)
 {
 
   int ii;
@@ -1370,7 +1383,8 @@ void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp
     tempIndex = nidx[ii];
 
     if(ord == 0)
-    { // if the square index is 0 for corner site...
+    {
+      // if the square index is 0 for corner site...
 
       switch(tempIndex)
       {
@@ -1393,7 +1407,8 @@ void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp
 
     }
     else if(ord == 1)
-    { // if the square index is 1...
+    {
+      // if the square index is 1...
 
       switch(tempIndex)
       {
@@ -1416,7 +1431,8 @@ void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp
 
     }
     else
-    { // if the square index is 2...
+    {
+      // if the square index is 2...
 
       switch(tempIndex)
       {
@@ -1448,7 +1464,7 @@ void M3CEntireVolume::get_nodes(int cst, int ord, int nidx[2], int *nid, int nsp
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::get_spins(DataArray<int32_t>::Pointer points, int cst, int ord, int pID[2], int *pSpin, int nsp1, int xDim1)
+void M3CEntireVolume::get_spins(DataArray<int32_t>::Pointer points, int cst, int ord, int pID[2], int* pSpin, int nsp1, int xDim1)
 {
   int32_t* p1 = points->GetPointer(0);
 
@@ -1546,12 +1562,12 @@ void M3CEntireVolume::get_spins(DataArray<int32_t>::Pointer points, int cst, int
 //
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
-                                                  Face* sq,
-                                                  Node* v,
-                                                  Segment* e,
-                                                  int ns,
-                                                  int nsp,
-                                                  int xDim)
+                                          Face* sq,
+                                          Node* v,
+                                          Segment* e,
+                                          int ns,
+                                          int nsp,
+                                          int xDim)
 {
   int32_t* p = points->GetPointer(0);
   std::stringstream ss;
@@ -1565,11 +1581,11 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
   int nFE; // number of face edges...
   int eff; // all the squares effective?...
   int cubeFlag; // if 1, we can do marching cube; if 0, useless...
-  int *arrayFE;
+  int* arrayFE;
   int arrayFC[6];
   int arraySpin[8];
- // arrayFC = (int *)malloc(6 * sizeof(int)); // stores face center node of each square. possible max = 6...
- // arraySpin = (int *)malloc(8 * sizeof(int)); // stores 8 corner spins for center node kind...
+// arrayFC = (int *)malloc(6 * sizeof(int)); // stores face center node of each square. possible max = 6...
+// arraySpin = (int *)malloc(8 * sizeof(int)); // stores 8 corner spins for center node kind...
 
   int tsqid1, tsqid2;
   int tsite1, tsite2, tspin1, tspin2;
@@ -1704,7 +1720,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
     }
     else if(nFE > 0 && nFE < 3)
     {
-     // printf("\t? cube id = %d, # face edges %d --> cannot form any loop!\n", i, nFE);
+      // printf("\t? cube id = %d, # face edges %d --> cannot form any loop!\n", i, nFE);
       // not supposed to happen. We have to ignore this case...
     }
     else if(nFE == 0)
@@ -1724,7 +1740,7 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
     if(cubeFlag == 1 && nFE > 2)
     {
       // Make face edge array for each marching cube...
-      arrayFE = (int *)malloc(nFE * sizeof(int));
+      arrayFE = (int*)malloc(nFE * sizeof(int));
       tindex = 0;
       for (i1 = 0; i1 < 6; i1++)
       {
@@ -1733,7 +1749,8 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
         if(tnfe != 0)
         {
           for (i2 = 0; i2 < tnfe; i2++)
-          { // make face edge array for the current marching cube...
+          {
+            // make face edge array for the current marching cube...
             arrayFE[tindex] = sq[tsq].edge_id[i2];
             tindex++;
           }
@@ -1747,7 +1764,8 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
 
       // Consider each case as Z. Wu's paper...
       if(nFC == 0)
-      { // when there's no face center, all the face edges forms one loop!
+      {
+        // when there's no face center, all the face edges forms one loop!
         //printf("\n%3d marching cubes at %3d = and case 0\n", tcount, i);
         //tcount++;
         nTri0 = nTri0 + get_number_case0_triangles(arrayFE, v, e, nFE);
@@ -1786,10 +1804,10 @@ int M3CEntireVolume::get_number_triangles(DataArray<int32_t>::Pointer points,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CEntireVolume::get_number_case0_triangles(int *afe,
-                                                        Node* v,
-                                                        Segment* e1,
-                                                        int nfedge)
+int M3CEntireVolume::get_number_case0_triangles(int* afe,
+                                                Node* v,
+                                                Segment* e1,
+                                                int nfedge)
 {
   std::stringstream ss;
   int ii, i, j, jj, k, kk, k1;
@@ -1803,12 +1821,12 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
   //  int start, end;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, numTri, tnumTri;
   //  int te, tn1, tn2;
 
@@ -1824,7 +1842,8 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
   head = 0;
 
   for (i = 0; i < nfedge; i++)
-  { // for face edges in each marching cubes...
+  {
+    // for face edges in each marching cubes...
 
     cedge = afe[i];
     bflag = burnt[i];
@@ -1885,12 +1904,14 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
             }
             // if 2 edges share same neighbor spins and contiguous...
             if(spinFlag == 1 && nodeFlag == 1)
-            { // update nedge to burnt_list and give proper loop id...
+            {
+              // update nedge to burnt_list and give proper loop id...
               head = head + 1;
               burnt_list[head] = nedge;
               burnt[j] = loopID;
               if(flip == 1)
-              { // why do we flip the nodes and spins?
+              {
+                // why do we flip the nodes and spins?
                 e1[nedge].nSpin[0] = nspin2;
                 e1[nedge].nSpin[1] = nspin1;
                 e1[nedge].node_id[0] = nnode2;
@@ -1928,7 +1949,7 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -1979,10 +2000,10 @@ int M3CEntireVolume::get_number_case0_triangles(int *afe,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CEntireVolume::get_number_case2_triangles(int *afe,
-                                                        Node* v1,
-                                                        Segment* e1,
-                                                        int nfedge, int *afc, int nfctr)
+int M3CEntireVolume::get_number_case2_triangles(int* afe,
+                                                Node* v1,
+                                                Segment* e1,
+                                                int nfedge, int* afc, int nfctr)
 {
 
   int ii, i, j, k, kk, k1, n, i1, j1;
@@ -1997,14 +2018,14 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
   int from, to;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, numTri;
-  int *burnt_loop;
+  int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
@@ -2125,7 +2146,7 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -2159,7 +2180,7 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
     to = to + numN;
     from = to - numN;
     //printf("%5d %5d   ", from, to);
-    burnt_loop = (int *)malloc((numN + 2) * sizeof(int));
+    burnt_loop = (int*)malloc((numN + 2) * sizeof(int));
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -2190,7 +2211,8 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
     //printf("   flip flag: %2d", flip);
     //printf("\n");
     if(openL == 1)
-    { // if current loop is an open loop...
+    {
+      // if current loop is an open loop...
 
       if(flip == 1)
       {
@@ -2262,7 +2284,8 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
 
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
+    {
+      // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
@@ -2331,10 +2354,10 @@ int M3CEntireVolume::get_number_case2_triangles(int *afe,
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int M3CEntireVolume::get_number_caseM_triangles(int *afe,
-                                                        Node* v,
-                                                        Segment* e1,
-                                                        int nfedge, int *afc, int nfctr)
+int M3CEntireVolume::get_number_caseM_triangles(int* afe,
+                                                Node* v,
+                                                Segment* e1,
+                                                int nfedge, int* afc, int nfctr)
 {
 
   int ii, i, j, k, kk, k1, n, i1, j1, n1;
@@ -2349,14 +2372,14 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
   int from, to;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, numTri;
-  int *burnt_loop;
+  int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
@@ -2475,7 +2498,7 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -2508,7 +2531,7 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
     to = to + numN;
     from = to - numN;
     //printf("%5d %5d   ", from, to);
-    burnt_loop = (int *)malloc((numN + 2) * sizeof(int));
+    burnt_loop = (int*)malloc((numN + 2) * sizeof(int));
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -2545,7 +2568,8 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
     //printf("   flip flag: %2d", flip);
     //printf("\n");
     if(openL == 1)
-    { // if current loop is an open loop...
+    {
+      // if current loop is an open loop...
 
       if(flip == 1)
       {
@@ -2616,7 +2640,8 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
 
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
+    {
+      // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
@@ -2685,15 +2710,15 @@ int M3CEntireVolume::get_number_caseM_triangles(int *afe,
 //
 // -----------------------------------------------------------------------------
 int M3CEntireVolume::get_triangles(VoxelCoord* p,
-                                           Triangle* t,
-                                           int* mCubeID,
-                                           Face* sq,
-                                           Node* v,
-                                           Segment* e,
-                                           Neighbor* n,
-                                           int ns,
-                                           int nsp,
-                                           int xDim)
+                                   Triangle* t,
+                                   int* mCubeID,
+                                   Face* sq,
+                                   Node* v,
+                                   Segment* e,
+                                   Neighbor* n,
+                                   int ns,
+                                   int nsp,
+                                   int xDim)
 {
   std::stringstream ss;
   int i, ii, i1, i2, k;
@@ -2706,7 +2731,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
   int eff; // all the squares effective?...
   int cubeFlag; // if 1, we can do marching cube; if 0, useless...
   int bodyCtr; // cube center node...
-  int *arrayFE;
+  int* arrayFE;
   int arrayFC[6];
 //  arrayFC = (int *)malloc(6 * sizeof(int));
   int fcid;
@@ -2795,7 +2820,7 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
         coord2[k] = p[i + 1 + xDim + nsp].coord[k];
       }
       // Make edge array for each marching cube...
-      arrayFE = (int *)malloc(nFE * sizeof(int));
+      arrayFE = (int*)malloc(nFE * sizeof(int));
       tindex = 0;
       for (i1 = 0; i1 < 6; i1++)
       {
@@ -2818,7 +2843,8 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
 
       // Consider each case as Z. Wu's paper...
       if(nFC == 0)
-      { // when there's no face center
+      {
+        // when there's no face center
         //printf("%5d ", tidIn);
         get_case0_triangles(t, mCubeID, arrayFE, v, e, nFE, tidIn, &tidOut, coord1, coord2, i);
         tidIn = tidOut;
@@ -2857,12 +2883,12 @@ int M3CEntireVolume::get_triangles(VoxelCoord* p,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_case0_triangles(Triangle* t1,
-                                            int* mCubeID,
-                                                  int *afe,
-                                                  Node* v1,
-                                                  Segment* e1,
-                                                  int nfedge, int tin, int *tout,
-                                                  double tcrd1[3], double tcrd2[3], int mcid)
+                                          int* mCubeID,
+                                          int* afe,
+                                          Node* v1,
+                                          Segment* e1,
+                                          int nfedge, int tin, int* tout,
+                                          double tcrd1[3], double tcrd2[3], int mcid)
 {
   int ii, i, j, jj, k, kk, k1, mm;
   int loopID;
@@ -2873,15 +2899,15 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
   int nucleus, chaser;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, sumN;
   int from;
-  int *loop;
+  int* loop;
   int ctid;
   int front, back;
   int ce;
@@ -3022,7 +3048,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -3051,7 +3077,7 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
     sumN = sumN + numN;
     from = sumN - numN;
 
-    loop = (int *)malloc(numN * sizeof(int));
+    loop = (int*)malloc(numN * sizeof(int));
 
     for (mm = 0; mm < numN; mm++)
     {
@@ -3226,12 +3252,12 @@ void M3CEntireVolume::get_case0_triangles(Triangle* t1,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
-                                                  int *afe, Node* v1,
-                                                  Segment* e1,
-                                                  int nfedge, int *afc, int nfctr,
-                                                  int tin, int *tout,
-                                                  double tcrd1[3], double tcrd2[3],
-                                                  int mcid)
+                                          int* afe, Node* v1,
+                                          Segment* e1,
+                                          int nfedge, int* afc, int nfctr,
+                                          int tin, int* tout,
+                                          double tcrd1[3], double tcrd2[3],
+                                          int mcid)
 {
 
   int ii, i, j, k, kk, k1, n, i1, j1;
@@ -3246,14 +3272,14 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
   int from, to;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, numTri;
-  int *burnt_loop;
+  int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
@@ -3395,7 +3421,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -3433,7 +3459,7 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = (int *)malloc(numN * sizeof(int));
+    burnt_loop = (int*)malloc(numN * sizeof(int));
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -3465,7 +3491,8 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
     //printf("\n");
 
     if(openL == 1)
-    { // if current loop is an open loop...
+    {
+      // if current loop is an open loop...
 
       if(flip == 1)
       {
@@ -3680,7 +3707,8 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
 
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
+    {
+      // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
@@ -3895,12 +3923,12 @@ void M3CEntireVolume::get_case2_triangles(Triangle* t1, int* mCubeID,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
-                                            int* mCubeID,
-                                                  int *afe,
-                                                  Node* v1,
-                                                  Segment* e1,
-                                                  int nfedge, int *afc, int nfctr, int tin,
-                                                  int *tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid)
+                                          int* mCubeID,
+                                          int* afe,
+                                          Node* v1,
+                                          Segment* e1,
+                                          int nfedge, int* afc, int nfctr, int tin,
+                                          int* tout, int ccn, double tcrd1[3], double tcrd2[3], int mcid)
 {
   int ii, i, j, k, kk, k1, n, i1, j1, n1, iii;
   int loopID;
@@ -3914,15 +3942,15 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
   int from, to;
   int spinFlag, nodeFlag, flip;
   int bflag, nbflag;
-  int *burnt;
-  int *burnt_list;
-  burnt = (int *)malloc(nfedge * sizeof(int));
-  burnt_list = (int *)malloc(nfedge * sizeof(int));
+  int* burnt;
+  int* burnt_list;
+  burnt = (int*)malloc(nfedge * sizeof(int));
+  burnt_list = (int*)malloc(nfedge * sizeof(int));
 
-  int *count;
+  int* count;
   int numN, numTri;
   int tn0, tn1;
-  int *burnt_loop;
+  int* burnt_loop;
   int openL; // if a loop is an open loop, it's 1; if closed, it's 0...
   int startEdge;
   int endNode;
@@ -4063,7 +4091,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
     }
   }
 
-  count = (int *)malloc(loopID * sizeof(int));
+  count = (int*)malloc(loopID * sizeof(int));
 
   for (k1 = 1; k1 < loopID; k1++)
   {
@@ -4096,7 +4124,7 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
     numN = count[j1];
     to = to + numN;
     from = to - numN;
-    burnt_loop = (int *)malloc(numN * sizeof(int));
+    burnt_loop = (int*)malloc(numN * sizeof(int));
 
     for (i1 = from; i1 < to; i1++)
     {
@@ -4130,7 +4158,8 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
     }
 
     if(openL == 1)
-    { // if current loop is an open loop...
+    {
+      // if current loop is an open loop...
 
       if(flip == 1)
       {
@@ -4225,7 +4254,8 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
 
     }
     else
-    { // if current loop is a closed one....i.e., openL = 0...
+    {
+      // if current loop is a closed one....i.e., openL = 0...
 
       startEdge = burnt_list[from];
       burnt_loop[0] = startEdge;
@@ -4438,15 +4468,15 @@ void M3CEntireVolume::get_caseM_triangles(Triangle* t1,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::find_edgePlace(double tvcrd1[3],
-                                             double tvcrd2[3],
-                                             double tvcrd3[3],
-                                             int tw[3],
-                                             double xh,
-                                             double xl,
-                                             double yh,
-                                             double yl,
-                                             double zh,
-                                             double zl)
+                                     double tvcrd2[3],
+                                     double tvcrd3[3],
+                                     int tw[3],
+                                     double xh,
+                                     double xl,
+                                     double yh,
+                                     double yl,
+                                     double zh,
+                                     double zl)
 {
 
   double txc, tyc, tzc;
@@ -4520,11 +4550,11 @@ void M3CEntireVolume::find_edgePlace(double tvcrd1[3],
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::update_triangle_sides_with_fedge(Triangle* t,
                                                        int* mCubeID,
-                                                               Segment* e,
-                                                               Face* sq,
-                                                               int nT,
-                                                               int xDim,
-                                                               int nsp)
+                                                       Segment* e,
+                                                       Face* sq,
+                                                       int nT,
+                                                       int xDim,
+                                                       int nsp)
 {
   int i, ii, i1, i2, j, k;
   int sqID[6];
@@ -4632,22 +4662,23 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, in
   // make inner edge array, including duplicates inside each marching cube...
   do
   {
-      //printf("triangle %5d    ", i);
-      cmcID = mCubeID[i];
-      if(i == (numT - 1))
-      {
-        nmcID = -1;
-      }
-      else
-      {
-        nmcID = mCubeID[i + 1];
-      }// Let's get out when it hits the last triangle...
+    //printf("triangle %5d    ", i);
+    cmcID = mCubeID[i];
+    if(i == (numT - 1))
+    {
+      nmcID = -1;
+    }
+    else
+    {
+      nmcID = mCubeID[i + 1];
+    }// Let's get out when it hits the last triangle...
     //printf("cmcID = %10d, nmcID = %10d, index = %10d\n", cmcID, nmcID, index);
 
     for (j = 0; j < 3; j++)
     {
       if(t[i].edgePlace[j] == 1)
-      { // only for inner edges...
+      {
+        // only for inner edges...
         index1 = j;
         index2 = j + 1;
         if(index2 == 3)
@@ -4721,9 +4752,9 @@ int M3CEntireVolume::get_number_unique_inner_edges(Triangle* t, int* mCubeID, in
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
-                                              int* mCubeID,
-                                                     ISegment* ie,
-                                                     int nT, int nfedge)
+                                             int* mCubeID,
+                                             ISegment* ie,
+                                             int nT, int nfedge)
 {
   std::stringstream ss;
   int i, j, k, kk, m, mm, ii, jj, jjj;
@@ -4755,21 +4786,22 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
   // make inner edge array, including duplicates inside each marching cube...
   do
   {
-      //printf("triangle %5d    ", i);
-      cmcID = mCubeID[i];
-      if(i == (numT - 1))
-      {
-        nmcID = -1;
-      }
-      else
-      {
-        nmcID = mCubeID[i + 1];
-      }// Let's get out when it hits the last triangle...
+    //printf("triangle %5d    ", i);
+    cmcID = mCubeID[i];
+    if(i == (numT - 1))
+    {
+      nmcID = -1;
+    }
+    else
+    {
+      nmcID = mCubeID[i + 1];
+    }// Let's get out when it hits the last triangle...
 
     for (j = 0; j < 3; j++)
     {
       if(t[i].edgePlace[j] == 1)
-      { // only for inner edges...
+      {
+        // only for inner edges...
         index1 = j;
         index2 = j + 1;
         if(index2 == 3)
@@ -4817,7 +4849,8 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
           for (jj = 0; jj < 3; jj++)
           {
             if(t[ctri].edgePlace[jj] == 1)
-            { // only for inner edges...
+            {
+              // only for inner edges...
               index1 = jj;
               index2 = jj + 1;
               if(index2 == 3)
@@ -4838,7 +4871,8 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
           {
 
             if(bFlag[kk] == 0)
-            { // if current neigh edge is a new one...
+            {
+              // if current neigh edge is a new one...
 
               nnode1 = arrayIEnode[kk][0]; // get nodes...
               nnode2 = arrayIEnode[kk][1];
@@ -4855,7 +4889,8 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
                 for (jjj = 0; jjj < 3; jjj++)
                 {
                   if(t[ntri].edgePlace[jjj] == 1)
-                  { // only for inner edges...
+                  {
+                    // only for inner edges...
                     index1 = jjj;
                     index2 = jjj + 1;
                     if(index2 == 3)
@@ -4941,10 +4976,10 @@ void M3CEntireVolume::get_unique_inner_edges(Triangle* t,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::arrange_spins(DataArray<int32_t>::Pointer points,
-                                            VoxelCoord* pCoord,
-                                            Triangle* t,
-                                            Node* v,
-                                            int numT, int xDim, int nsp)
+                                    VoxelCoord* pCoord,
+                                    Triangle* t,
+                                    Node* v,
+                                    int numT, int xDim, int nsp)
 {
   int32_t* p = points->GetPointer(0);
 
@@ -4975,7 +5010,8 @@ void M3CEntireVolume::arrange_spins(DataArray<int32_t>::Pointer points,
   double tn[3];
 
   for (i = 0; i < numT; i++)
-  { // for each triangle...
+  {
+    // for each triangle...
     // get neighboring spins...
     nspin1 = t[i].nSpin[0];
     nspin2 = t[i].nSpin[1];
@@ -4993,7 +5029,8 @@ void M3CEntireVolume::arrange_spins(DataArray<int32_t>::Pointer points,
     nEnode = 0;
 
     for (j = 0; j < 3; j++)
-    { // for each node inside the triangle...
+    {
+      // for each node inside the triangle...
 
       cnode = t[i].node_id[j]; // current node
       csite = cnode / 7 + 1; // get original data site for this triangle...
@@ -5161,10 +5198,10 @@ void M3CEntireVolume::arrange_spins(DataArray<int32_t>::Pointer points,
 //
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::update_node_edge_kind(Node* v,
-                                                    Segment* fe,
-                                                    ISegment* ie,
-                                                    Triangle* t,
-                                                    int nT, int nfedge)
+                                            Segment* fe,
+                                            ISegment* ie,
+                                            Triangle* t,
+                                            int nT, int nfedge)
 {
   int i, j;
   int tn, te;
@@ -5178,7 +5215,8 @@ void M3CEntireVolume::update_node_edge_kind(Node* v,
     tspin2 = t[j].nSpin[1];
 
     if(tspin1 * tspin2 < 0)
-    { // if the triangle is the surface of whole microstructure...
+    {
+      // if the triangle is the surface of whole microstructure...
       // increase edge and node kind by 10...
       for (i = 0; i < 3; i++)
       {
@@ -5242,10 +5280,10 @@ int M3CEntireVolume::assign_new_nodeID(Node* v, DataArray<int32_t>::Pointer node
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void M3CEntireVolume::get_output(node *v, segment *fe, isegment *ie, patch *t, int ns, int nN, int nfe, int nie, int nT, MeshParameters* mp)
+void M3CEntireVolume::get_output(node* v, segment* fe, isegment* ie, patch* t, int ns, int nN, int nfe, int nie, int nT, MeshParameters* mp)
 {
 
-  FILE *f1, *f2, *f3;
+  FILE* f1, *f2, *f3;
 
   int i, j, k, kk;
   int numN;

@@ -79,7 +79,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     * in the GUI for the filter
     */
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::IOFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::OutputFilters; }
 
     /**
     * @brief This returns a string that is displayed in the GUI. It should be readable
@@ -130,10 +130,10 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
 
-    int writeMetaInfo(const std::string &hdfPath, int64_t volDims[3],
-                              float spacing[3], float origin[3]);
+    int writeMetaInfo(const std::string& hdfPath, int64_t volDims[3],
+                      float spacing[3], float origin[3]);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const std::string& hdfGroupPath, const char* vtkDataObjectType);
     int writeVertexData(hid_t dcGid);
     int writeEdgeData(hid_t dcGid);
     int writeFaceData(hid_t dcGid);
@@ -142,17 +142,17 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
     int writeEnsembleData(hid_t dcGid);
 
     void writeCellXdmfGridHeader(float* origin, float* spacing, int64_t* volDims);
-    void writeFieldXdmfGridHeader(size_t numElements, const std::string &label);
+    void writeFieldXdmfGridHeader(size_t numElements, const std::string& label);
     //void writeFieldNeighborXdmfGridHeader(size_t numElements);
-    void writeXdmfGridFooter(const std::string &label);
+    void writeXdmfGridFooter(const std::string& label);
 
 
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
     template<typename T, typename K>
-    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T> &v, const std::string &label)
-     {
+    int writeEnsembleDataArray(hid_t ensembleGid, const std::vector<T>& v, const std::string& label)
+    {
       herr_t err = 0;
       int numComp = 1;
       std::vector<int> eData(v.size());
@@ -167,7 +167,7 @@ class DREAM3DLib_EXPORT VolumeDataContainerWriter : public AbstractFilter
         int num = static_cast<int>(eData.size() / numComp);
         int32_t rank = 1;
         hsize_t dims[1] =
-        { (hsize_t)num * (hsize_t)numComp };
+        { (hsize_t)num* (hsize_t)numComp };
 
         err |= H5Lite::writePointerDataset(ensembleGid, label, rank, dims, eDataPtr);
         err |= H5Lite::writeScalarAttribute(ensembleGid, label, std::string(H5_NUMCOMPONENTS), numComp);

@@ -98,7 +98,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
   setZEndIndex( reader->readValue("ZEndIndex", getZEndIndex()) );
   setOrigin( reader->readValue("Origin", getOrigin()) );
   setResolution( reader->readValue("Resolution", getResolution()) );
-  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir",getRefFrameZDir()));
+  Ebsd::RefFrameZDir zdir = static_cast<Ebsd::RefFrameZDir>(reader->readValue("RefFrameZDir", getRefFrameZDir()));
   setRefFrameZDir(zdir);
   reader->closeFilterGroup();
 }
@@ -109,7 +109,7 @@ void ImportImageStack::readFilterParameters(AbstractFilterParametersReader* read
 int ImportImageStack::writeFilterParameters(AbstractFilterParametersWriter* writer, int index)
 {
   writer->openFilterGroup(this, index);
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   writer->writeValue("ImageDataArrayName", getImageDataArrayName() );
   writer->writeValue("ZStartIndex", getZStartIndex() );
   writer->writeValue("ZEndIndex", getZEndIndex() );
@@ -265,7 +265,7 @@ void ImportImageStack::execute()
     }
 
     // Get the current position in the array to copy the image into
-    zSpot = (z-m_ZStartIndex);
+    zSpot = (z - m_ZStartIndex);
     for(qint32 i = 0; i < height; ++i)
     {
       imagePtr = data->GetPointer( (zSpot) * totalPixels * pixelBytes + i * (width * pixelBytes));

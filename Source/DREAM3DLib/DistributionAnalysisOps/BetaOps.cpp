@@ -55,7 +55,7 @@ BetaOps::BetaOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Pointer outputs)
+int BetaOps::calculateParameters(std::vector<float>& data, FloatArrayType::Pointer outputs)
 {
   int err = 0;
   float avg = 0;
@@ -64,23 +64,23 @@ int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Point
   float beta = 0;
   if(data.size() > 1)
   {
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		avg = avg + data[i];
-	  }
-	  avg = avg/float(data.size());
-	  for(size_t i = 0; i < data.size(); i++)
-	  {
-		stddev = stddev + ((avg - data[i])*(avg - data[i]));
-	  }
-	  stddev = stddev/float(data.size());
-	  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-	  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      avg = avg + data[i];
+    }
+    avg = avg / float(data.size());
+    for(size_t i = 0; i < data.size(); i++)
+    {
+      stddev = stddev + ((avg - data[i]) * (avg - data[i]));
+    }
+    stddev = stddev / float(data.size());
+    alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+    beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
   }
   else
   {
-	  alpha = 0;
-	  beta = 0;
+    alpha = 0;
+    beta = 0;
   }
   outputs->SetValue(0, alpha);
   outputs->SetValue(1, beta);
@@ -89,7 +89,7 @@ int BetaOps::calculateParameters(std::vector<float> &data, FloatArrayType::Point
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &data, VectorOfFloatArray outputs)
+int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> >& data, VectorOfFloatArray outputs)
 {
   int err = 0;
   float avg = 0;
@@ -98,30 +98,30 @@ int BetaOps::calculateCorrelatedParameters(std::vector<std::vector<float> > &dat
   float beta = 0;
   for(size_t i = 0; i < data.size(); i++)
   {
-	  avg = 0;
-	  stddev = 0;
-	  if(data[i].size() > 1)
-	  {
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			avg = avg + data[i][j];
-		  }
-		  avg = avg/float(data[i].size());
-		  for(size_t j = 0; j < data[i].size(); j++)
-		  {
-			stddev = stddev + ((avg - data[i][j])*(avg - data[i][j]));
-		  }
-		  stddev = stddev/float(data[i].size());
-		  alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
-		  beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
-	  }
-	  else
-	  {
-		  alpha = 0;
-		  beta = 0;
-	  }
-	  outputs[0]->SetValue(i, alpha);
-	  outputs[1]->SetValue(i, beta);
+    avg = 0;
+    stddev = 0;
+    if(data[i].size() > 1)
+    {
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        avg = avg + data[i][j];
+      }
+      avg = avg / float(data[i].size());
+      for(size_t j = 0; j < data[i].size(); j++)
+      {
+        stddev = stddev + ((avg - data[i][j]) * (avg - data[i][j]));
+      }
+      stddev = stddev / float(data[i].size());
+      alpha = avg * (((avg * (1 - avg)) / stddev) - 1);
+      beta = (1 - avg) * (((avg * (1 - avg)) / stddev) - 1);
+    }
+    else
+    {
+      alpha = 0;
+      beta = 0;
+    }
+    outputs[0]->SetValue(i, alpha);
+    outputs[1]->SetValue(i, beta);
   }
   return err;
 }

@@ -89,12 +89,12 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
 
     DREAM3D_INSTANCE_PROPERTY(std::vector<PipelineMessage>, PipelineMessages)
 
-    void addErrorMessage(PipelineMessage &msg);
-    void addErrorMessage(const std::string &filterName, const std::string &errorDescription, int errorCode);
+    void addErrorMessage(PipelineMessage& msg);
+    void addErrorMessage(const std::string& filterName, const std::string& errorDescription, int errorCode);
     void addErrorMessages(std::vector<PipelineMessage> msgVector);
 
-    void addWarningMessage(PipelineMessage &msg);
-    void addWarningMessage(const std::string &filterName, const std::string &warnDescription, int warnCode);
+    void addWarningMessage(PipelineMessage& msg);
+    void addWarningMessage(const std::string& filterName, const std::string& warnDescription, int warnCode);
     void addWarningMessages(std::vector<PipelineMessage> msgVector);
 
     void removeErrorMessage(PipelineMessage msg);
@@ -116,9 +116,9 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, PreviousFilter)
     DREAM3D_INSTANCE_PROPERTY(AbstractFilter::Pointer, NextFilter)
 
-   /**
-     * @brief Cancel the operation
-     */
+    /**
+      * @brief Cancel the operation
+      */
     DREAM3D_VIRTUAL_INSTANCE_PROPERTY(bool, Cancel)
 
 
@@ -127,7 +127,7 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     DREAM3D_INSTANCE_PROPERTY(std::vector<CreatedArrayHelpIndexEntry::Pointer>, CreatedArrayHelpIndexEntries)
     void addCreatedArrayHelpIndexEntry(CreatedArrayHelpIndexEntry::Pointer entry);
 
-    virtual void printValues(std::ostream &out){}
+    virtual void printValues(std::ostream& out) {}
 
 
     virtual void setupFilterParameters();
@@ -152,8 +152,8 @@ class DREAM3DLib_EXPORT AbstractFilter : public Observable
     virtual void execute();
     virtual void preflight();
 
-    virtual bool doesPipelineContainFilterBeforeThis(const std::string &name);
-    virtual bool doesPipelineContainFilterAfterThis(const std::string &name);
+    virtual bool doesPipelineContainFilterBeforeThis(const std::string& name);
+    virtual bool doesPipelineContainFilterAfterThis(const std::string& name);
 
 
 

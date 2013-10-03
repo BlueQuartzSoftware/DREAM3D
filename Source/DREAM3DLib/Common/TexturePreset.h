@@ -58,7 +58,7 @@ class DREAM3DLib_EXPORT TexturePreset
     MXA_STATIC_NEW_MACRO(TexturePreset)
     MXA_TYPE_MACRO(TexturePreset)
     static Pointer New(unsigned int xtal,
-                       const std::string &name,
+                       const std::string& name,
                        double e1, double e2, double e3)
     {
       Pointer p (new TexturePreset);

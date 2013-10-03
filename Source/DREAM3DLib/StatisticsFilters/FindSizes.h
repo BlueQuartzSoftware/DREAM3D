@@ -63,15 +63,15 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
 
     virtual ~FindSizes();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(EquivalentDiametersArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(NumCellsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(VolumesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::StatisticsFilters; }
-	 virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::MorphologicalFilters; }
     virtual const std::string getHumanLabel() { return "Find Field Sizes"; }
 
     /**
@@ -79,8 +79,8 @@ class DREAM3DLib_EXPORT FindSizes : public AbstractFilter
      */
 
     virtual void setupFilterParameters();
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file

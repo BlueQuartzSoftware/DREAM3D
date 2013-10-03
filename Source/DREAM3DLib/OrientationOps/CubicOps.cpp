@@ -59,12 +59,12 @@
 namespace Detail
 {
 
-  static const float CubicDim1InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim2InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim3InitValue = powf((0.75f*((DREAM3D::Constants::k_Pi/4.0f)-sinf((DREAM3D::Constants::k_Pi/4.0f)))),(1.0f/3.0f));
-  static const float CubicDim1StepValue = CubicDim1InitValue/9.0f;
-  static const float CubicDim2StepValue = CubicDim2InitValue/9.0f;
-  static const float CubicDim3StepValue = CubicDim3InitValue/9.0f;
+  static const float CubicDim1InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim2InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim3InitValue = powf((0.75f * ((DREAM3D::Constants::k_Pi / 4.0f) - sinf((DREAM3D::Constants::k_Pi / 4.0f)))), (1.0f / 3.0f));
+  static const float CubicDim1StepValue = CubicDim1InitValue / 9.0f;
+  static const float CubicDim2StepValue = CubicDim2InitValue / 9.0f;
+  static const float CubicDim3StepValue = CubicDim3InitValue / 9.0f;
   namespace CubicHigh
   {
     static const int symSize0 = 6;
@@ -74,7 +74,8 @@ namespace Detail
 }
 
 
-static const QuatF CubicQuatSym[24] = {
+static const QuatF CubicQuatSym[24] =
+{
   QuaternionMathF::New(0.000000000f, 0.000000000f, 0.000000000f, 1.000000000f),
   QuaternionMathF::New(1.000000000f, 0.000000000f, 0.000000000f, 0.000000000f),
   QuaternionMathF::New(0.000000000f, 1.000000000f, 0.000000000f, 0.000000000f),
@@ -98,155 +99,185 @@ static const QuatF CubicQuatSym[24] = {
   QuaternionMathF::New(-0.500000000f, 0.500000000f, 0.500000000f, 0.500000000f),
   QuaternionMathF::New(0.500000000f, -0.500000000f, -0.500000000f, 0.500000000f),
   QuaternionMathF::New(-0.500000000f, -0.500000000f, 0.500000000f, 0.500000000f),
-  QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)};
+  QuaternionMathF::New(0.500000000f, 0.500000000f, -0.500000000f, 0.500000000f)
+};
 
-static const float CubicRodSym[24][3] = {{0.0f, 0.0f,0.0f},
-                                         {10000000000.0f, 0.0f, 0.0f},
-                                         {0.0f, 10000000000.0f, 0.0f},
-                                         {0.0f, 0.0f, 10000000000.0f},
-                                         {1.0f, 0.0f, 0.0f},
-                                         {0.0f, 1.0f, 0.0f},
-                                         {0.0f, 0.0f, 1.0f},
-                                         {-1.0f, 0.0f, 0.0f},
-                                         {0.0f, -1.0f, 0.0f},
-                                         {0.0f, 0.0f, -1.0f},
-                                         {10000000000.0f, 10000000000.0f, 0.0f},
-                                         {-10000000000.0f, 10000000000.0f, 0.0f},
-                                         {0.0f, 10000000000.0f, 10000000000.0f},
-                                         {0.0f, -10000000000.0f, 10000000000.0f},
-                                         {10000000000.0f, 0.0f, 10000000000.0f},
-                                         {-10000000000.0f, 0.0f, 10000000000.0f},
-                                         {1.0f, 1.0f, 1.0f},
-                                         {-1.0f, -1.0f, -1.0f},
-                                         {1.0f, -1.0f, 1.0f},
-                                         {-1.0f, 1.0f, -1.0f},
-                                         {-1.0f, 1.0f, 1.0f},
-                                         {1.0f, -1.0f, -1.0f},
-                                         {-1.0f, -1.0f, 1.0f},
-                                         {1.0f, 1.0f, -1.0}};
+static const float CubicRodSym[24][3] = {{0.0f, 0.0f, 0.0f},
+  {10000000000.0f, 0.0f, 0.0f},
+  {0.0f, 10000000000.0f, 0.0f},
+  {0.0f, 0.0f, 10000000000.0f},
+  {1.0f, 0.0f, 0.0f},
+  {0.0f, 1.0f, 0.0f},
+  {0.0f, 0.0f, 1.0f},
+  { -1.0f, 0.0f, 0.0f},
+  {0.0f, -1.0f, 0.0f},
+  {0.0f, 0.0f, -1.0f},
+  {10000000000.0f, 10000000000.0f, 0.0f},
+  { -10000000000.0f, 10000000000.0f, 0.0f},
+  {0.0f, 10000000000.0f, 10000000000.0f},
+  {0.0f, -10000000000.0f, 10000000000.0f},
+  {10000000000.0f, 0.0f, 10000000000.0f},
+  { -10000000000.0f, 0.0f, 10000000000.0f},
+  {1.0f, 1.0f, 1.0f},
+  { -1.0f, -1.0f, -1.0f},
+  {1.0f, -1.0f, 1.0f},
+  { -1.0f, 1.0f, -1.0f},
+  { -1.0f, 1.0f, 1.0f},
+  {1.0f, -1.0f, -1.0f},
+  { -1.0f, -1.0f, 1.0f},
+  {1.0f, 1.0f, -1.0}
+};
 
-static const float CubicSlipDirections[12][3] = {{0.0f,1.0f,-1.0f},
-                                                 {1.0f,0.0f,-1.0f},
-                                                 {1.0f,-1.0f,0.0f},
-                                                 {1.0f,-1.0f,0.0f},
-                                                 {1.0f,0.0f,1.0f},
-                                                 {0.0f,1.0f,1.0f},
-                                                 {1.0f,1.0f,0.0f},
-                                                 {0.0f,1.0f,1.0f},
-                                                 {1.0f,0.0f,-1.0f},
-                                                 {1.0f,1.0f,0.0f},
-                                                 {1.0f,0.0f,1.0f},
-                                                 {0.0f,1.0f,-1.0f}};
+static const float CubicSlipDirections[12][3] = {{0.0f, 1.0f, -1.0f},
+  {1.0f, 0.0f, -1.0f},
+  {1.0f, -1.0f, 0.0f},
+  {1.0f, -1.0f, 0.0f},
+  {1.0f, 0.0f, 1.0f},
+  {0.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, 0.0f},
+  {0.0f, 1.0f, 1.0f},
+  {1.0f, 0.0f, -1.0f},
+  {1.0f, 1.0f, 0.0f},
+  {1.0f, 0.0f, 1.0f},
+  {0.0f, 1.0f, -1.0f}
+};
 
-static const float CubicSlipPlanes[12][3] = {{1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,1.0f,-1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {1.0f,-1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f},
-                                             {-1.0f,1.0f,1.0f}};
+static const float CubicSlipPlanes[12][3] = {{1.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, 1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, 1.0f, -1.0f},
+  {1.0f, -1.0f, 1.0f},
+  {1.0f, -1.0f, 1.0f},
+  {1.0f, -1.0f, 1.0f},
+  { -1.0f, 1.0f, 1.0f},
+  { -1.0f, 1.0f, 1.0f},
+  { -1.0f, 1.0f, 1.0f}
+};
 
 static const float CubicMatSym[24][3][3] =
-{{{1.0, 0.0, 0.0},
-  {0.0, 1.0, 0.0},
-  {0.0, 0.0, 1.0}},
+{
+  { {1.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0},
+    {0.0, 0.0, 1.0}
+  },
 
- {{1.0, 0.0,  0.0},
-  {0.0, 0.0, -1.0},
-  {0.0, 1.0,  0.0}},
+  { {1.0, 0.0,  0.0},
+    {0.0, 0.0, -1.0},
+    {0.0, 1.0,  0.0}
+  },
 
- {{1.0,  0.0,  0.0},
-  {0.0, -1.0,  0.0},
-  {0.0,  0.0, -1.0}},
+  { {1.0,  0.0,  0.0},
+    {0.0, -1.0,  0.0},
+    {0.0,  0.0, -1.0}
+  },
 
- {{1.0,  0.0, 0.0},
-  {0.0,  0.0, 1.0},
-  {0.0, -1.0, 0.0}},
+  { {1.0,  0.0, 0.0},
+    {0.0,  0.0, 1.0},
+    {0.0, -1.0, 0.0}
+  },
 
- {{0.0, 0.0, -1.0},
-  {0.0, 1.0,  0.0},
-  {1.0, 0.0,  0.0}},
+  { {0.0, 0.0, -1.0},
+    {0.0, 1.0,  0.0},
+    {1.0, 0.0,  0.0}
+  },
 
- {{0.0, 0.0, 1.0},
-  {0.0, 1.0, 0.0},
-  {-1.0, 0.0, 0.0}},
+  { {0.0, 0.0, 1.0},
+    {0.0, 1.0, 0.0},
+    { -1.0, 0.0, 0.0}
+  },
 
- {{-1.0, 0.0,  0.0},
-  {0.0, 1.0,  0.0},
-  {0.0, 0.0, -1.0}},
+  { { -1.0, 0.0,  0.0},
+    {0.0, 1.0,  0.0},
+    {0.0, 0.0, -1.0}
+  },
 
- {{-1.0,  0.0, 0.0},
-  {0.0, -1.0, 0.0},
-  {0.0,  0.0, 1.0}},
+  { { -1.0,  0.0, 0.0},
+    {0.0, -1.0, 0.0},
+    {0.0,  0.0, 1.0}
+  },
 
- {{0.0, 1.0, 0.0},
-  {-1.0, 0.0, 0.0},
-  {0.0, 0.0, 1.0}},
+  { {0.0, 1.0, 0.0},
+    { -1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0}
+  },
 
- {{0.0, -1.0, 0.0},
-  {1.0,  0.0, 0.0},
-  {0.0,  0.0, 1.0}},
+  { {0.0, -1.0, 0.0},
+    {1.0,  0.0, 0.0},
+    {0.0,  0.0, 1.0}
+  },
 
- {{0.0, -1.0, 0.0},
-  {0.0,  0.0, 1.0},
-  {-1.0,  0.0, 0.0}},
+  { {0.0, -1.0, 0.0},
+    {0.0,  0.0, 1.0},
+    { -1.0,  0.0, 0.0}
+  },
 
- {{0.0,  0.0, 1.0},
-  {-1.0,  0.0, 0.0},
-  {0.0, -1.0, 0.0}},
+  { {0.0,  0.0, 1.0},
+    { -1.0,  0.0, 0.0},
+    {0.0, -1.0, 0.0}
+  },
 
- {{0.0, -1.0,  0.0},
-  {0.0,  0.0, -1.0},
-  {1.0,  0.0,  0.0}},
+  { {0.0, -1.0,  0.0},
+    {0.0,  0.0, -1.0},
+    {1.0,  0.0,  0.0}
+  },
 
- {{0.0,  0.0, -1.0},
-  {1.0,  0.0,  0.0},
-  {0.0, -1.0,  0.0}},
+  { {0.0,  0.0, -1.0},
+    {1.0,  0.0,  0.0},
+    {0.0, -1.0,  0.0}
+  },
 
- {{0.0, 1.0,  0.0},
-  {0.0, 0.0, -1.0},
-  {-1.0, 0.0,  0.0}},
+  { {0.0, 1.0,  0.0},
+    {0.0, 0.0, -1.0},
+    { -1.0, 0.0,  0.0}
+  },
 
- {{0.0, 0.0, -1.0},
-  {-1.0, 0.0,  0.0},
-  {0.0, 1.0,  0.0}},
+  { {0.0, 0.0, -1.0},
+    { -1.0, 0.0,  0.0},
+    {0.0, 1.0,  0.0}
+  },
 
- {{0.0, 1.0, 0.0},
-  {0.0, 0.0, 1.0},
-  {1.0, 0.0, 0.0}},
+  { {0.0, 1.0, 0.0},
+    {0.0, 0.0, 1.0},
+    {1.0, 0.0, 0.0}
+  },
 
- {{0.0, 0.0, 1.0},
-  {1.0, 0.0, 0.0},
-  {0.0, 1.0, 0.0}},
+  { {0.0, 0.0, 1.0},
+    {1.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0}
+  },
 
- {{0.0, 1.0,  0.0},
-  {1.0, 0.0,  0.0},
-  {0.0, 0.0, -1.0}},
+  { {0.0, 1.0,  0.0},
+    {1.0, 0.0,  0.0},
+    {0.0, 0.0, -1.0}
+  },
 
- {{-1.0, 0.0, 0.0},
-  {0.0, 0.0, 1.0},
-  {0.0, 1.0, 0.0}},
+  { { -1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0},
+    {0.0, 1.0, 0.0}
+  },
 
- {{0.0,  0.0, 1.0},
-  {0.0, -1.0, 0.0},
-  {1.0,  0.0, 0.0}},
+  { {0.0,  0.0, 1.0},
+    {0.0, -1.0, 0.0},
+    {1.0,  0.0, 0.0}
+  },
 
- {{-1.0,  0.0,  0.0},
-  {0.0,  0.0, -1.0},
-  {0.0, -1.0,  0.0}},
+  { { -1.0,  0.0,  0.0},
+    {0.0,  0.0, -1.0},
+    {0.0, -1.0,  0.0}
+  },
 
- {{0.0,  0.0, -1.0},
-  {0.0, -1.0,  0.0},
-  {-1.0,  0.0,  0.0}},
+  { {0.0,  0.0, -1.0},
+    {0.0, -1.0,  0.0},
+    { -1.0,  0.0,  0.0}
+  },
 
- {{0.0, -1.0,  0.0},
-  {-1.0,  0.0,  0.0},
-  {0.0,  0.0, -1.0}}};
+  { {0.0, -1.0,  0.0},
+    { -1.0,  0.0,  0.0},
+    {0.0,  0.0, -1.0}
+  }
+};
 
 using namespace Detail;
 
@@ -267,7 +298,7 @@ CubicOps::~CubicOps()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-float CubicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n3)
+float CubicOps::getMisoQuat(QuatF& q1, QuatF& q2, float& n1, float& n2, float& n3)
 {
 
   int numsym = 24;
@@ -279,10 +310,10 @@ float CubicOps::getMisoQuat(QuatF &q1, QuatF &q2, float &n1, float &n2, float &n
 //
 // -----------------------------------------------------------------------------
 float CubicOps::_calcMisoQuat(const QuatF quatsym[24], int numsym,
-QuatF &q1, QuatF &q2,
-float &n1, float &n2, float &n3)
+                              QuatF& q1, QuatF& q2,
+                              float& n1, float& n2, float& n3)
 {
-  float wmin=9999999.0f; //,na,nb,nc;
+  float wmin = 9999999.0f; //,na,nb,nc;
   QuatF qco;
   QuatF qc;
   QuatF q2inv;
@@ -304,22 +335,22 @@ float &n1, float &n2, float &n3)
     if (qc.y <= qc.z && qc.y <= qc.w)
     {
       qco.y = qc.y;
-      if(qc.z <= qc.w) qco.z = qc.z, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.z;
+      if(qc.z <= qc.w) { qco.z = qc.z, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.z; }
     }
     //if qc.z is next smallest
     else if (qc.z <= qc.y && qc.z <= qc.w)
     {
       qco.y = qc.z;
-      if(qc.y <= qc.w) qco.z = qc.y, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.y;
+      if(qc.y <= qc.w) { qco.z = qc.y, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.y; }
     }
     //if qc.w is next smallest
     else
     {
       qco.y = qc.w;
-      if(qc.y <= qc.z) qco.z = qc.y, qco.w = qc.z;
-      else qco.z = qc.z, qco.w = qc.y;
+      if(qc.y <= qc.z) { qco.z = qc.y, qco.w = qc.z; }
+      else { qco.z = qc.z, qco.w = qc.y; }
     }
   }
   //if qc.y is smallest
@@ -330,22 +361,22 @@ float &n1, float &n2, float &n3)
     if (qc.x <= qc.z && qc.x <= qc.w)
     {
       qco.y = qc.x;
-      if(qc.z <= qc.w) qco.z = qc.z, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.z;
+      if(qc.z <= qc.w) { qco.z = qc.z, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.z; }
     }
     //if qc.z is next smallest
     else if (qc.z <= qc.x && qc.z <= qc.w)
     {
       qco.y = qc.z;
-      if(qc.x <= qc.w) qco.z = qc.x, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.x;
+      if(qc.x <= qc.w) { qco.z = qc.x, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.x; }
     }
     //if qc.w is next smallest
     else
     {
       qco.y = qc.w;
-      if(qc.x <= qc.z) qco.z = qc.x, qco.w = qc.z;
-      else qco.z = qc.z, qco.w = qc.x;
+      if(qc.x <= qc.z) { qco.z = qc.x, qco.w = qc.z; }
+      else { qco.z = qc.z, qco.w = qc.x; }
     }
   }
   //if qc.z is smallest
@@ -356,22 +387,22 @@ float &n1, float &n2, float &n3)
     if (qc.x <= qc.y && qc.x <= qc.w)
     {
       qco.y = qc.x;
-      if(qc.y <= qc.w) qco.z = qc.y, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.y;
+      if(qc.y <= qc.w) { qco.z = qc.y, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.y; }
     }
     //if qc.y is next smallest
     else if (qc.y <= qc.x && qc.y <= qc.w)
     {
       qco.y = qc.y;
-      if(qc.x <= qc.w) qco.z = qc.x, qco.w = qc.w;
-      else qco.z = qc.w, qco.w = qc.x;
+      if(qc.x <= qc.w) { qco.z = qc.x, qco.w = qc.w; }
+      else { qco.z = qc.w, qco.w = qc.x; }
     }
     //if qc.w is next smallest
     else
     {
       qco.y = qc.w;
-      if(qc.x <= qc.y) qco.z = qc.x, qco.w = qc.y;
-      else qco.z = qc.y, qco.w = qc.x;
+      if(qc.x <= qc.y) { qco.z = qc.x, qco.w = qc.y; }
+      else { qco.z = qc.y, qco.w = qc.x; }
     }
   }
   //if qc.w is smallest
@@ -382,22 +413,22 @@ float &n1, float &n2, float &n3)
     if (qc.x <= qc.y && qc.x <= qc.z)
     {
       qco.y = qc.x;
-      if(qc.y <= qc.z) qco.z = qc.y, qco.w = qc.z;
-      else qco.z = qc.z, qco.w = qc.y;
+      if(qc.y <= qc.z) { qco.z = qc.y, qco.w = qc.z; }
+      else { qco.z = qc.z, qco.w = qc.y; }
     }
     //if qc.y is next smallest
     else if (qc.y <= qc.x && qc.y <= qc.z)
     {
       qco.y = qc.y;
-      if(qc.x <= qc.z) qco.z = qc.x, qco.w = qc.z;
-      else qco.z = qc.z, qco.w = qc.x;
+      if(qc.x <= qc.z) { qco.z = qc.x, qco.w = qc.z; }
+      else { qco.z = qc.z, qco.w = qc.x; }
     }
     //if qc.z is next smallest
     else
     {
       qco.y = qc.z;
-      if(qc.x <= qc.y) qco.z = qc.x, qco.w = qc.y;
-      else qco.z = qc.y, qco.w = qc.x;
+      if(qc.x <= qc.y) { qco.z = qc.x, qco.w = qc.y; }
+      else { qco.z = qc.y, qco.w = qc.x; }
     }
   }
   wmin = qco.w;
@@ -447,37 +478,37 @@ float &n1, float &n2, float &n3)
     n2 = ((qco.x + qco.y - qco.z - qco.w) / (2.0f)) / sin_wmin_over_2;
     n3 = ((-qco.x + qco.y + qco.z - qco.w) / (2.0f)) / sin_wmin_over_2;
   }
-  float denom = sqrt((n1*n1+n2*n2+n3*n3));
-  n1 = n1/denom;
-  n2 = n2/denom;
-  n3 = n3/denom;
-  if(denom == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
-  if(wmin == 0) n1 = 0.0, n2 = 0.0, n3 = 1.0;
+  float denom = sqrt((n1 * n1 + n2 * n2 + n3 * n3));
+  n1 = n1 / denom;
+  n2 = n2 / denom;
+  n3 = n3 / denom;
+  if(denom == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
+  if(wmin == 0) { n1 = 0.0, n2 = 0.0, n3 = 1.0; }
   wmin = 2.0f * wmin;
   return wmin;
 
 }
 
-void CubicOps::getODFFZRod(float &r1,float &r2, float &r3)
+void CubicOps::getODFFZRod(float& r1, float& r2, float& r3)
 {
   int numsym = 24;
 
   _calcRodNearestOrigin(CubicRodSym, numsym, r1, r2, r3);
 }
 
-void CubicOps::getQuatSymOp(int i, QuatF &q)
+void CubicOps::getQuatSymOp(int i, QuatF& q)
 {
   QuaternionMathF::Copy(CubicQuatSym[i], q);
 }
 
-void CubicOps::getRodSymOp(int i,float *r)
+void CubicOps::getRodSymOp(int i, float* r)
 {
   r[0] = CubicRodSym[i][0];
   r[1] = CubicRodSym[i][1];
   r[2] = CubicRodSym[i][2];
 }
 
-void CubicOps::getMatSymOp(int i,float g[3][3])
+void CubicOps::getMatSymOp(int i, float g[3][3])
 {
   g[0][0] = CubicMatSym[i][0][0];
   g[0][1] = CubicMatSym[i][0][1];
@@ -490,7 +521,7 @@ void CubicOps::getMatSymOp(int i,float g[3][3])
   g[2][2] = CubicMatSym[i][2][2];
 }
 
-void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
+void CubicOps::getMDFFZRod(float& r1, float& r2, float& r3)
 {
   float w, n1, n2, n3;
   float FZw, FZn1, FZn2, FZn3;
@@ -507,33 +538,33 @@ void CubicOps::getMDFFZRod(float &r1,float &r2, float &r3)
     if(n1 > n3)
     {
       FZn1 = n1;
-      if (n2 > n3) FZn2 = n2, FZn3 = n3;
-      else FZn2 = n3, FZn3 = n2;
+      if (n2 > n3) { FZn2 = n2, FZn3 = n3; }
+      else { FZn2 = n3, FZn3 = n2; }
     }
-    else FZn1 = n3, FZn2 = n1, FZn3 = n2;
+    else { FZn1 = n3, FZn2 = n1, FZn3 = n2; }
   }
   else
   {
     if(n2 > n3)
     {
       FZn1 = n2;
-      if (n1 > n3) FZn2 = n1, FZn3 = n3;
-      else FZn2 = n3, FZn3 = n1;
+      if (n1 > n3) { FZn2 = n1, FZn3 = n3; }
+      else { FZn2 = n3, FZn3 = n1; }
     }
-    else FZn1 = n3, FZn2 = n2, FZn3 = n1;
+    else { FZn1 = n3, FZn2 = n2, FZn3 = n1; }
   }
 
   OrientationMath::AxisAngletoRod(FZw, FZn1, FZn2, FZn3, r1, r2, r3);
 }
 
-void CubicOps::getNearestQuat(QuatF &q1, QuatF &q2)
+void CubicOps::getNearestQuat(QuatF& q1, QuatF& q2)
 {
   int numsym = 24;
 
   _calcNearestQuat(CubicQuatSym, numsym, q1, q2);
 }
 
-void CubicOps::getFZQuat(QuatF &qr)
+void CubicOps::getFZQuat(QuatF& qr)
 {
   int numsym = 24;
 
@@ -561,7 +592,7 @@ int CubicOps::getMisoBin(float r1, float r2, float r3)
   return _calcMisoBin(dim, bins, step, r1, r2, r3);
 }
 
-void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, float &synea3)
+void CubicOps::determineEulerAngles(int choose, float& synea1, float& synea2, float& synea3)
 {
   float init[3];
   float step[3];
@@ -584,7 +615,7 @@ void CubicOps::determineEulerAngles(int choose, float &synea1, float &synea2, fl
   OrientationMath::RodtoEuler(r1, r2, r3, synea1, synea2, synea3);
 }
 
-void CubicOps::determineRodriguesVector(int choose, float &r1, float &r2, float &r3)
+void CubicOps::determineRodriguesVector(int choose, float& r1, float& r2, float& r3)
 {
   float init[3];
   float step[3];
@@ -625,7 +656,7 @@ int CubicOps::getOdfBin(float r1, float r2, float r3)
   return _calcODFBin(dim, bins, step, r1, r2, r3);
 }
 
-void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float &schmidfactor, int &slipsys)
+void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float& schmidfactor, int& slipsys)
 {
   schmidfactor = 0.0;
   float theta1, theta2, theta3, theta4;
@@ -668,37 +699,37 @@ void CubicOps::getSchmidFactorAndSS(float loadx, float loady, float loadz, float
   schmid12 = theta4 * lambda6;
   schmidfactor = schmid1, slipsys = 0;
 
-  if (schmid2 > schmidfactor) schmidfactor = schmid2, slipsys = 1;
-  if (schmid3 > schmidfactor) schmidfactor = schmid3, slipsys = 2;
-  if (schmid4 > schmidfactor) schmidfactor = schmid4, slipsys = 3;
-  if (schmid5 > schmidfactor) schmidfactor = schmid5, slipsys = 4;
-  if (schmid6 > schmidfactor) schmidfactor = schmid6, slipsys = 5;
-  if (schmid7 > schmidfactor) schmidfactor = schmid7, slipsys = 6;
-  if (schmid8 > schmidfactor) schmidfactor = schmid8, slipsys = 7;
-  if (schmid9 > schmidfactor) schmidfactor = schmid9, slipsys = 8;
-  if (schmid10 > schmidfactor) schmidfactor = schmid10, slipsys = 9;
-  if (schmid11 > schmidfactor) schmidfactor = schmid11, slipsys = 10;
-  if (schmid12 > schmidfactor) schmidfactor = schmid12, slipsys = 11;
+  if (schmid2 > schmidfactor) { schmidfactor = schmid2, slipsys = 1; }
+  if (schmid3 > schmidfactor) { schmidfactor = schmid3, slipsys = 2; }
+  if (schmid4 > schmidfactor) { schmidfactor = schmid4, slipsys = 3; }
+  if (schmid5 > schmidfactor) { schmidfactor = schmid5, slipsys = 4; }
+  if (schmid6 > schmidfactor) { schmidfactor = schmid6, slipsys = 5; }
+  if (schmid7 > schmidfactor) { schmidfactor = schmid7, slipsys = 6; }
+  if (schmid8 > schmidfactor) { schmidfactor = schmid8, slipsys = 7; }
+  if (schmid9 > schmidfactor) { schmidfactor = schmid9, slipsys = 8; }
+  if (schmid10 > schmidfactor) { schmidfactor = schmid10, slipsys = 9; }
+  if (schmid11 > schmidfactor) { schmidfactor = schmid11, slipsys = 10; }
+  if (schmid12 > schmidfactor) { schmidfactor = schmid12, slipsys = 11; }
 }
 
-void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
+void CubicOps::getmPrime(QuatF& q1, QuatF& q2, float LD[3], float& mPrime)
 {
   float g1[3][3];
   float g2[3][3];
   float hkl1[3], uvw1[3];
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float planeMisalignment=0, directionMisalignment=0;
-  int ss1=0, ss2=0;
+  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float directionComponent1 = 0, planeComponent1 = 0;
+  float directionComponent2 = 0, planeComponent2 = 0;
+  float planeMisalignment = 0, directionMisalignment = 0;
+  int ss1 = 0, ss2 = 0;
 
   OrientationMath::QuattoMat(q1, g1);
   OrientationMath::QuattoMat(q2, g2);
   MatrixMath::Transpose3x3(g1, g1);
   MatrixMath::Transpose3x3(g2, g2);
-  for(int i=0;i<12;i++)
+  for(int i = 0; i < 12; i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -706,13 +737,13 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
+    MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
-    schmidFactor1 = directionComponent1*planeComponent1;
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor)
     {
       maxSchmidFactor = schmidFactor1;
@@ -725,13 +756,13 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss1][0];
   slipPlane[1] = CubicSlipPlanes[ss1][1];
   slipPlane[2] = CubicSlipPlanes[ss1][2];
-  MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
-  MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+  MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
+  MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
   MatrixMath::Normalize3x1(hkl1);
   MatrixMath::Normalize3x1(uvw1);
 
   maxSchmidFactor = 0;
-  for(int j=0;j<12;j++)
+  for(int j = 0; j < 12; j++)
   {
     slipDirection[0] = CubicSlipDirections[j][0];
     slipDirection[1] = CubicSlipDirections[j][1];
@@ -739,13 +770,13 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
     slipPlane[0] = CubicSlipPlanes[j][0];
     slipPlane[1] = CubicSlipPlanes[j][1];
     slipPlane[2] = CubicSlipPlanes[j][2];
-    MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
-    MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+    MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
+    MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
     MatrixMath::Normalize3x1(hkl2);
     MatrixMath::Normalize3x1(uvw2);
-    directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
-    planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
-    schmidFactor2 = directionComponent2*planeComponent2;
+    directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
+    planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+    schmidFactor2 = directionComponent2 * planeComponent2;
     if(schmidFactor2 > maxSchmidFactor)
     {
       maxSchmidFactor = schmidFactor2;
@@ -758,27 +789,27 @@ void CubicOps::getmPrime(QuatF &q1, QuatF &q2, float LD[3], float &mPrime)
   slipPlane[0] = CubicSlipPlanes[ss2][0];
   slipPlane[1] = CubicSlipPlanes[ss2][1];
   slipPlane[2] = CubicSlipPlanes[ss2][2];
-  MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
-  MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+  MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
+  MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
   MatrixMath::Normalize3x1(hkl2);
   MatrixMath::Normalize3x1(uvw2);
-  planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1,hkl2));
-  directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
-  mPrime = planeMisalignment*directionMisalignment;
+  planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1, hkl2));
+  directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
+  mPrime = planeMisalignment * directionMisalignment;
 }
 
-void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
+void CubicOps::getF1(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1)
 {
   float g1[3][3];
   float g2[3][3];
   float hkl1[3], uvw1[3];
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF1=0;
+  float directionMisalignment = 0, totalDirectionMisalignment = 0;
+  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float directionComponent1 = 0, planeComponent1 = 0;
+  float directionComponent2 = 0, planeComponent2 = 0;
+  float maxF1 = 0;
 
   OrientationMath::QuattoMat(q1, g1);
   OrientationMath::QuattoMat(q2, g2);
@@ -787,8 +818,8 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
 
   MatrixMath::Normalize3x1(LD);
 
-  if(maxSF == true) maxSchmidFactor = 0;
-  for(int i=0;i<12;i++)
+  if(maxSF == true) { maxSchmidFactor = 0; }
+  for(int i = 0; i < 12; i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -796,18 +827,18 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
+    MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
-    schmidFactor1 = directionComponent1*planeComponent1;
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
       totalDirectionMisalignment = 0;
-      if(maxSF == true) maxSchmidFactor = schmidFactor1;
-      for(int j=0;j<12;j++)
+      if(maxSF == true) { maxSchmidFactor = schmidFactor1; }
+      for(int j = 0; j < 12; j++)
       {
         slipDirection[0] = CubicSlipDirections[j][0];
         slipDirection[1] = CubicSlipDirections[j][1];
@@ -815,39 +846,39 @@ void CubicOps::getF1(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1)
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
+        MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
-        schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        schmidFactor2 = directionComponent2 * planeComponent2;
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
-      F1 = schmidFactor1*directionComponent1*totalDirectionMisalignment;
+      F1 = schmidFactor1 * directionComponent1 * totalDirectionMisalignment;
       if(maxSF == false)
       {
-        if(F1 < maxF1) F1 = maxF1;
-        else maxF1 = F1;
+        if(F1 < maxF1) { F1 = maxF1; }
+        else { maxF1 = F1; }
       }
     }
   }
 }
 
-void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1spt)
+void CubicOps::getF1spt(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F1spt)
 {
   float g1[3][3];
   float g2[3][3];
   float hkl1[3], uvw1[3];
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float planeMisalignment=0, totalPlaneMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF1spt=0;
+  float directionMisalignment = 0, totalDirectionMisalignment = 0;
+  float planeMisalignment = 0, totalPlaneMisalignment = 0;
+  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float directionComponent1 = 0, planeComponent1 = 0;
+  float directionComponent2 = 0, planeComponent2 = 0;
+  float maxF1spt = 0;
 
   OrientationMath::QuattoMat(q1, g1);
   OrientationMath::QuattoMat(q2, g2);
@@ -856,8 +887,8 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
 
   MatrixMath::Normalize3x1(LD);
 
-  if(maxSF == true) maxSchmidFactor = 0;
-  for(int i=0;i<12;i++)
+  if(maxSF == true) { maxSchmidFactor = 0; }
+  for(int i = 0; i < 12; i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -865,19 +896,19 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
+    MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
-    schmidFactor1 = directionComponent1*planeComponent1;
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
       totalDirectionMisalignment = 0;
       totalPlaneMisalignment = 0;
-      if(maxSF == true) maxSchmidFactor = schmidFactor1;
-      for(int j=0;j<12;j++)
+      if(maxSF == true) { maxSchmidFactor = schmidFactor1; }
+      for(int j = 0; j < 12; j++)
       {
         slipDirection[0] = CubicSlipDirections[j][0];
         slipDirection[1] = CubicSlipDirections[j][1];
@@ -885,40 +916,40 @@ void CubicOps::getF1spt(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F1
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
+        MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
-        schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
-        planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1,hkl2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        schmidFactor2 = directionComponent2 * planeComponent2;
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
+        planeMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(hkl1, hkl2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
         totalPlaneMisalignment = totalPlaneMisalignment + planeMisalignment;
       }
-      F1spt = schmidFactor1*directionComponent1*totalDirectionMisalignment*totalPlaneMisalignment;
+      F1spt = schmidFactor1 * directionComponent1 * totalDirectionMisalignment * totalPlaneMisalignment;
       if(maxSF == false)
       {
-        if(F1spt < maxF1spt) F1spt = maxF1spt;
-        else maxF1spt = F1spt;
+        if(F1spt < maxF1spt) { F1spt = maxF1spt; }
+        else { maxF1spt = F1spt; }
       }
     }
   }
 }
 
-void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
+void CubicOps::getF7(QuatF& q1, QuatF& q2, float LD[3], bool maxSF, float& F7)
 {
   float g1[3][3];
   float g2[3][3];
   float hkl1[3], uvw1[3];
   float hkl2[3], uvw2[3];
   float slipDirection[3], slipPlane[3];
-  float directionMisalignment=0, totalDirectionMisalignment=0;
-  float schmidFactor1=0, schmidFactor2=0, maxSchmidFactor=0;
-  float directionComponent1=0, planeComponent1=0;
-  float directionComponent2=0, planeComponent2=0;
-  float maxF7=0;
+  float directionMisalignment = 0, totalDirectionMisalignment = 0;
+  float schmidFactor1 = 0, schmidFactor2 = 0, maxSchmidFactor = 0;
+  float directionComponent1 = 0, planeComponent1 = 0;
+  float directionComponent2 = 0, planeComponent2 = 0;
+  float maxF7 = 0;
 
   OrientationMath::QuattoMat(q1, g1);
   OrientationMath::QuattoMat(q2, g2);
@@ -927,7 +958,7 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
 
   MatrixMath::Normalize3x1(LD);
 
-  for(int i=0;i<12;i++)
+  for(int i = 0; i < 12; i++)
   {
     slipDirection[0] = CubicSlipDirections[i][0];
     slipDirection[1] = CubicSlipDirections[i][1];
@@ -935,18 +966,18 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
     slipPlane[0] = CubicSlipPlanes[i][0];
     slipPlane[1] = CubicSlipPlanes[i][1];
     slipPlane[2] = CubicSlipPlanes[i][2];
-    MatrixMath::Multiply3x3with3x1(g1,slipDirection,hkl1);
-    MatrixMath::Multiply3x3with3x1(g1,slipPlane,uvw1);
+    MatrixMath::Multiply3x3with3x1(g1, slipDirection, hkl1);
+    MatrixMath::Multiply3x3with3x1(g1, slipPlane, uvw1);
     MatrixMath::Normalize3x1(hkl1);
     MatrixMath::Normalize3x1(uvw1);
-    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw1));
-    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl1));
-    schmidFactor1 = directionComponent1*planeComponent1;
+    directionComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw1));
+    planeComponent1 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl1));
+    schmidFactor1 = directionComponent1 * planeComponent1;
     if(schmidFactor1 > maxSchmidFactor || maxSF == false)
     {
       totalDirectionMisalignment = 0;
-      if(maxSF == true) maxSchmidFactor = schmidFactor1;
-      for(int j=0;j<12;j++)
+      if(maxSF == true) { maxSchmidFactor = schmidFactor1; }
+      for(int j = 0; j < 12; j++)
       {
         slipDirection[0] = CubicSlipDirections[j][0];
         slipDirection[1] = CubicSlipDirections[j][1];
@@ -954,21 +985,21 @@ void CubicOps::getF7(QuatF &q1, QuatF &q2, float LD[3], bool maxSF, float &F7)
         slipPlane[0] = CubicSlipPlanes[j][0];
         slipPlane[1] = CubicSlipPlanes[j][1];
         slipPlane[2] = CubicSlipPlanes[j][2];
-        MatrixMath::Multiply3x3with3x1(g2,slipDirection,hkl2);
-        MatrixMath::Multiply3x3with3x1(g2,slipPlane,uvw2);
+        MatrixMath::Multiply3x3with3x1(g2, slipDirection, hkl2);
+        MatrixMath::Multiply3x3with3x1(g2, slipPlane, uvw2);
         MatrixMath::Normalize3x1(hkl2);
         MatrixMath::Normalize3x1(uvw2);
-        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,uvw2));
-        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD,hkl2));
-        schmidFactor2 = directionComponent2*planeComponent2;
-        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1,uvw2));
+        directionComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, uvw2));
+        planeComponent2 = fabs(MatrixMath::CosThetaBetweenVectors(LD, hkl2));
+        schmidFactor2 = directionComponent2 * planeComponent2;
+        directionMisalignment = fabs(MatrixMath::CosThetaBetweenVectors(uvw1, uvw2));
         totalDirectionMisalignment = totalDirectionMisalignment + directionMisalignment;
       }
-      F7 = directionComponent1*directionComponent1*totalDirectionMisalignment;
+      F7 = directionComponent1 * directionComponent1 * totalDirectionMisalignment;
       if(maxSF == false)
       {
-        if(F7 < maxF7) F7 = maxF7;
-        else maxF7 = F7;
+        if(F7 < maxF7) { F7 = maxF7; }
+        else { maxF7 = F7; }
       }
     }
   }
@@ -995,7 +1026,7 @@ namespace Detail
           m_xyz011(xyz011),
           m_xyz111(xyz111)
         {}
-        virtual ~GenerateSphereCoordsImpl(){}
+        virtual ~GenerateSphereCoordsImpl() {}
 
         void generate(size_t start, size_t end) const
         {
@@ -1013,70 +1044,96 @@ namespace Detail
 
             // -----------------------------------------------------------------------------
             // 001 Family
-            direction[0] = 1.0; direction[1] = 0.0; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18));
-            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18),m_xyz001->GetPointer(i*18 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 3),-1);
-            direction[0] = 0.0; direction[1] = 1.0; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 6));
-            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 6),m_xyz001->GetPointer(i*18 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 9),-1);
-            direction[0] = 0.0; direction[1] = 0.0; direction[2] = 1.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i*18 + 12));
-            MatrixMath::Copy3x1(m_xyz001->GetPointer(i*18 + 12),m_xyz001->GetPointer(i*18 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i*18 + 15),-1);
+            direction[0] = 1.0;
+            direction[1] = 0.0;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i * 18));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i * 18), m_xyz001->GetPointer(i * 18 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i * 18 + 3), -1);
+            direction[0] = 0.0;
+            direction[1] = 1.0;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i * 18 + 6));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i * 18 + 6), m_xyz001->GetPointer(i * 18 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i * 18 + 9), -1);
+            direction[0] = 0.0;
+            direction[1] = 0.0;
+            direction[2] = 1.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz001->GetPointer(i * 18 + 12));
+            MatrixMath::Copy3x1(m_xyz001->GetPointer(i * 18 + 12), m_xyz001->GetPointer(i * 18 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz001->GetPointer(i * 18 + 15), -1);
 
             // -----------------------------------------------------------------------------
             // 011 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36),m_xyz011->GetPointer(i*36 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 3),-1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 6));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+6),m_xyz011->GetPointer(i*36 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 9),-1);
-            direction[0] = 0.0; direction[1] = DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 12));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+12),m_xyz011->GetPointer(i*36 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 15),-1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = 0.0;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 18));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+18),m_xyz011->GetPointer(i*36 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 21),-1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot2; direction[1] = 0.0; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 24));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+24),m_xyz011->GetPointer(i*36 + 27));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 27),-1);
-            direction[0] = 0.0; direction[1] = -DREAM3D::Constants::k_1OverRoot2; direction[2] = DREAM3D::Constants::k_1OverRoot2;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i*36 + 30));
-            MatrixMath::Copy3x1(m_xyz011->GetPointer(i*36+30),m_xyz011->GetPointer(i*36 + 33));
-            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i*36 + 33),-1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36), m_xyz011->GetPointer(i * 36 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 3), -1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = 0.0;
+            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36 + 6));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36 + 6), m_xyz011->GetPointer(i * 36 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 9), -1);
+            direction[0] = 0.0;
+            direction[1] = DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36 + 12));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36 + 12), m_xyz011->GetPointer(i * 36 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 15), -1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = 0.0;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36 + 18));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36 + 18), m_xyz011->GetPointer(i * 36 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 21), -1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[1] = 0.0;
+            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36 + 24));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36 + 24), m_xyz011->GetPointer(i * 36 + 27));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 27), -1);
+            direction[0] = 0.0;
+            direction[1] = -DREAM3D::Constants::k_1OverRoot2;
+            direction[2] = DREAM3D::Constants::k_1OverRoot2;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz011->GetPointer(i * 36 + 30));
+            MatrixMath::Copy3x1(m_xyz011->GetPointer(i * 36 + 30), m_xyz011->GetPointer(i * 36 + 33));
+            MatrixMath::Multiply3x1withConstant(m_xyz011->GetPointer(i * 36 + 33), -1);
 
             // -----------------------------------------------------------------------------
             // 111 Family
-            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24));
-            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24),m_xyz111->GetPointer(i*24 + 3));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 3),-1);
-            direction[0] = -DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 6));
-            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+6),m_xyz111->GetPointer(i*24 + 9));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 9),-1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = -DREAM3D::Constants::k_1OverRoot3; direction[2] = DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 12));
-            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+12),m_xyz111->GetPointer(i*24 + 15));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 15),-1);
-            direction[0] = DREAM3D::Constants::k_1OverRoot3; direction[1] = DREAM3D::Constants::k_1OverRoot3; direction[2] = -DREAM3D::Constants::k_1OverRoot3;
-            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i*24 + 18));
-            MatrixMath::Copy3x1(m_xyz111->GetPointer(i*24+18),m_xyz111->GetPointer(i*24 + 21));
-            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i*24 + 21),-1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot3;
+            direction[1] = DREAM3D::Constants::k_1OverRoot3;
+            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i * 24));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i * 24), m_xyz111->GetPointer(i * 24 + 3));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i * 24 + 3), -1);
+            direction[0] = -DREAM3D::Constants::k_1OverRoot3;
+            direction[1] = DREAM3D::Constants::k_1OverRoot3;
+            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i * 24 + 6));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i * 24 + 6), m_xyz111->GetPointer(i * 24 + 9));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i * 24 + 9), -1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot3;
+            direction[1] = -DREAM3D::Constants::k_1OverRoot3;
+            direction[2] = DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i * 24 + 12));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i * 24 + 12), m_xyz111->GetPointer(i * 24 + 15));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i * 24 + 15), -1);
+            direction[0] = DREAM3D::Constants::k_1OverRoot3;
+            direction[1] = DREAM3D::Constants::k_1OverRoot3;
+            direction[2] = -DREAM3D::Constants::k_1OverRoot3;
+            MatrixMath::Multiply3x3with3x1(gTranpose, direction, m_xyz111->GetPointer(i * 24 + 18));
+            MatrixMath::Copy3x1(m_xyz111->GetPointer(i * 24 + 18), m_xyz111->GetPointer(i * 24 + 21));
+            MatrixMath::Multiply3x1withConstant(m_xyz111->GetPointer(i * 24 + 21), -1);
           }
 
         }
 
 #ifdef DREAM3D_USE_PARALLEL_ALGORITHMS
-        void operator()(const tbb::blocked_range<size_t> &r) const
+        void operator()(const tbb::blocked_range<size_t>& r) const
         {
           generate(r.begin(), r.end());
         }
@@ -1088,7 +1145,7 @@ namespace Detail
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void CubicOps::generateSphereCoordsFromEulers(FloatArrayType *eulers, FloatArrayType *xyz001, FloatArrayType *xyz011, FloatArrayType *xyz111)
+void CubicOps::generateSphereCoordsFromEulers(FloatArrayType* eulers, FloatArrayType* xyz001, FloatArrayType* xyz011, FloatArrayType* xyz111)
 {
   size_t nOrientations = eulers->GetNumberOfTuples();
 
@@ -1151,11 +1208,15 @@ void _TripletSort(T a, T b, T c, T* sorted)
   }
   else if ( a > b )
   {
-    sorted[1] = a; sorted[0] = b; sorted[2] = c;
+    sorted[1] = a;
+    sorted[0] = b;
+    sorted[2] = c;
   }
-  else if (a >= c && b >=c)
+  else if (a >= c && b >= c)
   {
-    sorted[0] = c; sorted[1] = a; sorted[2] = b;
+    sorted[0] = c;
+    sorted[1] = a;
+    sorted[2] = b;
   }
   else
   { sorted[0] = a; sorted[1] = b; sorted[2] = c;}
@@ -1172,7 +1233,7 @@ void _TripletSort(T a, T b, T c, T* sorted)
  * @param z Output
  */
 template<typename T>
-void _TripletSort(T a, T b, T c, T &x, T &y, T&z)
+void _TripletSort(T a, T b, T c, T& x, T& y, T& z)
 {
   if ( a > b && a > c)
   {
@@ -1188,11 +1249,15 @@ void _TripletSort(T a, T b, T c, T &x, T &y, T&z)
   }
   else if ( a > b )
   {
-    y = a; x = b; z = c;
+    y = a;
+    x = b;
+    z = c;
   }
-  else if (a >= c && b >=c)
+  else if (a >= c && b >= c)
   {
-    x = c; y = a; z = b;
+    x = c;
+    y = a;
+    z = b;
   }
   else
   { x = a; y = b; z = c;}
@@ -1204,13 +1269,13 @@ void _TripletSort(T a, T b, T c, T &x, T &y, T&z)
 // -----------------------------------------------------------------------------
 bool CubicOps::inUnitTriangle(float eta, float chi)
 {
-  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
   float chiMax;
-  if(etaDeg > 45.0) chiMax = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
-  else chiMax = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
-  DREAM3DMath::boundF(chiMax,-1.0f,1.0f);
+  if(etaDeg > 45.0) { chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta))); }
+  else { chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta))); }
+  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
-  if( eta < 0.0 || eta > (45.0*DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax ) return false;
+  if( eta < 0.0 || eta > (45.0 * DREAM3D::Constants::k_PiOver180) || chi < 0.0 || chi > chiMax ) { return false; }
   return true;
 }
 
@@ -1256,35 +1321,35 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
     MatrixMath::Multiply3x3with3x1(g, refDirection, p);
     MatrixMath::Normalize3x1(p);
 
-    if(getHasInversion() == false && p[2] < 0) continue;
-    else if(getHasInversion() == true && p[2] < 0) p[0] = -p[0], p[1] = -p[1], p[2] = -p[2];
+    if(getHasInversion() == false && p[2] < 0) { continue; }
+    else if(getHasInversion() == true && p[2] < 0) { p[0] = -p[0], p[1] = -p[1], p[2] = -p[2]; }
     chi = acos(p[2]);
-    eta = atan2(p[1],p[0]);
-    if(inUnitTriangle(eta, chi) == false) continue;
+    eta = atan2(p[1], p[0]);
+    if(inUnitTriangle(eta, chi) == false) { continue; }
     else {break;}
   }
 
   float etaMin = 0.0;
   float etaMax = 45.0;
-  float etaDeg = eta*DREAM3D::Constants::k_180OverPi;
+  float etaDeg = eta * DREAM3D::Constants::k_180OverPi;
   float chiMax;
-  if(etaDeg > 45.0) chiMax = sqrt(1.0/(2.0+tanf(0.5*DREAM3D::Constants::k_Pi-eta)*tanf(0.5*DREAM3D::Constants::k_Pi-eta)));
-  else chiMax = sqrt(1.0/(2.0+tanf(eta)*tanf(eta)));
-  DREAM3DMath::boundF(chiMax,-1.0f,1.0f);
+  if(etaDeg > 45.0) { chiMax = sqrt(1.0 / (2.0 + tanf(0.5 * DREAM3D::Constants::k_Pi - eta) * tanf(0.5 * DREAM3D::Constants::k_Pi - eta))); }
+  else { chiMax = sqrt(1.0 / (2.0 + tanf(eta) * tanf(eta))); }
+  DREAM3DMath::boundF(chiMax, -1.0f, 1.0f);
   chiMax = acos(chiMax);
 
-  _rgb[0] = 1.0 - chi/chiMax;
-  _rgb[2] = fabs(etaDeg-etaMin)/(etaMax-etaMin);
-  _rgb[1] = 1-_rgb[2];
-  _rgb[1] *= chi/chiMax;
-  _rgb[2] *= chi/chiMax;
+  _rgb[0] = 1.0 - chi / chiMax;
+  _rgb[2] = fabs(etaDeg - etaMin) / (etaMax - etaMin);
+  _rgb[1] = 1 - _rgb[2];
+  _rgb[1] *= chi / chiMax;
+  _rgb[2] *= chi / chiMax;
   _rgb[0] = sqrt(_rgb[0]);
   _rgb[1] = sqrt(_rgb[1]);
   _rgb[2] = sqrt(_rgb[2]);
 
   float max = _rgb[0];
-  if (_rgb[1] > max) max = _rgb[1];
-  if (_rgb[2] > max) max = _rgb[2];
+  if (_rgb[1] > max) { max = _rgb[1]; }
+  if (_rgb[2] > max) { max = _rgb[2]; }
 
   _rgb[0] = _rgb[0] / max;
   _rgb[1] = _rgb[1] / max;
@@ -1299,15 +1364,15 @@ DREAM3D::Rgb CubicOps::generateIPFColor(double phi1, double phi, double phi2, do
 // -----------------------------------------------------------------------------
 DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 {
-  float range1 = 2.0f*CubicDim1InitValue;
-  float range2 = 2.0f*CubicDim2InitValue;
-  float range3 = 2.0f*CubicDim3InitValue;
-  float max1 = range1/2.0f;
-  float max2 = range2/2.0f;
-  float max3 = range3/2.0f;
-  float red = (r1+max1)/range1;
-  float green = (r2+max2)/range2;
-  float blue = (r3+max3)/range3;
+  float range1 = 2.0f * CubicDim1InitValue;
+  float range2 = 2.0f * CubicDim2InitValue;
+  float range3 = 2.0f * CubicDim3InitValue;
+  float max1 = range1 / 2.0f;
+  float max2 = range2 / 2.0f;
+  float max3 = range3 / 2.0f;
+  float red = (r1 + max1) / range1;
+  float green = (r2 + max2) / range2;
+  float blue = (r3 + max3) / range3;
 
   return RgbColor::dRgb(red * 255, green * 255, blue * 255, 255);
 }
@@ -1315,7 +1380,7 @@ DREAM3D::Rgb CubicOps::generateRodriguesColor(float r1, float r2, float r3)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t &config)
+std::vector<UInt8ArrayType::Pointer> CubicOps::generatePoleFigure(PoleFigureConfiguration_t& config)
 {
   std::vector<UInt8ArrayType::Pointer> poleFigures;
   std::string label0("<001>");
@@ -1554,7 +1619,7 @@ UInt8ArrayType::Pointer CubicOps::generateIPFTriangleLegend(int imageDim)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &refFrame)
+DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF& q, const QuatF& refFrame)
 {
   float n1, n2, n3, w;
   float x, x1, x2, x3, x4, x5, x6, x7;
@@ -1567,234 +1632,234 @@ DREAM3D::Rgb CubicOps::generateMisorientationColor(const QuatF &q, const QuatF &
   QuaternionMathF::Copy(refFrame, q2);
 
   //get disorientation
-  w=getMisoQuat(q1, q2, n1, n2, n3);
-  n1=fabs(n1);
-  n2=fabs(n2);
-  n3=fabs(n3);
+  w = getMisoQuat(q1, q2, n1, n2, n3);
+  n1 = fabs(n1);
+  n2 = fabs(n2);
+  n3 = fabs(n3);
 
   _TripletSort(n1, n2, n3, z, y, x);
 
   //eq c9.1
-  k=tan(w/2.0f);
-  x=x*k;
-  y=y*k;
-  z=z*k;
+  k = tan(w / 2.0f);
+  x = x * k;
+  y = y * k;
+  z = z * k;
 
   //eq c9.2
-  x1=x;
-  y1=y;
-  z1=z;
-  if(x>=DREAM3D::Constants::k_1Over3 && atan2(z, y)>=((1.0f-2.0f*x)/x))
+  x1 = x;
+  y1 = y;
+  z1 = z;
+  if(x >= DREAM3D::Constants::k_1Over3 && atan2(z, y) >= ((1.0f - 2.0f * x) / x))
   {
-      y1=(x*(y+z))/(1.0f-x);
-      z1=(x*z*(y+z))/(y*(1.0f-x));
+    y1 = (x * (y + z)) / (1.0f - x);
+    z1 = (x * z * (y + z)) / (y * (1.0f - x));
   }
 
   //eq c9.3
-  x2=x1-DREAM3D::Constants::k_Tan_OneEigthPi;
-  y2=y1*DREAM3D::Constants::k_Cos_ThreeEightPi-z1*DREAM3D::Constants::k_Sin_ThreeEightPi;
-  z2=y1*DREAM3D::Constants::k_Sin_ThreeEightPi+z1*DREAM3D::Constants::k_Cos_ThreeEightPi;
+  x2 = x1 - DREAM3D::Constants::k_Tan_OneEigthPi;
+  y2 = y1 * DREAM3D::Constants::k_Cos_ThreeEightPi - z1 * DREAM3D::Constants::k_Sin_ThreeEightPi;
+  z2 = y1 * DREAM3D::Constants::k_Sin_ThreeEightPi + z1 * DREAM3D::Constants::k_Cos_ThreeEightPi;
 
   //eq c9.4
-  x3=x2;
-  y3=y2*(1+(y2/z2)*DREAM3D::Constants::k_Tan_OneEigthPi);
-  z3=z2+y2*DREAM3D::Constants::k_Tan_OneEigthPi;
+  x3 = x2;
+  y3 = y2 * (1 + (y2 / z2) * DREAM3D::Constants::k_Tan_OneEigthPi);
+  z3 = z2 + y2 * DREAM3D::Constants::k_Tan_OneEigthPi;
 
   //eq c9.5
-  x4=x3;
-  y4=(y3*DREAM3D::Constants::k_Cos_OneEigthPi)/DREAM3D::Constants::k_Tan_OneEigthPi;
-  z4=z3-x3/DREAM3D::Constants::k_Cos_OneEigthPi;
+  x4 = x3;
+  y4 = (y3 * DREAM3D::Constants::k_Cos_OneEigthPi) / DREAM3D::Constants::k_Tan_OneEigthPi;
+  z4 = z3 - x3 / DREAM3D::Constants::k_Cos_OneEigthPi;
 
   //eq c9.6
-  k=atan2(-x4, y4);
-  x5=x4*(sin(k)+fabs(cos(k)));
-  y5=y4*(sin(k)+fabs(cos(k)));
-  z5=z4;
+  k = atan2(-x4, y4);
+  x5 = x4 * (sin(k) + fabs(cos(k)));
+  y5 = y4 * (sin(k) + fabs(cos(k)));
+  z5 = z4;
 
   //eq c9.7
-  k=atan2(-x5, y5);
-  x6=-sqrt(x5*x5+y5*y5)*sin(2.0f*k);
-  y6=sqrt(x5*x5+y5*y5)*cos(2.0f*k);
-  z6=z5;
+  k = atan2(-x5, y5);
+  x6 = -sqrt(x5 * x5 + y5 * y5) * sin(2.0f * k);
+  y6 = sqrt(x5 * x5 + y5 * y5) * cos(2.0f * k);
+  z6 = z5;
 
   //eq c9.8 these hsv are from 0 to 1 in cartesian coordinates
-  x7=(x6*DREAM3D::Constants::k_Sqrt3-y6)/(2.0f*DREAM3D::Constants::k_Tan_OneEigthPi);
-  y7=(x6+y6*DREAM3D::Constants::k_Sqrt3)/(2.0f*DREAM3D::Constants::k_Tan_OneEigthPi);
-  z7=z6*(DREAM3D::Constants::k_Cos_OneEigthPi/DREAM3D::Constants::k_Tan_OneEigthPi);
+  x7 = (x6 * DREAM3D::Constants::k_Sqrt3 - y6) / (2.0f * DREAM3D::Constants::k_Tan_OneEigthPi);
+  y7 = (x6 + y6 * DREAM3D::Constants::k_Sqrt3) / (2.0f * DREAM3D::Constants::k_Tan_OneEigthPi);
+  z7 = z6 * (DREAM3D::Constants::k_Cos_OneEigthPi / DREAM3D::Constants::k_Tan_OneEigthPi);
 
   //convert to traditional hsv (0-1)
-  h=fmod(atan2f(y7, x7)+M_2PI, M_2PI)/M_2PI;
-  s=sqrt(x7*x7+y7*y7);
-  v=z7;
-  if(v>0)
+  h = fmod(atan2f(y7, x7) + M_2PI, M_2PI) / M_2PI;
+  s = sqrt(x7 * x7 + y7 * y7);
+  v = z7;
+  if(v > 0)
   {
-      s=s/v;
+    s = s / v;
   }
 
   DREAM3D::Rgb rgb = ColorUtilities::convertHSVtoRgb(h, s, v);
 
   //now standard 0-255 rgb, needs rotation
-  return RgbColor::dRgb(255-RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
+  return RgbColor::dRgb(255 - RgbColor::dGreen(rgb), RgbColor::dBlue(rgb), RgbColor::dRed(rgb), 0);
 }
 
 UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float angle, int n1, int n2, int imageDim)
 {
 
-    BOOST_ASSERT(false);
+  BOOST_ASSERT(false);
 
   UInt8ArrayType::Pointer image = UInt8ArrayType::CreateArray(imageDim * imageDim, 4, "Cubic High Misorientation Triangle Legend");
   uint32_t* pixelPtr = reinterpret_cast<uint32_t*>(image->GetPointer(0));
 
-  double maxk = sqrt(2)-1;
-  double maxdeg = 2*atan(sqrt(6*maxk*maxk-4*maxk+1));
-  double deg1=2*atan(sqrt(2*maxk*maxk));
+  double maxk = sqrt(2) - 1;
+  double maxdeg = 2 * atan(sqrt(6 * maxk * maxk - 4 * maxk + 1));
+  double deg1 = 2 * atan(sqrt(2 * maxk * maxk));
 
-  double A=angle*M_PI/360;
+  double A = angle * M_PI / 360;
   std::vector<double> B;
   std::vector< std::vector<double> > C;
 
   ///Generate regularly spaced array of points in misorientation space
-  if(A<=M_PI/8)
+  if(A <= M_PI / 8)
   {
-      double theta1=atan(1/sin(M_PI_4));
-      double theta2=M_PI_2;
-      B=DREAM3DMath::linspace(theta1, theta2, n2);
-      for(int i=0; i<n2; i++)
-      {
-          C.push_back(DREAM3DMath::linspace(asin(1/tan(B[i])), M_PI_4, n1));
-      }
+    double theta1 = atan(1 / sin(M_PI_4));
+    double theta2 = M_PI_2;
+    B = DREAM3DMath::linspace(theta1, theta2, n2);
+    for(int i = 0; i < n2; i++)
+    {
+      C.push_back(DREAM3DMath::linspace(asin(1 / tan(B[i])), M_PI_4, n1));
+    }
   }
-  else if(A>M_PI/8 && A<=M_PI/6)
+  else if(A > M_PI / 8 && A <= M_PI / 6)
   {
-      double theta1=atan(1/sin(M_PI_4));
-      double theta2=acos(-(maxk*(1/tan(A)))*(maxk*(1/tan(A))))/2;
-      double theta3=M_PI_2;
-      int frac1 = floor((n2-3)*(theta2-theta1)/(theta3-theta1));
-      int frac2 = (n2-3)-frac1;
-      std::vector<double> temptheta1=DREAM3DMath::linspace(theta1, theta2, frac1+2);
-      std::vector<double> temptheta2=DREAM3DMath::linspace(theta2, theta3, frac2+2);
-      temptheta2.erase(temptheta2.begin());
-      B.insert(B.end(), temptheta1.begin(), temptheta1.end());
-      B.insert(B.end(), temptheta2.begin(), temptheta2.end());
-      for(int i=0; i<n2; i++)
+    double theta1 = atan(1 / sin(M_PI_4));
+    double theta2 = acos(-(maxk * (1 / tan(A))) * (maxk * (1 / tan(A)))) / 2;
+    double theta3 = M_PI_2;
+    int frac1 = floor((n2 - 3) * (theta2 - theta1) / (theta3 - theta1));
+    int frac2 = (n2 - 3) - frac1;
+    std::vector<double> temptheta1 = DREAM3DMath::linspace(theta1, theta2, frac1 + 2);
+    std::vector<double> temptheta2 = DREAM3DMath::linspace(theta2, theta3, frac2 + 2);
+    temptheta2.erase(temptheta2.begin());
+    B.insert(B.end(), temptheta1.begin(), temptheta1.end());
+    B.insert(B.end(), temptheta2.begin(), temptheta2.end());
+    for(int i = 0; i < n2; i++)
+    {
+      double theta = B[i];
+      if(theta >= theta1 && theta <= theta2)
       {
-          double theta=B[i];
-          if(theta>=theta1 && theta<=theta2)
-          {
-              C.push_back(DREAM3DMath::linspace(asin(1/tan(theta)), M_PI_4, n1));
-          }
-          else
-          {
-              C.push_back(DREAM3DMath::linspace(acos(maxk/(tan(A)*sin(theta))), M_PI_4, n1));
-          }
+        C.push_back(DREAM3DMath::linspace(asin(1 / tan(theta)), M_PI_4, n1));
       }
+      else
+      {
+        C.push_back(DREAM3DMath::linspace(acos(maxk / (tan(A)*sin(theta))), M_PI_4, n1));
+      }
+    }
   }
-  else if(A>M_PI/6 && A<=deg1/2)
+  else if(A > M_PI / 6 && A <= deg1 / 2)
   {
-      std::vector<double> thetaSort;
-      double thetaa=acos((1-sqrt(6*tan(A)*tan(A)-2))/(3*tan(A)));
-      thetaSort.push_back(thetaa);
-      thetaSort.push_back(M_PI_2);
-      thetaSort.push_back(acos((2-sqrt(6*tan(A)*tan(A)-2))/(6*tan(A))));
-      double thetad=(acos(-(maxk/tan(A))*(maxk/tan(A))))/2;
-      thetaSort.push_back(thetad);
-      std::sort(thetaSort.begin(), thetaSort.end());
-      double theta1=thetaSort[0];
-      double theta2=thetaSort[1];
-      double theta3=thetaSort[2];
-      double theta4=thetaSort[3];
-      int frac1 = (floor((n2 - 4)*(theta2 - theta1)/(theta4 - theta1)));
-      int frac2 = (floor((n2 - 4)*(theta3 - theta2)/(theta4 - theta1)));
-      int frac3 = n2 - 4 - frac1 - frac2;
-      std::vector<double> temptheta3 = DREAM3DMath::linspace(theta1,theta2,(frac1 + 2));
-      std::vector<double> temptheta4 = DREAM3DMath::linspace(theta2,theta3,(frac2 + 2));
-      temptheta4.erase(temptheta4.begin());
-      std::vector<double>temptheta5 = DREAM3DMath::linspace(theta3,theta4,(frac3 + 2));
-      temptheta5.erase(temptheta5.begin());
-      B.insert(B.end(), temptheta3.begin(), temptheta3.end());
-      B.insert(B.end(), temptheta4.begin(), temptheta4.end());
-      B.insert(B.end(), temptheta5.begin(), temptheta5.end());
+    std::vector<double> thetaSort;
+    double thetaa = acos((1 - sqrt(6 * tan(A) * tan(A) - 2)) / (3 * tan(A)));
+    thetaSort.push_back(thetaa);
+    thetaSort.push_back(M_PI_2);
+    thetaSort.push_back(acos((2 - sqrt(6 * tan(A)*tan(A) - 2)) / (6 * tan(A))));
+    double thetad = (acos(-(maxk / tan(A)) * (maxk / tan(A)))) / 2;
+    thetaSort.push_back(thetad);
+    std::sort(thetaSort.begin(), thetaSort.end());
+    double theta1 = thetaSort[0];
+    double theta2 = thetaSort[1];
+    double theta3 = thetaSort[2];
+    double theta4 = thetaSort[3];
+    int frac1 = (floor((n2 - 4) * (theta2 - theta1) / (theta4 - theta1)));
+    int frac2 = (floor((n2 - 4) * (theta3 - theta2) / (theta4 - theta1)));
+    int frac3 = n2 - 4 - frac1 - frac2;
+    std::vector<double> temptheta3 = DREAM3DMath::linspace(theta1, theta2, (frac1 + 2));
+    std::vector<double> temptheta4 = DREAM3DMath::linspace(theta2, theta3, (frac2 + 2));
+    temptheta4.erase(temptheta4.begin());
+    std::vector<double>temptheta5 = DREAM3DMath::linspace(theta3, theta4, (frac3 + 2));
+    temptheta5.erase(temptheta5.begin());
+    B.insert(B.end(), temptheta3.begin(), temptheta3.end());
+    B.insert(B.end(), temptheta4.begin(), temptheta4.end());
+    B.insert(B.end(), temptheta5.begin(), temptheta5.end());
 
-      for(int i=0; i<n2; i++)
+    for(int i = 0; i < n2; i++)
+    {
+      double theta = B[i];
+      double phi1, phi2;
+      if(thetaa <= thetad)
       {
-          double theta = B[i];
-          double phi1, phi2;
-          if(thetaa<=thetad)
-          {
-              if(theta<=theta2)
-              {
-                  phi1=asin(1/tan(theta));
-                  double k=(1-tan(A)*cos(theta))/(sqrt(2)*(tan(A)*sin(theta)));
-                  if(k>1)k=1;
-                  if(k<-1)k=-1;
-                  phi2=asin(k)-M_PI_4;
-              }
-              else if(theta>theta2 && theta<theta3)
-              {
-                  phi1=acos((sqrt(2)-1)/(tan(A)*sin(theta)));
-                  phi2=M_PI_4;
-              }
-          }
-          else
-          {
-              if(theta<=theta2)
-              {
-                  phi1=asin(1/tan(theta));
-              }
-              else if(theta>theta2 && theta<=theta3)
-              {
-                  phi1=acos(maxk/(tan(A)*sin(theta)));
-              }
+        if(theta <= theta2)
+        {
+          phi1 = asin(1 / tan(theta));
+          double k = (1 - tan(A) * cos(theta)) / (sqrt(2) * (tan(A) * sin(theta)));
+          if(k > 1) { k = 1; }
+          if(k < -1) { k = -1; }
+          phi2 = asin(k) - M_PI_4;
+        }
+        else if(theta > theta2 && theta < theta3)
+        {
+          phi1 = acos((sqrt(2) - 1) / (tan(A) * sin(theta)));
+          phi2 = M_PI_4;
+        }
+      }
+      else
+      {
+        if(theta <= theta2)
+        {
+          phi1 = asin(1 / tan(theta));
+        }
+        else if(theta > theta2 && theta <= theta3)
+        {
+          phi1 = acos(maxk / (tan(A) * sin(theta)));
+        }
 
-              double d3=tan(A)*cos(theta);
-              double k=((1-d3)+sqrt(2*(tan(A)*tan(A)-d3*d3)-(1-d3)*(1-d3)))/(2*tan(A)*sin(theta));
-              if(k>1)k=1;
-              if(k<-1)k=-1;
-              phi2=acos(k);
-          }
-          if(theta>theta3)
-          {
-              phi1=acos(maxk/(tan(A)*sin(theta)));
-              phi2=M_PI_4;
-          }
-          C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+        double d3 = tan(A) * cos(theta);
+        double k = ((1 - d3) + sqrt(2 * (tan(A) * tan(A) - d3 * d3) - (1 - d3) * (1 - d3))) / (2 * tan(A) * sin(theta));
+        if(k > 1) { k = 1; }
+        if(k < -1) { k = -1; }
+        phi2 = acos(k);
       }
-  }
-  else if(A>=deg1/2 && A<=maxdeg/2)
-  {
-      double theta1 = acos(((1-maxk)- sqrt(2*(tan(A)*tan(A) - maxk*maxk) - (1-maxk)*(1-maxk)))/(2*tan(A)));
-      double theta2 = acos((1-sqrt(6*(tan(A)*tan(A))-2))/(3*tan(A)));
-      double theta3 = acos((sqrt(tan(A)*tan(A)-2*(maxk*maxk)))/(tan(A)));
-      int frac1 = (floor((n2 - 3)*(theta2 - theta1)/(theta3 - theta1)));
-      int frac2 = (n2 - 3) - frac1;
-      std::vector<double> temptheta1 = DREAM3DMath::linspace(theta1,theta2,(frac1 + 2));
-      std::vector<double> temptheta2 = DREAM3DMath::linspace(theta2,theta3,(frac2 + 2));
-      temptheta2.erase(temptheta2.begin());
-      B.insert(B.end(), temptheta1.begin(), temptheta1.end());
-      B.insert(B.end(), temptheta2.begin(), temptheta2.end());
-      for(int i=0; i<n2; i++)
+      if(theta > theta3)
       {
-          double theta=B[i];
-          double phi1, phi2;
-          phi1=acos(maxk/(tan(A)*sin(theta)));
-          if(theta>=theta1 && theta<theta2)
-          {
-              double d3=tan(A)*cos(theta);
-              double k=((1-d3)+sqrt(2*(tan(A)*tan(A)-d3*d3)-(1-d3)*(1-d3)))/(2*tan(A)*sin(theta));
-              phi2=acos(k);
-          }
-          else
-          {
-              phi2=M_PI_4;
-          }
-          C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+        phi1 = acos(maxk / (tan(A) * sin(theta)));
+        phi2 = M_PI_4;
       }
+      C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+    }
+  }
+  else if(A >= deg1 / 2 && A <= maxdeg / 2)
+  {
+    double theta1 = acos(((1 - maxk) - sqrt(2 * (tan(A) * tan(A) - maxk * maxk) - (1 - maxk) * (1 - maxk))) / (2 * tan(A)));
+    double theta2 = acos((1 - sqrt(6 * (tan(A) * tan(A)) - 2)) / (3 * tan(A)));
+    double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * (maxk * maxk))) / (tan(A)));
+    int frac1 = (floor((n2 - 3) * (theta2 - theta1) / (theta3 - theta1)));
+    int frac2 = (n2 - 3) - frac1;
+    std::vector<double> temptheta1 = DREAM3DMath::linspace(theta1, theta2, (frac1 + 2));
+    std::vector<double> temptheta2 = DREAM3DMath::linspace(theta2, theta3, (frac2 + 2));
+    temptheta2.erase(temptheta2.begin());
+    B.insert(B.end(), temptheta1.begin(), temptheta1.end());
+    B.insert(B.end(), temptheta2.begin(), temptheta2.end());
+    for(int i = 0; i < n2; i++)
+    {
+      double theta = B[i];
+      double phi1, phi2;
+      phi1 = acos(maxk / (tan(A) * sin(theta)));
+      if(theta >= theta1 && theta < theta2)
+      {
+        double d3 = tan(A) * cos(theta);
+        double k = ((1 - d3) + sqrt(2 * (tan(A) * tan(A) - d3 * d3) - (1 - d3) * (1 - d3))) / (2 * tan(A) * sin(theta));
+        phi2 = acos(k);
+      }
+      else
+      {
+        phi2 = M_PI_4;
+      }
+      C.push_back(DREAM3DMath::linspace(phi1, phi2, n1));
+    }
   }
 
   ///create image, fill with empty pixels, setup painter
-  int width=1000;
-  double scale =width/tan(M_PI/8);
-  int height=ceil(0.349159*scale);
+  int width = 1000;
+  double scale = width / tan(M_PI / 8);
+  int height = ceil(0.349159 * scale);
   /*
   QPainter painter;
   image = QImage(width, height, QImage::Format_ARGB32_Premultiplied);
@@ -1811,15 +1876,15 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   pen.setStyle(Qt::DotLine);
   painter.setPen(pen);
   */
-  double r=tan(A);
+  double r = tan(A);
   std::vector<double> x, y, z;
-  y=DREAM3DMath::linspace(0, r/sqrt(2), 100);
-  for(int i=0; i<y.size(); i++)
+  y = DREAM3DMath::linspace(0, r / sqrt(2), 100);
+  for(int i = 0; i < y.size(); i++)
   {
-      double k=r*r-y[i]*y[i];
-      if(k<0)k=0;
-      x.push_back(sqrt(k));
-      z.push_back(0);
+    double k = r * r - y[i] * y[i];
+    if(k < 0) { k = 0; }
+    x.push_back(sqrt(k));
+    z.push_back(0);
   }
   std::vector< std::pair<double, double> > ptsa = rodri2pair(x, y, z);
   //std::vector< std::pair<int, int> > pointlist=scalePoints(ptsa, scale);
@@ -1829,15 +1894,15 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x=DREAM3DMath::linspace(r/sqrt(3), r, 100);
-  for(int i=0; i<x.size(); i++)
+  x = DREAM3DMath::linspace(r / sqrt(3), r, 100);
+  for(int i = 0; i < x.size(); i++)
   {
-      double k=r*r-x[i]*x[i];
-      if(k<0)k=0;
-      y.push_back(sqrt((k)/2));
-      z.push_back(y[i]);
+    double k = r * r - x[i] * x[i];
+    if(k < 0) { k = 0; }
+    y.push_back(sqrt((k) / 2));
+    z.push_back(y[i]);
   }
-  ptsa=rodri2pair(x, y, z);
+  ptsa = rodri2pair(x, y, z);
   //pointlist=scalePoints(ptsa, scale);
   //qpointlist = pairToQPoint(pointlist);
   //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
@@ -1845,15 +1910,15 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   x.clear();
   y.clear();
   z.clear();
-  x=DREAM3DMath::linspace(r/sqrt(3),r/sqrt(2),100);
-  for(int i=0; i<x.size(); i++)
+  x = DREAM3DMath::linspace(r / sqrt(3), r / sqrt(2), 100);
+  for(int i = 0; i < x.size(); i++)
   {
-      y.push_back(x[i]);
-      double k=r*r-2*x[i]*x[i];
-      if(k<0)k=0;
-      z.push_back(sqrt(k));
+    y.push_back(x[i]);
+    double k = r * r - 2 * x[i] * x[i];
+    if(k < 0) { k = 0; }
+    z.push_back(sqrt(k));
   }
-  ptsa=rodri2pair(x, y, z);
+  ptsa = rodri2pair(x, y, z);
   //pointlist=scalePoints(ptsa, scale);
   //qpointlist = pairToQPoint(pointlist);
   //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
@@ -1861,37 +1926,37 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   ///find triangle vertices by converting misorientation space grid to pixels
   std::vector< std::pair<double, double> > ba;
   std::vector<double> d0, d1, d2, d3;
-  int k=0;
-  for(int i=0; i<n1; i++)
+  int k = 0;
+  for(int i = 0; i < n1; i++)
   {
-      for(int j=0; j<n2; j++)
-      {
-          d3.push_back(tan(A)*cos(B[j]));
-          d2.push_back(tan(A)*sin(B[j])*sin(C[j][i]));
-          d1.push_back(tan(A)*sin(B[j])*cos(C[j][i]));
-          double d=1-d1[k]*d1[k]-d2[k]*d2[k]-d3[k]*d3[k];
-          k++;
-      }
+    for(int j = 0; j < n2; j++)
+    {
+      d3.push_back(tan(A)*cos(B[j]));
+      d2.push_back(tan(A)*sin(B[j])*sin(C[j][i]));
+      d1.push_back(tan(A)*sin(B[j])*cos(C[j][i]));
+      double d = 1 - d1[k] * d1[k] - d2[k] * d2[k] - d3[k] * d3[k];
+      k++;
+    }
   }
 
   ///add corner vertices if the sst isn't filled
-  if(A>M_PI/8)
+  if(A > M_PI / 8)
   {
-      d1.push_back(0);
-      d2.push_back(0);
-      d3.push_back(0);
+    d1.push_back(0);
+    d2.push_back(0);
+    d3.push_back(0);
 
-      if(A>M_PI/8 && A<=M_PI/6)
-      {
-      }
-      else
-      {
-          d1.push_back(r/sqrt(3));
-          d2.push_back(r/sqrt(3));
-          d3.push_back(r/sqrt(3));
-      }
+    if(A > M_PI / 8 && A <= M_PI / 6)
+    {
+    }
+    else
+    {
+      d1.push_back(r / sqrt(3));
+      d2.push_back(r / sqrt(3));
+      d3.push_back(r / sqrt(3));
+    }
   }
-  ba=rodri2pair(d1, d2, d3);
+  ba = rodri2pair(d1, d2, d3);
 
   ///find triangles
   std::vector< std::pair<int, int> > scaledba;//=scalePoints(ba, scale);
@@ -1922,381 +1987,381 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
   */
 
   ///fill triangles
-  for(int i=0; i<ba.size(); i++)
+  for(int i = 0; i < ba.size(); i++)
   {
-      QuatF quat, refQuat;
-      refQuat.x=0;
-      refQuat.y=0;
-      refQuat.z=0;
-      refQuat.w=1;
-      //have rodrigues vector, need quat
-      float tanAng=sqrt(d1[i]*d1[i]+d2[i]*d2[i]+d3[i]*d3[i]);
-      float cosAng=cosf(atanf(tanAng));
-      quat.x=d1[i]*cosAng*tanAng;
-      quat.y=d2[i]*cosAng*tanAng;
-      quat.z=d3[i]*cosAng*tanAng;
-      quat.w=cosAng;
-      DREAM3D::Rgb pix=generateMisorientationColor(quat, refQuat);
-      //image.setPixel(qpointba[i].x(), qpointba[i].y(), pix);
+    QuatF quat, refQuat;
+    refQuat.x = 0;
+    refQuat.y = 0;
+    refQuat.z = 0;
+    refQuat.w = 1;
+    //have rodrigues vector, need quat
+    float tanAng = sqrt(d1[i] * d1[i] + d2[i] * d2[i] + d3[i] * d3[i]);
+    float cosAng = cosf(atanf(tanAng));
+    quat.x = d1[i] * cosAng * tanAng;
+    quat.y = d2[i] * cosAng * tanAng;
+    quat.z = d3[i] * cosAng * tanAng;
+    quat.w = cosAng;
+    DREAM3D::Rgb pix = generateMisorientationColor(quat, refQuat);
+    //image.setPixel(qpointba[i].x(), qpointba[i].y(), pix);
   }
 
   std::pair<int, int> vert1, vert2, vert3;
   std::vector<int> triangle;
 
-  for(int k=0; k<triList.size(); k++)
+  for(int k = 0; k < triList.size(); k++)
   {
-      triangle=triList[k];
-      vert1=scaledba[triangle[0]];
-      vert2=scaledba[triangle[1]];
-      vert3=scaledba[triangle[2]];
+    triangle = triList[k];
+    vert1 = scaledba[triangle[0]];
+    vert2 = scaledba[triangle[1]];
+    vert3 = scaledba[triangle[2]];
 
-      //check that none of verticies are special spots
-      bool color=true;
-      if(A>M_PI/8)
+    //check that none of verticies are special spots
+    bool color = true;
+    if(A > M_PI / 8)
+    {
+      if(A > M_PI / 8 && A <= M_PI / 6)
       {
-          if(A>M_PI/8 && A<=M_PI/6)
+        //1 extra point at end
+        if(triangle[0] == ba.size() - 1) { color = false; }
+        if(triangle[1] == ba.size() - 1) { color = false; }
+        if(triangle[2] == ba.size() - 1) { color = false; }
+      }
+      else
+      {
+        //2 extra points at end
+        if(triangle[0] == ba.size() - 1) { color = false; }
+        if(triangle[1] == ba.size() - 1) { color = false; }
+        if(triangle[2] == ba.size() - 1) { color = false; }
+        if(triangle[0] == ba.size() - 2) { color = false; }
+        if(triangle[1] == ba.size() - 2) { color = false; }
+        if(triangle[2] == ba.size() - 2) { color = false; }
+      }
+    }
+
+    if(color)
+    {
+      double x1, x2, x3, y1, y2, y3;
+      int r1, r2, r3, g1, g2, g3, b1, b2, b3;
+      x1 = vert1.first;
+      x2 = vert2.first;
+      x3 = vert3.first;
+      y1 = vert1.second;
+      y2 = vert2.second;
+      y3 = vert3.second;
+
+      //find rectangle bounding triangle
+      int xMin, xMax, yMin, yMax;
+      xMin = std::min(std::min(x1, x2), x3);
+      xMax = std::max(std::max(x1, x2), x3);
+      yMin = std::min(std::min(y1, y2), y3);
+      yMax = std::max(std::max(y1, y2), y3);
+
+      //get colors of vertices
+      /*
+      QRgb pixval1=image.pixel(x1, y1);
+      QRgb pixval2=image.pixel(x2, y2);
+      QRgb pixval3=image.pixel(x3, y3);
+      r1 = qRed(pixval1);
+      r2 = qRed(pixval2);
+      r3 = qRed(pixval3);
+      g1 = qGreen(pixval1);
+      g2 = qGreen(pixval2);
+      g3 = qGreen(pixval3);
+      b1 = qBlue(pixval1);
+      b2 = qBlue(pixval2);
+      b3 = qBlue(pixval3);
+      */
+
+      //loop over pixels in rectangle
+      for(int i = xMin; i <= xMax; i++)
+      {
+        for(int j = yMin; j <= yMax; j++)
+        {
+          //determine barycentric coordinates
+          double gamma1, gamma2, gamma3;
+          double det = (y2 - y3) * (x1 - x3) + (x3 - x2) * (y1 - y3);
+          gamma1 = ((y2 - y3) * ((double)i - x3) + (x3 - x2) * ((double)j - y3)) / det;
+          gamma2 = ((y3 - y1) * ((double)i - x3) + (x1 - x3) * ((double)j - y3)) / det;
+          gamma3 = 1.0 - gamma1 - gamma2;
+
+          //check if pixel is inside triangle
+          double minval = -0.0000000000000000001;//misses some boundary points for >=0
+          if(gamma1 >= minval && gamma2 >= minval && gamma3 >= minval && gamma1 <= 1.0 && gamma2 <= 1.0 && gamma3 <= 1.0 )
           {
-              //1 extra point at end
-              if(triangle[0]==ba.size()-1)color=false;
-              if(triangle[1]==ba.size()-1)color=false;
-              if(triangle[2]==ba.size()-1)color=false;
+            if(gamma1 == 1.0 || gamma2 == 1.0 || gamma3 == 1.0)
+            {
+              //vertex
+            }
+            else
+            {
+              //edge or insdie
+              uint8_t red = r1 * gamma1 + r2 * gamma2 + r3 * gamma3;
+              uint8_t green = g1 * gamma1 + g2 * gamma2 + g3 * gamma3;
+              uint8_t blue = b1 * gamma1 + b2 * gamma2 + b3 * gamma3;
+              uint8_t alpha = 255;
+              unsigned int pix = (alpha << 24) | (red << 16) | (green << 8) | blue;
+              //image.setPixel(i, j, pix);
+            }
           }
           else
           {
-              //2 extra points at end
-              if(triangle[0]==ba.size()-1)color=false;
-              if(triangle[1]==ba.size()-1)color=false;
-              if(triangle[2]==ba.size()-1)color=false;
-              if(triangle[0]==ba.size()-2)color=false;
-              if(triangle[1]==ba.size()-2)color=false;
-              if(triangle[2]==ba.size()-2)color=false;
+            //outside triangle
           }
+        }
       }
-
-      if(color)
-      {
-          double x1, x2, x3, y1, y2, y3;
-          int r1, r2, r3, g1, g2, g3, b1, b2, b3;
-          x1=vert1.first;
-          x2=vert2.first;
-          x3=vert3.first;
-          y1=vert1.second;
-          y2=vert2.second;
-          y3=vert3.second;
-
-          //find rectangle bounding triangle
-          int xMin, xMax, yMin, yMax;
-          xMin=std::min(std::min(x1, x2),x3);
-          xMax=std::max(std::max(x1, x2),x3);
-          yMin=std::min(std::min(y1, y2),y3);
-          yMax=std::max(std::max(y1, y2),y3);
-
-          //get colors of vertices
-          /*
-          QRgb pixval1=image.pixel(x1, y1);
-          QRgb pixval2=image.pixel(x2, y2);
-          QRgb pixval3=image.pixel(x3, y3);
-          r1 = qRed(pixval1);
-          r2 = qRed(pixval2);
-          r3 = qRed(pixval3);
-          g1 = qGreen(pixval1);
-          g2 = qGreen(pixval2);
-          g3 = qGreen(pixval3);
-          b1 = qBlue(pixval1);
-          b2 = qBlue(pixval2);
-          b3 = qBlue(pixval3);
-          */
-
-          //loop over pixels in rectangle
-          for(int i=xMin; i<=xMax; i++)
-          {
-              for(int j=yMin; j<=yMax; j++)
-              {
-                  //determine barycentric coordinates
-                  double gamma1, gamma2, gamma3;
-                  double det = (y2-y3)*(x1-x3)+(x3-x2)*(y1-y3);
-                  gamma1=((y2-y3)*((double)i-x3)+(x3-x2)*((double)j-y3))/det;
-                  gamma2=((y3-y1)*((double)i-x3)+(x1-x3)*((double)j-y3))/det;
-                  gamma3=1.0-gamma1-gamma2;
-
-                  //check if pixel is inside triangle
-                  double minval = -0.0000000000000000001;//misses some boundary points for >=0
-                  if(gamma1>=minval && gamma2>=minval && gamma3>=minval && gamma1<=1.0 && gamma2<=1.0 && gamma3<=1.0 )
-                  {
-                      if(gamma1==1.0 || gamma2==1.0 || gamma3==1.0)
-                      {
-                          //vertex
-                      }
-                      else
-                      {
-                          //edge or insdie
-                          uint8_t red=r1*gamma1+r2*gamma2+r3*gamma3;
-                          uint8_t green=g1*gamma1+g2*gamma2+g3*gamma3;
-                          uint8_t blue=b1*gamma1+b2*gamma2+b3*gamma3;
-                          uint8_t alpha=255;
-                          unsigned int pix=(alpha<<24) | (red<<16)| (green<<8) | blue;
-                          //image.setPixel(i, j, pix);
-                      }
-                  }
-                  else
-                  {
-                      //outside triangle
-                  }
-              }
-          }
-      }
+    }
   }
 
   ///Draw Solid Border
   //pen.setStyle(Qt::SolidLine);
   //painter.setPen(pen);
 
-  if(A<=M_PI/8)
+  if(A <= M_PI / 8)
   {
-      std::vector<double> x, y, z;
-      y = DREAM3DMath::linspace(0.0f, r/sqrt(2.0f), 100);
-      for(int i=0; i<y.size(); i++)
-      {
-          z.push_back(0);
-          double k=r*r-y[i]*y[i];
-          if(k<0)k=0;
-          x.push_back(sqrt(k));
-      }
-      ptsa=rodri2pair(x, y, z);
-      //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
-      //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    std::vector<double> x, y, z;
+    y = DREAM3DMath::linspace(0.0f, r / sqrt(2.0f), 100);
+    for(int i = 0; i < y.size(); i++)
+    {
+      z.push_back(0);
+      double k = r * r - y[i] * y[i];
+      if(k < 0) { k = 0; }
+      x.push_back(sqrt(k));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
+    //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      x = DREAM3DMath::linspace(r/sqrt(3),r,100);
-      for(int i=0; i<x.size(); i++)
-      {
-          double k=(r*r-x[i]*x[i])/2;
-          if(k<0)k=0;
-          y.push_back(sqrt(k));
-          z.push_back(y[i]);
-      }
-      ptsa=rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    x = DREAM3DMath::linspace(r / sqrt(3), r, 100);
+    for(int i = 0; i < x.size(); i++)
+    {
+      double k = (r * r - x[i] * x[i]) / 2;
+      if(k < 0) { k = 0; }
+      y.push_back(sqrt(k));
+      z.push_back(y[i]);
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      x = DREAM3DMath::linspace(r/sqrt(3),r/sqrt(2),100);
-      for(int i=0; i<x.size(); i++)
-      {
-          y.push_back(x[i]);
-          double k=r*r-2*x[i]*x[i];
-          if(k<0)k=0;
-          z.push_back(sqrt(k));
-      }
-      ptsa=rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    x = DREAM3DMath::linspace(r / sqrt(3), r / sqrt(2), 100);
+    for(int i = 0; i < x.size(); i++)
+    {
+      y.push_back(x[i]);
+      double k = r * r - 2 * x[i] * x[i];
+      if(k < 0) { k = 0; }
+      z.push_back(sqrt(k));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
   }
 
-  else if(A>M_PI/8 && A<=M_PI/6)
+  else if(A > M_PI / 8 && A <= M_PI / 6)
   {
-      std::vector<double> x, y, z;
-      double theta1 = atan(1/sin(M_PI_4));
-      double theta2 = acos(-(maxk*maxk)/(tan(A)*tan(A)))/2;
-      double theta3 = M_PI_2;
-      double phi3 = acos(maxk/(tan(A)*sin(theta3)));
+    std::vector<double> x, y, z;
+    double theta1 = atan(1 / sin(M_PI_4));
+    double theta2 = acos(-(maxk * maxk) / (tan(A) * tan(A))) / 2;
+    double theta3 = M_PI_2;
+    double phi3 = acos(maxk / (tan(A) * sin(theta3)));
 
-      y = DREAM3DMath::linspace(r*sin(phi3),r/(sqrt(2)),100);
-      for(int i=0; i<y.size(); i++)
-      {
-          x.push_back(sqrt(r*r - y[i]*y[i]));
-          z.push_back(0);
-      }
-      ptsa = rodri2pair(x, y, z);
-      //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
-      //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    y = DREAM3DMath::linspace(r * sin(phi3), r / (sqrt(2)), 100);
+    for(int i = 0; i < y.size(); i++)
+    {
+      x.push_back(sqrt(r * r - y[i]*y[i]));
+      z.push_back(0);
+    }
+    ptsa = rodri2pair(x, y, z);
+    //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
+    //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z=DREAM3DMath::linspace(r*cos(theta1),r*cos(theta2),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          y.push_back(z[i]);
-          x.push_back(sqrt(r*r-2*z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta2), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      y.push_back(z[i]);
+      x.push_back(sqrt(r * r - 2 * z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(theta1),r*cos(theta3),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(sqrt((r*r-z[i]*z[i])/2));
-          y.push_back(x[i]);
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
+      y.push_back(x[i]);
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(theta2),r*cos(theta3),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(maxk);
-          y.push_back(sqrt(r*r - maxk*maxk - z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(maxk);
+      y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
   }
-  else if(A>M_PI/6 && A<=deg1/2)
+  else if(A > M_PI / 6 && A <= deg1 / 2)
   {
-      std::vector<double> x, y, z;
-      double thetac = acos((2-sqrt(6*(tan(A)*tan(A))-2))/(6*tan(A)));
-      double thetaa = acos((1-sqrt(6*(tan(A)*tan(A))-2))/(3*tan(A)));
-      double thetad = acos(-(maxk*maxk)/(tan(A)*tan(A)))/2;
-      double thetab = M_PI_2;
-      double phi3 = acos(maxk/(tan(A)*sin(thetab)));
+    std::vector<double> x, y, z;
+    double thetac = acos((2 - sqrt(6 * (tan(A) * tan(A)) - 2)) / (6 * tan(A)));
+    double thetaa = acos((1 - sqrt(6 * (tan(A) * tan(A)) - 2)) / (3 * tan(A)));
+    double thetad = acos(-(maxk * maxk) / (tan(A) * tan(A))) / 2;
+    double thetab = M_PI_2;
+    double phi3 = acos(maxk / (tan(A) * sin(thetab)));
 
-      y = DREAM3DMath::linspace(r*sin(phi3),r/(sqrt(2)),100);
-      for(int i=0; i<y.size(); i++)
-      {
-          z.push_back(0);
-          x.push_back(sqrt(r*r-y[i]*y[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
-      //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    y = DREAM3DMath::linspace(r * sin(phi3), r / (sqrt(2)), 100);
+    for(int i = 0; i < y.size(); i++)
+    {
+      z.push_back(0);
+      x.push_back(sqrt(r * r - y[i]*y[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
+    //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(thetac),r*cos(thetad),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          y.push_back(z[i]);
-          double k=r*r - 2*(z[i]*z[i]);
-          if(k<0)k=0;
-          x.push_back(sqrt(k));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(thetac), r * cos(thetad), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      y.push_back(z[i]);
+      double k = r * r - 2 * (z[i] * z[i]);
+      if(k < 0) { k = 0; }
+      x.push_back(sqrt(k));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(thetaa),r*cos(thetab),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(sqrt((r*r - (z[i]*z[i]))/2));
-          y.push_back(x[i]);
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(thetaa), r * cos(thetab), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(sqrt((r * r - (z[i]*z[i])) / 2));
+      y.push_back(x[i]);
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(thetad),r*cos(thetab),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(maxk);
-          y.push_back(sqrt(r*r - maxk*maxk - z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(thetad), r * cos(thetab), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(maxk);
+      y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      std::vector<double> theta, tempd3, phi;
-      theta = DREAM3DMath::linspace(thetac,thetaa,100);
-      for(int i=0; i<theta.size(); i++)
-      {
-          tempd3.push_back(tan(A)*cos(theta[i]));
-          double k=2*((tan(A)*tan(A)) - tempd3[i]*tempd3[i])-(1-tempd3[i])*(1-tempd3[i]);
-          if(k<0)k=0;
-          phi.push_back(acos((((1-tempd3[i])+(sqrt(k)))/2)/(tan(A)*sin(theta[i]))));
-          z.push_back(r*cos(theta[i]));
-          x.push_back(r*sin(theta[i])*cos(phi[i]));
-          y.push_back(sqrt(r*r-x[i]*x[i]-z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    std::vector<double> theta, tempd3, phi;
+    theta = DREAM3DMath::linspace(thetac, thetaa, 100);
+    for(int i = 0; i < theta.size(); i++)
+    {
+      tempd3.push_back(tan(A)*cos(theta[i]));
+      double k = 2 * ((tan(A) * tan(A)) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      if(k < 0) { k = 0; }
+      phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
+      z.push_back(r * cos(theta[i]));
+      x.push_back(r * sin(theta[i])*cos(phi[i]));
+      y.push_back(sqrt(r * r - x[i]*x[i] - z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
   }
-  else if(A>=deg1/2 && A<=maxdeg/2)
+  else if(A >= deg1 / 2 && A <= maxdeg / 2)
   {
-      std::vector<double> x, y, z;
-      double theta1 = acos(((1-maxk)- sqrt(2*(tan(A)*tan(A) - maxk*maxk) - (1-maxk)*(1-maxk)))/(2*tan(A)));
-      double theta2 = acos((1-sqrt(6*tan(A)*tan(A) -2))/(3*tan(A)));
-      double theta3 = acos((sqrt(tan(A)*tan(A) - 2*maxk*maxk))/(tan(A)));
+    std::vector<double> x, y, z;
+    double theta1 = acos(((1 - maxk) - sqrt(2 * (tan(A) * tan(A) - maxk * maxk) - (1 - maxk) * (1 - maxk))) / (2 * tan(A)));
+    double theta2 = acos((1 - sqrt(6 * tan(A) * tan(A) - 2)) / (3 * tan(A)));
+    double theta3 = acos((sqrt(tan(A) * tan(A) - 2 * maxk * maxk)) / (tan(A)));
 
-      z = DREAM3DMath::linspace(r*cos(theta2),r*cos(theta3),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(sqrt((r*r-z[i]*z[i])/2));
-          y.push_back(x[i]);
-      }
-      ptsa = rodri2pair(x, y, z);
-      //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
-      //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    z = DREAM3DMath::linspace(r * cos(theta2), r * cos(theta3), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(sqrt((r * r - z[i]*z[i]) / 2));
+      y.push_back(x[i]);
+    }
+    ptsa = rodri2pair(x, y, z);
+    //std::vector< std::pair<int, int> >pointlist=scalePoints(ptsa, scale);
+    //std::vector<QPoint> qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      std::vector<double> theta, tempd3, phi;
-      theta = DREAM3DMath::linspace(theta1,theta2,100);
-      for(int i=0; i<theta.size(); i++)
-      {
-          tempd3.push_back(tan(A)*cos(theta[i]));
-          double k=2*(tan(A)*tan(A) - tempd3[i]*tempd3[i])-(1-tempd3[i])*(1-tempd3[i]);
-          if(k<0)k=0;
-          phi.push_back(acos((((1-tempd3[i])+(sqrt(k)))/2)/(tan(A)*sin(theta[i]))));
-          x.push_back(r*sin(theta[i])*cos(phi[i]));
-          z.push_back(r*cos(theta[i]));
-          y.push_back(sqrt(r*r-x[i]*x[i]-z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    std::vector<double> theta, tempd3, phi;
+    theta = DREAM3DMath::linspace(theta1, theta2, 100);
+    for(int i = 0; i < theta.size(); i++)
+    {
+      tempd3.push_back(tan(A)*cos(theta[i]));
+      double k = 2 * (tan(A) * tan(A) - tempd3[i] * tempd3[i]) - (1 - tempd3[i]) * (1 - tempd3[i]);
+      if(k < 0) { k = 0; }
+      phi.push_back(acos((((1 - tempd3[i]) + (sqrt(k))) / 2) / (tan(A)*sin(theta[i]))));
+      x.push_back(r * sin(theta[i])*cos(phi[i]));
+      z.push_back(r * cos(theta[i]));
+      y.push_back(sqrt(r * r - x[i]*x[i] - z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
 
-      x.clear();
-      y.clear();
-      z.clear();
-      z = DREAM3DMath::linspace(r*cos(theta1),r*cos(theta3),100);
-      for(int i=0; i<z.size(); i++)
-      {
-          x.push_back(maxk);
-          y.push_back(sqrt(r*r-maxk*maxk-z[i]*z[i]));
-      }
-      ptsa = rodri2pair(x, y, z);
-      //pointlist=scalePoints(ptsa, scale);
-      //qpointlist = pairToQPoint(pointlist);
-      //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
+    x.clear();
+    y.clear();
+    z.clear();
+    z = DREAM3DMath::linspace(r * cos(theta1), r * cos(theta3), 100);
+    for(int i = 0; i < z.size(); i++)
+    {
+      x.push_back(maxk);
+      y.push_back(sqrt(r * r - maxk * maxk - z[i]*z[i]));
+    }
+    ptsa = rodri2pair(x, y, z);
+    //pointlist=scalePoints(ptsa, scale);
+    //qpointlist = pairToQPoint(pointlist);
+    //painter.drawPolyline(qpointlist.data(), static_cast<int>(qpointlist.size()));
   }
 
   return image;
@@ -2304,44 +2369,44 @@ UInt8ArrayType::Pointer CubicOps::generateMisorientationTriangleLegend(float ang
 
 std::vector< std::pair<double, double> > CubicOps::rodri2pair(std::vector<double> x, std::vector<double> y, std::vector<double> z)
 {
-    std::vector< std::pair<double, double> > result;
-    double q0, q1, q2, q3, ang, r, x1, y1, z1, rad, xPair, yPair, k;
+  std::vector< std::pair<double, double> > result;
+  double q0, q1, q2, q3, ang, r, x1, y1, z1, rad, xPair, yPair, k;
 
-    for(int i=0; i<x.size(); i++)
+  for(int i = 0; i < x.size(); i++)
+  {
+    //rodri2volpreserv
+    q0 = sqrt(1 / (1 + x[i] * x[i] + y[i] * y[i] + z[i] * z[i]));
+    q1 = x[i] * q0;
+    q2 = y[i] * q0;
+    q3 = z[i] * q0;
+    ang = acos(q0);
+    r = pow(1.5 * (ang - sin(ang) * cos(ang)), (1.0 / 3.0));
+    x1 = q1 * r;
+    y1 = q2 * r;
+    z1 = q3 * r;
+    if(sin(ang) != 0)
     {
-        //rodri2volpreserv
-        q0=sqrt(1/(1+x[i]*x[i]+y[i]*y[i]+z[i]*z[i]));
-        q1=x[i]*q0;
-        q2=y[i]*q0;
-        q3=z[i]*q0;
-        ang=acos(q0);
-        r=pow(1.5*(ang-sin(ang)*cos(ang)),(1.0/3.0));
-        x1=q1*r;
-        y1=q2*r;
-        z1=q3*r;
-        if(sin(ang)!=0)
-        {
-            x1=x1/sin(ang);
-            y1=y1/sin(ang);
-            z1=z1/sin(ang);
-        }
-
-        //areapreservingx
-        rad=sqrt(x1*x1+y1*y1+z1*z1);
-        if(rad==0)rad++;
-        k=2*(1-fabs(x1/rad));
-        if(k<0)k=0;
-        k=rad*sqrt(k);
-        xPair = y1*k;
-        yPair = z1*k;
-        k=rad*rad-x1*x1;
-        if(k>0)
-        {
-            xPair=xPair/sqrt(k);
-            yPair=yPair/sqrt(k);
-        }
-        result.push_back(std::make_pair(xPair, yPair));
+      x1 = x1 / sin(ang);
+      y1 = y1 / sin(ang);
+      z1 = z1 / sin(ang);
     }
-    return result;
+
+    //areapreservingx
+    rad = sqrt(x1 * x1 + y1 * y1 + z1 * z1);
+    if(rad == 0) { rad++; }
+    k = 2 * (1 - fabs(x1 / rad));
+    if(k < 0) { k = 0; }
+    k = rad * sqrt(k);
+    xPair = y1 * k;
+    yPair = z1 * k;
+    k = rad * rad - x1 * x1;
+    if(k > 0)
+    {
+      xPair = xPair / sqrt(k);
+      yPair = yPair / sqrt(k);
+    }
+    result.push_back(std::make_pair(xPair, yPair));
+  }
+  return result;
 }
 

@@ -17,9 +17,9 @@ Q_EXPORT_PLUGIN2(ImageImportPlugin, ImageImportPlugin)
 
 namespace Detail
 {
-   const std::string ImageImportPluginFile("ImageImportPlugin");
-   const std::string ImageImportPluginDisplayName("ImageImportPlugin");
-   const std::string ImageImportPluginBaseName("ImageImportPlugin");
+  const std::string ImageImportPluginFile("ImageImportPlugin");
+  const std::string ImageImportPluginDisplayName("ImageImportPlugin");
+  const std::string ImageImportPluginBaseName("ImageImportPlugin");
 }
 
 // -----------------------------------------------------------------------------
@@ -48,7 +48,7 @@ QString ImageImportPlugin::getPluginName()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::writeSettings(QSettings &prefs)
+void ImageImportPlugin::writeSettings(QSettings& prefs)
 {
 
 }
@@ -56,7 +56,7 @@ void ImageImportPlugin::writeSettings(QSettings &prefs)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void ImageImportPlugin::readSettings(QSettings &prefs)
+void ImageImportPlugin::readSettings(QSettings& prefs)
 {
 
 }

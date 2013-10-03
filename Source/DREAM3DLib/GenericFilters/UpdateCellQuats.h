@@ -64,7 +64,7 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     DREAM3D_INSTANCE_STRING_PROPERTY(QuatsArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::GenericFilters; }
-  virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::CrystallographyFilters; }
     virtual const std::string getHumanLabel() { return "Update Cell Quaternions"; }
 
     /**
@@ -82,10 +82,10 @@ class DREAM3DLib_EXPORT UpdateCellQuats : public AbstractFilter
     virtual void execute();
     virtual void preflight();
 
-   protected:
-     UpdateCellQuats();
+  protected:
+    UpdateCellQuats();
 
-   private:
+  private:
     float* m_Quats;
 
     std::vector<OrientationOps::Pointer> m_OrientationOps;

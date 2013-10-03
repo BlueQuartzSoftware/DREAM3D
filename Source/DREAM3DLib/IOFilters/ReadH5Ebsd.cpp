@@ -565,11 +565,11 @@ void ReadH5Ebsd::execute()
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                             std::set<std::string> selectedEdgeArrays,
-                                                             std::set<std::string> selectedFaceArrays,
-                                                             std::set<std::string> selectedCellArrays,
-                                                             std::set<std::string> selectedFieldArrays,
-                                                             std::set<std::string> selectedEnsembleArrays)
+                                             std::set<std::string> selectedEdgeArrays,
+                                             std::set<std::string> selectedFaceArrays,
+                                             std::set<std::string> selectedCellArrays,
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays)
 {
   m_SelectedVolumeVertexArrays = selectedVertexArrays;
   m_SelectedVolumeEdgeArrays = selectedEdgeArrays;
@@ -583,10 +583,10 @@ void ReadH5Ebsd::setVolumeSelectedArrayNames(std::set<std::string> selectedVerte
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFaceArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                              std::set<std::string> selectedEdgeArrays,
+                                              std::set<std::string> selectedFaceArrays,
+                                              std::set<std::string> selectedFieldArrays,
+                                              std::set<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Surface data in an H5Ebsd file
 }
@@ -595,9 +595,9 @@ void ReadH5Ebsd::setSurfaceSelectedArrayNames(std::set<std::string> selectedVert
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                           std::set<std::string> selectedEdgeArrays,
-                                                           std::set<std::string> selectedFieldArrays,
-                                                           std::set<std::string> selectedEnsembleArrays)
+                                           std::set<std::string> selectedEdgeArrays,
+                                           std::set<std::string> selectedFieldArrays,
+                                           std::set<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Edge data in an H5Ebsd file
 }
@@ -606,8 +606,8 @@ void ReadH5Ebsd::setEdgeSelectedArrayNames(std::set<std::string> selectedVertexA
 //
 // -----------------------------------------------------------------------------
 void ReadH5Ebsd::setVertexSelectedArrayNames(std::set<std::string> selectedVertexArrays,
-                                                std::set<std::string> selectedFieldArrays,
-                                                std::set<std::string> selectedEnsembleArrays)
+                                             std::set<std::string> selectedFieldArrays,
+                                             std::set<std::string> selectedEnsembleArrays)
 {
   // Empty because there is no Vertex data in an H5Ebsd file
 }
@@ -910,10 +910,10 @@ void ReadH5Ebsd::copyHEDMArrays(H5EbsdVolumeReader* ebsdReader)
   {
     x = f1[i];
     y = f2[i];
-    if(x < xMin) xMin = x;
-    if(y < yMin) yMin = y;
+    if(x < xMin) { xMin = x; }
+    if(y < yMin) { yMin = y; }
   }
-  m->setOrigin(xMin,yMin,0.0);
+  m->setOrigin(xMin, yMin, 0.0);
 
   if (m_SelectedVolumeCellArrays.find(m_CellEulerAnglesArrayName) != m_SelectedVolumeCellArrays.end() )
   {

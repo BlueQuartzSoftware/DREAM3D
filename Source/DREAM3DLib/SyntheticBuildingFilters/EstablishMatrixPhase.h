@@ -66,21 +66,21 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
 
     virtual ~EstablishMatrixPhase();
 
-	//------ Required Cell Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
-	//------ Created Field Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
-	DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-	//------ Required Ensemble Data
-	DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
+    //------ Required Cell Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    //------ Created Field Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
+    //------ Required Ensemble Data
+    DREAM3D_INSTANCE_STRING_PROPERTY(PhaseTypesArrayName)
 
     virtual const std::string getGroupName() { return DREAM3D::FilterGroups::SyntheticBuildingFilters; }
-	virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
+    virtual const std::string getSubGroupName() { return DREAM3D::FilterSubGroups::PackingFilters; }
     virtual const std::string getHumanLabel() { return "Establish Matrix Phase"; }
 
-	virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+    virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -105,7 +105,7 @@ class DREAM3DLib_EXPORT EstablishMatrixPhase : public AbstractFilter
   private:
 
 
-	size_t firstMatrixField;
+    size_t firstMatrixField;
     unsigned long long int Seed;
     float sizex;
     float sizey;

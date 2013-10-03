@@ -56,10 +56,10 @@ template<typename T>
 class H5DataArrayWriter
 {
   public:
-  virtual ~H5DataArrayWriter() {}
+    virtual ~H5DataArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t numTuples, int numComp, T* data, const std::string &className)
-  {
+    static int writeArray(hid_t gid, const std::string& name, size_t numTuples, int numComp, T* data, const std::string& className)
+    {
       int32_t rank = 0;
       if(numComp == 1)
       {
@@ -73,7 +73,8 @@ class H5DataArrayWriter
       hsize_t dims[2] =
       { numTuples, numComp };
       int err = 0;
-      if (H5Lite::datasetExists(gid, name) == false) {
+      if (H5Lite::datasetExists(gid, name) == false)
+      {
         err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
         if(err < 0)
         {
@@ -96,10 +97,10 @@ class H5DataArrayWriter
 
 
   protected:
-  H5DataArrayWriter(){}
+    H5DataArrayWriter() {}
 
   private:
-  H5DataArrayWriter(const H5DataArrayWriter&); // Copy Constructor Not Implemented
+    H5DataArrayWriter(const H5DataArrayWriter&); // Copy Constructor Not Implemented
     void operator=(const H5DataArrayWriter&); // Operator '=' Not Implemented
 };
 
@@ -117,14 +118,15 @@ template<typename T>
 class H5GBCDArrayWriter
 {
   public:
-  virtual ~H5GBCDArrayWriter() {}
+    virtual ~H5GBCDArrayWriter() {}
 
-  static int writeArray(hid_t gid, const std::string &name, size_t* gbcdDims, T* data, const std::string &className)
-  {
+    static int writeArray(hid_t gid, const std::string& name, size_t* gbcdDims, T* data, const std::string& className)
+    {
       int32_t rank = 5;
-      hsize_t dims[5] = {gbcdDims[0],gbcdDims[1],gbcdDims[2],gbcdDims[3],gbcdDims[4],};
+      hsize_t dims[5] = {gbcdDims[0], gbcdDims[1], gbcdDims[2], gbcdDims[3], gbcdDims[4],};
       int err = 0;
-      if (H5Lite::datasetExists(gid, name) == false) {
+      if (H5Lite::datasetExists(gid, name) == false)
+      {
         err = H5Lite::writePointerDataset(gid, name, rank, dims, data);
         if(err < 0)
         {
@@ -142,7 +144,7 @@ class H5GBCDArrayWriter
 
 
   protected:
-    H5GBCDArrayWriter(){}
+    H5GBCDArrayWriter() {}
 
   private:
     H5GBCDArrayWriter(const H5GBCDArrayWriter&); // Copy Constructor Not Implemented

@@ -59,10 +59,11 @@ class MeshEdgeNeighbors
     DREAM3D_STATIC_NEW_MACRO(MeshEdgeNeighbors)
     DREAM3D_TYPE_MACRO(MeshEdgeNeighbors)
 
-    class NeighborList {
+    class NeighborList
+    {
       public:
-      unsigned short ncells;
-      int* cells;
+        unsigned short ncells;
+        int* cells;
     };
 
 
@@ -77,7 +78,7 @@ class MeshEdgeNeighbors
         return;
       }
 
-      for (size_t i=0; i < this->Size; i++)
+      for (size_t i = 0; i < this->Size; i++)
       {
         if ( this->Array[i].cells != NULL )
         {
@@ -98,19 +99,22 @@ class MeshEdgeNeighbors
 
     // Description:
     // Get a link structure given a point id.
-    NeighborList& getNeighborList(size_t ptId) {
+    NeighborList& getNeighborList(size_t ptId)
+    {
       return this->Array[ptId];
     }
 
     // Description:
     // Get the number of cells using the point specified by ptId.
-    unsigned short getNumberOfFaces(size_t ptId) {
+    unsigned short getNumberOfFaces(size_t ptId)
+    {
       return this->Array[ptId].ncells;
     }
 
     // Description:
     // Return a list of cell ids using the point.
-    int* getNeighborListPointer(size_t ptId) {
+    int* getNeighborListPointer(size_t ptId)
+    {
       return this->Array[ptId].cells;
     }
 
@@ -197,7 +201,7 @@ class MeshEdgeNeighbors
         }
         BOOST_ASSERT(this->Array[t].ncells > 2);
         // Reset all the visited triangle indexs back to false (zero)
-        for(size_t k = 0;k < this->Array[t].ncells; ++k)
+        for(size_t k = 0; k < this->Array[t].ncells; ++k)
         {
           visited[loop_neighbors[k]] = false;
         }
@@ -211,7 +215,7 @@ class MeshEdgeNeighbors
     // -----------------------------------------------------------------------------
     //
     // -----------------------------------------------------------------------------
-    void deserializeLinks(std::vector<uint8_t> &buffer, size_t nFaces)
+    void deserializeLinks(std::vector<uint8_t>& buffer, size_t nFaces)
     {
       size_t offset = 0;
       allocate(nFaces); // Allocate all the links with 0 and NULL;
@@ -233,17 +237,17 @@ class MeshEdgeNeighbors
 
 
   protected:
-    MeshEdgeNeighbors():Array(NULL),Size(0) {}
+    MeshEdgeNeighbors(): Array(NULL), Size(0) {}
 
     //----------------------------------------------------------------------------
     // This will allocate memory to hold all the NeighborList structures where each
     // structure is initialized to Zero Entries and a NULL Pointer
-    void allocate(size_t sz, size_t ext=1000)
+    void allocate(size_t sz, size_t ext = 1000)
     {
-      static MeshEdgeNeighbors::NeighborList linkInit = {0,NULL};
+      static MeshEdgeNeighbors::NeighborList linkInit = {0, NULL};
 
       // This makes sure we deallocate any lists that have been created
-      for (size_t i=0; i<this->Size; i++)
+      for (size_t i = 0; i < this->Size; i++)
       {
         if ( this->Array[i].cells != NULL )
         {
@@ -261,7 +265,7 @@ class MeshEdgeNeighbors
       this->Array = new MeshEdgeNeighbors::NeighborList[sz];
 
       // Initialize each structure to have 0 entries and NULL pointer.
-      for (size_t i=0; i < sz; i++)
+      for (size_t i = 0; i < sz; i++)
       {
         this->Array[i] = linkInit;
       }
@@ -281,7 +285,7 @@ class MeshEdgeNeighbors
     // This will allocate the actual memory to hold each NeighborList
     void allocateLinks(size_t n)
     {
-      for (size_t i=0; i < n; i++)
+      for (size_t i = 0; i < n; i++)
       {
         this->Array[i].cells = new int[this->Array[i].ncells];
       }

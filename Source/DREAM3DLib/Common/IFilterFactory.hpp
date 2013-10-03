@@ -64,7 +64,7 @@ class IFilterFactory
 
 
   protected:
-    IFilterFactory(){}
+    IFilterFactory() {}
   private:
     IFilterFactory(const IFilterFactory&); // Copy Constructor Not Implemented
     void operator=(const IFilterFactory&); // Operator '=' Not Implemented

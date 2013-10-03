@@ -94,9 +94,9 @@ std::string H5FilterParametersReader::readValue(const std::string name, std::str
   int err = 0;
   err = H5Lite::readStringDataset(m_CurrentGroupId, name, value);
   if (err == 0)
-    return value;
+  { return value; }
   else
-    return defaultStr;
+  { return defaultStr; }
 }
 
 // -----------------------------------------------------------------------------
@@ -108,7 +108,7 @@ std::vector<std::string> H5FilterParametersReader::readValue(const std::string n
   std::string str = "";
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readStringAttribute(m_CurrentGroupId, name, ss.str(), str);
@@ -219,7 +219,7 @@ std::vector<int8_t> H5FilterParametersReader::readValue(const std::string name, 
   int8_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -239,7 +239,7 @@ std::vector<int16_t> H5FilterParametersReader::readValue(const std::string name,
   int16_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -259,7 +259,7 @@ std::vector<int32_t> H5FilterParametersReader::readValue(const std::string name,
   int32_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -279,7 +279,7 @@ std::vector<int64_t> H5FilterParametersReader::readValue(const std::string name,
   int64_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -299,7 +299,7 @@ std::vector<uint8_t> H5FilterParametersReader::readValue(const std::string name,
   uint8_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -319,7 +319,7 @@ std::vector<uint16_t> H5FilterParametersReader::readValue(const std::string name
   uint16_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -339,7 +339,7 @@ std::vector<uint32_t> H5FilterParametersReader::readValue(const std::string name
   uint32_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -359,7 +359,7 @@ std::vector<uint64_t> H5FilterParametersReader::readValue(const std::string name
   uint64_t scalar = 0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -379,7 +379,7 @@ std::vector<float> H5FilterParametersReader::readValue(const std::string name, s
   float scalar = 0.0f;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -399,7 +399,7 @@ std::vector<double> H5FilterParametersReader::readValue(const std::string name, 
   double scalar = 0.0;
   int err = H5Lite::readScalarDataset(m_CurrentGroupId, name, vectorSize);
   std::stringstream ss;
-  for (int i=0; i<vectorSize; i++)
+  for (int i = 0; i < vectorSize; i++)
   {
     ss << i;
     err = H5Lite::readScalarAttribute(m_CurrentGroupId, name, ss.str(), scalar);
@@ -545,7 +545,7 @@ std::set<std::string> H5FilterParametersReader::readValue(const std::string name
     // was written to the HDF5 file.
     return v;
   }
-  for (int i=0; i<strVector.size(); i++)
+  for (int i = 0; i < strVector.size(); i++)
   {
     v.insert(strVector[i]);
   }
@@ -565,7 +565,7 @@ std::vector<std::string> H5FilterParametersReader::tokenize(const char* buf, cha
   while(pos != std::string::npos && pos != values.size() - 1)
   {
     pos = values.find(delimiter, start);
-    output.push_back(values.substr(start, pos-start));
+    output.push_back(values.substr(start, pos - start));
     //   std::cout << "Adding: " << output.back() << std::endl;
     if (pos != std::string::npos)
     {

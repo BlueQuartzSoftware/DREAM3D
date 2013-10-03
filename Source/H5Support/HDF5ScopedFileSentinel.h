@@ -53,12 +53,12 @@ class H5Support_EXPORT HDF5ScopedFileSentinel
     void setFileId(hid_t* fileId);
     hid_t* getFileId();
 
-    private:
-      hid_t* m_FileId;
-      bool m_TurnOffErrors;
+  private:
+    hid_t* m_FileId;
+    bool m_TurnOffErrors;
 
-      herr_t (*_oldHDF_error_func)(hid_t, void *);
-      void* _oldHDF_error_client_data;
+    herr_t (*_oldHDF_error_func)(hid_t, void*);
+    void* _oldHDF_error_client_data;
 };
 
 

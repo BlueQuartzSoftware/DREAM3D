@@ -134,10 +134,10 @@ void GroupMicroTextureRegions::readFilterParameters(AbstractFilterParametersRead
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setCAxisTolerance( reader->readValue("CAxisTolerance", getCAxisTolerance()) );
   setUseNonContiguousNeighbors( reader->readValue("UseNonContiguousNeighbors", getUseNonContiguousNeighbors()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -178,26 +178,26 @@ void GroupMicroTextureRegions::dataCheck(bool preflight, size_t voxels, size_t f
 
   if(m_UseNonContiguousNeighbors == false)
   {
-      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-      if(m_ContiguousNeighborList == NULL)
-      {
-        ss << "NeighborLists Array Not Initialized correctly" << std::endl;
-        setErrorCondition(-304);
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
-      }
+    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    if(m_ContiguousNeighborList == NULL)
+    {
+      ss << "NeighborLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-304);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
+    }
   }
   else
   {
-      // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
-      m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
-      m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
-      if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
-      {
-        ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
-        setErrorCondition(-305);
-        addErrorMessage(getHumanLabel(), ss.str(), -1);
-      }
+    // Now we are going to get a "Pointer" to the NeighborList object out of the DataContainer
+    m_ContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborList).get());
+    m_NonContiguousNeighborList = NeighborList<int>::SafeObjectDownCast<IDataArray*, NeighborList<int>*>(m->getFieldData(DREAM3D::FieldData::NeighborhoodList).get());
+    if(m_ContiguousNeighborList == NULL || m_NonContiguousNeighborList == NULL)
+    {
+      ss << "NeighborhoodLists Array Not Initialized correctly" << std::endl;
+      setErrorCondition(-305);
+      addErrorMessage(getHumanLabel(), ss.str(), -1);
+    }
   }
   typedef DataArray<unsigned int> XTalStructArrayType;
   GET_PREREQ_DATA(m, DREAM3D, EnsembleData, CrystalStructures, -305, unsigned int, XTalStructArrayType, ensembles, 1)
@@ -232,7 +232,7 @@ void GroupMicroTextureRegions::execute()
   }
 
   // Convert user defined tolerance to radians.
-  m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi/180.0f;
+  m_CAxisTolerance = m_CAxisTolerance * DREAM3D::Constants::k_Pi / 180.0f;
 
   notifyStatusMessage("Grouping MicroTexture Regions");
   merge_micro_texture_regions();
@@ -266,7 +266,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
   float g2t[3][3];
   float c1[3];
   float c2[3];
-  float caxis[3] = {0,0,1};
+  float caxis[3] = {0, 0, 1};
   QuatF q1;
   QuatF q2;
   QuatF* avgQuats = reinterpret_cast<QuatF*>(m_AvgQuats);
@@ -287,7 +287,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
     {
       parentcount++;
       parentnumbers[i] = parentcount;
-      if (i%1000 == 0)
+      if (i % 1000 == 0)
       {
         ss.str("");
         ss << "Working On Grain " << i << " of " << numgrains;
@@ -302,7 +302,7 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       {
         int firstgrain = microtexturelist[j];
         size1 = int(neighborlist[firstgrain].size());
-        if (m_UseNonContiguousNeighbors == true) size2 = int(neighborhoodlist[firstgrain].size());
+        if (m_UseNonContiguousNeighbors == true) { size2 = int(neighborhoodlist[firstgrain].size()); }
         QuaternionMathF::Copy(avgQuats[firstgrain], q1);
         phase1 = m_CrystalStructures[m_FieldPhases[firstgrain]];
         OrientationMath::QuattoMat(q1, g1);
@@ -317,13 +317,13 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
         size_t neigh;
         for (int k = 0; k < 2; k++)
         {
-          if (k == 0) size = size1;
-          else if (k == 1) size = size2;
+          if (k == 0) { size = size1; }
+          else if (k == 1) { size = size2; }
           for (int l = 0; l < size; l++)
           {
             angcur = 180.0f;
-            if (k == 0) neigh = neighborlist[firstgrain][l];
-            else if (k == 1) neigh = neighborhoodlist[firstgrain][l];
+            if (k == 0) { neigh = neighborlist[firstgrain][l]; }
+            else if (k == 1) { neigh = neighborhoodlist[firstgrain][l]; }
             if (beenChecked[neigh] == false)
             {
               totalCheckList.push_back(neigh);
@@ -345,12 +345,12 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
                 //dividing by the magnitudes (they would be 1)
                 MatrixMath::Normalize3x1(c2);
 
-                w = MatrixMath::CosThetaBetweenVectors(c1,c2);
-                DREAM3DMath::boundF(w,-1,1);
+                w = MatrixMath::CosThetaBetweenVectors(c1, c2);
+                DREAM3DMath::boundF(w, -1, 1);
                 w = acosf(w);
-                if (k == 0) misoTotal += w;
-                if (k == 0) misoCount++;
-                if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi-w) <= m_CAxisTolerance)
+                if (k == 0) { misoTotal += w; }
+                if (k == 0) { misoCount++; }
+                if (w <= m_CAxisTolerance || (DREAM3D::Constants::k_Pi - w) <= m_CAxisTolerance)
                 {
                   parentnumbers[neigh] = parentcount;
                   microtexturelist.push_back(neigh);
@@ -366,15 +366,15 @@ void GroupMicroTextureRegions::merge_micro_texture_regions()
       int checkedSize = totalCheckList.size();
       for (size_t j = 0 ; j < checkedSize ; j++)
       {
-          beenChecked[totalCheckList[j]] = false;
+        beenChecked[totalCheckList[j]] = false;
       }
     }
     microtexturelist.clear();
     totalCheckList.clear();
     microtexturevolume = 0.0f;
     totalCheckVolume = 0.0f;
-    if (misoCount > 0) m_MTRgKAM[i] = misoTotal / misoCount * DREAM3D::Constants::k_180OverPi;
-    else m_MTRgKAM[i] = -1.0f;
+    if (misoCount > 0) { m_MTRgKAM[i] = misoTotal / misoCount * DREAM3D::Constants::k_180OverPi; }
+    else { m_MTRgKAM[i] = -1.0f; }
     misoTotal = 0.0f;
     misoCount = 0;
   }

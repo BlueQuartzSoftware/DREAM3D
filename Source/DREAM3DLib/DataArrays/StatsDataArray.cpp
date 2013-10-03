@@ -46,7 +46,7 @@
 //
 // -----------------------------------------------------------------------------
 StatsDataArray::StatsDataArray() :
-    m_Name(DREAM3D::EnsembleData::Statistics)
+  m_Name(DREAM3D::EnsembleData::Statistics)
 {
   m_IsAllocated = true;
 }
@@ -61,7 +61,7 @@ StatsDataArray::~StatsDataArray()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::SetName(const std::string &name)
+void StatsDataArray::SetName(const std::string& name)
 {
   m_Name = name;
 }
@@ -151,7 +151,7 @@ size_t StatsDataArray::GetTypeSize()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-int StatsDataArray::EraseTuples(std::vector<size_t> &idxs)
+int StatsDataArray::EraseTuples(std::vector<size_t>& idxs)
 {
   int err = 0;
 
@@ -245,14 +245,14 @@ int32_t StatsDataArray::Resize(size_t numTuples)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printTuple(std::ostream &out, size_t i, char delimiter)
+void StatsDataArray::printTuple(std::ostream& out, size_t i, char delimiter)
 {
   BOOST_ASSERT(false);
 }
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void StatsDataArray::printComponent(std::ostream &out, size_t i, int j)
+void StatsDataArray::printComponent(std::ostream& out, size_t i, int j)
 {
   BOOST_ASSERT(false);
 }
@@ -271,13 +271,14 @@ int StatsDataArray::writeH5Data(hid_t parentId)
   // We start numbering our phases at 1. Anything in slot 0 is considered "Dummy" or invalid
   for(size_t i = 1; i < m_StatsDataArray.size(); ++i)
   {
-    if (m_StatsDataArray[i].get() != NULL) {
-    std::string indexString = StringUtils::numToString(i);
-    hid_t tupleId = H5Utilities::createGroup(gid, indexString);
-    err |= H5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
-    err |= H5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
-    err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
-    err |= H5Utilities::closeHDF5Object(tupleId);
+    if (m_StatsDataArray[i].get() != NULL)
+    {
+      std::string indexString = StringUtils::numToString(i);
+      hid_t tupleId = H5Utilities::createGroup(gid, indexString);
+      err |= H5Lite::writeStringAttribute(gid, indexString, DREAM3D::HDF5::StatsType, m_StatsDataArray[i]->getStatsType() );
+      err |= H5Lite::writeScalarAttribute(gid, indexString, DREAM3D::HDF5::PhaseType, m_StatsDataArray[i]->getPhaseType() );
+      err |= m_StatsDataArray[i]->writeHDF5Data(tupleId);
+      err |= H5Utilities::closeHDF5Object(tupleId);
     }
   }
   err |= H5Utilities::closeHDF5Object(gid);

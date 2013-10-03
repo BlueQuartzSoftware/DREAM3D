@@ -13,8 +13,8 @@
  * list of conditions and the following disclaimer in the documentation and/or
  * other materials provided with the distribution.
  *
- * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force, 
- * BlueQuartz Software nor the names of its contributors may be used to endorse 
+ * Neither the name of Michael A. Groeber, Michael A. Jackson, the US Air Force,
+ * BlueQuartz Software nor the names of its contributors may be used to endorse
  * or promote products derived from this software without specific prior written
  * permission.
  *
@@ -44,11 +44,11 @@
 #ifdef DREAM3D_USE_QT
 #define CHECK_FOR_CANCELED(AClass)\
   if (this->m_Cancel) { \
-  QString msg = #AClass; \
-  msg += " was Canceled"; \
-  emit updateMessage(msg);\
-  emit updateProgress(0);\
-  return;}
+    QString msg = #AClass; \
+    msg += " was Canceled"; \
+    emit updateMessage(msg);\
+    emit updateProgress(0);\
+    return;}
 
 #else
 #define CHECK_FOR_CANCELED(AClass)\
@@ -56,7 +56,7 @@
 #endif
 
 #define MAKE_OUTPUT_FILE_PATH(outpath, filename)\
-    std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
+  std::string outpath = m_OutputDirectory + MXADir::Separator + m_OutputFilePrefix + filename;
 
 
 #if DREAM3D_USE_QT
@@ -76,27 +76,27 @@ VolumeMesh::Pointer VolumeMesh::New( QObject* parent)
 // -----------------------------------------------------------------------------
 VolumeMesh::VolumeMesh(
 #if DREAM3D_USE_QT
-QObject* parent
+  QObject* parent
 #endif
 ) :
 #if DREAM3D_USE_QT
-QObject(parent),
+  QObject(parent),
 #endif
-m_NodesFile(""),
-m_TrianglesFile(""),
-m_OutputDirectory(""),
-m_OutputFilePrefix("VolumeMesh_"),
-m_XDim(0.0),
-m_YDim(0.0),
-m_ZDim(0.0),
-m_XRes(0.0),
-m_YRes(0.0),
-m_ZRes(0.0),
-m_NumGrains(0),
-m_ErrorCondition(0)
+  m_NodesFile(""),
+  m_TrianglesFile(""),
+  m_OutputDirectory(""),
+  m_OutputFilePrefix("VolumeMesh_"),
+  m_XDim(0.0),
+  m_YDim(0.0),
+  m_ZDim(0.0),
+  m_XRes(0.0),
+  m_YRes(0.0),
+  m_ZRes(0.0),
+  m_NumGrains(0),
+  m_ErrorCondition(0)
 #if DREAM3D_USE_QT
-,
-m_Cancel(false)
+  ,
+  m_Cancel(false)
 #endif
 {
 
@@ -126,13 +126,13 @@ void VolumeMesh::compute()
 
 
   m_ErrorCondition = MeshGenerator_Main(m_NodesFile,
-                                     m_TrianglesFile,
-                                     meshFile, // Vtk file
-                                     meshFile2, // Vtk File
-                                     qualFile, //"element_quality_measures_v5.txt"
-                                     voxelsFile, //"voxels_v5.txt"
-                                     m_XDim, m_YDim, m_ZDim,
-                                     m_XRes, m_YRes, m_ZRes, m_NumGrains);
+                                        m_TrianglesFile,
+                                        meshFile, // Vtk file
+                                        meshFile2, // Vtk File
+                                        qualFile, //"element_quality_measures_v5.txt"
+                                        voxelsFile, //"voxels_v5.txt"
+                                        m_XDim, m_YDim, m_ZDim,
+                                        m_XRes, m_YRes, m_ZRes, m_NumGrains);
 
   progressMessage(AIM_STRING("Surface Volume Complete"), 100 );
 #if DREAM3D_USE_QT
@@ -147,9 +147,9 @@ void VolumeMesh::compute()
 void VolumeMesh::progressMessage(AIM_STRING message, int progress)
 {
 #ifdef DREAM3D_USE_QT
-      emit updateMessage(QString(message));
-      emit updateProgress(progress);
-     // std::cout << message.toStdString() << std::endl;
+  emit updateMessage(QString(message));
+  emit updateProgress(progress);
+  // std::cout << message.toStdString() << std::endl;
 #else
   std::cout << message << std::endl;
 #endif

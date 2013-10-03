@@ -71,8 +71,8 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     DREAM3D_INSTANCE_PROPERTY(int, ReferenceSlice)
     DREAM3D_INSTANCE_PROPERTY(bool, UseReferenceSlice)
 
-	virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
-	virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
+    virtual const std::string getGroupName() { return DREAM3D::FilterGroups::ReconstructionFilters; }
+    virtual const std::string getSubGroupName() {return DREAM3D::FilterSubGroups::AlignmentFilters;}
     virtual const std::string getHumanLabel() { return "Align Sections (Feature Centroid)"; }
 
     virtual void setupFilterParameters();
@@ -81,7 +81,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -94,7 +94,7 @@ class DREAM3DLib_EXPORT AlignSectionsFeatureCentroid : public AlignSections
     virtual void execute();
     virtual void preflight();
 
-    virtual void find_shifts(std::vector<int> &xshifts, std::vector<int> &yshifts);
+    virtual void find_shifts(std::vector<int>& xshifts, std::vector<int>& yshifts);
 
   protected:
     AlignSectionsFeatureCentroid();

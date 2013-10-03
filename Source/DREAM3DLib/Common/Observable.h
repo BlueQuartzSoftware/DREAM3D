@@ -76,7 +76,7 @@ class DREAM3DLib_EXPORT Observable
      */
     virtual void removeObserver(Observer* observer);
 
-    virtual void notifyMessage(PipelineMessage &msg);
+    virtual void notifyMessage(PipelineMessage& msg);
 
     void notifyErrorMessage(std::string errDesc, int errCode);
 
@@ -92,7 +92,7 @@ class DREAM3DLib_EXPORT Observable
 
     virtual void setObservers(std::vector<Observer*> obs);
 
-    virtual void setMessagePrefix(const std::string &str);
+    virtual void setMessagePrefix(const std::string& str);
     virtual std::string getMessagePrefix();
 
   private:

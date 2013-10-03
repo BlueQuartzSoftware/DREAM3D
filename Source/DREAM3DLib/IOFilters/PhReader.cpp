@@ -53,11 +53,11 @@
 //
 // -----------------------------------------------------------------------------
 PhReader::PhReader() :
-FileReader(),
-m_InputFile(""),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_GrainIds(NULL),
-m_InStream(NULL)
+  FileReader(),
+  m_InputFile(""),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_GrainIds(NULL),
+  m_InStream(NULL)
 
 {
   m_Origin.x = 0.0;
@@ -68,7 +68,9 @@ m_InStream(NULL)
   m_Resolution.y = 1.0;
   m_Resolution.z = 1.0;
 
-  m_Dims[0] = 0; m_Dims[1] = 0; m_Dims[2] = 0;
+  m_Dims[0] = 0;
+  m_Dims[1] = 0;
+  m_Dims[2] = 0;
   setupFilterParameters();
 }
 
@@ -123,11 +125,11 @@ void PhReader::readFilterParameters(AbstractFilterParametersReader* reader, int 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setInputFile( reader->readValue( "InputFile", getInputFile() ) );
   setOrigin( reader->readValue("Origin", getOrigin() ) );
   setResolution( reader->readValue("Resolution", getResolution() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -212,7 +214,7 @@ void PhReader::execute()
   if (NULL == getVolumeDataContainer())
   {
     std::stringstream ss;
-    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "("<<__LINE__<<")";
+    ss << "DataContainer Pointer was NULL and Must be valid." << __FILE__ << "(" << __LINE__ << ")";
     setErrorCondition(-48020);
     addErrorMessage(getHumanLabel(), ss.str(), getErrorCondition());
     return;
@@ -233,8 +235,8 @@ void PhReader::execute()
   err = readHeader();
   if(err < 0)
   {
-  fclose(m_InStream);
-  m_InStream = NULL;
+    fclose(m_InStream);
+    m_InStream = NULL;
     return;
   }
   err = readFile();
@@ -287,7 +289,7 @@ int  PhReader::readFile()
   int32_t* grainIds = m_GrainIdData->GetPointer(0);
   for(size_t n = 0; n < totalPoints; ++n)
   {
-    if (fscanf(m_InStream, "%d", grainIds+n) == 0)
+    if (fscanf(m_InStream, "%d", grainIds + n) == 0)
     {
       fclose(m_InStream);
       m_InStream = NULL;

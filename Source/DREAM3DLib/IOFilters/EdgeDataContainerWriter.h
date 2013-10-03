@@ -95,7 +95,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
@@ -126,7 +126,7 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
     */
     void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
-    int createVtkObjectGroup(const std::string &hdfGroupPath, const char* vtkDataObjectType);
+    int createVtkObjectGroup(const std::string& hdfGroupPath, const char* vtkDataObjectType);
 
     int writeVertices(hid_t dcGid);
     int writeEdges(hid_t dcGid);
@@ -139,8 +139,8 @@ class DREAM3DLib_EXPORT EdgeDataContainerWriter : public AbstractFilter
 
     void writeXdmfGridHeader();
     void writeXdmfGridFooter();
-    void writeXdmfAttributeData(const std::string &groupName, IDataArray::Pointer array, const std::string &centering);
-    std::string writeXdmfAttributeDataHelper(int numComp, const std::string &attrType, const std::string &groupName, IDataArray::Pointer array, const std::string &centering, int precision, const std::string &xdmfTypeName);
+    void writeXdmfAttributeData(const std::string& groupName, IDataArray::Pointer array, const std::string& centering);
+    std::string writeXdmfAttributeDataHelper(int numComp, const std::string& attrType, const std::string& groupName, IDataArray::Pointer array, const std::string& centering, int precision, const std::string& xdmfTypeName);
 
   private:
     std::ostream* m_XdmfPtr;

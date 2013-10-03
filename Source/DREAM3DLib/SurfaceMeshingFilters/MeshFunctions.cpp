@@ -44,8 +44,8 @@
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-NodeFunctions::NodeFunctions(){}
-NodeFunctions::~NodeFunctions(){}
+NodeFunctions::NodeFunctions() {}
+NodeFunctions::~NodeFunctions() {}
 
 double NodeFunctions::Distance(Node& n0, Node& n1)
 {
@@ -66,8 +66,8 @@ int NodeFunctions::type(Node& n)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-EdgeFunctions::EdgeFunctions(){}
-EdgeFunctions::~EdgeFunctions(){}
+EdgeFunctions::EdgeFunctions() {}
+EdgeFunctions::~EdgeFunctions() {}
 
 
 double EdgeFunctions::Length(StructArray<Node>::Pointer nodes, Segment* e)
@@ -80,10 +80,10 @@ double EdgeFunctions::Length(StructArray<Node>::Pointer nodes, Segment* e)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-TriangleFunctions::TriangleFunctions(){}
-TriangleFunctions::~TriangleFunctions(){}
+TriangleFunctions::TriangleFunctions() {}
+TriangleFunctions::~TriangleFunctions() {}
 
-double TriangleFunctions::area(Node &n0, Node &n1, Node &n2)
+double TriangleFunctions::area(Node& n0, Node& n1, Node& n2)
 {
   double a[3], b[3], c[3];
 
@@ -131,14 +131,14 @@ double TriangleFunctions::aspect(Node& n0, Node& n1, Node& n2)
   double c = NodeFunctions::Distance(n2, n0);
   double min = a;
   double max = a;
-  if(b > max) max = b;
-  else if(b < min) min = b;
-  if(c > max) max = c;
-  else if(c < min) min = c;
+  if(b > max) { max = b; }
+  else if(b < min) { min = b; }
+  if(c > max) { max = c; }
+  else if(c < min) { min = c; }
   return max / min;
 }
 
-double TriangleFunctions::circularity(Node &n0, Node &n1, Node &n2, double area)
+double TriangleFunctions::circularity(Node& n0, Node& n1, Node& n2, double area)
 {
   double a = NodeFunctions::Distance(n0, n1);
   double b = NodeFunctions::Distance(n1, n2);
@@ -146,11 +146,11 @@ double TriangleFunctions::circularity(Node &n0, Node &n1, Node &n2, double area)
   double s = 0.5 * (a + b + c); //  1/2 perimeter
   double r = area / s;
   double R = a * b * c / 4.0 / area;
-  R = R/r;
+  R = R / r;
   return R;
 }
 
-double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another triangle quality measure
+double TriangleFunctions::MinDihedral(Node& n0, Node& n1, Node& n2) //  another triangle quality measure
 {
   //  a points from p0 to p1; b is p0 to p2;  c points p1 to p2
   double a[3], b[3], c[3], min, w1, w2, w3;
@@ -191,14 +191,14 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
   }
   //  std::cout << "MinDIhedral, c: " << c[0] <<" " << c[1] <<" " << c[2] << std::endl ;
   w1 = a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
-  if(w1 < -1.) w1 = -1.;
-  if(w1 > 1.) w1 = 1.;
+  if(w1 < -1.) { w1 = -1.; }
+  if(w1 > 1.) { w1 = 1.; }
   w2 = -1. * a[0] * c[0] - a[1] * c[1] - a[2] * c[2];
-  if(w2 < -1.) w2 = -1.;
-  if(w2 > 1.) w2 = 1.;
+  if(w2 < -1.) { w2 = -1.; }
+  if(w2 > 1.) { w2 = 1.; }
   w3 = c[0] * b[0] + c[1] * b[1] + c[2] * b[2];
-  if(w3 < -1.) w3 = -1.;
-  if(w3 > 1.) w3 = 1.;
+  if(w3 < -1.) { w3 = -1.; }
+  if(w3 > 1.) { w3 = 1.; }
   //  std::cout << "MinDIhedral, w: " << w1 <<" " << w2 <<" " << w3 << std::endl ;
   double d1 = acos(w1);
   double d2 = acos(w2);
@@ -206,7 +206,7 @@ double TriangleFunctions::MinDihedral(Node &n0, Node &n1, Node &n2) //  another 
   // debug
   //  std::cout << "MinDIhedral, angles: " << d1*180./PI <<" " << d2*180./PI <<" " << d3*180./PI << std::endl ;
   min = d1;
-  if(d2 < min) min = d2;
-  if(d3 < min) min = d3;
+  if(d2 < min) { min = d2; }
+  if(d3 < min) { min = d3; }
   return min;
 }

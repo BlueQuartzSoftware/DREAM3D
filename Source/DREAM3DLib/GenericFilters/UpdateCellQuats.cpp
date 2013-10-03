@@ -66,8 +66,8 @@ void UpdateCellQuats::readFilterParameters(AbstractFilterParametersReader* reade
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -146,9 +146,9 @@ void UpdateCellQuats::execute()
   // quaternions then DO NOT USE THIS CODE as an example. Use another filter instead.
   for (int i = 0; i < totalPoints; i++)
   {
-    for(int j=0;j<4;j++)
+    for(int j = 0; j < 4; j++)
     {
-      m_Quats[4*i+j] = quats5ptr[5*i+(j+1)];
+      m_Quats[4 * i + j] = quats5ptr[5 * i + (j + 1)];
     }
   }
 

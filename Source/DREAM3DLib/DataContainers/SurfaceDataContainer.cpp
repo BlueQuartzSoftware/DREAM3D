@@ -51,10 +51,10 @@
 //
 // -----------------------------------------------------------------------------
 SurfaceDataContainer::SurfaceDataContainer() :
-Observable(),
-m_NumVertexTuples(0),
-m_NumFaceTuples(0),
-m_NumEdgeTuples(0)
+  Observable(),
+  m_NumVertexTuples(0),
+  m_NumFaceTuples(0),
+  m_NumEdgeTuples(0)
 
 {
 
@@ -156,7 +156,7 @@ void SurfaceDataContainer::setMeshFaceNeighborLists(MeshFaceNeighbors::Pointer n
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addVertexData(const std::string &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addVertexData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -172,7 +172,7 @@ void SurfaceDataContainer::addVertexData(const std::string &name, IDataArray::Po
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getVertexData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::getVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -187,7 +187,7 @@ IDataArray::Pointer SurfaceDataContainer::getVertexData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeVertexData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::removeVertexData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_VertexData.find(name);
@@ -235,7 +235,7 @@ int SurfaceDataContainer::getNumVertexArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFaceData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::getFaceData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -249,7 +249,7 @@ IDataArray::Pointer SurfaceDataContainer::getFaceData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFaceData(const std::string &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFaceData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -265,7 +265,7 @@ void SurfaceDataContainer::addFaceData(const std::string &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFaceData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::removeFaceData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FaceData.find(name);
@@ -312,7 +312,7 @@ int SurfaceDataContainer::getNumFaceArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FaceData.begin(); iter != m_FaceData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
@@ -325,7 +325,7 @@ void SurfaceDataContainer::resizeFaceDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getEdgeData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::getEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -339,7 +339,7 @@ IDataArray::Pointer SurfaceDataContainer::getEdgeData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addEdgeData(const std::string &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addEdgeData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -356,7 +356,7 @@ void SurfaceDataContainer::addEdgeData(const std::string &name, IDataArray::Poin
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeEdgeData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::removeEdgeData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EdgeData.find(name);
@@ -402,7 +402,7 @@ int SurfaceDataContainer::getNumEdgeArrays()
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getFieldData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::getFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -416,7 +416,7 @@ IDataArray::Pointer SurfaceDataContainer::getFieldData(const std::string &name)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addFieldData(const std::string &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addFieldData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -432,7 +432,7 @@ void SurfaceDataContainer::addFieldData(const std::string &name, IDataArray::Poi
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeFieldData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::removeFieldData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_FieldData.find(name);
@@ -479,7 +479,7 @@ int SurfaceDataContainer::getNumFieldArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeFieldDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_FieldData.begin(); iter != m_FieldData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;
@@ -492,7 +492,7 @@ void SurfaceDataContainer::resizeFieldDataArrays(size_t size)
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::getEnsembleData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::getEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -506,7 +506,7 @@ IDataArray::Pointer SurfaceDataContainer::getEnsembleData(const std::string &nam
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void SurfaceDataContainer::addEnsembleData(const std::string &name, IDataArray::Pointer data)
+void SurfaceDataContainer::addEnsembleData(const std::string& name, IDataArray::Pointer data)
 {
   if (data->GetName().compare(name) != 0)
   {
@@ -522,7 +522,7 @@ void SurfaceDataContainer::addEnsembleData(const std::string &name, IDataArray::
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-IDataArray::Pointer SurfaceDataContainer::removeEnsembleData(const std::string &name)
+IDataArray::Pointer SurfaceDataContainer::removeEnsembleData(const std::string& name)
 {
   std::map<std::string, IDataArray::Pointer>::iterator it;
   it =  m_EnsembleData.find(name);
@@ -569,7 +569,7 @@ int SurfaceDataContainer::getNumEnsembleArrays()
 // -----------------------------------------------------------------------------
 void SurfaceDataContainer::resizeEnsembleDataArrays(size_t size)
 {
- // int success = 0;
+// int success = 0;
   for(std::map<std::string, IDataArray::Pointer>::iterator iter = m_EnsembleData.begin(); iter != m_EnsembleData.end(); ++iter)
   {
     //std::cout << "Resizing Array '" << (*iter).first << "' : " << success << std::endl;

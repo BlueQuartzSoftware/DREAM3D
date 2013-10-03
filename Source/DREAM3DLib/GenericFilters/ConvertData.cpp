@@ -44,7 +44,8 @@
 
 namespace Detail
 {
-  enum NumType {
+  enum NumType
+  {
     Int8 = 0,
     UInt8,
     Int16,
@@ -65,7 +66,7 @@ namespace Detail
   //
   // -----------------------------------------------------------------------------
   template<typename T>
-  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const std::string &name)
+  void ConvertData(T* ptr, VolumeDataContainer* m, int32_t scalarType, const std::string& name)
   {
     int numberOfComponents = ptr->GetNumberOfComponents();
     int voxels = ptr->GetNumberOfTuples();
@@ -166,11 +167,11 @@ namespace Detail
 
 #define CHECK_AND_CONVERT(Type, DataContainer, ScalarType, Array, OutputName)\
   if(false == completed) {\
-  Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
-  if (NULL != Type##Ptr) {\
-  Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
-  completed = true;\
-  }\
+    Type* Type##Ptr = Type::SafePointerDownCast(Array.get());\
+    if (NULL != Type##Ptr) {\
+      Detail::ConvertData<Type>(Type##Ptr, DataContainer, ScalarType, OutputName);\
+      completed = true;\
+    }\
   }
 
 
@@ -250,11 +251,11 @@ void ConvertData::readFilterParameters(AbstractFilterParametersReader* reader, i
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setSelectedCellArrayName( reader->readValue( "SelectedCellArrayName", getSelectedCellArrayName() ) );
   setScalarType( reader->readValue("ScalarType", getScalarType()) );
   setOutputArrayName( reader->readValue( "OutputArrayName", getOutputArrayName() ) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 

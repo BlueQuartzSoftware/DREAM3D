@@ -1,6 +1,6 @@
 /***
- * Name:	Vector3.cpp
- * Purpose:	m3c_basics.math.vectors.Vector3 Implementation
+ * Name:  Vector3.cpp
+ * Purpose: m3c_basics.math.vectors.Vector3 Implementation
  * Notice:  Copyright Stuart Golodetz, 2008. All rights reserved.
 * This work is licensed under the Creative Commons Attribution-NonCommercial 3.0
 * Unported License. To view a copy of this license, visit
@@ -16,12 +16,13 @@
 
 #include "DREAM3DLib/SurfaceMeshingFilters/util/Exception.h"
 
-namespace Vector3Detail {
+namespace Vector3Detail
+{
 
 //double EPSILON = 0.0001;
-double   EPSILON = 0.0001f;
-double PI = 3.141592654;
-double SMALL_EPSILON = 0.0000000001;
+  double   EPSILON = 0.0001f;
+  double PI = 3.141592654;
+  double SMALL_EPSILON = 0.0000000001;
 
 }
 
@@ -33,21 +34,21 @@ using namespace Vector3Detail;
 //##################RUCTORS ##################//
 template <typename T>
 Vector3<T>::Vector3()
-:	x(0), y(0), z(0)
+  : x(0), y(0), z(0)
 {}
 
 template <typename T>
 Vector3<T>::Vector3(double x_, double y_, double z_)
-:	x(static_cast<T>(x_)),
-  y(static_cast<T>(y_)),
-  z(static_cast<T>(z_))
+  : x(static_cast<T>(x_)),
+    y(static_cast<T>(y_)),
+    z(static_cast<T>(z_))
 {}
 
 template<typename T>
 Vector3<T>::Vector3(DREAM3D::Mesh::Vert_t& node)
-: x(static_cast<T>(node.pos[0])),
-y(static_cast<T>(node.pos[1])),
-z(static_cast<T>(node.pos[2]))
+  : x(static_cast<T>(node.pos[0])),
+    y(static_cast<T>(node.pos[1])),
+    z(static_cast<T>(node.pos[2]))
 {}
 
 //################## PUBLIC OPERATORS ##################//
@@ -97,9 +98,9 @@ Vector3<T> Vector3<T>::operator-()
 template <typename T>
 Vector3<T> Vector3<T>::cross(Vector3& rhs)
 {
-  return Vector3(y*rhs.z - z*rhs.y,
-          z*rhs.x - x*rhs.z,
-          x*rhs.y - y*rhs.x);
+  return Vector3(y * rhs.z - z * rhs.y,
+                 z * rhs.x - x * rhs.z,
+                 x * rhs.y - y * rhs.x);
 }
 
 template <typename T>
@@ -114,19 +115,19 @@ double Vector3<T>::distance_squared(Vector3& rhs)
   double dx = x - rhs.x;
   double dy = y - rhs.y;
   double dz = z - rhs.z;
-  return dx*dx + dy*dy + dz*dz;
+  return dx * dx + dy * dy + dz * dz;
 }
 
 template <typename T>
 double Vector3<T>::dot(Vector3& rhs)
 {
-  return x*rhs.x + y*rhs.y + z*rhs.z;
+  return x * rhs.x + y * rhs.y + z * rhs.z;
 }
 
 template <typename T>
-double Vector3<T>::dot(DREAM3D::Mesh::Vert_t &rhs)
+double Vector3<T>::dot(DREAM3D::Mesh::Vert_t& rhs)
 {
-  return x*rhs.pos[0] + y*rhs.pos[1] + z*rhs.pos[2];
+  return x * rhs.pos[0] + y * rhs.pos[1] + z * rhs.pos[2];
 }
 
 
@@ -139,7 +140,7 @@ double Vector3<T>::length()
 template <typename T>
 double Vector3<T>::length_squared()
 {
-  return x*x + y*y + z*z;
+  return x * x + y * y + z * z;
 }
 
 template <typename T>
@@ -155,8 +156,8 @@ template <typename T>
 Vector3<T>& Vector3<T>::normalize()
 {
   double len = length();
-  if(len < SMALL_EPSILON) throw Exception("Unable to normalize vector: too close to zero");
-  return (*this) *= 1.0/len;
+  if(len < SMALL_EPSILON) { throw Exception("Unable to normalize vector: too close to zero"); }
+  return (*this) *= 1.0 / len;
 }
 
 template <typename T>

@@ -55,16 +55,16 @@
 //
 // -----------------------------------------------------------------------------
 MinNeighbors::MinNeighbors() :
-AbstractFilter(),
-m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
-m_ActiveArrayName(DREAM3D::FieldData::Active),
-m_MinNumNeighbors(1),
-m_AlreadyChecked(NULL),
-m_Neighbors(NULL),
-m_GrainIds(NULL),
-m_NumNeighbors(NULL),
-m_Active(NULL)
+  AbstractFilter(),
+  m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
+  m_NumNeighborsArrayName(DREAM3D::FieldData::NumNeighbors),
+  m_ActiveArrayName(DREAM3D::FieldData::Active),
+  m_MinNumNeighbors(1),
+  m_AlreadyChecked(NULL),
+  m_Neighbors(NULL),
+  m_GrainIds(NULL),
+  m_NumNeighbors(NULL),
+  m_Active(NULL)
 {
   setupFilterParameters();
 }
@@ -98,9 +98,9 @@ void MinNeighbors::readFilterParameters(AbstractFilterParametersReader* reader, 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
   setMinNumNeighbors( reader->readValue("MinNumNeighbors", getMinNumNeighbors()) );
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
@@ -168,7 +168,7 @@ void MinNeighbors::preflight()
 void MinNeighbors::execute()
 {
   setErrorCondition(0);
- // int err = 0;
+// int err = 0;
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
   {
@@ -211,7 +211,7 @@ void MinNeighbors::execute()
   }
 
   // If there is an error set this to something negative and also set a message
- notifyStatusMessage("Minimum Number of Neighbors Filter Complete");
+  notifyStatusMessage("Minimum Number of Neighbors Filter Complete");
 }
 
 // -----------------------------------------------------------------------------
@@ -221,14 +221,15 @@ void MinNeighbors::assign_badpoints()
 {
   VolumeDataContainer* m = getVolumeDataContainer();
   int64_t totalPoints = m->getTotalPoints();
-  size_t udims[3] = {0,0,0};
+  size_t udims[3] = {0, 0, 0};
   m->getDimensions(udims);
 #if (CMP_SIZEOF_SIZE_T == 4)
   typedef int32_t DimType;
 #else
   typedef int64_t DimType;
 #endif
-  DimType dims[3] = {
+  DimType dims[3] =
+  {
     static_cast<DimType>(udims[0]),
     static_cast<DimType>(udims[1]),
     static_cast<DimType>(udims[2]),
@@ -246,7 +247,7 @@ void MinNeighbors::assign_badpoints()
   int current = 0;
   int most = 0;
 //  int curgrain = 0;
- // DimType row, plane;
+// DimType row, plane;
   int neighpoint;
   size_t numgrains = m->getNumFieldTuples();
 
@@ -264,71 +265,71 @@ void MinNeighbors::assign_badpoints()
   int kstride, jstride;
   int grainname, grain;
   int neighbor;
-  std::vector<int > n(numgrains + 1,0);
+  std::vector<int > n(numgrains + 1, 0);
   while (counter != 0)
   {
     counter = 0;
     for (int k = 0; k < dims[2]; k++)
     {
-		kstride = static_cast<int>( dims[0]*dims[1]*k );
-	    for (int j = 0; j < dims[1]; j++)
-	    {
-			jstride = static_cast<int>( dims[0]*j );
-		    for (int i = 0; i < dims[0]; i++)
-		    {
-			  count = kstride+jstride+i;
-			  std::stringstream ss;
-			  grainname = m_GrainIds[count];
-			  if (grainname < 0)
-			  {
-			    counter++;
-				current = 0;
-				most = 0;
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = static_cast<int>( count + neighpoints[l] );
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if (grain >= 0)
-					{
-					  n[grain]++;
-					  current = n[grain];
-					  if (current > most)
-					  {
-						most = current;
-					    m_Neighbors[count] = neighpoint;
-					  }
-					}
-				  }
-				}
-				for (int l = 0; l < 6; l++)
-				{
-				  good = 1;
-				  neighpoint = static_cast<int>( count + neighpoints[l] );
-				  if (l == 0 && k == 0) good = 0;
-				  if (l == 5 && k == (dims[2] - 1)) good = 0;
-				  if (l == 1 && j == 0) good = 0;
-				  if (l == 4 && j == (dims[1] - 1)) good = 0;
-				  if (l == 2 && i == 0) good = 0;
-				  if (l == 3 && i == (dims[0] - 1)) good = 0;
-				  if (good == 1)
-				  {
-					grain = m_GrainIds[neighpoint];
-					if(grain >= 0) n[grain] = 0;
-				  }
-				}
-			}
-		  }
-		}
-	}
+      kstride = static_cast<int>( dims[0] * dims[1] * k );
+      for (int j = 0; j < dims[1]; j++)
+      {
+        jstride = static_cast<int>( dims[0] * j );
+        for (int i = 0; i < dims[0]; i++)
+        {
+          count = kstride + jstride + i;
+          std::stringstream ss;
+          grainname = m_GrainIds[count];
+          if (grainname < 0)
+          {
+            counter++;
+            current = 0;
+            most = 0;
+            for (int l = 0; l < 6; l++)
+            {
+              good = 1;
+              neighpoint = static_cast<int>( count + neighpoints[l] );
+              if (l == 0 && k == 0) { good = 0; }
+              if (l == 5 && k == (dims[2] - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (dims[1] - 1)) { good = 0; }
+              if (l == 2 && i == 0) { good = 0; }
+              if (l == 3 && i == (dims[0] - 1)) { good = 0; }
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if (grain >= 0)
+                {
+                  n[grain]++;
+                  current = n[grain];
+                  if (current > most)
+                  {
+                    most = current;
+                    m_Neighbors[count] = neighpoint;
+                  }
+                }
+              }
+            }
+            for (int l = 0; l < 6; l++)
+            {
+              good = 1;
+              neighpoint = static_cast<int>( count + neighpoints[l] );
+              if (l == 0 && k == 0) { good = 0; }
+              if (l == 5 && k == (dims[2] - 1)) { good = 0; }
+              if (l == 1 && j == 0) { good = 0; }
+              if (l == 4 && j == (dims[1] - 1)) { good = 0; }
+              if (l == 2 && i == 0) { good = 0; }
+              if (l == 3 && i == (dims[0] - 1)) { good = 0; }
+              if (good == 1)
+              {
+                grain = m_GrainIds[neighpoint];
+                if(grain >= 0) { n[grain] = 0; }
+              }
+            }
+          }
+        }
+      }
+    }
     std::list<std::string> voxelArrayNames = m->getCellArrayNameList();
     for (size_t j = 0; j < totalPoints; j++)
     {
@@ -336,12 +337,12 @@ void MinNeighbors::assign_badpoints()
       neighbor = m_Neighbors[j];
       if (grainname < 0 && neighbor >= 0 && m_GrainIds[neighbor] >= 0)
       {
-          for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
-          {
-            std::string name = *iter;
-            IDataArray::Pointer p = m->getCellData(*iter);
-            p->CopyTuple(neighbor, j);
-          }
+        for(std::list<std::string>::iterator iter = voxelArrayNames.begin(); iter != voxelArrayNames.end(); ++iter)
+        {
+          std::string name = *iter;
+          IDataArray::Pointer p = m->getCellData(*iter);
+          p->CopyTuple(neighbor, j);
+        }
       }
     }
   }
@@ -360,8 +361,8 @@ void MinNeighbors::merge_containedgrains()
   size_t totalFields = static_cast<size_t>(m->getNumFieldTuples());
   for (size_t i = 0; i < totalFields; i++)
   {
-	  m_Active[i] = true;
-	  if(m_NumNeighbors[i] >= m_MinNumNeighbors) good = true;
+    m_Active[i] = true;
+    if(m_NumNeighbors[i] >= m_MinNumNeighbors) { good = true; }
   }
   if(good == false)
   {
@@ -371,7 +372,7 @@ void MinNeighbors::merge_containedgrains()
   }
   for (size_t i = 0; i < totalPoints; i++)
   {
-	std::stringstream ss;
+    std::stringstream ss;
     int grainname = m_GrainIds[i];
     if(m_NumNeighbors[grainname] < m_MinNumNeighbors && grainname > 0)
     {

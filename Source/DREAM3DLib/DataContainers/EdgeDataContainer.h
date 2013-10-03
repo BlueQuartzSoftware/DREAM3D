@@ -124,14 +124,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexData(const std::string &name);
+    IDataArray::Pointer getVertexData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -139,7 +139,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const std::string& name);
 
     /**
      * @brief Removes all the Point Arrays
@@ -171,14 +171,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const std::string &name);
+    IDataArray::Pointer getEdgeData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -186,7 +186,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeData(const std::string &name);
+    IDataArray::Pointer removeEdgeData(const std::string& name);
 
     /**
      * @brief Removes all the ensemble data
@@ -204,14 +204,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addFieldData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getFieldData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -219,7 +219,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeFieldData(const std::string& name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -257,14 +257,14 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addEnsembleData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getEnsembleData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -272,7 +272,7 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeEnsembleData(const std::string& name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -308,19 +308,19 @@ class DREAM3DLib_EXPORT EdgeDataContainer : public Observable
 
 
   protected:
-     EdgeDataContainer();
+    EdgeDataContainer();
 
-   private:
+  private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_EdgeData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+    std::map<std::string, IDataArray::Pointer> m_VertexData;
+    std::map<std::string, IDataArray::Pointer> m_EdgeData;
+    std::map<std::string, IDataArray::Pointer> m_FieldData;
+    std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-     MeshLinks::Pointer m_MeshLinks;
+    MeshLinks::Pointer m_MeshLinks;
 
-     EdgeDataContainer(const EdgeDataContainer&);
-     void operator =(const EdgeDataContainer&);
+    EdgeDataContainer(const EdgeDataContainer&);
+    void operator =(const EdgeDataContainer&);
 
 };
 

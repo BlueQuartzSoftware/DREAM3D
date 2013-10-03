@@ -85,17 +85,17 @@ class ArraySelectionExample : public AbstractFilter
                                                 std::set<std::string> selectedFaceArrays,
                                                 std::set<std::string> selectedEdgeArrays);
 
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
-      DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelCellArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedVoxelEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEdgeArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshFieldArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSurfaceMeshEnsembleArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshVertexArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshFaceArrays)
+    DREAM3D_INSTANCE_PROPERTY(std::set<std::string>, SelectedSolidMeshEdgeArrays)
 
   public:
 
@@ -156,9 +156,9 @@ class ArraySelectionExample : public AbstractFilter
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
-   /**
-    * @brief Reimplemented from @see AbstractFilter class
-    */
+    /**
+     * @brief Reimplemented from @see AbstractFilter class
+     */
     virtual void execute();
 
     /**

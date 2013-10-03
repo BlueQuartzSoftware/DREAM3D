@@ -153,14 +153,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addVertexData(const std::string &name, IDataArray::Pointer data);
+    void addVertexData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getVertexData(const std::string &name);
+    IDataArray::Pointer getVertexData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -168,7 +168,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeVertexData(const std::string &name);
+    IDataArray::Pointer removeVertexData(const std::string& name);
 
     /**
      * @brief Removes all the Point Arrays
@@ -200,14 +200,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFaceData(const std::string &name, IDataArray::Pointer data);
+    void addFaceData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFaceData(const std::string &name);
+    IDataArray::Pointer getFaceData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -215,7 +215,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFaceData(const std::string &name);
+    IDataArray::Pointer removeFaceData(const std::string& name);
 
     /**
      * @brief Removes all the Face Arrays
@@ -253,14 +253,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEdgeData(const std::string &name, IDataArray::Pointer data);
+    void addEdgeData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEdgeData(const std::string &name);
+    IDataArray::Pointer getEdgeData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -268,7 +268,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEdgeData(const std::string &name);
+    IDataArray::Pointer removeEdgeData(const std::string& name);
 
     /**
      * @brief Removes all the ensemble data
@@ -286,14 +286,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addFieldData(const std::string &name, IDataArray::Pointer data);
+    void addFieldData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getFieldData(const std::string &name);
+    IDataArray::Pointer getFieldData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -301,7 +301,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeFieldData(const std::string &name);
+    IDataArray::Pointer removeFieldData(const std::string& name);
 
     /**
      * @brief Removes all the Field Arrays
@@ -339,14 +339,14 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name that the array will be known by
      * @param data The IDataArray::Pointer that will hold the data
      */
-    void addEnsembleData(const std::string &name, IDataArray::Pointer data);
+    void addEnsembleData(const std::string& name, IDataArray::Pointer data);
 
     /**
      * @brief Returns the array for a given named array or the equivelant to a
      * null pointer if the name does not exist.
      * @param name The name of the data array
      */
-    IDataArray::Pointer getEnsembleData(const std::string &name);
+    IDataArray::Pointer getEnsembleData(const std::string& name);
 
     /**
      * @brief Removes the named data array from the Data Container and returns it to the calling
@@ -354,7 +354,7 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
      * @param name The name of the array
      * @return
      */
-    IDataArray::Pointer removeEnsembleData(const std::string &name);
+    IDataArray::Pointer removeEnsembleData(const std::string& name);
 
     /**
      * @brief Removes all the Ensemble Arrays
@@ -390,21 +390,21 @@ class DREAM3DLib_EXPORT SurfaceDataContainer : public Observable
 
 
   protected:
-     SurfaceDataContainer();
+    SurfaceDataContainer();
 
-   private:
+  private:
 
-     std::map<std::string, IDataArray::Pointer> m_VertexData;
-     std::map<std::string, IDataArray::Pointer> m_EdgeData;
-     std::map<std::string, IDataArray::Pointer> m_FaceData;
-     std::map<std::string, IDataArray::Pointer> m_FieldData;
-     std::map<std::string, IDataArray::Pointer> m_EnsembleData;
+    std::map<std::string, IDataArray::Pointer> m_VertexData;
+    std::map<std::string, IDataArray::Pointer> m_EdgeData;
+    std::map<std::string, IDataArray::Pointer> m_FaceData;
+    std::map<std::string, IDataArray::Pointer> m_FieldData;
+    std::map<std::string, IDataArray::Pointer> m_EnsembleData;
 
-     MeshLinks::Pointer m_MeshLinks;
-     MeshFaceNeighbors::Pointer m_FaceNeighbors;
+    MeshLinks::Pointer m_MeshLinks;
+    MeshFaceNeighbors::Pointer m_FaceNeighbors;
 
-     SurfaceDataContainer(const SurfaceDataContainer&);
-     void operator =(const SurfaceDataContainer&);
+    SurfaceDataContainer(const SurfaceDataContainer&);
+    void operator =(const SurfaceDataContainer&);
 
 };
 

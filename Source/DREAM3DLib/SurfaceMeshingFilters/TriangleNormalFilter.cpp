@@ -65,7 +65,7 @@ class CalculateNormalsImpl
       m_Triangles(triangles),
       m_Normals(normals)
     {}
-    virtual ~CalculateNormalsImpl(){}
+    virtual ~CalculateNormalsImpl() {}
 
     /**
      * @brief generate Generates the Normals for the triangles
@@ -80,9 +80,9 @@ class CalculateNormalsImpl
       {
         // Get the true indices of the 3 nodes
         VectorType normal = TriangleOps::computeNormal(nodes[triangles[i].verts[0]], nodes[triangles[i].verts[1]], nodes[triangles[i].verts[2]]);
-        m_Normals[i*3+0] = normal.x;
-        m_Normals[i*3+1] = normal.y;
-        m_Normals[i*3+2] = normal.z;
+        m_Normals[i * 3 + 0] = normal.x;
+        m_Normals[i * 3 + 1] = normal.y;
+        m_Normals[i * 3 + 2] = normal.z;
       }
     }
 
@@ -91,7 +91,7 @@ class CalculateNormalsImpl
      * @brief operator () This is called from the TBB stye of code
      * @param r The range to compute the values
      */
-    void operator()(const tbb::blocked_range<size_t> &r) const
+    void operator()(const tbb::blocked_range<size_t>& r) const
     {
       generate(r.begin(), r.end());
     }
@@ -136,8 +136,8 @@ void TriangleNormalFilter::readFilterParameters(AbstractFilterParametersReader* 
 {
   reader->openFilterGroup(this, index);
   /* Code to read the values goes between these statements */
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
-/* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE BEGIN*/
+  /* FILTER_WIDGETCODEGEN_AUTO_GENERATED_CODE END*/
   reader->closeFilterGroup();
 }
 
