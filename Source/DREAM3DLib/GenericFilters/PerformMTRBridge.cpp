@@ -82,7 +82,7 @@ int PerformMTRBridge::writeFilterParameters(AbstractFilterParametersWriter* writ
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
-void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles, bool afterLink)
 {
   setErrorCondition(0);
   std::stringstream ss;
@@ -105,7 +105,7 @@ void PerformMTRBridge::dataCheck(bool preflight, size_t voxels, size_t fields, s
 // -----------------------------------------------------------------------------
 void PerformMTRBridge::preflight()
 {
-  dataCheck(true, 1, 1, 1);
+  dataCheck(true, 1, 1, 1, false);
 
   VolumeDataContainer* m = getVolumeDataContainer();
   if(NULL == m)
@@ -159,7 +159,7 @@ void PerformMTRBridge::execute()
   }
 
   setErrorCondition(0);
-  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples());
+  dataCheck(false, m->getTotalPoints(), m->getNumFieldTuples(), m->getNumEnsembleTuples(), true);
   if (getErrorCondition() < 0)
   {
     return;
