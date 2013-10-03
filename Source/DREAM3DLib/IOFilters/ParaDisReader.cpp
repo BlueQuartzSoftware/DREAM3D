@@ -239,6 +239,15 @@ int ParaDisReader::readHeader()
   bool done = false;
   //read Version line
   buf = m_InStream.readLine();
+  buf = buf.trimmed();
+  buf = buf.simplified();
+  tokens = buf.split(' ');
+  fileVersion = tokens[2].toInt(&ok, 10);
+  if(fileVersion == 2)
+  {
+    //read num file segments line
+    buf = m_InStream.readLine();
+  }
   //read minCoordinates lines
   buf = m_InStream.readLine();
   buf = m_InStream.readLine();
@@ -257,6 +266,65 @@ int ParaDisReader::readHeader()
   buf = buf.simplified();
   tokens = buf.split(' ');
   numVerts = tokens[2].toInt(&ok, 10);
+  if(fileVersion == 2)
+  {
+    //read data decomp line
+    buf = m_InStream.readLine();
+    //read data decomp geometry lines
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    //read end of file parameters lines
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    //read domain decomposition lines
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+  }
+  if(fileVersion == 5)
+  {
+    //read end of file parameters lines
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    //read domain decomposition lines
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+    buf = m_InStream.readLine();
+  }
   //read nodal Data lines
   buf = m_InStream.readLine();
   buf = m_InStream.readLine();
@@ -309,6 +377,14 @@ int ParaDisReader::readFile()
   int nodeNum = 0;
   int neighborNode = 0;
   numEdges = 0;
+  int nodeCounter = 0;
+  uint64_t* ptr64;
+
+  QMap<int64_t, int32_t> vertNumbers;
+  struct{
+    int32_t n1;
+    int32_t n2;
+  } uniqueNodeId;
 
   QVector<int> firstNodes;
   QVector<int> secondNodes;
@@ -326,37 +402,69 @@ int ParaDisReader::readFile()
     buf = buf.simplified();
     tokens = buf.split(' ');
     subTokens = tokens[0].split(',');
-    nodeNum = subTokens[1].toInt(&ok, 10)-1;
-    vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok);
-    vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok);
-    vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok);
-    m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
-    m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
-    buf = m_InStream.readLine();
-    buf = m_InStream.readLine();
-    buf = buf.trimmed();
-    buf = buf.simplified();
-    tokens = buf.split(' ');
-    subTokens = tokens[0].split(',');
-    neighborNode = subTokens[1].toInt(&ok, 10)-1;
-    if(neighborNode > nodeNum)
+    uniqueNodeId.n1 = subTokens[0].toInt(&ok, 10);
+    uniqueNodeId.n2 = subTokens[1].toInt(&ok, 10);
+    ptr64 = reinterpret_cast<uint64_t*>(&uniqueNodeId);
+    nodeNum = vertNumbers.value(*ptr64, -1);
+    if(nodeNum == -1)
     {
-      numEdges++;
-      firstNodes.push_back(nodeNum);
-      secondNodes.push_back(neighborNode);
-      burgerXs.push_back(tokens[1].toFloat(&ok));
-      burgerYs.push_back(tokens[2].toFloat(&ok));
-      burgerZs.push_back(tokens[3].toFloat(&ok));
+      nodeNum = nodeCounter;
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok);
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok);
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok);
+      m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
+      m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
+      vertNumbers.insert(*ptr64, nodeNum);
+      nodeCounter++;
     }
-    buf = m_InStream.readLine();
-    buf = buf.trimmed();
-    buf = buf.simplified();
-    tokens = buf.split(' ');
-    if(neighborNode > nodeNum)
+    else
     {
-      spnXs.push_back(tokens[0].toFloat(&ok));
-      spnYs.push_back(tokens[1].toFloat(&ok));
-      spnZs.push_back(tokens[2].toFloat(&ok));
+      vertex[nodeNum].pos[0] = tokens[1].toFloat(&ok);
+      vertex[nodeNum].pos[1] = tokens[2].toFloat(&ok);
+      vertex[nodeNum].pos[2] = tokens[3].toFloat(&ok);
+      m_NumberOfArms[nodeNum] = tokens[4].toInt(&ok, 10);
+      m_NodeConstraints[nodeNum] = tokens[5].toInt(&ok, 10);
+    }
+    if(fileVersion == 5)
+    {
+      buf = m_InStream.readLine();
+    }
+    for(int k=0;k<m_NumberOfArms[nodeNum];k++)
+    {
+      buf = m_InStream.readLine();
+      buf = buf.trimmed();
+      buf = buf.simplified();
+      tokens = buf.split(' ');
+      subTokens = tokens[0].split(',');
+      uniqueNodeId.n1 = subTokens[0].toInt(&ok, 10);
+      uniqueNodeId.n2 = subTokens[1].toInt(&ok, 10);
+      ptr64 = reinterpret_cast<uint64_t*>(&uniqueNodeId);
+      neighborNode = vertNumbers.value(*ptr64, -1);
+      if(neighborNode == -1)
+      {
+        neighborNode = nodeCounter;
+        vertNumbers.insert(*ptr64, neighborNode);
+        nodeCounter++;
+      }
+      if(neighborNode > nodeNum)
+      {
+        numEdges++;
+        firstNodes.push_back(nodeNum);
+        secondNodes.push_back(neighborNode);
+        burgerXs.push_back(tokens[1].toFloat(&ok));
+        burgerYs.push_back(tokens[2].toFloat(&ok));
+        burgerZs.push_back(tokens[3].toFloat(&ok));
+      }
+      buf = m_InStream.readLine();
+      buf = buf.trimmed();
+      buf = buf.simplified();
+      tokens = buf.split(' ');
+      if(neighborNode > nodeNum)
+      {
+        spnXs.push_back(tokens[0].toFloat(&ok));
+        spnYs.push_back(tokens[1].toFloat(&ok));
+        spnZs.push_back(tokens[2].toFloat(&ok));
+      }
     }
   }
 

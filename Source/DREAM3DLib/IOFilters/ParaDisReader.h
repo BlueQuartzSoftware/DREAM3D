@@ -110,6 +110,8 @@ class DREAM3DLib_EXPORT ParaDisReader : public FileReader
     int numVerts;
     int numEdges;
 
+    int fileVersion;
+
     ParaDisReader(const ParaDisReader&); // Copy Constructor Not Implemented
     void operator=(const ParaDisReader&); // Operator '=' Not Implemented
 };

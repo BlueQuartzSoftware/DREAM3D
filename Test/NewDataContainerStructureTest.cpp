@@ -717,11 +717,11 @@ void RunPipeline5()
   FilterPipeline::Pointer pipeline = FilterPipeline::New();
 
   ParaDisReader::Pointer pr = ParaDisReader::New();
-  pr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.data");
+  pr->setInputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\rs57226.data");
   pipeline->pushBack(pr);
 
   DataContainerWriter::Pointer dcw = DataContainerWriter::New();
-  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\simulation1.dream3d");
+  dcw->setOutputFile("C:\\Users\\groebema\\Desktop\\Data\\dislocation\\rs57226.dream3d");
   dcw->setWriteVolumeData(false);
   dcw->setWriteSurfaceData(false);
   dcw->setWriteEdgeData(true);
@@ -783,8 +783,8 @@ int main(int argc, char **argv)
 //  RunPipeline2();
 //  RunPipeline3();
 //  RunPipeline4();
-//  RunPipeline5();
-  RunPipeline6();
+  RunPipeline5();
+//  RunPipeline6();
 
   //DREAM3D_REGISTER_TEST( TestInsertDelete() )
   //DREAM3D_REGISTER_TEST( TestArrayCreation() )
