@@ -111,7 +111,6 @@ namespace DREAM3D
     const DREAM3D_STRING CellPhases("Phases");
     const DREAM3D_STRING BandContrast("BandContrast");
     const DREAM3D_STRING EulerAngles("EulerAngles");
-    const DREAM3D_STRING MTRdensity("MTRdensity");
     const DREAM3D_STRING MTRgKAM("MTRgKAM");
     const DREAM3D_STRING SurfaceVoxels("SurfaceVoxels");
     const DREAM3D_STRING Quats("Quats");
@@ -187,7 +186,6 @@ namespace DREAM3D
     const DREAM3D_STRING BasalLoadingFactor("BasalLoadingFactor");
     const DREAM3D_STRING Clusters("Clusters");
     const DREAM3D_STRING ClusteringList("ClusteringList");
-    const DREAM3D_STRING MTRgKAM("MTRgKAM");
   }
 
   namespace EnsembleData
