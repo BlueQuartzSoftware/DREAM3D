@@ -229,7 +229,7 @@ VerifyTriangleWinding::~VerifyTriangleWinding()
 // -----------------------------------------------------------------------------
 void VerifyTriangleWinding::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

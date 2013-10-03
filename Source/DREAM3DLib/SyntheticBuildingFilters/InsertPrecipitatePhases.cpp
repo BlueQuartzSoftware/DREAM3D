@@ -129,7 +129,7 @@ InsertPrecipitatePhases::~InsertPrecipitatePhases()
 
 void InsertPrecipitatePhases::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Periodic Boundary");

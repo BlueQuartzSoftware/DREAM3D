@@ -61,7 +61,7 @@ VtkGrainIdWriter::~VtkGrainIdWriter()
 // -----------------------------------------------------------------------------
 void VtkGrainIdWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");

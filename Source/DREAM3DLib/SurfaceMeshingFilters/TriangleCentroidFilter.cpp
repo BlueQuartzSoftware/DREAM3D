@@ -111,7 +111,7 @@ TriangleCentroidFilter::~TriangleCentroidFilter()
 // -----------------------------------------------------------------------------
 void TriangleCentroidFilter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

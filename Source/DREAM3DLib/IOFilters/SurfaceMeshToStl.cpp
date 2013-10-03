@@ -69,7 +69,7 @@ SurfaceMeshToStl::~SurfaceMeshToStl()
 // -----------------------------------------------------------------------------
 void SurfaceMeshToStl::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output STL Directory");

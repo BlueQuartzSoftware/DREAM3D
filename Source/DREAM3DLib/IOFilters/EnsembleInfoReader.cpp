@@ -73,7 +73,7 @@ EnsembleInfoReader::~EnsembleInfoReader()
 // -----------------------------------------------------------------------------
 void EnsembleInfoReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Ensemble Info File");

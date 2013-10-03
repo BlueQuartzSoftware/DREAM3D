@@ -64,7 +64,7 @@ SingleThresholdFields::~SingleThresholdFields()
 // -----------------------------------------------------------------------------
 void SingleThresholdFields::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Input Field Array Name");

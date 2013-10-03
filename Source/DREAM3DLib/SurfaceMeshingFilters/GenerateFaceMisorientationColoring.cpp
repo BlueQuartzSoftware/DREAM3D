@@ -185,7 +185,7 @@ GenerateFaceMisorientationColoring::~GenerateFaceMisorientationColoring()
 // -----------------------------------------------------------------------------
 void GenerateFaceMisorientationColoring::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

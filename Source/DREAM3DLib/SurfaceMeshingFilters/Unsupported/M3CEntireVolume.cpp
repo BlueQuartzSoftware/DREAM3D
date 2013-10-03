@@ -72,7 +72,7 @@ M3CEntireVolume::~M3CEntireVolume()
 // -----------------------------------------------------------------------------
 void M3CEntireVolume::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
    {
      FilterParameter::Pointer option = FilterParameter::New();
      option->setHumanLabel("Add Surface Layer");

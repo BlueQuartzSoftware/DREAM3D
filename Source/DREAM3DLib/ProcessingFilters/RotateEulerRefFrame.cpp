@@ -131,7 +131,7 @@ RotateEulerRefFrame::~RotateEulerRefFrame()
 // -----------------------------------------------------------------------------
 void RotateEulerRefFrame::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     ChoiceFilterParameter::Pointer option = ChoiceFilterParameter::New();
     option->setHumanLabel("Rotation Axis");

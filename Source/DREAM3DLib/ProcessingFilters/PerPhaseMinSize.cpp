@@ -56,12 +56,11 @@
 PerPhaseMinSize::PerPhaseMinSize() :
   MinSize(),
   m_GrainIdsArrayName(DREAM3D::CellData::GrainIds),
-  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
   m_ActiveArrayName(DREAM3D::FieldData::Active),
-  m_MinAllowedGrainSize(1),
-  m_GrainIds(NULL),
-  m_FieldPhases(NULL),
-  m_Active(NULL)
+  m_CellPhasesArrayName(DREAM3D::CellData::Phases),
+  m_FieldPhasesArrayName(DREAM3D::FieldData::Phases),
+  m_CellPhases(NULL),
+  m_FieldPhases(NULL)
 {
   setupFilterParameters();
 }
@@ -78,7 +77,7 @@ PerPhaseMinSize::~PerPhaseMinSize()
 // -----------------------------------------------------------------------------
 void PerPhaseMinSize::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Minimum Allowed Grain Size");
@@ -128,10 +127,54 @@ int PerPhaseMinSize::writeFilterParameters(AbstractFilterParametersWriter* write
 // -----------------------------------------------------------------------------
 //
 // -----------------------------------------------------------------------------
+void PerPhaseMinSize::dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles)
+{
+  setErrorCondition(0);
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+
+  GET_PREREQ_DATA(m, DREAM3D, CellData, GrainIds, -301, int32_t, Int32ArrayType, voxels, 1);
+  GET_PREREQ_DATA(m, DREAM3D, CellData, CellPhases, -301, int32_t, Int32ArrayType, voxels, 1);
+
+  GET_PREREQ_DATA(m, DREAM3D, CellFieldData, FieldPhases, -301, int32_t, Int32ArrayType, fields, 1);
+  CREATE_NON_PREREQ_DATA(m, DREAM3D, CellFieldData, Active, bool, BoolArrayType, true, fields, 1);
+
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
+void PerPhaseMinSize::preflight()
+{
+  dataCheck(true, 1, 1, 1);
+
+  VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
+  if(NULL == m)
+  {
+    setErrorCondition(-999);
+    notifyErrorMessage("The DataContainer Object was NULL", -999);
+    return;
+  }
+
+  RenumberGrains::Pointer renumber_grains = RenumberGrains::New();
+  renumber_grains->setObservers(this->getObservers());
+  renumber_grains->setDataContainerArray(getDataContainerArray());
+  renumber_grains->setMessagePrefix(getMessagePrefix());
+  renumber_grains->preflight();
+  int err = renumber_grains->getErrorCondition();
+  if (err < 0)
+  {
+    setErrorCondition(renumber_grains->getErrorCondition());
+    addErrorMessages(renumber_grains->getPipelineMessages());
+    return;
+  }
+}
+
+// -----------------------------------------------------------------------------
+//
+// -----------------------------------------------------------------------------
 void PerPhaseMinSize::remove_smallgrains()
 {
   VolumeDataContainer* m = getDataContainerArray()->getDataContainerAs<VolumeDataContainer>(getDataContainerName());
-
   int64_t totalPoints = m->getTotalPoints();
 
   bool good = false;
@@ -140,8 +183,8 @@ void PerPhaseMinSize::remove_smallgrains()
 
   int numgrains = m->getNumCellFieldTuples();
 
-  QVector<int> voxcounts(numgrains,0);
-
+  std::vector<int> voxcounts;
+  voxcounts.resize(numgrains,0);
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
@@ -150,7 +193,7 @@ void PerPhaseMinSize::remove_smallgrains()
   for (size_t i = 1; i <  static_cast<size_t>(numgrains); i++)
   {
   m_Active[i] = true;
-    if(voxcounts[i] >= m_MinAllowedGrainSize || m_FieldPhases[i] != m_PhaseNumber) good = true;
+    if(voxcounts[i] >= getMinAllowedGrainSize() || m_FieldPhases[i] != m_PhaseNumber) good = true;
   }
   if(good == false)
   {
@@ -161,7 +204,7 @@ void PerPhaseMinSize::remove_smallgrains()
   for (int64_t i = 0; i < totalPoints; i++)
   {
     gnum = m_GrainIds[i];
-    if(voxcounts[gnum] < m_MinAllowedGrainSize && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
+    if(voxcounts[gnum] < getMinAllowedGrainSize() && m_FieldPhases[i] == m_PhaseNumber && gnum > 0)
   {
     m_GrainIds[i] = -1;
     m_Active[gnum] = false;

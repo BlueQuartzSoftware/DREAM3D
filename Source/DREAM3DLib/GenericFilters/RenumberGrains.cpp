@@ -69,7 +69,7 @@ RenumberGrains::~RenumberGrains()
 // -----------------------------------------------------------------------------
 void RenumberGrains::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Name of Array for Active Grains");

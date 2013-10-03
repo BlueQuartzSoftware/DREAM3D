@@ -101,7 +101,7 @@ CAxisSegmentGrains::~CAxisSegmentGrains()
 
 void CAxisSegmentGrains::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setPropertyName("MisorientationTolerance");

@@ -72,7 +72,7 @@ AddBadData::~AddBadData()
 // -----------------------------------------------------------------------------
 void AddBadData::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Add Random Noise");

@@ -69,7 +69,7 @@ GBCDTriangleDumper::~GBCDTriangleDumper()
 // -----------------------------------------------------------------------------
 void GBCDTriangleDumper::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   {
     FilterParameter::Pointer option = FilterParameter::New();

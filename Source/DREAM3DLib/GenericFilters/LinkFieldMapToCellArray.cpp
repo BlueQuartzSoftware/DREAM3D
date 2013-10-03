@@ -60,7 +60,7 @@ LinkFieldMapToCellArray::~LinkFieldMapToCellArray()
 // -----------------------------------------------------------------------------
 void LinkFieldMapToCellArray::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Cell Array Name");

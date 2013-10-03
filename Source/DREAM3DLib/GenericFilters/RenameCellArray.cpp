@@ -61,7 +61,7 @@ RenameCellArray::~RenameCellArray()
 // -----------------------------------------------------------------------------
 void RenameCellArray::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Current Cell Array Name");

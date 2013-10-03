@@ -78,7 +78,7 @@ CropVolume::~CropVolume()
 // -----------------------------------------------------------------------------
 void CropVolume::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("X Min (Voxels)");

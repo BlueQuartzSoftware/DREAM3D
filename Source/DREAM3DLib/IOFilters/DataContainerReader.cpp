@@ -95,7 +95,7 @@ DataContainerReader::~DataContainerReader()
 // -----------------------------------------------------------------------------
 void DataContainerReader::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
 
   setFilterParameters(parameters);
 }

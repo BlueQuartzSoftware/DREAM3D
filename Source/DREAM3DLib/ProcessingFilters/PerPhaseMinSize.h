@@ -38,18 +38,11 @@
 #define _PerPhaseMinSize_H_
 
 #include <vector>
-#include <QtCore/QString>
+#include <string>
 
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
-// #include "DREAM3DLib/DataArrays/IDataArray.h"
-
-//#include "DREAM3DLib/Common/AbstractFilter.h"
-//#include "DREAM3DLib/DataContainers/VolumeDataContainer.h"
-//#include "DREAM3DLib/OrientationOps/OrientationOps.h"
-//#include "DREAM3DLib/DataArrays/NeighborList.hpp"
-
 #include "DREAM3DLib/ProcessingFilters/MinSize.h"
 
 
@@ -68,16 +61,13 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     DREAM3D_TYPE_MACRO_SUPER(PerPhaseMinSize, AbstractFilter)
 
     virtual ~PerPhaseMinSize();
-    DREAM3D_INSTANCE_STRING_PROPERTY(DataContainerName)
 
-    //------ Required Cell Data
+
     DREAM3D_INSTANCE_STRING_PROPERTY(GrainIdsArrayName)
-    //------ Required Field Data
-    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
-    //------ Created Field Data
     DREAM3D_INSTANCE_STRING_PROPERTY(ActiveArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(CellPhasesArrayName)
+    DREAM3D_INSTANCE_STRING_PROPERTY(FieldPhasesArrayName)
 
-    DREAM3D_INSTANCE_PROPERTY(int, MinAllowedGrainSize)
     DREAM3D_INSTANCE_PROPERTY(int, PhaseNumber)
 
     virtual const QString getGroupName() { return DREAM3D::FilterGroups::ProcessingFilters; }
@@ -90,28 +80,25 @@ class DREAM3DLib_EXPORT PerPhaseMinSize : public MinSize
     * @param writer The writer that is used to write the options to a file
     */
     virtual int writeFilterParameters(AbstractFilterParametersWriter* writer, int index);
-    
+
     /**
     * @brief This method will read the options from a file
     * @param reader The reader that is used to read the options from a file
     */
     virtual void readFilterParameters(AbstractFilterParametersReader* reader, int index);
 
+    virtual void preflight();
+
   protected:
     PerPhaseMinSize();
 
     // We over ride this method because we need to change the functionality
     virtual void remove_smallgrains();
+    virtual void dataCheck(bool preflight, size_t voxels, size_t fields, size_t ensembles);
 
   private:
-    int32_t* m_Neighbors;
-
-    int32_t* m_GrainIds;
+    int32_t* m_CellPhases;
     int32_t* m_FieldPhases;
-    bool* m_Active;
-
-    QVector<QVector<int> > voxellists;
-    QVector<int> nuclei;
 
 
     PerPhaseMinSize(const PerPhaseMinSize&); // Copy Constructor Not Implemented

@@ -63,7 +63,7 @@ SharedGrainFaceFilter::~SharedGrainFaceFilter()
 // -----------------------------------------------------------------------------
 void SharedGrainFaceFilter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   setFilterParameters(parameters);
 }
 

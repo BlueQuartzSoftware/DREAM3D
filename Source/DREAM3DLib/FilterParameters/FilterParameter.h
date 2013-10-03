@@ -38,7 +38,7 @@
 #define _FilterParameter_H_
 
 #include <QtCore/QMetaType>
-
+#include <QtCore/QVector>
 
 #include "DREAM3DLib/DREAM3DLib.h"
 #include "DREAM3DLib/Common/DREAM3DSetGetMacros.h"
@@ -138,6 +138,9 @@ class FilterParameter
     FilterParameter(const FilterParameter&); // Copy Constructor Not Implemented
     void operator=(const FilterParameter&); // Operator '=' Not Implemented
 };
+
+typedef QVector<FilterParameter::Pointer> FilterParameterVector;
+
 
 // -----------------------------------------------------------------------------
 //

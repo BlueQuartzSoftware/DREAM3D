@@ -88,7 +88,7 @@ INLWriter::~INLWriter()
 // -----------------------------------------------------------------------------
 void INLWriter::setupFilterParameters()
 {
-  QVector<FilterParameter::Pointer> parameters;
+  FilterParameterVector parameters;
   {
     FilterParameter::Pointer option = FilterParameter::New();
     option->setHumanLabel("Output File");
@@ -160,10 +160,6 @@ void INLWriter::dataCheck(bool preflight, size_t voxels, size_t fields, size_t e
     addErrorMessage(getHumanLabel(), ss, -1111);
     setErrorCondition(-1111);
   }
-  //  else
-  //  {
-  //    addRequiredEnsembleData(DREAM3D::EnsembleData::MaterialName);
-  //  }
 
 
 }
@@ -279,7 +275,7 @@ int INLWriter::writeFile()
   for(int32_t i = 1; i < count; ++i)
   {
     QString matName = materialNames->GetValue(i);
-    fprintf(f, "# Phase_%d: %s\r\n", i, matName);
+    fprintf(f, "# Phase_%d: %s\r\n", i, matName.toLatin1().data());
     symmetry = m_CrystalStructures[i];
     fprintf(f, "# Phase_%lu: %s\r\n", i, materialNames->GetValue(i).toLatin1().data());
     if(symmetry == Ebsd::CrystalStructure::Cubic_High)
